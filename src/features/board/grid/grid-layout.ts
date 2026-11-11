@@ -12,6 +12,16 @@ const GRID_GAP = "var(--grid-gap)";
 const GRID_CELL_WIDTH = "var(--grid-cell-width)";
 const GRID_CELL_HEIGHT = "var(--grid-cell-height)";
 
+/**
+ * The shortest the grid's viewport may get: one row of tiles and the padding
+ * around it. Below this the page has to scroll instead, or a zoomed-in or
+ * short screen would squeeze the board down to a strip too thin for one tile.
+ */
+export const GRID_MIN_VIEWPORT_HEIGHT = {
+  xs: GRID_MIN_CELL_HEIGHT_PX + 2 * GRID_COMPACT_PADDING_PX,
+  sm: GRID_MIN_CELL_HEIGHT_PX + 2 * GRID_REGULAR_PADDING_PX,
+} as const;
+
 interface GridLayoutOptions {
   rows: number;
   columns: number;

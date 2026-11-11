@@ -32,7 +32,16 @@ export function AppShell() {
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
-      <Box component="main" sx={{ flex: 1, overflow: "auto" }}>
+      <Box
+        component="main"
+        sx={{
+          flex: 1,
+          overflow: "auto",
+          // On a short or zoomed-in screen the page scrolls; this keeps a
+          // focused control and its focus ring clear of the scroll edge.
+          scrollPaddingBlock: (theme) => theme.spacing(1),
+        }}
+      >
         <Outlet />
       </Box>
 

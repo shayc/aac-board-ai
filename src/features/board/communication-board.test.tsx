@@ -118,6 +118,62 @@ describe("CommunicationBoard", () => {
     );
   });
 
+  describe("short viewports", () => {
+    async function renderAtViewport(width: number, height: number) {
+      await page.viewport(width, height);
+      const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+      const grid = screen.getByRole("grid");
+      await expect.element(grid).toBeVisible();
+
+      const gridViewport = grid.element().parentElement;
+      const boardContainer = screen.container.firstElementChild;
+      assertDefined(gridViewport);
+      assertDefined(boardContainer);
+
+      return { screen, gridViewport, boardContainer };
+    }
+
+    // 1280×1024 and 1920×1080 at 400% zoom.
+    test.each([
+      { width: 320, height: 256 },
+      { width: 480, height: 270 },
+    ])(
+      "keeps room for a full tile and lets the page scroll at $width×$height",
+      async ({ width, height }) => {
+        const originalWidth = window.innerWidth;
+        const originalHeight = window.innerHeight;
+
+        try {
+          const { screen, gridViewport, boardContainer } =
+            await renderAtViewport(width, height);
+          const tile = screen.getByRole("button", { name: "Button 0" });
+
+          expect(gridViewport.clientHeight).toBeGreaterThanOrEqual(
+            tile.element().getBoundingClientRect().height,
+          );
+          expect(boardContainer.scrollHeight).toBeGreaterThan(
+            boardContainer.clientHeight,
+          );
+        } finally {
+          await page.viewport(originalWidth, originalHeight);
+        }
+      },
+    );
+
+    test("fits the board without page scrolling at an ordinary size", async () => {
+      const originalWidth = window.innerWidth;
+      const originalHeight = window.innerHeight;
+
+      try {
+        const { boardContainer } = await renderAtViewport(1024, 768);
+
+        expect(boardContainer.scrollHeight).toBe(boardContainer.clientHeight);
+      } finally {
+        await page.viewport(originalWidth, originalHeight);
+      }
+    });
+  });
+
   describe("tile activation", () => {
     test("activates a focused tile with the Space key", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);

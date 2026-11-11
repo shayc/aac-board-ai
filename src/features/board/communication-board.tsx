@@ -9,6 +9,7 @@ import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
+import { GRID_MIN_VIEWPORT_HEIGHT } from "./grid/grid-layout";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
@@ -131,7 +132,7 @@ export function CommunicationBoard({
           {!isSmallScreen && backspaceButton}
         </Stack>
 
-        <Box sx={{ flex: 1, minHeight: 0 }}>
+        <Box sx={{ flex: 1, minHeight: GRID_MIN_VIEWPORT_HEIGHT }}>
           <Grid<BoardButton>
             ref={gridViewportRef}
             ariaLabel={board.name || t(m.boardGridLabel)}
