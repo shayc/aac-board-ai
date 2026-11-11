@@ -13,7 +13,7 @@ const cssVariableTheme = createTheme({ cssVariables: true });
 
 // The test viewport is below "sm", where the grid uses compact padding.
 const PADDING_PX = 16;
-const MIN_CELL_SIZE_PX = 96;
+const MIN_CELL_SIZE_PX = { columns: 72, rows: 96 };
 
 const AXES = {
   columns: {
@@ -315,22 +315,21 @@ describe("Grid", () => {
 
   describe("responsive sizing", () => {
     const FIT_CASES = [
-      { containerSize: 1000, tracks: 20, visible: 9 },
-      { containerSize: 1000, tracks: 4, visible: 4 },
-      { containerSize: 375, tracks: 20, visible: 3 },
-    ];
+      { axis: "columns", containerSize: 1000, tracks: 20, visible: 12 },
+      { axis: "columns", containerSize: 1000, tracks: 4, visible: 4 },
+      { axis: "columns", containerSize: 375, tracks: 20, visible: 4 },
+      { axis: "rows", containerSize: 1000, tracks: 20, visible: 9 },
+      { axis: "rows", containerSize: 1000, tracks: 4, visible: 4 },
+      { axis: "rows", containerSize: 375, tracks: 20, visible: 3 },
+    ] as const;
 
-    test.each(
-      (["columns", "rows"] as const).flatMap((axis) =>
-        FIT_CASES.map((fitCase) => ({ axis, ...fitCase })),
-      ),
-    )(
-      "fits $visible whole $axis of at least 96px into $containerSize px for a $tracks-track board",
+    test.each(FIT_CASES)(
+      "fits $visible whole $axis into $containerSize px for a $tracks-track board",
       async ({ axis, containerSize, tracks, visible }) => {
         const layout = await measureTracks(axis, containerSize, tracks);
 
         expect(layout.visibleCellCount).toBe(visible);
-        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
+        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX[axis]);
         expect(layout.lastVisibleCellEnd).toBeCloseTo(
           layout.viewportContentEnd,
           0,
@@ -340,11 +339,11 @@ describe("Grid", () => {
     );
 
     test.each(["columns", "rows"] as const)(
-      "keeps %s at the 96px floor in a container smaller than one cell",
+      "keeps %s at the minimum cell size in a container smaller than one cell",
       async (axis) => {
-        const layout = await measureTracks(axis, 120, 1);
+        const layout = await measureTracks(axis, 80, 1);
 
-        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
+        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX[axis]);
         expect(layout.overflows).toBe(true);
       },
     );
