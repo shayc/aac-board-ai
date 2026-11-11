@@ -7,10 +7,8 @@ import {
 } from "../storage/board-content-storage";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
-type BoardSetToExport = Pick<BoardSetRecord, "id" | "name" | "rootBoardId">;
-
 export async function exportBoardSet(
-  boardSet: BoardSetToExport,
+  boardSet: Pick<BoardSetRecord, "id" | "name" | "rootBoardId">,
 ): Promise<void> {
   const archive = await boardSetToOBZ(boardSet);
   // Safari appends ".zip" to a download typed as a ZIP archive, and import
@@ -36,7 +34,7 @@ export async function boardSetToOBZ({
   );
 
   const boards = records.map((record) =>
-    withPackagedPaths(record.obf, boardIds, assets),
+    withPackagedMedia(withPackagedLinks(record.obf, boardIds), assets),
   );
 
   return createOBZ(boards, rootBoardId, assets);
@@ -75,15 +73,11 @@ function collectAssetPaths(boards: readonly OBFBoard[]): Set<string> {
 
 /**
  * Points board links at where `createOBZ` writes each board, since the paths
- * kept from the imported archive no longer exist. Media take the normalized
- * path their file is packaged under, because a path such as `/images/a.png` is
- * not a portable archive entry. Media whose file was never stored drop their
- * path, falling back to `data` or `url` as the app does.
+ * kept from the imported archive no longer exist.
  */
-function withPackagedPaths(
+function withPackagedLinks(
   board: OBFBoard,
   boardIds: ReadonlySet<string>,
-  assets: ReadonlyMap<string, Uint8Array>,
 ): OBFBoard {
   const buttons = board.buttons.map((button) => {
     const targetBoardId = button.load_board?.id;
@@ -100,12 +94,7 @@ function withPackagedPaths(
     };
   });
 
-  return {
-    ...board,
-    buttons,
-    images: board.images?.map((image) => withPackagedPath(image, assets)),
-    sounds: board.sounds?.map((sound) => withPackagedPath(sound, assets)),
-  };
+  return { ...board, buttons };
 }
 
 // Must match the layout `createOBZ` writes; the export round-trip test guards it.
@@ -113,15 +102,31 @@ function packagedBoardPath(boardId: string): string {
   return `boards/${encodeURIComponent(boardId)}.obf`;
 }
 
-function withPackagedPath<Media extends { path?: string }>(
-  media: Media,
+/**
+ * Points media at the normalized path their file is packaged under, because a
+ * path such as `/images/a.png` is not a portable archive entry. Media whose
+ * file was never stored lose their path, falling back to `data` or `url` as
+ * the app does.
+ */
+function withPackagedMedia(
+  board: OBFBoard,
   assets: ReadonlyMap<string, Uint8Array>,
-): Media {
-  if (!media.path) {
-    return media;
+): OBFBoard {
+  function atPackagedPath<Media extends { path?: string }>(
+    media: Media,
+  ): Media {
+    if (!media.path) {
+      return media;
+    }
+
+    const path = normalizeAssetPath(media.path);
+
+    return { ...media, path: assets.has(path) ? path : undefined };
   }
 
-  const path = normalizeAssetPath(media.path);
-
-  return { ...media, path: assets.has(path) ? path : undefined };
+  return {
+    ...board,
+    images: board.images?.map(atPackagedPath),
+    sounds: board.sounds?.map(atPackagedPath),
+  };
 }
