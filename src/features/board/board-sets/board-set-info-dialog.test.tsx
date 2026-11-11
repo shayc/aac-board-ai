@@ -2,7 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { makeBoardSetRecord } from "../testing";
@@ -42,6 +42,27 @@ describe("BoardSetInfoDialog", () => {
       .element(screen.getByText("A starter vocabulary board."))
       .toBeInTheDocument();
 
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("scrolls a long description with the keyboard", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetInfoDialog
+        boardSet={makeBoardSetRecord({
+          description: "A line of the description.\n".repeat(200),
+        })}
+        onClose={vi.fn()}
+      />,
+    );
+    const details = screen.getByRole("region", { name: "Info" });
+    await expect.element(details).toBeVisible();
+
+    await userEvent.tab();
+    await expect.element(details).toHaveFocus();
+
+    await userEvent.keyboard("{End}");
+
+    await expect.poll(() => details.element().scrollTop).toBeGreaterThan(0);
     await expectNoA11yViolations(document.body);
   });
 

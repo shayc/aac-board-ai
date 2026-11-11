@@ -41,7 +41,18 @@ export function BoardSetInfoDialog({
         )}
       </DialogTitle>
 
-      <DialogContent sx={{ overflowX: "hidden", overflowY: "auto" }}>
+      <DialogContent
+        // A long description scrolls, and nothing inside it takes focus, so
+        // the scroller itself is the keyboard's way to read past the fold.
+        role="region"
+        aria-label={t(m.libraryInfo)}
+        tabIndex={0}
+        sx={{
+          overflowX: "hidden",
+          overflowY: "auto",
+          "&:focus-visible": { outlineOffset: -2 },
+        }}
+      >
         {chipLabels.length > 0 && (
           <Stack
             direction="row"
