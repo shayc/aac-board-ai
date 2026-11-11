@@ -106,13 +106,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
                 bottom: safeAreaGutter(theme.spacing(1), "bottom"),
                 left: safeAreaGutter(theme.spacing(1), "left"),
               }
-            : {
-                // MUI sets the wide-screen offset inside this media query,
-                // so a plain `top` would lose to it.
-                [theme.breakpoints.up("sm")]: {
-                  top: safeAreaGutter(theme.spacing(3), "top"),
-                },
-              }
+            : {}
         }
       >
         <Alert
