@@ -95,6 +95,11 @@ export function CommunicationBoard({
     />
   );
 
+  // On a small screen the buttons move to the bottom bar, which leaves this row
+  // with nothing to show unless suggestions are available. Its padding would
+  // otherwise leave an empty strip above the grid.
+  const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
+
   return (
     <ScanningScope>
       <Stack
@@ -108,35 +113,41 @@ export function CommunicationBoard({
       >
         <PlaybackMessageBar parts={message.parts} playback={playback} />
 
-        <Stack
-          {...scanGroupProps}
-          direction="row"
-          spacing={2}
-          sx={{
-            justifyContent: "space-between",
-            px: { xs: 2, sm: 3 },
-            // The message bar above keeps its own distance. Below, the grid
-            // pads itself by 16px at every width, so the row only adds what is
-            // missing to reach the page margin; on a wide screen that also
-            // keeps scrolled tiles from touching the buttons.
-            pb: { xs: 0, sm: 1 },
-          }}
-        >
-          <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-            {!isSmallScreen && navigationButtons}
+        {isActionRowVisible && (
+          <Stack
+            {...scanGroupProps}
+            direction="row"
+            spacing={2}
+            sx={{
+              justifyContent: "space-between",
+              px: { xs: 2, sm: 3 },
+              // The grid scrolls right under this row, and scrolled tiles keep
+              // 8px clear of what it holds. On a wide screen that is buttons as
+              // tall as the row, so all 8px go below it; the grid's own 16px
+              // then brings the space under the row to the page margin, the
+              // same as above it. A small screen shows only suggestions, which
+              // sit 4px inside the row: 4px more on each side gives them the
+              // same room and keeps the space around them even.
+              pt: { xs: 0.5, sm: 0 },
+              pb: { xs: 0.5, sm: 1 },
+            }}
+          >
+            <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
+              {!isSmallScreen && navigationButtons}
 
-            {suggestions.isSupported && (
-              <SuggestionBar
-                status={suggestions.status}
-                phrases={suggestions.phrases}
-                onEnable={suggestions.enable}
-                onPhraseSelect={message.replaceWithText}
-              />
-            )}
+              {suggestions.isSupported && (
+                <SuggestionBar
+                  status={suggestions.status}
+                  phrases={suggestions.phrases}
+                  onEnable={suggestions.enable}
+                  onPhraseSelect={message.replaceWithText}
+                />
+              )}
+            </Stack>
+
+            {!isSmallScreen && backspaceButton}
           </Stack>
-
-          {!isSmallScreen && backspaceButton}
-        </Stack>
+        )}
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <Grid<BoardButton>
