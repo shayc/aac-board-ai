@@ -94,16 +94,15 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         autoHideDuration={
           state.current?.durationMs ?? defaultDurationMs(severity)
         }
-        anchorOrigin={{
-          vertical: isSmallScreen ? "bottom" : "top",
-          horizontal: "center",
-        }}
+        // Top on every screen size: at the bottom of a phone it would sit on
+        // the board's Go back, Go home and Backspace buttons, and an error
+        // stays there until it is closed.
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
         sx={(theme) =>
           isSmallScreen
             ? {
                 right: safeAreaGutter(theme.spacing(1), "right"),
-                bottom: safeAreaGutter(theme.spacing(1), "bottom"),
                 left: safeAreaGutter(theme.spacing(1), "left"),
               }
             : {}

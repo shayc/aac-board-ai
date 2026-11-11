@@ -1,4 +1,6 @@
 import Stack from "@mui/material/Stack";
+import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { scanGroupProps } from "../scanning/scan-targets";
@@ -26,6 +28,7 @@ export function MessageBar({
   onPlay,
   onStop,
 }: MessageBarProps) {
+  const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,14 +87,26 @@ export function MessageBar({
       >
         <Stack
           ref={scrollContainerRef}
+          // No live region: each tile is already spoken aloud as it is added.
+          role="list"
+          aria-label={t(m.messageLabel)}
+          // A long message scrolls and its parts take no focus, so the
+          // scroller is the keyboard's way to read the rest of it. An empty
+          // message has nothing to read and stays out of the tab order.
+          tabIndex={parts.length > 0 ? 0 : undefined}
           direction="row"
-          sx={{
+          sx={(theme) => ({
             flexGrow: 1,
             alignItems: "center",
             py: 1,
             px: 2,
             overflow: "auto",
-          }}
+            // Rounded like the bar's leading end so the focus ring isn't
+            // clipped by it.
+            borderStartStartRadius: theme.vars.shape.borderRadiusFull,
+            borderEndStartRadius: theme.vars.shape.borderRadiusFull,
+            "&:focus-visible": { outlineOffset: -4 },
+          })}
         >
           {parts.map((part) => (
             <MessagePartItem
@@ -130,6 +145,7 @@ function MessagePartItem({
 }: MessagePartItemProps) {
   return (
     <Stack
+      role="listitem"
       direction="row"
       sx={(theme) => ({
         p: 1,

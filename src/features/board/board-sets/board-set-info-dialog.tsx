@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
@@ -32,14 +33,15 @@ export function BoardSetInfoDialog({
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle>
-        {boardSet?.name}
+      <Box sx={{ px: 3, py: 2 }}>
+        <DialogTitle sx={{ p: 0 }}>{boardSet?.name}</DialogTitle>
+
         {boardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {t(m.libraryByAuthor, { author: boardSet.author })}
           </Typography>
         )}
-      </DialogTitle>
+      </Box>
 
       <DialogContent
         // A long description scrolls, and nothing inside it takes focus, so
@@ -48,8 +50,12 @@ export function BoardSetInfoDialog({
         aria-label={t(m.libraryInfo)}
         tabIndex={0}
         sx={{
+          pt: 0,
           overflowX: "hidden",
           overflowY: "auto",
+          // Descriptions carry URLs and credits people need to copy; the app
+          // turns selection off globally for the board.
+          userSelect: "text",
           "&:focus-visible": { outlineOffset: -2 },
         }}
       >

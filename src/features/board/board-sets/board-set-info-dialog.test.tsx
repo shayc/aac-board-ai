@@ -28,12 +28,12 @@ describe("BoardSetInfoDialog", () => {
     );
 
     await expect
-      .element(screen.getByRole("dialog", { name: "Core Words By Jane" }))
+      .element(screen.getByRole("dialog", { name: "Core Words", exact: true }))
       .toBeVisible();
     await expect
-      .element(screen.getByRole("heading", { name: "Core Words By Jane" }))
+      .element(screen.getByRole("heading", { name: "Core Words", exact: true }))
       .toBeInTheDocument();
-    await expect.element(screen.getByText("By Jane")).toBeInTheDocument();
+    await expect.element(screen.getByText("By Jane")).toBeVisible();
     await expect
       .element(screen.getByText(/grid$/))
       .toHaveTextContent("2×3 grid");
@@ -64,6 +64,22 @@ describe("BoardSetInfoDialog", () => {
 
     await expect.poll(() => details.element().scrollTop).toBeGreaterThan(0);
     await expectNoA11yViolations(document.body);
+  });
+
+  test("lets the description be selected for copying", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetInfoDialog
+        boardSet={makeBoardSetRecord({
+          description: "Symbols from https://example.org/symbols",
+        })}
+        onClose={vi.fn()}
+      />,
+    );
+
+    const description = screen.getByText(/example\.org/);
+    await expect.element(description).toBeVisible();
+
+    expect(getComputedStyle(description.element()).userSelect).toBe("text");
   });
 
   test.each([
