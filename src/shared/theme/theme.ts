@@ -1,4 +1,3 @@
-import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
@@ -282,16 +281,6 @@ const themeOptions = {
           paddingTop: 12,
           paddingBottom: 12,
           ...buttonFeedbackTiming(theme),
-          variants: [
-            {
-              props: { variant: "contained", color: "inherit" },
-              style: theme.applyStyles("light", {
-                [`&.${buttonClasses.disabled}`]: {
-                  backgroundColor: "transparent",
-                },
-              }),
-            },
-          ],
         }),
       },
     },
