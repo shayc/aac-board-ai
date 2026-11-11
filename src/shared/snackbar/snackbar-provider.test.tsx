@@ -2,10 +2,12 @@ import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 import type { SnackbarOptions } from "./snackbar-context";
+import { SnackbarOutlet } from "./snackbar-outlet";
 import { useSnackbar } from "./use-snackbar";
 
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
@@ -139,6 +141,55 @@ describe("SnackbarProvider", () => {
       }
     },
   );
+
+  test("still shows a snackbar that replaces another as their outlet goes away", async () => {
+    function ReplaceAsOutletUnmounts() {
+      const { showSnackbar } = useSnackbar();
+      const [hasOutlet, setHasOutlet] = useState(true);
+
+      return (
+        <div style={{ position: "fixed", bottom: 0 }}>
+          <button
+            onClick={() =>
+              showSnackbar({ message: "first", durationMs: LONG_DURATION_MS })
+            }
+          >
+            show-first
+          </button>
+          <button
+            onClick={() => {
+              showSnackbar({ message: "second", durationMs: LONG_DURATION_MS });
+              setHasOutlet(false);
+            }}
+          >
+            replace-and-unmount
+          </button>
+          {hasOutlet && (
+            // Its own box at the top, so the hosted snackbar stays off the
+            // buttons.
+            <div style={{ position: "fixed", top: 0, width: 300, height: 100 }}>
+              <SnackbarOutlet />
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const screen = await render(
+      <AppProviders>
+        <ReplaceAsOutletUnmounts />
+      </AppProviders>,
+    );
+
+    await screen.getByRole("button", { name: "show-first" }).click();
+    await expect.element(screen.getByRole("status")).toHaveTextContent("first");
+
+    await screen.getByRole("button", { name: "replace-and-unmount" }).click();
+
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("second");
+  });
 
   describe("default duration", () => {
     const PAST_DEFAULT_DURATION_MS = 10_000;

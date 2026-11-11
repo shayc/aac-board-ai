@@ -5,13 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import {
-  type ReactNode,
-  type SyntheticEvent,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
   SnackbarContext,
@@ -32,17 +26,21 @@ interface SnackbarState {
   queue: readonly QueuedSnackbar[];
   current: QueuedSnackbar | undefined;
   open: boolean;
+  outlets: readonly HTMLElement[];
 }
 
 type SnackbarAction =
   | { type: "show"; snackbar: QueuedSnackbar }
   | { type: "close" }
-  | { type: "exited" };
+  | { type: "exited" }
+  | { type: "outletAdded"; outlet: HTMLElement }
+  | { type: "outletRemoved"; outlet: HTMLElement };
 
 const initialState: SnackbarState = {
   queue: [],
   current: undefined,
   open: false,
+  outlets: [],
 };
 
 interface SnackbarProviderProps {
@@ -53,8 +51,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
-  const [outlets, setOutlets] = useState<readonly HTMLElement[]>([]);
-  const outlet = outlets.at(-1);
+  const outlet = state.outlets.at(-1);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   function showSnackbar(options: SnackbarOptions | string) {
@@ -70,11 +67,9 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   }
 
   function registerOutlet(element: HTMLElement) {
-    setOutlets((current) => [...current, element]);
+    dispatch({ type: "outletAdded", outlet: element });
 
-    return () => {
-      setOutlets((current) => current.filter((other) => other !== element));
-    };
+    return () => dispatch({ type: "outletRemoved", outlet: element });
   }
 
   function handleClose(
@@ -222,16 +217,35 @@ function snackbarReducer(
     case "close":
       return { ...state, open: false };
 
-    case "exited": {
-      if (state.queue.length > 0) {
-        return {
-          current: state.queue[0],
-          queue: state.queue.slice(1),
-          open: true,
-        };
-      }
+    case "exited":
+      return showNextSnackbar(state);
 
-      return { ...state, current: undefined };
-    }
+    case "outletAdded":
+      return moveSnackbar(state, [...state.outlets, action.outlet]);
+
+    case "outletRemoved":
+      return moveSnackbar(
+        state,
+        state.outlets.filter((outlet) => outlet !== action.outlet),
+      );
   }
+}
+
+function showNextSnackbar(state: SnackbarState): SnackbarState {
+  const [next, ...queue] = state.queue;
+
+  return { ...state, current: next, queue, open: next !== undefined };
+}
+
+// Moving to another outlet mounts the snackbar afresh. One that was on its way
+// out mounts already closed and never reports its exit, so the exit is
+// finished here; otherwise nothing queued behind it would ever show.
+function moveSnackbar(
+  state: SnackbarState,
+  outlets: readonly HTMLElement[],
+): SnackbarState {
+  const moved = { ...state, outlets };
+  const isExiting = state.current !== undefined && !state.open;
+
+  return isExiting ? showNextSnackbar(moved) : moved;
 }
