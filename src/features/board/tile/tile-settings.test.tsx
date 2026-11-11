@@ -190,7 +190,7 @@ describe("TileSettings", () => {
 
     await expect
       .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "70%");
+      .toHaveAttribute("aria-valuetext", "50%");
   });
 
   test("keeps repeated label position controls synchronized and persists the choice", async () => {

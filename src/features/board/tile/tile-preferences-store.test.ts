@@ -51,7 +51,7 @@ describe("parseTilePreferences", () => {
   });
 
   test.each([
-    { brightness: 0.1, expected: 0.7 },
+    { brightness: 0.1, expected: 0.5 },
     { brightness: 5, expected: 1 },
   ])("clamps brightness $brightness into range", ({ brightness, expected }) => {
     expect(parseTilePreferences({ brightness }).brightness).toBe(expected);

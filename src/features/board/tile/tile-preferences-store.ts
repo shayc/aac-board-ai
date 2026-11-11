@@ -29,9 +29,10 @@ export const TILE_SATURATION: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-// 70% is the dimmest level whose symbols and labels were checked by eye.
+// A wide range leaves the choice to the user. Labels and the speaking
+// highlight keep their contrast down to this floor.
 export const TILE_BRIGHTNESS: ClampedNumberOptions = {
-  min: 0.7,
+  min: 0.5,
   max: 1,
   defaultValue: 1,
 };
