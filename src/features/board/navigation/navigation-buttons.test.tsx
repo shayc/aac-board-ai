@@ -2,6 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { NavigationButtons } from "./navigation-buttons";
 
 interface RenderOptions {
@@ -51,16 +52,23 @@ describe("NavigationButtons", () => {
     expect(onHome).toHaveBeenCalledOnce();
   });
 
-  test("disables unavailable navigation actions", async () => {
-    const { screen } = await renderButtons();
+  test("disables unavailable navigation actions while keeping them focusable", async () => {
+    const { onBack, onHome, screen } = await renderButtons();
+    const back = screen.getByRole("button", { name: "Go back" });
+    const home = screen.getByRole("button", { name: "Go home" });
 
-    await expect
-      .element(screen.getByRole("button", { name: "Go back" }))
-      .toBeDisabled();
+    await expect.element(back).toHaveAttribute("aria-disabled", "true");
+    await expect.element(home).toHaveAttribute("aria-disabled", "true");
 
-    await expect
-      .element(screen.getByRole("button", { name: "Go home" }))
-      .toBeDisabled();
+    await userEvent.tab();
+    await expect.element(back).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    await userEvent.tab();
+    await expect.element(home).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+
+    expect(onBack).not.toHaveBeenCalled();
+    expect(onHome).not.toHaveBeenCalled();
   });
 
   test.each([

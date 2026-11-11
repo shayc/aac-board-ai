@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
 
 function renderWithProviders(children: ReactNode) {
@@ -63,6 +64,25 @@ describe("BackspaceButton", () => {
 
     expect(handlers.onLongPress).toHaveBeenCalledTimes(1);
     expect(handlers.onPress).not.toHaveBeenCalled();
+  });
+
+  test("stays focusable and ignores presses while disabled", async () => {
+    const handlers = createHandlers();
+
+    const screen = await renderWithProviders(
+      <BackspaceButton {...handlers} disabled />,
+    );
+
+    const button = screen.getByRole("button", { name: "Backspace" });
+    await expect.element(button).toHaveAttribute("aria-disabled", "true");
+
+    button.element().focus();
+    await expect.element(button).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    longPress(button.element());
+
+    expect(handlers.onPress).not.toHaveBeenCalled();
+    expect(handlers.onLongPress).not.toHaveBeenCalled();
   });
 
   test.each([
