@@ -76,15 +76,15 @@ support from User-Agent strings.
 
 State has distinct owners and lifetimes:
 
-| State                 | Owner                                 | Contents                                                                                               |
-| --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                                                |
-| Active board          | React Router loaders                  | Stored `Board`, and its set's board list and root board, for the current route                         |
-| Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
-| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
-| Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
-| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, switch scanning, suggestion instructions, onboarding       |
-| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
+| State                 | Owner                                 | Contents                                                                                                           |
+| --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                                                            |
+| Active board          | React Router loaders                  | Stored `Board`, and its set's board list and root board, for the current route                                     |
+| Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                                       |
+| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                                         |
+| Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress             |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, board brightness, switch scanning, suggestion instructions, onboarding |
+| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                                |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding resolved board links and translations saved on
@@ -318,15 +318,16 @@ preferences.
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
 are relative to `src/features/board/`.
 
-| Area                   | Source                                                                                                 | Responsibility                                                                  |
-| ---------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                  |
-| Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                             |
-| Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                            |
-| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.   |
-| Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.    |
-| Switch scanning        | [scanning/](../src/features/board/scanning/)                                                           | Scan the board's controls with one or two switches; own scanning preferences.   |
-| Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text. |
+| Area                   | Source                                                                                                 | Responsibility                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
+| Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                   |
+| Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                              |
+| Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                             |
+| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.    |
+| Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.     |
+| Board brightness       | [brightness/](../src/features/board/brightness/)                                                       | Own the brightness preference and dim tiles, symbols, and the message bar alike. |
+| Switch scanning        | [scanning/](../src/features/board/scanning/)                                                           | Scan the board's controls with one or two switches; own scanning preferences.    |
+| Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text.  |
 
 ### App and shared code
 

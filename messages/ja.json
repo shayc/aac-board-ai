@@ -91,7 +91,7 @@
   "messageImages": "画像を表示",
   "messageHighlight": "読み上げ中にハイライト",
   "tileSaturation": "色の濃さ",
-  "tileBrightness": "明るさ",
+  "boardBrightness": "明るさ",
   "tileBorders": "枠線を表示",
   "tileLabelPlacement": "ラベル",
   "tileLabelTop": "上",

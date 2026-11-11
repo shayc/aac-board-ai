@@ -4,9 +4,9 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
-  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
+import { buttonFeedbackTiming } from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
@@ -75,16 +75,6 @@ function softShadow(elevation: number) {
 // Theme overrides follow MUI's state rules, so the sticky touch hover would
 // otherwise repaint the focused, error, and disabled outlines.
 const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
-
-function buttonFeedbackTiming(theme: Theme) {
-  return {
-    transitionDuration: `${theme.transitions.duration.shortest}ms`,
-    transitionTimingFunction: theme.transitions.easing.easeOut,
-    "&:active": {
-      transitionDuration: "0ms",
-    },
-  };
-}
 
 const themeOptions = {
   focusVisible: true,

@@ -5,10 +5,8 @@ import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import {
-  setTileBrightness,
-  setTileLabelPlacement,
-} from "./tile/tile-preferences-store";
+import { setBoardBrightness } from "./brightness/board-brightness-store";
+import { setTileLabelPlacement } from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
@@ -444,7 +442,7 @@ describe("CommunicationBoard", () => {
     });
 
     test("dims symbols on tiles and in the message alike", async () => {
-      setTileBrightness(0.6);
+      setBoardBrightness(0.6);
 
       const screen = await renderCommunicationBoard(SYMBOL_BOARD);
       const helloTile = screen.getByRole("button", { name: "hello" });

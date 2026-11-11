@@ -6,7 +6,8 @@ import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
-import type { BoardBrightnessStyle } from "../board-brightness";
+import type { BoardBrightnessStyle } from "../brightness/board-brightness";
+import { BOARD_BRIGHTNESS } from "../brightness/board-brightness-store";
 import type { BoardButton } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
 import {
@@ -19,7 +20,6 @@ import { Tile } from "./tile";
 import {
   setTileBordersVisible,
   setTileSaturation,
-  TILE_BRIGHTNESS,
 } from "./tile-preferences-store";
 
 const WCAG_TEXT_CONTRAST = 4.5;
@@ -74,7 +74,7 @@ function Unhoverable({ children }: { children: ReactNode }) {
 // hover tint to the colors under measurement.
 function Dimmed({ children }: { children: ReactNode }) {
   const style: BoardBrightnessStyle = {
-    "--board-brightness": TILE_BRIGHTNESS.min,
+    "--board-brightness": BOARD_BRIGHTNESS.min,
     pointerEvents: "none",
   };
 
@@ -325,7 +325,7 @@ describe("Tile", () => {
       styleOf(screen.getByRole("button", { name: "Dim" })).backgroundColor,
     );
 
-    const scale = TILE_BRIGHTNESS.min;
+    const scale = BOARD_BRIGHTNESS.min;
 
     expect(
       channelDistance(dimmed, [255 * scale, 204 * scale, 0]),
@@ -386,7 +386,7 @@ describe("Tile", () => {
     );
     const dimmed = paintBorder(screen.getByRole("button", { name: "Dim" }));
 
-    const scale = TILE_BRIGHTNESS.min;
+    const scale = BOARD_BRIGHTNESS.min;
 
     expect(
       channelDistance(dimmed, [red * scale, green * scale, blue * scale]),

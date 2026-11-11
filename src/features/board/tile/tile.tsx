@@ -4,7 +4,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { CSSProperties } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import { dim } from "../board-brightness";
+import { dim, dimmedSurface } from "../brightness/board-brightness";
 import type { BoardButton } from "../board-types";
 import { useTilePreferences } from "./tile-preferences-store";
 
@@ -60,7 +60,7 @@ function mixWithTextColor(color: string, amount: string): string {
 }
 
 function tileSx(theme: Theme) {
-  const background = dim(
+  const surface = dimmedSurface(
     `var(--tile-background-color, ${theme.vars.palette.background.paper})`,
   );
   const borderColor = dim("var(--tile-border-color, transparent)");
@@ -74,8 +74,7 @@ function tileSx(theme: Theme) {
     height: "100%",
     p: 1,
     overflow: "hidden",
-    color: `contrast-color(${background})`,
-    backgroundColor: background,
+    ...surface,
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
@@ -84,12 +83,12 @@ function tileSx(theme: Theme) {
     },
     "&:hover": {
       "@media (hover: hover)": {
-        backgroundColor: mixWithTextColor(background, "8%"),
+        backgroundColor: mixWithTextColor(surface.backgroundColor, "8%"),
         boxShadow: theme.vars.shadows[4],
       },
     },
     "&:active": {
-      backgroundColor: mixWithTextColor(background, "16%"),
+      backgroundColor: mixWithTextColor(surface.backgroundColor, "16%"),
       boxShadow: theme.vars.shadows[8],
     },
     [`&.${buttonClasses.focusVisible}`]: {

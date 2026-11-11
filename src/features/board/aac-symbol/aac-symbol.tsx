@@ -4,7 +4,7 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 import {
   brightnessTransition,
   symbolBrightnessFilter,
-} from "../board-brightness";
+} from "../brightness/board-brightness";
 
 export type SymbolLabelPlacement = "top" | "bottom";
 

@@ -3,7 +3,6 @@ import { parseTilePreferences } from "./tile-preferences-store";
 
 const DEFAULTS = {
   saturation: 1,
-  brightness: 1,
   areBordersVisible: false,
   labelPlacement: "top",
 };
@@ -23,7 +22,6 @@ describe("parseTilePreferences", () => {
   test("keeps valid stored values", () => {
     const stored = {
       saturation: 0.4,
-      brightness: 0.8,
       areBordersVisible: true,
       labelPlacement: "hidden",
     };
@@ -34,8 +32,6 @@ describe("parseTilePreferences", () => {
   test.each([
     { saturation: "high" },
     { saturation: NaN },
-    { brightness: "dim" },
-    { brightness: NaN },
     { areBordersVisible: "no" },
     { areBordersVisible: 0 },
     { labelPlacement: "center" },
@@ -48,12 +44,5 @@ describe("parseTilePreferences", () => {
     { saturation: 5, expected: 1 },
   ])("clamps saturation $saturation into range", ({ saturation, expected }) => {
     expect(parseTilePreferences({ saturation }).saturation).toBe(expected);
-  });
-
-  test.each([
-    { brightness: 0.1, expected: 0.5 },
-    { brightness: 5, expected: 1 },
-  ])("clamps brightness $brightness into range", ({ brightness, expected }) => {
-    expect(parseTilePreferences({ brightness }).brightness).toBe(expected);
   });
 });

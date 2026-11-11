@@ -149,7 +149,7 @@ describe("TileSettings", () => {
     });
   });
 
-  test("persists tile brightness when brightness is lowered", async () => {
+  test("persists board brightness when brightness is lowered", async () => {
     const screen = await render(
       <AppProviders>
         <TileSettings />
@@ -167,12 +167,7 @@ describe("TileSettings", () => {
     await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-preferences");
-      expect(stored).not.toBeNull();
-      const preferences = JSON.parse(stored ?? "{}") as {
-        brightness: number;
-      };
-      expect(preferences.brightness).toBe(0.9);
+      expect(localStorage.getItem("board-brightness")).toBe("0.9");
     });
   });
 

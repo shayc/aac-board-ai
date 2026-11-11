@@ -1,7 +1,10 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import { brightnessTransition, dim } from "../board-brightness";
+import {
+  brightnessTransition,
+  dimmedSurface,
+} from "../brightness/board-brightness";
 import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
@@ -18,15 +21,6 @@ export interface MessageBarProps {
 // Symbols are drawn for light backgrounds, so the bar stays a light surface in
 // dark mode; the scheme class makes everything inside it resolve light tokens.
 const LIGHT_SCHEME_CLASS = "light";
-
-function dimmedSurface(color: string) {
-  const background = dim(color);
-
-  return {
-    color: `contrast-color(${background})`,
-    backgroundColor: background,
-  };
-}
 
 export function MessageBar({
   parts,
