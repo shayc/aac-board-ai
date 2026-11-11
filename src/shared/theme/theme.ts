@@ -128,7 +128,12 @@ const themeOptions = {
         outline: outline.dark,
         Chip: { defaultBorder: outline.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
-        action: { active: "rgba(255, 255, 255, 0.7)" },
+        action: {
+          active: "rgba(255, 255, 255, 0.7)",
+          // MUI's 30% white stays too close to an enabled icon on dark
+          // surfaces; 20% matches the light scheme's disabled contrast.
+          disabled: "rgba(255, 255, 255, 0.2)",
+        },
       },
     },
   },
