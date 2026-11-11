@@ -157,6 +157,15 @@ const themeOptions = {
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        // Dark surfaces take two deliberate steps (background.default and
+        // background.paper); MUI's elevation overlay would add unplanned ones.
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
     MuiAppBar: {
       defaultProps: {
         color: "transparent",
@@ -183,7 +192,6 @@ const themeOptions = {
 
           return {
             backgroundColor: theme.vars.palette.background.default,
-            backgroundImage: "none",
             // Physical corners, like the drawer's own `left`/`right` offset, are
             // mirrored by the RTL stylis plugin, so the inner edge stays rounded.
             variants: [
