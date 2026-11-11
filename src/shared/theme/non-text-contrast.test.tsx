@@ -6,6 +6,7 @@ import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
 // WCAG 1.4.11 Non-text Contrast.
@@ -99,14 +100,33 @@ describe.each(SCHEMES)(
       expect(contrastRatio(mark, rail)).toBeGreaterThanOrEqual(MIN_CONTRAST);
     });
 
-    test("rings the selected list item in a color that shows against the page", async () => {
+    test("marks the selected list item with a dot that shows against the page", async () => {
       const screen = await renderControls(scheme);
-      const selected = getComputedStyle(screen.getByText("Selected").element());
+      const marker = getComputedStyle(
+        screen.getByText("Selected").element(),
+        "::after",
+      );
 
-      expect(selected.outlineStyle).toBe("solid");
+      expect(marker.content).not.toBe("none");
+      expect(marker.opacity).toBe("1");
+      expect(parseFloat(marker.width)).toBeGreaterThan(0);
       expect(
-        contrastRatio(selected.outlineColor, background),
+        contrastRatio(marker.backgroundColor, background),
       ).toBeGreaterThanOrEqual(MIN_CONTRAST);
+    });
+
+    test("keeps the keyboard focus ring for focus alone", async () => {
+      const screen = await renderControls(scheme);
+      const selected = screen.getByText("Selected");
+
+      expect(getComputedStyle(selected.element()).outlineStyle).toBe("none");
+
+      // Tabs through the switches and the slider first.
+      while (document.activeElement !== selected.element()) {
+        await userEvent.tab();
+      }
+
+      expect(getComputedStyle(selected.element()).outlineStyle).toBe("solid");
     });
   },
 );

@@ -369,11 +369,19 @@ const themeOptions = {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
           ...buttonFeedbackTiming(theme),
-          // The selected fill is a faint tint of the page, so the ring is the
-          // cue that reaches 3:1.
-          [`&.${listItemButtonClasses.selected}`]: {
-            outline: `2px solid ${theme.vars.palette.primary.main}`,
-            outlineOffset: -2,
+          // The selected fill is a faint tint of the page, so this dot is the
+          // cue that reaches 3:1. Not a ring: keyboard focus draws one. And
+          // `::after`, because `::before` is every button's press feedback.
+          [`&.${listItemButtonClasses.selected}::after`]: {
+            content: '""',
+            position: "absolute",
+            top: "50%",
+            insetInlineStart: 4,
+            width: 8,
+            height: 8,
+            backgroundColor: theme.vars.palette.primary.main,
+            borderRadius: "50%",
+            transform: "translateY(-50%)",
           },
         }),
       },
