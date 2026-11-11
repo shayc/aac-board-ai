@@ -44,6 +44,9 @@ export function AACSymbol({
             position: "relative",
             flexGrow: 1,
             height: "54px",
+            // When the symbol and label don't both fit, the image gives up the
+            // room; the label keeps its full line.
+            minHeight: 0,
             aspectRatio: "1 / 1",
           }}
         >
@@ -68,7 +71,7 @@ export function AACSymbol({
         noWrap
         variant={isImageShown ? "body2" : "h5"}
         sx={[
-          { lineHeight: 1.2, fontWeight: "fontWeightBold" },
+          { flexShrink: 0, lineHeight: 1.2, fontWeight: "fontWeightBold" },
           !isLabelShown && visuallyHidden,
         ]}
       >

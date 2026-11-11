@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { safeAreaInset } from "@shared/theme/safe-area";
+import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import type { Board, BoardButton } from "./board-types";
@@ -113,7 +112,16 @@ export function CommunicationBoard({
           {...scanGroupProps}
           direction="row"
           spacing={2}
-          sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
+          sx={{
+            justifyContent: "space-between",
+            px: { xs: 2, sm: 3 },
+            // On a wide screen the row holds buttons as tall as itself, and the
+            // grid scrolls right under them: the padding keeps scrolled tiles
+            // from touching the buttons, and matching it above keeps the gaps
+            // around the row equal. A small screen shows only suggestions here,
+            // which are shorter than the row and bring their own room.
+            py: { xs: 0, sm: 0.5 },
+          }}
         >
           <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
             {!isSmallScreen && navigationButtons}
@@ -144,18 +152,22 @@ export function CommunicationBoard({
         </Box>
 
         {isSmallScreen && (
-          <Toolbar
+          <Stack
             {...scanGroupProps}
-            sx={{
-              alignItems: "flex-end",
+            direction="row"
+            sx={(theme) => ({
               justifyContent: "space-between",
               gap: 2,
-              pb: safeAreaInset("bottom"),
-            }}
+              px: 2,
+              // The grid scrolls right above the buttons; the top padding
+              // keeps scrolled tiles from touching them.
+              pt: 1,
+              pb: safeAreaGutter(theme.spacing(1), "bottom"),
+            })}
           >
             {navigationButtons}
             {backspaceButton}
-          </Toolbar>
+          </Stack>
         )}
       </Stack>
     </ScanningScope>

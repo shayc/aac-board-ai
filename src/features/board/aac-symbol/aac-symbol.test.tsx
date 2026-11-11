@@ -7,9 +7,10 @@ import { AACSymbol } from "./aac-symbol";
 
 async function renderSymbol(
   props: Partial<ComponentProps<typeof AACSymbol>> = {},
+  height = 120,
 ) {
   const screen = await render(
-    <div style={{ width: 120, height: 120 }}>
+    <div style={{ width: 120, height }}>
       <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Action" {...props} />
     </div>,
   );
@@ -63,6 +64,15 @@ describe("AACSymbol", () => {
 
     expect(byDefault.label.top).toBeGreaterThanOrEqual(byDefault.image.bottom);
     expect(top.label.bottom).toBeLessThanOrEqual(top.image.top);
+  });
+
+  test("shrinks the image, not the label, when both don't fit the height", async () => {
+    const roomy = await renderSymbol();
+    const tight = await renderSymbol({}, 60);
+
+    expect(tight.label.height).toBe(roomy.label.height);
+    expect(tight.image.height).toBeLessThan(roomy.image.height);
+    expect(tight.image.bottom).toBeLessThanOrEqual(tight.label.top);
   });
 
   test("keeps a hidden label in the DOM without taking space from the image", async () => {

@@ -70,7 +70,11 @@ export function createGridContentSx(
       GRID_MIN_CELL_HEIGHT_PX,
     ),
     minWidth: createGridExtentExpression(GRID_CELL_WIDTH, columns),
-    minHeight: createGridExtentExpression(GRID_CELL_HEIGHT, rows),
+    // A definite height, not a minimum: rows share it equally, so a row is
+    // always the fitted cell height. With only a minimum the height would be
+    // indefinite, rows would size to their content, and a tile taller than the
+    // fitted height would push the next row's overflow hint out of view.
+    height: createGridExtentExpression(GRID_CELL_HEIGHT, rows),
     gap: GRID_GAP,
     p: GRID_PADDING,
     [theme.breakpoints.down("sm")]: createVisibleTrackQueries(

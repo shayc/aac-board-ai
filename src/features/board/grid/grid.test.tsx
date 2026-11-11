@@ -38,6 +38,7 @@ async function measureTracks(
   axis: Axis,
   containerSize: number,
   tracks: number,
+  { itemSize }: { itemSize?: number } = {},
 ) {
   const isColumns = axis === "columns";
   const items = Array.from({ length: tracks }, (_, index) => ({
@@ -59,7 +60,14 @@ async function measureTracks(
           items={items}
           rows={isColumns ? 1 : tracks}
           columns={isColumns ? tracks : 1}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+          renderItem={(item, props) => (
+            <button
+              {...props}
+              style={{ flexShrink: 0, [AXES[axis].size]: itemSize }}
+            >
+              {item.label}
+            </button>
+          )}
         />
       </div>
     </MUIThemeProvider>,
@@ -335,6 +343,19 @@ describe("Grid", () => {
           0,
         );
         expect(layout.overflows).toBe(tracks > visible);
+      },
+    );
+
+    test.each(["columns", "rows"] as const)(
+      "keeps %s at the fitted size when an item is larger than its cell",
+      async (axis) => {
+        const layout = await measureTracks(axis, 375, 20, { itemSize: 150 });
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.lastVisibleCellEnd).toBeCloseTo(
+          layout.viewportContentEnd,
+          0,
+        );
       },
     );
 
