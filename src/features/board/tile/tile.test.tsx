@@ -2,6 +2,7 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
@@ -417,6 +418,25 @@ describe("Tile", () => {
     assertDefined(symbol);
 
     expect(getComputedStyle(symbol).filter).toBe("brightness(0.8)");
+  });
+
+  test("eases its symbol with the same timing as its own colors", async () => {
+    // The app's theme sets the button timing the symbol has to match.
+    const screen = await render(
+      <AppProviders>{tileElement({ imageSrc: TEST_IMAGE_SRC })}</AppProviders>,
+    );
+    const tile = screen.getByRole("button", { name: "Word" });
+    const symbol = tile.element().querySelector("img");
+    assertDefined(symbol);
+    const tileStyles = styleOf(tile);
+    const symbolStyles = getComputedStyle(symbol);
+
+    expect(symbolStyles.transitionProperty).toBe("filter");
+    expect(symbolStyles.transitionDuration).not.toBe("0s");
+    expect(symbolStyles.transitionDuration).toBe(tileStyles.transitionDuration);
+    expect(symbolStyles.transitionTimingFunction).toBe(
+      tileStyles.transitionTimingFunction,
+    );
   });
 
   test("activates with its button when clicked", async () => {
