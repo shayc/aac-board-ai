@@ -112,9 +112,7 @@ export function CommunicationBoard({
           pr: { sm: safeAreaInset("right") },
         }}
       >
-        {/* The bars above the grid sit one page margin apart, and whichever is
-            last keeps the scroll clearance from the tiles below it. */}
-        <Stack spacing={PAGE_MARGIN} sx={{ pb: SCROLL_CLEARANCE }}>
+        <Stack spacing={PAGE_MARGIN}>
           <PlaybackMessageBar parts={message.parts} playback={playback} />
 
           {isActionRowVisible && (
@@ -142,7 +140,10 @@ export function CommunicationBoard({
           )}
         </Stack>
 
-        <Box sx={{ flex: 1, minHeight: 0 }}>
+        {/* The clearance sits above and below the grid at every size, so
+            scrolled tiles stop short of a bar and of the screen's bottom edge
+            alike. */}
+        <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
           <Grid<BoardButton>
             ref={gridViewportRef}
             ariaLabel={board.name || t(m.boardGridLabel)}
@@ -162,9 +163,9 @@ export function CommunicationBoard({
             sx={(theme) => ({
               justifyContent: "space-between",
               px: PAGE_MARGIN,
-              pt: SCROLL_CLEARANCE,
-              // As tight below the buttons as above them: this bar is all the
-              // margin the screen's bottom edge gets, plus the safe area.
+              // As tight below the buttons as the clearance above them: this
+              // bar is all the margin the screen's bottom edge gets, plus the
+              // safe area.
               pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
             })}
           >

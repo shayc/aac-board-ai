@@ -110,11 +110,7 @@ function measureBoardLayout(
     (row) =>
       row.top >= viewport.top - 0.5 && row.bottom <= viewport.bottom + 0.5,
   );
-  const firstWholeRow = wholeRows.at(0);
-  const lastWholeRow = wholeRows.at(-1);
   const firstColumn = columns.at(0);
-  assertDefined(firstWholeRow);
-  assertDefined(lastWholeRow);
   assertDefined(firstColumn);
 
   const rowAbove = rows.find(
@@ -132,8 +128,12 @@ function measureBoardLayout(
   const barAboveBottom = isBarBelowGrid
     ? messageBar.getBoundingClientRect().bottom
     : backspace.bottom;
+  // Without a bar below the grid, the screen's bottom edge is what is below.
+  const edgeBelowTop = isBarBelowGrid ? backspace.top : window.innerHeight;
   const firstRow = rows.at(0);
+  const lastRow = rows.at(-1);
   assertDefined(firstRow);
+  assertDefined(lastRow);
 
   return {
     messageBarStart: messageBar.getBoundingClientRect().left,
@@ -142,10 +142,8 @@ function measureBoardLayout(
     barToGrid: isBarBelowGrid
       ? backspace.top - viewport.bottom
       : viewport.top - backspace.bottom,
-    barToNearestTile: isBarBelowGrid
-      ? backspace.top - lastWholeRow.bottom
-      : firstWholeRow.top - backspace.bottom,
     barAboveToFirstRow: firstRow.top - barAboveBottom,
+    lastRowToEdgeBelow: edgeBelowTop - lastRow.bottom,
     wholeRows: wholeRows.length,
     topHint: rowAbove ? rowAbove.bottom - viewport.top : 0,
     bottomHint: rowBelow ? viewport.bottom - rowBelow.top : 0,
@@ -198,7 +196,9 @@ describe("CommunicationBoard", () => {
     // The board fills the screen below the app header, which takes 57px below
     // the "sm" breakpoint and 65px from it: these are a 375 x 812 phone and a
     // 1024 x 768 tablet. A bar and the nearest tile are one page margin apart,
-    // and scrolled tiles pass a bar's controls at the clearance.
+    // and scrolled tiles pass a bar's controls at the clearance. Scrolled to
+    // the end, the last row is one page margin above the phone's bottom bar or
+    // the tablet's bottom edge.
     const LAYOUT_CASES = [
       {
         name: "a phone",
@@ -206,7 +206,7 @@ describe("CommunicationBoard", () => {
         height: 755,
         pageMargin: 16,
         clearance: 4,
-        sideHint: 8,
+        overflowHint: 8,
         wholeRows: 5,
       },
       {
@@ -215,14 +215,21 @@ describe("CommunicationBoard", () => {
         height: 703,
         pageMargin: 24,
         clearance: 8,
-        sideHint: 16,
+        overflowHint: 16,
         wholeRows: 4,
       },
     ];
 
     test.each(LAYOUT_CASES)(
       "spaces the bars and the grid by the page margin on $name",
-      async ({ width, height, pageMargin, clearance, sideHint, wholeRows }) => {
+      async ({
+        width,
+        height,
+        pageMargin,
+        clearance,
+        overflowHint,
+        wholeRows,
+      }) => {
         const originalWidth = window.innerWidth;
         const originalHeight = window.innerHeight;
         try {
@@ -237,14 +244,14 @@ describe("CommunicationBoard", () => {
           expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
           expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
           expect(atStart.wholeRows).toBe(wholeRows);
-          expect(atStart.bottomHint).toBeCloseTo(8, 0);
-          expect(atStart.sideHint).toBeCloseTo(sideHint, 0);
+          expect(atStart.bottomHint).toBeCloseTo(overflowHint, 0);
+          expect(atStart.sideHint).toBeCloseTo(overflowHint, 0);
 
           const atEnd = measureBoardLayout(screen.container, {
             isScrolledToEnd: true,
           });
-          expect(atEnd.barToNearestTile).toBeCloseTo(pageMargin, 0);
-          expect(atEnd.topHint).toBeCloseTo(8, 0);
+          expect(atEnd.lastRowToEdgeBelow).toBeCloseTo(pageMargin, 0);
+          expect(atEnd.topHint).toBeCloseTo(overflowHint, 0);
         } finally {
           await page.viewport(originalWidth, originalHeight);
         }

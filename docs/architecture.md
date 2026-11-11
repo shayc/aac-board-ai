@@ -293,10 +293,11 @@ The message bar, the bars around the grid, and the grid read their spacing from
 between any two of them changes in one place. Two values exist for each side of
 the `sm` breakpoint: the page margin and the scroll clearance.
 
-- The bars above the grid sit one page margin apart. Whichever bar is next to
-  the grid, above or below, pads the edge the grid scrolls against by the
-  scroll clearance. The grid pads its top and bottom by the page margin minus
-  that clearance, so a bar and the nearest tile are one page margin apart.
+- The bars above the grid sit one page margin apart. The board keeps the scroll
+  clearance above and below the grid at every size, whether a bar or the
+  screen's edge is next to it. The grid pads its top and bottom by the page
+  margin minus that clearance, so its first and last rows are one page margin
+  from whatever is next to them, the same as its sides.
 - The grid's
   [layout](../src/features/board/grid/grid-layout.ts) takes a padding and an
   overflow hint for each axis. Changing a padding does not change a hint.
@@ -420,8 +421,8 @@ AI availability, provisioning, and session lifecycle to
   speak.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
-- **Scroll clearance** — the room a bar keeps between its controls and the tiles
-  scrolling past it.
+- **Scroll clearance** — the room kept above and below the grid, between the
+  tiles scrolling past and a bar's controls or the screen's edge.
 - **Overflow hint** — the part of the next row or column that shows past the
   grid's edge, so the user can tell the board scrolls that way.
 - **Inset** — the part of the grid's viewport that whole rows or columns leave

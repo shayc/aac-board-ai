@@ -6,7 +6,8 @@
 // bar and the next.
 export const PAGE_MARGIN = { xs: 2, sm: 3 } as const;
 
-// Room a bar keeps between its controls and the tiles scrolling past it. The
-// grid pads itself by the page margin minus this, so a bar and the nearest
-// tile end up one page margin apart.
+// Room kept above and below the grid, between the tiles scrolling past and a
+// bar's controls or the screen's edge. The grid pads its top and bottom by the
+// page margin minus this, so its first and last rows end up one page margin
+// from whatever is next to them.
 export const SCROLL_CLEARANCE = { xs: 0.5, sm: 1 } as const;

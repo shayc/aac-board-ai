@@ -51,8 +51,9 @@ interface GridSpacing {
 
 // The side padding is the page margin, so tiles line up with the bars around
 // the grid. The top and bottom padding is the page margin minus the clearance
-// the bars next to the grid already keep, so a bar and the nearest tile end up
-// one page margin apart. Keyed like the board's spacing: below and from "sm".
+// the board keeps above and below the grid, so the first and last rows end up
+// one page margin from whatever is next to them. Keyed like the board's
+// spacing: below and from "sm".
 const GRID_SPACING: Record<"xs" | "sm", GridSpacing> = {
   xs: {
     inline: {
@@ -71,7 +72,7 @@ const GRID_SPACING: Record<"xs" | "sm", GridSpacing> = {
     },
     block: {
       paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm - SCROLL_CLEARANCE.sm),
-      overflowHintPx: 8,
+      overflowHintPx: 16,
     },
   },
 };
