@@ -107,7 +107,7 @@ const themeOptions = {
     light: {
       palette: {
         primary: { main: "#0b7468" },
-        // Informational notices use the brand colour; MUI's default blue would
+        // Informational notices use the brand color; MUI's default blue would
         // be the only blue in the app.
         info: { main: "#0b7468" },
         grey,

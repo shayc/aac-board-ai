@@ -13,7 +13,7 @@ const cssVariableTheme = createTheme({ cssVariables: true });
 
 // The test viewport is below "sm", where the grid uses compact padding.
 const PADDING_PX = 16;
-const MIN_CELL_SIZE_PX = { columns: 88, rows: 96 };
+const MIN_CELL_SIZES_PX = { columns: 88, rows: 96 };
 
 const AXES = {
   columns: {
@@ -329,7 +329,7 @@ describe("Grid", () => {
         const layout = await measureTracks(axis, containerSize, tracks);
 
         expect(layout.visibleCellCount).toBe(visible);
-        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX[axis]);
+        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZES_PX[axis]);
         expect(layout.lastVisibleCellEnd).toBeCloseTo(
           layout.viewportContentEnd,
           0,
@@ -343,7 +343,7 @@ describe("Grid", () => {
       async (axis) => {
         const layout = await measureTracks(axis, 80, 1);
 
-        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX[axis]);
+        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZES_PX[axis]);
         expect(layout.overflows).toBe(true);
       },
     );
