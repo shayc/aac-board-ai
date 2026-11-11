@@ -1,10 +1,11 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
+import { contrastRatio, paint, relativeLuminance } from "../testing/colors";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
 
@@ -99,6 +100,50 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("I")).toBeVisible();
     expect(screen.container.querySelectorAll("img")).toHaveLength(1);
   });
+
+  test.each(["light", "dark"] as const)(
+    "dims its surface with the board and keeps labels readable in the %s scheme",
+    async (scheme) => {
+      const dimmedStyle: CSSProperties & { "--board-brightness": number } = {
+        "--board-brightness": 0.5,
+      };
+      const parts = [{ id: "1", label: "Hello" }];
+      localStorage.setItem("mui-mode", scheme);
+
+      const screen = await renderWithProviders(
+        <>
+          <div data-testid="bright">
+            <MessageBar {...createProps({ parts })} />
+          </div>
+          <div data-testid="dimmed" style={dimmedStyle}>
+            <MessageBar {...createProps({ parts })} />
+          </div>
+        </>,
+      );
+      const surfaceColors = (testId: string) => {
+        const label = screen.getByTestId(testId).getByText("Hello").element();
+        const surface = label.closest(".light");
+        assertDefined(surface);
+
+        return {
+          text: paint(getComputedStyle(label).color),
+          background: paint(getComputedStyle(surface).backgroundColor),
+        };
+      };
+      const bright = surfaceColors("bright");
+      const dimmed = surfaceColors("dimmed");
+
+      expect(relativeLuminance(bright.background) > 0.9).toBe(
+        scheme === "light",
+      );
+      expect(relativeLuminance(dimmed.background)).toBeLessThan(
+        relativeLuminance(bright.background),
+      );
+      expect(
+        contrastRatio(dimmed.text, dimmed.background),
+      ).toBeGreaterThanOrEqual(4.5);
+    },
+  );
 
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {

@@ -10,8 +10,10 @@ import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import {
   setTileBordersVisible,
+  setTileBrightness,
   setTileLabelPlacement,
   setTileSaturation,
+  TILE_BRIGHTNESS,
   TILE_SATURATION,
   useTilePreferences,
   type TileLabelPlacement,
@@ -59,7 +61,7 @@ export function TileSettings() {
   const t = useTranslate();
   const uiLocale = useUILocale();
   const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
-  const { saturation, areBordersVisible, labelPlacement } =
+  const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
   return (
@@ -87,6 +89,16 @@ export function TileSettings() {
         onChange={setTileSaturation}
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
+        step={0.1}
+        formatValue={(value) => percentFormat.format(value)}
+      />
+
+      <SettingsSlider
+        label={t(m.tileBrightness)}
+        value={brightness}
+        onChange={setTileBrightness}
+        min={TILE_BRIGHTNESS.min}
+        max={TILE_BRIGHTNESS.max}
         step={0.1}
         formatValue={(value) => percentFormat.format(value)}
       />

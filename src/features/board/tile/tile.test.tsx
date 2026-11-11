@@ -2,20 +2,23 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import { assertDefined } from "@shared/testing/assert-defined";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
 import type { BoardButton } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
+import {
+  contrastRatio,
+  paint,
+  relativeLuminance,
+  type Rgb,
+} from "../testing/colors";
 import { Tile } from "./tile";
 import {
   setTileBordersVisible,
   setTileSaturation,
 } from "./tile-preferences-store";
-
-type Rgb = readonly [red: number, green: number, blue: number];
 
 const WCAG_TEXT_CONTRAST = 4.5;
 const WCAG_NON_TEXT_CONTRAST = 3;
@@ -42,48 +45,6 @@ function tileElement(overrides: Partial<BoardButton>) {
   );
 }
 
-function paint(...cssColors: string[]): Rgb {
-  const context = new OffscreenCanvas(1, 1).getContext("2d");
-  assertDefined(context);
-
-  for (const cssColor of cssColors) {
-    context.fillStyle = cssColor;
-    context.fillRect(0, 0, 1, 1);
-  }
-
-  const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data;
-  assertDefined(red);
-  assertDefined(green);
-  assertDefined(blue);
-  expect(alpha, `painting ${cssColors.join(", ")} must end opaque`).toBe(255);
-
-  return [red, green, blue];
-}
-
-function linearizeChannel(channel: number): number {
-  const value = channel / 255;
-
-  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-}
-
-function relativeLuminance([red, green, blue]: Rgb): number {
-  return (
-    0.2126 * linearizeChannel(red) +
-    0.7152 * linearizeChannel(green) +
-    0.0722 * linearizeChannel(blue)
-  );
-}
-
-function contrastRatio(first: Rgb, second: Rgb): number {
-  const firstLuminance = relativeLuminance(first) + 0.05;
-  const secondLuminance = relativeLuminance(second) + 0.05;
-
-  return (
-    Math.max(firstLuminance, secondLuminance) /
-    Math.min(firstLuminance, secondLuminance)
-  );
-}
-
 function channelDistance(
   [red, green, blue]: Rgb,
   [otherRed, otherGreen, otherBlue]: Rgb,
@@ -105,6 +66,17 @@ function backgroundLuminance(tile: Locator): number {
 
 function Unhoverable({ children }: { children: ReactNode }) {
   return <div style={{ pointerEvents: "none" }}>{children}</div>;
+}
+
+// Unhoverable, so a pointer left over a tile by an earlier test can't add the
+// hover tint to the colors under measurement.
+function Dimmed({ children }: { children: ReactNode }) {
+  const style: CSSProperties & { "--board-brightness": number } = {
+    "--board-brightness": 0.5,
+    pointerEvents: "none",
+  };
+
+  return <div style={style}>{children}</div>;
 }
 
 async function measureLuminanceOnHover(backgroundColor?: string) {
@@ -339,6 +311,78 @@ describe("Tile", () => {
     expect(Math.max(...channels) - Math.min(...channels)).toBeLessThanOrEqual(
       1,
     );
+  });
+
+  test("halves each background channel at half board brightness", async () => {
+    const screen = await renderInTheme(
+      <Dimmed>
+        {tileElement({ label: "Dim", backgroundColor: "#ffcc00" })}
+      </Dimmed>,
+    );
+    const dimmed = paint(
+      styleOf(screen.getByRole("button", { name: "Dim" })).backgroundColor,
+    );
+
+    expect(channelDistance(dimmed, [128, 102, 0])).toBeLessThanOrEqual(1);
+  });
+
+  test("dims a tile that has no background color of its own", async () => {
+    const screen = await renderInTheme(
+      <>
+        <Unhoverable>{tileElement({ label: "Bright" })}</Unhoverable>
+        <Dimmed>{tileElement({ label: "Dim" })}</Dimmed>
+      </>,
+    );
+
+    expect(
+      backgroundLuminance(screen.getByRole("button", { name: "Dim" })),
+    ).toBeLessThan(
+      backgroundLuminance(screen.getByRole("button", { name: "Bright" })),
+    );
+  });
+
+  test.each(["#ffffff", "#ffeb3b", "#3f51b5"])(
+    "keeps the label readable on a dimmed %s background",
+    async (backgroundColor) => {
+      const screen = await renderInTheme(
+        <Dimmed>{tileElement({ backgroundColor })}</Dimmed>,
+      );
+      const { color, backgroundColor: background } = styleOf(
+        screen.getByRole("button", { name: "Word" }),
+      );
+
+      expect(
+        contrastRatio(paint(color), paint(background)),
+      ).toBeGreaterThanOrEqual(WCAG_TEXT_CONTRAST);
+    },
+  );
+
+  test("dims a translucent border by the same amount as the background", async () => {
+    const colors = {
+      backgroundColor: "#ffffff",
+      borderColor: "rgb(0 128 255 / 0.5)",
+    };
+    const paintBorder = (tile: Locator) => {
+      const styles = styleOf(tile);
+
+      return paint(styles.backgroundColor, styles.borderTopColor);
+    };
+
+    setTileBordersVisible(true);
+    const screen = await renderInTheme(
+      <>
+        <Unhoverable>{tileElement({ label: "Bright", ...colors })}</Unhoverable>
+        <Dimmed>{tileElement({ label: "Dim", ...colors })}</Dimmed>
+      </>,
+    );
+    const [red, green, blue] = paintBorder(
+      screen.getByRole("button", { name: "Bright" }),
+    );
+    const dimmed = paintBorder(screen.getByRole("button", { name: "Dim" }));
+
+    expect(
+      channelDistance(dimmed, [red / 2, green / 2, blue / 2]),
+    ).toBeLessThanOrEqual(1);
   });
 
   test("activates with its button when clicked", async () => {

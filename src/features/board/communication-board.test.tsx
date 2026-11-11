@@ -5,7 +5,10 @@ import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { setTileLabelPlacement } from "./tile/tile-preferences-store";
+import {
+  setTileBrightness,
+  setTileLabelPlacement,
+} from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
@@ -438,6 +441,24 @@ describe("CommunicationBoard", () => {
 
       await expect.element(helloTile).toBeVisible();
       expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    });
+
+    test("dims symbols on tiles and in the message alike", async () => {
+      setTileBrightness(0.6);
+
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const helloTile = screen.getByRole("button", { name: "hello" });
+      await expect.element(helloTile).toBeVisible();
+      const tileImageCount = screen.container.querySelectorAll("img").length;
+
+      await helloTile.click();
+
+      await expect
+        .poll(() => screen.container.querySelectorAll("img"))
+        .toHaveLength(tileImageCount + 1);
+      for (const image of screen.container.querySelectorAll("img")) {
+        expect(getComputedStyle(image).filter).toBe("brightness(0.6)");
+      }
     });
 
     test("shows message parts as labels only when message images are hidden", async () => {

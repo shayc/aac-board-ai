@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
+import { symbolBrightnessFilter } from "../board-brightness";
 
 export type SymbolLabelPlacement = "top" | "bottom";
 
@@ -58,6 +59,7 @@ export function AACSymbol({
               width: "100%",
               height: "100%",
               objectFit: "contain",
+              filter: symbolBrightnessFilter,
               pointerEvents: "none",
             }}
           />

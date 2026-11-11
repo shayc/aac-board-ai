@@ -1,6 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
+import { dim } from "../board-brightness";
 import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
@@ -17,6 +18,15 @@ export interface MessageBarProps {
 // Symbols are drawn for light backgrounds, so the bar stays a light surface in
 // dark mode; the scheme class makes everything inside it resolve light tokens.
 const LIGHT_SCHEME_CLASS = "light";
+
+function dimmedSurface(color: string) {
+  const background = dim(color);
+
+  return {
+    color: `contrast-color(${background})`,
+    backgroundColor: background,
+  };
+}
 
 export function MessageBar({
   parts,
@@ -61,25 +71,25 @@ export function MessageBar({
         className={LIGHT_SCHEME_CLASS}
         direction="row"
         sx={[
-          {
+          (theme) => ({
             flexGrow: 1,
             gap: 2,
             overflow: "hidden",
             border: 1,
             borderColor: "transparent",
-            borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
-            color: "text.primary",
-            bgcolor: "background.paper",
+            borderRadius: theme.vars.shape.borderRadiusFull,
+            ...dimmedSurface(theme.vars.palette.background.paper),
             colorScheme: "light",
-          },
+          }),
           (theme) =>
             theme.applyStyles("light", {
               boxShadow: theme.vars.shadows[1],
             }),
           (theme) =>
-            theme.applyStyles("dark", {
-              bgcolor: theme.vars.palette.grey[400],
-            }),
+            theme.applyStyles(
+              "dark",
+              dimmedSurface(theme.vars.palette.grey[400]),
+            ),
         ]}
       >
         <Stack

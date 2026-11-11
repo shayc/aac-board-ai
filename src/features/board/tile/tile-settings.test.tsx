@@ -27,7 +27,14 @@ describe("TileSettings", () => {
     await expect
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "100%");
-    await expect.element(screen.getByText("100%")).toBeVisible();
+
+    const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
+
+    await expect.element(brightnessSlider).toBeVisible();
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "100%");
+    expect(screen.getByText("100%").all()).toHaveLength(2);
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
@@ -140,6 +147,50 @@ describe("TileSettings", () => {
       };
       expect(preferences.saturation).toBe(valueNow);
     });
+  });
+
+  test("persists tile brightness when brightness is lowered", async () => {
+    const screen = await render(
+      <AppProviders>
+        <TileSettings />
+      </AppProviders>,
+    );
+
+    const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
+
+    brightnessSlider.element().focus();
+    await userEvent.keyboard("{ArrowLeft}");
+
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "90%");
+    await expect.element(screen.getByText("90%")).toBeVisible();
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("tile-preferences");
+      expect(stored).not.toBeNull();
+      const preferences = JSON.parse(stored ?? "{}") as {
+        brightness: number;
+      };
+      expect(preferences.brightness).toBe(0.9);
+    });
+  });
+
+  test("stops lowering brightness at half", async () => {
+    const screen = await render(
+      <AppProviders>
+        <TileSettings />
+      </AppProviders>,
+    );
+
+    const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
+
+    brightnessSlider.element().focus();
+    await userEvent.keyboard("{Home}");
+
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "50%");
   });
 
   test("keeps repeated label position controls synchronized and persists the choice", async () => {
