@@ -1,13 +1,22 @@
 import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
+import {
+  type ReactNode,
+  type SyntheticEvent,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
 import {
   SnackbarContext,
   type SnackbarContextValue,
+  SnackbarOutletContext,
   type SnackbarOptions,
   type SnackbarSeverity,
 } from "./snackbar-context";
@@ -44,6 +53,8 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
+  const [outlets, setOutlets] = useState<readonly HTMLElement[]>([]);
+  const outlet = outlets.at(-1);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   function showSnackbar(options: SnackbarOptions | string) {
@@ -56,6 +67,14 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     };
 
     dispatch({ type: "show", snackbar });
+  }
+
+  function registerOutlet(element: HTMLElement) {
+    setOutlets((current) => [...current, element]);
+
+    return () => {
+      setOutlets((current) => current.filter((other) => other !== element));
+    };
   }
 
   function handleClose(
@@ -83,56 +102,90 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       ? state.current.message(t)
       : state.current?.message;
 
+  const isAtBottom = isSmallScreen || outlet !== undefined;
+
+  const snackbar = (
+    <Snackbar
+      key={state.current?.key}
+      open={state.open}
+      onClose={handleClose}
+      autoHideDuration={
+        state.current?.durationMs ?? defaultDurationMs(severity)
+      }
+      anchorOrigin={{
+        vertical: isAtBottom ? "bottom" : "top",
+        horizontal: "center",
+      }}
+      slotProps={{ transition: { onExited: handleExited } }}
+      sx={(theme) =>
+        snackbarPlacementSx(theme, {
+          isInOutlet: outlet !== undefined,
+          isSmallScreen,
+        })
+      }
+    >
+      <Alert
+        role={isUrgent(severity) ? "alert" : "status"}
+        closeText={t(m.close)}
+        action={state.current?.action}
+        severity={severity}
+        onClose={handleClose}
+        sx={(theme) => ({
+          width: "100%",
+          color: theme.vars.palette.SnackbarContent.color,
+          backgroundColor: theme.vars.palette.SnackbarContent.bg,
+          boxShadow: theme.vars.shadows[6],
+          [`& .${alertClasses.icon}`]: {
+            color: theme.colorSchemes.dark?.palette[severity].main,
+            ...theme.applyStyles("dark", {
+              color: theme.colorSchemes.light?.palette[severity].main,
+            }),
+          },
+        })}
+      >
+        {message}
+      </Alert>
+    </Snackbar>
+  );
+
   return (
     <SnackbarContext value={contextValue}>
-      {children}
+      <SnackbarOutletContext value={registerOutlet}>
+        {children}
+      </SnackbarOutletContext>
 
-      <Snackbar
-        key={state.current?.key}
-        open={state.open}
-        onClose={handleClose}
-        autoHideDuration={
-          state.current?.durationMs ?? defaultDurationMs(severity)
-        }
-        anchorOrigin={{
-          vertical: isSmallScreen ? "bottom" : "top",
-          horizontal: "center",
-        }}
-        slotProps={{ transition: { onExited: handleExited } }}
-        sx={(theme) =>
-          isSmallScreen
-            ? {
-                right: safeAreaGutter(theme.spacing(1), "right"),
-                bottom: safeAreaGutter(theme.spacing(1), "bottom"),
-                left: safeAreaGutter(theme.spacing(1), "left"),
-              }
-            : {}
-        }
-      >
-        <Alert
-          role={isUrgent(severity) ? "alert" : "status"}
-          closeText={t(m.close)}
-          action={state.current?.action}
-          severity={severity}
-          onClose={handleClose}
-          sx={(theme) => ({
-            width: "100%",
-            color: theme.vars.palette.SnackbarContent.color,
-            backgroundColor: theme.vars.palette.SnackbarContent.bg,
-            boxShadow: theme.vars.shadows[6],
-            [`& .${alertClasses.icon}`]: {
-              color: theme.colorSchemes.dark?.palette[severity].main,
-              ...theme.applyStyles("dark", {
-                color: theme.colorSchemes.light?.palette[severity].main,
-              }),
-            },
-          })}
-        >
-          {message}
-        </Alert>
-      </Snackbar>
+      {outlet ? createPortal(snackbar, outlet) : snackbar}
     </SnackbarContext>
   );
+}
+
+interface SnackbarPlacement {
+  isInOutlet: boolean;
+  isSmallScreen: boolean;
+}
+
+function snackbarPlacementSx(
+  theme: Theme,
+  { isInOutlet, isSmallScreen }: SnackbarPlacement,
+) {
+  const edgeInsets = {
+    right: safeAreaGutter(theme.spacing(1), "right"),
+    bottom: safeAreaGutter(theme.spacing(1), "bottom"),
+    left: safeAreaGutter(theme.spacing(1), "left"),
+  };
+
+  // Inside a drawer the snackbar belongs to the drawer: it spans the drawer's
+  // width and moves with it instead of the viewport. MUI centers wide-screen
+  // snackbars from a media query, which only the same query can override.
+  if (isInOutlet) {
+    return {
+      position: "absolute",
+      ...edgeInsets,
+      [theme.breakpoints.up("sm")]: { ...edgeInsets, transform: "none" },
+    };
+  }
+
+  return isSmallScreen ? edgeInsets : {};
 }
 
 function isUrgent(severity: SnackbarSeverity) {

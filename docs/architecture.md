@@ -93,7 +93,11 @@ this device. Board-set records keep their translated names alongside.
 without rewriting stored records. Storage schema changes require a versioned
 migration in [`boards-db.ts`](../src/features/board/storage/boards-db.ts).
 
-React Context provides theme, playback controls, and snackbar access.
+React Context provides theme, playback controls, and snackbar access. Snackbars
+render in the page unless a modal surface mounts a
+[`SnackbarOutlet`](../src/shared/snackbar/snackbar-outlet.tsx): an open drawer
+hides the page from assistive technology and traps focus, so the drawer hosts
+the snackbar while it is open.
 Components subscribe to external stores through `useExternalStore`, a
 `useSyncExternalStore` wrapper that takes an optional selector.
 

@@ -16,3 +16,9 @@ export interface SnackbarContextValue {
 }
 
 export const SnackbarContext = createContext<SnackbarContextValue | null>(null);
+
+/** Registers an element to host snackbars; returns its unregister function. */
+export type RegisterSnackbarOutlet = (outlet: HTMLElement) => () => void;
+
+export const SnackbarOutletContext =
+  createContext<RegisterSnackbarOutlet | null>(null);

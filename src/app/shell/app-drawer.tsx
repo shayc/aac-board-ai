@@ -5,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { SnackbarOutlet } from "@shared/snackbar/snackbar-outlet";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { useState, type ReactNode } from "react";
 
@@ -46,6 +47,8 @@ export function AppDrawer({
       <AppDrawerContent title={title} closeLabel={closeLabel} onClose={onClose}>
         {children}
       </AppDrawerContent>
+
+      <SnackbarOutlet />
     </Drawer>
   );
 }
