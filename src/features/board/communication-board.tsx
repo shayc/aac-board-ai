@@ -6,6 +6,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
+import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -120,12 +121,10 @@ export function CommunicationBoard({
             spacing={2}
             sx={{
               justifyContent: "space-between",
-              px: { xs: 2, sm: 3 },
-              // The grid scrolls right under this row; the bottom padding
-              // keeps scrolled tiles from touching what it holds. Nothing
-              // scrolls above it, and the message bar keeps its own distance.
-              // A small screen uses half, like its bottom bar.
-              pb: { xs: 0.5, sm: 1 },
+              px: PAGE_MARGIN,
+              // Nothing scrolls above this row, and the message bar keeps its
+              // own distance, so only the bottom needs clearance.
+              pb: SCROLL_CLEARANCE,
             }}
           >
             <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
@@ -164,11 +163,9 @@ export function CommunicationBoard({
             sx={(theme) => ({
               justifyContent: "space-between",
               gap: 2,
-              px: 2,
-              // The grid scrolls right above the buttons; the top padding
-              // keeps scrolled tiles from touching them.
-              pt: 0.5,
-              pb: safeAreaGutter(theme.spacing(0.5), "bottom"),
+              px: PAGE_MARGIN,
+              pt: SCROLL_CLEARANCE,
+              pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
             })}
           >
             {navigationButtons}

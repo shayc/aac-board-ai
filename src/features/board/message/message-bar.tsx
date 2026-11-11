@@ -3,6 +3,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
+import { PAGE_MARGIN } from "../board-spacing";
 import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
@@ -58,7 +59,7 @@ export function MessageBar({
     <Stack
       {...scanGroupProps}
       direction="row"
-      sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}
+      sx={{ p: PAGE_MARGIN, userSelect: "text" }}
     >
       <Stack
         className={LIGHT_SCHEME_CLASS}

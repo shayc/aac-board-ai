@@ -77,6 +77,75 @@ const LARGE_GRID_BOARD: OBFBoard = {
   },
 };
 
+// Below the "sm" breakpoint the buttons sit in a bar under the grid; from it
+// they sit in a row above the grid. Distances are measured to whichever bar
+// holds them.
+function measureBoardLayout(
+  container: Element,
+  { isScrolledToEnd = false } = {},
+) {
+  const grid = container.querySelector("[role='grid']");
+  const scroller = grid?.parentElement;
+  const messageBar = container.querySelector("[role='list']")?.parentElement;
+  const backspaceButton = container.querySelector("[aria-label='Backspace']");
+  assertDefined(grid);
+  assertDefined(scroller);
+  assertDefined(messageBar);
+  assertDefined(backspaceButton);
+
+  if (isScrolledToEnd) {
+    scroller.scrollTo({ top: scroller.scrollHeight, behavior: "instant" });
+  }
+
+  const viewport = scroller.getBoundingClientRect();
+  const backspace = backspaceButton.getBoundingClientRect();
+  const rows = Array.from(grid.querySelectorAll("[role='row']"), (row) =>
+    row.getBoundingClientRect(),
+  );
+  const columns = Array.from(
+    grid.querySelectorAll("[role='row']:first-child > [role='gridcell']"),
+    (cell) => cell.getBoundingClientRect(),
+  );
+  const wholeRows = rows.filter(
+    (row) =>
+      row.top >= viewport.top - 0.5 && row.bottom <= viewport.bottom + 0.5,
+  );
+  const firstWholeRow = wholeRows.at(0);
+  const lastWholeRow = wholeRows.at(-1);
+  const firstColumn = columns.at(0);
+  assertDefined(firstWholeRow);
+  assertDefined(lastWholeRow);
+  assertDefined(firstColumn);
+
+  const rowAbove = rows.find(
+    (row) => row.top < viewport.top - 0.5 && row.bottom > viewport.top,
+  );
+  const rowBelow = rows.find(
+    (row) => row.top < viewport.bottom && row.bottom > viewport.bottom + 0.5,
+  );
+  const columnPastEnd = columns.find(
+    (column) =>
+      column.left < viewport.right && column.right > viewport.right + 0.5,
+  );
+  const isBarBelowGrid = backspace.top >= viewport.bottom - 0.5;
+
+  return {
+    messageBarStart: messageBar.getBoundingClientRect().left,
+    firstTileStart: firstColumn.left,
+    backspaceEnd: window.innerWidth - backspace.right,
+    barToGrid: isBarBelowGrid
+      ? backspace.top - viewport.bottom
+      : viewport.top - backspace.bottom,
+    barToNearestTile: isBarBelowGrid
+      ? backspace.top - lastWholeRow.bottom
+      : firstWholeRow.top - backspace.bottom,
+    wholeRows: wholeRows.length,
+    topHint: rowAbove ? rowAbove.bottom - viewport.top : 0,
+    bottomHint: rowBelow ? viewport.bottom - rowBelow.top : 0,
+    sideHint: columnPastEnd ? viewport.right - columnPastEnd.left : 0,
+  };
+}
+
 describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -114,6 +183,63 @@ describe("CommunicationBoard", () => {
         await expect
           .element(screen.getByRole("grid", { name: "Communication board" }))
           .toBeVisible();
+      },
+    );
+  });
+
+  describe("layout", () => {
+    // The board fills the screen below the app header, which takes 57px below
+    // the "sm" breakpoint and 65px from it: these are a 375 x 812 phone and a
+    // 1024 x 768 tablet. A bar and the nearest tile are one page margin apart,
+    // and scrolled tiles pass a bar's controls at the clearance.
+    const LAYOUT_CASES = [
+      {
+        name: "a phone",
+        width: 375,
+        height: 755,
+        pageMargin: 16,
+        clearance: 4,
+        sideHint: 8,
+        wholeRows: 5,
+      },
+      {
+        name: "a tablet",
+        width: 1024,
+        height: 703,
+        pageMargin: 24,
+        clearance: 8,
+        sideHint: 16,
+        wholeRows: 4,
+      },
+    ];
+
+    test.each(LAYOUT_CASES)(
+      "spaces the bars and the grid by the page margin on $name",
+      async ({ width, height, pageMargin, clearance, sideHint, wholeRows }) => {
+        const originalWidth = window.innerWidth;
+        const originalHeight = window.innerHeight;
+        try {
+          await page.viewport(width, height);
+          const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+          await expect.element(screen.getByRole("grid")).toBeVisible();
+
+          const atStart = measureBoardLayout(screen.container);
+          expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+          expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
+          expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
+          expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
+          expect(atStart.wholeRows).toBe(wholeRows);
+          expect(atStart.bottomHint).toBeCloseTo(8, 0);
+          expect(atStart.sideHint).toBeCloseTo(sideHint, 0);
+
+          const atEnd = measureBoardLayout(screen.container, {
+            isScrolledToEnd: true,
+          });
+          expect(atEnd.barToNearestTile).toBeCloseTo(pageMargin, 0);
+          expect(atEnd.topHint).toBeCloseTo(8, 0);
+        } finally {
+          await page.viewport(originalWidth, originalHeight);
+        }
       },
     );
   });

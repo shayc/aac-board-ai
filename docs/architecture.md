@@ -286,6 +286,23 @@ Theme colors are defined centrally in
 [`theme-colors.ts`](../src/shared/theme/theme-colors.ts). Theme mode is set before
 the first paint to avoid a flash of the wrong color scheme.
 
+### Board spacing
+
+The message bar, the bars around the grid, and the grid read their spacing from
+[`board-spacing.ts`](../src/features/board/board-spacing.ts), so the space
+between any two of them changes in one place. Two values exist for each side of
+the `sm` breakpoint: the page margin and the scroll clearance.
+
+- A bar next to the grid pads the edge the grid scrolls against by the scroll
+  clearance. The grid pads its top and bottom by the page margin minus that
+  clearance, so a bar and the nearest tile are one page margin apart.
+- The grid's
+  [layout](../src/features/board/grid/grid-layout.ts) takes a padding and an
+  overflow hint for each axis. Changing a padding does not change a hint.
+- The space between a bar and the first whole row is the clearance, the overflow
+  hint, and one tile gap whenever a hint shows. Making one of the three smaller
+  is the only way to make that space smaller.
+
 ## Module boundaries and code map
 
 Cross-boundary imports use path aliases. Oxlint enforces these dependency rules
@@ -394,6 +411,14 @@ AI availability, provisioning, and session lifecycle to
   and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
+- **Page margin** — the space between the screen's edges and the board's
+  content, and between one bar and the next.
+- **Scroll clearance** — the room a bar keeps between its controls and the tiles
+  scrolling past it.
+- **Overflow hint** — the part of the next row or column that shows past the
+  grid's edge, so the user can tell the board scrolls that way.
+- **Inset** — the part of the grid's viewport that whole rows or columns leave
+  free: padding, plus a tile gap and the overflow hint where the grid scrolls.
 - **Message part** — one item in the message, with its own label and any
   vocalization, image, or sound.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and

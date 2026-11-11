@@ -1,10 +1,11 @@
 import type { Theme } from "@mui/material/styles";
+import { PAGE_MARGIN, SCROLL_CLEARANCE } from "../board-spacing";
 
 // A tile's symbol and label need the extra height; its width can go narrower
 // so that wide boards fit more columns before they scroll.
 const GRID_MIN_CELL_WIDTH_PX = 88;
 const GRID_MIN_CELL_HEIGHT_PX = 96;
-const GRID_GAP_UNIT_PX = 8;
+const GRID_SPACING_UNIT_PX = 8;
 const GRID_GAP = "var(--grid-gap)";
 const GRID_CELL_WIDTH = "var(--grid-cell-width)";
 const GRID_CELL_HEIGHT = "var(--grid-cell-height)";
@@ -23,17 +24,28 @@ interface GridSpacing {
 }
 
 // The side padding is the page margin, so tiles line up with the bars around
-// the grid. The top and bottom padding is the page margin minus the padding
-// the bars next to the grid keep against it (4px on a small screen, 8px on a
-// wide one), so the space between a bar and the nearest tile comes to the page
-// margin too.
+// the grid. The top and bottom padding is the page margin minus the clearance
+// the bars next to the grid already keep, so a bar and the nearest tile end up
+// one page margin apart.
 const GRID_COMPACT_SPACING: GridSpacing = {
-  inline: { paddingPx: 16, overflowHintPx: 8 },
-  block: { paddingPx: 12, overflowHintPx: 8 },
+  inline: {
+    paddingPx: spacingUnitsToPx(PAGE_MARGIN.xs),
+    overflowHintPx: 8,
+  },
+  block: {
+    paddingPx: spacingUnitsToPx(PAGE_MARGIN.xs - SCROLL_CLEARANCE.xs),
+    overflowHintPx: 8,
+  },
 };
 const GRID_REGULAR_SPACING: GridSpacing = {
-  inline: { paddingPx: 24, overflowHintPx: 16 },
-  block: { paddingPx: 16, overflowHintPx: 8 },
+  inline: {
+    paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm),
+    overflowHintPx: 16,
+  },
+  block: {
+    paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm - SCROLL_CLEARANCE.sm),
+    overflowHintPx: 8,
+  },
 };
 
 const AXES = {
@@ -91,7 +103,7 @@ export function createGridContentSx(
   theme: Theme,
   { rows, columns, gap }: GridLayoutOptions,
 ) {
-  const gapPx = gapUnitsToPx(gap);
+  const gapPx = spacingUnitsToPx(gap);
 
   return {
     "--grid-gap": formatPx(gapPx),
@@ -233,8 +245,8 @@ function createGridExtentExpression(
   return `calc(${count} * ${cellSize} + ${count - 1} * ${GRID_GAP} + 2 * var(${axis.padding}))`;
 }
 
-function gapUnitsToPx(gap: number): number {
-  return gap * GRID_GAP_UNIT_PX;
+function spacingUnitsToPx(units: number): number {
+  return units * GRID_SPACING_UNIT_PX;
 }
 
 function formatPx(value: number): string {
