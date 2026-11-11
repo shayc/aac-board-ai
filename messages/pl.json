@@ -119,6 +119,8 @@
   "navHome": "Przejdź do strony głównej",
   "messageBackspace": "Usuń",
   "messageBackspaceLongPressHint": "Naciśnij i przytrzymaj, aby wyczyścić wiadomość.",
+  "messageCleared": "Wiadomość wyczyszczona",
+  "messageClearUndo": "Cofnij",
   "messagePlay": "Odtwórz wiadomość",
   "messageStop": "Zatrzymaj wiadomość",
   "onboardingContinue": "Kontynuuj",

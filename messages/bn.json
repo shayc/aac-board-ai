@@ -119,6 +119,8 @@
   "navHome": "হোমে যান",
   "messageBackspace": "মুছুন",
   "messageBackspaceLongPressHint": "বার্তা মুছতে চেপে ধরে রাখুন।",
+  "messageCleared": "বার্তা মুছে ফেলা হয়েছে",
+  "messageClearUndo": "পূর্বাবস্থায় ফেরান",
   "messagePlay": "বার্তা চালান",
   "messageStop": "বার্তা থামান",
   "onboardingContinue": "চালিয়ে যান",

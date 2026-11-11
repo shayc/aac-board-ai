@@ -119,6 +119,8 @@
   "navHome": "Idi na početnu",
   "messageBackspace": "Obriši",
   "messageBackspaceLongPressHint": "Pritisnite i držite za brisanje poruke.",
+  "messageCleared": "Poruka je izbrisana",
+  "messageClearUndo": "Poništi",
   "messagePlay": "Reproduciraj poruku",
   "messageStop": "Zaustavi poruku",
   "onboardingContinue": "Nastavi",

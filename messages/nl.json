@@ -119,6 +119,8 @@
   "navHome": "Naar start",
   "messageBackspace": "Wissen",
   "messageBackspaceLongPressHint": "Houd ingedrukt om het bericht te wissen.",
+  "messageCleared": "Bericht gewist",
+  "messageClearUndo": "Ongedaan maken",
   "messagePlay": "Bericht afspelen",
   "messageStop": "Bericht stoppen",
   "onboardingContinue": "Doorgaan",

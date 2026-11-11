@@ -119,6 +119,8 @@
   "navHome": "الانتقال إلى الرئيسية",
   "messageBackspace": "مسح",
   "messageBackspaceLongPressHint": "اضغط مع الاستمرار لمسح الرسالة.",
+  "messageCleared": "تم مسح الرسالة",
+  "messageClearUndo": "تراجع",
   "messagePlay": "تشغيل الرسالة",
   "messageStop": "إيقاف الرسالة",
   "onboardingContinue": "متابعة",

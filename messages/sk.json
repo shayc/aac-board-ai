@@ -119,6 +119,8 @@
   "navHome": "Prejsť domov",
   "messageBackspace": "Vymazať",
   "messageBackspaceLongPressHint": "Stlačením a podržaním vymažete správu.",
+  "messageCleared": "Správa vymazaná",
+  "messageClearUndo": "Vrátiť späť",
   "messagePlay": "Prehrať správu",
   "messageStop": "Zastaviť správu",
   "onboardingContinue": "Pokračovať",

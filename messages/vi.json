@@ -119,6 +119,8 @@
   "navHome": "Về trang chủ",
   "messageBackspace": "Xóa",
   "messageBackspaceLongPressHint": "Nhấn giữ để xóa tin nhắn.",
+  "messageCleared": "Đã xóa tin nhắn",
+  "messageClearUndo": "Hoàn tác",
   "messagePlay": "Phát tin nhắn",
   "messageStop": "Dừng tin nhắn",
   "onboardingContinue": "Tiếp tục",

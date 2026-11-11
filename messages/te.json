@@ -119,6 +119,8 @@
   "navHome": "హోమ్‌కు వెళ్లు",
   "messageBackspace": "తుడిచివేయి",
   "messageBackspaceLongPressHint": "సందేశాన్ని క్లియర్ చేయడానికి నొక్కి ఉంచండి.",
+  "messageCleared": "సందేశం క్లియర్ చేయబడింది",
+  "messageClearUndo": "చర్య రద్దు చేయి",
   "messagePlay": "సందేశాన్ని ప్లే చేయి",
   "messageStop": "సందేశాన్ని ఆపు",
   "onboardingContinue": "కొనసాగించు",

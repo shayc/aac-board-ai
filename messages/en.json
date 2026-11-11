@@ -119,6 +119,8 @@
   "navHome": "Go home",
   "messageBackspace": "Backspace",
   "messageBackspaceLongPressHint": "Press and hold to clear the message.",
+  "messageCleared": "Message cleared",
+  "messageClearUndo": "Undo",
   "messagePlay": "Play message",
   "messageStop": "Stop message",
   "onboardingContinue": "Continue",

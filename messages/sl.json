@@ -119,6 +119,8 @@
   "navHome": "Pojdi domov",
   "messageBackspace": "Briši",
   "messageBackspaceLongPressHint": "Pritisnite in pridržite za izbris sporočila.",
+  "messageCleared": "Sporočilo izbrisano",
+  "messageClearUndo": "Razveljavi",
   "messagePlay": "Predvajaj sporočilo",
   "messageStop": "Ustavi sporočilo",
   "onboardingContinue": "Nadaljuj",

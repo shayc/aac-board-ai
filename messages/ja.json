@@ -119,6 +119,8 @@
   "navHome": "ホームに戻る",
   "messageBackspace": "消去",
   "messageBackspaceLongPressHint": "押したままにするとメッセージを消去できます。",
+  "messageCleared": "メッセージを消去しました",
+  "messageClearUndo": "元に戻す",
   "messagePlay": "メッセージを再生",
   "messageStop": "メッセージを停止",
   "onboardingContinue": "続ける",

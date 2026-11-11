@@ -119,6 +119,8 @@
   "navHome": "Siirry etusivulle",
   "messageBackspace": "Poista",
   "messageBackspaceLongPressHint": "Tyhjennä viesti pitämällä painettuna.",
+  "messageCleared": "Viesti tyhjennetty",
+  "messageClearUndo": "Kumoa",
   "messagePlay": "Toista viesti",
   "messageStop": "Pysäytä viesti",
   "onboardingContinue": "Jatka",

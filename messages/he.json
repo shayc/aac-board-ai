@@ -119,6 +119,8 @@
   "navHome": "לעמוד הבית",
   "messageBackspace": "מחיקה לאחור",
   "messageBackspaceLongPressHint": "לחצו לחיצה ארוכה כדי למחוק את ההודעה.",
+  "messageCleared": "ההודעה נמחקה",
+  "messageClearUndo": "ביטול המחיקה",
   "messagePlay": "השמעת ההודעה",
   "messageStop": "עצירת ההשמעה",
   "onboardingContinue": "המשך",

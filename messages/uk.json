@@ -119,6 +119,8 @@
   "navHome": "На головну",
   "messageBackspace": "Стерти",
   "messageBackspaceLongPressHint": "Натисніть і утримуйте, щоб очистити повідомлення.",
+  "messageCleared": "Повідомлення очищено",
+  "messageClearUndo": "Повернути",
   "messagePlay": "Відтворити повідомлення",
   "messageStop": "Зупинити повідомлення",
   "onboardingContinue": "Продовжити",

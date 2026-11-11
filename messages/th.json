@@ -119,6 +119,8 @@
   "navHome": "ไปที่หน้าแรก",
   "messageBackspace": "ลบ",
   "messageBackspaceLongPressHint": "กดค้างเพื่อล้างข้อความ",
+  "messageCleared": "ล้างข้อความแล้ว",
+  "messageClearUndo": "เลิกทำ",
   "messagePlay": "เล่นข้อความ",
   "messageStop": "หยุดข้อความ",
   "onboardingContinue": "ดำเนินการต่อ",

@@ -119,6 +119,8 @@
   "navHome": "Ugrás a kezdőlapra",
   "messageBackspace": "Törlés",
   "messageBackspaceLongPressHint": "Tartsd lenyomva az üzenet törléséhez.",
+  "messageCleared": "Üzenet törölve",
+  "messageClearUndo": "Visszavonás",
   "messagePlay": "Üzenet lejátszása",
   "messageStop": "Üzenet leállítása",
   "onboardingContinue": "Folytatás",

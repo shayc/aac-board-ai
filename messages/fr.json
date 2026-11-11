@@ -119,6 +119,8 @@
   "navHome": "Aller à l'accueil",
   "messageBackspace": "Effacer",
   "messageBackspaceLongPressHint": "Maintenez appuyé pour effacer le message.",
+  "messageCleared": "Message effacé",
+  "messageClearUndo": "Annuler l’effacement",
   "messagePlay": "Lire le message",
   "messageStop": "Arrêter le message",
   "onboardingContinue": "Continuer",

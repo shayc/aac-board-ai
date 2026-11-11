@@ -119,6 +119,8 @@
   "navHome": "Vai alla home",
   "messageBackspace": "Cancella",
   "messageBackspaceLongPressHint": "Tieni premuto per cancellare il messaggio.",
+  "messageCleared": "Messaggio cancellato",
+  "messageClearUndo": "Annulla cancellazione",
   "messagePlay": "Riproduci messaggio",
   "messageStop": "Interrompi messaggio",
   "onboardingContinue": "Continua",

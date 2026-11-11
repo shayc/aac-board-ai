@@ -119,6 +119,8 @@
   "navHome": "होम पर जाएँ",
   "messageBackspace": "मिटाएं",
   "messageBackspaceLongPressHint": "संदेश साफ़ करने के लिए दबाकर रखें।",
+  "messageCleared": "संदेश साफ़ किया गया",
+  "messageClearUndo": "पहले जैसा करें",
   "messagePlay": "संदेश चलाएँ",
   "messageStop": "संदेश रोकें",
   "onboardingContinue": "जारी रखें",

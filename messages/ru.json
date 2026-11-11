@@ -119,6 +119,8 @@
   "navHome": "На главную",
   "messageBackspace": "Стереть",
   "messageBackspaceLongPressHint": "Нажмите и удерживайте, чтобы очистить сообщение.",
+  "messageCleared": "Сообщение очищено",
+  "messageClearUndo": "Вернуть",
   "messagePlay": "Воспроизвести сообщение",
   "messageStop": "Остановить сообщение",
   "onboardingContinue": "Продолжить",

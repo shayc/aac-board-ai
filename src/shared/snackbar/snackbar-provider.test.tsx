@@ -114,6 +114,23 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("status")).toHaveTextContent("done");
   });
 
+  test("runs an action once and closes when its button is pressed", async () => {
+    const onSelect = vi.fn();
+    const screen = await renderSnackbars({
+      "show-undoable": {
+        message: "cleared",
+        durationMs: LONG_DURATION_MS,
+        action: { label: "Undo", onSelect },
+      },
+    });
+
+    await screen.getByRole("button", { name: "show-undoable" }).click();
+    await screen.getByRole("button", { name: "Undo" }).click();
+
+    expect(onSelect).toHaveBeenCalledOnce();
+    await expect.element(screen.getByText("cleared")).not.toBeInTheDocument();
+  });
+
   describe("default duration", () => {
     const PAST_DEFAULT_DURATION_MS = 10_000;
 

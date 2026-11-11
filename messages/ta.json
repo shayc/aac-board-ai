@@ -119,6 +119,8 @@
   "navHome": "முகப்புக்குச் செல்",
   "messageBackspace": "அழி",
   "messageBackspaceLongPressHint": "செய்தியை அழிக்க அழுத்திப் பிடிக்கவும்.",
+  "messageCleared": "செய்தி அழிக்கப்பட்டது",
+  "messageClearUndo": "செயல்தவிர்",
   "messagePlay": "செய்தியை இயக்கு",
   "messageStop": "செய்தியை நிறுத்து",
   "onboardingContinue": "தொடரவும்",

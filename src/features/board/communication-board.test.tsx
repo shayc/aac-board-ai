@@ -250,6 +250,75 @@ describe("CommunicationBoard", () => {
       await expect.element(play).toBeEnabled();
     });
 
+    test("restores a message cleared by a long press on Backspace", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const backspace = screen.getByRole("button", { name: "Backspace" });
+      const play = screen.getByRole("button", { name: "Play message" });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+      await expect.element(play).toBeEnabled();
+
+      // Non-zero pressure: react-aria treats a pressure-less mouse press as a
+      // virtual click and skips the long-press timer.
+      backspace.element().dispatchEvent(
+        new PointerEvent("pointerdown", {
+          bubbles: true,
+          button: 0,
+          pointerType: "mouse",
+          pressure: 0.5,
+        }),
+      );
+
+      await expect.element(screen.getByText("Message cleared")).toBeVisible();
+      await expect.element(play).toBeDisabled();
+
+      await screen.getByRole("button", { name: "Undo" }).click();
+
+      await expect
+        .element(screen.getByText("Message cleared"))
+        .not.toBeInTheDocument();
+      speech.speak.mockClear();
+      await play.click();
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello world"]);
+      });
+    });
+
+    test("keeps what was composed after a clear when the clear is undone", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const hello = screen.getByRole("button", { name: "hello" });
+
+      await hello.click();
+      hello.element().focus();
+      await userEvent.keyboard("{Control>}{Backspace}{/Control}");
+      await expect.element(screen.getByText("Message cleared")).toBeVisible();
+
+      await screen.getByRole("button", { name: "world" }).click();
+      await screen.getByRole("button", { name: "Undo" }).click();
+      speech.speak.mockClear();
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello world"]);
+      });
+    });
+
+    test("offers no undo when there was nothing to clear", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      screen.getByRole("button", { name: "hello" }).element().focus();
+      await userEvent.keyboard("{Control>}{Backspace}{/Control}");
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
+      await expect
+        .element(screen.getByText("Message cleared"))
+        .not.toBeInTheDocument();
+    });
+
     test("speaks the composed message when play is pressed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 

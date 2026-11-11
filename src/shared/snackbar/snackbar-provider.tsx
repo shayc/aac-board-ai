@@ -1,13 +1,15 @@
 import Alert, { alertClasses } from "@mui/material/Alert";
+import Button from "@mui/material/Button";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import { useTranslate } from "@shared/language/use-translate";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
+  type SnackbarMessage,
   type SnackbarOptions,
   type SnackbarSeverity,
 } from "./snackbar-context";
@@ -78,10 +80,13 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
-  const message =
-    typeof state.current?.message === "function"
-      ? state.current.message(t)
-      : state.current?.message;
+  const message = state.current && resolveMessage(state.current.message, t);
+  const action = state.current?.action;
+
+  function handleActionSelect() {
+    action?.onSelect();
+    dispatch({ type: "close" });
+  }
 
   return (
     <SnackbarContext value={contextValue}>
@@ -112,7 +117,13 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           role={isUrgent(severity) ? "alert" : "status"}
           closeText={t(m.close)}
-          action={state.current?.action}
+          action={
+            action && (
+              <Button color="inherit" size="small" onClick={handleActionSelect}>
+                {resolveMessage(action.label, t)}
+              </Button>
+            )
+          }
           severity={severity}
           onClose={handleClose}
           sx={(theme) => ({
@@ -133,6 +144,10 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function resolveMessage(message: SnackbarMessage, t: Translate): string {
+  return typeof message === "function" ? message(t) : message;
 }
 
 function isUrgent(severity: SnackbarSeverity) {

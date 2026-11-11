@@ -119,6 +119,8 @@
   "navHome": "Μετάβαση στην αρχική",
   "messageBackspace": "Διαγραφή",
   "messageBackspaceLongPressHint": "Πατήστε και κρατήστε πατημένο για εκκαθάριση του μηνύματος.",
+  "messageCleared": "Το μήνυμα εκκαθαρίστηκε",
+  "messageClearUndo": "Αναίρεση",
   "messagePlay": "Αναπαραγωγή μηνύματος",
   "messageStop": "Διακοπή μηνύματος",
   "onboardingContinue": "Συνέχεια",

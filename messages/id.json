@@ -119,6 +119,8 @@
   "navHome": "Ke beranda",
   "messageBackspace": "Hapus",
   "messageBackspaceLongPressHint": "Tekan dan tahan untuk menghapus pesan.",
+  "messageCleared": "Pesan dihapus",
+  "messageClearUndo": "Urungkan",
   "messagePlay": "Putar pesan",
   "messageStop": "Hentikan pesan",
   "onboardingContinue": "Lanjutkan",

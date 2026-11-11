@@ -119,6 +119,8 @@
   "navHome": "Ana sayfaya git",
   "messageBackspace": "Geri sil",
   "messageBackspaceLongPressHint": "Mesajı temizlemek için basılı tutun.",
+  "messageCleared": "Mesaj temizlendi",
+  "messageClearUndo": "Geri al",
   "messagePlay": "Mesajı oynat",
   "messageStop": "Mesajı durdur",
   "onboardingContinue": "Devam et",

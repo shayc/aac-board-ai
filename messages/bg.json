@@ -119,6 +119,8 @@
   "navHome": "Към началото",
   "messageBackspace": "Изтриване",
   "messageBackspaceLongPressHint": "Натиснете и задръжте, за да изчистите съобщението.",
+  "messageCleared": "Съобщението е изчистено",
+  "messageClearUndo": "Отмяна",
   "messagePlay": "Възпроизвеждане на съобщението",
   "messageStop": "Спиране на съобщението",
   "onboardingContinue": "Продължаване",

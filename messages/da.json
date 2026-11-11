@@ -119,6 +119,8 @@
   "navHome": "Gå til start",
   "messageBackspace": "Slet",
   "messageBackspaceLongPressHint": "Tryk og hold nede for at rydde beskeden.",
+  "messageCleared": "Beskeden er ryddet",
+  "messageClearUndo": "Fortryd",
   "messagePlay": "Afspil besked",
   "messageStop": "Stop besked",
   "onboardingContinue": "Fortsæt",

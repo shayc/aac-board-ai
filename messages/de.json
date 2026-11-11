@@ -119,6 +119,8 @@
   "navHome": "Zur Startseite",
   "messageBackspace": "Löschen",
   "messageBackspaceLongPressHint": "Gedrückt halten, um die Nachricht zu löschen.",
+  "messageCleared": "Nachricht gelöscht",
+  "messageClearUndo": "Rückgängig",
   "messagePlay": "Nachricht abspielen",
   "messageStop": "Nachricht stoppen",
   "onboardingContinue": "Weiter",

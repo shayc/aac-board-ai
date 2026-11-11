@@ -119,6 +119,8 @@
   "navHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "messageBackspace": "ಅಳಿಸು",
   "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ.",
+  "messageCleared": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲಾಗಿದೆ",
+  "messageClearUndo": "ರದ್ದುಗೊಳಿಸಿ",
   "messagePlay": "ಸಂದೇಶವನ್ನು ಪ್ಲೇ ಮಾಡಿ",
   "messageStop": "ಸಂದೇಶವನ್ನು ನಿಲ್ಲಿಸಿ",
   "onboardingContinue": "ಮುಂದುವರಿಸಿ",

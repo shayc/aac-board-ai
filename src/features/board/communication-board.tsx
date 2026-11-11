@@ -12,6 +12,7 @@ import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
+import { useUndoableClear } from "./message/use-undoable-clear";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
@@ -36,6 +37,7 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
+  const clearMessageWithUndo = useUndoableClear(message);
   const suggestions = useMessageSuggestions(message.text);
 
   const playback = useBoardPlayback();
@@ -54,7 +56,10 @@ export function CommunicationBoard({
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
   });
-  const shortcuts = useBoardShortcuts({ message, playback });
+  const shortcuts = useBoardShortcuts({
+    message: { ...message, clear: clearMessageWithUndo },
+    playback,
+  });
 
   const hasMessage = message.parts.length > 0;
 
@@ -83,7 +88,7 @@ export function CommunicationBoard({
     <BackspaceButton
       disabled={!hasMessage}
       onPress={message.backspace}
-      onLongPress={message.clear}
+      onLongPress={clearMessageWithUndo}
     />
   );
 

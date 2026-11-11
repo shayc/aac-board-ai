@@ -119,6 +119,8 @@
   "navHome": "Mergi la pagina principală",
   "messageBackspace": "Șterge",
   "messageBackspaceLongPressHint": "Apasă și ține apăsat pentru a șterge mesajul.",
+  "messageCleared": "Mesaj șters",
+  "messageClearUndo": "Anulează ștergerea",
   "messagePlay": "Redă mesajul",
   "messageStop": "Oprește mesajul",
   "onboardingContinue": "Continuă",

@@ -119,6 +119,8 @@
   "navHome": "Till startsidan",
   "messageBackspace": "Radera",
   "messageBackspaceLongPressHint": "Tryck och håll inne för att rensa meddelandet.",
+  "messageCleared": "Meddelandet rensat",
+  "messageClearUndo": "Ångra",
   "messagePlay": "Spela upp meddelande",
   "messageStop": "Stoppa meddelande",
   "onboardingContinue": "Fortsätt",

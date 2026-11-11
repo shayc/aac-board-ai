@@ -119,6 +119,8 @@
   "navHome": "홈으로",
   "messageBackspace": "지우기",
   "messageBackspaceLongPressHint": "누른 상태를 유지하면 메시지가 지워집니다.",
+  "messageCleared": "메시지를 지웠습니다",
+  "messageClearUndo": "실행 취소",
   "messagePlay": "메시지 재생",
   "messageStop": "메시지 중지",
   "onboardingContinue": "계속",

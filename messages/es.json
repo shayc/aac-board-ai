@@ -119,6 +119,8 @@
   "navHome": "Ir al inicio",
   "messageBackspace": "Borrar",
   "messageBackspaceLongPressHint": "Mantén pulsado para borrar el mensaje.",
+  "messageCleared": "Mensaje borrado",
+  "messageClearUndo": "Deshacer",
   "messagePlay": "Reproducir mensaje",
   "messageStop": "Detener mensaje",
   "onboardingContinue": "Continuar",
