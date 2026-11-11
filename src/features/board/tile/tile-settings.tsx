@@ -10,13 +10,19 @@ import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import {
   setTileBordersVisible,
+  setTileBrightness,
   setTileLabelPlacement,
   setTileSaturation,
+  TILE_BRIGHTNESS,
   TILE_SATURATION,
   useTilePreferences,
   type TileLabelPlacement,
 } from "./tile-preferences-store";
 import { LabelPlacementPreview } from "./label-placement-preview";
+
+// Ten steps each, so the two sliders feel alike though their ranges differ.
+const BRIGHTNESS_STEP = 0.03;
+const SATURATION_STEP = 0.1;
 
 interface LabelPlacementOptionProps {
   label: string;
@@ -59,7 +65,7 @@ export function TileSettings() {
   const t = useTranslate();
   const uiLocale = useUILocale();
   const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
-  const { saturation, areBordersVisible, labelPlacement } =
+  const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
   return (
@@ -82,12 +88,24 @@ export function TileSettings() {
       />
 
       <SettingsSlider
+        label={t(m.tileBrightness)}
+        value={brightness}
+        onChange={setTileBrightness}
+        min={TILE_BRIGHTNESS.min}
+        max={TILE_BRIGHTNESS.max}
+        step={BRIGHTNESS_STEP}
+        isValueHidden
+        formatValue={(value) => percentFormat.format(value)}
+      />
+
+      <SettingsSlider
         label={t(m.tileSaturation)}
         value={saturation}
         onChange={setTileSaturation}
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
-        step={0.1}
+        step={SATURATION_STEP}
+        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>

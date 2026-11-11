@@ -5,7 +5,10 @@ import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { setTileLabelPlacement } from "./tile/tile-preferences-store";
+import {
+  setTileBrightness,
+  setTileLabelPlacement,
+} from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
@@ -438,6 +441,49 @@ describe("CommunicationBoard", () => {
 
       await expect.element(helloTile).toBeVisible();
       expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    });
+
+    test("dims symbols on tiles and leaves the message's symbols alone", async () => {
+      setTileBrightness(0.8);
+
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const helloTile = screen.getByRole("button", { name: "hello" });
+      await expect.element(helloTile).toBeVisible();
+      const tileSymbols = Array.from(screen.container.querySelectorAll("img"));
+
+      await helloTile.click();
+
+      await expect
+        .poll(() => screen.container.querySelectorAll("img"))
+        .toHaveLength(tileSymbols.length + 1);
+      const messageSymbols = Array.from(
+        screen.container.querySelectorAll("img"),
+      ).filter((symbol) => !tileSymbols.includes(symbol));
+      const filterOf = (symbol: Element) => getComputedStyle(symbol).filter;
+
+      expect(tileSymbols.map(filterOf)).toEqual(
+        tileSymbols.map(() => "brightness(0.8)"),
+      );
+      expect(messageSymbols.map(filterOf)).toEqual(["none"]);
+    });
+
+    test("eases a tile's symbol with the same timing as the tile behind it", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const helloTile = screen.getByRole("button", { name: "hello" });
+      await expect.element(helloTile).toBeVisible();
+      const symbol = helloTile.element().querySelector("img");
+      assertDefined(symbol);
+      const tileStyles = getComputedStyle(helloTile.element());
+      const symbolStyles = getComputedStyle(symbol);
+
+      expect(symbolStyles.transitionProperty).toBe("filter");
+      expect(symbolStyles.transitionDuration).not.toBe("0s");
+      expect(symbolStyles.transitionDuration).toBe(
+        tileStyles.transitionDuration,
+      );
+      expect(symbolStyles.transitionTimingFunction).toBe(
+        tileStyles.transitionTimingFunction,
+      );
     });
 
     test("shows message parts as labels only when message images are hidden", async () => {

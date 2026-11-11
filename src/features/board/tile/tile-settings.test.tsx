@@ -27,7 +27,14 @@ describe("TileSettings", () => {
     await expect
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "100%");
-    await expect.element(screen.getByText("100%")).toBeVisible();
+
+    const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
+
+    await expect.element(brightnessSlider).toBeVisible();
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "100%");
+    await expect.element(screen.getByText("100%")).not.toBeInTheDocument();
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
@@ -130,7 +137,9 @@ describe("TileSettings", () => {
       saturationSlider.element().getAttribute("aria-valuenow"),
     );
     expect(valueNow).toBe(0.9);
-    await expect.element(screen.getByText("90%")).toBeVisible();
+    await expect
+      .element(saturationSlider)
+      .toHaveAttribute("aria-valuetext", "90%");
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("tile-preferences");
@@ -140,6 +149,52 @@ describe("TileSettings", () => {
       };
       expect(preferences.saturation).toBe(valueNow);
     });
+  });
+
+  test("persists tile brightness when brightness is lowered", async () => {
+    const screen = await render(
+      <AppProviders>
+        <TileSettings />
+      </AppProviders>,
+    );
+
+    const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
+
+    brightnessSlider.element().focus();
+    await userEvent.keyboard("{ArrowLeft}");
+
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "97%");
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("tile-preferences");
+      expect(stored).not.toBeNull();
+      const preferences = JSON.parse(stored ?? "{}") as {
+        brightness: number;
+      };
+      expect(preferences.brightness).toBe(0.97);
+    });
+  });
+
+  test.each([
+    { name: "Brightness", lowest: "70%" },
+    { name: "Color intensity", lowest: "0%" },
+  ])("lowers $name to $lowest in ten steps", async ({ name, lowest }) => {
+    const screen = await render(
+      <AppProviders>
+        <TileSettings />
+      </AppProviders>,
+    );
+
+    const slider = screen.getByRole("slider", { name });
+
+    slider.element().focus();
+    await userEvent.keyboard("{ArrowLeft>9/}");
+    await expect.element(slider).not.toHaveAttribute("aria-valuetext", lowest);
+
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect.element(slider).toHaveAttribute("aria-valuetext", lowest);
   });
 
   test("keeps repeated label position controls synchronized and persists the choice", async () => {
