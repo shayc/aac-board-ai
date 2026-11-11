@@ -133,6 +133,8 @@ function MessagePartItem({
       direction="row"
       sx={(theme) => ({
         p: 1,
+        // The bar scrolls sideways, so a part keeps its label on one line.
+        whiteSpace: "nowrap",
         borderRadius: theme.vars.shape.borderRadius,
         outline: isActive
           ? `2px solid ${theme.vars.palette.primary.main}`

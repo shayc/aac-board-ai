@@ -58,6 +58,25 @@ function waitForAnimationFrame(): Promise<void> {
 }
 
 describe("MessageBar", () => {
+  test("keeps each part's label on one line so the bar scrolls sideways", async () => {
+    const parts: MessagePart[] = Array.from({ length: 6 }, (_, index) => ({
+      id: String(index),
+      label: index === 0 ? "short" : "an extraordinarily long label",
+    }));
+    const screen = await render(
+      <ScrollableMessageBar {...createProps({ parts })} />,
+    );
+    const shortLabel = screen.getByText("short").element();
+    const longLabel = screen
+      .getByText("an extraordinarily long label")
+      .first()
+      .element();
+
+    expect(longLabel.getBoundingClientRect().height).toBe(
+      shortLabel.getBoundingClientRect().height,
+    );
+  });
+
   test("renders a label for each message part", async () => {
     const parts: MessagePart[] = [
       { id: "a", label: "I" },

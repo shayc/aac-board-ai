@@ -81,6 +81,23 @@ describe("AACSymbol", () => {
     ).toBeGreaterThan(1);
   });
 
+  test("wraps a label that is wider than the symbol instead of cutting it", async () => {
+    const screen = await render(
+      <div style={{ width: 60 }}>
+        <AACSymbol imageSrc={TEST_IMAGE_SRC} label="short" />
+        <AACSymbol imageSrc={TEST_IMAGE_SRC} label="extraordinarily" />
+      </div>,
+    );
+    const shortLabel = screen.getByText("short").element();
+    const longLabel = screen.getByText("extraordinarily").element();
+
+    expect(longLabel.scrollWidth).toBeLessThanOrEqual(longLabel.clientWidth);
+    expect(longLabel.getBoundingClientRect().height).toBeGreaterThan(
+      shortLabel.getBoundingClientRect().height,
+    );
+    expect(getComputedStyle(longLabel).textOverflow).not.toBe("ellipsis");
+  });
+
   test("shows only the label when the image is hidden", async () => {
     const screen = await render(
       <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Hello" isImageHidden />,

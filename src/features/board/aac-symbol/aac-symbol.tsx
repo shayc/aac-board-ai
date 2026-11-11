@@ -65,10 +65,16 @@ export function AACSymbol({
       )}
       <Typography
         component="span"
-        noWrap
         variant={isImageShown ? "body2" : "h5"}
         sx={[
-          { lineHeight: 1.2, fontWeight: "fontWeightBold" },
+          {
+            // The label is how the user and their partner confirm a word, so
+            // a long one wraps, breaking mid-word if it must, and is never cut.
+            overflowWrap: "anywhere",
+            hyphens: "auto",
+            lineHeight: 1.2,
+            fontWeight: "fontWeightBold",
+          },
           !isLabelShown && visuallyHidden,
         ]}
       >
