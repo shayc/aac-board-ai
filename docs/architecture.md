@@ -299,8 +299,8 @@ the `sm` breakpoint: the page margin and the scroll clearance.
   margin minus that clearance, so its first and last rows are one page margin
   from whatever is next to them, the same as its sides.
 - The grid's
-  [layout](../src/features/board/grid/grid-layout.ts) takes a padding and an
-  overflow hint for each axis. Changing a padding does not change a hint.
+  [layout](../src/features/board/grid/grid-layout.ts) takes a padding for each
+  axis and one overflow hint. Changing a padding does not change the hint.
 - The grid's viewport sets its scroll padding to half the inset of an axis that
   scrolls. A row or column at rest, and a tile scrolled in because it took
   focus, sit that far from the edge with the same hint of both neighbors.
