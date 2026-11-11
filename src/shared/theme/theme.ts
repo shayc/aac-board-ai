@@ -6,7 +6,6 @@ import {
   type Shadows,
   type ThemeOptions,
 } from "@mui/material/styles";
-import { toggleButtonClasses } from "@mui/material/ToggleButton";
 import { buttonFeedbackTiming } from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
@@ -305,28 +304,6 @@ const themeOptions = {
     MuiFab: {
       styleOverrides: {
         root: ({ theme }) => buttonFeedbackTiming(theme),
-      },
-    },
-    MuiToggleButton: {
-      styleOverrides: {
-        root: ({ theme }) => ({
-          variants: [
-            {
-              props: { color: "primary" },
-              // MUI marks the selected button with a faint tint that falls
-              // short of 3:1 against the surface around it.
-              style: {
-                [`&.${toggleButtonClasses.selected}`]: {
-                  color: theme.vars.palette.primary.contrastText,
-                  backgroundColor: theme.vars.palette.primary.main,
-                  "&:hover": {
-                    backgroundColor: theme.vars.palette.primary.dark,
-                  },
-                },
-              },
-            },
-          ],
-        }),
       },
     },
     MuiOutlinedInput: {
