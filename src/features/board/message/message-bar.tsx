@@ -105,7 +105,8 @@ export function MessageBar({
             // clipped by it.
             borderStartStartRadius: theme.vars.shape.borderRadiusFull,
             borderEndStartRadius: theme.vars.shape.borderRadiusFull,
-            "&:focus-visible": { outlineOffset: -4 },
+            // The bar clips overflow, so the theme's ring is drawn inset.
+            "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
           })}
         >
           {parts.map((part) => (
