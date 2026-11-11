@@ -3,6 +3,7 @@ import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { safeAreaGutter } from "@shared/theme/safe-area";
 import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -98,6 +99,15 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           horizontal: "center",
         }}
         slotProps={{ transition: { onExited: handleExited } }}
+        sx={(theme) =>
+          isSmallScreen
+            ? {
+                right: safeAreaGutter(theme.spacing(1), "right"),
+                bottom: safeAreaGutter(theme.spacing(1), "bottom"),
+                left: safeAreaGutter(theme.spacing(1), "left"),
+              }
+            : {}
+        }
       >
         <Alert
           role={isUrgent(severity) ? "alert" : "status"}
