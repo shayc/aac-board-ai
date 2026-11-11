@@ -13,7 +13,11 @@ describe("ThemeSettings", () => {
       </AppProviders>,
     );
 
-    const groups = screen.getByRole("group", { name: "Theme" }).all();
+    const themeGroups = screen.getByRole("group", { name: "Theme" });
+    const groups = themeGroups.all();
+    const firstDarkButton = themeGroups
+      .first()
+      .getByRole("button", { name: "Dark" });
     expect(groups).toHaveLength(2);
     expect(
       new Set(
@@ -30,7 +34,7 @@ describe("ThemeSettings", () => {
         .toHaveAttribute("aria-pressed", "false");
     }
 
-    await groups[0]?.getByRole("button", { name: "Dark" }).click();
+    await firstDarkButton.click();
 
     for (const group of groups) {
       await expect
@@ -38,10 +42,10 @@ describe("ThemeSettings", () => {
         .toHaveAttribute("aria-pressed", "true");
     }
 
-    await groups[0]?.getByRole("button", { name: "Dark" }).click();
+    await firstDarkButton.click();
 
     await expect
-      .element(groups[0]!.getByRole("button", { name: "Dark" }))
+      .element(firstDarkButton)
       .toHaveAttribute("aria-pressed", "true");
 
     await expectNoA11yViolations(screen.container);

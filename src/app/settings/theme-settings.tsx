@@ -11,8 +11,6 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useId } from "react";
 
-type ThemeMode = "system" | "light" | "dark";
-
 export function ThemeSettings() {
   const t = useTranslate();
   const labelId = useId();
@@ -31,6 +29,7 @@ export function ThemeSettings() {
     { value: "light", label: t(m.themeLight), Icon: LightModeOutlinedIcon },
     { value: "dark", label: t(m.themeDark), Icon: DarkModeOutlinedIcon },
   ] as const;
+  type ThemeMode = (typeof options)[number]["value"];
 
   return (
     <FormControl fullWidth>
