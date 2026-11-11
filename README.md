@@ -31,7 +31,7 @@ Suggestions are optional and replace the original message only when accepted.
 - Optional on-device AI suggestions and board translation
 - First Words and Quick Core starter boards
 - Touch, keyboard navigation, and switch scanning with one or two switches
-- Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
+- Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL, and export board sets as `.obz` files
 - 35 interface languages, including right-to-left layouts
 - Installable PWA with offline communication
 
@@ -41,7 +41,7 @@ No accounts, backend, or tracking. Boards and settings are stored on the device.
 
 ## Limitations
 
-Boards can be imported and stored, but not edited, exported, or synced across devices. To use custom boards, create them in any AAC tool that exports [Open Board Format](https://www.openboardformat.org) (`.obf` or `.obz`), then import them on each device.
+Boards can be imported, stored, and exported, but not edited or synced across devices. To use custom boards, create them in any AAC tool that exports [Open Board Format](https://www.openboardformat.org) (`.obf` or `.obz`), then import them on each device. To back up a board set or move it to another device, export it from the library.
 
 ## Enable AI suggestions
 

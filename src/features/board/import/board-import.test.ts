@@ -1,10 +1,5 @@
 import { assertDefined } from "@shared/testing/assert-defined";
-import {
-  loadOBF,
-  loadOBZ,
-  OBFError,
-  type OBFBoard,
-} from "@shayc/open-board-format";
+import { loadOBF, loadOBZ, OBFError } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getAssetBlob, getBoardRecord } from "../storage/board-content-storage";
 import { listBoardSetRecords } from "../storage/board-set-storage";
@@ -20,7 +15,6 @@ import {
   buildAssetInputs,
   importBoardFile,
   importEachBoardFile,
-  resolveBoardLinks,
 } from "./board-import";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";
@@ -274,79 +268,6 @@ describe("importEachBoardFile", () => {
       "corrupt.obf",
     ]);
     expect(await listBoardSetRecords()).toHaveLength(1);
-  });
-});
-
-describe("resolveBoardLinks", () => {
-  const minimalBoard: OBFBoard = {
-    format: "open-board-0.1",
-    id: "board-1",
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-  };
-
-  test("resolves load_board path to id using pathToId map", () => {
-    const board: OBFBoard = {
-      ...minimalBoard,
-      buttons: [
-        { id: "btn-1", label: "Go", load_board: { path: "boards/child.obf" } },
-      ],
-    };
-    const pathToId = new Map([["boards/child.obf", "child-1"]]);
-
-    const result = resolveBoardLinks(board, pathToId);
-
-    expect(result.buttons[0]?.load_board?.id).toBe("child-1");
-    expect(result.buttons[0]?.load_board?.path).toBe("boards/child.obf");
-  });
-
-  test("skips buttons that already have a load_board id", () => {
-    const board: OBFBoard = {
-      ...minimalBoard,
-      buttons: [
-        {
-          id: "btn-1",
-          label: "Go",
-          load_board: { id: "existing-id", path: "boards/child.obf" },
-        },
-      ],
-    };
-    const pathToId = new Map([["boards/child.obf", "different-id"]]);
-
-    const result = resolveBoardLinks(board, pathToId);
-
-    expect(result.buttons[0]?.load_board?.id).toBe("existing-id");
-  });
-
-  test("skips buttons with unmatched path", () => {
-    const board: OBFBoard = {
-      ...minimalBoard,
-      buttons: [
-        {
-          id: "btn-1",
-          label: "Go",
-          load_board: { path: "boards/unknown.obf" },
-        },
-      ],
-    };
-    const pathToId = new Map([["boards/child.obf", "child-1"]]);
-
-    const result = resolveBoardLinks(board, pathToId);
-
-    expect(result.buttons[0]?.load_board?.id).toBeUndefined();
-  });
-
-  test("passes through buttons without load_board", () => {
-    const board: OBFBoard = {
-      ...minimalBoard,
-      buttons: [{ id: "btn-1", label: "Hello" }],
-    };
-    const pathToId = new Map([["boards/child.obf", "child-1"]]);
-
-    const result = resolveBoardLinks(board, pathToId);
-
-    expect(result.buttons[0]?.load_board).toBeUndefined();
-    expect(result.buttons[0]?.label).toBe("Hello");
   });
 });
 

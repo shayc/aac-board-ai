@@ -1,6 +1,7 @@
 import type { BoardKey } from "../board-types";
 import { getBoardsDB, normalizeAssetPath, type BoardRecord } from "./boards-db";
 
+export { normalizeAssetPath } from "./boards-db";
 export type { BoardRecord } from "./boards-db";
 
 export class BoardNotFoundError extends Error {

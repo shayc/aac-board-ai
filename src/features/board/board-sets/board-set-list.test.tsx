@@ -29,6 +29,7 @@ describe("BoardSetList", () => {
         downloadableBoardSets={[]}
         activeBoardSetId="a"
         onShowInfo={vi.fn()}
+        onExport={vi.fn()}
         onRequestDelete={vi.fn()}
       />,
     );
@@ -61,6 +62,7 @@ describe("BoardSetList", () => {
             boardSets={[boardSet]}
             downloadableBoardSets={[]}
             onShowInfo={onShowInfo}
+            onExport={vi.fn()}
             onRequestDelete={onRequestDelete}
           />
         ))}
@@ -114,6 +116,7 @@ describe("BoardSetList", () => {
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         downloadableBoardSets={[]}
         onShowInfo={onShowInfo}
+        onExport={vi.fn()}
         onRequestDelete={onRequestDelete}
       />,
     );
@@ -128,5 +131,27 @@ describe("BoardSetList", () => {
       name: "Core Words",
     });
     expect(onShowInfo).not.toHaveBeenCalled();
+  });
+
+  test("routes the menu's Export to onExport", async () => {
+    const onExport = vi.fn();
+    const screen = await renderWithProviders(
+      <BoardSetList
+        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
+        downloadableBoardSets={[]}
+        onShowInfo={vi.fn()}
+        onExport={onExport}
+        onRequestDelete={vi.fn()}
+      />,
+    );
+
+    await screen
+      .getByRole("button", { name: "More options for Core Words" })
+      .click();
+    await screen.getByRole("menuitem", { name: "Export" }).click();
+
+    expect(onExport).toHaveBeenCalledOnce();
+    expect(onExport.mock.calls[0]?.[0]).toMatchObject({ name: "Core Words" });
+    await expect.element(screen.getByRole("menu")).not.toBeInTheDocument();
   });
 });

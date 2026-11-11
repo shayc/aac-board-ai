@@ -1,7 +1,9 @@
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import SaveAltOutlinedIcon from "@mui/icons-material/SaveAltOutlined";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem, { listItemClasses } from "@mui/material/ListItem";
@@ -32,6 +34,7 @@ interface BoardSetListProps {
   boardSets: readonly BoardSetRecord[];
   downloadableBoardSets: readonly CatalogBoardSet[];
   onShowInfo: (boardSet: BoardSetRecord) => void;
+  onExport: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
   activeBoardSetId?: string;
 }
@@ -40,6 +43,7 @@ export function BoardSetList({
   boardSets,
   downloadableBoardSets,
   onShowInfo,
+  onExport,
   onRequestDelete,
   activeBoardSetId,
 }: BoardSetListProps) {
@@ -71,6 +75,14 @@ export function BoardSetList({
   function handleShowInfo() {
     if (menuAnchor) {
       onShowInfo(menuAnchor.boardSet);
+    }
+
+    handleMenuClose();
+  }
+
+  function handleExport() {
+    if (menuAnchor) {
+      onExport(menuAnchor.boardSet);
     }
 
     handleMenuClose();
@@ -141,6 +153,13 @@ export function BoardSetList({
           </ListItemIcon>
           <ListItemText>{t(m.libraryInfo)}</ListItemText>
         </MenuItem>
+        <MenuItem onClick={handleExport}>
+          <ListItemIcon>
+            <SaveAltOutlinedIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{t(m.libraryExport)}</ListItemText>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={handleRequestDelete} sx={{ color: "error.main" }}>
           <ListItemIcon sx={{ color: "inherit" }}>
             <DeleteOutlinedIcon fontSize="small" />

@@ -1,6 +1,7 @@
 import { resetBoardsDB, seedBoardSets } from "../testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { extractOBZ } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
@@ -456,6 +457,70 @@ describe("BoardSetLibrary", () => {
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .toBeInTheDocument();
       expect(await listBoardSetRecords()).toEqual([]);
+    });
+  });
+
+  describe("exporting", () => {
+    function captureSavedFile(): Promise<File> {
+      const { promise, resolve, reject } = Promise.withResolvers<File>();
+
+      // Saving a file is device output; read it back instead of downloading.
+      vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(
+        function (this: HTMLAnchorElement) {
+          const { download } = this;
+          void fetch(this.href)
+            .then((response) => response.blob())
+            .then(
+              (blob) =>
+                resolve(new File([blob], download, { type: blob.type })),
+              reject,
+            );
+        },
+      );
+
+      return promise;
+    }
+
+    test("saves the set as an OBZ file named after it", async () => {
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
+      const savedFile = captureSavedFile();
+
+      const screen = await renderBoardSetLibrary();
+
+      await screen
+        .getByRole("button", { name: "More options for Animals" })
+        .click();
+      await screen.getByRole("menuitem", { name: "Export" }).click();
+
+      const file = await savedFile;
+      const { rootBoard } = await extractOBZ(file);
+
+      expect(file.name).toBe("Animals.obz");
+      // A ZIP type makes Safari save "Animals.obz.zip", which import rejects.
+      expect(file.type).toBe("application/octet-stream");
+      expect(rootBoard.id).toBe("root");
+    });
+
+    test("reports a set that cannot be exported", async () => {
+      await seedBoardSets([
+        { id: "broken", rootBoardId: "root", name: "Broken" },
+      ]);
+      void captureSavedFile();
+      const db = await getBoardsDB();
+      await db.delete("boards", ["broken", "root"]);
+
+      const screen = await renderBoardSetLibrary();
+
+      await screen
+        .getByRole("button", { name: "More options for Broken" })
+        .click();
+      await screen.getByRole("menuitem", { name: "Export" }).click();
+
+      await expect
+        .element(screen.getByText('Couldn\'t export board set "Broken"'))
+        .toBeInTheDocument();
     });
   });
 
