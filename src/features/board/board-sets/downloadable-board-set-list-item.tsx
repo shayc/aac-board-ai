@@ -69,7 +69,13 @@ export function DownloadableBoardSetListItem({
         </Tooltip>
       }
     >
-      <ListItemText primary={name} slotProps={{ primary: { noWrap: true } }} />
+      {/* Muted so a catalog entry doesn't read as an openable board set. */}
+      <ListItemText
+        primary={name}
+        slotProps={{
+          primary: { noWrap: true, sx: { color: "text.secondary" } },
+        }}
+      />
       {status && (
         <span id={statusId} hidden>
           {status}
