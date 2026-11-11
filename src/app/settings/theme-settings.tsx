@@ -33,7 +33,7 @@ export function ThemeSettings() {
   ] as const;
 
   return (
-    <FormControl>
+    <FormControl fullWidth>
       <FormLabel id={labelId} sx={{ color: "text.primary" }}>
         {t(m.themeLabel)}
       </FormLabel>
@@ -41,6 +41,7 @@ export function ThemeSettings() {
         aria-labelledby={labelId}
         value={mode}
         exclusive
+        fullWidth
         onChange={(_event, selected: ThemeMode | null) => {
           // Pressing the active button reports null; a theme must stay selected.
           if (selected) {
