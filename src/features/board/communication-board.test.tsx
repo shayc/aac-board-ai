@@ -461,6 +461,30 @@ describe("CommunicationBoard", () => {
       }
     });
 
+    test("eases symbols with the same timing as the tile behind them", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const helloTile = screen.getByRole("button", { name: "hello" });
+      await expect.element(helloTile).toBeVisible();
+      const symbol = helloTile.element().querySelector("img");
+      assertDefined(symbol);
+      const transitionOf = (element: Element, property: string) => {
+        const styles = getComputedStyle(element);
+        const index = styles.transitionProperty.split(", ").indexOf(property);
+
+        return {
+          duration: styles.transitionDuration.split(", ")[index],
+          timing: styles.transitionTimingFunction.split(/, (?=[a-z])/)[index],
+        };
+      };
+
+      const symbolTransition = transitionOf(symbol, "filter");
+
+      expect(symbolTransition.duration).not.toBe("0s");
+      expect(symbolTransition).toEqual(
+        transitionOf(helloTile.element(), "background-color"),
+      );
+    });
+
     test("shows message parts as labels only when message images are hidden", async () => {
       setMessageImagesVisible(false);
 

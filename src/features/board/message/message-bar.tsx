@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import { dim } from "../board-brightness";
+import { brightnessTransition, dim } from "../board-brightness";
 import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
@@ -80,6 +80,10 @@ export function MessageBar({
             borderRadius: theme.vars.shape.borderRadiusFull,
             ...dimmedSurface(theme.vars.palette.background.paper),
             colorScheme: "light",
+            transition: brightnessTransition(theme, [
+              "background-color",
+              "color",
+            ]),
           }),
           (theme) =>
             theme.applyStyles("light", {

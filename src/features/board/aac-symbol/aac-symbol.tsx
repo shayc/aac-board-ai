@@ -1,7 +1,10 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
-import { symbolBrightnessFilter } from "../board-brightness";
+import {
+  brightnessTransition,
+  symbolBrightnessFilter,
+} from "../board-brightness";
 
 export type SymbolLabelPlacement = "top" | "bottom";
 
@@ -52,7 +55,7 @@ export function AACSymbol({
             component="img"
             alt=""
             src={imageSrc}
-            sx={{
+            sx={(theme) => ({
               position: "absolute",
               top: 0,
               insetInlineStart: 0,
@@ -61,7 +64,8 @@ export function AACSymbol({
               objectFit: "contain",
               filter: symbolBrightnessFilter,
               pointerEvents: "none",
-            }}
+              transition: brightnessTransition(theme, ["filter"]),
+            })}
           />
         </Box>
       )}
