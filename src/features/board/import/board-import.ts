@@ -1,8 +1,6 @@
 import {
   loadBoard,
   type LoadedBoard,
-  type OBFBoard,
-  type OBFManifest,
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
@@ -99,46 +97,14 @@ function buildBoardSetContent(
     };
   }
 
-  const { manifest, boards, rootBoard, resources } = loadedBoard.archive;
-  const boardIdByPath = buildBoardIdByPath(manifest);
+  const { boards, rootBoard, resources } = loadedBoard.archive;
 
   return {
     rootBoardId: rootBoard.id,
     name: nonBlankText(rootBoard.name) ?? fileName,
-    boards: Array.from(boards.values(), (board) =>
-      resolveBoardLinks(board, boardIdByPath),
-    ),
+    boards: [...boards.values()],
     assets: buildAssetInputs(resources),
   };
-}
-
-function buildBoardIdByPath(manifest: OBFManifest): Map<string, string> {
-  return new Map(
-    Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
-  );
-}
-
-export function resolveBoardLinks(
-  board: OBFBoard,
-  boardIdByPath: Map<string, string>,
-): OBFBoard {
-  const buttons = board.buttons.map((button) => {
-    if (!button.load_board?.path || button.load_board.id) {
-      return button;
-    }
-
-    const targetBoardId = boardIdByPath.get(button.load_board.path);
-    if (!targetBoardId) {
-      return button;
-    }
-
-    return {
-      ...button,
-      load_board: { ...button.load_board, id: targetBoardId },
-    };
-  });
-
-  return { ...board, buttons };
 }
 
 export function buildAssetInputs(

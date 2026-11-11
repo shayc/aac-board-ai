@@ -27,15 +27,12 @@ export async function boardSetToOBZ({
   rootBoardId,
 }: Pick<BoardSetRecord, "id" | "rootBoardId">): Promise<Blob> {
   const records = await listBoardRecords(id);
-  const boardIds = new Set(records.map((record) => record.id));
   const assets = await loadStoredAssets(
     id,
     records.map((record) => record.obf),
   );
 
-  const boards = records.map((record) =>
-    withPackagedMedia(withPackagedLinks(record.obf, boardIds), assets),
-  );
+  const boards = records.map((record) => withPackagedMedia(record.obf, assets));
 
   return createOBZ(boards, rootBoardId, assets);
 }
@@ -69,37 +66,6 @@ function collectAssetPaths(boards: readonly OBFBoard[]): Set<string> {
   }
 
   return paths;
-}
-
-/**
- * Points board links at where `createOBZ` writes each board, since the paths
- * kept from the imported archive no longer exist.
- */
-function withPackagedLinks(
-  board: OBFBoard,
-  boardIds: ReadonlySet<string>,
-): OBFBoard {
-  const buttons = board.buttons.map((button) => {
-    const targetBoardId = button.load_board?.id;
-    if (!targetBoardId || !boardIds.has(targetBoardId)) {
-      return button;
-    }
-
-    return {
-      ...button,
-      load_board: {
-        ...button.load_board,
-        path: packagedBoardPath(targetBoardId),
-      },
-    };
-  });
-
-  return { ...board, buttons };
-}
-
-// Must match the layout `createOBZ` writes; the export round-trip test guards it.
-function packagedBoardPath(boardId: string): string {
-  return `boards/${encodeURIComponent(boardId)}.obf`;
 }
 
 /**

@@ -87,8 +87,8 @@ State has distinct owners and lifetimes:
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
-imported fields while adding resolved board links and translations saved on
-this device. Board-set records keep their translated names alongside.
+imported fields while adding translations saved on this device. Board links
+carry the linked board's ID, which the OBF library resolves from the archive. Board-set records keep their translated names alongside.
 `obfToBoard` derives the runtime `Board` on each read, so runtime types can evolve
 without rewriting stored records. Storage schema changes require a versioned
 migration in [`boards-db.ts`](../src/features/board/storage/boards-db.ts).
@@ -123,9 +123,8 @@ reports the outcome in one message that names the file when exactly one fails.
 
 Export is the reverse, for one set at a time from its library menu.
 `boardSetToOBZ` packages the stored OBF records, which already carry the
-translations saved on this device, with the set's stored assets. Board links get
-the paths `createOBZ` writes, since the imported archive's paths no longer exist,
-media take the normalized path their file is stored under, and media whose file
+translations saved on this device, with the set's stored assets. `createOBZ`
+points board links at the boards it packages, media take the normalized path their file is stored under, and media whose file
 was never stored drop their path and fall back to `data` or `url`. The set name, translated into the communication language, names the file.
 
 ### Open a board
