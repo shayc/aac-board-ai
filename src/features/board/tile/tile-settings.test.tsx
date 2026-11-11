@@ -176,7 +176,7 @@ describe("TileSettings", () => {
     });
   });
 
-  test("stops lowering brightness at half", async () => {
+  test("stops lowering brightness at its floor", async () => {
     const screen = await render(
       <AppProviders>
         <TileSettings />
@@ -190,7 +190,7 @@ describe("TileSettings", () => {
 
     await expect
       .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "50%");
+      .toHaveAttribute("aria-valuetext", "70%");
   });
 
   test("keeps repeated label position controls synchronized and persists the choice", async () => {

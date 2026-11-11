@@ -29,9 +29,9 @@ export const TILE_SATURATION: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-// Below half brightness, symbols stop being recognizable.
+// 70% is the dimmest level whose symbols and labels were checked by eye.
 export const TILE_BRIGHTNESS: ClampedNumberOptions = {
-  min: 0.5,
+  min: 0.7,
   max: 1,
   defaultValue: 1,
 };

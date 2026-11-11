@@ -1,11 +1,13 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import type { BoardBrightnessStyle } from "../board-brightness";
 import { TEST_IMAGE_SRC } from "../testing";
 import { contrastRatio, paint, relativeLuminance } from "../testing/colors";
+import { TILE_BRIGHTNESS } from "../tile/tile-preferences-store";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
 
@@ -101,11 +103,14 @@ describe("MessageBar", () => {
     expect(screen.container.querySelectorAll("img")).toHaveLength(1);
   });
 
-  test.each(["light", "dark"] as const)(
-    "dims its surface with the board and keeps labels readable in the %s scheme",
-    async (scheme) => {
-      const dimmedStyle: CSSProperties & { "--board-brightness": number } = {
-        "--board-brightness": 0.5,
+  test.each([
+    { scheme: "light", surfaceColor: "#ffffff" },
+    { scheme: "dark", surfaceColor: "#babdc3" },
+  ])(
+    "dims its surface with the board and keeps labels readable in the $scheme scheme",
+    async ({ scheme, surfaceColor }) => {
+      const dimmedStyle: BoardBrightnessStyle = {
+        "--board-brightness": TILE_BRIGHTNESS.min,
       };
       const parts = [{ id: "1", label: "Hello" }];
       localStorage.setItem("mui-mode", scheme);
@@ -133,9 +138,7 @@ describe("MessageBar", () => {
       const bright = surfaceColors("bright");
       const dimmed = surfaceColors("dimmed");
 
-      expect(relativeLuminance(bright.background) > 0.9).toBe(
-        scheme === "light",
-      );
+      expect(bright.background).toEqual(paint(surfaceColor));
       expect(relativeLuminance(dimmed.background)).toBeLessThan(
         relativeLuminance(bright.background),
       );

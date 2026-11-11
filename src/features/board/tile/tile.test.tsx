@@ -2,10 +2,11 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
+import type { BoardBrightnessStyle } from "../board-brightness";
 import type { BoardButton } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
 import {
@@ -18,6 +19,7 @@ import { Tile } from "./tile";
 import {
   setTileBordersVisible,
   setTileSaturation,
+  TILE_BRIGHTNESS,
 } from "./tile-preferences-store";
 
 const WCAG_TEXT_CONTRAST = 4.5;
@@ -71,8 +73,8 @@ function Unhoverable({ children }: { children: ReactNode }) {
 // Unhoverable, so a pointer left over a tile by an earlier test can't add the
 // hover tint to the colors under measurement.
 function Dimmed({ children }: { children: ReactNode }) {
-  const style: CSSProperties & { "--board-brightness": number } = {
-    "--board-brightness": 0.5,
+  const style: BoardBrightnessStyle = {
+    "--board-brightness": TILE_BRIGHTNESS.min,
     pointerEvents: "none",
   };
 
@@ -313,7 +315,7 @@ describe("Tile", () => {
     );
   });
 
-  test("halves each background channel at half board brightness", async () => {
+  test("scales each background channel by the board brightness", async () => {
     const screen = await renderInTheme(
       <Dimmed>
         {tileElement({ label: "Dim", backgroundColor: "#ffcc00" })}
@@ -323,7 +325,11 @@ describe("Tile", () => {
       styleOf(screen.getByRole("button", { name: "Dim" })).backgroundColor,
     );
 
-    expect(channelDistance(dimmed, [128, 102, 0])).toBeLessThanOrEqual(1);
+    const scale = TILE_BRIGHTNESS.min;
+
+    expect(
+      channelDistance(dimmed, [255 * scale, 204 * scale, 0]),
+    ).toBeLessThanOrEqual(1);
   });
 
   test("dims a tile that has no background color of its own", async () => {
@@ -380,8 +386,10 @@ describe("Tile", () => {
     );
     const dimmed = paintBorder(screen.getByRole("button", { name: "Dim" }));
 
+    const scale = TILE_BRIGHTNESS.min;
+
     expect(
-      channelDistance(dimmed, [red / 2, green / 2, blue / 2]),
+      channelDistance(dimmed, [red * scale, green * scale, blue * scale]),
     ).toBeLessThanOrEqual(1);
   });
 
