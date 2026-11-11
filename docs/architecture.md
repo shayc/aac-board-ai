@@ -125,8 +125,8 @@ Export is the reverse, for one set at a time from its library menu.
 `boardSetToOBZ` packages the stored OBF records, which already carry the
 translations saved on this device, with the set's stored assets. Board links get
 the paths `createOBZ` writes, since the imported archive's paths no longer exist,
-and media whose file was never stored drop their path and fall back to `data` or
-`url`. The set name, translated into the communication language, names the file.
+media take the normalized path their file is stored under, and media whose file
+was never stored drop their path and fall back to `data` or `url`. The set name, translated into the communication language, names the file.
 
 ### Open a board
 

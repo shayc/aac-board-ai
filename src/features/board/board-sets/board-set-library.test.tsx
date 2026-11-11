@@ -470,7 +470,11 @@ describe("BoardSetLibrary", () => {
           const { download } = this;
           void fetch(this.href)
             .then((response) => response.blob())
-            .then((blob) => resolve(new File([blob], download)), reject);
+            .then(
+              (blob) =>
+                resolve(new File([blob], download, { type: blob.type })),
+              reject,
+            );
         },
       );
 
@@ -494,6 +498,8 @@ describe("BoardSetLibrary", () => {
       const { rootBoard } = await extractOBZ(file);
 
       expect(file.name).toBe("Animals.obz");
+      // A ZIP type makes Safari save "Animals.obz.zip", which import rejects.
+      expect(file.type).toBe("application/octet-stream");
       expect(rootBoard.id).toBe("root");
     });
 

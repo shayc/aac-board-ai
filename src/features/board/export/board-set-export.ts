@@ -3,6 +3,7 @@ import { saveFile } from "@shared/utils/save-file";
 import {
   getAssetBlob,
   listBoardRecords,
+  normalizeAssetPath,
 } from "../storage/board-content-storage";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
@@ -12,8 +13,11 @@ export async function exportBoardSet(
   boardSet: BoardSetToExport,
 ): Promise<void> {
   const archive = await boardSetToOBZ(boardSet);
+  // Safari appends ".zip" to a download typed as a ZIP archive, and import
+  // accepts only board file extensions.
+  const file = new Blob([archive], { type: "application/octet-stream" });
 
-  saveFile(archive, `${boardSet.name}.obz`);
+  saveFile(file, `${boardSet.name}.obz`);
 }
 
 /**
@@ -26,41 +30,42 @@ export async function boardSetToOBZ({
 }: Pick<BoardSetRecord, "id" | "rootBoardId">): Promise<Blob> {
   const records = await listBoardRecords(id);
   const boardIds = new Set(records.map((record) => record.id));
-  const resources = await loadMediaResources(
+  const assets = await loadStoredAssets(
     id,
     records.map((record) => record.obf),
   );
 
   const boards = records.map((record) =>
-    withPackagedPaths(record.obf, boardIds, resources),
+    withPackagedPaths(record.obf, boardIds, assets),
   );
 
-  return createOBZ(boards, rootBoardId, resources);
+  return createOBZ(boards, rootBoardId, assets);
 }
 
-async function loadMediaResources(
+/** Stored assets by the normalized path they are stored and packaged under. */
+async function loadStoredAssets(
   boardSetId: string,
   boards: readonly OBFBoard[],
 ): Promise<Map<string, Uint8Array>> {
-  const resources = new Map<string, Uint8Array>();
+  const assets = new Map<string, Uint8Array>();
 
-  for (const path of collectMediaPaths(boards)) {
+  for (const path of collectAssetPaths(boards)) {
     const blob = await getAssetBlob(boardSetId, path);
     if (blob) {
-      resources.set(path, await blob.bytes());
+      assets.set(path, await blob.bytes());
     }
   }
 
-  return resources;
+  return assets;
 }
 
-function collectMediaPaths(boards: readonly OBFBoard[]): Set<string> {
+function collectAssetPaths(boards: readonly OBFBoard[]): Set<string> {
   const paths = new Set<string>();
 
   for (const board of boards) {
     for (const media of [...(board.images ?? []), ...(board.sounds ?? [])]) {
       if (media.path) {
-        paths.add(media.path);
+        paths.add(normalizeAssetPath(media.path));
       }
     }
   }
@@ -70,13 +75,15 @@ function collectMediaPaths(boards: readonly OBFBoard[]): Set<string> {
 
 /**
  * Points board links at where `createOBZ` writes each board, since the paths
- * kept from the imported archive no longer exist. Media whose file was never
- * stored drop their path, falling back to `data` or `url` as the app does.
+ * kept from the imported archive no longer exist. Media take the normalized
+ * path their file is packaged under, because a path such as `/images/a.png` is
+ * not a portable archive entry. Media whose file was never stored drop their
+ * path, falling back to `data` or `url` as the app does.
  */
 function withPackagedPaths(
   board: OBFBoard,
   boardIds: ReadonlySet<string>,
-  resources: ReadonlyMap<string, Uint8Array>,
+  assets: ReadonlyMap<string, Uint8Array>,
 ): OBFBoard {
   const buttons = board.buttons.map((button) => {
     const targetBoardId = button.load_board?.id;
@@ -96,8 +103,8 @@ function withPackagedPaths(
   return {
     ...board,
     buttons,
-    images: board.images?.map((image) => withStoredPath(image, resources)),
-    sounds: board.sounds?.map((sound) => withStoredPath(sound, resources)),
+    images: board.images?.map((image) => withPackagedPath(image, assets)),
+    sounds: board.sounds?.map((sound) => withPackagedPath(sound, assets)),
   };
 }
 
@@ -106,13 +113,15 @@ function packagedBoardPath(boardId: string): string {
   return `boards/${encodeURIComponent(boardId)}.obf`;
 }
 
-function withStoredPath<Media extends { path?: string }>(
+function withPackagedPath<Media extends { path?: string }>(
   media: Media,
-  resources: ReadonlyMap<string, Uint8Array>,
+  assets: ReadonlyMap<string, Uint8Array>,
 ): Media {
-  if (!media.path || resources.has(media.path)) {
+  if (!media.path) {
     return media;
   }
 
-  return { ...media, path: undefined };
+  const path = normalizeAssetPath(media.path);
+
+  return { ...media, path: assets.has(path) ? path : undefined };
 }

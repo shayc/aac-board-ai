@@ -111,7 +111,7 @@ describe("boardSetToOBZ", () => {
     ]);
   });
 
-  test("packages a stored asset under the path its board declares", async () => {
+  test("packages an asset under its normalized path and points its media there", async () => {
     const image = { id: "img", path: "/images/photo.png" };
     await seedBoardSets([
       {
@@ -122,10 +122,12 @@ describe("boardSetToOBZ", () => {
       },
     ]);
 
-    const { resources } = await extractOBZ(
+    const { rootBoard, resources } = await extractOBZ(
       await boardSetToOBZ({ id: "photos", rootBoardId: "root" }),
     );
 
-    expect(resources.has("/images/photo.png")).toBe(true);
+    expect(resources.has("images/photo.png")).toBe(true);
+    expect(resources.has("/images/photo.png")).toBe(false);
+    expect(rootBoard.images).toEqual([{ id: "img", path: "images/photo.png" }]);
   });
 });
