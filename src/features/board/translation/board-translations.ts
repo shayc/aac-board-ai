@@ -31,6 +31,15 @@ export function findBoardInLanguage(
   return { ...applyTranslations(board, translations), locale: language };
 }
 
+/**
+ * The tag to declare a board's text with. Keeps the region and script that
+ * `getBoardLanguage` drops: they change pronunciation (`pt-BR`) and which
+ * glyphs a font picks (`zh-TW`).
+ */
+export function getBoardTextLocale({ locale }: { locale?: string }): string {
+  return locale ?? DEFAULT_BOARD_LANGUAGE;
+}
+
 export function getBoardLanguage({ locale }: { locale?: string }): string {
   return locale ? getLanguageCode(locale) : DEFAULT_BOARD_LANGUAGE;
 }

@@ -6,6 +6,7 @@ import {
   findBoardInLanguage,
   findStringTranslations,
   getBoardLanguage,
+  getBoardTextLocale,
 } from "./board-translations";
 import type { Board } from "../board-types";
 
@@ -158,6 +159,7 @@ describe("findBoardInLanguage", () => {
 
     assertDefined(translated);
     expect(getBoardLanguage(translated)).toBe("es");
+    expect(getBoardTextLocale(translated)).toBe("es");
   });
 
   test("returns nothing when the board has no translations for the language", () => {

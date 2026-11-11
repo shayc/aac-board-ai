@@ -121,7 +121,8 @@ describe("CommunicationBoard", () => {
   describe("text language", () => {
     test.each([
       { locale: "es", expected: "es" },
-      { locale: "pt-BR", expected: "pt" },
+      { locale: "pt-BR", expected: "pt-BR" },
+      { locale: "zh_TW", expected: "zh-TW" },
       { locale: undefined, expected: "en" },
     ])(
       "tags the tiles and the message with the board's language ($locale)",
