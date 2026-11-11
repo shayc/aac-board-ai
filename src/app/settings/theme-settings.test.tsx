@@ -13,7 +13,7 @@ describe("ThemeSettings", () => {
       </AppProviders>,
     );
 
-    const groups = screen.getByRole("radiogroup", { name: "Theme" }).all();
+    const groups = screen.getByRole("group", { name: "Theme" }).all();
     expect(groups).toHaveLength(2);
     expect(
       new Set(
@@ -23,20 +23,26 @@ describe("ThemeSettings", () => {
 
     for (const group of groups) {
       await expect
-        .element(group.getByRole("radio", { name: "System" }))
-        .toBeChecked();
+        .element(group.getByRole("button", { name: "System" }))
+        .toHaveAttribute("aria-pressed", "true");
       await expect
-        .element(group.getByRole("radio", { name: "Light" }))
-        .not.toBeChecked();
+        .element(group.getByRole("button", { name: "Light" }))
+        .toHaveAttribute("aria-pressed", "false");
     }
 
-    await groups[0]?.getByRole("radio", { name: "Dark" }).click();
+    await groups[0]?.getByRole("button", { name: "Dark" }).click();
 
     for (const group of groups) {
       await expect
-        .element(group.getByRole("radio", { name: "Dark" }))
-        .toBeChecked();
+        .element(group.getByRole("button", { name: "Dark" }))
+        .toHaveAttribute("aria-pressed", "true");
     }
+
+    await groups[0]?.getByRole("button", { name: "Dark" }).click();
+
+    await expect
+      .element(groups[0]!.getByRole("button", { name: "Dark" }))
+      .toHaveAttribute("aria-pressed", "true");
 
     await expectNoA11yViolations(screen.container);
   });

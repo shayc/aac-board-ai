@@ -25,7 +25,7 @@ describe("SettingsDrawer", () => {
 
     const drawerItems = [
       screen.getByRole("heading", { name: "Appearance" }),
-      screen.getByRole("radiogroup", { name: "Theme" }),
+      screen.getByRole("group", { name: "Theme" }),
       screen.getByRole("heading", { name: "Language & voice" }),
       screen.getByRole("combobox", { name: "Language" }),
       screen.getByRole("combobox", { name: "Voice" }),
