@@ -4,6 +4,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { page } from "vitest/browser";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
@@ -17,8 +18,9 @@ function ShowButtons({
 }) {
   const { showSnackbar } = useSnackbar();
 
+  // Pinned to the bottom so a visible snackbar never covers the buttons.
   return (
-    <>
+    <div style={{ position: "fixed", bottom: 0 }}>
       {Object.entries(snackbars).map(([name, options]) => (
         <button key={name} onClick={() => showSnackbar(options)}>
           {name}
@@ -26,7 +28,7 @@ function ShowButtons({
       ))}
       <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
       <button>outside</button>
-    </>
+    </div>
   );
 }
 
@@ -130,6 +132,30 @@ describe("SnackbarProvider", () => {
     expect(onSelect).toHaveBeenCalledOnce();
     await expect.element(screen.getByText("cleared")).not.toBeInTheDocument();
   });
+
+  test.each([375, 1024])(
+    "keeps a persistent error at the top, clear of controls along the bottom, at a viewport width of %i",
+    async (width) => {
+      const originalWidth = window.innerWidth;
+      const originalHeight = window.innerHeight;
+
+      try {
+        await page.viewport(width, 667);
+        const screen = await renderSnackbars({
+          "show-error": { message: "failed", severity: "error" },
+        });
+
+        await screen.getByRole("button", { name: "show-error" }).click();
+        const alert = screen.getByRole("alert");
+        await expect.element(alert).toBeVisible();
+
+        const bounds = alert.element().getBoundingClientRect();
+        expect(bounds.bottom).toBeLessThan(window.innerHeight / 2);
+      } finally {
+        await page.viewport(originalWidth, originalHeight);
+      }
+    },
+  );
 
   describe("default duration", () => {
     const PAST_DEFAULT_DURATION_MS = 10_000;

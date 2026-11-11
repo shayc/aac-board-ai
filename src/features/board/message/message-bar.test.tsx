@@ -1,5 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -72,6 +73,53 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("I")).toBeVisible();
     await expect.element(screen.getByText("want")).toBeVisible();
     await expect.element(screen.getByText("water")).toBeVisible();
+  });
+
+  test("exposes the message as a named list of its parts", async () => {
+    const parts: MessagePart[] = [
+      { id: "a", label: "I" },
+      { id: "b", label: "want" },
+    ];
+
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts })} />,
+    );
+    const message = screen.getByRole("list", { name: "Message" });
+
+    await expect.element(message).toBeVisible();
+    await expect.element(message.getByRole("listitem")).toHaveLength(2);
+    await expect
+      .element(message.getByRole("listitem").first())
+      .toHaveTextContent("I");
+  });
+
+  test("lets the keyboard reach and scroll a message longer than the bar", async () => {
+    const screen = await render(
+      <ScrollableMessageBar {...createProps({ parts: SCROLL_PARTS })} />,
+    );
+    const message = screen.getByRole("list", { name: "Message" });
+    await waitForAnimationFrame();
+
+    const scrollLeftAtEnd = message.element().scrollLeft;
+    expect(scrollLeftAtEnd).toBeGreaterThan(0);
+
+    await userEvent.tab();
+    await expect.element(message).toHaveFocus();
+
+    await userEvent.keyboard("{ArrowLeft}");
+
+    await expect
+      .poll(() => message.element().scrollLeft)
+      .toBeLessThan(scrollLeftAtEnd);
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("keeps an empty message out of the tab order", async () => {
+    const screen = await renderWithProviders(<MessageBar {...createProps()} />);
+
+    await expect
+      .element(screen.getByRole("list", { name: "Message" }))
+      .not.toHaveAttribute("tabindex");
   });
 
   test("re-enables text selection so the composed message can be copied", async () => {
