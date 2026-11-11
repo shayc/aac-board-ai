@@ -109,13 +109,13 @@ function Unhoverable({ children }: { children: ReactNode }) {
   return <div style={{ pointerEvents: "none" }}>{children}</div>;
 }
 
-// Unhoverable, so a pointer left over a tile by an earlier test can't add the
-// hover tint to the colors under measurement.
 async function paintTileAtBrightness(
   brightness: number,
   overrides: Partial<BoardButton>,
 ): Promise<Rgb> {
   setTileBrightness(brightness);
+  // A pointer left over the tile by an earlier test would add the hover tint
+  // to the colors under measurement.
   const screen = await renderInTheme(
     <Unhoverable>{tileElement(overrides)}</Unhoverable>,
   );

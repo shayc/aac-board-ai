@@ -449,18 +449,22 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(SYMBOL_BOARD);
       const helloTile = screen.getByRole("button", { name: "hello" });
       await expect.element(helloTile).toBeVisible();
-      const tileSymbols = new Set(screen.container.querySelectorAll("img"));
+      const tileSymbols = Array.from(screen.container.querySelectorAll("img"));
 
       await helloTile.click();
 
       await expect
         .poll(() => screen.container.querySelectorAll("img"))
-        .toHaveLength(tileSymbols.size + 1);
-      for (const symbol of screen.container.querySelectorAll("img")) {
-        expect(getComputedStyle(symbol).filter).toBe(
-          tileSymbols.has(symbol) ? "brightness(0.8)" : "none",
-        );
-      }
+        .toHaveLength(tileSymbols.length + 1);
+      const messageSymbols = Array.from(
+        screen.container.querySelectorAll("img"),
+      ).filter((symbol) => !tileSymbols.includes(symbol));
+      const filterOf = (symbol: Element) => getComputedStyle(symbol).filter;
+
+      expect(tileSymbols.map(filterOf)).toEqual(
+        tileSymbols.map(() => "brightness(0.8)"),
+      );
+      expect(messageSymbols.map(filterOf)).toEqual(["none"]);
     });
 
     test("eases a tile's symbol with the same timing as the tile behind it", async () => {

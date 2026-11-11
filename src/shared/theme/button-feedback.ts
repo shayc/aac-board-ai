@@ -1,6 +1,6 @@
 import type { Theme } from "@mui/material/styles";
 
-function buttonFeedbackEasing(theme: Theme) {
+function transitionOptions(theme: Theme) {
   return {
     duration: theme.transitions.duration.shortest,
     easing: theme.transitions.easing.easeOut,
@@ -8,7 +8,7 @@ function buttonFeedbackEasing(theme: Theme) {
 }
 
 export function buttonFeedbackTiming(theme: Theme) {
-  const { duration, easing } = buttonFeedbackEasing(theme);
+  const { duration, easing } = transitionOptions(theme);
 
   return {
     transitionDuration: `${duration}ms`,
@@ -24,5 +24,5 @@ export function buttonFeedbackTransition(
   theme: Theme,
   properties: string[],
 ): string {
-  return theme.transitions.create(properties, buttonFeedbackEasing(theme));
+  return theme.transitions.create(properties, transitionOptions(theme));
 }
