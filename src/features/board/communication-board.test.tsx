@@ -250,6 +250,19 @@ describe("CommunicationBoard", () => {
       await expect.element(play).toBeEnabled();
     });
 
+    test("keeps keyboard focus on Backspace when it removes the last part", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const backspace = screen.getByRole("button", { name: "Backspace" });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await expect.element(backspace).not.toHaveAttribute("aria-disabled");
+      backspace.element().focus();
+      await userEvent.keyboard("{Enter}");
+
+      await expect.element(backspace).toHaveAttribute("aria-disabled", "true");
+      await expect.element(backspace).toHaveFocus();
+    });
+
     test("speaks the composed message when play is pressed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
@@ -291,7 +304,9 @@ describe("CommunicationBoard", () => {
           const backspace = screen.getByRole("button", { name: "Backspace" });
           const play = screen.getByRole("button", { name: "Play message" });
 
-          await expect.element(backspace).toBeDisabled();
+          await expect
+            .element(backspace)
+            .toHaveAttribute("aria-disabled", "true");
           await expect
             .element(screen.getByRole("button", { name: "Go back" }))
             .toBeVisible();
@@ -311,7 +326,9 @@ describe("CommunicationBoard", () => {
 
           await backspace.click();
 
-          await expect.element(backspace).toBeDisabled();
+          await expect
+            .element(backspace)
+            .toHaveAttribute("aria-disabled", "true");
           await expect.element(play).toBeDisabled();
         } finally {
           await page.viewport(originalWidth, originalHeight);
@@ -352,13 +369,13 @@ describe("CommunicationBoard", () => {
       );
       const back = screen.getByRole("button", { name: "Go back" });
 
-      await expect.element(back).toBeDisabled();
+      await expect.element(back).toHaveAttribute("aria-disabled", "true");
       await screen.getByRole("button", { name: "hello" }).click();
       speech.speak.mockClear();
 
       await screen.getByRole("button", { name: "Folder" }).click();
 
-      await expect.element(back).toBeEnabled();
+      await expect.element(back).not.toHaveAttribute("aria-disabled");
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
         .toBeEnabled();
@@ -392,6 +409,28 @@ describe("CommunicationBoard", () => {
       expect(scrollContainer.scrollTop).toBeGreaterThan(0);
     });
 
+    test("keeps keyboard focus on Go back when it reaches the first board", async () => {
+      const screen = await renderCommunicationBoard(
+        TWO_BUTTON_BOARD,
+        [
+          "/sets/set-1/boards/test-board",
+          {
+            pathname: "/sets/set-1/boards/test-board",
+            state: { canGoBack: true },
+          },
+        ],
+        "test-board",
+      );
+      const back = screen.getByRole("button", { name: "Go back" });
+
+      await expect.element(back).not.toHaveAttribute("aria-disabled");
+      back.element().focus();
+      await userEvent.keyboard("{Enter}");
+
+      await expect.element(back).toHaveAttribute("aria-disabled", "true");
+      await expect.element(back).toHaveFocus();
+    });
+
     test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
       const screen = await renderCommunicationBoard(
         LARGE_GRID_BOARD,
@@ -408,7 +447,7 @@ describe("CommunicationBoard", () => {
       const scrollContainer = grid.parentElement;
       assertDefined(scrollContainer);
 
-      await expect.element(back).toBeEnabled();
+      await expect.element(back).not.toHaveAttribute("aria-disabled");
 
       scrollContainer.scrollTo({
         left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
@@ -427,7 +466,7 @@ describe("CommunicationBoard", () => {
         expect(scrollContainer.scrollTop).toBe(0);
       });
 
-      await expect.element(back).toBeDisabled();
+      await expect.element(back).toHaveAttribute("aria-disabled", "true");
     });
   });
 

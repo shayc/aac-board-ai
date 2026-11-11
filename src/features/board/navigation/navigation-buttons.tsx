@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
+import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 
 interface NavigationButtonsProps {
   canGoBack: boolean;
@@ -24,24 +25,24 @@ export function NavigationButtons({
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
       <Button
+        {...focusableDisabledProps(!canGoBack)}
         aria-label={t(m.navBack)}
-        disabled={!canGoBack}
         size="large"
         color="inherit"
         variant="contained"
-        onClick={onBack}
+        onClick={canGoBack ? onBack : undefined}
         sx={{ width: 72 }}
       >
         <ArrowBackOutlinedIcon sx={flipForRTL} />
       </Button>
 
       <Button
+        {...focusableDisabledProps(!canGoHome)}
         aria-label={t(m.navHome)}
-        disabled={!canGoHome}
         size="large"
         color="inherit"
         variant="contained"
-        onClick={onHome}
+        onClick={canGoHome ? onHome : undefined}
         sx={{ width: 72 }}
       >
         <HomeOutlinedIcon />

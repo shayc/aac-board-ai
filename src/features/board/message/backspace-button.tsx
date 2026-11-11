@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
+import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
 const LONG_PRESS_THRESHOLD_MS = 600;
@@ -14,15 +15,16 @@ interface BackspaceButtonProps {
 }
 
 export function BackspaceButton({
-  disabled,
+  disabled = false,
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
   const t = useTranslate();
-  const { pressProps } = usePress({ onPress });
+  const { pressProps } = usePress({ isDisabled: disabled, onPress });
 
   const { longPressProps } = useLongPress({
     accessibilityDescription: t(m.messageBackspaceLongPressHint),
+    isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
   });
@@ -30,8 +32,8 @@ export function BackspaceButton({
   return (
     <Button
       {...mergeProps(pressProps, longPressProps)}
+      {...focusableDisabledProps(disabled)}
       aria-label={t(m.messageBackspace)}
-      disabled={disabled}
       size="large"
       color="inherit"
       variant="contained"
