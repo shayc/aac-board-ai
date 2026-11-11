@@ -1,11 +1,14 @@
 import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
+import { listItemButtonClasses } from "@mui/material/ListItemButton";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
+  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
+import { switchClasses } from "@mui/material/Switch";
 import { buttonFeedbackTiming } from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
@@ -57,6 +60,23 @@ const outline = {
   light: "rgba(0, 0, 0, 0.5)",
   dark: "rgba(255, 255, 255, 0.42)",
 };
+
+// The unfilled part of a control: a switch that is off, the rest of a slider's
+// rail. This grey keeps 3:1 against the page background in both schemes, where
+// MUI's translucent tracks fall below it.
+const INACTIVE_TRACK_COLOR = grey[600];
+
+// A switch thumb sits inside its track, so it only has to stand out from the
+// track: white on the light scheme's tracks, the dark page color on the dark
+// scheme's.
+function switchThumbColor(theme: Theme) {
+  return {
+    color: theme.vars.palette.common.white,
+    ...theme.applyStyles("dark", {
+      color: theme.vars.palette.background.default,
+    }),
+  };
+}
 
 const shadows = [
   "none",
@@ -349,6 +369,43 @@ const themeOptions = {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
           ...buttonFeedbackTiming(theme),
+          // The selected fill is a faint tint of the page, so the ring is the
+          // cue that reaches 3:1.
+          [`&.${listItemButtonClasses.selected}`]: {
+            outline: `2px solid ${theme.vars.palette.primary.main}`,
+            outlineOffset: -2,
+          },
+        }),
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          width: 52,
+          height: 32,
+          padding: 0,
+        },
+        switchBase: ({ theme }) => ({
+          padding: 4,
+          ...switchThumbColor(theme),
+          [`&.${switchClasses.checked}`]: {
+            transform: "translateX(20px)",
+            ...switchThumbColor(theme),
+          },
+          [`&.${switchClasses.checked} + .${switchClasses.track}`]: {
+            backgroundColor: theme.vars.palette.primary.main,
+            opacity: 1,
+          },
+        }),
+        thumb: {
+          width: 24,
+          height: 24,
+          boxShadow: "none",
+        },
+        track: ({ theme }) => ({
+          backgroundColor: INACTIVE_TRACK_COLOR,
+          borderRadius: theme.vars.shape.borderRadiusFull,
+          opacity: 1,
         }),
       },
     },
@@ -388,11 +445,16 @@ const themeOptions = {
             },
           ],
         },
-        mark: {
+        rail: {
+          backgroundColor: INACTIVE_TRACK_COLOR,
+          opacity: 1,
+        },
+        mark: ({ theme }) => ({
           width: 2,
           height: 12,
+          backgroundColor: theme.vars.palette.text.primary,
           borderRadius: 1,
-        },
+        }),
         markActive: ({ theme }) => ({
           backgroundColor: theme.vars.palette.background.default,
         }),
