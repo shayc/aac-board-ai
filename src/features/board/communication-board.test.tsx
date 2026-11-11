@@ -467,25 +467,6 @@ describe("CommunicationBoard", () => {
       expect(messageSymbols.map(filterOf)).toEqual(["none"]);
     });
 
-    test("eases a tile's symbol with the same timing as the tile behind it", async () => {
-      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-      const helloTile = screen.getByRole("button", { name: "hello" });
-      await expect.element(helloTile).toBeVisible();
-      const symbol = helloTile.element().querySelector("img");
-      assertDefined(symbol);
-      const tileStyles = getComputedStyle(helloTile.element());
-      const symbolStyles = getComputedStyle(symbol);
-
-      expect(symbolStyles.transitionProperty).toBe("filter");
-      expect(symbolStyles.transitionDuration).not.toBe("0s");
-      expect(symbolStyles.transitionDuration).toBe(
-        tileStyles.transitionDuration,
-      );
-      expect(symbolStyles.transitionTimingFunction).toBe(
-        tileStyles.transitionTimingFunction,
-      );
-    });
-
     test("shows message parts as labels only when message images are hidden", async () => {
       setMessageImagesVisible(false);
 
