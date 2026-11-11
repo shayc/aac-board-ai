@@ -1,10 +1,6 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import {
-  brightnessTransition,
-  dimmedSurface,
-} from "../brightness/board-brightness";
 import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
@@ -65,29 +61,25 @@ export function MessageBar({
         className={LIGHT_SCHEME_CLASS}
         direction="row"
         sx={[
-          (theme) => ({
+          {
             flexGrow: 1,
             gap: 2,
             overflow: "hidden",
             border: 1,
             borderColor: "transparent",
-            borderRadius: theme.vars.shape.borderRadiusFull,
-            ...dimmedSurface(theme.vars.palette.background.paper),
+            borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
+            color: "text.primary",
+            bgcolor: "background.paper",
             colorScheme: "light",
-            transition: brightnessTransition(theme, [
-              "background-color",
-              "color",
-            ]),
-          }),
+          },
           (theme) =>
             theme.applyStyles("light", {
               boxShadow: theme.vars.shadows[1],
             }),
           (theme) =>
-            theme.applyStyles(
-              "dark",
-              dimmedSurface(theme.vars.palette.grey[400]),
-            ),
+            theme.applyStyles("dark", {
+              bgcolor: theme.vars.palette.grey[400],
+            }),
         ]}
       >
         <Stack
@@ -142,9 +134,9 @@ function MessagePartItem({
       sx={(theme) => ({
         p: 1,
         borderRadius: theme.vars.shape.borderRadius,
-        // The label's color follows the bar's brightness, so the outline stays
-        // visible on a dimmed bar where a fixed color would fade into it.
-        outline: isActive ? "2px solid currentColor" : "none",
+        outline: isActive
+          ? `2px solid ${theme.vars.palette.primary.main}`
+          : "none",
         outlineOffset: -2,
       })}
     >

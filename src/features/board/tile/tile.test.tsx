@@ -2,25 +2,22 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import { assertDefined } from "@shared/testing/assert-defined";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
-import type { BoardBrightnessStyle } from "../brightness/board-brightness";
-import { BOARD_BRIGHTNESS } from "../brightness/board-brightness-store";
 import type { BoardButton } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
-import {
-  contrastRatio,
-  paint,
-  relativeLuminance,
-  type Rgb,
-} from "../testing/colors";
 import { Tile } from "./tile";
 import {
   setTileBordersVisible,
+  setTileBrightness,
   setTileSaturation,
+  TILE_BRIGHTNESS,
 } from "./tile-preferences-store";
+
+type Rgb = readonly [red: number, green: number, blue: number];
 
 const WCAG_TEXT_CONTRAST = 4.5;
 const WCAG_NON_TEXT_CONTRAST = 3;
@@ -44,6 +41,48 @@ function makeButton(overrides: Partial<BoardButton>): BoardButton {
 function tileElement(overrides: Partial<BoardButton>) {
   return (
     <Tile button={makeButton(overrides)} tabIndex={0} onActivate={vi.fn()} />
+  );
+}
+
+function paint(...cssColors: string[]): Rgb {
+  const context = new OffscreenCanvas(1, 1).getContext("2d");
+  assertDefined(context);
+
+  for (const cssColor of cssColors) {
+    context.fillStyle = cssColor;
+    context.fillRect(0, 0, 1, 1);
+  }
+
+  const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data;
+  assertDefined(red);
+  assertDefined(green);
+  assertDefined(blue);
+  expect(alpha, `painting ${cssColors.join(", ")} must end opaque`).toBe(255);
+
+  return [red, green, blue];
+}
+
+function linearizeChannel(channel: number): number {
+  const value = channel / 255;
+
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+}
+
+function relativeLuminance([red, green, blue]: Rgb): number {
+  return (
+    0.2126 * linearizeChannel(red) +
+    0.7152 * linearizeChannel(green) +
+    0.0722 * linearizeChannel(blue)
+  );
+}
+
+function contrastRatio(first: Rgb, second: Rgb): number {
+  const firstLuminance = relativeLuminance(first) + 0.05;
+  const secondLuminance = relativeLuminance(second) + 0.05;
+
+  return (
+    Math.max(firstLuminance, secondLuminance) /
+    Math.min(firstLuminance, secondLuminance)
   );
 }
 
@@ -72,13 +111,23 @@ function Unhoverable({ children }: { children: ReactNode }) {
 
 // Unhoverable, so a pointer left over a tile by an earlier test can't add the
 // hover tint to the colors under measurement.
-function Dimmed({ children }: { children: ReactNode }) {
-  const style: BoardBrightnessStyle = {
-    "--board-brightness": BOARD_BRIGHTNESS.min,
-    pointerEvents: "none",
-  };
+async function paintTileAtBrightness(
+  brightness: number,
+  overrides: Partial<BoardButton>,
+): Promise<Rgb> {
+  setTileBrightness(brightness);
+  const screen = await renderInTheme(
+    <Unhoverable>{tileElement(overrides)}</Unhoverable>,
+  );
+  const styles = styleOf(screen.getByRole("button", { name: "Word" }));
+  const painted = paint(styles.backgroundColor, styles.borderTopColor);
+  await screen.unmount();
 
-  return <div style={style}>{children}</div>;
+  return painted;
+}
+
+function scale([red, green, blue]: Rgb, factor: number): Rgb {
+  return [red * factor, green * factor, blue * factor];
 }
 
 async function measureLuminanceOnHover(backgroundColor?: string) {
@@ -315,43 +364,35 @@ describe("Tile", () => {
     );
   });
 
-  test("scales each background channel by the board brightness", async () => {
-    const screen = await renderInTheme(
-      <Dimmed>
-        {tileElement({ label: "Dim", backgroundColor: "#ffcc00" })}
-      </Dimmed>,
-    );
-    const dimmed = paint(
-      styleOf(screen.getByRole("button", { name: "Dim" })).backgroundColor,
-    );
+  test.each([
+    { description: "its own background color", backgroundColor: "#ffcc00" },
+    { description: "the theme's background", backgroundColor: undefined },
+    {
+      description: "a translucent border",
+      backgroundColor: "#ffffff",
+      borderColor: "rgb(0 128 255 / 0.5)",
+    },
+  ])(
+    "scales each color channel by the tile brightness with $description",
+    async (colors) => {
+      setTileBordersVisible(true);
 
-    const scale = BOARD_BRIGHTNESS.min;
+      const bright = await paintTileAtBrightness(1, colors);
+      const dimmed = await paintTileAtBrightness(TILE_BRIGHTNESS.min, colors);
 
-    expect(
-      channelDistance(dimmed, [255 * scale, 204 * scale, 0]),
-    ).toBeLessThanOrEqual(1);
-  });
-
-  test("dims a tile that has no background color of its own", async () => {
-    const screen = await renderInTheme(
-      <>
-        <Unhoverable>{tileElement({ label: "Bright" })}</Unhoverable>
-        <Dimmed>{tileElement({ label: "Dim" })}</Dimmed>
-      </>,
-    );
-
-    expect(
-      backgroundLuminance(screen.getByRole("button", { name: "Dim" })),
-    ).toBeLessThan(
-      backgroundLuminance(screen.getByRole("button", { name: "Bright" })),
-    );
-  });
+      expect(
+        channelDistance(dimmed, scale(bright, TILE_BRIGHTNESS.min)),
+      ).toBeLessThanOrEqual(1);
+    },
+  );
 
   test.each(["#ffffff", "#ffeb3b", "#3f51b5"])(
-    "keeps the label readable on a dimmed %s background",
+    "keeps the label readable on a %s background at the lowest brightness",
     async (backgroundColor) => {
+      setTileBrightness(TILE_BRIGHTNESS.min);
+
       const screen = await renderInTheme(
-        <Dimmed>{tileElement({ backgroundColor })}</Dimmed>,
+        <Unhoverable>{tileElement({ backgroundColor })}</Unhoverable>,
       );
       const { color, backgroundColor: background } = styleOf(
         screen.getByRole("button", { name: "Word" }),
@@ -363,34 +404,19 @@ describe("Tile", () => {
     },
   );
 
-  test("dims a translucent border by the same amount as the background", async () => {
-    const colors = {
-      backgroundColor: "#ffffff",
-      borderColor: "rgb(0 128 255 / 0.5)",
-    };
-    const paintBorder = (tile: Locator) => {
-      const styles = styleOf(tile);
+  test("dims its symbol by the tile brightness", async () => {
+    setTileBrightness(0.8);
 
-      return paint(styles.backgroundColor, styles.borderTopColor);
-    };
-
-    setTileBordersVisible(true);
     const screen = await renderInTheme(
-      <>
-        <Unhoverable>{tileElement({ label: "Bright", ...colors })}</Unhoverable>
-        <Dimmed>{tileElement({ label: "Dim", ...colors })}</Dimmed>
-      </>,
+      tileElement({ imageSrc: TEST_IMAGE_SRC }),
     );
-    const [red, green, blue] = paintBorder(
-      screen.getByRole("button", { name: "Bright" }),
-    );
-    const dimmed = paintBorder(screen.getByRole("button", { name: "Dim" }));
+    const symbol = screen
+      .getByRole("button", { name: "Word" })
+      .element()
+      .querySelector("img");
+    assertDefined(symbol);
 
-    const scale = BOARD_BRIGHTNESS.min;
-
-    expect(
-      channelDistance(dimmed, [red * scale, green * scale, blue * scale]),
-    ).toBeLessThanOrEqual(1);
+    expect(getComputedStyle(symbol).filter).toBe("brightness(0.8)");
   });
 
   test("activates with its button when clicked", async () => {

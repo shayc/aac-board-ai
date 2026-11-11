@@ -9,14 +9,11 @@ import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import {
-  BOARD_BRIGHTNESS,
-  setBoardBrightness,
-  useBoardBrightness,
-} from "../brightness/board-brightness-store";
-import {
   setTileBordersVisible,
+  setTileBrightness,
   setTileLabelPlacement,
   setTileSaturation,
+  TILE_BRIGHTNESS,
   TILE_SATURATION,
   useTilePreferences,
   type TileLabelPlacement,
@@ -64,9 +61,8 @@ export function TileSettings() {
   const t = useTranslate();
   const uiLocale = useUILocale();
   const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
-  const { saturation, areBordersVisible, labelPlacement } =
+  const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
-  const brightness = useBoardBrightness();
 
   return (
     <Stack spacing={3}>
@@ -88,11 +84,11 @@ export function TileSettings() {
       />
 
       <SettingsSlider
-        label={t(m.boardBrightness)}
+        label={t(m.tileBrightness)}
         value={brightness}
-        onChange={setBoardBrightness}
-        min={BOARD_BRIGHTNESS.min}
-        max={BOARD_BRIGHTNESS.max}
+        onChange={setTileBrightness}
+        min={TILE_BRIGHTNESS.min}
+        max={TILE_BRIGHTNESS.max}
         step={0.1}
         formatValue={(value) => percentFormat.format(value)}
       />

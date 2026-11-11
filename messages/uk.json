@@ -91,7 +91,7 @@
   "messageImages": "Показувати зображення",
   "messageHighlight": "Підсвічувати під час мовлення",
   "tileSaturation": "Насиченість кольору",
-  "boardBrightness": "Яскравість",
+  "tileBrightness": "Яскравість",
   "tileBorders": "Показувати межі",
   "tileLabelPlacement": "Підписи",
   "tileLabelTop": "Зверху",

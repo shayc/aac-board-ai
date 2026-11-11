@@ -5,8 +5,10 @@ import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { setBoardBrightness } from "./brightness/board-brightness-store";
-import { setTileLabelPlacement } from "./tile/tile-preferences-store";
+import {
+  setTileBrightness,
+  setTileLabelPlacement,
+} from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
@@ -441,45 +443,42 @@ describe("CommunicationBoard", () => {
       expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
     });
 
-    test("dims symbols on tiles and in the message alike", async () => {
-      setBoardBrightness(0.6);
+    test("dims symbols on tiles and leaves the message's symbols alone", async () => {
+      setTileBrightness(0.8);
 
       const screen = await renderCommunicationBoard(SYMBOL_BOARD);
       const helloTile = screen.getByRole("button", { name: "hello" });
       await expect.element(helloTile).toBeVisible();
-      const tileImageCount = screen.container.querySelectorAll("img").length;
+      const tileSymbols = new Set(screen.container.querySelectorAll("img"));
 
       await helloTile.click();
 
       await expect
         .poll(() => screen.container.querySelectorAll("img"))
-        .toHaveLength(tileImageCount + 1);
-      for (const image of screen.container.querySelectorAll("img")) {
-        expect(getComputedStyle(image).filter).toBe("brightness(0.6)");
+        .toHaveLength(tileSymbols.size + 1);
+      for (const symbol of screen.container.querySelectorAll("img")) {
+        expect(getComputedStyle(symbol).filter).toBe(
+          tileSymbols.has(symbol) ? "brightness(0.8)" : "none",
+        );
       }
     });
 
-    test("eases symbols with the same timing as the tile behind them", async () => {
+    test("eases a tile's symbol with the same timing as the tile behind it", async () => {
       const screen = await renderCommunicationBoard(SYMBOL_BOARD);
       const helloTile = screen.getByRole("button", { name: "hello" });
       await expect.element(helloTile).toBeVisible();
       const symbol = helloTile.element().querySelector("img");
       assertDefined(symbol);
-      const transitionOf = (element: Element, property: string) => {
-        const styles = getComputedStyle(element);
-        const index = styles.transitionProperty.split(", ").indexOf(property);
+      const tileStyles = getComputedStyle(helloTile.element());
+      const symbolStyles = getComputedStyle(symbol);
 
-        return {
-          duration: styles.transitionDuration.split(", ")[index],
-          timing: styles.transitionTimingFunction.split(/, (?=[a-z])/)[index],
-        };
-      };
-
-      const symbolTransition = transitionOf(symbol, "filter");
-
-      expect(symbolTransition.duration).not.toBe("0s");
-      expect(symbolTransition).toEqual(
-        transitionOf(helloTile.element(), "background-color"),
+      expect(symbolStyles.transitionProperty).toBe("filter");
+      expect(symbolStyles.transitionDuration).not.toBe("0s");
+      expect(symbolStyles.transitionDuration).toBe(
+        tileStyles.transitionDuration,
+      );
+      expect(symbolStyles.transitionTimingFunction).toBe(
+        tileStyles.transitionTimingFunction,
       );
     });
 

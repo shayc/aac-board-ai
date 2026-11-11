@@ -7,8 +7,6 @@ import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
-import type { BoardBrightnessStyle } from "./brightness/board-brightness";
-import { useBoardBrightness } from "./brightness/board-brightness-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -36,10 +34,6 @@ export function CommunicationBoard({
   const t = useTranslate();
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const brightness = useBoardBrightness();
-  const brightnessStyle: BoardBrightnessStyle = {
-    "--board-brightness": brightness,
-  };
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
@@ -107,7 +101,6 @@ export function CommunicationBoard({
       <Stack
         {...shortcuts.rootProps}
         direction="column"
-        style={brightnessStyle}
         sx={{
           height: "100%",
           pl: { sm: safeAreaInset("left") },

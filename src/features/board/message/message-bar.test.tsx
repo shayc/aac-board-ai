@@ -4,10 +4,7 @@ import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
-import type { BoardBrightnessStyle } from "../brightness/board-brightness";
-import { BOARD_BRIGHTNESS } from "../brightness/board-brightness-store";
 import { TEST_IMAGE_SRC } from "../testing";
-import { contrastRatio, paint, relativeLuminance } from "../testing/colors";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
 
@@ -102,87 +99,6 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("I")).toBeVisible();
     expect(screen.container.querySelectorAll("img")).toHaveLength(1);
   });
-
-  test.each([
-    { scheme: "light", surfaceColor: "#ffffff" },
-    { scheme: "dark", surfaceColor: "#babdc3" },
-  ])(
-    "dims its surface with the board and keeps labels readable in the $scheme scheme",
-    async ({ scheme, surfaceColor }) => {
-      const dimmedStyle: BoardBrightnessStyle = {
-        "--board-brightness": BOARD_BRIGHTNESS.min,
-      };
-      const parts = [{ id: "1", label: "Hello" }];
-      localStorage.setItem("mui-mode", scheme);
-
-      const screen = await renderWithProviders(
-        <>
-          <div data-testid="bright">
-            <MessageBar {...createProps({ parts })} />
-          </div>
-          <div data-testid="dimmed" style={dimmedStyle}>
-            <MessageBar {...createProps({ parts })} />
-          </div>
-        </>,
-      );
-      const surfaceColors = (testId: string) => {
-        const label = screen.getByTestId(testId).getByText("Hello").element();
-        const surface = label.closest(".light");
-        assertDefined(surface);
-
-        return {
-          text: paint(getComputedStyle(label).color),
-          background: paint(getComputedStyle(surface).backgroundColor),
-        };
-      };
-      const bright = surfaceColors("bright");
-      const dimmed = surfaceColors("dimmed");
-
-      expect(bright.background).toEqual(paint(surfaceColor));
-      expect(relativeLuminance(dimmed.background)).toBeLessThan(
-        relativeLuminance(bright.background),
-      );
-      expect(
-        contrastRatio(dimmed.text, dimmed.background),
-      ).toBeGreaterThanOrEqual(4.5);
-    },
-  );
-
-  test.each(["light", "dark"])(
-    "keeps the spoken part's outline visible on a dimmed bar in the %s scheme",
-    async (scheme) => {
-      const dimmedStyle: BoardBrightnessStyle = {
-        "--board-brightness": BOARD_BRIGHTNESS.min,
-      };
-      localStorage.setItem("mui-mode", scheme);
-
-      const screen = await renderWithProviders(
-        <div style={dimmedStyle}>
-          <MessageBar
-            {...createProps({
-              parts: [{ id: "1", label: "Hello" }],
-              activePartId: "1",
-            })}
-          />
-        </div>,
-      );
-      const label = screen.getByText("Hello").element();
-      const surface = label.closest(".light");
-      assertDefined(surface);
-      const outlined = Array.from(surface.querySelectorAll("*")).find(
-        (element) => getComputedStyle(element).outlineStyle === "solid",
-      );
-      assertDefined(outlined);
-
-      expect(outlined.contains(label)).toBe(true);
-      expect(
-        contrastRatio(
-          paint(getComputedStyle(outlined).outlineColor),
-          paint(getComputedStyle(surface).backgroundColor),
-        ),
-      ).toBeGreaterThanOrEqual(4.5);
-    },
-  );
 
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {

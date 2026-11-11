@@ -2,9 +2,9 @@ import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
 import type { CSSProperties } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import { dim, dimmedSurface } from "../brightness/board-brightness";
 import type { BoardButton } from "../board-types";
 import { useTilePreferences } from "./tile-preferences-store";
 
@@ -17,6 +17,7 @@ interface TileProps {
 type TileColorStyle = CSSProperties & {
   "--tile-background-color"?: string;
   "--tile-border-color"?: string;
+  "--tile-brightness"?: number;
 };
 
 function channelOntoWhite(channel: "r" | "g" | "b"): string {
@@ -31,11 +32,21 @@ function desaturate(color: string, saturation: number): string {
   return `oklch(from ${color} l calc(c * ${saturation}) h)`;
 }
 
+// The same per-channel multiplication as the `brightness()` filter on the
+// tile's symbol, so the symbol and the tile behind it dim by the same amount.
+function dim(color: string): string {
+  const dimmed = (channel: "r" | "g" | "b") =>
+    `calc(${channel} * var(--tile-brightness))`;
+
+  return `rgb(from ${color} ${dimmed("r")} ${dimmed("g")} ${dimmed("b")} / alpha)`;
+}
+
 interface TileColorOptions {
   backgroundColor: string | undefined;
   borderColor: string | undefined;
   isBorderVisible: boolean;
   saturation: number;
+  brightness: number;
 }
 
 function tileColorStyle({
@@ -43,6 +54,7 @@ function tileColorStyle({
   borderColor,
   isBorderVisible,
   saturation,
+  brightness,
 }: TileColorOptions): TileColorStyle {
   const visibleBorderColor = isBorderVisible ? borderColor : undefined;
 
@@ -52,6 +64,7 @@ function tileColorStyle({
       desaturate(flattenOntoWhite(backgroundColor), saturation),
     "--tile-border-color":
       visibleBorderColor && desaturate(visibleBorderColor, saturation),
+    "--tile-brightness": brightness,
   };
 }
 
@@ -60,7 +73,7 @@ function mixWithTextColor(color: string, amount: string): string {
 }
 
 function tileSx(theme: Theme) {
-  const surface = dimmedSurface(
+  const background = dim(
     `var(--tile-background-color, ${theme.vars.palette.background.paper})`,
   );
   const borderColor = dim("var(--tile-border-color, transparent)");
@@ -74,7 +87,8 @@ function tileSx(theme: Theme) {
     height: "100%",
     p: 1,
     overflow: "hidden",
-    ...surface,
+    color: `contrast-color(${background})`,
+    backgroundColor: background,
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
@@ -83,17 +97,23 @@ function tileSx(theme: Theme) {
     },
     "&:hover": {
       "@media (hover: hover)": {
-        backgroundColor: mixWithTextColor(surface.backgroundColor, "8%"),
+        backgroundColor: mixWithTextColor(background, "8%"),
         boxShadow: theme.vars.shadows[4],
       },
     },
     "&:active": {
-      backgroundColor: mixWithTextColor(surface.backgroundColor, "16%"),
+      backgroundColor: mixWithTextColor(background, "16%"),
       boxShadow: theme.vars.shadows[8],
     },
     [`&.${buttonClasses.focusVisible}`]: {
       outlineWidth: 3,
       boxShadow: theme.vars.shadows[6],
+    },
+    "& img": {
+      filter: "brightness(var(--tile-brightness))",
+      // The tile's own colors ease with the button feedback timing; without
+      // the same easing the symbol would jump ahead of the tile behind it.
+      transition: buttonFeedbackTransition(theme, ["filter"]),
     },
   } as const;
 }
@@ -114,7 +134,7 @@ const folderTileSx = {
 
 export function Tile({ button, tabIndex, onActivate }: TileProps) {
   const t = useTranslate();
-  const { saturation, areBordersVisible, labelPlacement } =
+  const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
   const ariaLabel = button.label ? undefined : button.vocalization;
@@ -124,6 +144,7 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
     borderColor: button.borderColor,
     isBorderVisible: areBordersVisible,
     saturation,
+    brightness,
   });
 
   const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";

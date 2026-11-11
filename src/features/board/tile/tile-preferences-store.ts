@@ -18,12 +18,20 @@ export type TileLabelPlacement = (typeof TILE_LABEL_PLACEMENTS)[number];
 
 interface TilePreferences {
   saturation: number;
+  brightness: number;
   areBordersVisible: boolean;
   labelPlacement: TileLabelPlacement;
 }
 
 export const TILE_SATURATION: ClampedNumberOptions = {
   min: 0,
+  max: 1,
+  defaultValue: 1,
+};
+
+// 70% is the dimmest level whose symbols and labels were checked by eye.
+export const TILE_BRIGHTNESS: ClampedNumberOptions = {
+  min: 0.7,
   max: 1,
   defaultValue: 1,
 };
@@ -37,6 +45,7 @@ export function parseTilePreferences(raw: unknown): TilePreferences {
 
   return {
     saturation: parseClampedNumber(stored.saturation, TILE_SATURATION),
+    brightness: parseClampedNumber(stored.brightness, TILE_BRIGHTNESS),
     areBordersVisible: parseBoolean(stored.areBordersVisible, false),
     labelPlacement: isTileLabelPlacement(stored.labelPlacement)
       ? stored.labelPlacement
@@ -58,6 +67,10 @@ function updatePreferences(patch: Partial<TilePreferences>): void {
 
 export function setTileSaturation(saturation: number): void {
   updatePreferences({ saturation });
+}
+
+export function setTileBrightness(brightness: number): void {
+  updatePreferences({ brightness });
 }
 
 export function setTileBordersVisible(areBordersVisible: boolean): void {
