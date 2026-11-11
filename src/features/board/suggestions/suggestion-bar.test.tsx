@@ -39,6 +39,24 @@ describe("SuggestionBar", () => {
     expect(props.onPhraseSelect).toHaveBeenCalledTimes(2);
   });
 
+  test("groups the phrase chips under a name", async () => {
+    const props = makeProps({ phrases: ["Hello", "Goodbye"] });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+    const suggestions = screen.getByRole("group", { name: "Suggestions" });
+
+    await expect.element(suggestions.getByRole("button")).toHaveLength(2);
+  });
+
+  test("exposes no suggestion group while there are no phrases", async () => {
+    const screen = await renderWithProviders(
+      <SuggestionBar {...makeProps()} />,
+    );
+
+    await expect
+      .element(screen.getByRole("group", { name: "Suggestions" }))
+      .not.toBeInTheDocument();
+  });
+
   test("offers an enable chip when suggestions are not enabled", async () => {
     const props = makeProps({ status: { kind: "not-enabled" } });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
