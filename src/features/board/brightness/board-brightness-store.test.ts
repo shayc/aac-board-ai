@@ -14,7 +14,7 @@ describe("parseBoardBrightness", () => {
   });
 
   test.each([
-    { stored: 0.1, expected: 0.5 },
+    { stored: 0.1, expected: 0.7 },
     { stored: 5, expected: 1 },
   ])("clamps brightness $stored into range", ({ stored, expected }) => {
     expect(parseBoardBrightness(stored)).toBe(expected);

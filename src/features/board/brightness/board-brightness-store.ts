@@ -5,10 +5,9 @@ import {
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
 
-// A wide range leaves the choice to the user. Labels and the speaking
-// highlight keep their contrast down to this floor.
+// 70% is the dimmest level whose symbols and labels were checked by eye.
 export const BOARD_BRIGHTNESS: ClampedNumberOptions = {
-  min: 0.5,
+  min: 0.7,
   max: 1,
   defaultValue: 1,
 };
