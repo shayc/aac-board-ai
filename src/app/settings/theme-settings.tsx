@@ -9,7 +9,15 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useId } from "react";
+import { useId, type MouseEvent } from "react";
+
+const themeOptions = [
+  { value: "system", message: m.themeSystem, Icon: DesktopWindowsOutlinedIcon },
+  { value: "light", message: m.themeLight, Icon: LightModeOutlinedIcon },
+  { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
+] as const;
+
+type ThemeMode = (typeof themeOptions)[number]["value"];
 
 export function ThemeSettings() {
   const t = useTranslate();
@@ -20,16 +28,12 @@ export function ThemeSettings() {
     return null;
   }
 
-  const options = [
-    {
-      value: "system",
-      label: t(m.themeSystem),
-      Icon: DesktopWindowsOutlinedIcon,
-    },
-    { value: "light", label: t(m.themeLight), Icon: LightModeOutlinedIcon },
-    { value: "dark", label: t(m.themeDark), Icon: DarkModeOutlinedIcon },
-  ] as const;
-  type ThemeMode = (typeof options)[number]["value"];
+  function handleChange(_event: MouseEvent, selected: ThemeMode | null) {
+    // Pressing the active button reports null; a theme must stay selected.
+    if (selected) {
+      setMode(selected);
+    }
+  }
 
   return (
     <FormControl fullWidth>
@@ -41,21 +45,20 @@ export function ThemeSettings() {
         value={mode}
         exclusive
         fullWidth
-        onChange={(_event, selected: ThemeMode | null) => {
-          // Pressing the active button reports null; a theme must stay selected.
-          if (selected) {
-            setMode(selected);
-          }
-        }}
+        onChange={handleChange}
         sx={{ mt: 1 }}
       >
-        {options.map(({ value, label, Icon }) => (
-          <Tooltip key={value} title={label}>
-            <ToggleButton aria-label={label} value={value}>
-              <Icon />
-            </ToggleButton>
-          </Tooltip>
-        ))}
+        {themeOptions.map(({ value, message, Icon }) => {
+          const label = t(message);
+
+          return (
+            <Tooltip key={value} title={label}>
+              <ToggleButton aria-label={label} value={value}>
+                <Icon />
+              </ToggleButton>
+            </Tooltip>
+          );
+        })}
       </ToggleButtonGroup>
     </FormControl>
   );
