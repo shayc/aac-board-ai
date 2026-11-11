@@ -102,8 +102,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       ? state.current.message(t)
       : state.current?.message;
 
-  const isAtBottom = isSmallScreen || outlet !== undefined;
-
   const snackbar = (
     <Snackbar
       key={state.current?.key}
@@ -112,8 +110,12 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       autoHideDuration={
         state.current?.durationMs ?? defaultDurationMs(severity)
       }
+      // Top of the page on every screen size: at the bottom of a phone it
+      // would sit on the board's Go back, Go home and Backspace buttons, and
+      // an error stays there until it is closed. A drawer's header holds its
+      // Close button, so inside a drawer the snackbar sits at the bottom.
       anchorOrigin={{
-        vertical: isAtBottom ? "bottom" : "top",
+        vertical: outlet ? "bottom" : "top",
         horizontal: "center",
       }}
       slotProps={{ transition: { onExited: handleExited } }}
@@ -168,9 +170,8 @@ function snackbarPlacementSx(
   theme: Theme,
   { isInOutlet, isSmallScreen }: SnackbarPlacement,
 ) {
-  const edgeInsets = {
+  const sideInsets = {
     right: safeAreaGutter(theme.spacing(1), "right"),
-    bottom: safeAreaGutter(theme.spacing(1), "bottom"),
     left: safeAreaGutter(theme.spacing(1), "left"),
   };
 
@@ -178,14 +179,19 @@ function snackbarPlacementSx(
   // width and moves with it instead of the viewport. MUI centers wide-screen
   // snackbars from a media query, which only the same query can override.
   if (isInOutlet) {
+    const drawerInsets = {
+      ...sideInsets,
+      bottom: safeAreaGutter(theme.spacing(1), "bottom"),
+    };
+
     return {
       position: "absolute",
-      ...edgeInsets,
-      [theme.breakpoints.up("sm")]: { ...edgeInsets, transform: "none" },
+      ...drawerInsets,
+      [theme.breakpoints.up("sm")]: { ...drawerInsets, transform: "none" },
     };
   }
 
-  return isSmallScreen ? edgeInsets : {};
+  return isSmallScreen ? sideInsets : {};
 }
 
 function isUrgent(severity: SnackbarSeverity) {
