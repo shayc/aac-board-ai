@@ -44,7 +44,8 @@ async function measureTracks(
   {
     itemSize,
     scrollToTrack,
-  }: { itemSize?: number; scrollToTrack?: number } = {},
+    focusTrack,
+  }: { itemSize?: number; scrollToTrack?: number; focusTrack?: number } = {},
 ) {
   const isColumns = axis === "columns";
   const items = Array.from({ length: tracks }, (_, index) => ({
@@ -87,6 +88,12 @@ async function measureTracks(
     scrollTrackToStart(grid, axis, scrollToTrack);
   }
 
+  if (focusTrack !== undefined) {
+    const item = grid.querySelectorAll("button").item(focusTrack);
+    assertDefined(item);
+    item.focus();
+  }
+
   const { start, end, size, scrollSize, clientSize } = AXES[axis];
   const viewport = scroller.getBoundingClientRect();
   const cells = Array.from(grid.querySelectorAll("[role='gridcell']"), (cell) =>
@@ -118,7 +125,7 @@ async function measureTracks(
 }
 
 // Rows snap on the block axis and cells on the inline axis, so each axis
-// scrolls the element that carries its snap margin.
+// scrolls the element that snaps on it.
 function scrollTrackToStart(grid: Element, axis: Axis, index: number) {
   const selector = axis === "columns" ? "[role='gridcell']" : "[role='row']";
   const track = grid.querySelectorAll(selector).item(index);
@@ -410,6 +417,21 @@ describe("Grid", () => {
         expect(layout.visibleCellCount).toBe(3);
         expect(layout.leadingHint).toBeCloseTo(OVERFLOW_HINT_PX, 0);
         expect(layout.trailingSpace).toBeCloseTo(PADDING_PX[axis], 0);
+      },
+    );
+
+    // Without help the browser leaves a focused element where it is as long as
+    // any part of it shows, and the hint is such a part.
+    test.each(["columns", "rows"] as const)(
+      "scrolls the hinted track of the %s into view when its item takes focus",
+      async (axis) => {
+        const layout = await measureTracks(axis, 375, 20, { focusTrack: 3 });
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.leadingHint).toBeGreaterThan(0);
+        expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
+          1,
+        );
       },
     );
 

@@ -128,6 +128,12 @@ function measureBoardLayout(
       column.left < viewport.right && column.right > viewport.right + 0.5,
   );
   const isBarBelowGrid = backspace.top >= viewport.bottom - 0.5;
+  // With the buttons below the grid, the message bar is the bar above it.
+  const barAboveBottom = isBarBelowGrid
+    ? messageBar.getBoundingClientRect().bottom
+    : backspace.bottom;
+  const firstRow = rows.at(0);
+  assertDefined(firstRow);
 
   return {
     messageBarStart: messageBar.getBoundingClientRect().left,
@@ -139,6 +145,7 @@ function measureBoardLayout(
     barToNearestTile: isBarBelowGrid
       ? backspace.top - lastWholeRow.bottom
       : firstWholeRow.top - backspace.bottom,
+    barAboveToFirstRow: firstRow.top - barAboveBottom,
     wholeRows: wholeRows.length,
     topHint: rowAbove ? rowAbove.bottom - viewport.top : 0,
     bottomHint: rowBelow ? viewport.bottom - rowBelow.top : 0,
@@ -228,6 +235,7 @@ describe("CommunicationBoard", () => {
           expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
           expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
           expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
+          expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
           expect(atStart.wholeRows).toBe(wholeRows);
           expect(atStart.bottomHint).toBeCloseTo(8, 0);
           expect(atStart.sideHint).toBeCloseTo(sideHint, 0);

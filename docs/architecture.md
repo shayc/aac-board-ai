@@ -293,15 +293,22 @@ The message bar, the bars around the grid, and the grid read their spacing from
 between any two of them changes in one place. Two values exist for each side of
 the `sm` breakpoint: the page margin and the scroll clearance.
 
-- A bar next to the grid pads the edge the grid scrolls against by the scroll
-  clearance. The grid pads its top and bottom by the page margin minus that
-  clearance, so a bar and the nearest tile are one page margin apart.
+- The bars above the grid sit one page margin apart. Whichever bar is next to
+  the grid, above or below, pads the edge the grid scrolls against by the
+  scroll clearance. The grid pads its top and bottom by the page margin minus
+  that clearance, so a bar and the nearest tile are one page margin apart.
 - The grid's
   [layout](../src/features/board/grid/grid-layout.ts) takes a padding and an
   overflow hint for each axis. Changing a padding does not change a hint.
-- The space between a bar and the first whole row is the clearance, the overflow
-  hint, and one tile gap whenever a hint shows. Making one of the three smaller
-  is the only way to make that space smaller.
+- The grid's viewport sets its scroll padding to half the inset of an axis that
+  scrolls. A row or column at rest, and a tile scrolled in because it took
+  focus, sit that far from the edge with the same hint of both neighbors.
+- Where the scroll rests at its start or end and a hint shows next to a bar, the
+  space between that bar and the nearest whole row is the clearance, the
+  overflow hint, and one tile gap. Making one of the three smaller is the only
+  way to make that space smaller. Mid-scroll the space is the clearance plus the
+  scroll padding, which is smaller wherever the grid's padding is less than a
+  gap plus the hint.
 
 ## Module boundaries and code map
 

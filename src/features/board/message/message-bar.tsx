@@ -59,7 +59,8 @@ export function MessageBar({
     <Stack
       {...scanGroupProps}
       direction="row"
-      sx={{ p: PAGE_MARGIN, userSelect: "text" }}
+      // No bottom padding: what sits below the bar decides that space.
+      sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN, userSelect: "text" }}
     >
       <Stack
         className={LIGHT_SCHEME_CLASS}

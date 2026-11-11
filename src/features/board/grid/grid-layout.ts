@@ -5,10 +5,36 @@ import { PAGE_MARGIN, SCROLL_CLEARANCE } from "../board-spacing";
 // so that wide boards fit more columns before they scroll.
 const GRID_MIN_CELL_WIDTH_PX = 88;
 const GRID_MIN_CELL_HEIGHT_PX = 96;
+// The theme's spacing unit as a number: container queries compare against
+// lengths, and the theme only offers its unit as a CSS variable.
 const GRID_SPACING_UNIT_PX = 8;
 const GRID_GAP = "var(--grid-gap)";
-const GRID_CELL_WIDTH = "var(--grid-cell-width)";
-const GRID_CELL_HEIGHT = "var(--grid-cell-height)";
+
+const AXES = {
+  inline: {
+    feature: "min-width",
+    viewportSize: "100cqi",
+    minCellSizePx: GRID_MIN_CELL_WIDTH_PX,
+    cellSize: "--grid-cell-width",
+    visibleTracks: "--grid-visible-columns",
+    padding: "--grid-inline-padding",
+    inset: "--grid-inline-inset",
+  },
+  block: {
+    feature: "min-height",
+    viewportSize: "100cqb",
+    minCellSizePx: GRID_MIN_CELL_HEIGHT_PX,
+    cellSize: "--grid-cell-height",
+    visibleTracks: "--grid-visible-rows",
+    padding: "--grid-block-padding",
+    inset: "--grid-block-inset",
+  },
+} as const;
+
+type GridAxis = (typeof AXES)[keyof typeof AXES];
+
+const GRID_CELL_WIDTH = `var(${AXES.inline.cellSize})`;
+const GRID_CELL_HEIGHT = `var(${AXES.block.cellSize})`;
 
 interface AxisSpacing {
   // Space between the grid's edge and its first and last track.
@@ -26,44 +52,29 @@ interface GridSpacing {
 // The side padding is the page margin, so tiles line up with the bars around
 // the grid. The top and bottom padding is the page margin minus the clearance
 // the bars next to the grid already keep, so a bar and the nearest tile end up
-// one page margin apart.
-const GRID_COMPACT_SPACING: GridSpacing = {
-  inline: {
-    paddingPx: spacingUnitsToPx(PAGE_MARGIN.xs),
-    overflowHintPx: 8,
+// one page margin apart. Keyed like the board's spacing: below and from "sm".
+const GRID_SPACING: Record<"xs" | "sm", GridSpacing> = {
+  xs: {
+    inline: {
+      paddingPx: spacingUnitsToPx(PAGE_MARGIN.xs),
+      overflowHintPx: 8,
+    },
+    block: {
+      paddingPx: spacingUnitsToPx(PAGE_MARGIN.xs - SCROLL_CLEARANCE.xs),
+      overflowHintPx: 8,
+    },
   },
-  block: {
-    paddingPx: spacingUnitsToPx(PAGE_MARGIN.xs - SCROLL_CLEARANCE.xs),
-    overflowHintPx: 8,
+  sm: {
+    inline: {
+      paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm),
+      overflowHintPx: 16,
+    },
+    block: {
+      paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm - SCROLL_CLEARANCE.sm),
+      overflowHintPx: 8,
+    },
   },
 };
-const GRID_REGULAR_SPACING: GridSpacing = {
-  inline: {
-    paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm),
-    overflowHintPx: 16,
-  },
-  block: {
-    paddingPx: spacingUnitsToPx(PAGE_MARGIN.sm - SCROLL_CLEARANCE.sm),
-    overflowHintPx: 8,
-  },
-};
-
-const AXES = {
-  inline: {
-    feature: "min-width",
-    visibleTracks: "--grid-visible-columns",
-    padding: "--grid-inline-padding",
-    inset: "--grid-inline-inset",
-  },
-  block: {
-    feature: "min-height",
-    visibleTracks: "--grid-visible-rows",
-    padding: "--grid-block-padding",
-    inset: "--grid-block-inset",
-  },
-} as const;
-
-type GridAxis = (typeof AXES)[keyof typeof AXES];
 
 interface GridLayoutOptions {
   rows: number;
@@ -71,13 +82,10 @@ interface GridLayoutOptions {
   gap: number;
 }
 
-// A snapped track sits half the axis' inset from the edge, which leaves the
-// same hint of its neighbors on both sides.
 export const gridCellSx = {
   flex: 1,
   minWidth: GRID_CELL_WIDTH,
   minHeight: GRID_CELL_HEIGHT,
-  scrollMarginInline: `calc(var(${AXES.inline.inset}) / 2)`,
   scrollSnapAlign: "none start",
 } as const;
 
@@ -88,16 +96,36 @@ export const gridRowSx = {
   flex: 1,
   minHeight: GRID_CELL_HEIGHT,
   gap: GRID_GAP,
-  scrollMarginBlock: `calc(var(${AXES.block.inset}) / 2)`,
   scrollSnapAlign: "start none",
 } as const;
 
-export const gridViewportSx = {
-  containerType: "size",
-  height: "100%",
-  overflow: "auto",
-  scrollSnapType: "both proximity",
-} as const;
+export function createGridViewportSx(theme: Theme, gap: number) {
+  const gapPx = spacingUnitsToPx(gap);
+
+  return {
+    containerType: "size",
+    height: "100%",
+    overflow: "auto",
+    scrollSnapType: "both proximity",
+    [theme.breakpoints.down("sm")]: createScrollPadding(gapPx, GRID_SPACING.xs),
+    [theme.breakpoints.up("sm")]: createScrollPadding(gapPx, GRID_SPACING.sm),
+  };
+}
+
+// A track scrolled to rest sits half the scrolling inset from the edge, which
+// leaves the same hint of its neighbors on both sides. The hint is narrower
+// than this padding, so a hinted tile that takes focus counts as out of view
+// and the browser scrolls all of it in.
+function createScrollPadding(gapPx: number, spacing: GridSpacing) {
+  return {
+    scrollPaddingInline: formatPx(
+      calculateScrollingInsetPx(gapPx, spacing.inline) / 2,
+    ),
+    scrollPaddingBlock: formatPx(
+      calculateScrollingInsetPx(gapPx, spacing.block) / 2,
+    ),
+  };
+}
 
 export function createGridContentSx(
   theme: Theme,
@@ -107,22 +135,14 @@ export function createGridContentSx(
 
   return {
     "--grid-gap": formatPx(gapPx),
-    "--grid-cell-width": createCellSizeExpression(
-      "100cqi",
-      AXES.inline,
-      GRID_MIN_CELL_WIDTH_PX,
-    ),
-    "--grid-cell-height": createCellSizeExpression(
-      "100cqb",
-      AXES.block,
-      GRID_MIN_CELL_HEIGHT_PX,
-    ),
-    minWidth: createGridExtentExpression(GRID_CELL_WIDTH, AXES.inline, columns),
+    [AXES.inline.cellSize]: createCellSizeExpression(AXES.inline),
+    [AXES.block.cellSize]: createCellSizeExpression(AXES.block),
+    minWidth: createGridExtentExpression(AXES.inline, columns),
     // A definite height, not a minimum: rows share it equally, so a row is
     // always the fitted cell height. With only a minimum the height would be
     // indefinite, rows would size to their content, and a tile taller than the
     // fitted height would push the next row's overflow hint out of view.
-    height: createGridExtentExpression(GRID_CELL_HEIGHT, AXES.block, rows),
+    height: createGridExtentExpression(AXES.block, rows),
     gap: GRID_GAP,
     px: `var(${AXES.inline.padding})`,
     py: `var(${AXES.block.padding})`,
@@ -130,13 +150,13 @@ export function createGridContentSx(
       rows,
       columns,
       gapPx,
-      GRID_COMPACT_SPACING,
+      GRID_SPACING.xs,
     ),
     [theme.breakpoints.up("sm")]: createSpacingRules(
       rows,
       columns,
       gapPx,
-      GRID_REGULAR_SPACING,
+      GRID_SPACING.sm,
     ),
   };
 }
@@ -148,20 +168,8 @@ function createSpacingRules(
   spacing: GridSpacing,
 ) {
   return {
-    ...createAxisRules(
-      AXES.inline,
-      columns,
-      GRID_MIN_CELL_WIDTH_PX,
-      gapPx,
-      spacing.inline,
-    ),
-    ...createAxisRules(
-      AXES.block,
-      rows,
-      GRID_MIN_CELL_HEIGHT_PX,
-      gapPx,
-      spacing.block,
-    ),
+    ...createAxisRules(AXES.inline, columns, gapPx, spacing.inline),
+    ...createAxisRules(AXES.block, rows, gapPx, spacing.block),
   };
 }
 
@@ -174,23 +182,27 @@ type AxisRules = Record<
 function createAxisRules(
   axis: GridAxis,
   count: number,
-  minCellSizePx: number,
   gapPx: number,
   spacing: AxisSpacing,
 ): AxisRules {
   const rules: AxisRules = {
     [axis.padding]: formatPx(spacing.paddingPx),
-    ...createVisibleTrackProperties(axis, 1, count, gapPx, spacing),
+    ...createVisibleTrackProperties(
+      axis,
+      1,
+      calculateInsetPx(1, count, gapPx, spacing),
+    ),
   };
 
   for (let visibleTracks = 2; visibleTracks <= count; visibleTracks++) {
+    const insetPx = calculateInsetPx(visibleTracks, count, gapPx, spacing);
     const thresholdPx =
-      visibleTracks * minCellSizePx +
+      visibleTracks * axis.minCellSizePx +
       (visibleTracks - 1) * gapPx +
-      calculateInsetPx(visibleTracks, count, gapPx, spacing);
+      insetPx;
 
     rules[`@container (${axis.feature}: ${formatPx(thresholdPx)})`] =
-      createVisibleTrackProperties(axis, visibleTracks, count, gapPx, spacing);
+      createVisibleTrackProperties(axis, visibleTracks, insetPx);
   }
 
   return rules;
@@ -199,15 +211,11 @@ function createAxisRules(
 function createVisibleTrackProperties(
   axis: GridAxis,
   visibleTracks: number,
-  count: number,
-  gapPx: number,
-  spacing: AxisSpacing,
+  insetPx: number,
 ): Record<string, string | number> {
   return {
     [axis.visibleTracks]: visibleTracks,
-    [axis.inset]: formatPx(
-      calculateInsetPx(visibleTracks, count, gapPx, spacing),
-    ),
+    [axis.inset]: formatPx(insetPx),
   };
 }
 
@@ -219,30 +227,31 @@ function calculateInsetPx(
   visibleTracks: number,
   count: number,
   gapPx: number,
-  { paddingPx, overflowHintPx }: AxisSpacing,
+  spacing: AxisSpacing,
 ): number {
   const isScrollable = visibleTracks < count;
 
-  return isScrollable ? paddingPx + gapPx + overflowHintPx : 2 * paddingPx;
+  return isScrollable
+    ? calculateScrollingInsetPx(gapPx, spacing)
+    : 2 * spacing.paddingPx;
 }
 
-function createCellSizeExpression(
-  viewportSize: string,
-  axis: GridAxis,
-  minCellSizePx: number,
-): string {
+function calculateScrollingInsetPx(
+  gapPx: number,
+  { paddingPx, overflowHintPx }: AxisSpacing,
+): number {
+  return paddingPx + gapPx + overflowHintPx;
+}
+
+function createCellSizeExpression(axis: GridAxis): string {
   const visibleTracks = `var(${axis.visibleTracks})`;
-  const availableSize = `${viewportSize} - var(${axis.inset}) - (${visibleTracks} - 1) * ${GRID_GAP}`;
+  const availableSize = `${axis.viewportSize} - var(${axis.inset}) - (${visibleTracks} - 1) * ${GRID_GAP}`;
 
-  return `max(${formatPx(minCellSizePx)}, calc((${availableSize}) / ${visibleTracks}))`;
+  return `max(${formatPx(axis.minCellSizePx)}, calc((${availableSize}) / ${visibleTracks}))`;
 }
 
-function createGridExtentExpression(
-  cellSize: string,
-  axis: GridAxis,
-  count: number,
-): string {
-  return `calc(${count} * ${cellSize} + ${count - 1} * ${GRID_GAP} + 2 * var(${axis.padding}))`;
+function createGridExtentExpression(axis: GridAxis, count: number): string {
+  return `calc(${count} * var(${axis.cellSize}) + ${count - 1} * ${GRID_GAP} + 2 * var(${axis.padding}))`;
 }
 
 function spacingUnitsToPx(units: number): number {

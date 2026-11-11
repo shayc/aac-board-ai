@@ -97,8 +97,8 @@ export function CommunicationBoard({
   );
 
   // On a small screen the buttons move to the bottom bar, which leaves this row
-  // with nothing to show unless suggestions are available. Its padding would
-  // otherwise leave an empty strip above the grid.
+  // with nothing to show unless suggestions are available. Rendered empty, it
+  // would still take a page margin above the grid.
   const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
 
   return (
@@ -112,37 +112,35 @@ export function CommunicationBoard({
           pr: { sm: safeAreaInset("right") },
         }}
       >
-        <PlaybackMessageBar parts={message.parts} playback={playback} />
+        {/* The bars above the grid sit one page margin apart, and whichever is
+            last keeps the scroll clearance from the tiles below it. */}
+        <Stack spacing={PAGE_MARGIN} sx={{ pb: SCROLL_CLEARANCE }}>
+          <PlaybackMessageBar parts={message.parts} playback={playback} />
 
-        {isActionRowVisible && (
-          <Stack
-            {...scanGroupProps}
-            direction="row"
-            spacing={2}
-            sx={{
-              justifyContent: "space-between",
-              px: PAGE_MARGIN,
-              // Nothing scrolls above this row, and the message bar keeps its
-              // own distance, so only the bottom needs clearance.
-              pb: SCROLL_CLEARANCE,
-            }}
-          >
-            <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-              {!isSmallScreen && navigationButtons}
+          {isActionRowVisible && (
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={2}
+              sx={{ justifyContent: "space-between", px: PAGE_MARGIN }}
+            >
+              <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
+                {!isSmallScreen && navigationButtons}
 
-              {suggestions.isSupported && (
-                <SuggestionBar
-                  status={suggestions.status}
-                  phrases={suggestions.phrases}
-                  onEnable={suggestions.enable}
-                  onPhraseSelect={message.replaceWithText}
-                />
-              )}
+                {suggestions.isSupported && (
+                  <SuggestionBar
+                    status={suggestions.status}
+                    phrases={suggestions.phrases}
+                    onEnable={suggestions.enable}
+                    onPhraseSelect={message.replaceWithText}
+                  />
+                )}
+              </Stack>
+
+              {!isSmallScreen && backspaceButton}
             </Stack>
-
-            {!isSmallScreen && backspaceButton}
-          </Stack>
-        )}
+          )}
+        </Stack>
 
         <Box sx={{ flex: 1, minHeight: 0 }}>
           <Grid<BoardButton>
@@ -160,11 +158,13 @@ export function CommunicationBoard({
           <Stack
             {...scanGroupProps}
             direction="row"
+            spacing={2}
             sx={(theme) => ({
               justifyContent: "space-between",
-              gap: 2,
               px: PAGE_MARGIN,
               pt: SCROLL_CLEARANCE,
+              // As tight below the buttons as above them: this bar is all the
+              // margin the screen's bottom edge gets, plus the safe area.
               pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
             })}
           >
