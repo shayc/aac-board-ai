@@ -123,7 +123,7 @@ const themeOptions = {
       palette: {
         primary: { main: "#3fd0bd" },
         grey,
-        background: { default: BACKGROUND_DARK, paper: "#1a1d23" },
+        background: { default: BACKGROUND_DARK, paper: "#262930" },
         error: { main: "#f2b8b5" },
         outline: outline.dark,
         Chip: { defaultBorder: outline.dark },
