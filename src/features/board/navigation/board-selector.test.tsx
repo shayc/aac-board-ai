@@ -73,6 +73,16 @@ describe("BoardSelector", () => {
     });
   });
 
+  test("names the popup list without referencing a missing label", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("combobox").click();
+
+    const listbox = screen.getByRole("listbox", { name: "Board" });
+    await expect.element(listbox).toBeVisible();
+    await expect.element(listbox).not.toHaveAttribute("aria-labelledby");
+  });
+
   test("navigates and closes the popup when a board is clicked", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 

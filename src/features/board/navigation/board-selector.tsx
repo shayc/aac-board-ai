@@ -39,6 +39,12 @@ export function BoardSelector({ summaries }: BoardSelectorProps) {
       autoHighlight
       size="small"
       slotProps={{
+        // MUI points the listbox at a visible label's id, which this field
+        // doesn't render, so it is named directly instead.
+        listbox: {
+          "aria-label": t(m.boardSelectorLabel),
+          "aria-labelledby": undefined,
+        },
         popupIndicator: { sx: { border: "none" } },
       }}
       getOptionLabel={(board) => board.name}
