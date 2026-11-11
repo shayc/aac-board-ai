@@ -144,9 +144,9 @@ function MessagePartItem({
       sx={(theme) => ({
         p: 1,
         borderRadius: theme.vars.shape.borderRadius,
-        outline: isActive
-          ? `2px solid ${theme.vars.palette.primary.main}`
-          : "none",
+        // The label's color follows the bar's brightness, so the outline stays
+        // visible on a dimmed bar where a fixed color would fade into it.
+        outline: isActive ? "2px solid currentColor" : "none",
         outlineOffset: -2,
       })}
     >

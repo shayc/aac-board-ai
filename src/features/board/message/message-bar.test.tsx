@@ -148,6 +148,42 @@ describe("MessageBar", () => {
     },
   );
 
+  test.each(["light", "dark"])(
+    "keeps the spoken part's outline visible on a dimmed bar in the %s scheme",
+    async (scheme) => {
+      const dimmedStyle: BoardBrightnessStyle = {
+        "--board-brightness": TILE_BRIGHTNESS.min,
+      };
+      localStorage.setItem("mui-mode", scheme);
+
+      const screen = await renderWithProviders(
+        <div style={dimmedStyle}>
+          <MessageBar
+            {...createProps({
+              parts: [{ id: "1", label: "Hello" }],
+              activePartId: "1",
+            })}
+          />
+        </div>,
+      );
+      const label = screen.getByText("Hello").element();
+      const surface = label.closest(".light");
+      assertDefined(surface);
+      const outlined = Array.from(surface.querySelectorAll("*")).find(
+        (element) => getComputedStyle(element).outlineStyle === "solid",
+      );
+      assertDefined(outlined);
+
+      expect(outlined.contains(label)).toBe(true);
+      expect(
+        contrastRatio(
+          paint(getComputedStyle(outlined).outlineColor),
+          paint(getComputedStyle(surface).backgroundColor),
+        ),
+      ).toBeGreaterThanOrEqual(4.5);
+    },
+  );
+
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {
       const props = createProps();
