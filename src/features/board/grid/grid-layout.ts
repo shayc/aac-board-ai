@@ -2,7 +2,7 @@ import type { Theme } from "@mui/material/styles";
 
 // A tile's symbol and label need the extra height; its width can go narrower
 // so that wide boards fit more columns before they scroll.
-const GRID_MIN_CELL_WIDTH_PX = 72;
+const GRID_MIN_CELL_WIDTH_PX = 88;
 const GRID_MIN_CELL_HEIGHT_PX = 96;
 const GRID_GAP_UNIT_PX = 8;
 const GRID_COMPACT_PADDING_PX = 16;

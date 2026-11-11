@@ -13,7 +13,7 @@ const cssVariableTheme = createTheme({ cssVariables: true });
 
 // The test viewport is below "sm", where the grid uses compact padding.
 const PADDING_PX = 16;
-const MIN_CELL_SIZE_PX = { columns: 72, rows: 96 };
+const MIN_CELL_SIZE_PX = { columns: 88, rows: 96 };
 
 const AXES = {
   columns: {
@@ -315,9 +315,9 @@ describe("Grid", () => {
 
   describe("responsive sizing", () => {
     const FIT_CASES = [
-      { axis: "columns", containerSize: 1000, tracks: 20, visible: 12 },
+      { axis: "columns", containerSize: 1000, tracks: 20, visible: 10 },
       { axis: "columns", containerSize: 1000, tracks: 4, visible: 4 },
-      { axis: "columns", containerSize: 375, tracks: 20, visible: 4 },
+      { axis: "columns", containerSize: 375, tracks: 20, visible: 3 },
       { axis: "rows", containerSize: 1000, tracks: 20, visible: 9 },
       { axis: "rows", containerSize: 1000, tracks: 4, visible: 4 },
       { axis: "rows", containerSize: 375, tracks: 20, visible: 3 },
