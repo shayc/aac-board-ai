@@ -13,6 +13,7 @@ import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router";
+import { exportBoardSet } from "../export/board-set-export";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import { BOARD_SET_SEGMENT } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -66,6 +67,17 @@ export function BoardSetLibrary() {
     }
   }
 
+  async function handleExport(boardSet: BoardSetRecord) {
+    try {
+      await exportBoardSet(boardSet);
+    } catch {
+      showSnackbar({
+        message: (t) => t(m.libraryExportFailed, { name: boardSet.name }),
+        severity: "error",
+      });
+    }
+  }
+
   if (isLoading) {
     return (
       <Box sx={{ height: "100%", px: 2 }}>
@@ -99,8 +111,9 @@ export function BoardSetLibrary() {
         boardSets={boardSets}
         downloadableBoardSets={downloadableBoardSets}
         activeBoardSetId={activeBoardSetId}
-        onRequestDelete={setDeleteTarget}
         onShowInfo={setInfoTarget}
+        onExport={(boardSet) => void handleExport(boardSet)}
+        onRequestDelete={setDeleteTarget}
       />
 
       <BoardSetInfoDialog

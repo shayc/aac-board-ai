@@ -121,6 +121,13 @@ skips files without a board file extension and reports when none remain. It
 imports the rest one at a time, so a failing file doesn't block the others, and
 reports the outcome in one message that names the file when exactly one fails.
 
+Export is the reverse, for one set at a time from its library menu.
+`boardSetToOBZ` packages the stored OBF records, which already carry the
+translations saved on this device, with the set's stored assets. Board links get
+the paths `createOBZ` writes, since the imported archive's paths no longer exist,
+and media whose file was never stored drop their path and fall back to `data` or
+`url`. The set name, translated into the communication language, names the file.
+
 ### Open a board
 
 Route loaders only read; they never translate or wait on a model:
@@ -322,6 +329,7 @@ are relative to `src/features/board/`.
 | ---------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
 | Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                  |
 | Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                             |
+| Export                 | [export/](../src/features/board/export/)                                                               | Package a stored board set as an OBZ file.                                      |
 | Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                            |
 | Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.   |
 | Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.    |
@@ -355,9 +363,9 @@ AI availability, provisioning, and session lifecycle to
 
 - **AI availability varies.** Support depends on browser, hardware, model
   installation, and language.
-- **Boards are import-only.** There is no editor, export, or cross-device sync.
-  Moving boards between devices requires the original OBF/OBZ files; cached
-  translations cannot be exported.
+- **Boards cannot be edited or synced.** There is no editor or cross-device
+  sync. Moving boards between devices means exporting each board set as an OBZ
+  file and importing it on the other device.
 - **Speech may use external services.** Offline availability and privacy depend
   on the selected voice.
 - **Remote media has limited offline support.** Cached third-party images may be
