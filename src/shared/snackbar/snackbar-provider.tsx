@@ -5,7 +5,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
+import {
+  type FocusEvent,
+  type ReactNode,
+  type SyntheticEvent,
+  useReducer,
+  useRef,
+} from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -46,6 +52,8 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
+  const snackbarRef = useRef<HTMLDivElement>(null);
+  const focusOriginRef = useRef<HTMLElement | null>(null);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   function showSnackbar(options: SnackbarOptions | string) {
@@ -68,7 +76,26 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       return;
     }
 
+    returnFocus();
     dispatch({ type: "close" });
+  }
+
+  function handleFocus(event: FocusEvent<HTMLDivElement>) {
+    const origin = event.relatedTarget;
+    const isFromOutside =
+      origin instanceof HTMLElement && !event.currentTarget.contains(origin);
+
+    if (isFromOutside) {
+      focusOriginRef.current = origin;
+    }
+  }
+
+  // Closing removes the button that was just pressed. Without this, keyboard
+  // focus would fall to the top of the page.
+  function returnFocus() {
+    if (snackbarRef.current?.contains(document.activeElement)) {
+      focusOriginRef.current?.focus();
+    }
   }
 
   function handleExited() {
@@ -85,6 +112,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 
   function handleActionSelect() {
     action?.onSelect();
+    returnFocus();
     dispatch({ type: "close" });
   }
 
@@ -94,8 +122,10 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 
       <Snackbar
         key={state.current?.key}
+        ref={snackbarRef}
         open={state.open}
         onClose={handleClose}
+        onFocus={handleFocus}
         autoHideDuration={
           state.current?.durationMs ?? defaultDurationMs(severity)
         }

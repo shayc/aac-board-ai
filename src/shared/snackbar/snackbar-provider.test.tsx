@@ -4,7 +4,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { page } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
@@ -131,6 +131,37 @@ describe("SnackbarProvider", () => {
 
     expect(onSelect).toHaveBeenCalledOnce();
     await expect.element(screen.getByText("cleared")).not.toBeInTheDocument();
+  });
+
+  test("returns keyboard focus to where it came from when a snackbar button closes it", async () => {
+    const screen = await renderSnackbars({
+      "show-undoable": {
+        message: "cleared",
+        durationMs: LONG_DURATION_MS,
+        action: { label: "Undo", onSelect: vi.fn() },
+      },
+      "show-error": { message: "failed", severity: "error" },
+    });
+    const outside = screen.getByRole("button", { name: "outside" });
+
+    for (const [trigger, snackbarButton] of [
+      ["show-undoable", "Undo"],
+      ["show-error", "Close"],
+    ] as const) {
+      await screen.getByRole("button", { name: trigger }).click();
+      outside.element().focus();
+      await userEvent.tab();
+      await expect
+        .element(screen.getByRole("button", { name: snackbarButton }))
+        .toHaveFocus();
+
+      await userEvent.keyboard("{Enter}");
+
+      await expect.element(outside).toHaveFocus();
+      await expect
+        .element(screen.getByRole("button", { name: snackbarButton }))
+        .not.toBeInTheDocument();
+    }
   });
 
   test.each([375, 1024])(
