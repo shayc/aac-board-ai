@@ -14,6 +14,10 @@ export interface MessageBarProps {
   onStop: () => void;
 }
 
+// Symbols are drawn for light backgrounds, so the bar stays a light surface in
+// dark mode; the scheme class makes everything inside it resolve light tokens.
+const LIGHT_SCHEME_CLASS = "light";
+
 export function MessageBar({
   parts,
   activePartId,
@@ -54,6 +58,7 @@ export function MessageBar({
       sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}
     >
       <Stack
+        className={LIGHT_SCHEME_CLASS}
         direction="row"
         sx={[
           {
@@ -61,14 +66,19 @@ export function MessageBar({
             gap: 2,
             overflow: "hidden",
             border: 1,
-            borderColor: "divider",
+            borderColor: "transparent",
             borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
+            color: "text.primary",
             bgcolor: "background.paper",
+            colorScheme: "light",
           },
           (theme) =>
             theme.applyStyles("light", {
-              borderColor: "transparent",
               boxShadow: theme.vars.shadows[1],
+            }),
+          (theme) =>
+            theme.applyStyles("dark", {
+              bgcolor: theme.vars.palette.grey[400],
             }),
         ]}
       >

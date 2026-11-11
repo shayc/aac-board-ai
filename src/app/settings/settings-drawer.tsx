@@ -66,7 +66,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             <ExternalLink
               href="https://github.com/shayc/aac-board-ai"
               variant="body2"
-              color="text.secondary"
               sx={{ alignSelf: "flex-start" }}
             >
               <GitHubIcon

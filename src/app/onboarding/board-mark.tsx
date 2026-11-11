@@ -1,11 +1,13 @@
 import Box from "@mui/material/Box";
-import { BACKGROUND_DARK } from "@shared/theme/theme-colors";
 
 const TILE_ROWS = [
   ["#C9B8F0", "#FBE89A", "#BFE3C6"],
   ["#FBE89A", "#F5B3B0", "#BFE3C6"],
   ["#F9C99A", "#BFE3C6", "#ECEEF2"],
 ];
+
+// Matches the installed app icon (public/board.svg), not the app background.
+const MARK_BACKGROUND = "#0e1014";
 
 const MARK_SIZE = 560;
 const GRID_OFFSET = 104;
@@ -29,7 +31,7 @@ export function BoardMark() {
         boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
       }}
     >
-      <rect width="100%" height="100%" fill={BACKGROUND_DARK} />
+      <rect width="100%" height="100%" fill={MARK_BACKGROUND} />
 
       {TILE_ROWS.flatMap((row, rowIndex) =>
         row.map((fill, columnIndex) => (

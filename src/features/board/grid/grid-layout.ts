@@ -1,6 +1,9 @@
 import type { Theme } from "@mui/material/styles";
 
-const GRID_MIN_CELL_SIZE_PX = 96;
+// A tile's symbol and label need the extra height; its width can go narrower
+// so that wide boards fit more columns before they scroll.
+const GRID_MIN_CELL_WIDTH_PX = 88;
+const GRID_MIN_CELL_HEIGHT_PX = 96;
 const GRID_GAP_UNIT_PX = 8;
 const GRID_COMPACT_PADDING_PX = 16;
 const GRID_REGULAR_PADDING_PX = 24;
@@ -59,10 +62,12 @@ export function createGridContentSx(
     "--grid-cell-width": createCellSizeExpression(
       "100cqi",
       "var(--grid-visible-columns)",
+      GRID_MIN_CELL_WIDTH_PX,
     ),
     "--grid-cell-height": createCellSizeExpression(
       "100cqb",
       "var(--grid-visible-rows)",
+      GRID_MIN_CELL_HEIGHT_PX,
     ),
     minWidth: createGridExtentExpression(GRID_CELL_WIDTH, columns),
     minHeight: createGridExtentExpression(GRID_CELL_HEIGHT, rows),
@@ -94,6 +99,7 @@ function createVisibleTrackQueries(
       "min-width",
       "--grid-visible-columns",
       columns,
+      GRID_MIN_CELL_WIDTH_PX,
       gapPx,
       paddingPx,
     ),
@@ -101,6 +107,7 @@ function createVisibleTrackQueries(
       "min-height",
       "--grid-visible-rows",
       rows,
+      GRID_MIN_CELL_HEIGHT_PX,
       gapPx,
       paddingPx,
     ),
@@ -111,6 +118,7 @@ function createTrackAxisQueries(
   feature: "min-width" | "min-height",
   property: "--grid-visible-columns" | "--grid-visible-rows",
   count: number,
+  minCellSizePx: number,
   gapPx: number,
   paddingPx: number,
 ): Record<string, Record<string, number>> {
@@ -119,6 +127,7 @@ function createTrackAxisQueries(
   for (let visibleTracks = 2; visibleTracks <= count; visibleTracks++) {
     const thresholdPx = calculateTrackFitThresholdPx(
       visibleTracks,
+      minCellSizePx,
       gapPx,
       paddingPx,
     );
@@ -133,19 +142,21 @@ function createTrackAxisQueries(
 
 function calculateTrackFitThresholdPx(
   count: number,
+  minCellSizePx: number,
   gapPx: number,
   paddingPx: number,
 ): number {
-  return count * GRID_MIN_CELL_SIZE_PX + (count - 1) * gapPx + 2 * paddingPx;
+  return count * minCellSizePx + (count - 1) * gapPx + 2 * paddingPx;
 }
 
 function createCellSizeExpression(
   viewportSize: string,
   visibleTracks: string,
+  minCellSizePx: number,
 ): string {
   const availableSize = `${viewportSize} - 2 * ${GRID_PADDING} - (${visibleTracks} - 1) * ${GRID_GAP}`;
 
-  return `max(${formatPx(GRID_MIN_CELL_SIZE_PX)}, calc((${availableSize}) / ${visibleTracks}))`;
+  return `max(${formatPx(minCellSizePx)}, calc((${availableSize}) / ${visibleTracks}))`;
 }
 
 function createGridExtentExpression(cellSize: string, count: number): string {

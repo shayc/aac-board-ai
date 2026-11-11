@@ -107,6 +107,9 @@ const themeOptions = {
     light: {
       palette: {
         primary: { main: "#0b7468" },
+        // Informational notices use the brand color; MUI's default blue would
+        // be the only blue in the app.
+        info: { main: "#0b7468" },
         grey,
         background: { default: BACKGROUND_LIGHT, paper: "#ffffff" },
         Button: {
@@ -122,13 +125,19 @@ const themeOptions = {
     dark: {
       palette: {
         primary: { main: "#3fd0bd" },
+        info: { main: "#3fd0bd" },
         grey,
-        background: { default: BACKGROUND_DARK, paper: "#1a1d23" },
+        background: { default: BACKGROUND_DARK, paper: "#262930" },
         error: { main: "#f2b8b5" },
         outline: outline.dark,
         Chip: { defaultBorder: outline.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
-        action: { active: "rgba(255, 255, 255, 0.7)" },
+        action: {
+          active: "rgba(255, 255, 255, 0.7)",
+          // MUI's 30% white stays too close to an enabled icon on dark
+          // surfaces; 20% matches the light scheme's disabled contrast.
+          disabled: "rgba(255, 255, 255, 0.2)",
+        },
       },
     },
   },
@@ -154,6 +163,15 @@ const themeOptions = {
         },
         body: {
           userSelect: "none",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        // Dark surfaces take two deliberate steps (background.default and
+        // background.paper); MUI's elevation overlay would add unplanned ones.
+        root: {
+          backgroundImage: "none",
         },
       },
     },
@@ -183,7 +201,6 @@ const themeOptions = {
 
           return {
             backgroundColor: theme.vars.palette.background.default,
-            backgroundImage: "none",
             // Physical corners, like the drawer's own `left`/`right` offset, are
             // mirrored by the RTL stylis plugin, so the inner edge stays rounded.
             variants: [
@@ -277,9 +294,11 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
+              // MUI's grey disabled fill is darker than the light page, so a
+              // disabled button would outweigh the enabled ones beside it.
               style: theme.applyStyles("light", {
                 [`&.${buttonClasses.disabled}`]: {
-                  backgroundColor: "transparent",
+                  backgroundColor: theme.vars.palette.Button.inheritContainedBg,
                 },
               }),
             },
