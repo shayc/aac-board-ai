@@ -119,7 +119,7 @@ const themeOptions = {
         info: { main: "#3fd0bd" },
         grey,
         background: { default: BACKGROUND_DARK, paper: "#262930" },
-        error: { main: red[300] },
+        error: { main: red.A100 },
         outline: outline.dark,
         Chip: { defaultBorder: outline.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
