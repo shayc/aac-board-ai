@@ -121,14 +121,10 @@ export function CommunicationBoard({
             sx={{
               justifyContent: "space-between",
               px: { xs: 2, sm: 3 },
-              // The grid scrolls right under this row, and scrolled tiles keep
-              // 8px clear of what it holds. On a wide screen that is buttons as
-              // tall as the row, so all 8px go below it; the grid's own 16px
-              // then brings the space under the row to the page margin, the
-              // same as above it. A small screen shows only suggestions, which
-              // sit 4px inside the row: 4px more on each side gives them the
-              // same room and keeps the space around them even.
-              pt: { xs: 0.5, sm: 0 },
+              // The grid scrolls right under this row; the bottom padding
+              // keeps scrolled tiles from touching what it holds. Nothing
+              // scrolls above it, and the message bar keeps its own distance.
+              // A small screen uses half, like its bottom bar.
               pb: { xs: 0.5, sm: 1 },
             }}
           >
@@ -171,8 +167,8 @@ export function CommunicationBoard({
               px: 2,
               // The grid scrolls right above the buttons; the top padding
               // keeps scrolled tiles from touching them.
-              pt: 1,
-              pb: safeAreaGutter(theme.spacing(1), "bottom"),
+              pt: 0.5,
+              pb: safeAreaGutter(theme.spacing(0.5), "bottom"),
             })}
           >
             {navigationButtons}

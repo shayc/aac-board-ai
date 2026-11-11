@@ -4,9 +4,9 @@ import type { ReactNode, Ref } from "react";
 import { scanGroupProps } from "../scanning/scan-targets";
 import {
   createGridContentSx,
-  createGridViewportSx,
   gridCellSx,
   gridRowSx,
+  gridViewportSx,
 } from "./grid-layout";
 import { buildGrid, type GridOrder } from "./grid-model";
 import { useGridFocus } from "./use-grid-focus";
@@ -40,7 +40,7 @@ export function Grid<TItem extends { id: string }>({
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
 
   return (
-    <Box ref={ref} sx={createGridViewportSx}>
+    <Box ref={ref} sx={gridViewportSx}>
       <Stack
         {...rootProps}
         ref={rootRef}
