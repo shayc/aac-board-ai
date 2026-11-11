@@ -1,3 +1,4 @@
+import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
@@ -281,6 +282,18 @@ const themeOptions = {
           paddingTop: 12,
           paddingBottom: 12,
           ...buttonFeedbackTiming(theme),
+          variants: [
+            {
+              props: { variant: "contained", color: "inherit" },
+              // MUI's grey disabled fill is darker than the light page, so a
+              // disabled button would outweigh the enabled ones beside it.
+              style: theme.applyStyles("light", {
+                [`&.${buttonClasses.disabled}`]: {
+                  backgroundColor: theme.vars.palette.Button.inheritContainedBg,
+                },
+              }),
+            },
+          ],
         }),
       },
     },
