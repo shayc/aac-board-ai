@@ -22,7 +22,13 @@ export function findBoardInLanguage(
     language,
   );
 
-  return translations ? applyTranslations(board, translations) : undefined;
+  if (!translations) {
+    return undefined;
+  }
+
+  // The translated board declares the language its text is now in, so the
+  // board can tag that text for screen readers.
+  return { ...applyTranslations(board, translations), locale: language };
 }
 
 export function getBoardLanguage({ locale }: { locale?: string }): string {

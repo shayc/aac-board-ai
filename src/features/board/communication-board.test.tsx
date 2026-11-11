@@ -118,6 +118,33 @@ describe("CommunicationBoard", () => {
     );
   });
 
+  describe("text language", () => {
+    test.each([
+      { locale: "es", expected: "es" },
+      { locale: "pt-BR", expected: "pt" },
+      { locale: undefined, expected: "en" },
+    ])(
+      "tags the tiles and the message with the board's language ($locale)",
+      async ({ locale, expected }) => {
+        const screen = await renderCommunicationBoard({
+          ...TWO_BUTTON_BOARD,
+          locale,
+        });
+        const hello = screen.getByRole("button", { name: "hello" });
+
+        await hello.click();
+
+        // Once on its tile and once in the message.
+        const labels = screen.getByText("hello", { exact: true });
+        await expect.element(labels).toHaveLength(2);
+
+        for (const label of labels.elements()) {
+          expect(label.closest("[lang]")).toHaveAttribute("lang", expected);
+        }
+      },
+    );
+  });
+
   describe("tile activation", () => {
     test("activates a focused tile with the Space key", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);

@@ -1,3 +1,4 @@
+import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test } from "vitest";
 import {
   applyTranslations,
@@ -148,6 +149,15 @@ describe("findBoardInLanguage", () => {
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
     expect(translated?.buttons[0]?.label).toBe("Hola");
+  });
+
+  test("declares the translated board's text language", () => {
+    expect(getBoardLanguage(mockBoard)).toBe("en");
+
+    const translated = findBoardInLanguage(mockBoard, "es");
+
+    assertDefined(translated);
+    expect(getBoardLanguage(translated)).toBe("es");
   });
 
   test("returns nothing when the board has no translations for the language", () => {

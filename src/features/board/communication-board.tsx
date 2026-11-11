@@ -21,6 +21,7 @@ import { ScanningScope } from "./scanning/scanning-scope";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
+import { getBoardLanguage } from "./translation/board-translations";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -57,6 +58,9 @@ export function CommunicationBoard({
   const shortcuts = useBoardShortcuts({ message, playback });
 
   const hasMessage = message.parts.length > 0;
+  // An untranslated board keeps its own language under the page's, so its
+  // text is tagged for a screen reader to pronounce it correctly.
+  const textLanguage = getBoardLanguage(board);
 
   function handleHome() {
     if (navigation.isHome) {
@@ -107,7 +111,11 @@ export function CommunicationBoard({
           pr: { sm: safeAreaInset("right") },
         }}
       >
-        <PlaybackMessageBar parts={message.parts} playback={playback} />
+        <PlaybackMessageBar
+          lang={textLanguage}
+          parts={message.parts}
+          playback={playback}
+        />
 
         <Stack
           {...scanGroupProps}
@@ -135,6 +143,7 @@ export function CommunicationBoard({
           <Grid<BoardButton>
             ref={gridViewportRef}
             ariaLabel={board.name || t(m.boardGridLabel)}
+            lang={textLanguage}
             items={board.buttons}
             rows={board.grid.rows}
             columns={board.grid.columns}

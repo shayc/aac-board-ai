@@ -7,6 +7,7 @@ import {
 } from "./use-board-playback";
 
 interface PlaybackMessageBarProps {
+  lang?: string;
   parts: readonly MessagePart[];
   playback: Pick<
     UseBoardPlaybackReturn,
@@ -15,6 +16,7 @@ interface PlaybackMessageBarProps {
 }
 
 export function PlaybackMessageBar({
+  lang,
   parts,
   playback,
 }: PlaybackMessageBarProps) {
@@ -23,6 +25,7 @@ export function PlaybackMessageBar({
 
   return (
     <MessageBar
+      lang={lang}
       parts={parts}
       activePartId={isHighlightingEnabled ? activePartId : null}
       areImagesVisible={areImagesVisible}

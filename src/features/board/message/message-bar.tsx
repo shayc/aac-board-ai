@@ -6,6 +6,8 @@ import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
 
 export interface MessageBarProps {
+  /** Language of the parts' text, when it may differ from the page's. */
+  lang?: string;
   parts: readonly MessagePart[];
   activePartId: string | null;
   areImagesVisible: boolean;
@@ -19,6 +21,7 @@ export interface MessageBarProps {
 const LIGHT_SCHEME_CLASS = "light";
 
 export function MessageBar({
+  lang,
   parts,
   activePartId,
   areImagesVisible,
@@ -84,6 +87,7 @@ export function MessageBar({
       >
         <Stack
           ref={scrollContainerRef}
+          lang={lang}
           direction="row"
           sx={{
             flexGrow: 1,
