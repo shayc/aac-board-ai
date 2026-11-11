@@ -61,39 +61,31 @@ describe("BoardSetInfoDialog", () => {
     expect(getComputedStyle(description.element()).userSelect).toBe("text");
   });
 
-  test.each([
-    { width: 390, isFullScreen: true },
-    { width: 1024, isFullScreen: false },
-  ])(
-    "fills the viewport only on small screens (width $width)",
-    async ({ width, isFullScreen }) => {
-      const originalWidth = window.innerWidth;
-      const originalHeight = window.innerHeight;
+  test("stays sized to its content on small screens", async () => {
+    const originalWidth = window.innerWidth;
+    const originalHeight = window.innerHeight;
 
-      try {
-        await page.viewport(width, 800);
-        const screen = await renderWithProviders(
-          <BoardSetInfoDialog
-            boardSet={makeBoardSetRecord()}
-            onClose={vi.fn()}
-          />,
-        );
-        const dialog = screen.getByRole("dialog");
+    try {
+      await page.viewport(390, 800);
+      const screen = await renderWithProviders(
+        <BoardSetInfoDialog
+          boardSet={makeBoardSetRecord()}
+          onClose={vi.fn()}
+        />,
+      );
+      const dialog = screen.getByRole("dialog");
 
-        await expect.element(dialog).toBeVisible();
+      await expect.element(dialog).toBeVisible();
 
-        const bounds = dialog.element().getBoundingClientRect();
-        const fillsViewport =
-          bounds.width === window.innerWidth &&
-          bounds.height === window.innerHeight;
-        expect(fillsViewport).toBe(isFullScreen);
-      } finally {
-        await page.viewport(originalWidth, originalHeight);
-      }
-    },
-  );
+      expect(dialog.element().getBoundingClientRect().height).toBeLessThan(
+        window.innerHeight,
+      );
+    } finally {
+      await page.viewport(originalWidth, originalHeight);
+    }
+  });
 
-  test("omits the author line and chips when those fields are absent", async () => {
+  test("omits the author line and facts when those fields are absent", async () => {
     const screen = await renderWithProviders(
       <BoardSetInfoDialog boardSet={makeBoardSetRecord()} onClose={vi.fn()} />,
     );

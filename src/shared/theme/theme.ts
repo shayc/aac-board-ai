@@ -1,5 +1,6 @@
 import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
+import { red } from "@mui/material/colors";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
@@ -118,7 +119,7 @@ const themeOptions = {
         info: { main: "#3fd0bd" },
         grey,
         background: { default: BACKGROUND_DARK, paper: "#262930" },
-        error: { main: "#f2b8b5" },
+        error: { main: red.A100 },
         outline: outline.dark,
         Chip: { defaultBorder: outline.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
