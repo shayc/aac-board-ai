@@ -117,8 +117,18 @@ export function createGridContentSx(
 
   function createBreakpointRules(breakpoint: Breakpoint) {
     return {
-      ...createAxisRules(AXES.inline, breakpoint, columns, gapPx),
-      ...createAxisRules(AXES.block, breakpoint, rows, gapPx),
+      ...createAxisRules({
+        axis: AXES.inline,
+        breakpoint,
+        trackCount: columns,
+        gapPx,
+      }),
+      ...createAxisRules({
+        axis: AXES.block,
+        breakpoint,
+        trackCount: rows,
+        gapPx,
+      }),
     };
   }
 
@@ -130,34 +140,31 @@ export function createGridContentSx(
   };
 }
 
+interface AxisLayout {
+  axis: GridAxis;
+  breakpoint: Breakpoint;
+  trackCount: number;
+  gapPx: number;
+}
+
 type AxisRules = Record<string, string | Record<string, string>>;
 
 // Pads the axis, sizes the grid to hold every track, and sizes a cell to fit
 // whole tracks into the viewport. One track is visible unless a container
 // query finds room for more.
-function createAxisRules(
-  axis: GridAxis,
-  breakpoint: Breakpoint,
-  trackCount: number,
-  gapPx: number,
-): AxisRules {
+function createAxisRules(layout: AxisLayout): AxisRules {
+  const { axis, breakpoint, trackCount, gapPx } = layout;
   const paddingPx = axis.paddingPx[breakpoint];
   const gapsAndPaddingPx = (trackCount - 1) * gapPx + 2 * paddingPx;
 
   const rules: AxisRules = {
     [axis.paddingProperty]: formatPx(paddingPx),
     [axis.extentProperty]: `calc(${trackCount} * var(${axis.cellSize}) + ${formatPx(gapsAndPaddingPx)})`,
-    ...createTrackFit(axis, breakpoint, trackCount, 1, gapPx).cellSize,
+    ...createTrackFit(layout, 1).cellSize,
   };
 
   for (let visibleTracks = 2; visibleTracks <= trackCount; visibleTracks++) {
-    const { thresholdPx, cellSize } = createTrackFit(
-      axis,
-      breakpoint,
-      trackCount,
-      visibleTracks,
-      gapPx,
-    );
+    const { thresholdPx, cellSize } = createTrackFit(layout, visibleTracks);
 
     rules[`@container (${axis.containerFeature}: ${formatPx(thresholdPx)})`] =
       cellSize;
@@ -169,11 +176,8 @@ function createAxisRules(
 // The cell size that fits a number of whole tracks into the viewport, and the
 // smallest viewport those tracks fit into at their minimum size.
 function createTrackFit(
-  axis: GridAxis,
-  breakpoint: Breakpoint,
-  trackCount: number,
+  { axis, breakpoint, trackCount, gapPx }: AxisLayout,
   visibleTracks: number,
-  gapPx: number,
 ) {
   const isScrollable = visibleTracks < trackCount;
   const insetPx = isScrollable
