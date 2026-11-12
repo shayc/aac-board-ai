@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { createExternalStore } from "./external-store";
+import { createExternalStore, patchState } from "./external-store";
 
 describe("createExternalStore", () => {
   test("notifies listeners on setState", () => {
@@ -16,6 +16,14 @@ describe("createExternalStore", () => {
     const store = createExternalStore({ count: 1, label: "a" });
 
     store.setState((current) => ({ ...current, count: current.count + 1 }));
+
+    expect(store.getSnapshot()).toEqual({ count: 2, label: "a" });
+  });
+
+  test("patches the given fields and keeps the rest", () => {
+    const store = createExternalStore({ count: 1, label: "a" });
+
+    patchState(store, { count: 2 });
 
     expect(store.getSnapshot()).toEqual({ count: 2, label: "a" });
   });

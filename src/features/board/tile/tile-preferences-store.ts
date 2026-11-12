@@ -1,4 +1,4 @@
-import { useExternalStore } from "@shared/state/external-store";
+import { patchState, useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
@@ -58,29 +58,22 @@ const tilePreferencesStore = createPersistedStore<TilePreferences>(
   parseTilePreferences,
 );
 
-function updatePreferences(patch: Partial<TilePreferences>): void {
-  tilePreferencesStore.setState((preferences) => ({
-    ...preferences,
-    ...patch,
-  }));
-}
-
 export function setTileSaturation(saturation: number): void {
-  updatePreferences({ saturation });
+  patchState(tilePreferencesStore, { saturation });
 }
 
 export function setTileBrightness(brightness: number): void {
-  updatePreferences({ brightness });
+  patchState(tilePreferencesStore, { brightness });
 }
 
 export function setTileBordersVisible(areBordersVisible: boolean): void {
-  updatePreferences({ areBordersVisible });
+  patchState(tilePreferencesStore, { areBordersVisible });
 }
 
 export function setTileLabelPlacement(
   labelPlacement: TileLabelPlacement,
 ): void {
-  updatePreferences({ labelPlacement });
+  patchState(tilePreferencesStore, { labelPlacement });
 }
 
 export function useTilePreferences(): TilePreferences {
