@@ -27,21 +27,21 @@ const builtInAIRestriction: ImportPattern = {
 const ownedPackageRestrictions = [indexedDBRestriction, builtInAIRestriction];
 
 const boardBoundary: ImportPattern = {
-  group: ["@app/**", "@pages/**", "@features/**", "!@features/library"],
+  group: ["@app/**", "@features/**", "!@features/library"],
   message:
-    "The board feature is isolated from @app and @pages and may import only the library's barrel (@features/library) — otherwise use @shared or relative paths within the feature.",
+    "The board feature is isolated from @app and may import only the library's barrel (@features/library) — otherwise use @shared or relative paths within the feature.",
 };
 
 const boardTestBoundary: ImportPattern = {
   group: [...boardBoundary.group, "!@features/library/testing"],
   message:
-    "The board feature is isolated from @app and @pages and may import only the library's barrel (@features/library) or test entry (@features/library/testing) — otherwise use @shared or relative paths within the feature.",
+    "The board feature is isolated from @app and may import only the library's barrel (@features/library) or test entry (@features/library/testing) — otherwise use @shared or relative paths within the feature.",
 };
 
 const libraryBoundary: ImportPattern = {
-  group: ["@app/**", "@pages/**", "@features/**"],
+  group: ["@app/**", "@features/**"],
   message:
-    "The library feature is isolated from @app, @pages, and other features — use @shared or relative paths within the feature.",
+    "The library feature is isolated from @app and other features — use @shared or relative paths within the feature.",
 };
 
 type RestrictedImports = ["error", { patterns: ImportPattern[] }];
@@ -150,9 +150,9 @@ export default defineConfig({
       files: ["src/shared/**/*.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
-          group: ["@app/**", "@features/**", "@pages/**"],
+          group: ["@app/**", "@features/**"],
           message:
-            "@shared is a leaf layer — it imports nothing from @app, @features, or @pages.",
+            "@shared is a leaf layer — it imports nothing from @app or @features.",
         }),
       },
     },
@@ -219,11 +219,8 @@ export default defineConfig({
       },
     },
     {
-      files: ["src/app/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
-      excludeFiles: [
-        "src/app/**/*.test.{ts,tsx}",
-        "src/pages/**/*.test.{ts,tsx}",
-      ],
+      files: ["src/app/**/*.{ts,tsx}"],
+      excludeFiles: ["src/app/**/*.test.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
           group: ["@features/*/**"],
@@ -233,7 +230,7 @@ export default defineConfig({
       },
     },
     {
-      files: ["src/app/**/*.test.{ts,tsx}", "src/pages/**/*.test.{ts,tsx}"],
+      files: ["src/app/**/*.test.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
           group: ["@features/*/**", "!@features/*/testing"],

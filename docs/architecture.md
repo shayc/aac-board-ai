@@ -329,12 +329,12 @@ about the bars around it.
 Cross-boundary imports use path aliases. Oxlint enforces these dependency rules
 for aliased imports:
 
-- `src/shared/` is the leaf layer and does not import from app, pages, or features.
+- `src/shared/` is the leaf layer and does not import from app or features.
 - Each directory directly under `src/features/` is a feature. It imports shared
   code, its own relative modules, and the public entry points of the features
-  it is allowed to depend on, but never app, pages, or another feature's
+  it is allowed to depend on, but never app or another feature's
   internals.
-- `src/app/` and `src/pages/` compose features through public entry points such as
+- `src/app/` composes features through public entry points such as
   [`src/features/board/index.ts`](../src/features/board/index.ts).
 - Only the library's [`storage/`](../src/features/library/storage/) imports `idb`
   or uses the `indexedDB` global, so every other module reaches stored boards
@@ -401,7 +401,7 @@ Paths in this table are relative to `src/`.
 
 | Area                   | Source                                                                                                                                             | Responsibility                                            |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| App composition        | [main.tsx](../src/main.tsx), [app/](../src/app/), [pages/](../src/pages/), [shared/providers/](../src/shared/providers/)                           | Assemble providers, shell, routing, and features.         |
+| App composition        | [main.tsx](../src/main.tsx), [app/](../src/app/), [shared/providers/](../src/shared/providers/)                                                    | Assemble providers, shell, routing, and features.         |
 | Device output          | [shared/playback/](../src/shared/playback/)                                                                                                        | Own all Web Speech and HTML Audio output.                 |
 | Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                               | Coordinate communication language and voice selection.    |
 | Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                              | Apply theme and directional styling.                      |

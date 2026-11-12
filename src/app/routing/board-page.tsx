@@ -1,11 +1,11 @@
-import type { boardLoader } from "@app/routing/loaders/board-loader";
-import {
-  BOARD_SET_ROUTE_ID,
-  type boardSetLoader,
-} from "@app/routing/loaders/board-set-loader";
 import { CommunicationBoard } from "@features/board";
 import { useBoardInLanguage } from "@features/library";
 import { useLoaderData, useRouteLoaderData } from "react-router";
+import type { boardLoader } from "./loaders/board-loader";
+import {
+  BOARD_SET_ROUTE_ID,
+  type boardSetLoader,
+} from "./loaders/board-set-loader";
 
 export function BoardPage() {
   const board = useBoardInLanguage(useLoaderData<typeof boardLoader>());

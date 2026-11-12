@@ -29,12 +29,11 @@
 ## Project Structure
 
 - `src/main.tsx`: React entry
-- `src/app/`: app shell + providers
+- `src/app/`: app shell, routing, and pages
 - `src/features/`: feature modules, each with a public `index.ts`
   - `board/`: using a board (grid, tiles, message, suggestions, activation, playback, scanning)
   - `library/`: stored board sets (storage, import, export, OBF mapping, translation)
 - `board` may import `library` through its public entry point; `library` imports no feature. Only `library/storage/` touches IndexedDB, and only `board/suggestions/` and `library/translation/` use built-in AI. Oxlint enforces all three.
-- `src/pages/`: routes/pages
 - `src/shared/`: shared code
 - See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure.
 
@@ -78,7 +77,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - Keep each function at one level of abstraction: low-level mechanics live in named helpers; the body reads as a summary of what happens.
 - Prefer the smallest meaningful input a component or function needs; don't pass large objects solely to access one leaf property.
 - Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
-- Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`, `@paraglide/*`).
+- Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@paraglide/*`).
 - User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text. In React, call messages through `useTranslate()` as `t(m.messageKey)` so renders subscribe to locale changes; Sherlock extraction emits `m.messageKey()` and must be adapted before committing.
 - The React Compiler is enabled: write Compiler-native code; don't add `useMemo`/`useCallback` for performance.
 
