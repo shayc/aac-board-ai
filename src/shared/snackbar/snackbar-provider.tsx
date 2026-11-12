@@ -81,7 +81,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     typeof state.current?.message === "function"
       ? state.current.message(t)
       : state.current?.message;
-  const autoHideDuration =
+  const autoHideDurationMs =
     state.current?.durationMs ?? defaultDurationMs(severity);
 
   return (
@@ -92,7 +92,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={autoHideDuration}
+        autoHideDuration={autoHideDurationMs}
         // Keep persistent errors clear of the board's bottom controls.
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}

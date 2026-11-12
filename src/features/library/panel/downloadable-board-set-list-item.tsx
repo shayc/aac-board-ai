@@ -42,7 +42,7 @@ export function DownloadableBoardSetListItem({
         <DownloadButton
           name={name}
           phase={phase}
-          describedById={status ? statusId : undefined}
+          statusId={status ? statusId : undefined}
           onDownload={() => void download()}
           onCancel={cancel}
         />
@@ -67,7 +67,7 @@ export function DownloadableBoardSetListItem({
 interface DownloadButtonProps {
   name: string;
   phase: BoardSetDownloadPhase | undefined;
-  describedById: string | undefined;
+  statusId: string | undefined;
   onDownload: () => void;
   onCancel: () => void;
 }
@@ -75,7 +75,7 @@ interface DownloadButtonProps {
 function DownloadButton({
   name,
   phase,
-  describedById,
+  statusId,
   onDownload,
   onCancel,
 }: DownloadButtonProps) {
@@ -92,7 +92,7 @@ function DownloadButton({
     <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
       <IconButton
         aria-label={label}
-        aria-describedby={describedById}
+        aria-describedby={statusId}
         aria-disabled={isImporting}
         edge="end"
         onClick={isCancellable ? onCancel : onDownload}

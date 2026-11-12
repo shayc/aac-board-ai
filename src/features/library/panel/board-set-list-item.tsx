@@ -58,7 +58,7 @@ export function BoardSetListItem({
         </Tooltip>
       }
       disablePadding
-      sx={revealActionOnHoverSx}
+      sx={secondaryActionRevealSx}
     >
       <ListItemButton
         ref={linkRef}
@@ -76,7 +76,7 @@ export function BoardSetListItem({
   );
 }
 
-function revealActionOnHoverSx(theme: Theme) {
+function secondaryActionRevealSx(theme: Theme) {
   return {
     "@media (hover: hover)": {
       [theme.breakpoints.up("md")]: {

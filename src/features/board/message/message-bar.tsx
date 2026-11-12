@@ -69,7 +69,7 @@ export function MessageBar({
         // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
-        sx={messageScrollerSx}
+        sx={scrollContainerSx}
       >
         {parts.map((part) => (
           <MessagePartItem
@@ -108,7 +108,7 @@ function messageBarSx(theme: Theme) {
   } as const;
 }
 
-function messageScrollerSx(theme: Theme) {
+function scrollContainerSx(theme: Theme) {
   return {
     flexGrow: 1,
     alignItems: "center",
