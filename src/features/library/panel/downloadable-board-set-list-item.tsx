@@ -10,7 +10,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
-import { useTranslate, type Translate } from "@shared/language/use-translate";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
 import { useId } from "react";
 import type { BoardSetDownloadPhase } from "../catalog/board-set-downloads";

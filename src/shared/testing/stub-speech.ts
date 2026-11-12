@@ -1,4 +1,4 @@
-import { vi, type MockInstance } from "vitest";
+import { type MockInstance, vi } from "vitest";
 
 export function stubSpeech(): {
   speak: MockInstance<SpeechSynthesis["speak"]>;

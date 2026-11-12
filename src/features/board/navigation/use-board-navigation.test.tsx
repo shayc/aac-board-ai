@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import {
+  type Location,
   MemoryRouter,
+  type NavigateFunction,
   Route,
   Routes,
   useLocation,
   useNavigate,
-  type Location,
-  type NavigateFunction,
 } from "react-router";
 import { describe, expect, test } from "vitest";
 import { renderHook, type RenderHookResult } from "vitest-browser-react";

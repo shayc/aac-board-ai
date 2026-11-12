@@ -4,11 +4,11 @@ import {
 } from "@shared/state/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
+  type BoardSetInput,
+  type BoardSetRecord,
   insertBoardSet,
   listBoardSetRecords,
   removeBoardSet,
-  type BoardSetInput,
-  type BoardSetRecord,
 } from "../storage/board-set-storage";
 
 export interface BoardSetsSnapshot {

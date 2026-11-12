@@ -1,5 +1,5 @@
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
-import { zip, type OBFBoard } from "@shayc/open-board-format";
+import { type OBFBoard, zip } from "@shayc/open-board-format";
 import { BOARD_FILE_IMPORT_LIMITS } from "../import/board-file-import";
 import type {
   BoardSetInput,

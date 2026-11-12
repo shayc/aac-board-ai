@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { userEvent, type Locator } from "vitest/browser";
+import { type Locator, userEvent } from "vitest/browser";
 import { getCellPosition } from "../testing/get-cell-position";
 import { Grid, type GridItemProps } from "./grid";
 

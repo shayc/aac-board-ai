@@ -8,8 +8,8 @@ import {
   stubRewriter,
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { userEvent } from "vitest/browser";
 import { renderHook } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { setSuggestionCustomInstructions } from "./suggestion-preferences-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
 

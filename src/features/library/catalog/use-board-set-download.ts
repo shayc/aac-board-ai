@@ -1,10 +1,10 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import {
+  type BoardSetDownloadPhase,
   cancelBoardSetDownload,
   downloadBoardSet,
   useBoardSetDownloadPhase,
-  type BoardSetDownloadPhase,
 } from "./board-set-downloads";
 
 interface UseBoardSetDownloadReturn {

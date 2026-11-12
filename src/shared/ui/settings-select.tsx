@@ -1,7 +1,7 @@
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useId, type ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 
 interface SettingsSelectProps {
   label: string;

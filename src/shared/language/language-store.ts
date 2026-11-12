@@ -1,9 +1,9 @@
 import {
   baseLocale,
   isLocale,
+  type Locale,
   overwriteGetLocale,
   overwriteSetLocale,
-  type Locale,
 } from "@paraglide/runtime";
 import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";

@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, type RefObject } from "react";
+import { type RefObject, useEffect, useEffectEvent } from "react";
 import { isScanningScopeCovered } from "./scan-targets";
 
 export function useSwitchKeys<Action>(

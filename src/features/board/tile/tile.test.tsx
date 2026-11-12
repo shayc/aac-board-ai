@@ -8,8 +8,8 @@ import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { ThemeProvider } from "@shared/theme/theme-provider";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
-import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
+import type { Locator } from "vitest/browser";
 import { Tile } from "./tile";
 import {
   setTileBordersVisible,

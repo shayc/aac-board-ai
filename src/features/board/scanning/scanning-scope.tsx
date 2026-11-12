@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import type { Theme } from "@mui/material/styles";
-import { useRef, type ReactNode } from "react";
+import { type ReactNode, useRef } from "react";
 import { SCAN_HIGHLIGHTED_ITEM_SELECTOR } from "./scan-targets";
 import { useScanningPreferences } from "./scanning-preferences-store";
 import { SwitchScanner } from "./switch-scanner";

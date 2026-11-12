@@ -3,8 +3,8 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
-import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { TileSettings } from "./tile-settings";
 
 describe("TileSettings", () => {

@@ -4,8 +4,8 @@ import {
 } from "@shared/state/external-store";
 import type { ImportedBoardSet } from "../import/board-file-import";
 import {
-  importBoardFileFromURL,
   type DownloadProgress,
+  importBoardFileFromURL,
 } from "../import/import-from-url";
 
 export type BoardSetDownloadPhase =

@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
-  resolveBoardShortcut,
   type BoardKeyEvent,
+  resolveBoardShortcut,
 } from "./resolve-board-shortcut";
 
 function key(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {

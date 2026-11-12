@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
 import {
   advanceScan,
-  selectScan,
-  startScan,
   type ScanGroup,
   type ScanPosition,
+  selectScan,
+  startScan,
 } from "./scan-sequence";
 
 const GROUPS: ScanGroup<string>[] = [

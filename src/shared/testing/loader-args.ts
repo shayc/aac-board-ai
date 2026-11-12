@@ -1,7 +1,7 @@
 import {
-  RouterContextProvider,
   type LoaderFunctionArgs,
   type Params,
+  RouterContextProvider,
 } from "react-router";
 
 interface LoaderArgsOptions {

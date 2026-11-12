@@ -1,9 +1,9 @@
 import {
   findGridPosition,
-  listGridFocusTargets,
   type GridFocusTarget,
+  listGridFocusTargets,
 } from "./grid-dom";
-import { isSameGridPosition, type GridPosition } from "./grid-model";
+import { type GridPosition, isSameGridPosition } from "./grid-model";
 
 interface GridKeyEvent {
   key: string;
