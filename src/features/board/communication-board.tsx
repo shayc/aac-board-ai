@@ -4,7 +4,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
-import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import type { Board, BoardButton } from "./board-types";
@@ -41,7 +40,6 @@ export function CommunicationBoard({
   const playback = useBoardPlayback();
 
   const navigation = useBoardNavigation(rootBoardId);
-  const gridViewportRef = useRef<HTMLDivElement>(null);
 
   // Only the callbacks it calls. The hook results also carry state, so they
   // change identity when the message changes or its playback starts or stops,
@@ -58,21 +56,12 @@ export function CommunicationBoard({
 
   const hasMessage = message.parts.length > 0;
 
-  function scrollGridToOrigin() {
-    gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
-  }
-
-  function handleHome() {
-    scrollGridToOrigin();
-    navigation.goHome();
-  }
-
   const navigationButtons = (
     <NavigationButtons
       canGoBack={navigation.canGoBack}
       canGoHome={navigation.canGoHome}
       onBack={navigation.goBack}
-      onHome={handleHome}
+      onHome={navigation.goHome}
     />
   );
 
@@ -142,7 +131,6 @@ export function CommunicationBoard({
             alike. */}
         <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
           <Grid<BoardButton>
-            ref={gridViewportRef}
             ariaLabel={board.name || t(m.boardGridLabel)}
             items={board.buttons}
             rows={board.grid.rows}
