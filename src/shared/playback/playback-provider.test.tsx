@@ -154,7 +154,7 @@ describe("PlaybackProvider", () => {
     expect(speech.spokenTexts()).toEqual(["hello"]);
   });
 
-  test("speaks each request with the settings current at that moment", async () => {
+  test("speaks each request with the parameters current at that moment", async () => {
     let currentParameters = speechParameters;
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: ({ children }: { children: ReactNode }) => (

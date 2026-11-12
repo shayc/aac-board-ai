@@ -18,7 +18,7 @@ import {
 } from "./scanning-preferences-store";
 import { ScanningScope } from "./scanning-scope";
 
-const SCAN_INTERVAL_MS_RANGE = 1000;
+const SCAN_INTERVAL_MS = 1000;
 
 const TWO_ROW_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -101,7 +101,7 @@ async function pressSwitch(key: "Space" | "Enter" = "Space") {
 
 // Assert each move before advancing again so React can schedule the next interval.
 async function advanceScanInterval() {
-  await vi.advanceTimersByTimeAsync(SCAN_INTERVAL_MS_RANGE);
+  await vi.advanceTimersByTimeAsync(SCAN_INTERVAL_MS);
 }
 
 describe("switch scanning", () => {
@@ -109,7 +109,7 @@ describe("switch scanning", () => {
 
   beforeEach(() => {
     speech = stubSpeech();
-    setScanIntervalMs(SCAN_INTERVAL_MS_RANGE);
+    setScanIntervalMs(SCAN_INTERVAL_MS);
   });
 
   afterEach(() => {
@@ -145,7 +145,7 @@ describe("switch scanning", () => {
     test("waits for a switch press, then highlights the first row", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
-      await vi.advanceTimersByTimeAsync(3 * SCAN_INTERVAL_MS_RANGE);
+      await vi.advanceTimersByTimeAsync(3 * SCAN_INTERVAL_MS);
       expect(highlightedNames()).toEqual([]);
 
       await pressSwitch();
