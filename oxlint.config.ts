@@ -44,6 +44,9 @@ const libraryBoundary: ImportPattern = {
     "The library feature is isolated from @app and other features — use @shared or relative paths within the feature.",
 };
 
+const moduleMockMessage =
+  "Tests render the real tree — stub only platform boundaries, with vi.spyOn.";
+
 type RestrictedImports = ["error", { patterns: ImportPattern[] }];
 
 function restrictImports(...patterns: ImportPattern[]): RestrictedImports {
@@ -154,7 +157,8 @@ export default defineConfig({
         "vitest/no-restricted-vi-methods": [
           "error",
           {
-            mock: "Tests render the real tree — stub only platform boundaries, with vi.spyOn.",
+            mock: moduleMockMessage,
+            doMock: moduleMockMessage,
           },
         ],
       },
