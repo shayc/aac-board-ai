@@ -142,7 +142,6 @@ interface AxisLayout {
 
 type AxisRules = Record<string, string | Record<string, string>>;
 
-// One track is visible unless a container query finds room for more.
 function createAxisRules(layout: AxisLayout): AxisRules {
   const { axis, breakpoint, trackCount, gapPx } = layout;
   const paddingPx = axis.paddingPx[breakpoint];

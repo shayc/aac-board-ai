@@ -73,7 +73,6 @@ export function advanceScan<Target>(
     return itemPosition(group, group.items[0], completedPasses);
   }
 
-  // The exit step has just shown the whole group, so the scan moves on from it.
   return nextGroupPosition(groups, groupIndex, 0, maxPasses);
 }
 

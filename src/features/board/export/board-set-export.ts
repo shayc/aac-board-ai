@@ -37,7 +37,6 @@ export async function boardSetToOBZ({
   return createOBZ(boards, rootBoardId, assets);
 }
 
-/** Stored assets by the normalized path they are stored and packaged under. */
 async function loadStoredAssets(
   boardSetId: string,
   boards: readonly OBFBoard[],
