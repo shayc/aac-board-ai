@@ -30,6 +30,7 @@ export function SettingsRadioGroup<Value extends string>({
       <FormLabel id={labelId} sx={{ color: "text.primary" }}>
         {label}
       </FormLabel>
+
       <RadioGroup
         aria-labelledby={labelId}
         aria-describedby={helperText ? helperTextId : undefined}
@@ -40,6 +41,7 @@ export function SettingsRadioGroup<Value extends string>({
       >
         {children}
       </RadioGroup>
+
       {helperText && (
         <FormHelperText id={helperTextId} sx={{ mx: 0 }}>
           {helperText}

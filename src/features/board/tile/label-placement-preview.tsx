@@ -50,6 +50,7 @@ export function LabelPlacementPreview({
             height: iconSize,
           }}
         />
+
         {isLabelVisible && (
           <Box
             component="span"

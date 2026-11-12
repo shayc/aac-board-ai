@@ -50,6 +50,7 @@ export function ScanningSettings() {
             control={<Radio />}
             label={t(m.scanningMethodAuto)}
           />
+
           <FormControlLabel
             value="step"
             control={<Radio />}

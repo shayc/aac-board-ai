@@ -122,6 +122,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 >
                   <highlight.Icon color="primary" fontSize="inherit" />
                 </ListItemIcon>
+
                 <ListItemText
                   primary={highlight.title}
                   secondary={highlight.description}

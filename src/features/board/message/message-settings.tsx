@@ -18,6 +18,7 @@ export function MessageSettings() {
         checked={areImagesVisible}
         onChange={setMessageImagesVisible}
       />
+
       <SettingsSwitch
         label={t(m.messageHighlight)}
         checked={isHighlightingEnabled}

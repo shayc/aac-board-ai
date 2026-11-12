@@ -74,6 +74,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               />
               {t(m.aboutSourceCode)}
             </ExternalLink>
+
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {t(m.aboutVersion, { version })}
             </Typography>

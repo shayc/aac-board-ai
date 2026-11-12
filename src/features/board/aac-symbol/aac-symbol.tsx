@@ -65,6 +65,7 @@ export function AACSymbol({
           />
         </Box>
       )}
+
       <Typography
         component="span"
         noWrap
