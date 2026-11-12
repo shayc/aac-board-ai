@@ -1,6 +1,9 @@
-import type { Board, StringTranslations } from "@shared/board/board-types";
+import type {
+  Board,
+  StringTranslations,
+  TranslationsByLocale,
+} from "@shared/board/board-types";
 import { getLanguageCode } from "@shared/language/locale";
-import { findStringTranslations } from "../find-string-translations";
 import { nonBlankText } from "../non-blank-text";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
@@ -33,6 +36,19 @@ export function boardSetInLanguage(
   const name = boardSet.translatedNames?.[language];
 
   return name ? { ...boardSet, name } : boardSet;
+}
+
+export function findStringTranslations(
+  translationsByLocale: TranslationsByLocale,
+  language: string,
+): StringTranslations | undefined {
+  for (const [locale, translations] of translationsByLocale) {
+    if (getLanguageCode(locale) === language) {
+      return translations;
+    }
+  }
+
+  return undefined;
 }
 
 export function applyTranslations(

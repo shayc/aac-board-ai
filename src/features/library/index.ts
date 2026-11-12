@@ -5,8 +5,8 @@ export {
   boardPath,
   rootBoardPath,
 } from "./board-paths";
-export { listBoardSummaries } from "./boards/list-board-summaries";
-export { loadStoredBoard } from "./boards/load-stored-board";
+export { listBoardSummaries } from "./board-sets/list-board-summaries";
+export { loadStoredBoard } from "./board-sets/load-stored-board";
 export { starterBoardSet } from "./catalog/board-set-catalog";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {
@@ -25,4 +25,4 @@ export { BoardTranslationNotice } from "./translation/board-translation-notice";
 export { useBoardInLanguage } from "./translation/use-board-in-language";
 export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
-export type { BoardSummary } from "./boards/list-board-summaries";
+export type { BoardSummary } from "./board-sets/list-board-summaries";

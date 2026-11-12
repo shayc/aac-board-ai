@@ -1,8 +1,8 @@
 import type { TranslationsByLocale } from "@shared/board/board-types";
 import { getLanguageCode } from "@shared/language/locale";
-import { findStringTranslations } from "../find-string-translations";
 import { obfToTranslationsByLocale } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
+import { findStringTranslations } from "../translation/board-translations";
 
 export interface BoardSummary {
   id: string;
