@@ -126,6 +126,7 @@ export default defineConfig({
     "typescript/no-unsafe-call": "error",
     "typescript/no-unsafe-member-access": "error",
     "typescript/no-unsafe-return": "error",
+    "unicorn/filename-case": ["error", { case: "kebabCase" }],
     "vitest/require-mock-type-parameters": "off",
     "vitest/require-to-throw-message": "off",
     "vitest/valid-expect": ["error", { maxArgs: 2 }],
@@ -148,6 +149,12 @@ export default defineConfig({
           "error",
           {
             assertFunctionNames: ["expect", "assert", "expectNoA11yViolations"],
+          },
+        ],
+        "vitest/no-restricted-vi-methods": [
+          "error",
+          {
+            mock: "Tests render the real tree — stub only platform boundaries, with vi.spyOn.",
           },
         ],
       },

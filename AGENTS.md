@@ -46,7 +46,6 @@
 - **Determinism:** No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
 - **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use Chromium's real web APIs except for the allowed stubs below.
   - _Allowed stubs (closed list):_ network (`fetch`, WebSocket), non-determinism (`Date.now`, `Math.random`), device output (`speechSynthesis`, `HTMLAudioElement.play`), and browser capabilities unavailable in the test runtime (only at the platform boundary).
-  - _Method:_ Prefer `vi.spyOn` over `vi.mock`.
 - **Scope:**
   - **Interactive:** Prove a behavior (interaction → observable result).
   - **Presentational:** Render-only assertions for accessibility, content, and visibility.
@@ -70,7 +69,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 
 ### Naming
 
-- All files and folders under `src/` are kebab-case.
+- Folders under `src/` are kebab-case.
 - Avoid vague filler words (`data`, `info`, `manager`) when a precise domain name is available, and avoid cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
 - Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs, except conversions and pure value builders that read better as nouns (`obfToBoard`, `rootBoardPath`); React components use descriptive PascalCase nouns.
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
