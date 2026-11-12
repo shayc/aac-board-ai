@@ -1,6 +1,6 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { loadOBF, loadOBZ, OBFError } from "@shayc/open-board-format";
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getAssetBlob, getBoardRecord } from "../storage/board-content-storage";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
@@ -268,6 +268,52 @@ describe("importEachBoardFile", () => {
       "corrupt.obf",
     ]);
     expect(await listBoardSetRecords()).toHaveLength(1);
+  });
+
+  test("asks the browser to keep stored boards once a file is imported", async () => {
+    const persist = vi
+      .spyOn(navigator.storage, "persist")
+      .mockResolvedValue(true);
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+
+    await importEachBoardFile([goodFile]);
+
+    expect(persist).toHaveBeenCalledOnce();
+  });
+
+  test("does not ask the browser to keep stored boards when no file is imported", async () => {
+    const persist = vi
+      .spyOn(navigator.storage, "persist")
+      .mockResolvedValue(true);
+
+    await importEachBoardFile([makeCorruptBoardFile("corrupt.obf")]);
+
+    expect(persist).not.toHaveBeenCalled();
+  });
+
+  test("reports the import without waiting for the browser's answer", async () => {
+    vi.spyOn(navigator.storage, "persist").mockReturnValue(
+      new Promise(() => undefined),
+    );
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+
+    const { importedBoardSets } = await importEachBoardFile([goodFile]);
+
+    expect(importedBoardSets).toHaveLength(1);
+  });
+
+  test("imports when the browser refuses to keep stored boards", async () => {
+    vi.spyOn(navigator.storage, "persist").mockRejectedValue(
+      new Error("storage manager unavailable"),
+    );
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+
+    const { importedBoardSets, failures } = await importEachBoardFile([
+      goodFile,
+    ]);
+
+    expect(importedBoardSets).toHaveLength(1);
+    expect(failures).toEqual([]);
   });
 });
 

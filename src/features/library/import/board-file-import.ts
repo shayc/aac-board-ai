@@ -12,6 +12,7 @@ import {
   type BoardSetInput,
   MAX_ID_LENGTH,
 } from "../storage/board-set-storage";
+import { requestPersistentStorage } from "../storage/persistent-storage";
 import { stripBoardFileExtension } from "./board-file-formats";
 
 export interface ImportedBoardSet {
@@ -53,6 +54,12 @@ export async function importEachBoardFile(
     } catch (error) {
       failures.push({ fileName: file.name, error });
     }
+  }
+
+  // A file the user picked may exist nowhere else, unlike the bundled sets.
+  // Not awaited: a browser that asks the user would hold up the outcome.
+  if (importedBoardSets.length > 0) {
+    void requestPersistentStorage();
   }
 
   return { importedBoardSets, failures };

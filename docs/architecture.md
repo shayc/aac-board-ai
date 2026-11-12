@@ -140,6 +140,12 @@ skips files without a board file extension and reports when none remain. It
 imports the rest one at a time, so a failing file doesn't block the others, and
 reports the outcome in one message that names the file when exactly one fails.
 
+Once a local file is imported, the app asks the browser for
+[persistent storage](../src/features/library/storage/persistent-storage.ts), so
+that boards which may exist nowhere else are not evicted when the device runs
+low on space. The browser may decline, or ask the user. The bundled board sets
+and link imports do not ask, because they can be fetched again.
+
 ### Export a board set
 
 Export is the reverse, for one set at a time from its library menu.
