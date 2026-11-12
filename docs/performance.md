@@ -123,6 +123,32 @@ Each row shows the base and current medians, the typical per-round difference
 adjusted p-value. A row is flagged when that p is below 0.05; how much the
 change matters is for you to judge from the difference and its interval.
 
+## Find out why
+
+The lab says whether a timing changed or went over, not why. A performance
+trace of the journey does: it shows the long tasks, layouts and layout shifts
+behind a slow row.
+
+An agent can record one with the `chrome-devtools` server in
+[.vscode/mcp.json](../.vscode/mcp.json) and get a short summary of what is
+slow. To trace what the lab measured, match its setup:
+
+```bash
+npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
+```
+
+- Trace this production build, not `npm run dev`: a dev-server trace is mostly
+  Vite loading modules one by one.
+- Slow the CPU 4×, the `CPU_SLOWDOWN` in [perf/settings.ts](../perf/settings.ts),
+  and use a 1280×720 viewport.
+- Repeat the journey's taps from [perf/journeys.spec.ts](../perf/journeys.spec.ts).
+
+The server starts Chrome with a fresh profile each time (`--isolated`), so
+storage and the service worker start empty, as in a first launch. It is also
+set not to send usage statistics or trace URLs to Google
+(`--no-usage-statistics`, `--no-performance-crux`). Without the server, record
+the same steps in Chrome DevTools → Performance.
+
 ## How builds are compared
 
 A run is a series of rounds. Each round runs a journey once on each build, back
@@ -195,7 +221,7 @@ scorecard and its report with Node's built-in test runner.
 - In a comparison, other load on the machine cancels out between the builds but widens the
   confidence intervals, so small changes go unflagged. A machine that sleeps
   mid-run stalls the browser and fails the journey.
-- The lab says whether a timing changed or went over, not why. To find out, record the
-  journey in Chrome DevTools → Performance.
+- The lab says whether a timing changed or went over, not why. To find out,
+  trace the journey; see [Find out why](#find-out-why).
 - Not covered: WebKit/Safari, built-in AI, real speech, memory, imports from a
   file or a link, CI.
