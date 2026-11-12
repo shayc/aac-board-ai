@@ -1,5 +1,5 @@
 {
-  "servers": {
+  "mcpServers": {
     "mui-mcp": {
       "type": "stdio",
       "command": "npx",
@@ -20,6 +20,5 @@
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp/"
     }
-  },
-  "inputs": []
+  }
 }

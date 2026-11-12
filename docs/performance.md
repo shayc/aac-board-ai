@@ -129,10 +129,9 @@ The lab says whether a timing changed or went over, not why. A performance
 trace of the journey does: it shows the long tasks, layouts and layout shifts
 behind a slow row.
 
-In VS Code, an agent can record one with the `chrome-devtools` server in
-[.vscode/mcp.json](../.vscode/mcp.json) and get a short summary of what is
-slow. Other agents read their own MCP configuration and need the server added
-there. To trace what the lab measured, match its setup:
+An agent in VS Code or Claude Code can record one with the `chrome-devtools`
+server in [.mcp.json](../.mcp.json) and get a short summary of what is slow.
+To trace what the lab measured, match its setup:
 
 ```bash
 npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
