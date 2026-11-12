@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import type { Board, BoardButton } from "@shared/board/board-types";
@@ -78,7 +79,9 @@ export function CommunicationBoard({
     />
   );
 
-  const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
+  const controlsPlacement = isSmallScreen ? "bottom" : "top";
+  const isActionRowVisible =
+    controlsPlacement === "top" || suggestions.isSupported;
 
   return (
     <ScanningScope>
@@ -102,7 +105,7 @@ export function CommunicationBoard({
               sx={{ justifyContent: "space-between" }}
             >
               <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-                {!isSmallScreen && navigationButtons}
+                {controlsPlacement === "top" && navigationButtons}
 
                 {suggestions.isSupported && (
                   <SuggestionBar
@@ -114,7 +117,7 @@ export function CommunicationBoard({
                 )}
               </Stack>
 
-              {!isSmallScreen && backspaceButton}
+              {controlsPlacement === "top" && backspaceButton}
             </Stack>
           )}
         </Stack>
@@ -131,16 +134,12 @@ export function CommunicationBoard({
           />
         </Box>
 
-        {isSmallScreen && (
+        {controlsPlacement === "bottom" && (
           <Stack
             {...scanGroupProps}
             direction="row"
             spacing={2}
-            sx={(theme) => ({
-              justifyContent: "space-between",
-              px: PAGE_MARGIN,
-              pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
-            })}
+            sx={bottomControlsSx}
           >
             {navigationButtons}
             {backspaceButton}
@@ -149,4 +148,12 @@ export function CommunicationBoard({
       </Stack>
     </ScanningScope>
   );
+}
+
+function bottomControlsSx(theme: Theme) {
+  return {
+    justifyContent: "space-between",
+    px: PAGE_MARGIN,
+    pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
+  };
 }

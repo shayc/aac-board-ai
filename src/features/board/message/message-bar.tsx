@@ -1,4 +1,5 @@
 import Stack from "@mui/material/Stack";
+import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useRef } from "react";
@@ -58,27 +59,7 @@ export function MessageBar({
       {...scanGroupProps}
       className={LIGHT_SCHEME_CLASS}
       direction="row"
-      sx={[
-        {
-          gap: 2,
-          overflow: "hidden",
-          border: 1,
-          borderColor: "transparent",
-          borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
-          color: "text.primary",
-          bgcolor: "background.paper",
-          colorScheme: "light",
-          userSelect: "text",
-        },
-        (theme) =>
-          theme.applyStyles("light", {
-            boxShadow: theme.vars.shadows[1],
-          }),
-        (theme) =>
-          theme.applyStyles("dark", {
-            bgcolor: theme.vars.palette.grey[400],
-          }),
-      ]}
+      sx={messageBarSx}
     >
       <Stack
         ref={scrollContainerRef}
@@ -88,17 +69,7 @@ export function MessageBar({
         // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
-        sx={(theme) => ({
-          flexGrow: 1,
-          alignItems: "center",
-          py: 1,
-          px: 2,
-          overflow: "auto",
-          borderStartStartRadius: theme.vars.shape.borderRadiusFull,
-          borderEndStartRadius: theme.vars.shape.borderRadiusFull,
-          // Keep the focus ring inside the bar's clipped overflow.
-          "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
-        })}
+        sx={messageScrollerSx}
       >
         {parts.map((part) => (
           <MessagePartItem
@@ -119,6 +90,36 @@ export function MessageBar({
       />
     </Stack>
   );
+}
+
+function messageBarSx(theme: Theme) {
+  return {
+    gap: 2,
+    overflow: "hidden",
+    border: 1,
+    borderColor: "transparent",
+    borderRadius: theme.vars.shape.borderRadiusFull,
+    color: "text.primary",
+    bgcolor: "background.paper",
+    colorScheme: "light",
+    userSelect: "text",
+    ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
+    ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[400] }),
+  } as const;
+}
+
+function messageScrollerSx(theme: Theme) {
+  return {
+    flexGrow: 1,
+    alignItems: "center",
+    py: 1,
+    px: 2,
+    overflow: "auto",
+    borderStartStartRadius: theme.vars.shape.borderRadiusFull,
+    borderEndStartRadius: theme.vars.shape.borderRadiusFull,
+    // Keep the focus ring inside the bar's clipped overflow.
+    "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
+  } as const;
 }
 
 interface MessagePartItemProps {

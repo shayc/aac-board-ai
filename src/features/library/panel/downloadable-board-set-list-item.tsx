@@ -30,7 +30,6 @@ export function DownloadableBoardSetListItem({
   url,
 }: DownloadableBoardSetListItemProps) {
   const t = useTranslate();
-  const endSide = useEndSide();
   const uiLocale = useUILocale();
   const statusId = useId();
   const { phase, download, cancel } = useBoardSetDownload({ name, url });
@@ -51,23 +50,13 @@ export function DownloadableBoardSetListItem({
   return (
     <ListItem
       secondaryAction={
-        <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
-          <IconButton
-            aria-label={t(
-              isCancellable
-                ? m.libraryCancelDownloadBoardSet
-                : m.libraryDownloadBoardSet,
-              { name },
-            )}
-            aria-describedby={status ? statusId : undefined}
-            aria-disabled={phase?.kind === "importing"}
-            edge="end"
-            onClick={handleClick}
-            sx={{ border: "none" }}
-          >
-            <DownloadButtonIcon phase={phase} />
-          </IconButton>
-        </Tooltip>
+        <DownloadButton
+          name={name}
+          phase={phase}
+          isCancellable={isCancellable}
+          describedById={status ? statusId : undefined}
+          onClick={handleClick}
+        />
       }
     >
       <ListItemText
@@ -83,6 +72,44 @@ export function DownloadableBoardSetListItem({
         </span>
       )}
     </ListItem>
+  );
+}
+
+interface DownloadButtonProps {
+  name: string;
+  phase: BoardSetDownloadPhase | undefined;
+  isCancellable: boolean;
+  describedById: string | undefined;
+  onClick: () => void;
+}
+
+function DownloadButton({
+  name,
+  phase,
+  isCancellable,
+  describedById,
+  onClick,
+}: DownloadButtonProps) {
+  const t = useTranslate();
+  const endSide = useEndSide();
+
+  const label = isCancellable
+    ? t(m.libraryCancelDownloadBoardSet, { name })
+    : t(m.libraryDownloadBoardSet, { name });
+
+  return (
+    <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
+      <IconButton
+        aria-label={label}
+        aria-describedby={describedById}
+        aria-disabled={phase?.kind === "importing"}
+        edge="end"
+        onClick={onClick}
+        sx={{ border: "none" }}
+      >
+        <DownloadButtonIcon phase={phase} />
+      </IconButton>
+    </Tooltip>
   );
 }
 

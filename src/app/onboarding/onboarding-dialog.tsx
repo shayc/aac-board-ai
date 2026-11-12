@@ -104,38 +104,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
               pl: 2,
             }}
           >
-            {highlights.map((highlight) => (
-              <ListItem
-                key={highlight.id}
-                disableGutters
-                disablePadding
-                sx={{ alignItems: "flex-start", gap: 2 }}
-              >
-                <ListItemIcon
-                  sx={{
-                    justifyContent: "center",
-                    width: 40,
-                    minWidth: 0,
-                    pt: 0.5,
-                    fontSize: "36px",
-                  }}
-                >
-                  <highlight.Icon color="primary" fontSize="inherit" />
-                </ListItemIcon>
-
-                <ListItemText
-                  primary={highlight.title}
-                  secondary={highlight.description}
-                  sx={{ my: 0 }}
-                  slotProps={{
-                    primary: { sx: { fontWeight: "fontWeightBold" } },
-                    secondary: {
-                      variant: "body1",
-                      sx: { textWrap: "balance" },
-                    },
-                  }}
-                />
-              </ListItem>
+            {highlights.map(({ id, Icon, title, description }) => (
+              <HighlightItem
+                key={id}
+                Icon={Icon}
+                title={title}
+                description={description}
+              />
             ))}
           </List>
         </DialogContent>
@@ -147,5 +122,39 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </Button>
       </DialogActions>
     </Dialog>
+  );
+}
+
+type HighlightItemProps = Omit<Highlight, "id">;
+
+function HighlightItem({ Icon, title, description }: HighlightItemProps) {
+  return (
+    <ListItem
+      disableGutters
+      disablePadding
+      sx={{ alignItems: "flex-start", gap: 2 }}
+    >
+      <ListItemIcon
+        sx={{
+          justifyContent: "center",
+          width: 40,
+          minWidth: 0,
+          pt: 0.5,
+          fontSize: "36px",
+        }}
+      >
+        <Icon color="primary" fontSize="inherit" />
+      </ListItemIcon>
+
+      <ListItemText
+        primary={title}
+        secondary={description}
+        sx={{ my: 0 }}
+        slotProps={{
+          primary: { sx: { fontWeight: "fontWeightBold" } },
+          secondary: { variant: "body1", sx: { textWrap: "balance" } },
+        }}
+      />
+    </ListItem>
   );
 }
