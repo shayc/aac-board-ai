@@ -1,6 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
-import { stubSpeech } from "@shared/testing/stub-speech";
+import { failSpeech, stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { page } from "vitest/browser";
@@ -235,21 +235,8 @@ describe("useBoardPlayback", () => {
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
-  function failSpeech() {
-    speech.speak.mockImplementation((utterance) => {
-      queueMicrotask(() => {
-        utterance.dispatchEvent(
-          new SpeechSynthesisErrorEvent("error", {
-            utterance,
-            error: "synthesis-failed",
-          }),
-        );
-      });
-    });
-  }
-
   test("reports a failed message once and resolves as not completed", async () => {
-    failSpeech();
+    failSpeech(speech.speak);
     const { result, rerender } = await renderPlayback();
 
     await expect(
@@ -264,13 +251,11 @@ describe("useBoardPlayback", () => {
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
-  test("reports a failed tile once and resolves as not completed", async () => {
-    failSpeech();
+  test("reports a failed tile once", async () => {
+    failSpeech(speech.speak);
     const { result } = await renderPlayback();
 
-    await expect(
-      result.current.playPart({ id: "1", label: "hi" }),
-    ).resolves.toBe(false);
+    await result.current.playPart({ id: "1", label: "hi" });
 
     await expect
       .element(page.getByRole("alert"))
@@ -290,7 +275,10 @@ describe("useBoardPlayback", () => {
     ).resolves.toBe(false);
 
     expect(speech.spokenTexts()).toEqual(["before"]);
-    await expect.element(page.getByRole("alert")).toBeVisible();
+    await expect
+      .element(page.getByRole("alert"))
+      .toHaveTextContent("Couldn't play sound");
+    expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
   test("resolves as completed without reporting anything", async () => {

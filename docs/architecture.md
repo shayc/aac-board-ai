@@ -207,7 +207,7 @@ expected and do not surface as user errors.
 The shared coordinator resolves each request as completed, interrupted, or
 failed. The board playback adapter is the only place that reads that outcome:
 it reports a failure once in an error snackbar, including when only some steps
-failed, and tells its callers just whether playback completed.
+failed, and tells its callers only whether a message played to its end.
 
 ## Accessibility, language, and presentation
 

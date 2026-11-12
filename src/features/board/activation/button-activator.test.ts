@@ -19,7 +19,7 @@ function setup(initialParts: readonly MessagePart[] = []) {
       Promise.resolve(true),
     ),
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
-      Promise.resolve(true),
+      Promise.resolve(),
     ),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };

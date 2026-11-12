@@ -1,7 +1,11 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
-import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
+import {
+  failSpeech,
+  preventSpeechEnd,
+  stubSpeech,
+} from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -359,16 +363,7 @@ describe("CommunicationBoard", () => {
     });
 
     test("tells the user when a tile fails to speak", async () => {
-      speech.speak.mockImplementation((utterance) => {
-        queueMicrotask(() => {
-          utterance.dispatchEvent(
-            new SpeechSynthesisErrorEvent("error", {
-              utterance,
-              error: "synthesis-failed",
-            }),
-          );
-        });
-      });
+      failSpeech(speech.speak);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();

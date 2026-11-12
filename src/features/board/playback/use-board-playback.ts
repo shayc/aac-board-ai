@@ -14,10 +14,9 @@ const TILE_OWNER = "board-tile";
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  // Both play functions resolve to whether playback completed; failures are
-  // already reported to the user, so callers have no outcome to handle.
+  /** Resolves to whether the message played to its end. */
   playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
-  playPart: (part: MessagePart) => Promise<boolean>;
+  playPart: (part: MessagePart) => Promise<void>;
   stop: () => void;
 }
 
@@ -26,8 +25,8 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
-  // AAC users depend on knowing that nothing was heard, so a failure is reported
-  // here, once, instead of being left to each caller.
+  // AAC users depend on knowing their speech output failed, so a failure is
+  // reported here, once, instead of being left to each caller.
   async function play(request: PlaybackRequest): Promise<boolean> {
     const outcome = await playback.play(request);
 
@@ -45,8 +44,8 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     return play({ owner: MESSAGE_OWNER, steps: planPlayback(parts) });
   }
 
-  function playPart(part: MessagePart) {
-    return play({ owner: TILE_OWNER, steps: planPlayback([part]) });
+  async function playPart(part: MessagePart) {
+    await play({ owner: TILE_OWNER, steps: planPlayback([part]) });
   }
 
   return {
