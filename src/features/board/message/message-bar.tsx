@@ -7,6 +7,9 @@ import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
 
+// Imported symbols need a light background in both themes.
+const LIGHT_SCHEME_CLASS = "light";
+
 export interface MessageBarProps {
   parts: readonly MessagePart[];
   activePartId: string | null;
@@ -15,9 +18,6 @@ export interface MessageBarProps {
   onPlay: () => void;
   onStop: () => void;
 }
-
-// Imported symbols need a light background in both themes.
-const LIGHT_SCHEME_CLASS = "light";
 
 export function MessageBar({
   parts,

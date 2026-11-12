@@ -8,10 +8,61 @@ import type { CSSProperties } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { useTilePreferences } from "./tile-preferences-store";
 
+const folderTileSx = {
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    top: -2,
+    insetInlineEnd: -2,
+    width: 0,
+    height: 0,
+    borderInlineEnd:
+      "32px solid color-mix(in srgb, currentColor 75%, transparent)",
+    borderBottom: "32px solid transparent",
+  },
+} as const;
+
 interface TileProps {
   button: BoardButton;
   tabIndex: number;
   onActivate: (button: BoardButton) => void;
+}
+
+export function Tile({ button, tabIndex, onActivate }: TileProps) {
+  const t = useTranslate();
+  const { saturation, brightness, areBordersVisible, labelPlacement } =
+    useTilePreferences();
+
+  const ariaLabel = button.label ? undefined : button.vocalization;
+  const isFolder = Boolean(button.linkedBoardId);
+  const colorStyle = tileColorStyle({
+    backgroundColor: button.backgroundColor,
+    borderColor: button.borderColor,
+    isBorderVisible: areBordersVisible,
+    saturation,
+    brightness,
+  });
+
+  const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";
+  const isLabelVisible = labelPlacement !== "hidden";
+
+  return (
+    <Button
+      aria-label={ariaLabel}
+      aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
+      tabIndex={tabIndex}
+      style={colorStyle}
+      onClick={() => onActivate(button)}
+      sx={[tileSx, isFolder && folderTileSx]}
+    >
+      <AACSymbol
+        label={button.label}
+        imageSrc={button.imageSrc}
+        labelPlacement={symbolLabelPlacement}
+        isLabelVisible={isLabelVisible}
+      />
+    </Button>
+  );
 }
 
 type TileColorStyle = CSSProperties & {
@@ -19,26 +70,6 @@ type TileColorStyle = CSSProperties & {
   "--tile-border-color"?: string;
   "--tile-brightness"?: number;
 };
-
-function channelOntoWhite(channel: "r" | "g" | "b"): string {
-  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
-}
-
-function flattenOntoWhite(color: string): string {
-  return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
-}
-
-function desaturate(color: string, saturation: number): string {
-  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
-}
-
-// Match the symbol's CSS brightness filter.
-function dim(color: string): string {
-  const dimmed = (channel: "r" | "g" | "b") =>
-    `calc(${channel} * var(--tile-brightness))`;
-
-  return `rgb(from ${color} ${dimmed("r")} ${dimmed("g")} ${dimmed("b")} / alpha)`;
-}
 
 interface TileColorOptions {
   backgroundColor: string | undefined;
@@ -67,8 +98,16 @@ function tileColorStyle({
   };
 }
 
-function mixWithTextColor(color: string, amount: string): string {
-  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
+function flattenOntoWhite(color: string): string {
+  return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
+}
+
+function channelOntoWhite(channel: "r" | "g" | "b"): string {
+  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
+}
+
+function desaturate(color: string, saturation: number): string {
+  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
 }
 
 function tileSx(theme: Theme) {
@@ -115,53 +154,14 @@ function tileSx(theme: Theme) {
   } as const;
 }
 
-const folderTileSx = {
-  "&::after": {
-    content: '""',
-    position: "absolute",
-    top: -2,
-    insetInlineEnd: -2,
-    width: 0,
-    height: 0,
-    borderInlineEnd:
-      "32px solid color-mix(in srgb, currentColor 75%, transparent)",
-    borderBottom: "32px solid transparent",
-  },
-} as const;
+// Match the symbol's CSS brightness filter.
+function dim(color: string): string {
+  const dimmed = (channel: "r" | "g" | "b") =>
+    `calc(${channel} * var(--tile-brightness))`;
 
-export function Tile({ button, tabIndex, onActivate }: TileProps) {
-  const t = useTranslate();
-  const { saturation, brightness, areBordersVisible, labelPlacement } =
-    useTilePreferences();
+  return `rgb(from ${color} ${dimmed("r")} ${dimmed("g")} ${dimmed("b")} / alpha)`;
+}
 
-  const ariaLabel = button.label ? undefined : button.vocalization;
-  const isFolder = Boolean(button.linkedBoardId);
-  const colorStyle = tileColorStyle({
-    backgroundColor: button.backgroundColor,
-    borderColor: button.borderColor,
-    isBorderVisible: areBordersVisible,
-    saturation,
-    brightness,
-  });
-
-  const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";
-  const isLabelVisible = labelPlacement !== "hidden";
-
-  return (
-    <Button
-      aria-label={ariaLabel}
-      aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
-      tabIndex={tabIndex}
-      style={colorStyle}
-      onClick={() => onActivate(button)}
-      sx={[tileSx, isFolder && folderTileSx]}
-    >
-      <AACSymbol
-        label={button.label}
-        imageSrc={button.imageSrc}
-        labelPlacement={symbolLabelPlacement}
-        isLabelVisible={isLabelVisible}
-      />
-    </Button>
-  );
+function mixWithTextColor(color: string, amount: string): string {
+  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
 }

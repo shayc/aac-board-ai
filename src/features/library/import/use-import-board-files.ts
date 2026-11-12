@@ -11,9 +11,9 @@ import { pickFiles } from "./pick-files";
 import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
-  pickAndImport: () => Promise<void>;
   importFiles: (files: readonly File[]) => Promise<ImportedBoardSet[]>;
   importAndOpen: (files: readonly File[]) => Promise<void>;
+  pickAndImport: () => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
@@ -28,12 +28,12 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
 
     const boardFiles = files.filter(hasBoardFileExtension);
-
     if (boardFiles.length === 0) {
       showSnackbar({
         message: (t) => t(m.libraryImportOnlyBoardFiles),
         severity: "error",
       });
+
       return [];
     }
 
@@ -52,7 +52,6 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const importedBoardSets = await importFiles(files);
     const onlyBoardSet =
       importedBoardSets.length === 1 ? importedBoardSets[0] : undefined;
-
     if (!onlyBoardSet) {
       return;
     }
@@ -70,8 +69,8 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   }
 
   return {
-    pickAndImport,
     importFiles,
     importAndOpen,
+    pickAndImport,
   };
 }

@@ -44,12 +44,6 @@ type GridAxis = (typeof AXES)[keyof typeof AXES];
 const GRID_CELL_WIDTH = `var(${AXES.inline.cellSizeProperty})`;
 const GRID_CELL_HEIGHT = `var(${AXES.block.cellSizeProperty})`;
 
-interface GridLayoutOptions {
-  rows: number;
-  columns: number;
-  gap: number;
-}
-
 export const gridCellSx = {
   flex: 1,
   minWidth: GRID_CELL_WIDTH,
@@ -88,6 +82,12 @@ function createScrollPadding(breakpoint: Breakpoint, gapPx: number) {
       calculateScrollingInsetPx(AXES.block, breakpoint, gapPx) / 2,
     ),
   };
+}
+
+interface GridLayoutOptions {
+  rows: number;
+  columns: number;
+  gap: number;
 }
 
 export function createGridContentSx(

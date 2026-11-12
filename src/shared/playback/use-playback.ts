@@ -7,7 +7,6 @@ type PlayingState = Extract<PlaybackState, { status: "playing" }>;
 
 export function usePlayback(): PlaybackController {
   const context = use(PlaybackContext);
-
   if (!context) {
     throw new Error("usePlayback must be used within PlaybackProvider");
   }

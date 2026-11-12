@@ -1,6 +1,5 @@
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { DBSchema, IDBPDatabase } from "idb";
-import { openDB } from "idb";
+import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 
 export interface BoardSetRecord {
   readonly id: string;
@@ -68,7 +67,6 @@ export function normalizeAssetPath(rawPath: string): string {
     .replaceAll("\\", "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
-
   if (!path) {
     throw new Error("Path cannot be empty");
   }

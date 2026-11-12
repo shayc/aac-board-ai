@@ -14,19 +14,20 @@ interface SeedBoardSet extends Partial<BoardSetInput> {
   rootBoardId: string;
 }
 
+export async function resetBoardsDB(): Promise<void> {
+  await clearBoardsDB();
+  await refreshBoardSets();
+}
+
 async function clearBoardsDB(): Promise<void> {
   const db = await getBoardsDB();
   const tx = db.transaction(STORE_NAMES, "readwrite");
+
   for (const name of STORE_NAMES) {
     await tx.objectStore(name).clear();
   }
 
   await tx.done;
-}
-
-export async function resetBoardsDB(): Promise<void> {
-  await clearBoardsDB();
-  await refreshBoardSets();
 }
 
 export async function makeBoardsDBUnreadable(): Promise<() => Promise<void>> {

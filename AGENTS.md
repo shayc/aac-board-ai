@@ -57,7 +57,12 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 
 ### Layout & Control Flow
 
+- Order a file as imports → module constants → types and props → the main export → private helpers in the order they are called, each with its own types directly above it. Store modules (`*-preferences-store`, `board-sets-store`, `board-set-downloads`) keep helpers above the exports that use them.
+- Order imports as packages and path aliases, then `../`, then `./`, each alphabetical, with no blank lines in the block. Import each module with one statement, and list values before types in its specifiers.
 - Group related statements into paragraphs separated by single blank lines.
+- Keep a guard (or a test's `assertDefined`) directly under the value it tests. Put a blank line before a `return` or `continue` that follows other statements, between an accumulator and the loop that fills it, and between a test's act and assert steps.
+- Separate sibling JSX elements that each span several lines with a blank line.
+- In a component or hook, call hooks first, then derive values; a value that feeds a later hook stays with that hook. A hook's return type and returned object list members in the order they are defined.
 - Use early returns and guard clauses; keep the happy path at the left margin.
 - Extract dense conditionals and nested ternaries into named locals or helper functions.
 - Extract complex conditional JSX and nested mapping loops into sub-components.

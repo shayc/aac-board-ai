@@ -41,6 +41,7 @@ export function DownloadableBoardSetListItem({
   function handleClick() {
     if (isCancellable) {
       cancel();
+
       return;
     }
 
@@ -75,6 +76,7 @@ export function DownloadableBoardSetListItem({
           primary: { noWrap: true, sx: { color: "text.secondary" } },
         }}
       />
+
       {status && (
         <span id={statusId} hidden>
           {status}
@@ -108,6 +110,7 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
           [`& .${circularProgressClasses.circle}`]: { transition: "none" },
         }}
       />
+
       {!isImporting && (
         <StopRoundedIcon
           sx={{ position: "absolute", inset: 0, margin: "auto", fontSize: 14 }}

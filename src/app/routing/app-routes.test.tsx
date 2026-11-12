@@ -1,4 +1,4 @@
-import { listBoardSetRecords, importBoardFileFromURL } from "@features/library";
+import { importBoardFileFromURL, listBoardSetRecords } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -101,6 +101,16 @@ function seedTwoBoardSet() {
   ]);
 }
 
+function seedExistingLotsOfStuffSet() {
+  return seedBoardSets([
+    {
+      id: "lots-of-stuff",
+      rootBoardId: "root-1",
+      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
+    },
+  ]);
+}
+
 describe("app flow", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -191,8 +201,8 @@ describe("app flow", () => {
     });
 
     const element = audio.play.mock.contexts[0];
-
     assert(element instanceof HTMLAudioElement);
+
     const response = await fetch(element.src);
 
     expect(await response.text()).toBe("recording");
@@ -653,13 +663,3 @@ describe("app flow", () => {
       .toHaveAttribute("href", "/");
   });
 });
-
-function seedExistingLotsOfStuffSet() {
-  return seedBoardSets([
-    {
-      id: "lots-of-stuff",
-      rootBoardId: "root-1",
-      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
-    },
-  ]);
-}

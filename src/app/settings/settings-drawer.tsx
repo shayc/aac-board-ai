@@ -1,9 +1,9 @@
 import { AppDrawer } from "@app/shell/app-drawer";
 import {
-  TileSettings,
   MessageSettings,
   ScanningSettings,
   SuggestionSettings,
+  TileSettings,
 } from "@features/board";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
@@ -74,6 +74,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               />
               {t(m.aboutSourceCode)}
             </ExternalLink>
+
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {t(m.aboutVersion, { version })}
             </Typography>

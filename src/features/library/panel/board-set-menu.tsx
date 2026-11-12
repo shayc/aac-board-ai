@@ -41,13 +41,16 @@ export function BoardSetMenu({
         </ListItemIcon>
         <ListItemText>{t(m.libraryInfo)}</ListItemText>
       </MenuItem>
+
       <MenuItem onClick={onExport}>
         <ListItemIcon>
           <SaveAltOutlinedIcon fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryExport)}</ListItemText>
       </MenuItem>
+
       <Divider />
+
       <MenuItem onClick={onRequestDelete} sx={{ color: "error.main" }}>
         <ListItemIcon sx={{ color: "inherit" }}>
           <DeleteOutlinedIcon fontSize="small" />

@@ -30,11 +30,13 @@ export const SPEECH_RATE: ClampedNumberOptions = {
   max: 2,
   defaultValue: 1,
 };
+
 export const SPEECH_PITCH: ClampedNumberOptions = {
   min: 0.1,
   max: 2,
   defaultValue: 1,
 };
+
 export const SPEECH_VOLUME: ClampedNumberOptions = {
   min: 0.1,
   max: 1,

@@ -6,9 +6,9 @@ export interface UseMessageReturn {
   parts: readonly MessagePart[];
   text: string;
   getParts: () => readonly MessagePart[];
+  setParts: (parts: readonly MessagePart[]) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
-  setParts: (parts: readonly MessagePart[]) => void;
   clear: () => void;
 }
 
@@ -43,9 +43,9 @@ export function useMessage(): UseMessageReturn {
     parts,
     text,
     getParts,
+    setParts,
     replaceWithText,
     backspace,
-    setParts,
     clear,
   };
 }

@@ -13,8 +13,8 @@ import type {
   OBFMedia,
 } from "@shayc/open-board-format";
 import { nonBlankText } from "../non-blank-text";
-import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";
+import { sanitizeColor } from "./sanitize-color";
 
 export function obfToBoard(
   obfBoard: OBFBoard,
@@ -93,6 +93,14 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   return rawActions.map(parseAction).filter((action) => action !== undefined);
 }
 
+function obfToBoardGrid(obfGrid: OBFGrid): BoardGrid {
+  return {
+    rows: obfGrid.rows,
+    columns: obfGrid.columns,
+    order: obfGrid.order,
+  };
+}
+
 export function obfToTranslationsByLocale(
   strings: OBFBoard["strings"],
 ): TranslationsByLocale {
@@ -106,12 +114,4 @@ export function obfToTranslationsByLocale(
       new Map(Object.entries(translations)),
     ]),
   );
-}
-
-function obfToBoardGrid(obfGrid: OBFGrid): BoardGrid {
-  return {
-    rows: obfGrid.rows,
-    columns: obfGrid.columns,
-    order: obfGrid.order,
-  };
 }

@@ -45,6 +45,7 @@ export function SettingsSlider({
           </Typography>
         )}
       </Stack>
+
       <Slider
         aria-labelledby={labelId}
         getAriaValueText={formatValue}

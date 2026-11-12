@@ -13,6 +13,11 @@ import { renderHook } from "vitest-browser-react";
 import { setSuggestionCustomInstructions } from "./suggestion-preferences-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
 
+const ENGINE_STUBS = {
+  Proofreader: stubProofreader,
+  Rewriter: stubRewriter,
+};
+
 function renderMessageSuggestions(text: string) {
   return renderHook(() => useMessageSuggestions(text));
 }
@@ -33,11 +38,6 @@ function stubRewritesByTone(
 
   return rewriter;
 }
-
-const ENGINE_STUBS = {
-  Proofreader: stubProofreader,
-  Rewriter: stubRewriter,
-};
 
 async function clickToRun(action: () => void): Promise<void> {
   const trigger = document.createElement("button");

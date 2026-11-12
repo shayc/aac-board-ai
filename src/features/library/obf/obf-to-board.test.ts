@@ -262,6 +262,7 @@ describe("obfToBoard", () => {
       });
 
       const board = obfToBoard(obfBoard);
+
       expect(board.buttons[0]?.actions).toEqual([
         { kind: "space" },
         { kind: "clear" },
@@ -277,6 +278,7 @@ describe("obfToBoard", () => {
       });
 
       const board = obfToBoard(obfBoard);
+
       expect(board.buttons[0]?.actions).toEqual([]);
     });
 
@@ -287,6 +289,7 @@ describe("obfToBoard", () => {
       });
 
       const board = obfToBoard(obfBoard);
+
       expect(board.buttons[0]?.actions).toEqual([{ kind: "play" }]);
     });
 
@@ -303,6 +306,7 @@ describe("obfToBoard", () => {
       });
 
       const board = obfToBoard(obfBoard);
+
       expect(board.buttons[0]?.actions).toEqual([
         { kind: "spell", text: "ing" },
         { kind: "home" },

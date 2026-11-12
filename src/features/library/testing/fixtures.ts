@@ -58,7 +58,6 @@ export async function loadTestImageBlob(): Promise<Blob> {
 
 export async function loadFixtureFile(name: string): Promise<File> {
   const response = await fetch(`${SAMPLE_BOARDS_DIR}/${name}`);
-
   if (!response.ok) {
     throw new Error(`Failed to load test fixture: ${response.status}`);
   }

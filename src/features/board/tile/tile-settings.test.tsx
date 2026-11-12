@@ -214,7 +214,6 @@ describe("TileSettings", () => {
     ).toBe(2);
 
     const [firstGroup] = groups;
-
     assertDefined(firstGroup);
 
     const bottomRadio = firstGroup.getByRole("radio", { name: "Bottom" });

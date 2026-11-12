@@ -25,7 +25,6 @@ class BoardURLError extends Error {
 // http(s) may reach fetch. Schemes such as data: carry a payload with no host.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
-
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
     throw new BoardURLError(
       "unsupported-scheme",
@@ -36,12 +35,12 @@ export function parseBoardURL(url: string): URL {
   return resolved;
 }
 
-function deriveFileName(url: URL): string {
-  return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
-}
-
 export function deriveBoardSetIdFromURL(url: string): string {
   return deriveBoardSetId(deriveFileName(parseBoardURL(url)));
+}
+
+function deriveFileName(url: URL): string {
+  return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
 }
 
 export interface DownloadProgress {
@@ -72,30 +71,6 @@ export async function importBoardFileFromURL(
   return importBoardFile(file);
 }
 
-function expectedDownloadBytes(headers: Headers): number | undefined {
-  const contentLength = headers.get("content-length");
-  if (contentLength === null || headers.has("content-encoding")) {
-    return undefined;
-  }
-
-  const total = Number(contentLength);
-
-  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
-}
-
-function assertSameHost(requestedURL: URL, response: Response): void {
-  const servedHost = new URL(response.url).host;
-  if (servedHost === requestedURL.host) {
-    return;
-  }
-
-  void response.body?.cancel();
-  throw new BoardURLError(
-    "cross-host-redirect",
-    `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
-  );
-}
-
 async function downloadBoardFile(
   url: URL,
   {
@@ -104,7 +79,6 @@ async function downloadBoardFile(
   }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
 ): Promise<Blob> {
   const response = await fetch(url, { signal });
-
   if (!response.ok) {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
@@ -146,4 +120,28 @@ async function downloadBoardFile(
   return new Blob(chunks, {
     type: response.headers.get("content-type") ?? "",
   });
+}
+
+function assertSameHost(requestedURL: URL, response: Response): void {
+  const servedHost = new URL(response.url).host;
+  if (servedHost === requestedURL.host) {
+    return;
+  }
+
+  void response.body?.cancel();
+  throw new BoardURLError(
+    "cross-host-redirect",
+    `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
+  );
+}
+
+function expectedDownloadBytes(headers: Headers): number | undefined {
+  const contentLength = headers.get("content-length");
+  if (contentLength === null || headers.has("content-encoding")) {
+    return undefined;
+  }
+
+  const total = Number(contentLength);
+
+  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
 }

@@ -1,12 +1,5 @@
 import type { Theme } from "@mui/material/styles";
 
-function transitionOptions(theme: Theme) {
-  return {
-    duration: theme.transitions.duration.shortest,
-    easing: theme.transitions.easing.easeOut,
-  };
-}
-
 export function buttonFeedbackTiming(theme: Theme) {
   const { duration, easing } = transitionOptions(theme);
 
@@ -24,4 +17,11 @@ export function buttonFeedbackTransition(
   properties: string[],
 ): string {
   return theme.transitions.create(properties, transitionOptions(theme));
+}
+
+function transitionOptions(theme: Theme) {
+  return {
+    duration: theme.transitions.duration.shortest,
+    easing: theme.transitions.easing.easeOut,
+  };
 }

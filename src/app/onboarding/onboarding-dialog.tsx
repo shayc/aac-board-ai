@@ -18,7 +18,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
-
 import { BoardMark } from "./board-mark";
 
 interface OnboardingDialogProps {
@@ -123,6 +122,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 >
                   <highlight.Icon color="primary" fontSize="inherit" />
                 </ListItemIcon>
+
                 <ListItemText
                   primary={highlight.title}
                   secondary={highlight.description}

@@ -1,7 +1,7 @@
 import type { StringTranslations } from "@shared/board/board-types";
-import type { OBFBoard } from "@shayc/open-board-format";
 import { normalizeLocale } from "@shared/language/locale";
 import { htmlToText } from "@shared/utils/html-to-text";
+import type { OBFBoard } from "@shayc/open-board-format";
 import { nonBlankText } from "../non-blank-text";
 import {
   getBoardsDB,
@@ -50,14 +50,9 @@ export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
-// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
-// for this set's board IDs and asset paths.
-function boardSetRange(boardSetId: string): IDBKeyRange {
-  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
-}
-
 export async function removeBoardSet(boardSetId: string): Promise<void> {
   validateId(boardSetId, "boardSetId");
+
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
   const keyRange = boardSetRange(boardSetId);
@@ -68,6 +63,12 @@ export async function removeBoardSet(boardSetId: string): Promise<void> {
     tx.objectStore("boardSets").delete(boardSetId),
     tx.done,
   ]);
+}
+
+// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
+// for this set's board IDs and asset paths.
+function boardSetRange(boardSetId: string): IDBKeyRange {
+  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
 export interface BoardSetTranslations {
@@ -169,6 +170,7 @@ function validateBoardSetInput({
   validateId(rootBoardId, "rootBoardId");
 
   const boardIds = new Set<string>();
+
   for (const obf of boards) {
     validateId(obf.id, "boardId");
     if (boardIds.has(obf.id)) {

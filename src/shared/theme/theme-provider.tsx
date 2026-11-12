@@ -9,15 +9,15 @@ import { prefixer } from "stylis";
 import { ltrTheme, rtlTheme } from "./theme";
 import { ThemeColorMeta } from "./theme-color-meta";
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-
 const ltrCache = createCache({ key: "muiltr" });
 const rtlCache = createCache({
   key: "muirtl",
   stylisPlugins: [prefixer, rtlPlugin],
 });
+
+interface ThemeProviderProps {
+  children: ReactNode;
+}
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const { direction } = useLanguage();

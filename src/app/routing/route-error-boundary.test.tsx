@@ -1,11 +1,11 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { setStoredLanguage } from "@shared/language/language-store";
+import { AppProviders } from "@shared/providers/app-providers";
 import { createMemoryRouter, data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { RouteErrorBoundary } from "./route-error-boundary";
 import { routeErrorCodes, routeErrorResponse } from "./route-error";
+import { RouteErrorBoundary } from "./route-error-boundary";
 
 function TestRoute() {
   return null;

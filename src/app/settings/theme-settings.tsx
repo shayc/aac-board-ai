@@ -40,6 +40,7 @@ export function ThemeSettings() {
       <FormLabel id={labelId} sx={{ color: "text.primary" }}>
         {t(m.themeLabel)}
       </FormLabel>
+
       <ToggleButtonGroup
         aria-labelledby={labelId}
         value={mode}

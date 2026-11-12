@@ -6,22 +6,6 @@ import { SCAN_HIGHLIGHTED_ITEM_SELECTOR } from "./scan-targets";
 import { useScanningPreferences } from "./scanning-preferences-store";
 import { SwitchScanner } from "./switch-scanner";
 
-function scopeSx(theme: Theme) {
-  return {
-    display: "contents",
-    // Doubled so the highlight also wins on a control that has keyboard focus.
-    [`&& ${SCAN_HIGHLIGHTED_ITEM_SELECTOR}`]: {
-      outline: `4px solid ${theme.vars.palette.primary.main}`,
-      outlineOffset: 2,
-    },
-    // Two outlined controls would leave it unclear which one a switch selects.
-    [`&:has(${SCAN_HIGHLIGHTED_ITEM_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHTED_ITEM_SELECTOR})`]:
-      {
-        outline: "none",
-      },
-  };
-}
-
 interface ScanningScopeProps {
   children: ReactNode;
 }
@@ -44,4 +28,20 @@ export function ScanningScope({ children }: ScanningScopeProps) {
       {children}
     </Box>
   );
+}
+
+function scopeSx(theme: Theme) {
+  return {
+    display: "contents",
+    // Doubled so the highlight also wins on a control that has keyboard focus.
+    [`&& ${SCAN_HIGHLIGHTED_ITEM_SELECTOR}`]: {
+      outline: `4px solid ${theme.vars.palette.primary.main}`,
+      outlineOffset: 2,
+    },
+    // Two outlined controls would leave it unclear which one a switch selects.
+    [`&:has(${SCAN_HIGHLIGHTED_ITEM_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHTED_ITEM_SELECTOR})`]:
+      {
+        outline: "none",
+      },
+  };
 }

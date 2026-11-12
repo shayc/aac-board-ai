@@ -4,7 +4,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
+import { useReducer, useRef, type ReactNode, type SyntheticEvent } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,

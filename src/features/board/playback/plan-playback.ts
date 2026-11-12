@@ -2,10 +2,6 @@ import type { PlaybackStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
 import { joinSpokenParts, type SpokenPart } from "./join-spoken-parts";
 
-function getSpokenText(part: MessagePart): string {
-  return (part.vocalization ?? part.label).toLowerCase();
-}
-
 export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
   let spokenRun: SpokenPart[] = [];
@@ -32,6 +28,7 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
         src: part.soundSrc,
         cue: part.id,
       });
+
       continue;
     }
 
@@ -44,4 +41,8 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   flushSpeech();
 
   return steps;
+}
+
+function getSpokenText(part: MessagePart): string {
+  return (part.vocalization ?? part.label).toLowerCase();
 }

@@ -47,7 +47,6 @@ export function BoardSetList({
   useEffect(() => subscribeCompletedDownloads(setBoardSetIdToFocus), []);
 
   const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
-
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
 
   function handleMenuClose() {

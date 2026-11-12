@@ -5,8 +5,8 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatus,
 } from "./derive-suggestion-status";
-import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
+import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import {
   areSuggestionsSupported,
   SUGGESTION_ENGINES,
@@ -36,7 +36,6 @@ export function useMessageSuggestions(
   );
 
   const { language } = useLanguage();
-
   const proofreaderSource = useProofreaderSource({ text, language });
   const rewriterSource = useRewriterSource({
     text,
@@ -50,11 +49,9 @@ export function useMessageSuggestions(
     language,
     tone: "more-casual",
   });
-
-  const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
-
   const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
+  const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
   const phrases = selectSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),

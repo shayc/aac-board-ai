@@ -4,13 +4,13 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 
+const defaultIcon = <ErrorOutlineIcon />;
+
 interface ErrorStateProps {
   icon?: ReactNode;
   title: string;
   action?: ReactNode;
 }
-
-const defaultIcon = <ErrorOutlineIcon />;
 
 export function ErrorState({
   icon = defaultIcon,

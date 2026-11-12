@@ -41,6 +41,7 @@ export function deriveSuggestionStatus({
 
   if (downloadProgress !== null) {
     const percent = Math.round(downloadProgress * 100);
+
     return { kind: "downloading", percent: percent === 0 ? null : percent };
   }
 

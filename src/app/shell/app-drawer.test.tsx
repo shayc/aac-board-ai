@@ -21,7 +21,6 @@ function renderDrawer(open: boolean) {
 
 function headerBorderColor(): string {
   const header = document.querySelector("header");
-
   if (!header) {
     throw new Error("Drawer header is not rendered");
   }
@@ -33,7 +32,6 @@ describe("AppDrawer", () => {
   test("clears the scrolled divider when the drawer reopens", async () => {
     const screen = await render(renderDrawer(true));
     const content = screen.getByText("Tall content").element().parentElement;
-
     if (!content) {
       throw new Error("Drawer content is not rendered");
     }

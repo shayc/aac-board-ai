@@ -1,5 +1,5 @@
-import { createOBZ, type OBFBoard } from "@shayc/open-board-format";
 import { saveFile } from "@shared/utils/save-file";
+import { createOBZ, type OBFBoard } from "@shayc/open-board-format";
 import {
   getAssetBlob,
   listBoardRecords,
@@ -27,7 +27,6 @@ export async function boardSetToOBZ({
     id,
     records.map((record) => record.obf),
   );
-
   const boards = records.map((record) => withPackagedMedia(record.obf, assets));
 
   return createOBZ(boards, rootBoardId, assets);

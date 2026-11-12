@@ -1,4 +1,4 @@
-import { type Mock, vi } from "vitest";
+import { vi, type Mock } from "vitest";
 
 type AINamespace = "Proofreader" | "Rewriter" | "Translator";
 
@@ -21,23 +21,6 @@ interface RewriterStub extends NamespaceSpies {
 
 interface TranslatorStub extends NamespaceSpies {
   translate: Mock<(input: string) => string | Promise<string>>;
-}
-
-function installNamespace(
-  name: AINamespace,
-  buildInstance: () => Record<string, unknown>,
-): NamespaceSpies {
-  const availability = vi.fn<
-    (options?: Record<string, unknown>) => Promise<Availability>
-  >(() => Promise.resolve("available"));
-
-  const create = vi.fn<(options?: Record<string, unknown>) => Promise<unknown>>(
-    () => Promise.resolve({ destroy: () => undefined, ...buildInstance() }),
-  );
-
-  vi.stubGlobal(name, { availability, create });
-
-  return { create, availability };
 }
 
 export function makeProofreadResult(correctedInput: string): ProofreadResult {
@@ -71,4 +54,21 @@ export function stubTranslator(
   const spies = installNamespace("Translator", () => ({ translate: action }));
 
   return { translate: action, ...spies };
+}
+
+function installNamespace(
+  name: AINamespace,
+  buildInstance: () => Record<string, unknown>,
+): NamespaceSpies {
+  const availability = vi.fn<
+    (options?: Record<string, unknown>) => Promise<Availability>
+  >(() => Promise.resolve("available"));
+
+  const create = vi.fn<(options?: Record<string, unknown>) => Promise<unknown>>(
+    () => Promise.resolve({ destroy: () => undefined, ...buildInstance() }),
+  );
+
+  vi.stubGlobal(name, { availability, create });
+
+  return { create, availability };
 }

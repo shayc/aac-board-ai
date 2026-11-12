@@ -8,7 +8,6 @@ import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
-import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
@@ -17,6 +16,7 @@ import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
+import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
@@ -31,15 +31,13 @@ export function CommunicationBoard({
   rootBoardId,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
-
   const playback = useBoardPlayback();
-
   const navigation = useBoardNavigation(rootBoardId);
+  const shortcuts = useBoardShortcuts({ message, playback });
 
   // Stable callbacks let React Compiler reuse the activator across message and
   // playback updates, avoiding a rerender of every tile.
@@ -51,7 +49,6 @@ export function CommunicationBoard({
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
   });
-  const shortcuts = useBoardShortcuts({ message, playback });
 
   const hasMessage = message.parts.length > 0;
 

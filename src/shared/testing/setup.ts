@@ -13,8 +13,10 @@ beforeEach(() => {
   for (const namespace of BUILT_IN_AI_NAMESPACES) {
     vi.stubGlobal(namespace, undefined);
   }
+
   clearStorage();
   // Module-scoped stores survive localStorage.clear().
   reloadPersistedStores();
 });
+
 afterEach(clearStorage);

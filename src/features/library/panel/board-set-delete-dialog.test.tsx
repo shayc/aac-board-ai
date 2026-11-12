@@ -1,8 +1,8 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { makeBoardSetRecord } from "../testing";
+import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 
 describe("BoardSetDeleteDialog", () => {
   test("names the board set in the warning with no accessibility violations", async () => {

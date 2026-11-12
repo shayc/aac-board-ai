@@ -1,20 +1,12 @@
 import {
-  rootBoardPath,
-  listBoardSetRecords,
   importBoardFileFromURL,
+  listBoardSetRecords,
   parseBoardURL,
+  rootBoardPath,
   starterBoardSet,
 } from "@features/library";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
-
-function boardLinkHost(boardURL: string): string {
-  try {
-    return parseBoardURL(boardURL).host;
-  } catch {
-    throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
-  }
-}
 
 export async function rootIndexLoader({
   request,
@@ -37,4 +29,12 @@ export async function rootIndexLoader({
   });
 
   return redirect(rootBoardPath(importedBoardSet));
+}
+
+function boardLinkHost(boardURL: string): string {
+  try {
+    return parseBoardURL(boardURL).host;
+  } catch {
+    throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
+  }
 }

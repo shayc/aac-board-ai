@@ -27,7 +27,6 @@ export function appendText(
   text: string,
 ): readonly MessagePart[] {
   const lastPart = parts.at(-1);
-
   if (!lastPart || !isTextOnlyPart(lastPart)) {
     return appendPart(parts, { label: text });
   }
@@ -53,7 +52,6 @@ export function applyBackspace(
   const lastGrapheme = graphemeSegmenter
     .segment(lastPart.label)
     .containing(lastPart.label.length - 1);
-
   if (!lastGrapheme || lastGrapheme.index === 0) {
     return parts.slice(0, -1);
   }

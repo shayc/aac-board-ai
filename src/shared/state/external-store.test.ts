@@ -8,6 +8,7 @@ describe("createExternalStore", () => {
     store.subscribe(listener);
 
     store.setState(1);
+
     expect(listener).toHaveBeenCalledOnce();
   });
 
@@ -26,6 +27,7 @@ describe("createExternalStore", () => {
 
     unsubscribe();
     store.setState(1);
+
     expect(listener).not.toHaveBeenCalled();
   });
 });

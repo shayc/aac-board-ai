@@ -27,11 +27,13 @@ export function createButtonActivator({
   function activateButton(button: BoardButton) {
     if (button.linkedBoardId) {
       navigation.goToBoard(button.linkedBoardId);
+
       return;
     }
 
     if (button.actions.length === 0) {
       composeAndPlayButton(button);
+
       return;
     }
 
@@ -58,6 +60,7 @@ export function createButtonActivator({
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
       commitEdits(message.getParts(), actions);
+
       return;
     }
 

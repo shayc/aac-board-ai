@@ -11,5 +11,6 @@ export function safeAreaGutter(
   side: SafeAreaSide,
 ): string {
   const length = typeof base === "number" ? `${base}px` : base;
+
   return `calc(${length} + ${safeAreaInset(side)})`;
 }

@@ -2,8 +2,8 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, test, vi } from "vitest";
-import { BoardSetList } from "./board-set-list";
 import { makeBoardSetRecord } from "../testing";
+import { BoardSetList } from "./board-set-list";
 
 function renderInRouter(children: ReactNode) {
   return renderWithProviders(<MemoryRouter>{children}</MemoryRouter>);
@@ -79,6 +79,7 @@ describe("BoardSetList", () => {
     expect(new Set(labelIds).size).toBe(2);
 
     const menuIds: string[] = [];
+
     for (const [index, boardSet] of boardSets.entries()) {
       const trigger = screen.getByRole("button", {
         name: `More options for ${boardSet.name}`,

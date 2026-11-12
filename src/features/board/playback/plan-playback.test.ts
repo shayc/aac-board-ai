@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import type { MessagePart } from "../message/message-types";
 import { createPart } from "../message/message-transforms";
+import type { MessagePart } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
 describe("planPlayback", () => {
@@ -18,7 +18,6 @@ describe("planPlayback", () => {
 
     expect(steps).toHaveLength(1);
     const step = steps[0];
-
     if (step?.kind !== "speech") {
       throw new Error("Expected a speech step");
     }

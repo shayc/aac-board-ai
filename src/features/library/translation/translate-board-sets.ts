@@ -104,18 +104,6 @@ async function translateBoardSet(
   return true;
 }
 
-function pickBoardTranslations(
-  board: Board,
-  findTranslation: (board: Board, text: string) => string,
-): StringTranslations {
-  return new Map(
-    Array.from(collectBoardStrings(board), (text) => [
-      text,
-      findTranslation(board, text),
-    ]),
-  );
-}
-
 async function listBoards(boardSetId: string): Promise<Board[]> {
   const records = await listBoardRecords(boardSetId);
 
@@ -152,6 +140,7 @@ function collectStringsBySourceLanguage(
   boards: readonly Board[],
 ): Map<string, Set<string>> {
   const stringsBySourceLanguage = new Map<string, Set<string>>();
+
   for (const board of boards) {
     addStrings(
       stringsBySourceLanguage,
@@ -169,6 +158,7 @@ function addStrings(
   strings: Iterable<string>,
 ) {
   const collected = stringsBySourceLanguage.get(sourceLanguage) ?? new Set();
+
   for (const text of strings) {
     collected.add(text);
   }
@@ -237,4 +227,16 @@ async function translateStrings(
   );
 
   return new Map(entries);
+}
+
+function pickBoardTranslations(
+  board: Board,
+  findTranslation: (board: Board, text: string) => string,
+): StringTranslations {
+  return new Map(
+    Array.from(collectBoardStrings(board), (text) => [
+      text,
+      findTranslation(board, text),
+    ]),
+  );
 }

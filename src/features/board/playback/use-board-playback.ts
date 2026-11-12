@@ -31,7 +31,6 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     request: PlaybackRequest,
   ): Promise<boolean> {
     const outcome = await playback.play(request);
-
     if (outcome === "failed") {
       showSnackbar({
         message: (t) => t(m.playbackFailed),

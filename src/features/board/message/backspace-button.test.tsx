@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
 
@@ -93,8 +93,8 @@ describe("BackspaceButton", () => {
         .getByRole("button", { name: "Backspace" })
         .element()
         .querySelector("svg");
-
       assertDefined(icon);
+
       expect(getComputedStyle(icon).transform).toBe(transform);
     },
   );
