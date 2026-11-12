@@ -17,7 +17,6 @@ export function SuggestionSettings() {
   const { customInstructions } = useSuggestionPreferences();
 
   if (!areCustomInstructionsSupported()) {
-    // The Proofreader alone still produces suggestions; only instructions need the Rewriter.
     const unsupportedMessage = areSuggestionsSupported()
       ? m.suggestionsCustomInstructionsUnsupported
       : m.suggestionsUnsupported;

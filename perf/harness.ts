@@ -60,7 +60,6 @@ export class PageProbe {
     );
   }
 
-  /** Slows the CPU for `steps`; whatever surrounds them runs at full speed. */
   async slowCPUDuring(steps: () => Promise<void>): Promise<void> {
     await this.#setCPUSlowdown(CPU_SLOWDOWN);
     try {

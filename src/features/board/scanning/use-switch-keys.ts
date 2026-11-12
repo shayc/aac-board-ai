@@ -38,7 +38,6 @@ export function useSwitchKeys<Action>(
 
       claimKey(event);
 
-      // A held switch repeats its key; only the press itself counts.
       if (!event.repeat) {
         handlePress(action);
       }
@@ -50,7 +49,6 @@ export function useSwitchKeys<Action>(
       }
     }
 
-    // Capturing at the document runs before the focused control's own handlers.
     const options = { capture: true };
     document.addEventListener("keydown", handleKeyDown, options);
     document.addEventListener("keyup", handleKeyUp, options);

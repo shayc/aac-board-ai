@@ -124,11 +124,9 @@ function measureBoardLayout(
       column.left < viewport.right && column.right > viewport.right + 0.5,
   );
   const isBarBelowGrid = backspace.top >= viewport.bottom - 0.5;
-  // With the buttons below the grid, the message bar is the bar above it.
   const barAboveBottom = isBarBelowGrid
     ? messageBar.getBoundingClientRect().bottom
     : backspace.bottom;
-  // Without a bar below the grid, the screen's bottom edge is what is below.
   const edgeBelowTop = isBarBelowGrid ? backspace.top : window.innerHeight;
   const firstRow = rows.at(0);
   const lastRow = rows.at(-1);

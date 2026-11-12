@@ -49,7 +49,6 @@ export function deriveSuggestionStatus({
     return { kind: "pending" };
   }
 
-  // A working source that merely had nothing to suggest keeps the bar quiet.
   const hasWorkingSource = supportedSources.some(
     ({ engineStatus, hasRequestFailed }) =>
       engineStatus !== "unavailable" && !hasRequestFailed,

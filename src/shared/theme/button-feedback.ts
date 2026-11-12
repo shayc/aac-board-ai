@@ -19,7 +19,6 @@ export function buttonFeedbackTiming(theme: Theme) {
   };
 }
 
-// For anything that has to change in step with a button's own colors.
 export function buttonFeedbackTransition(
   theme: Theme,
   properties: string[],

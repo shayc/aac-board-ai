@@ -62,8 +62,6 @@ export function useBoardSetTranslation(): void {
   useEffect(() => stopBoardTranslation, []);
 }
 
-// The set on screen is translated first, so it doesn't wait behind sets the
-// user isn't looking at.
 function visibleFirst(
   boardSets: readonly BoardSetRecord[],
   visibleBoardSetId: string | undefined,

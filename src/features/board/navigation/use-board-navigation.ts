@@ -39,7 +39,6 @@ export function useBoardRoute(): UseBoardRouteReturn {
   return { boardSetId, boardId, goToBoard };
 }
 
-/** `rootBoardId` is undefined while the set's root board is unknown. */
 export function useBoardNavigation(
   rootBoardId: string | undefined,
 ): UseBoardNavigationReturn {

@@ -38,7 +38,6 @@ export async function refreshBoardSets(): Promise<void> {
   }
 }
 
-/** Refreshes this tab's library, then tells the other tabs to refresh theirs. */
 export async function syncBoardSets(): Promise<void> {
   await refreshBoardSets();
   boardSetsSyncChannel.postMessage(undefined);

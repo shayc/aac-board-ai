@@ -38,7 +38,6 @@ function renderWithLoader(loader: () => unknown) {
 }
 
 function throwDataResponse(errorData: unknown): never {
-  // React Router exposes data responses by throwing them from loaders.
   throw data(errorData, { status: 404 });
 }
 
