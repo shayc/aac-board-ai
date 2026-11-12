@@ -101,6 +101,11 @@ Playback uses slice subscriptions: each component tracks only the progress field
 it needs. Word-boundary updates rerender only components whose selected fields
 change.
 
+Device output does not read settings stores. `AppProviders` gives the playback
+coordinator a `getSpeechSettings` function, and the coordinator calls it for
+each speech step, so every utterance uses the language, voice, rate, pitch, and
+volume current at that moment.
+
 The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` do not synchronize across tabs. MUI
 persists and synchronizes theme mode separately.
@@ -233,7 +238,8 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
   enabled buttons inside it. The board marks the message bar, the board
-  controls, and each grid row. The
+  controls, and each grid row; the grid itself knows nothing about scanning and
+  spreads the row props the board hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. Scanned controls therefore

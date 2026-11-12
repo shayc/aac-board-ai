@@ -1,16 +1,16 @@
-import { setStoredLanguage } from "@shared/language/language-store";
-import {
-  setSpeechPitch,
-  setSpeechRate,
-  setSpeechVoiceURI,
-  setSpeechVolume,
-  SPEECH_RATE,
-} from "@shared/speech/speech-store";
+import type { SpeechSettings } from "@shared/speech/speech-synthesis";
 import { assertDefined } from "@shared/testing/assert-defined";
-import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
-import { reloadPersistedStores } from "@shared/state/persisted-store";
+import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
+
+const settings: SpeechSettings = {
+  lang: "en",
+  voice: null,
+  rate: 1,
+  pitch: 1,
+  volume: 1,
+};
 
 // The native accessor rejects stub SpeechSynthesisVoice objects.
 function stubUtteranceVoiceAccessor(): void {
@@ -42,85 +42,39 @@ describe("speak", () => {
     });
 
     test("rejects because nothing can be spoken", async () => {
-      await expect(speak("hello")).rejects.toThrow(
+      await expect(speak("hello", settings)).rejects.toThrow(
         "Speech synthesis is unavailable",
       );
     });
   });
 
-  describe("utterance mapping", () => {
-    beforeEach(() => {
-      stubVoices([{ voiceURI: "voice-1", name: "Voice One", lang: "en-US" }]);
+  test("maps the given settings onto the utterance", async () => {
+    stubUtteranceVoiceAccessor();
+    const speech = stubSpeech();
+    const voice: SpeechSynthesisVoice = {
+      voiceURI: "he-voice",
+      name: "Carmit",
+      lang: "he-IL",
+      default: false,
+      localService: true,
+    };
+
+    await speak("שלום", {
+      lang: "he",
+      voice,
+      rate: 1.5,
+      pitch: 0.5,
+      volume: 0.25,
     });
 
-    test("maps the configured rate, pitch, volume, and voice onto the utterance", async () => {
-      stubUtteranceVoiceAccessor();
-      const speech = stubSpeech();
-      setStoredLanguage("en");
-      setSpeechVoiceURI("voice-1");
-      setSpeechRate(1.5);
-      setSpeechPitch(0.5);
-      setSpeechVolume(0.25);
+    const utterance = speech.speak.mock.calls[0]?.[0];
 
-      await speak("hi");
-
-      const utterance = speech.speak.mock.calls[0]?.[0];
-
-      assertDefined(utterance);
-      expect(utterance.rate).toBe(1.5);
-      expect(utterance.pitch).toBe(0.5);
-      expect(utterance.volume).toBe(0.25);
-      expect(utterance.voice?.voiceURI).toBe("voice-1");
-    });
-
-    test("leaves the voice to the browser when the language has no voices", async () => {
-      stubUtteranceVoiceAccessor();
-      const speech = stubSpeech();
-      setStoredLanguage("en");
-      setSpeechVoiceURI("voice-1");
-      setStoredLanguage("he");
-
-      await speak("שלום");
-
-      const utterance = speech.speak.mock.calls[0]?.[0];
-
-      assertDefined(utterance);
-      expect(utterance.voice).toBeNull();
-      expect(utterance.lang).toBe("he");
-    });
-
-    test("speaks a new language with its own voice and keeps the saved voice", async () => {
-      stubUtteranceVoiceAccessor();
-      stubVoices([
-        { voiceURI: "voice-1", name: "Voice One", lang: "en-US" },
-        { voiceURI: "he-voice", name: "Carmit", lang: "he-IL" },
-      ]);
-      const speech = stubSpeech();
-      setStoredLanguage("en");
-      setSpeechVoiceURI("voice-1");
-      setStoredLanguage("he");
-
-      await speak("שלום");
-      setStoredLanguage("en");
-      await speak("hello");
-
-      const [hebrew, english] = speech.speak.mock.calls.map(([call]) => call);
-      expect(hebrew?.voice?.voiceURI).toBe("he-voice");
-      expect(english?.voice?.voiceURI).toBe("voice-1");
-    });
-
-    test("clamps an out-of-range stored rate to the configured max", async () => {
-      const speech = stubSpeech();
-      localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
-      reloadPersistedStores();
-
-      await speak("hi");
-
-      const utterance = speech.speak.mock.calls[0]?.[0];
-
-      assertDefined(utterance);
-      expect(utterance.rate).toBe(SPEECH_RATE.max);
-    });
+    assertDefined(utterance);
+    expect(utterance.lang).toBe("he");
+    expect(utterance.voice).toBe(voice);
+    expect(utterance.rate).toBe(1.5);
+    expect(utterance.pitch).toBe(0.5);
+    expect(utterance.volume).toBe(0.25);
   });
 
   describe("lifecycle", () => {
@@ -128,7 +82,7 @@ describe("speak", () => {
       const speech = stubSpeech();
 
       await expect(
-        speak("hello", { signal: AbortSignal.abort() }),
+        speak("hello", settings, { signal: AbortSignal.abort() }),
       ).resolves.toBeUndefined();
 
       expect(speech.speak).not.toHaveBeenCalled();
@@ -139,7 +93,7 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce(() => undefined);
       const controller = new AbortController();
 
-      const playback = speak("hello", { signal: controller.signal });
+      const playback = speak("hello", settings, { signal: controller.signal });
       const cancelsBeforeAbort = speech.cancel.mock.calls.length;
       controller.abort();
 
@@ -155,7 +109,7 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce((spoken) => {
         utterance = spoken;
       });
-      const playback = speak("hello");
+      const playback = speak("hello", settings);
 
       utterance?.dispatchEvent(
         new SpeechSynthesisErrorEvent("error", {

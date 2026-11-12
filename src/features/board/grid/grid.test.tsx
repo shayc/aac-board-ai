@@ -360,6 +360,31 @@ describe("Grid", () => {
     });
   });
 
+  describe("row props", () => {
+    test("spreads rowProps onto every row", async () => {
+      const items = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+      ];
+
+      const screen = await render(
+        <Grid
+          items={items}
+          rows={2}
+          columns={1}
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+          rowProps={{ "data-testid": "grid-row" }}
+        />,
+      );
+
+      const rows = screen.getByRole("row").all();
+      expect(rows).toHaveLength(2);
+      for (const row of rows) {
+        await expect.element(row).toHaveAttribute("data-testid", "grid-row");
+      }
+    });
+  });
+
   describe("responsive sizing", () => {
     const FIT_CASES = [
       { axis: "columns", containerSize: 1000, tracks: 20, visible: 10 },
