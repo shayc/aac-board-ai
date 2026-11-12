@@ -13,9 +13,9 @@ import { useUILocale } from "@shared/language/language-store";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
 import { useId } from "react";
+import type { BoardSetDownloadPhase } from "../catalog/board-set-downloads";
+import { useBoardSetDownload } from "../catalog/use-board-set-download";
 import type { DownloadProgress } from "../import/import-from-url";
-import type { BoardSetDownloadPhase } from "./board-set-downloads";
-import { useBoardSetDownload } from "./use-board-set-download";
 
 const PROGRESS_RING_SIZE = 24;
 const BYTES_PER_MEGABYTE = 1_000_000;

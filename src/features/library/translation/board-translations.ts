@@ -1,7 +1,7 @@
 import type { Board, StringTranslations } from "@shared/board/board-types";
 import { getLanguageCode } from "@shared/language/locale";
+import { findStringTranslations } from "../find-string-translations";
 import { nonBlankText } from "../non-blank-text";
-import { findStringTranslations } from "../obf/find-string-translations";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
 const DEFAULT_SOURCE_LANGUAGE = "en";

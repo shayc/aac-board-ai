@@ -362,10 +362,11 @@ for aliased imports:
 There are two features, and the dependency runs one way: the board imports the
 library's public entry point, and the library imports no feature.
 
-| Feature                               | Owns                                                                              |
-| ------------------------------------- | --------------------------------------------------------------------------------- |
-| [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning  |
-| [`library`](../src/features/library/) | Stored board sets: storage, import, export, OBF mapping, board paths, translation |
+| Feature                               | Owns                                                                             |
+| ------------------------------------- | -------------------------------------------------------------------------------- |
+| [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning |
+| [`library`](../src/features/library/) | Stored board sets                                                                | [library/board-sets/](../src/features/library/board-sets/)       | Maintain the reactive library and coordinate board-set creation and deletion. |
+| Stored boards                         | [library/boards/](../src/features/library/boards/)                               | Read a stored set's boards and board summaries as runtime types. |
 
 Test files may also import the library's
 [`testing`](../src/features/library/testing/index.ts) entry. The runtime `Board`
@@ -377,10 +378,15 @@ imports; they are not separate boundaries. The library's folders still depend
 in one direction, so a folder's name tells which layer it is in:
 
 1. `storage/` and `obf/` import no other library folder.
-2. `board-sets/` reads and writes storage and maps what it reads through `obf/`.
+2. `board-sets/` keeps the reactive list of stored sets, and `boards/` reads a
+   set's boards through `storage/` and `obf/`.
 3. `import/`, `export/`, and `translation/` build on those.
 4. `catalog/` downloads through `import/`.
 5. `panel/` is the library's UI and may use all of the above.
+
+Modules at the feature's root, such as
+[`board-paths.ts`](../src/features/library/board-paths.ts), are helpers any of
+these folders may import.
 
 ### Settings composition
 
@@ -417,7 +423,7 @@ are relative to `src/features/`.
 | Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
 | Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
 | Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library, create and delete board sets, and read stored boards as runtime types. |
-| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and download them.                                                        |
+| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and track their downloads.                                                |
 | Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
 | Board translation      | [library/translation/](../src/features/library/translation/)                                     | Show a board in the communication language and translate board sets that lack it.                     |
 
