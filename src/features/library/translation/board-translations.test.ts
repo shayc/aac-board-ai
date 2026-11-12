@@ -1,5 +1,5 @@
-import type { Board } from "@shared/board/board-types";
 import { describe, expect, test } from "vitest";
+import type { Board } from "../board-types";
 import {
   applyTranslations,
   collectBoardStrings,

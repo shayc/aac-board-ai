@@ -1,8 +1,8 @@
+import type { Board, BoardButton } from "@features/library";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import type { Board, BoardButton } from "@shared/board/board-types";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivator } from "./activation/button-activator";

@@ -1,8 +1,8 @@
+import type { BoardButton } from "@features/library";
 import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import type { BoardButton } from "@shared/board/board-types";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { ThemeProvider } from "@shared/theme/theme-provider";

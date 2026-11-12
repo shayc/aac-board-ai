@@ -1,9 +1,9 @@
+import type { Board } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
-import type { Board } from "@shared/board/board-types";
 import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardLoader } from "./board-loader";

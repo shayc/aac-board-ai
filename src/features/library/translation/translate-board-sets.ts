@@ -1,5 +1,5 @@
-import type { Board, StringTranslations } from "@shared/board/board-types";
 import { createTranslator } from "@shayc/react-built-in-ai";
+import type { Board, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
 import {

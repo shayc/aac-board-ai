@@ -26,3 +26,4 @@ export { useBoardInLanguage } from "./translation/use-board-in-language";
 export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
 export type { BoardSummary } from "./board-sets/list-board-summaries";
+export type { Board, BoardAction, BoardButton } from "./board-types";
