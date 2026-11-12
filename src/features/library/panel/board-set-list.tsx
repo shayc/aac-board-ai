@@ -20,19 +20,19 @@ type BoardSetEntry =
 interface BoardSetListProps {
   boardSets: readonly BoardSetRecord[];
   downloadableBoardSets: readonly CatalogBoardSet[];
+  activeBoardSetId?: string;
   onShowInfo: (boardSet: BoardSetRecord) => void;
   onExport: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
-  activeBoardSetId?: string;
 }
 
 export function BoardSetList({
   boardSets,
   downloadableBoardSets,
+  activeBoardSetId,
   onShowInfo,
   onExport,
   onRequestDelete,
-  activeBoardSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
   const uiLocale = useUILocale();

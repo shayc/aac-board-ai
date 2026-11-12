@@ -84,11 +84,11 @@ export function DownloadableBoardSetListItem({
   );
 }
 
-function DownloadButtonIcon({
-  phase,
-}: {
+interface DownloadButtonIconProps {
   phase: BoardSetDownloadPhase | undefined;
-}) {
+}
+
+function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
   if (!phase) {
     return <DownloadOutlinedIcon />;
   }

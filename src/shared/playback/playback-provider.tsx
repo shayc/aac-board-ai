@@ -4,13 +4,13 @@ import { PlaybackContext } from "./playback-context";
 import { createPlaybackCoordinator } from "./playback-coordinator";
 
 interface PlaybackProviderProps {
-  children: ReactNode;
   getSpeechParameters: () => SpeechParameters;
+  children: ReactNode;
 }
 
 export function PlaybackProvider({
-  children,
   getSpeechParameters,
+  children,
 }: PlaybackProviderProps) {
   const [coordinator] = useState(() =>
     createPlaybackCoordinator(getSpeechParameters),

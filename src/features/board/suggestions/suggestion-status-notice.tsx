@@ -54,7 +54,11 @@ export function SuggestionStatusNotice({
   }
 }
 
-function StatusText({ children }: { children: ReactNode }) {
+interface StatusTextProps {
+  children: ReactNode;
+}
+
+function StatusText({ children }: StatusTextProps) {
   return (
     <Typography variant="body2" sx={{ color: "text.secondary" }}>
       {children}

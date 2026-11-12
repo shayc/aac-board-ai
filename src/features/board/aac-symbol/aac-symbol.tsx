@@ -5,16 +5,16 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 export type SymbolLabelPlacement = "top" | "bottom";
 
 interface AACSymbolProps {
-  imageSrc?: string;
   label: string;
+  imageSrc?: string;
   labelPlacement?: SymbolLabelPlacement;
   isLabelVisible?: boolean;
   isImageVisible?: boolean;
 }
 
 export function AACSymbol({
-  imageSrc,
   label,
+  imageSrc,
   labelPlacement = "bottom",
   isLabelVisible = true,
   isImageVisible = true,

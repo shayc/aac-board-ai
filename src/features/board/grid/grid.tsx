@@ -16,27 +16,27 @@ export interface GridItemProps {
 
 type GridRowDataAttributes = Record<`data-${string}`, string>;
 
-interface GridProps<TItem extends { id: string }> {
+interface GridProps<Item extends { id: string }> {
   "aria-label"?: string;
-  items: readonly TItem[];
+  items: readonly Item[];
   rows: number;
   columns: number;
   order?: GridOrder;
-  renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  rowProps?: GridRowDataAttributes;
   gap?: number;
+  rowProps?: GridRowDataAttributes;
+  renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
 
-export function Grid<TItem extends { id: string }>({
+export function Grid<Item extends { id: string }>({
   "aria-label": ariaLabel,
   items,
   rows,
   columns,
   order,
-  renderItem,
-  rowProps,
   gap = 1,
-}: GridProps<TItem>) {
+  rowProps,
+  renderItem,
+}: GridProps<Item>) {
   const grid = buildGrid(items, rows, columns, order);
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
 
@@ -60,8 +60,8 @@ export function Grid<TItem extends { id: string }>({
                 ? tabStopPosition.column
                 : undefined
             }
-            renderItem={renderItem}
             rowProps={rowProps}
+            renderItem={renderItem}
           />
         ))}
       </Stack>
@@ -69,21 +69,21 @@ export function Grid<TItem extends { id: string }>({
   );
 }
 
-interface GridRowProps<TItem extends { id: string }> {
-  items: readonly (TItem | undefined)[];
+interface GridRowProps<Item extends { id: string }> {
+  items: readonly (Item | undefined)[];
   rowIndex: number;
   tabStopColumn: number | undefined;
-  renderItem: (item: TItem, props: GridItemProps) => ReactNode;
   rowProps: GridRowDataAttributes | undefined;
+  renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
 
-function GridRow<TItem extends { id: string }>({
+function GridRow<Item extends { id: string }>({
   items,
   rowIndex,
   tabStopColumn,
-  renderItem,
   rowProps,
-}: GridRowProps<TItem>) {
+  renderItem,
+}: GridRowProps<Item>) {
   return (
     <Stack {...rowProps} role="row" direction="row" sx={gridRowSx}>
       {items.map((item, columnIndex) => (
@@ -100,21 +100,21 @@ function GridRow<TItem extends { id: string }>({
   );
 }
 
-interface GridCellProps<TItem extends { id: string }> {
-  item: TItem | undefined;
+interface GridCellProps<Item extends { id: string }> {
+  item: Item | undefined;
   rowIndex: number;
   columnIndex: number;
   isTabStop: boolean;
-  renderItem: (item: TItem, props: GridItemProps) => ReactNode;
+  renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
 
-function GridCell<TItem extends { id: string }>({
+function GridCell<Item extends { id: string }>({
   item,
   rowIndex,
   columnIndex,
   isTabStop,
   renderItem,
-}: GridCellProps<TItem>) {
+}: GridCellProps<Item>) {
   return (
     <Stack
       role="gridcell"
