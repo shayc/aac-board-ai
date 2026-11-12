@@ -39,8 +39,6 @@ export function CommunicationBoard({
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
 
-  // Stable callbacks let React Compiler reuse the activator across message and
-  // playback updates, avoiding a rerender of every tile.
   const activateButton = createButtonActivator({
     message: { getParts: message.getParts, setParts: message.setParts },
     playback: {
