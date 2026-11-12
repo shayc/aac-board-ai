@@ -1,5 +1,6 @@
 import {
   createExternalStore,
+  patchState,
   useExternalStore,
 } from "@shared/state/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
@@ -32,11 +33,10 @@ export async function refreshBoardSets(): Promise<void> {
     revokeAssetURLsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
   } catch (error) {
-    boardSetsStore.setState((snapshot) => ({
-      ...snapshot,
+    patchState(boardSetsStore, {
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),
-    }));
+    });
   }
 }
 
