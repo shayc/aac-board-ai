@@ -124,7 +124,7 @@ export function CommunicationBoard({
 
         <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
           <Grid<BoardButton>
-            ariaLabel={board.name || t(m.boardGridLabel)}
+            aria-label={board.name || t(m.boardGridLabel)}
             items={board.buttons}
             rows={board.grid.rows}
             columns={board.grid.columns}

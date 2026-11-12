@@ -149,7 +149,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          ariaLabel="Board"
+          aria-label="Board"
           rows={2}
           columns={2}
           items={items}
@@ -163,7 +163,7 @@ describe("useGridFocus", () => {
 
       await screen.rerender(
         <Grid
-          ariaLabel="Renamed board"
+          aria-label="Renamed board"
           rows={2}
           columns={2}
           items={items}
