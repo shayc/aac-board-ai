@@ -10,7 +10,7 @@ export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {
   importBoardFileFromURL,
-  parseBoardURL,
+  parseBoardFileURL,
 } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";

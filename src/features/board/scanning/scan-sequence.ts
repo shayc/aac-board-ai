@@ -14,7 +14,7 @@ export type ScanPosition<Target> =
   | (LevelPosition<Target> & { level: "items"; item: Target })
   | (LevelPosition<Target> & { level: "exit" });
 
-export type ScanSelection<Target> =
+export type ScanSelectOutcome<Target> =
   | { kind: "moved"; position: ScanPosition<Target> | null }
   | { kind: "activated"; target: Target };
 
@@ -61,7 +61,7 @@ export function advanceScan<Target>(
 export function selectScan<Target>(
   groups: readonly ScanGroup<Target>[],
   position: ScanPosition<Target> | null,
-): ScanSelection<Target> {
+): ScanSelectOutcome<Target> {
   const group = groups[findGroupIndex(groups, position)];
   if (!position || !group) {
     return { kind: "moved", position: startScan(groups) };

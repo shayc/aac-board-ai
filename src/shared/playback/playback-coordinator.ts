@@ -1,4 +1,4 @@
-import type { SpeechSettings } from "@shared/speech/speech-synthesis";
+import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { assertNever } from "@shared/utils/assert-never";
 import { createExternalStore } from "@shared/state/external-store";
 import type {
@@ -17,7 +17,7 @@ interface PlaybackSession {
 }
 
 export function createPlaybackCoordinator(
-  getSpeechSettings: () => SpeechSettings,
+  getSpeechParameters: () => SpeechParameters,
 ): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
   let currentSession: PlaybackSession | null = null;
@@ -52,7 +52,7 @@ export function createPlaybackCoordinator(
       case "speech": {
         const { cueAt } = step;
         setActiveCue(session, cueAt?.(0) ?? null);
-        await speak(step.text, getSpeechSettings(), {
+        await speak(step.text, getSpeechParameters(), {
           signal,
           onBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))

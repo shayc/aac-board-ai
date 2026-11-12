@@ -2,32 +2,32 @@ import {
   deriveBoardSetId,
   importBoardFile,
   type ImportedBoardSet,
-} from "./board-import";
+} from "./board-file-import";
 
-export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
+export const MAX_BOARD_FILE_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
-type BoardURLErrorCode =
+type BoardFileURLErrorCode =
   | "unsupported-scheme"
   | "cross-host-redirect"
   | "download-too-large";
 
-class BoardURLError extends Error {
-  readonly code: BoardURLErrorCode;
+class BoardFileURLError extends Error {
+  readonly code: BoardFileURLErrorCode;
 
-  constructor(code: BoardURLErrorCode, message: string) {
+  constructor(code: BoardFileURLErrorCode, message: string) {
     super(message);
-    this.name = "BoardURLError";
+    this.name = "BoardFileURLError";
     this.code = code;
   }
 }
 
 // The ?board= param is attacker-controlled and confirmed by its host, so only
 // http(s) may reach fetch. Schemes such as data: carry a payload with no host.
-export function parseBoardURL(url: string): URL {
+export function parseBoardFileURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
-    throw new BoardURLError(
+    throw new BoardFileURLError(
       "unsupported-scheme",
       `Unsupported board URL scheme: ${resolved.protocol}`,
     );
@@ -41,7 +41,7 @@ function deriveFileName(url: URL): string {
 }
 
 export function deriveBoardSetIdFromURL(url: string): string {
-  return deriveBoardSetId(deriveFileName(parseBoardURL(url)));
+  return deriveBoardSetId(deriveFileName(parseBoardFileURL(url)));
 }
 
 export interface DownloadProgress {
@@ -59,12 +59,12 @@ export async function importBoardFileFromURL(
   url: string,
   { signal, onProgress, onImportStart }: ImportBoardFileFromURLOptions = {},
 ): Promise<ImportedBoardSet> {
-  const boardURL = parseBoardURL(url);
-  const blob = await downloadBoard(boardURL, { signal, onProgress });
+  const fileURL = parseBoardFileURL(url);
+  const blob = await downloadBoardFile(fileURL, { signal, onProgress });
   signal?.throwIfAborted();
   onImportStart?.();
 
-  const file = new File([blob], deriveFileName(boardURL), {
+  const file = new File([blob], deriveFileName(fileURL), {
     type: blob.type || "application/octet-stream",
   });
 
@@ -90,13 +90,13 @@ function assertSameHost(requestedURL: URL, response: Response): void {
   }
 
   void response.body?.cancel();
-  throw new BoardURLError(
+  throw new BoardFileURLError(
     "cross-host-redirect",
     `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
   );
 }
 
-async function downloadBoard(
+async function downloadBoardFile(
   url: URL,
   {
     signal,
@@ -131,11 +131,11 @@ async function downloadBoard(
     }
 
     receivedBytes += value.byteLength;
-    if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
+    if (receivedBytes > MAX_BOARD_FILE_DOWNLOAD_BYTES) {
       await reader.cancel();
-      throw new BoardURLError(
+      throw new BoardFileURLError(
         "download-too-large",
-        `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
+        `Board download exceeded ${MAX_BOARD_FILE_DOWNLOAD_BYTES} bytes`,
       );
     }
 

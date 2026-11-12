@@ -1,6 +1,6 @@
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { zip, type OBFBoard } from "@shayc/open-board-format";
-import { BOARD_IMPORT_LIMITS } from "../import/board-import";
+import { BOARD_FILE_IMPORT_LIMITS } from "../import/board-file-import";
 import type {
   BoardSetInput,
   BoardSetRecord,
@@ -76,7 +76,7 @@ export function makeCorruptBoardFile(name: string): File {
 
 // Zeros keep the fixture small while exceeding the uncompressed-size limit.
 export async function makeOversizedOBZ(name: string): Promise<File> {
-  const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
+  const oversized = new Uint8Array(BOARD_FILE_IMPORT_LIMITS.maxEntrySize! + 1);
   const zipped = await zip(new Map([["big.bin", oversized]]));
 
   return new File([zipped], name, { type: "application/octet-stream" });

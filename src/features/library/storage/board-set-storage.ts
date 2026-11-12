@@ -72,13 +72,13 @@ export async function removeBoardSet(boardSetId: string): Promise<void> {
 
 export interface BoardSetTranslations {
   readonly name: string;
-  readonly stringsByBoardId: ReadonlyMap<string, StringTranslations>;
+  readonly translationsByBoardId: ReadonlyMap<string, StringTranslations>;
 }
 
 export async function saveBoardSetTranslations(
   boardSetId: string,
   language: string,
-  { name, stringsByBoardId }: BoardSetTranslations,
+  { name, translationsByBoardId }: BoardSetTranslations,
 ): Promise<void> {
   const db = await getBoardsDB();
   const tx = db.transaction(["boardSets", "boards"], "readwrite");
@@ -92,10 +92,10 @@ export async function saveBoardSetTranslations(
       return;
     }
 
-    for (const [boardId, strings] of stringsByBoardId) {
+    for (const [boardId, translations] of translationsByBoardId) {
       const board = await boardStore.get([boardSetId, boardId]);
       if (board) {
-        await boardStore.put(withStrings(board, language, strings));
+        await boardStore.put(withTranslations(board, language, translations));
       }
     }
 
@@ -106,14 +106,17 @@ export async function saveBoardSetTranslations(
   });
 }
 
-function withStrings(
+function withTranslations(
   board: BoardRecord,
   language: string,
-  strings: StringTranslations,
+  translations: StringTranslations,
 ): BoardRecord {
   const obf = {
     ...board.obf,
-    strings: { ...board.obf.strings, [language]: Object.fromEntries(strings) },
+    strings: {
+      ...board.obf.strings,
+      [language]: Object.fromEntries(translations),
+    },
   };
 
   return { ...board, obf };

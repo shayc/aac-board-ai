@@ -1,11 +1,11 @@
-import type { SpeechSettings } from "@shared/speech/speech-synthesis";
+import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
-const settings: SpeechSettings = {
-  lang: "en",
+const parameters: SpeechParameters = {
+  language: "en",
   voice: null,
   rate: 1,
   pitch: 1,
@@ -42,13 +42,13 @@ describe("speak", () => {
     });
 
     test("rejects because nothing can be spoken", async () => {
-      await expect(speak("hello", settings)).rejects.toThrow(
+      await expect(speak("hello", parameters)).rejects.toThrow(
         "Speech synthesis is unavailable",
       );
     });
   });
 
-  test("maps the given settings onto the utterance", async () => {
+  test("maps the given parameters onto the utterance", async () => {
     stubUtteranceVoiceAccessor();
     const speech = stubSpeech();
     const voice: SpeechSynthesisVoice = {
@@ -60,7 +60,7 @@ describe("speak", () => {
     };
 
     await speak("שלום", {
-      lang: "he",
+      language: "he",
       voice,
       rate: 1.5,
       pitch: 0.5,
@@ -82,7 +82,7 @@ describe("speak", () => {
       const speech = stubSpeech();
 
       await expect(
-        speak("hello", settings, { signal: AbortSignal.abort() }),
+        speak("hello", parameters, { signal: AbortSignal.abort() }),
       ).resolves.toBeUndefined();
 
       expect(speech.speak).not.toHaveBeenCalled();
@@ -93,7 +93,9 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce(() => undefined);
       const controller = new AbortController();
 
-      const playback = speak("hello", settings, { signal: controller.signal });
+      const playback = speak("hello", parameters, {
+        signal: controller.signal,
+      });
       const cancelsBeforeAbort = speech.cancel.mock.calls.length;
       controller.abort();
 
@@ -109,7 +111,7 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce((spoken) => {
         utterance = spoken;
       });
-      const playback = speak("hello", settings);
+      const playback = speak("hello", parameters);
 
       utterance?.dispatchEvent(
         new SpeechSynthesisErrorEvent("error", {

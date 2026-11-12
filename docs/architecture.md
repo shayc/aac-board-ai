@@ -102,7 +102,7 @@ it needs. Word-boundary updates rerender only components whose selected fields
 change.
 
 Device output does not read settings stores. `AppProviders` gives the playback
-coordinator a `getSpeechSettings` function, and the coordinator calls it for
+coordinator a `getSpeechParameters` function, and the coordinator calls it for
 each speech step, so every utterance uses the language, voice, rate, pitch, and
 volume current at that moment.
 

@@ -1,19 +1,19 @@
-import type { SpeechSettings } from "@shared/speech/speech-synthesis";
+import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { type ReactNode, useEffect, useState } from "react";
 import { PlaybackContext } from "./playback-context";
 import { createPlaybackCoordinator } from "./playback-coordinator";
 
 interface PlaybackProviderProps {
   children: ReactNode;
-  getSpeechSettings: () => SpeechSettings;
+  getSpeechParameters: () => SpeechParameters;
 }
 
 export function PlaybackProvider({
   children,
-  getSpeechSettings,
+  getSpeechParameters,
 }: PlaybackProviderProps) {
   const [coordinator] = useState(() =>
-    createPlaybackCoordinator(getSpeechSettings),
+    createPlaybackCoordinator(getSpeechParameters),
   );
 
   useEffect(() => () => coordinator.dispose(), [coordinator]);

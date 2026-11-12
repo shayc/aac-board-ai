@@ -7,7 +7,7 @@ import { listBoardRecords } from "./board-content-storage";
 export interface BoardSummary {
   id: string;
   name: string;
-  namesByLanguage: Readonly<Record<string, string>>;
+  translatedNames: Readonly<Record<string, string>>;
 }
 
 export async function listBoardSummaries(
@@ -18,18 +18,18 @@ export async function listBoardSummaries(
   return records.map(({ id, name, obf }) => ({
     id,
     name,
-    namesByLanguage: findNamesByLanguage(
+    translatedNames: findTranslatedNames(
       name,
       obfToTranslationsByLocale(obf.strings),
     ),
   }));
 }
 
-function findNamesByLanguage(
+function findTranslatedNames(
   name: string,
   translationsByLocale: TranslationsByLocale,
 ): Record<string, string> {
-  const namesByLanguage: Record<string, string> = {};
+  const translatedNames: Record<string, string> = {};
 
   for (const locale of translationsByLocale.keys()) {
     const language = getLanguageCode(locale);
@@ -39,9 +39,9 @@ function findNamesByLanguage(
     )?.get(name);
 
     if (translatedName !== undefined) {
-      namesByLanguage[language] = translatedName;
+      translatedNames[language] = translatedName;
     }
   }
 
-  return namesByLanguage;
+  return translatedNames;
 }

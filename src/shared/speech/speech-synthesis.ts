@@ -1,5 +1,5 @@
-export interface SpeechSettings {
-  lang: string;
+export interface SpeechParameters {
+  language: string;
   voice: SpeechSynthesisVoice | null;
   rate: number;
   pitch: number;

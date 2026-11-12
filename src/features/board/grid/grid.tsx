@@ -23,7 +23,7 @@ interface GridProps<TItem extends { id: string }> {
   columns: number;
   order?: GridOrder;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  rowProps?: GridRowDataAttributes;
+  rowAttributes?: GridRowDataAttributes;
   gap?: number;
 }
 
@@ -34,7 +34,7 @@ export function Grid<TItem extends { id: string }>({
   columns,
   order,
   renderItem,
-  rowProps,
+  rowAttributes,
   gap = 1,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
@@ -61,7 +61,7 @@ export function Grid<TItem extends { id: string }>({
                 : undefined
             }
             renderItem={renderItem}
-            rowProps={rowProps}
+            rowAttributes={rowAttributes}
           />
         ))}
       </Stack>
@@ -74,7 +74,7 @@ interface GridRowProps<TItem extends { id: string }> {
   rowIndex: number;
   tabStopColumn: number | undefined;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  rowProps: GridRowDataAttributes | undefined;
+  rowAttributes: GridRowDataAttributes | undefined;
 }
 
 function GridRow<TItem extends { id: string }>({
@@ -82,10 +82,10 @@ function GridRow<TItem extends { id: string }>({
   rowIndex,
   tabStopColumn,
   renderItem,
-  rowProps,
+  rowAttributes,
 }: GridRowProps<TItem>) {
   return (
-    <Stack {...rowProps} role="row" direction="row" sx={gridRowSx}>
+    <Stack {...rowAttributes} role="row" direction="row" sx={gridRowSx}>
       {items.map((item, columnIndex) => (
         <GridCell
           key={columnIndex}

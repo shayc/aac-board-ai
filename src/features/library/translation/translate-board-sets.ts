@@ -93,7 +93,7 @@ async function translateBoardSet(
 
   await saveBoardSetTranslations(boardSet.id, language, {
     name: nameInLanguage ?? findTranslation(boardSet, boardSet.name),
-    stringsByBoardId: new Map(
+    translationsByBoardId: new Map(
       boardsMissingLanguage.map((board) => [
         board.id,
         pickBoardTranslations(board, findTranslation),

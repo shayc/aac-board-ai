@@ -36,9 +36,9 @@ describe("boardSetLoader", () => {
       },
     ]);
 
-    const { summaries } = await callLoader("set-1");
+    const { boards } = await callLoader("set-1");
 
-    const names = summaries.map(({ name }) => name);
+    const names = boards.map(({ name }) => name);
     expect(new Set(names)).toEqual(new Set(["Food", "Home"]));
   });
 
@@ -51,9 +51,9 @@ describe("boardSetLoader", () => {
   });
 
   test("returns no root board for a set that isn't stored", async () => {
-    const { rootBoardId, summaries } = await callLoader("missing");
+    const { rootBoardId, boards } = await callLoader("missing");
 
     expect(rootBoardId).toBeUndefined();
-    expect(summaries).toEqual([]);
+    expect(boards).toEqual([]);
   });
 });

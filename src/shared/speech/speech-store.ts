@@ -9,10 +9,10 @@ import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 import {
   parseClampedNumber,
-  type ClampedNumberOptions,
+  type NumberRange,
 } from "@shared/utils/parse-clamped-number";
 import { resolveVoice } from "./resolve-voice";
-import { getSpeechSynthesis, type SpeechSettings } from "./speech-synthesis";
+import { getSpeechSynthesis, type SpeechParameters } from "./speech-synthesis";
 
 interface SpeechPreferences {
   voiceURI: string | null;
@@ -25,17 +25,17 @@ export type VoicesByLanguage = Partial<
   Record<string, readonly SpeechSynthesisVoice[]>
 >;
 
-export const SPEECH_RATE: ClampedNumberOptions = {
+export const SPEECH_RATE_RANGE: NumberRange = {
   min: 0.1,
   max: 2,
   defaultValue: 1,
 };
-export const SPEECH_PITCH: ClampedNumberOptions = {
+export const SPEECH_PITCH_RANGE: NumberRange = {
   min: 0.1,
   max: 2,
   defaultValue: 1,
 };
-export const SPEECH_VOLUME: ClampedNumberOptions = {
+export const SPEECH_VOLUME_RANGE: NumberRange = {
   min: 0.1,
   max: 1,
   defaultValue: 1,
@@ -46,9 +46,9 @@ export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
 
   return {
     voiceURI: typeof stored.voiceURI === "string" ? stored.voiceURI : null,
-    rate: parseClampedNumber(stored.rate, SPEECH_RATE),
-    pitch: parseClampedNumber(stored.pitch, SPEECH_PITCH),
-    volume: parseClampedNumber(stored.volume, SPEECH_VOLUME),
+    rate: parseClampedNumber(stored.rate, SPEECH_RATE_RANGE),
+    pitch: parseClampedNumber(stored.pitch, SPEECH_PITCH_RANGE),
+    volume: parseClampedNumber(stored.volume, SPEECH_VOLUME_RANGE),
   };
 }
 
@@ -104,15 +104,15 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechSettings(): SpeechSettings {
-  const lang = getStoredLanguage();
+export function getSpeechParameters(): SpeechParameters {
+  const language = getStoredLanguage();
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();
 
   return {
-    lang,
-    voice: resolveVoice(voicesByLanguage, lang, voiceURI),
+    language,
+    voice: resolveVoice(voicesByLanguage, language, voiceURI),
     rate,
     pitch,
     volume,

@@ -3,7 +3,7 @@ import { listBoardSetRecords } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
   importBoardFileFromURL,
-  MAX_BOARD_DOWNLOAD_BYTES,
+  MAX_BOARD_FILE_DOWNLOAD_BYTES,
 } from "./import-from-url";
 
 const SAMPLE_BOARDS_DIR = "/src/features/library/testing/sample-boards";
@@ -100,7 +100,7 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("https://trusted.example/go?to=core.obz"),
     ).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "cross-host-redirect",
     });
     expect(await listBoardSetRecords()).toEqual([]);
@@ -125,7 +125,7 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("data:application/zip;base64,UEsDBA=="),
     ).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "unsupported-scheme",
     });
 
@@ -136,7 +136,7 @@ describe("importBoardFileFromURL", () => {
     let cancelled = false;
     const endlessBody = new ReadableStream<Uint8Array>({
       pull(controller) {
-        controller.enqueue(new Uint8Array(MAX_BOARD_DOWNLOAD_BYTES / 4));
+        controller.enqueue(new Uint8Array(MAX_BOARD_FILE_DOWNLOAD_BYTES / 4));
       },
       cancel() {
         cancelled = true;
@@ -147,7 +147,7 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("https://example.com/huge.obz"),
     ).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "download-too-large",
     });
 

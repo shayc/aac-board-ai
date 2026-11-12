@@ -69,15 +69,15 @@ export function SwitchScanner({
       return;
     }
 
-    const selection = selectScan(groups, position);
-    if (selection.kind === "moved") {
-      setPosition(selection.position);
+    const outcome = selectScan(groups, position);
+    if (outcome.kind === "moved") {
+      setPosition(outcome.position);
 
       return;
     }
 
     // Commit activation before reading the newly enabled scan targets.
-    flushSync(() => selection.target.click());
+    flushSync(() => outcome.target.click());
     setPosition(startScan(listScanGroups(scope)));
   }
 

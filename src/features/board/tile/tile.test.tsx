@@ -15,7 +15,7 @@ import {
   setTileBordersVisible,
   setTileBrightness,
   setTileSaturation,
-  TILE_BRIGHTNESS,
+  TILE_BRIGHTNESS_RANGE,
 } from "./tile-preferences-store";
 
 type Rgb = readonly [red: number, green: number, blue: number];
@@ -378,10 +378,13 @@ describe("Tile", () => {
       setTileBordersVisible(true);
 
       const bright = await paintTileAtBrightness(1, colors);
-      const dimmed = await paintTileAtBrightness(TILE_BRIGHTNESS.min, colors);
+      const dimmed = await paintTileAtBrightness(
+        TILE_BRIGHTNESS_RANGE.min,
+        colors,
+      );
 
       expect(
-        channelDistance(dimmed, scale(bright, TILE_BRIGHTNESS.min)),
+        channelDistance(dimmed, scale(bright, TILE_BRIGHTNESS_RANGE.min)),
       ).toBeLessThanOrEqual(1);
     },
   );
@@ -389,7 +392,7 @@ describe("Tile", () => {
   test.each(["#ffffff", "#ffeb3b", "#3f51b5"])(
     "keeps the label readable on a %s background at the lowest brightness",
     async (backgroundColor) => {
-      setTileBrightness(TILE_BRIGHTNESS.min);
+      setTileBrightness(TILE_BRIGHTNESS_RANGE.min);
 
       const screen = await renderInTheme(
         <Unhoverable>{tileElement({ backgroundColor })}</Unhoverable>,

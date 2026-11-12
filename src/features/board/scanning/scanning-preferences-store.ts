@@ -4,7 +4,7 @@ import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import {
   parseClampedNumber,
-  type ClampedNumberOptions,
+  type NumberRange,
 } from "@shared/utils/parse-clamped-number";
 
 const SCAN_METHODS = ["auto", "step"] as const;
@@ -18,7 +18,7 @@ interface ScanningPreferences {
   intervalMs: number;
 }
 
-export const SCAN_INTERVAL_MS: ClampedNumberOptions = {
+export const SCAN_INTERVAL_MS_RANGE: NumberRange = {
   min: 500,
   max: 5000,
   defaultValue: 1200,
@@ -34,7 +34,7 @@ export function parseScanningPreferences(raw: unknown): ScanningPreferences {
   return {
     isEnabled: parseBoolean(stored.isEnabled, false),
     method: isScanMethod(stored.method) ? stored.method : "auto",
-    intervalMs: parseClampedNumber(stored.intervalMs, SCAN_INTERVAL_MS),
+    intervalMs: parseClampedNumber(stored.intervalMs, SCAN_INTERVAL_MS_RANGE),
   };
 }
 

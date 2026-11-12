@@ -343,7 +343,7 @@ describe("saveBoardSetTranslations", () => {
 
     await saveBoardSetTranslations("set-1", "es", {
       name: "Conjunto",
-      stringsByBoardId: new Map([["home", new Map([["Home", "Inicio"]])]]),
+      translationsByBoardId: new Map([["home", new Map([["Home", "Inicio"]])]]),
     });
 
     const board = await getBoardRecord({
@@ -370,7 +370,7 @@ describe("saveBoardSetTranslations", () => {
     await expect(
       saveBoardSetTranslations("set-1", "es", {
         name: "Conjunto",
-        stringsByBoardId: new Map([
+        translationsByBoardId: new Map([
           ["a", new Map([["Test Board", "Tablero"]])],
           ["b", new Map([["Test Board", uncloneable]])],
         ]),
@@ -388,7 +388,9 @@ describe("saveBoardSetTranslations", () => {
 
     await saveBoardSetTranslations("set-1", "es", {
       name: "Conjunto",
-      stringsByBoardId: new Map([["root-1", new Map([["Test Board", "x"]])]]),
+      translationsByBoardId: new Map([
+        ["root-1", new Map([["Test Board", "x"]])],
+      ]),
     });
 
     expect(await getBoardSetRecord("set-1")).toBeUndefined();

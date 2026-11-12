@@ -35,7 +35,7 @@ type BoardSetContent = Omit<BoardSetInput, "id">;
  * Checked against archive metadata before each entry is decompressed.
  * Allows observed board sets up to ~70 MB while bounding allocation.
  */
-export const BOARD_IMPORT_LIMITS: UnzipLimits = {
+export const BOARD_FILE_IMPORT_LIMITS: UnzipLimits = {
   maxTotalOriginalSize: 500 * 1024 * 1024,
   maxEntrySize: 100 * 1024 * 1024,
   maxEntries: 5000,
@@ -59,7 +59,9 @@ export async function importEachBoardFile(
 }
 
 export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
-  const loadedBoard = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+  const loadedBoard = await loadBoard(file, {
+    limits: BOARD_FILE_IMPORT_LIMITS,
+  });
   const content = buildBoardSetContent(loadedBoard, file.name);
   const baseBoardSetId = deriveBoardSetId(file.name);
 

@@ -1,7 +1,7 @@
 import { m } from "@paraglide/messages.js";
 import type { SnackbarOptions } from "@shared/snackbar/snackbar-context";
 import { OBFError } from "@shayc/open-board-format";
-import type { BoardFilesImportOutcome } from "./board-import";
+import type { BoardFilesImportOutcome } from "./board-file-import";
 
 export function summarizeImport({
   importedBoardSets,

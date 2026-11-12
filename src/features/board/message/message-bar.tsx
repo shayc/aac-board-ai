@@ -106,7 +106,7 @@ export function MessageBar({
             label={part.label}
             imageSrc={part.imageSrc}
             isActive={part.id === activePartId}
-            isImageHidden={!areImagesVisible}
+            isImageVisible={areImagesVisible}
           />
         ))}
       </Stack>
@@ -125,14 +125,14 @@ interface MessagePartItemProps {
   label: string;
   imageSrc?: string;
   isActive: boolean;
-  isImageHidden: boolean;
+  isImageVisible: boolean;
 }
 
 function MessagePartItem({
   label,
   imageSrc,
   isActive,
-  isImageHidden,
+  isImageVisible,
 }: MessagePartItemProps) {
   return (
     <Stack
@@ -150,7 +150,7 @@ function MessagePartItem({
       <AACSymbol
         label={label}
         imageSrc={imageSrc}
-        isImageHidden={isImageHidden}
+        isImageVisible={isImageVisible}
       />
     </Stack>
   );

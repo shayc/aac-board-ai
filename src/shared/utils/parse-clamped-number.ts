@@ -1,4 +1,4 @@
-export interface ClampedNumberOptions {
+export interface NumberRange {
   min: number;
   max: number;
   defaultValue: number;
@@ -6,7 +6,7 @@ export interface ClampedNumberOptions {
 
 export function parseClampedNumber(
   value: unknown,
-  { min, max, defaultValue }: ClampedNumberOptions,
+  { min, max, defaultValue }: NumberRange,
 ): number {
   if (typeof value !== "number" || !Number.isFinite(value)) {
     return defaultValue;

@@ -18,12 +18,12 @@ import { userEvent } from "vitest/browser";
 import { BoardSelector } from "./board-selector";
 
 async function renderSelector(boardSetId: string, boardId: string) {
-  const summaries = await listBoardSummaries(boardSetId);
+  const boards = await listBoardSummaries(boardSetId);
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:boardSetId/boards/:boardId",
-        element: <BoardSelector summaries={summaries} />,
+        element: <BoardSelector boards={boards} />,
       },
     ],
     { initialEntries: [`/sets/${boardSetId}/boards/${boardId}`] },

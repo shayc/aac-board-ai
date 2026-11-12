@@ -14,9 +14,9 @@ import {
   setSpeechRate,
   setSpeechVoiceURI,
   setSpeechVolume,
-  SPEECH_PITCH,
-  SPEECH_RATE,
-  SPEECH_VOLUME,
+  SPEECH_PITCH_RANGE,
+  SPEECH_RATE_RANGE,
+  SPEECH_VOLUME_RANGE,
   useSpeechPreferences,
   useSpeechVoice,
   useVoicesByLanguage,
@@ -45,10 +45,10 @@ export function SpeechSettings() {
         label={t(m.speechRate)}
         value={rate}
         onChange={setSpeechRate}
-        min={SPEECH_RATE.min}
-        max={SPEECH_RATE.max}
+        min={SPEECH_RATE_RANGE.min}
+        max={SPEECH_RATE_RANGE.max}
         step={0.1}
-        normalValue={SPEECH_RATE.defaultValue}
+        normalValue={SPEECH_RATE_RANGE.defaultValue}
         formatValue={(value) => `${multiplierFormat.format(value)}×`}
       />
 
@@ -56,10 +56,10 @@ export function SpeechSettings() {
         label={t(m.speechPitch)}
         value={pitch}
         onChange={setSpeechPitch}
-        min={SPEECH_PITCH.min}
-        max={SPEECH_PITCH.max}
+        min={SPEECH_PITCH_RANGE.min}
+        max={SPEECH_PITCH_RANGE.max}
         step={0.1}
-        normalValue={SPEECH_PITCH.defaultValue}
+        normalValue={SPEECH_PITCH_RANGE.defaultValue}
         formatValue={(value) => percentFormat.format(value)}
       />
 
@@ -67,8 +67,8 @@ export function SpeechSettings() {
         label={t(m.speechVolume)}
         value={volume}
         onChange={setSpeechVolume}
-        min={SPEECH_VOLUME.min}
-        max={SPEECH_VOLUME.max}
+        min={SPEECH_VOLUME_RANGE.min}
+        max={SPEECH_VOLUME_RANGE.max}
         step={0.1}
         formatValue={(value) => percentFormat.format(value)}
       />

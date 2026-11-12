@@ -13,7 +13,7 @@ const AXES = {
   inline: {
     containerFeature: "min-width",
     viewportSize: "100cqi",
-    cellSize: "--grid-cell-width",
+    cellSizeProperty: "--grid-cell-width",
     // Narrower than the height so wide boards fit more columns before scrolling.
     minCellSizePx: 88,
     paddingPx: {
@@ -26,7 +26,7 @@ const AXES = {
   block: {
     containerFeature: "min-height",
     viewportSize: "100cqb",
-    cellSize: "--grid-cell-height",
+    cellSizeProperty: "--grid-cell-height",
     // A tile's symbol and label need the extra height.
     minCellSizePx: 96,
     paddingPx: {
@@ -41,8 +41,8 @@ const AXES = {
 
 type GridAxis = (typeof AXES)[keyof typeof AXES];
 
-const GRID_CELL_WIDTH = `var(${AXES.inline.cellSize})`;
-const GRID_CELL_HEIGHT = `var(${AXES.block.cellSize})`;
+const GRID_CELL_WIDTH = `var(${AXES.inline.cellSizeProperty})`;
+const GRID_CELL_HEIGHT = `var(${AXES.block.cellSizeProperty})`;
 
 interface GridLayoutOptions {
   rows: number;
@@ -137,19 +137,19 @@ function createAxisRules(layout: AxisLayout): AxisRules {
 
   const rules: AxisRules = {
     [axis.paddingProperty]: formatPx(paddingPx),
-    [axis.extentProperty]: `calc(${trackCount} * var(${axis.cellSize}) + ${formatPx(gapsAndPaddingPx)})`,
-    ...createTrackFit(layout, 1).cellSize,
+    [axis.extentProperty]: `calc(${trackCount} * var(${axis.cellSizeProperty}) + ${formatPx(gapsAndPaddingPx)})`,
+    ...createTrackFit(layout, 1).cellSizeRule,
   };
 
   for (let visibleTracks = 2; visibleTracks <= trackCount; visibleTracks++) {
-    const { minViewportSizePx, cellSize } = createTrackFit(
+    const { minViewportSizePx, cellSizeRule } = createTrackFit(
       layout,
       visibleTracks,
     );
 
     rules[
       `@container (${axis.containerFeature}: ${formatPx(minViewportSizePx)})`
-    ] = cellSize;
+    ] = cellSizeRule;
   }
 
   return rules;
@@ -170,8 +170,8 @@ function createTrackFit(
 
   return {
     minViewportSizePx: visibleTracks * axis.minCellSizePx + gapsAndInsetPx,
-    cellSize: {
-      [axis.cellSize]: `max(${formatPx(axis.minCellSizePx)}, ${fittedCellSize})`,
+    cellSizeRule: {
+      [axis.cellSizeProperty]: `max(${formatPx(axis.minCellSizePx)}, ${fittedCellSize})`,
     },
   };
 }

@@ -12,16 +12,16 @@ interface BoardOption {
 }
 
 interface BoardSelectorProps {
-  summaries: readonly BoardSummary[];
+  boards: readonly BoardSummary[];
 }
 
-export function BoardSelector({ summaries }: BoardSelectorProps) {
+export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
   const { language } = useLanguage();
   const { boardId, goToBoard } = useBoardRoute();
-  const boards = toBoardOptions(summaries, language);
+  const options = toBoardOptions(boards, language);
 
-  const selectedBoard = boards.find((board) => board.id === boardId);
+  const selectedBoard = options.find((option) => option.id === boardId);
 
   if (!selectedBoard) {
     return null;
@@ -32,7 +32,7 @@ export function BoardSelector({ summaries }: BoardSelectorProps) {
       openText={t(m.boardSelectorOpen)}
       closeText={t(m.boardSelectorClose)}
       noOptionsText={t(m.boardSelectorNoOptions)}
-      options={boards}
+      options={options}
       value={selectedBoard}
       onChange={(_event, board) => goToBoard(board.id)}
       disableClearable
@@ -62,13 +62,13 @@ export function BoardSelector({ summaries }: BoardSelectorProps) {
 }
 
 function toBoardOptions(
-  summaries: readonly BoardSummary[],
+  boards: readonly BoardSummary[],
   language: string,
 ): BoardOption[] {
-  return summaries
-    .map(({ id, name, namesByLanguage }) => ({
+  return boards
+    .map(({ id, name, translatedNames }) => ({
       id,
-      name: namesByLanguage[language] ?? name,
+      name: translatedNames[language] ?? name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }
