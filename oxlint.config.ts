@@ -19,11 +19,14 @@ const indexedDBRestriction: ImportPattern = {
 
 type RestrictedImports = ["error", { patterns: ImportPattern[] }];
 
+function restrictStorageImports(
+  ...patterns: ImportPattern[]
+): RestrictedImports {
+  return ["error", { patterns: [muiBarrelRestriction, ...patterns] }];
+}
+
 function restrictImports(...patterns: ImportPattern[]): RestrictedImports {
-  return [
-    "error",
-    { patterns: [muiBarrelRestriction, indexedDBRestriction, ...patterns] },
-  ];
+  return restrictStorageImports(indexedDBRestriction, ...patterns);
 }
 
 // Each feature lists the features whose barrels it may import. The graph is
@@ -181,15 +184,9 @@ export default defineConfig({
       ],
       rules: {
         "no-restricted-globals": "off",
-        "no-restricted-imports": [
-          "error",
-          {
-            patterns: [
-              muiBarrelRestriction,
-              featureBoundary("library", { isTest: false }),
-            ],
-          },
-        ],
+        "no-restricted-imports": restrictStorageImports(
+          featureBoundary("library", { isTest: false }),
+        ),
       },
     },
     {

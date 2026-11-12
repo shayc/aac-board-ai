@@ -1,5 +1,3 @@
-export { getBoardRecord } from "../storage/board-content-storage";
-export { insertBoardSet } from "../storage/board-set-storage";
 export {
   countStoredBoardContent,
   makeBoardsDBUnreadable,
@@ -14,5 +12,4 @@ export {
   makeCorruptBoardFile,
   makeOBFBoard,
   makeOversizedOBZ,
-  TEST_IMAGE_SRC,
 } from "./fixtures";

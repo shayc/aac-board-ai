@@ -9,7 +9,7 @@ import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
 import type { BoardButton } from "@shared/board/board-types";
-import { TEST_IMAGE_SRC } from "@features/library/testing";
+import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { Tile } from "./tile";
 import {
   setTileBordersVisible,

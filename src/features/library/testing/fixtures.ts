@@ -1,12 +1,10 @@
+import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { zip, type OBFBoard } from "@shayc/open-board-format";
 import { BOARD_IMPORT_LIMITS } from "../import/board-import";
 import type {
   BoardSetInput,
   BoardSetRecord,
 } from "../storage/board-set-storage";
-
-export const TEST_IMAGE_SRC =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
 const SAMPLE_BOARDS_DIR = "/src/features/library/testing/sample-boards";
 

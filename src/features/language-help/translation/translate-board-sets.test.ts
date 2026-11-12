@@ -1,8 +1,11 @@
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
-import { getBoardSetRecord, listBoardSetRecords } from "@features/library";
 import {
-  getBoardRecord,
+  getBoardSetRecord,
+  listBoardRecords,
+  listBoardSetRecords,
+} from "@features/library";
+import {
   makeBoardsDBUnreadable,
   makeOBFBoard,
   resetBoardsDB,
@@ -48,7 +51,9 @@ async function runTranslation(
 }
 
 async function readStrings(boardSetId: string, boardId: string) {
-  return (await getBoardRecord({ boardSetId, boardId }))?.obf.strings;
+  const boards = await listBoardRecords(boardSetId);
+
+  return boards.find(({ id }) => id === boardId)?.obf.strings;
 }
 
 describe("translateBoardSets", () => {
