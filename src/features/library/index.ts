@@ -5,8 +5,9 @@ export {
   boardPath,
   rootBoardPath,
 } from "./board-paths";
-export { starterBoardSet } from "./board-sets/board-set-catalog";
-export { BoardSetLibrary } from "./board-sets/board-set-library";
+export { listBoardSummaries } from "./board-sets/list-board-summaries";
+export { loadStoredBoard } from "./board-sets/load-stored-board";
+export { starterBoardSet } from "./catalog/board-set-catalog";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {
   importBoardFileFromURL,
@@ -14,15 +15,14 @@ export {
 } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
+export { BoardSetLibrary } from "./panel/board-set-library";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export {
   getBoardSetRecord,
   listBoardSetRecords,
 } from "./storage/board-set-storage";
-export { listBoardSummaries } from "./storage/list-board-summaries";
-export { loadStoredBoard } from "./storage/load-stored-board";
 export { BoardTranslationNotice } from "./translation/board-translation-notice";
 export { useBoardInLanguage } from "./translation/use-board-in-language";
 export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
-export type { BoardSummary } from "./storage/list-board-summaries";
+export type { BoardSummary } from "./board-sets/list-board-summaries";

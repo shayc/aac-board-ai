@@ -13,16 +13,16 @@ import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router";
+import { BOARD_SET_SEGMENT } from "../board-paths";
+import { deleteBoardSet, useBoardSets } from "../board-sets/board-sets-store";
+import { listDownloadableBoardSets } from "../catalog/board-set-catalog";
 import { exportBoardSet } from "../export/board-set-export";
 import { useImportBoardFiles } from "../import/use-import-board-files";
-import { BOARD_SET_SEGMENT } from "../board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { boardSetInLanguage } from "../translation/board-translations";
-import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { BoardSetList } from "./board-set-list";
-import { deleteBoardSet, useBoardSets } from "./board-sets-store";
 
 export function BoardSetLibrary() {
   const t = useTranslate();

@@ -21,9 +21,9 @@ import { useEndSide } from "@shared/theme/rtl";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
 import { rootBoardPath } from "../board-paths";
+import type { CatalogBoardSet } from "../catalog/board-set-catalog";
+import { subscribeCompletedDownloads } from "../catalog/board-set-downloads";
 import type { BoardSetRecord } from "../storage/board-set-storage";
-import type { CatalogBoardSet } from "./board-set-catalog";
-import { subscribeCompletedDownloads } from "./board-set-downloads";
 import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
 type BoardSetEntry =
