@@ -19,6 +19,7 @@ import {
   gridArrangementKey,
   type GridCells,
   type GridPosition,
+  isSameGridPosition,
 } from "./grid-model";
 
 interface UseGridFocusReturn {
@@ -44,7 +45,6 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
       }
 
       event.preventDefault();
-      setRememberedPosition(next.position);
       next.element.focus();
     },
   });
@@ -52,7 +52,9 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
   function handleFocus(event: FocusEvent<HTMLElement>) {
     const position = findGridPosition(event.target);
     if (position) {
-      setRememberedPosition(position);
+      setRememberedPosition((remembered) =>
+        isSameGridPosition(remembered, position) ? remembered : position,
+      );
     }
   }
 
