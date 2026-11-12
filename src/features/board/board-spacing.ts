@@ -1,6 +1,6 @@
 // Spacing of the board screen, in theme spacing units, below and from the `sm`
-// breakpoint. The message bar, the bars around the grid, and the grid itself
-// all read these, so the space between any two of them changes in one place.
+// breakpoint. The board lays out its bars with these and the grid pads itself
+// with them, so the space between any two of them changes in one place.
 
 // Space between the screen's edges and the board's content, and between one
 // bar and the next.

@@ -288,7 +288,7 @@ the first paint to avoid a flash of the wrong color scheme.
 
 ### Board spacing
 
-The message bar, the bars around the grid, and the grid read their spacing from
+The board places its bars, and the grid pads itself, with the spacing in
 [`board-spacing.ts`](../src/features/board/board-spacing.ts), so the space
 between any two of them changes in one place. Two values exist for each side of
 the `sm` breakpoint: the page margin and the scroll clearance. The grid's

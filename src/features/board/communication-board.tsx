@@ -112,7 +112,7 @@ export function CommunicationBoard({
           pr: { sm: safeAreaInset("right") },
         }}
       >
-        <Stack spacing={PAGE_MARGIN}>
+        <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
           <PlaybackMessageBar parts={message.parts} playback={playback} />
 
           {isActionRowVisible && (
@@ -120,7 +120,7 @@ export function CommunicationBoard({
               {...scanGroupProps}
               direction="row"
               spacing={2}
-              sx={{ justifyContent: "space-between", px: PAGE_MARGIN }}
+              sx={{ justifyContent: "space-between" }}
             >
               <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
                 {!isSmallScreen && navigationButtons}
