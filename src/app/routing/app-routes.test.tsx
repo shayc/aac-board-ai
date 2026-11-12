@@ -482,6 +482,31 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
+  test("a board set whose ID is percent-encoded in the URL translates in place", async () => {
+    await seedBoardSets([
+      {
+        id: "my board",
+        name: "My Board",
+        rootBoardId: "home",
+        boards: [makeOBFBoard({ id: "home", name: "Home" })],
+      },
+    ]);
+    stubTranslator((input) => `[es] ${input}`);
+
+    const { screen } = await renderApp("/sets/my%20board/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Home" }))
+      .toBeVisible();
+
+    setStoredLanguage("es");
+
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Home" }))
+      .toBeVisible();
+  });
+
   test("the board set on screen translates without waiting for the others", async () => {
     const now = vi.spyOn(Date, "now").mockReturnValue(1);
     await seedBoardSets([
