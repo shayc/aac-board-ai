@@ -1,16 +1,14 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
-import type { Board, StringTranslations } from "../board-types";
-import { obfToBoard } from "../obf/obf-to-board";
-import { listBoardRecords } from "../storage/board-content-storage";
-import {
-  saveBoardSetTranslations,
-  type BoardSetRecord,
-} from "../storage/board-set-storage";
+import type { Board, StringTranslations } from "@shared/board/board-types";
 import {
   collectBoardStrings,
   findStringTranslations,
   getBoardLanguage,
-} from "./board-translations";
+  listBoardRecords,
+  obfToBoard,
+  saveBoardSetTranslations,
+  type BoardSetRecord,
+} from "@features/library";
 
 export interface TranslationOptions {
   signal: AbortSignal;

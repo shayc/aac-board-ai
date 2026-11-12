@@ -1,4 +1,4 @@
-import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
+import { resetBoardsDB, seedBoardSets } from "@features/library/testing";
 import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardSetIndexLoader } from "./board-set-index-loader";

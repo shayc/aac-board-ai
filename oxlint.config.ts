@@ -11,10 +11,79 @@ const muiBarrelRestriction: ImportPattern = {
     "@mui package roots are barrels — use a subpath, e.g. @mui/material/Button.",
 };
 
-function restrictImports(
-  ...patterns: ImportPattern[]
-): ["error", { patterns: ImportPattern[] }] {
-  return ["error", { patterns: [muiBarrelRestriction, ...patterns] }];
+const indexedDBRestriction: ImportPattern = {
+  group: ["idb", "idb/**"],
+  message:
+    "Storage owns all IndexedDB access — go through the library feature's storage module (@features/library from other features).",
+};
+
+type RestrictedImports = ["error", { patterns: ImportPattern[] }];
+
+function restrictImports(...patterns: ImportPattern[]): RestrictedImports {
+  return [
+    "error",
+    { patterns: [muiBarrelRestriction, indexedDBRestriction, ...patterns] },
+  ];
+}
+
+// Each feature lists the features whose barrels it may import. The graph is
+// acyclic: board → language-help → library.
+const featureDependencies = {
+  board: ["language-help", "library"],
+  "language-help": ["library"],
+  library: [],
+} satisfies Record<string, string[]>;
+
+type Feature = keyof typeof featureDependencies;
+
+function featureBoundary(
+  feature: Feature,
+  { isTest }: { isTest: boolean },
+): ImportPattern {
+  const dependencies: string[] = featureDependencies[feature];
+  const barrels = dependencies.map((name) => `!@features/${name}`);
+  const testEntries = dependencies.map((name) => `!@features/${name}/testing`);
+  const allowed =
+    dependencies.length > 0
+      ? `the barrels of ${dependencies.join(" and ")}`
+      : "no other feature";
+
+  return {
+    group: [
+      "@app/**",
+      "@pages/**",
+      "@features/**",
+      ...barrels,
+      ...(isTest ? testEntries : []),
+    ],
+    message: `The ${feature} feature is isolated from @app and @pages and may import ${allowed}${isTest ? " (and their /testing entries)" : ""} — otherwise use @shared or relative paths within the feature.`,
+  };
+}
+
+function featureOverrides(feature: Feature) {
+  const files = `src/features/${feature}/**/*.{ts,tsx}`;
+  const testFiles = `src/features/${feature}/**/*.test.{ts,tsx}`;
+  const testingFiles = `src/features/${feature}/testing/**/*.{ts,tsx}`;
+
+  return [
+    {
+      files: [files],
+      excludeFiles: [testFiles, testingFiles],
+      rules: {
+        "no-restricted-imports": restrictImports(
+          featureBoundary(feature, { isTest: false }),
+        ),
+      },
+    },
+    {
+      files: [testFiles, testingFiles],
+      rules: {
+        "no-restricted-imports": restrictImports(
+          featureBoundary(feature, { isTest: true }),
+        ),
+      },
+    },
+  ];
 }
 
 export default defineConfig({
@@ -42,6 +111,14 @@ export default defineConfig({
   ],
   rules: {
     curly: "error",
+    "no-restricted-globals": [
+      "error",
+      {
+        name: "indexedDB",
+        message:
+          "Storage owns all IndexedDB access — go through the library feature's storage module.",
+      },
+    ],
     "no-restricted-imports": restrictImports(),
     // ARIA grids and MUI primitives intentionally express semantics without table-specific elements.
     "jsx-a11y/prefer-tag-over-role": "off",
@@ -92,14 +169,27 @@ export default defineConfig({
         }),
       },
     },
+    ...featureOverrides("board"),
+    ...featureOverrides("language-help"),
+    ...featureOverrides("library"),
     {
-      files: ["src/features/**/*.{ts,tsx}"],
+      // The only modules that may open the database: storage, and the test
+      // helpers that reset and corrupt it.
+      files: [
+        "src/features/library/storage/**/*.{ts,tsx}",
+        "src/features/library/testing/db.ts",
+      ],
       rules: {
-        "no-restricted-imports": restrictImports({
-          group: ["@app/**", "@features/**", "@pages/**"],
-          message:
-            "A feature is isolated from @app, @pages, and other features — use @shared (e.g. @shared/testing) or relative paths within the feature.",
-        }),
+        "no-restricted-globals": "off",
+        "no-restricted-imports": [
+          "error",
+          {
+            patterns: [
+              muiBarrelRestriction,
+              featureBoundary("library", { isTest: false }),
+            ],
+          },
+        ],
       },
     },
     {
@@ -122,7 +212,7 @@ export default defineConfig({
         "no-restricted-imports": restrictImports({
           group: ["@features/*/**", "!@features/*/testing"],
           message:
-            "A feature's internals are private — use its barrel (@features/board) or test entry (@features/board/testing).",
+            "A feature's internals are private — use its barrel (@features/library) or test entry (@features/library/testing).",
         }),
       },
     },

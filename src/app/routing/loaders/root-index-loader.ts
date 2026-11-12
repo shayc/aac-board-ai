@@ -4,7 +4,7 @@ import {
   importBoardFileFromURL,
   parseBoardURL,
   starterBoardSet,
-} from "@features/board";
+} from "@features/library";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 

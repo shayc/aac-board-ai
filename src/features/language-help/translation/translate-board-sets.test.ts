@@ -1,16 +1,13 @@
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
-import { getBoardRecord } from "../storage/board-content-storage";
+import { getBoardSetRecord, listBoardSetRecords } from "@features/library";
 import {
-  getBoardSetRecord,
-  listBoardSetRecords,
-} from "../storage/board-set-storage";
-import {
+  getBoardRecord,
   makeBoardsDBUnreadable,
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
-} from "../testing";
+} from "@features/library/testing";
 import { translateBoardSets } from "./translate-board-sets";
 
 function seedFoodSet() {

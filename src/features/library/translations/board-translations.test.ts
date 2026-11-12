@@ -6,7 +6,7 @@ import {
   findStringTranslations,
   getBoardLanguage,
 } from "./board-translations";
-import type { Board } from "../board-types";
+import type { Board } from "@shared/board/board-types";
 
 const spanishTranslations = new Map([
   ["My Board", "Mi Tablero"],

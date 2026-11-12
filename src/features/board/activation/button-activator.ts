@@ -9,7 +9,7 @@ import type { MessagePart } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
-import type { BoardAction, BoardButton } from "../board-types";
+import type { BoardAction, BoardButton } from "@shared/board/board-types";
 
 interface ButtonActivatorOptions {
   message: Pick<UseMessageReturn, "getParts" | "setParts">;

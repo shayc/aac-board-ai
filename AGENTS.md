@@ -30,7 +30,11 @@
 
 - `src/main.tsx`: React entry
 - `src/app/`: app shell + providers
-- `src/features/`: feature modules
+- `src/features/`: feature modules, each with a public `index.ts`
+  - `board/`: using a board (grid, tiles, message, activation, playback, scanning)
+  - `library/`: stored board sets (storage, import, export, OBF mapping)
+  - `language-help/`: optional built-in AI (suggestions, board translation)
+- Features depend one way, through public entry points only: `board` → `language-help` → `library`, and `board` → `library`. Only `library/storage/` touches IndexedDB. Oxlint enforces both.
 - `src/pages/`: routes/pages
 - `src/shared/`: shared code
 - See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure.

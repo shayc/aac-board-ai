@@ -6,7 +6,7 @@ import {
   MAX_BOARD_DOWNLOAD_BYTES,
 } from "./import-from-url";
 
-const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
+const SAMPLE_BOARDS_DIR = "/src/features/library/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 
 function redirectedResponse(body: BodyInit, finalURL: string): Response {

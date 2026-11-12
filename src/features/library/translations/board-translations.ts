@@ -3,7 +3,7 @@ import type {
   Board,
   StringTranslations,
   TranslationsByLocale,
-} from "../board-types";
+} from "@shared/board/board-types";
 import { nonBlankText } from "../non-blank-text";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 

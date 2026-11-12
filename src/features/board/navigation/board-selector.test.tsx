@@ -9,9 +9,12 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { insertBoardSet } from "../storage/board-set-storage";
-import { listBoardSummaries } from "../storage/list-board-summaries";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
+import { listBoardSummaries } from "@features/library";
+import {
+  insertBoardSet,
+  makeOBFBoard,
+  resetBoardsDB,
+} from "@features/library/testing";
 import { BoardSelector } from "./board-selector";
 
 async function renderSelector(boardSetId: string, boardId: string) {

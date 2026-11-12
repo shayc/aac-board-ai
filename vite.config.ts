@@ -4,7 +4,7 @@ import { playwright } from "@vitest/browser-playwright";
 import type { Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
-import { BOARD_FILE_EXTENSIONS_BY_MIME_TYPE } from "./src/features/board/import/board-file-formats.ts";
+import { BOARD_FILE_EXTENSIONS_BY_MIME_TYPE } from "./src/features/library/import/board-file-formats.ts";
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,

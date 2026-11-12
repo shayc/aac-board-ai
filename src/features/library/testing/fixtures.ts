@@ -8,7 +8,7 @@ import type {
 export const TEST_IMAGE_SRC =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
-const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
+const SAMPLE_BOARDS_DIR = "/src/features/library/testing/sample-boards";
 
 export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
   return {

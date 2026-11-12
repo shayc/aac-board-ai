@@ -1,4 +1,4 @@
-import { getBoardSetRecord, rootBoardPath } from "@features/board";
+import { getBoardSetRecord, rootBoardPath } from "@features/library";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 

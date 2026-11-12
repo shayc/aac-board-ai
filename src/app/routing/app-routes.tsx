@@ -1,5 +1,5 @@
 import { AppShell } from "@app/shell/app-shell";
-import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/board";
+import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/library";
 import { BoardLinkPage } from "@pages/board-link-page";
 import { BoardPage } from "@pages/board-page";
 import { LoadingState } from "@shared/ui/loading-state";

@@ -11,7 +11,7 @@ import type {
   BoardButton,
   BoardGrid,
   TranslationsByLocale,
-} from "../board-types";
+} from "@shared/board/board-types";
 import { nonBlankText } from "../non-blank-text";
 import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";

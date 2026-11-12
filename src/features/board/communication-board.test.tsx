@@ -10,7 +10,7 @@ import {
   setTileLabelPlacement,
 } from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
-import { TEST_IMAGE_SRC } from "./testing";
+import { TEST_IMAGE_SRC } from "@features/library/testing";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,

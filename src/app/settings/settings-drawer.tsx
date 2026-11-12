@@ -3,8 +3,8 @@ import {
   TileSettings,
   MessageSettings,
   ScanningSettings,
-  SuggestionSettings,
 } from "@features/board";
+import { SuggestionSettings } from "@features/language-help";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";

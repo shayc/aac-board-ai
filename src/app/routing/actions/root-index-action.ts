@@ -1,4 +1,4 @@
-import { importBoardFileFromURL, rootBoardPath } from "@features/board";
+import { importBoardFileFromURL, rootBoardPath } from "@features/library";
 import { redirect, type ActionFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 

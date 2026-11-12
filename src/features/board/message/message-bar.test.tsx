@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
-import { TEST_IMAGE_SRC } from "../testing";
+import { TEST_IMAGE_SRC } from "@features/library/testing";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
 

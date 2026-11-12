@@ -6,7 +6,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
-import type { Board, BoardButton } from "./board-types";
+import type { Board, BoardButton } from "@shared/board/board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { BackspaceButton } from "./message/backspace-button";
@@ -17,8 +17,7 @@ import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
-import { SuggestionBar } from "./suggestions/suggestion-bar";
-import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
+import { SuggestionBar, useMessageSuggestions } from "@features/language-help";
 import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {

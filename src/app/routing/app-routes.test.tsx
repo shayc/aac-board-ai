@@ -1,9 +1,9 @@
-import { listBoardSetRecords, importBoardFileFromURL } from "@features/board";
+import { listBoardSetRecords, importBoardFileFromURL } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
-} from "@features/board/testing";
+} from "@features/library/testing";
 import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
@@ -30,7 +30,7 @@ import { appRoutes } from "./app-routes";
 import { BOARD_SET_ROUTE_ID } from "./loaders/board-set-loader";
 
 const OBZ_FIXTURE_URL =
-  "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
+  "/src/features/library/testing/sample-boards/lots-of-stuff.obz";
 
 async function renderApp(initialEntry = "/") {
   const router = createMemoryRouter(appRoutes, {

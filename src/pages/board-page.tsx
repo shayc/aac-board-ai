@@ -3,7 +3,8 @@ import {
   BOARD_SET_ROUTE_ID,
   type boardSetLoader,
 } from "@app/routing/loaders/board-set-loader";
-import { CommunicationBoard, useBoardInLanguage } from "@features/board";
+import { CommunicationBoard } from "@features/board";
+import { useBoardInLanguage } from "@features/library";
 import { useLoaderData, useRouteLoaderData } from "react-router";
 
 export function BoardPage() {
