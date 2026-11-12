@@ -13,7 +13,6 @@ import {
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
-  communicationBoardTree,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -59,6 +58,7 @@ const SYMBOL_BOARD: OBFBoard = {
 };
 
 const LARGE_GRID_SIZE = 20;
+const LAST_LARGE_GRID_LABEL = `Button ${LARGE_GRID_SIZE ** 2 - 1}`;
 const LARGE_GRID_BOARD: OBFBoard = {
   format: "open-board-0.1",
   id: "large-grid-board",
@@ -66,6 +66,9 @@ const LARGE_GRID_BOARD: OBFBoard = {
   buttons: Array.from({ length: LARGE_GRID_SIZE ** 2 }, (_, index) => ({
     id: `btn-${index}`,
     label: `Button ${index}`,
+    ...(index === LARGE_GRID_SIZE ** 2 - 1 && {
+      load_board: { id: "other-board" },
+    }),
   })),
   grid: {
     rows: LARGE_GRID_SIZE,
@@ -547,75 +550,6 @@ describe("CommunicationBoard", () => {
     });
 
     test("shows the home board from the grid's origin after Home is clicked", async () => {
-      const entries = ["/sets/set-1/boards/other-board"];
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
-        entries,
-        "root-board",
-      );
-
-      await screen.getByRole("button", { name: "Go home" }).click();
-      await screen.rerender(
-        communicationBoardTree(
-          { ...LARGE_GRID_BOARD, id: "root-board" },
-          entries,
-          "root-board",
-        ),
-      );
-
-      expect(scrollContainer.scrollLeft).toBe(0);
-      expect(scrollContainer.scrollTop).toBe(0);
-    });
-
-    test("keeps the grid's scroll position when Back returns to the home board", async () => {
-      const entries = [
-        "/sets/set-1/boards/root-board",
-        {
-          pathname: "/sets/set-1/boards/other-board",
-          state: { canGoBack: true },
-        },
-      ];
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
-        entries,
-        "root-board",
-      );
-
-      await screen.getByRole("button", { name: "Go back" }).click();
-      await screen.rerender(
-        communicationBoardTree(
-          { ...LARGE_GRID_BOARD, id: "root-board" },
-          entries,
-          "root-board",
-        ),
-      );
-
-      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-    });
-
-    test("keeps the grid's scroll position when another board is shown", async () => {
-      const entries = ["/sets/set-1/boards/other-board"];
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
-        entries,
-        "root-board",
-      );
-
-      // With focus on the page, the grid would take it for its first tile and
-      // scroll that tile into view.
-      screen.getByRole("button", { name: "Go home" }).element().focus();
-
-      await screen.rerender(
-        communicationBoardTree(
-          { ...LARGE_GRID_BOARD, id: "next-board" },
-          entries,
-          "root-board",
-        ),
-      );
-
-      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-    });
-
-    test("does not scroll the current board while Home navigates to the home board", async () => {
       const { screen, scrollContainer } = await renderScrolledLargeGrid(
         ["/sets/set-1/boards/other-board"],
         "root-board",
@@ -623,6 +557,42 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "Go home" }).click();
 
+      await vi.waitFor(() => {
+        expect(scrollContainer.scrollLeft).toBe(0);
+        expect(scrollContainer.scrollTop).toBe(0);
+      });
+    });
+
+    test("keeps the grid's scroll position when Back returns to the home board", async () => {
+      const { screen, scrollContainer } = await renderScrolledLargeGrid(
+        [
+          "/sets/set-1/boards/root-board",
+          {
+            pathname: "/sets/set-1/boards/other-board",
+            state: { canGoBack: true },
+          },
+        ],
+        "root-board",
+      );
+      const back = screen.getByRole("button", { name: "Go back" });
+
+      await back.click();
+
+      await expect.element(back).toHaveAttribute("aria-disabled", "true");
+      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+    });
+
+    test("keeps the grid's scroll position when a tile opens another board", async () => {
+      const { screen, scrollContainer } = await renderScrolledLargeGrid(
+        ["/sets/set-1/boards/root-board"],
+        "root-board",
+      );
+      const back = screen.getByRole("button", { name: "Go back" });
+
+      await screen.getByRole("button", { name: LAST_LARGE_GRID_LABEL }).click();
+
+      await expect.element(back).not.toHaveAttribute("aria-disabled");
       expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
       expect(scrollContainer.scrollTop).toBeGreaterThan(0);
     });

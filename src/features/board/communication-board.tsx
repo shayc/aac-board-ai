@@ -5,7 +5,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useLayoutEffect, useRef } from "react";
-import { useNavigationType } from "react-router";
+import { useLocation, useNavigationType } from "react-router";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import type { Board, BoardButton } from "./board-types";
@@ -59,33 +59,24 @@ export function CommunicationBoard({
 
   const hasMessage = message.parts.length > 0;
 
-  function scrollGridToOrigin() {
-    gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
-  }
-
+  const location = useLocation();
   const isHistoryTraversal = useNavigationType() === "POP";
+
+  // Keyed on the location, not the board, so Home from Home resets too.
   useLayoutEffect(() => {
-    if (board.id !== rootBoardId || isHistoryTraversal) {
+    if (!navigation.isHome || isHistoryTraversal) {
       return;
     }
 
-    scrollGridToOrigin();
-  }, [board.id, rootBoardId, isHistoryTraversal]);
-
-  function handleHome() {
-    if (navigation.isHome) {
-      scrollGridToOrigin();
-    }
-
-    navigation.goHome();
-  }
+    gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
+  }, [location.key, navigation.isHome, isHistoryTraversal]);
 
   const navigationButtons = (
     <NavigationButtons
       canGoBack={navigation.canGoBack}
       canGoHome={navigation.canGoHome}
       onBack={navigation.goBack}
-      onHome={handleHome}
+      onHome={navigation.goHome}
     />
   );
 
