@@ -36,7 +36,6 @@ export function PlayButton({
         width: 80,
         height: 80,
         my: 2,
-        marginInlineStart: 0,
         marginInlineEnd: 2,
         [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
       }}

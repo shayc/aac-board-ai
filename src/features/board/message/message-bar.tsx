@@ -55,74 +55,73 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack {...scanGroupProps} direction="row" sx={{ userSelect: "text" }}>
+    <Stack
+      {...scanGroupProps}
+      className={LIGHT_SCHEME_CLASS}
+      direction="row"
+      sx={[
+        {
+          gap: 2,
+          overflow: "hidden",
+          border: 1,
+          borderColor: "transparent",
+          borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
+          color: "text.primary",
+          bgcolor: "background.paper",
+          colorScheme: "light",
+          userSelect: "text",
+        },
+        (theme) =>
+          theme.applyStyles("light", {
+            boxShadow: theme.vars.shadows[1],
+          }),
+        (theme) =>
+          theme.applyStyles("dark", {
+            bgcolor: theme.vars.palette.grey[400],
+          }),
+      ]}
+    >
       <Stack
-        className={LIGHT_SCHEME_CLASS}
+        ref={scrollContainerRef}
+        // No live region: each tile is already spoken aloud as it is added.
+        role="list"
+        aria-label={t(m.messageLabel)}
+        // A long message scrolls and its parts take no focus, so the
+        // scroller is the keyboard's way to read the rest of it. An empty
+        // message has nothing to read and stays out of the tab order.
+        tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
-        sx={[
-          {
-            flexGrow: 1,
-            gap: 2,
-            overflow: "hidden",
-            border: 1,
-            borderColor: "transparent",
-            borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
-            color: "text.primary",
-            bgcolor: "background.paper",
-            colorScheme: "light",
-          },
-          (theme) =>
-            theme.applyStyles("light", {
-              boxShadow: theme.vars.shadows[1],
-            }),
-          (theme) =>
-            theme.applyStyles("dark", {
-              bgcolor: theme.vars.palette.grey[400],
-            }),
-        ]}
+        sx={(theme) => ({
+          flexGrow: 1,
+          alignItems: "center",
+          py: 1,
+          px: 2,
+          overflow: "auto",
+          // Rounded like the bar's leading end so the focus ring isn't
+          // clipped by it.
+          borderStartStartRadius: theme.vars.shape.borderRadiusFull,
+          borderEndStartRadius: theme.vars.shape.borderRadiusFull,
+          // The bar clips overflow, so the theme's ring is drawn inset.
+          "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
+        })}
       >
-        <Stack
-          ref={scrollContainerRef}
-          // No live region: each tile is already spoken aloud as it is added.
-          role="list"
-          aria-label={t(m.messageLabel)}
-          // A long message scrolls and its parts take no focus, so the
-          // scroller is the keyboard's way to read the rest of it. An empty
-          // message has nothing to read and stays out of the tab order.
-          tabIndex={parts.length > 0 ? 0 : undefined}
-          direction="row"
-          sx={(theme) => ({
-            flexGrow: 1,
-            alignItems: "center",
-            py: 1,
-            px: 2,
-            overflow: "auto",
-            // Rounded like the bar's leading end so the focus ring isn't
-            // clipped by it.
-            borderStartStartRadius: theme.vars.shape.borderRadiusFull,
-            borderEndStartRadius: theme.vars.shape.borderRadiusFull,
-            // The bar clips overflow, so the theme's ring is drawn inset.
-            "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
-          })}
-        >
-          {parts.map((part) => (
-            <MessagePartItem
-              key={part.id}
-              label={part.label}
-              imageSrc={part.imageSrc}
-              isActive={part.id === activePartId}
-              isImageHidden={!areImagesVisible}
-            />
-          ))}
-        </Stack>
-
-        <PlayButton
-          disabled={!isPlaying && parts.length === 0}
-          isPlaying={isPlaying}
-          onPlay={onPlay}
-          onStop={onStop}
-        />
+        {parts.map((part) => (
+          <MessagePartItem
+            key={part.id}
+            label={part.label}
+            imageSrc={part.imageSrc}
+            isActive={part.id === activePartId}
+            isImageHidden={!areImagesVisible}
+          />
+        ))}
       </Stack>
+
+      <PlayButton
+        disabled={!isPlaying && parts.length === 0}
+        isPlaying={isPlaying}
+        onPlay={onPlay}
+        onStop={onStop}
+      />
     </Stack>
   );
 }
