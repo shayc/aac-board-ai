@@ -5,6 +5,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useLayoutEffect, useRef } from "react";
+import { useNavigationType } from "react-router";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import type { Board, BoardButton } from "./board-types";
@@ -62,13 +63,14 @@ export function CommunicationBoard({
     gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
+  const isHistoryTraversal = useNavigationType() === "POP";
   useLayoutEffect(() => {
-    if (board.id !== rootBoardId) {
+    if (board.id !== rootBoardId || isHistoryTraversal) {
       return;
     }
 
     scrollGridToOrigin();
-  }, [board.id, rootBoardId]);
+  }, [board.id, rootBoardId, isHistoryTraversal]);
 
   function handleHome() {
     if (navigation.isHome) {

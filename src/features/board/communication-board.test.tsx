@@ -546,13 +546,14 @@ describe("CommunicationBoard", () => {
       expect(audio.play).not.toHaveBeenCalled();
     });
 
-    test("shows the home board from the grid's origin", async () => {
+    test("shows the home board from the grid's origin after Home is clicked", async () => {
       const entries = ["/sets/set-1/boards/other-board"];
       const { screen, scrollContainer } = await renderScrolledLargeGrid(
         entries,
         "root-board",
       );
 
+      await screen.getByRole("button", { name: "Go home" }).click();
       await screen.rerender(
         communicationBoardTree(
           { ...LARGE_GRID_BOARD, id: "root-board" },
@@ -563,6 +564,32 @@ describe("CommunicationBoard", () => {
 
       expect(scrollContainer.scrollLeft).toBe(0);
       expect(scrollContainer.scrollTop).toBe(0);
+    });
+
+    test("keeps the grid's scroll position when Back returns to the home board", async () => {
+      const entries = [
+        "/sets/set-1/boards/root-board",
+        {
+          pathname: "/sets/set-1/boards/other-board",
+          state: { canGoBack: true },
+        },
+      ];
+      const { screen, scrollContainer } = await renderScrolledLargeGrid(
+        entries,
+        "root-board",
+      );
+
+      await screen.getByRole("button", { name: "Go back" }).click();
+      await screen.rerender(
+        communicationBoardTree(
+          { ...LARGE_GRID_BOARD, id: "root-board" },
+          entries,
+          "root-board",
+        ),
+      );
+
+      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
     });
 
     test("keeps the grid's scroll position when another board is shown", async () => {
