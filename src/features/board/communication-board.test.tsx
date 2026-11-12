@@ -13,7 +13,6 @@ import {
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
-  communicationBoardTree,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -540,48 +539,7 @@ describe("CommunicationBoard", () => {
       expect(audio.play).not.toHaveBeenCalled();
     });
 
-    test("shows the home board from the grid's origin", async () => {
-      const entries = ["/sets/set-1/boards/other-board"];
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
-        entries,
-        "root-board",
-      );
-
-      await screen.rerender(
-        communicationBoardTree(
-          { ...LARGE_GRID_BOARD, id: "root-board" },
-          entries,
-          "root-board",
-        ),
-      );
-
-      expect(scrollContainer.scrollLeft).toBe(0);
-      expect(scrollContainer.scrollTop).toBe(0);
-    });
-
-    test("keeps the grid's scroll position when another board is shown", async () => {
-      const entries = ["/sets/set-1/boards/other-board"];
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
-        entries,
-        "root-board",
-      );
-
-      // Keep grid autofocus from scrolling the first tile into view during rerender.
-      screen.getByRole("button", { name: "Go home" }).element().focus();
-
-      await screen.rerender(
-        communicationBoardTree(
-          { ...LARGE_GRID_BOARD, id: "next-board" },
-          entries,
-          "root-board",
-        ),
-      );
-
-      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-    });
-
-    test("does not scroll the current board while Home navigates to the home board", async () => {
+    test("scrolls the grid to its origin when Home is clicked", async () => {
       const { screen, scrollContainer } = await renderScrolledLargeGrid(
         ["/sets/set-1/boards/other-board"],
         "root-board",
@@ -589,8 +547,8 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "Go home" }).click();
 
-      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+      expect(scrollContainer.scrollLeft).toBe(0);
+      expect(scrollContainer.scrollTop).toBe(0);
     });
 
     test("keeps keyboard focus on Go back when it reaches the first board", async () => {

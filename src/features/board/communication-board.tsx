@@ -4,7 +4,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import type { Board, BoardButton } from "./board-types";
@@ -61,19 +61,8 @@ export function CommunicationBoard({
     gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
-  useLayoutEffect(() => {
-    if (board.id !== rootBoardId) {
-      return;
-    }
-
-    scrollGridToOrigin();
-  }, [board.id, rootBoardId]);
-
   function handleHome() {
-    if (navigation.isHome) {
-      scrollGridToOrigin();
-    }
-
+    scrollGridToOrigin();
     navigation.goHome();
   }
 
