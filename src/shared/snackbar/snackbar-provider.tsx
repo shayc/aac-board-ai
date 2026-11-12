@@ -94,9 +94,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         autoHideDuration={
           state.current?.durationMs ?? defaultDurationMs(severity)
         }
-        // Top on every screen size: at the bottom of a phone it would sit on
-        // the board's Go back, Go home and Backspace buttons, and an error
-        // stays there until it is closed.
+        // Keep persistent errors clear of the board's bottom controls.
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
         sx={(theme) =>

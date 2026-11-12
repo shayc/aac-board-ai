@@ -69,7 +69,6 @@ export function DownloadableBoardSetListItem({
         </Tooltip>
       }
     >
-      {/* Muted so a catalog entry doesn't read as an openable board set. */}
       <ListItemText
         primary={name}
         slotProps={{
@@ -105,8 +104,7 @@ function DownloadButtonIcon({
         enableTrackSlot
         {...ringProgress(phase)}
         sx={{
-          // Progress arrives faster than the default 300ms easing can draw it,
-          // so an eased arc trails the download and then jumps to catch up.
+          // Downloads can update faster than MUI's default 300ms transition.
           [`& .${circularProgressClasses.circle}`]: { transition: "none" },
         }}
       />
@@ -136,8 +134,7 @@ type RingProgress =
   | { variant: "indeterminate" };
 
 function ringProgress(phase: BoardSetDownloadPhase): RingProgress {
-  // The size arrives with the response, so spinning until then would flash a
-  // spinner before every download.
+  // Wait for response headers to avoid flashing an indeterminate spinner.
   if (phase.kind === "connecting") {
     return { variant: "determinate", value: 0 };
   }

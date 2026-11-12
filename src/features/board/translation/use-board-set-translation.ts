@@ -13,10 +13,6 @@ import {
   type TranslationOptions,
 } from "./translate-board-sets";
 
-/**
- * Keeps every stored board set translated into the communication language,
- * in the background, so readers only ever pick from stored translations.
- */
 export function useBoardSetTranslation(): void {
   const { language } = useLanguage();
   const { boardSets, isLoading } = useBoardSets();
@@ -31,8 +27,7 @@ export function useBoardSetTranslation(): void {
       (path) => path && boardSetIdFromPath(path),
     );
 
-    // Only routes showing or loading this set hold its data. Revalidating
-    // for any other set would re-run a `?board=` link import still in flight.
+    // Unrelated revalidation could restart an in-flight ?board= import.
     if (routedBoardSetIds.includes(boardSetId)) {
       void revalidate();
     }

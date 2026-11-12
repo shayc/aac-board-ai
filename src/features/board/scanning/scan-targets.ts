@@ -8,9 +8,7 @@ const ITEM_SELECTOR =
 /** Spread on an element to scan the enabled buttons inside it as one group. */
 export const scanGroupProps = { [GROUP_ATTRIBUTE]: "" } as const;
 
-// A highlighted item, or an item inside a highlighted group. Matching the
-// group's items in CSS keeps the highlight on whichever buttons the group has
-// now, as they are enabled, disabled, added, or replaced.
+// CSS keeps group highlighting current as buttons are enabled or replaced.
 export const SCAN_HIGHLIGHTED_ITEM_SELECTOR = `${ITEM_SELECTOR}:is([${HIGHLIGHT_ATTRIBUTE}], [${HIGHLIGHT_ATTRIBUTE}] *)`;
 
 export function listScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
@@ -34,13 +32,10 @@ function listScanItems(container: HTMLElement): HTMLElement[] {
   ).filter((item) => item.checkVisibility({ visibilityProperty: true }));
 }
 
-// Dialogs, drawers, and menus hide everything behind them from assistive
-// technology, which is how the scope learns that it is covered.
 export function isScanningScopeCovered(scope: HTMLElement): boolean {
   return scope.closest("[aria-hidden='true'], [inert]") !== null;
 }
 
-/** Highlights an item, or every item of a group when given its container. */
 export function highlightScanTarget(target: HTMLElement): () => void {
   target.setAttribute(HIGHLIGHT_ATTRIBUTE, "");
 

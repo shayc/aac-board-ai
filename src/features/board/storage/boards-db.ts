@@ -12,7 +12,7 @@ export interface BoardSetRecord {
   readonly description?: string;
   readonly license?: string;
   readonly locale?: string;
-  /** Language code → set name, translated on this device. */
+  /** Keyed by language code. */
   readonly translatedNames?: Readonly<Record<string, string>>;
   readonly gridRows?: number;
   readonly gridColumns?: number;
@@ -105,14 +105,10 @@ export async function closeBoardsDB(): Promise<void> {
 }
 
 /**
- * Runs `write` and resolves once `tx` commits. When `write` fails, the
- * transaction is aborted so nothing it already wrote is kept. A put() that
- * throws synchronously (e.g. a non-cloneable value) would otherwise leave the
- * transaction open to commit the earlier writes. idb creates tx.done eagerly,
- * so it is awaited either way, or its rejection goes unhandled.
- *
- * `write` must await each request before issuing the next. Requests left
- * running when a later one throws would reject after the abort, unhandled.
+ * Synchronous request failures need an explicit abort to roll back earlier writes.
+ * Await both promises to handle idb's eager tx.done rejection.
+ * `write` must await each request before issuing the next so an abort cannot
+ * leave a pending request with an unhandled rejection.
  */
 export async function runTransaction(
   tx: { readonly done: Promise<void>; abort: () => void },

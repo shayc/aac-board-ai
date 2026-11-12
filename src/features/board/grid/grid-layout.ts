@@ -1,15 +1,12 @@
 import type { Theme } from "@mui/material/styles";
 import { GRID_PADDING } from "../board-spacing";
 
-// The theme's spacing unit as a number: container queries compare against
-// lengths, and the theme only offers its unit as a CSS variable.
+// Container-query thresholds require literal lengths for the theme's spacing unit.
 const GRID_SPACING_UNIT_PX = 8;
 const GRID_GAP = "var(--grid-gap)";
 
 type Breakpoint = "xs" | "sm";
 
-// How much of the next row or column shows past the edge of an axis that
-// scrolls, so the user can tell the board scrolls that way.
 const OVERFLOW_HINT_PX: Record<Breakpoint, number> = { xs: 8, sm: 16 };
 
 const AXES = {
@@ -17,8 +14,7 @@ const AXES = {
     containerFeature: "min-width",
     viewportSize: "100cqi",
     cellSize: "--grid-cell-width",
-    // A tile's width can go narrower than its height, so that wide boards fit
-    // more columns before they scroll.
+    // Narrower than the height so wide boards fit more columns before scrolling.
     minCellSizePx: 88,
     paddingPx: {
       xs: spacingUnitsToPx(GRID_PADDING.inline.xs),
@@ -38,10 +34,7 @@ const AXES = {
       sm: spacingUnitsToPx(GRID_PADDING.block.sm),
     },
     paddingProperty: "py",
-    // A definite height, not a minimum: rows share it equally, so a row is
-    // always the fitted cell height. With only a minimum the height would be
-    // indefinite, rows would size to their content, and a tile taller than the
-    // fitted height would push the next row's overflow hint out of view.
+    // A definite height keeps content-sized rows from displacing the overflow hint.
     extentProperty: "height",
   },
 } as const;
@@ -64,9 +57,7 @@ export const gridCellSx = {
   scrollSnapAlign: "none start",
 } as const;
 
-// Rows snap on the block axis and cells on the inline axis. A cell that snapped
-// on both would count as snapped through its row alone, and Safari re-snaps to
-// a snapped area that gains focus, dragging the board to the focused column.
+// Keep row and cell snap axes separate to prevent Safari focus from shifting columns.
 export const gridRowSx = {
   flex: 1,
   minHeight: GRID_CELL_HEIGHT,
@@ -87,10 +78,7 @@ export function createGridViewportSx(theme: Theme, gap: number) {
   };
 }
 
-// A track scrolled to rest sits half the scrolling inset from the edge, which
-// leaves the same hint of its neighbors on both sides. The hint is narrower
-// than this padding, so a hinted tile that takes focus counts as out of view
-// and the browser scrolls all of it in.
+// Padding wider than the hint makes keyboard focus scroll the whole tile into view.
 function createScrollPadding(breakpoint: Breakpoint, gapPx: number) {
   return {
     scrollPaddingInline: formatPx(
@@ -171,10 +159,8 @@ function createTrackFit(
   { axis, breakpoint, trackCount, gapPx }: AxisLayout,
   visibleTracks: number,
 ) {
-  // The inset is the part of the viewport that whole tracks leave free. An axis
-  // that fits needs only its padding on both sides. An axis that scrolls needs
-  // its padding on one side and, on the other, a gap and the hint of the next
-  // track; at the far end of the scroll the two sides swap.
+  // A fitting axis is inset by its padding on both sides. A scrolling axis has
+  // padding on one side and a gap plus the next track's hint on the other.
   const isScrollable = visibleTracks < trackCount;
   const insetPx = isScrollable
     ? calculateScrollingInsetPx(axis, breakpoint, gapPx)

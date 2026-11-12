@@ -11,8 +11,7 @@ interface SettingsSliderProps {
   max: number;
   step: number;
   normalValue?: number;
-  // Hide the number when it has no meaning to the user beyond what they see
-  // change; assistive technology still announces it.
+  // Assistive technology still announces the value.
   isValueHidden?: boolean;
   formatValue: (value: number) => string;
 }

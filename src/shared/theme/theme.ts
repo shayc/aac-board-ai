@@ -73,16 +73,13 @@ function softShadow(elevation: number) {
   return `${ring}, ${key}, ${ambient}`;
 }
 
-// Theme overrides follow MUI's state rules, so the sticky touch hover would
-// otherwise repaint the focused, error, and disabled outlines.
+// Sticky touch hover must preserve focused, error, and disabled outlines.
 const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
 
 const themeOptions = {
   focusVisible: true,
   shadows,
-  // Strings so radii returned from sx callbacks pass through as lengths; a
-  // number would be multiplied by the base again. MUI's Paper-based surfaces
-  // (menus, popovers, alerts, snackbars) and tooltips inherit the base.
+  // Explicit lengths prevent sx from multiplying these radii by the base radius.
   shape: {
     borderRadius: "20px",
     borderRadiusSm: "12px",
@@ -91,15 +88,14 @@ const themeOptions = {
   },
   cssVariables: {
     colorSchemeSelector: "class",
-    // index.html owns color-scheme; MUI only emits the palette vars.
+    // index.html owns color-scheme.
     disableCssColorScheme: true,
   },
   colorSchemes: {
     light: {
       palette: {
         primary: { main: "#0b7468" },
-        // Informational notices use the brand color; MUI's default blue would
-        // be the only blue in the app.
+        // MUI's default info blue would be the only blue in the app.
         info: { main: "#0b7468" },
         grey,
         background: { default: BACKGROUND_LIGHT, paper: "#ffffff" },
@@ -125,8 +121,8 @@ const themeOptions = {
         SnackbarContent: { bg: grey[100], color: grey[900] },
         action: {
           active: "rgba(255, 255, 255, 0.7)",
-          // MUI's 30% white stays too close to an enabled icon on dark
-          // surfaces; 20% matches the light scheme's disabled contrast.
+          // MUI's 30% white reads as enabled on dark surfaces. 20% matches the
+          // light scheme's disabled contrast.
           disabled: "rgba(255, 255, 255, 0.2)",
         },
       },
@@ -159,9 +155,9 @@ const themeOptions = {
     },
     MuiPaper: {
       styleOverrides: {
-        // Dark surfaces take two deliberate steps (background.default and
-        // background.paper); MUI's elevation overlay would add unplanned ones.
         root: {
+          // MUI's dark elevation overlay would add surface steps beyond
+          // background.default and background.paper.
           backgroundImage: "none",
         },
       },
@@ -192,8 +188,7 @@ const themeOptions = {
 
           return {
             backgroundColor: theme.vars.palette.background.default,
-            // Physical corners, like the drawer's own `left`/`right` offset, are
-            // mirrored by the RTL stylis plugin, so the inner edge stays rounded.
+            // The RTL stylis plugin mirrors these corners with the drawer anchor.
             variants: [
               {
                 props: { anchor: "left" },
@@ -285,8 +280,8 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
-              // MUI's grey disabled fill is darker than the light page, so a
-              // disabled button would outweigh the enabled ones beside it.
+              // MUI's grey disabled fill is darker than the light page and
+              // would outweigh the enabled buttons beside it.
               style: theme.applyStyles("light", {
                 [`&.${buttonClasses.disabled}`]: {
                   backgroundColor: theme.vars.palette.Button.inheritContainedBg,

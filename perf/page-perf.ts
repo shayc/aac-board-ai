@@ -10,10 +10,7 @@ declare global {
   }
 }
 
-/**
- * Runs in the page before any app script. Kept self-contained because
- * Playwright serializes it into the page.
- */
+// Keep self-contained because Playwright serializes this function into the page.
 export function installPagePerf(watches: Record<string, string>): void {
   const watched = new Map<
     string,
@@ -69,11 +66,7 @@ export function installPagePerf(watches: Record<string, string>): void {
     perf.watch(name, selector);
   }
 
-  // Resolves once the main thread has rendered the first frame in which the
-  // element is laid out. A user-blocking task posted from requestAnimationFrame
-  // runs right after that frame's style, layout and paint, ahead of the
-  // normal-priority tasks (image loads, React effects) already queued, whose
-  // order varies between runs.
+  // Timestamp after paint, ahead of queued normal-priority work that adds timing noise.
   function firstVisibleFrame(selector: string): Promise<number> {
     return new Promise((resolve) => {
       function isVisible(): boolean {

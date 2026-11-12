@@ -36,7 +36,7 @@ export function SuggestionBar({
       <SuggestionStatusNotice status={status} onEnable={onEnable} />
 
       <Box
-        // No live region: it would talk over the tile being spoken.
+        // A live region would interrupt the tile's spoken feedback.
         role={hasPhrases ? "group" : undefined}
         aria-label={hasPhrases ? t(m.suggestionsLabel) : undefined}
         sx={{

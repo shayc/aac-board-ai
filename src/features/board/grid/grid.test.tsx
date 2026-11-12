@@ -11,8 +11,7 @@ import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
 
-// The test viewport is below "sm", where the grid's top and bottom padding is
-// smaller than its side padding and the overflow hint is the same on both axes.
+// Expected dimensions for the test viewport below sm.
 const PADDING_PX = { columns: 16, rows: 12 };
 const OVERFLOW_HINT_PX = 8;
 const GAP_PX = 8;
@@ -124,8 +123,6 @@ async function measureTracks(
   };
 }
 
-// Rows snap on the block axis and cells on the inline axis, so each axis
-// scrolls the element that snaps on it.
 function scrollTrackToStart(grid: Element, axis: Axis, index: number) {
   const selector = axis === "columns" ? "[role='gridcell']" : "[role='row']";
   const track = grid.querySelectorAll(selector).item(index);
@@ -383,8 +380,6 @@ describe("Grid", () => {
         expect(layout.leadingSpace).toBeCloseTo(PADDING_PX[axis], 0);
         expect(layout.overflows).toBe(tracks > visible);
 
-        // An axis that scrolls ends its last whole track a gap and a hint
-        // before the edge; an axis that fits ends it at the padding.
         const expectedTrailingSpace = layout.overflows
           ? GAP_PX + OVERFLOW_HINT_PX
           : PADDING_PX[axis];
@@ -420,8 +415,6 @@ describe("Grid", () => {
       },
     );
 
-    // Without help the browser leaves a focused element where it is as long as
-    // any part of it shows, and the hint is such a part.
     test.each(["columns", "rows"] as const)(
       "scrolls the hinted track of the %s into view when its item takes focus",
       async (axis) => {

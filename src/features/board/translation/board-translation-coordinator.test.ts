@@ -102,8 +102,6 @@ describe("board translation coordinator", () => {
     current.options().onTranslating();
     await expect.poll(() => result.current).toBe(true);
 
-    // The next pass of the replaced run starts only after the first has ended
-    // and tried to clear the status.
     replaced.finish();
     await expect.poll(queuedBehindReplaced.hasStarted).toBe(true);
 

@@ -18,10 +18,6 @@ export async function exportBoardSet(
   saveFile(file, `${boardSet.name}.obz`);
 }
 
-/**
- * Packages a stored board set with its assets and the translations saved on
- * this device, which live in each board's `strings`.
- */
 export async function boardSetToOBZ({
   id,
   rootBoardId,
@@ -68,10 +64,8 @@ function collectAssetPaths(boards: readonly OBFBoard[]): Set<string> {
 }
 
 /**
- * Points media at the normalized path their file is packaged under, because a
- * path such as `/images/a.png` is not a portable archive entry. Media whose
- * file was never stored lose their path, falling back to `data` or `url` as
- * the app does.
+ * Archive paths must match stored entry names. Clear missing paths to allow
+ * consumers to fall back to embedded media or remote URLs.
  */
 function withPackagedMedia(
   board: OBFBoard,

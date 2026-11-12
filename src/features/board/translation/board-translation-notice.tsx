@@ -25,8 +25,7 @@ export function BoardTranslationNotice() {
     );
   }
 
-  // The first translation into a language downloads its model, so both states
-  // render the same alert, and its text moves from the download to the boards.
+  // Reuse the live region so assistive technology announces the phase change.
   if (progress !== null) {
     return (
       <TranslationStatusAlert
@@ -62,7 +61,6 @@ function TranslationStatusAlert({
   title,
   description,
 }: TranslationStatusAlertProps) {
-  // A polite status, so progress updates don't interrupt screen reader speech.
   return (
     <Alert role="status" severity="info" variant="outlined" icon={icon}>
       <AlertTitle>{title}</AlertTitle>

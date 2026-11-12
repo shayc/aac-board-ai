@@ -77,9 +77,6 @@ const LARGE_GRID_BOARD: OBFBoard = {
   },
 };
 
-// Below the "sm" breakpoint the buttons sit in a bar under the grid; from it
-// they sit in a row above the grid. Distances are measured to whichever bar
-// holds them.
 function measureBoardLayout(
   container: Element,
   { isScrolledToEnd = false } = {},
@@ -191,9 +188,7 @@ describe("CommunicationBoard", () => {
   });
 
   describe("layout", () => {
-    // The board fills the screen below the app header, which takes 57px below
-    // the "sm" breakpoint and 65px from it: these are a 375 x 812 phone and a
-    // 1024 x 768 tablet.
+    // Available heights exclude the app header (57px on phones, 65px on tablets).
     const LAYOUT_CASES = [
       {
         name: "a phone",
@@ -404,7 +399,6 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "world" }).click();
-      // Activating a tile speaks per-tile feedback; we only assert the play call.
       speech.speak.mockClear();
 
       await screen.getByRole("button", { name: "Play message" }).click();

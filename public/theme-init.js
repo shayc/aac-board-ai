@@ -1,6 +1,5 @@
-// Loaded as a blocking classic script from index.html so the theme class is set
-// before first paint and MUI adopts it without a flash. It lives in its own
-// file, not inline, so the Content-Security-Policy can forbid inline scripts.
+// Run before first paint to prevent a theme flash.
+// The external file allows CSP to forbid inline scripts.
 {
   const mode = localStorage.getItem("mui-mode") ?? "system";
   const isDark =

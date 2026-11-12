@@ -21,10 +21,8 @@ export async function rootIndexLoader({
 }: LoaderFunctionArgs): Promise<Response | { boardHost: string }> {
   const boardURL = new URL(request.url).searchParams.get("board");
 
-  // The ?board= param is attacker-controlled, and `/` opens the newest board
-  // set, so a link alone must never import. Only validate it here and name its
-  // host for the confirmation dialog; rootIndexAction imports once the user
-  // confirms.
+  // The ?board= param is attacker-controlled, so a link alone must never
+  // import. rootIndexAction imports once the user confirms the host.
   if (boardURL) {
     return { boardHost: boardLinkHost(boardURL) };
   }

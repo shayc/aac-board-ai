@@ -30,11 +30,6 @@ export interface Comparison {
   canFlagChanges: boolean;
 }
 
-/**
- * Tests each timing's per-round differences and corrects the p-values for the
- * number of timings, so two builds that perform alike get any flag at all in
- * fewer than SIGNIFICANCE_LEVEL of runs.
- */
 export function compareBuilds(results: RunResults): Comparison {
   const measured = results.journeys.flatMap(({ journey, timings }) =>
     Object.entries(timings).map(([timing, samples]) => ({

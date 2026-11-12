@@ -1,16 +1,3 @@
-/**
- * Two-level scanning. The scan moves through groups; selecting a group moves
- * through its items; selecting an item activates it. A group with one item
- * activates that item directly.
- *
- * After a group's last item the whole group is highlighted once more as an
- * exit step: selecting it returns to the groups, which is how a wrongly
- * selected group is left.
- *
- * Positions hold targets rather than indexes, so the groups may change between
- * steps: a position whose target is gone restarts the scan.
- */
-
 export interface ScanGroup<Target> {
   container: Target;
   items: readonly [Target, ...Target[]];
@@ -18,10 +5,10 @@ export interface ScanGroup<Target> {
 
 interface LevelPosition<Target> {
   container: Target;
-  /** Passes over the current level that ended without a selection. */
   completedPasses: number;
 }
 
+// The exit step lets users leave an accidentally selected group.
 export type ScanPosition<Target> =
   | (LevelPosition<Target> & { level: "groups" })
   | (LevelPosition<Target> & { level: "items"; item: Target })
@@ -39,11 +26,6 @@ export function startScan<Target>(
   return firstGroup ? groupPosition(firstGroup, 0) : null;
 }
 
-/**
- * Moves to the next group, item, or exit step. `maxPasses` passes over a level
- * without a selection end it: the groups return `null`, a paused scan, and a
- * group's items move on to the next group.
- */
 export function advanceScan<Target>(
   groups: readonly ScanGroup<Target>[],
   position: ScanPosition<Target> | null,

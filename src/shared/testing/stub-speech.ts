@@ -41,6 +41,5 @@ export function stubVoices(voices: StubVoice[]): void {
   }));
 
   vi.spyOn(speechSynthesis, "getVoices").mockReturnValue(synthesisVoices);
-  // The speech store rebuilds its voice catalog on this event.
   speechSynthesis.dispatchEvent(new Event("voiceschanged"));
 }

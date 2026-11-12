@@ -17,8 +17,7 @@ function createHandlers() {
   };
 }
 
-// pressure must be non-zero: react-aria treats pressure===0 + pointerType==="mouse"
-// as a virtual (assistive-technology) event and skips the long-press timer entirely.
+// React Aria needs nonzero mouse pressure to start its long-press timer.
 function longPress(element: Element) {
   element.dispatchEvent(
     new PointerEvent("pointerdown", {

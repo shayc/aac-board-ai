@@ -99,8 +99,7 @@ async function pressSwitch(key: "Space" | "Enter" = "Space") {
   await userEvent.keyboard(`{${key}}`);
 }
 
-// One interval at a time: the next interval starts only once React has
-// committed the move, so assert each move before advancing again.
+// Assert each move before advancing again so React can schedule the next interval.
 async function advanceScanInterval() {
   await vi.advanceTimersByTimeAsync(SCAN_INTERVAL_MS);
 }
@@ -312,7 +311,6 @@ describe("switch scanning", () => {
 
       await pressSwitch();
 
-      // Backspace removes the last character of a text-only message part.
       await expect
         .element(screen.getByText("ye", { exact: true }))
         .toBeVisible();

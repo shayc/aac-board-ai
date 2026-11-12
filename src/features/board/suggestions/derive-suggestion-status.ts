@@ -32,8 +32,7 @@ export function deriveSuggestionStatus({
     return { kind: "idle" };
   }
 
-  // An engine in `error` never recovers on its own, so enabling doubles as
-  // its retry.
+  // Engines in error require an explicit prepare() retry.
   if (
     supportedSources.some(({ engineStatus }) => needsEnabling(engineStatus))
   ) {
@@ -54,8 +53,6 @@ export function deriveSuggestionStatus({
       engineStatus !== "unavailable" && !hasRequestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingSource) {
-    // An `unavailable` engine can't run on this device, so retrying won't help;
-    // a failed request might succeed on the next message.
     const isEveryEngineUnavailable = supportedSources.every(
       ({ engineStatus }) => engineStatus === "unavailable",
     );

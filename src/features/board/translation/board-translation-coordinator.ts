@@ -16,10 +16,8 @@ const isTranslatingStore = createExternalStore(false);
 let currentRun: TranslationRun | undefined;
 
 /**
- * Runs `pass` after the passes already queued for `language`. Only a language
- * change aborts: a pass queued for the same language waits its turn, because
- * aborting could cancel a model download that, without the language change's
- * user gesture, can't start again.
+ * Queue same-language passes to preserve model downloads started by a user gesture.
+ * Aborting those downloads would require another gesture to restart them.
  */
 export function queueBoardTranslationPass(
   language: string,
@@ -66,8 +64,7 @@ function startRun(language: string): TranslationRun {
   return currentRun;
 }
 
-// A run replaced by a language change keeps settling in the background, and
-// must not touch the status its successor now owns.
+// Superseded runs can still settle after the new language's run starts.
 function setIsTranslating(run: TranslationRun, isTranslating: boolean) {
   if (currentRun === run) {
     isTranslatingStore.setState(isTranslating);

@@ -10,7 +10,6 @@ import {
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
 
-// Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
   transformIndexHtml: (html) =>
@@ -137,8 +136,8 @@ export default defineConfig({
         "**/testing/**",
         "**/test-utils.*",
       ],
-      // Regression floor ~2 points under the measured baseline; ratchet up
-      // alongside meaningful coverage gains, never down.
+      // Raise these floors with meaningful gains, keeping them about two
+      // percentage points below measured coverage.
       thresholds: {
         statements: 95,
         branches: 88,

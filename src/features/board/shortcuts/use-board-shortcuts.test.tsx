@@ -20,8 +20,6 @@ describe("board keyboard shortcuts", () => {
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
 
-    // The key must bubble past the grid's handler (which stops propagation by
-    // default) to the board root.
     screen.getByRole("button", { name: "world" }).element().focus();
     await userEvent.keyboard("{Backspace}");
 

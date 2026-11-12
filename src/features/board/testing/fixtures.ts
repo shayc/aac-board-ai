@@ -5,7 +5,6 @@ import type {
   BoardSetRecord,
 } from "../storage/board-set-storage";
 
-/** Inline 1×1 PNG for tests that need an image source without a network request. */
 export const TEST_IMAGE_SRC =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
@@ -77,8 +76,7 @@ export function makeCorruptBoardFile(name: string): File {
   return new File(["not valid json"], name, { type: "application/json" });
 }
 
-// Zeros compress to a tiny archive that still declares an oversized
-// uncompressed size, so the limit trips before inflation.
+// Zeros keep the fixture small while exceeding the uncompressed-size limit.
 export async function makeOversizedOBZ(name: string): Promise<File> {
   const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
   const zipped = await zip(new Map([["big.bin", oversized]]));

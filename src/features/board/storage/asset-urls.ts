@@ -1,10 +1,7 @@
 import { getAssetBlob } from "./board-content-storage";
 import { normalizeAssetPath } from "./boards-db";
 
-// Stored assets are immutable, so a URL stays correct for as long as its board
-// set exists. Message parts rely on this to keep their media after leaving the
-// board they came from. Replacing an asset at the same path would need its URL
-// revoked first.
+// Immutable assets keep their URLs until set deletion so messages survive navigation.
 const urlsByBoardSetId = new Map<string, Map<string, string>>();
 
 export async function getAssetURL(

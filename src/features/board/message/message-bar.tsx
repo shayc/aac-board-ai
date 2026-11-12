@@ -16,8 +16,7 @@ export interface MessageBarProps {
   onStop: () => void;
 }
 
-// Symbols are drawn for light backgrounds, so the bar stays a light surface in
-// dark mode; the scheme class makes everything inside it resolve light tokens.
+// Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
 export function MessageBar({
@@ -83,12 +82,10 @@ export function MessageBar({
     >
       <Stack
         ref={scrollContainerRef}
-        // No live region: each tile is already spoken aloud as it is added.
+        // A live region would repeat the tile's spoken feedback.
         role="list"
         aria-label={t(m.messageLabel)}
-        // A long message scrolls and its parts take no focus, so the
-        // scroller is the keyboard's way to read the rest of it. An empty
-        // message has nothing to read and stays out of the tab order.
+        // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
         sx={(theme) => ({
@@ -97,11 +94,9 @@ export function MessageBar({
           py: 1,
           px: 2,
           overflow: "auto",
-          // Rounded like the bar's leading end so the focus ring isn't
-          // clipped by it.
           borderStartStartRadius: theme.vars.shape.borderRadiusFull,
           borderEndStartRadius: theme.vars.shape.borderRadiusFull,
-          // The bar clips overflow, so the theme's ring is drawn inset.
+          // Keep the focus ring inside the bar's clipped overflow.
           "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
         })}
       >
