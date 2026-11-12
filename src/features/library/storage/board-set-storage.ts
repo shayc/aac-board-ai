@@ -215,5 +215,11 @@ function buildBoardSetRecord(
 // silently deleting the boards someone communicates with. Not awaited, since
 // Firefox settles only once the user answers its permission prompt.
 function requestPersistentStorage(): void {
+  // Insecure contexts, such as a dev server over LAN HTTP, have no
+  // navigator.storage, though IndexedDB still works there.
+  if (!window.isSecureContext) {
+    return;
+  }
+
   void navigator.storage.persist();
 }

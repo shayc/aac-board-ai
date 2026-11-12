@@ -87,6 +87,16 @@ describe("insertBoardSet", () => {
     expect(persist).toHaveBeenCalledOnce();
   });
 
+  test("stores a set without asking to persist outside a secure context", async () => {
+    vi.spyOn(window, "isSecureContext", "get").mockReturnValue(false);
+    const persist = vi.spyOn(navigator.storage, "persist");
+
+    await insertBoardSet(makeBoardSetInput({ id: "insecure" }));
+
+    expect(persist).not.toHaveBeenCalled();
+    expect(await getBoardSetRecord("insecure")).toBeDefined();
+  });
+
   test("rejects a missing root without storing a partial set", async () => {
     await expect(
       insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),

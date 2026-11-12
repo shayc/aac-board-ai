@@ -31,7 +31,10 @@ use on restricted networks; the trade-off is no built-in cross-device sync.
 A static host serves the app and updates. The service worker caches the app shell
 after the first successful load and third-party images as they are displayed.
 Once the shell and board are available locally, core communication works offline.
-Playback depends on locally available media and speech voices.
+Playback depends on locally available media and speech voices. Storing a board
+set asks the browser for persistent storage, so boards are not evicted when the
+device runs low on space; browsers may prompt or decline, and the app works
+either way.
 
 ```mermaid
 flowchart LR
@@ -89,9 +92,7 @@ State has distinct owners and lifetimes:
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding translations saved on this device. Board links
 carry the linked board's ID, which the OBF library resolves from the archive.
-Board-set records store the set's translated names. Storing a board set asks
-the browser for persistent storage, so boards survive eviction under storage
-pressure; browsers may decline or prompt, and the app works either way. `obfToBoard` derives the
+Board-set records store the set's translated names. `obfToBoard` derives the
 runtime `Board` on each read, so runtime types can evolve without rewriting
 stored records. Storage schema changes require a versioned migration in
 [`boards-db.ts`](../src/features/library/storage/boards-db.ts).
