@@ -44,6 +44,7 @@ export function AACSymbol({
             position: "relative",
             flexGrow: 1,
             height: "54px",
+            // Let the image shrink so the label keeps its full line.
             minHeight: 0,
             aspectRatio: "1 / 1",
           }}

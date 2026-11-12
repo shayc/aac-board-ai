@@ -39,6 +39,8 @@ export function BoardSetInfoDialog({
           pt: 0,
           overflowX: "hidden",
           overflowY: "auto",
+          // The app disables selection globally; descriptions carry URLs and
+          // credits people need to copy.
           userSelect: "text",
         }}
       >

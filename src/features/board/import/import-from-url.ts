@@ -21,7 +21,8 @@ class BoardURLError extends Error {
   }
 }
 
-// URL-import confirmation relies on a verifiable network host.
+// The ?board= param is attacker-controlled and confirmed by its host, so only
+// http(s) may reach fetch. Schemes such as data: carry a payload with no host.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 

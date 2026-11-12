@@ -4,6 +4,8 @@ export function safeAreaInset(side: SafeAreaSide): string {
   return `env(safe-area-inset-${side})`;
 }
 
+// Addition is intentional: max() would drop the base gutter wherever the inset
+// is larger.
 export function safeAreaGutter(
   base: string | number,
   side: SafeAreaSide,

@@ -95,6 +95,7 @@ const themeOptions = {
     light: {
       palette: {
         primary: { main: "#0b7468" },
+        // MUI's default info blue would be the only blue in the app.
         info: { main: "#0b7468" },
         grey,
         background: { default: BACKGROUND_LIGHT, paper: "#ffffff" },
@@ -120,6 +121,8 @@ const themeOptions = {
         SnackbarContent: { bg: grey[100], color: grey[900] },
         action: {
           active: "rgba(255, 255, 255, 0.7)",
+          // MUI's 30% white reads as enabled on dark surfaces. 20% matches the
+          // light scheme's disabled contrast.
           disabled: "rgba(255, 255, 255, 0.2)",
         },
       },
@@ -153,6 +156,8 @@ const themeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
+          // MUI's dark elevation overlay would add surface steps beyond
+          // background.default and background.paper.
           backgroundImage: "none",
         },
       },
@@ -275,6 +280,8 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
+              // MUI's grey disabled fill is darker than the light page and
+              // would outweigh the enabled buttons beside it.
               style: theme.applyStyles("light", {
                 [`&.${buttonClasses.disabled}`]: {
                   backgroundColor: theme.vars.palette.Button.inheritContainedBg,

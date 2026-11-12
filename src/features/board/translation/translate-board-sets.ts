@@ -23,6 +23,7 @@ interface TranslateBoardSetsOptions extends TranslationOptions {
 
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
+/** Translator failures skip a set. Storage and other errors reject. */
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
@@ -187,6 +188,7 @@ async function translateBySourceLanguage(
   const translators = new Map<string, OpenTranslator>();
 
   try {
+    // Open every translator first so a refused one wastes no translation.
     for (const sourceLanguage of stringsBySourceLanguage.keys()) {
       const translator = await createTranslator({
         sourceLanguage,
