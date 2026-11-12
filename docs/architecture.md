@@ -112,11 +112,11 @@ Preferences managed by `createPersistedStore` do not synchronize across tabs. MU
 persists and synchronizes theme mode separately.
 
 Stores are module singletons that start working when first imported, so they
-need no provider and their loading starts before React renders.
-The cost is that a store outlives a test, so tests reset the state behind it.
-The shared [test setup](../src/shared/testing/setup.ts) clears localStorage and
-calls `reloadPersistedStores` before each test. Tests that touch stored boards
-call `resetBoardsDB` from the library's
+need no provider and their loading starts before React renders. The cost is that
+a store outlives a test, so tests reset the state behind it. The shared [test
+setup](../src/shared/testing/setup.ts) clears localStorage and calls
+`reloadPersistedStores` before each test. Tests that touch stored boards call
+`resetBoardsDB` from the library's
 [`testing`](../src/features/library/testing/index.ts) entry, which empties
 IndexedDB and refreshes the board-sets store.
 
