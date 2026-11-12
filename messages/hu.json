@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Tartsd lenyomva az üzenet törléséhez.",
   "messagePlay": "Üzenet lejátszása",
   "messageStop": "Üzenet leállítása",
+  "playbackFailed": "Nem sikerült lejátszani a hangot",
   "messageLabel": "Üzenet",
   "onboardingContinue": "Folytatás",
   "onboardingTitle": "Üdvözöl az AAC Board AI",

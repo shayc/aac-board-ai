@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "לחצו לחיצה ארוכה כדי למחוק את ההודעה.",
   "messagePlay": "השמעת ההודעה",
   "messageStop": "עצירת ההשמעה",
+  "playbackFailed": "לא ניתן להשמיע את הצליל",
   "messageLabel": "הודעה",
   "onboardingContinue": "המשך",
   "onboardingTitle": "ברוכים הבאים ל-AAC Board AI",

@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "বার্তা মুছতে চেপে ধরে রাখুন।",
   "messagePlay": "বার্তা চালান",
   "messageStop": "বার্তা থামান",
+  "playbackFailed": "শব্দ চালানো যায়নি",
   "messageLabel": "বার্তা",
   "onboardingContinue": "চালিয়ে যান",
   "onboardingTitle": "AAC Board AI-তে স্বাগতম",

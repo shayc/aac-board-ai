@@ -1,8 +1,9 @@
-import { PlaybackProvider } from "@shared/playback/playback-provider";
+import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { page } from "vitest/browser";
 import type { MessagePart } from "../message/message-types";
 import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
@@ -12,7 +13,7 @@ function renderPlayback() {
       ...useBoardPlayback(),
       activePartId: useActiveMessagePartId(),
     }),
-    { wrapper: PlaybackProvider },
+    { wrapper: AppProviders },
   );
 }
 
@@ -228,13 +229,14 @@ describe("useBoardPlayback", () => {
 
     resolveFirstSpeak?.();
 
-    await expect(firstPlay).resolves.toBe("interrupted");
-    await expect(secondPlay).resolves.toBe("completed");
+    await expect(firstPlay).resolves.toBe(false);
+    await expect(secondPlay).resolves.toBe(true);
     expect(speech.spokenTexts()).toEqual(["first", "second"]);
+    expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
-  test("resets isMessagePlaying to false after a speech error", async () => {
-    speech.speak.mockImplementationOnce((utterance) => {
+  function failSpeech() {
+    speech.speak.mockImplementation((utterance) => {
       queueMicrotask(() => {
         utterance.dispatchEvent(
           new SpeechSynthesisErrorEvent("error", {
@@ -244,14 +246,71 @@ describe("useBoardPlayback", () => {
         );
       });
     });
+  }
 
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
-
+  test("reports a failed message once and resolves as not completed", async () => {
+    failSpeech();
     const { result, rerender } = await renderPlayback();
 
-    await expect(result.current.playMessage(parts)).resolves.toBe("failed");
+    await expect(
+      result.current.playMessage([{ id: "1", label: "hi" }]),
+    ).resolves.toBe(false);
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);
+    await expect
+      .element(page.getByRole("alert"))
+      .toHaveTextContent("Couldn't play sound");
+    expect(page.getByRole("alert").elements()).toHaveLength(1);
+  });
+
+  test("reports a failed tile once and resolves as not completed", async () => {
+    failSpeech();
+    const { result } = await renderPlayback();
+
+    await expect(
+      result.current.playPart({ id: "1", label: "hi" }),
+    ).resolves.toBe(false);
+
+    await expect
+      .element(page.getByRole("alert"))
+      .toHaveTextContent("Couldn't play sound");
+    expect(page.getByRole("alert").elements()).toHaveLength(1);
+  });
+
+  test("reports a failure when only some of the message plays", async () => {
+    audio.play.mockRejectedValue(new Error("Audio failed"));
+    const { result } = await renderPlayback();
+
+    await expect(
+      result.current.playMessage([
+        { id: "1", label: "before" },
+        { id: "2", label: "ding", soundSrc: "ding.mp3" },
+      ]),
+    ).resolves.toBe(false);
+
+    expect(speech.spokenTexts()).toEqual(["before"]);
+    await expect.element(page.getByRole("alert")).toBeVisible();
+  });
+
+  test("resolves as completed without reporting anything", async () => {
+    const { result } = await renderPlayback();
+
+    await expect(
+      result.current.playMessage([{ id: "1", label: "hi" }]),
+    ).resolves.toBe(true);
+
+    expect(page.getByRole("alert").elements()).toHaveLength(0);
+  });
+
+  test("resolves a stopped message as not completed without reporting it", async () => {
+    speech.speak.mockImplementationOnce(() => undefined);
+    const { result } = await renderPlayback();
+
+    const playPromise = result.current.playMessage([{ id: "1", label: "hi" }]);
+    result.current.stop();
+
+    await expect(playPromise).resolves.toBe(false);
+    expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 });

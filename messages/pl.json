@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Naciśnij i przytrzymaj, aby wyczyścić wiadomość.",
   "messagePlay": "Odtwórz wiadomość",
   "messageStop": "Zatrzymaj wiadomość",
+  "playbackFailed": "Nie udało się odtworzyć dźwięku",
   "messageLabel": "Wiadomość",
   "onboardingContinue": "Kontynuuj",
   "onboardingTitle": "Witamy w AAC Board AI",

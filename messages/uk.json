@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Натисніть і утримуйте, щоб очистити повідомлення.",
   "messagePlay": "Відтворити повідомлення",
   "messageStop": "Зупинити повідомлення",
+  "playbackFailed": "Не вдалося відтворити звук",
   "messageLabel": "Повідомлення",
   "onboardingContinue": "Продовжити",
   "onboardingTitle": "Вітаємо в AAC Board AI",

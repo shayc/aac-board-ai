@@ -1,9 +1,11 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-types";
+import { m } from "@paraglide/messages.js";
+import type { PlaybackRequest } from "@shared/playback/playback-types";
 import {
   useActiveCue,
   useIsPlaying,
   usePlayback,
 } from "@shared/playback/use-playback";
+import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import type { MessagePart } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
@@ -12,24 +14,39 @@ const TILE_OWNER = "board-tile";
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  playMessage: (parts: readonly MessagePart[]) => Promise<PlaybackOutcome>;
-  playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
+  // Both play functions resolve to whether playback completed; failures are
+  // already reported to the user, so callers have no outcome to handle.
+  playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
+  playPart: (part: MessagePart) => Promise<boolean>;
   stop: () => void;
 }
 
 export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
+  const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
+  // AAC users depend on knowing that nothing was heard, so a failure is reported
+  // here, once, instead of being left to each caller.
+  async function play(request: PlaybackRequest): Promise<boolean> {
+    const outcome = await playback.play(request);
+
+    if (outcome === "failed") {
+      showSnackbar({
+        message: (t) => t(m.playbackFailed),
+        severity: "error",
+      });
+    }
+
+    return outcome === "completed";
+  }
+
   function playMessage(parts: readonly MessagePart[]) {
-    return playback.play({
-      owner: MESSAGE_OWNER,
-      steps: planPlayback(parts),
-    });
+    return play({ owner: MESSAGE_OWNER, steps: planPlayback(parts) });
   }
 
   function playPart(part: MessagePart) {
-    return playback.play({ owner: TILE_OWNER, steps: planPlayback([part]) });
+    return play({ owner: TILE_OWNER, steps: planPlayback([part]) });
   }
 
   return {

@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "按住可清空消息。",
   "messagePlay": "播放消息",
   "messageStop": "停止播放消息",
+  "playbackFailed": "无法播放声音",
   "messageLabel": "消息",
   "onboardingContinue": "继续",
   "onboardingTitle": "欢迎使用 AAC Board AI",

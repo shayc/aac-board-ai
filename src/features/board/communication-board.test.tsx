@@ -352,6 +352,34 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByText("hi", { exact: true }))
         .toBeVisible();
+      await expect
+        .element(screen.getByRole("alert"))
+        .toHaveTextContent("Couldn't play sound");
+      expect(screen.getByRole("alert").elements()).toHaveLength(1);
+    });
+
+    test("tells the user when a tile fails to speak", async () => {
+      speech.speak.mockImplementation((utterance) => {
+        queueMicrotask(() => {
+          utterance.dispatchEvent(
+            new SpeechSynthesisErrorEvent("error", {
+              utterance,
+              error: "synthesis-failed",
+            }),
+          );
+        });
+      });
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect
+        .element(screen.getByRole("alert"))
+        .toHaveTextContent("Couldn't play sound");
+      expect(screen.getByRole("alert").elements()).toHaveLength(1);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
     });
 
     test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {

@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Press and hold to clear the message.",
   "messagePlay": "Play message",
   "messageStop": "Stop message",
+  "playbackFailed": "Couldn't play sound",
   "messageLabel": "Message",
   "onboardingContinue": "Continue",
   "onboardingTitle": "Welcome to AAC Board AI",

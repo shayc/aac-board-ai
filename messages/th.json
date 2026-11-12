@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "กดค้างเพื่อล้างข้อความ",
   "messagePlay": "เล่นข้อความ",
   "messageStop": "หยุดข้อความ",
+  "playbackFailed": "ไม่สามารถเล่นเสียงได้",
   "messageLabel": "ข้อความ",
   "onboardingContinue": "ดำเนินการต่อ",
   "onboardingTitle": "ยินดีต้อนรับสู่ AAC Board AI",

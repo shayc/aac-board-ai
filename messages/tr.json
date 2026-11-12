@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Mesajı temizlemek için basılı tutun.",
   "messagePlay": "Mesajı oynat",
   "messageStop": "Mesajı durdur",
+  "playbackFailed": "Ses oynatılamadı",
   "messageLabel": "Mesaj",
   "onboardingContinue": "Devam et",
   "onboardingTitle": "AAC Board AI uygulamasına hoş geldiniz",

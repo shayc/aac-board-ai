@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "సందేశాన్ని క్లియర్ చేయడానికి నొక్కి ఉంచండి.",
   "messagePlay": "సందేశాన్ని ప్లే చేయి",
   "messageStop": "సందేశాన్ని ఆపు",
+  "playbackFailed": "ధ్వనిని ప్లే చేయడం సాధ్యపడలేదు",
   "messageLabel": "సందేశం",
   "onboardingContinue": "కొనసాగించు",
   "onboardingTitle": "AAC Board AIకి స్వాగతం",

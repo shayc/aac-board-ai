@@ -1,4 +1,3 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import type { BoardButton } from "../board-types";
@@ -17,10 +16,10 @@ function setup(initialParts: readonly MessagePart[] = []) {
   };
   const playback = {
     playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() =>
-      Promise.resolve("completed"),
+      Promise.resolve(true),
     ),
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
-      Promise.resolve("completed"),
+      Promise.resolve(true),
     ),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
@@ -38,11 +37,11 @@ const PLAY_THEN_CLEAR: BoardButton["actions"] = [
 ];
 
 function holdMessagePlayback(playback: ReturnType<typeof setup>["playback"]) {
-  const { promise, resolve } = Promise.withResolvers<PlaybackOutcome>();
+  const { promise, resolve } = Promise.withResolvers<boolean>();
   playback.playMessage.mockReturnValue(promise);
 
-  return async (outcome: PlaybackOutcome) => {
-    resolve(outcome);
+  return async (hasCompleted: boolean) => {
+    resolve(hasCompleted);
     await promise;
   };
 }
@@ -157,7 +156,7 @@ describe("createButtonActivator", () => {
     const settlePlayback = holdMessagePlayback(playback);
 
     activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
-    await settlePlayback("completed");
+    await settlePlayback(true);
 
     expect(playback.playMessage).toHaveBeenCalledWith(parts);
     expect(message.setParts).not.toHaveBeenCalled();
@@ -172,7 +171,7 @@ describe("createButtonActivator", () => {
     activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
     expect(message.setParts).not.toHaveBeenCalled();
 
-    await settlePlayback("completed");
+    await settlePlayback(true);
 
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith([]);
   });
@@ -192,33 +191,21 @@ describe("createButtonActivator", () => {
       { id: "1", label: "hi" },
       { id: "2", label: "there" },
     ]);
-    await settlePlayback("completed");
+    await settlePlayback(true);
 
     const committed = message.setParts.mock.lastCall?.[0];
     assertDefined(committed);
     expect(committed.map((part) => part.label)).toEqual(["hi", "there", ""]);
   });
 
-  test("drops edits after play when playback is interrupted", async () => {
+  test("drops edits after play when playback does not complete", async () => {
     const { activateButton, message, playback } = setup([
       { id: "1", label: "hi" },
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 
     activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
-    await settlePlayback("interrupted");
-
-    expect(message.setParts).not.toHaveBeenCalled();
-  });
-
-  test("drops edits after play when playback fails", async () => {
-    const { activateButton, message, playback } = setup([
-      { id: "1", label: "hi" },
-    ]);
-    const settlePlayback = holdMessagePlayback(playback);
-
-    activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
-    await settlePlayback("failed");
+    await settlePlayback(false);
 
     expect(message.setParts).not.toHaveBeenCalled();
   });
