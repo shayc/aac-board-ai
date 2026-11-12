@@ -65,7 +65,7 @@ describe("BoardSelector", () => {
       .element(screen.getByRole("option", { name: "Home" }))
       .toHaveAttribute("aria-selected", "true");
 
-    // The app shell supplies the popup's landmark in production.
+    // Axe's region rule flags the popup portaled outside the app's landmarks.
     await expectNoA11yViolations(document.body, {
       rules: { region: { enabled: false } },
     });

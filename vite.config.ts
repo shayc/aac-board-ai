@@ -136,6 +136,8 @@ export default defineConfig({
         "**/testing/**",
         "**/test-utils.*",
       ],
+      // Raise these floors with meaningful gains, keeping them about two
+      // percentage points below measured coverage.
       thresholds: {
         statements: 95,
         branches: 88,
