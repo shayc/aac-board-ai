@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Nhấn giữ để xóa tin nhắn.",
   "messagePlay": "Phát tin nhắn",
   "messageStop": "Dừng tin nhắn",
+  "playbackFailed": "Không thể phát âm thanh",
   "messageLabel": "Tin nhắn",
   "onboardingContinue": "Tiếp tục",
   "onboardingTitle": "Chào mừng bạn đến với AAC Board AI",

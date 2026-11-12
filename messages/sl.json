@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Pritisnite in pridržite za izbris sporočila.",
   "messagePlay": "Predvajaj sporočilo",
   "messageStop": "Ustavi sporočilo",
+  "playbackFailed": "Zvoka ni bilo mogoče predvajati",
   "messageLabel": "Sporočilo",
   "onboardingContinue": "Nadaljuj",
   "onboardingTitle": "Dobrodošli v AAC Board AI",

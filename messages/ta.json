@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "செய்தியை அழிக்க அழுத்திப் பிடிக்கவும்.",
   "messagePlay": "செய்தியை இயக்கு",
   "messageStop": "செய்தியை நிறுத்து",
+  "playbackFailed": "ஒலியை இயக்க முடியவில்லை",
   "messageLabel": "செய்தி",
   "onboardingContinue": "தொடரவும்",
   "onboardingTitle": "AAC Board AI-க்கு வரவேற்கிறோம்",

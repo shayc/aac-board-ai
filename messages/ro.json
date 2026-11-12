@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Apasă și ține apăsat pentru a șterge mesajul.",
   "messagePlay": "Redă mesajul",
   "messageStop": "Oprește mesajul",
+  "playbackFailed": "Sunetul nu a putut fi redat",
   "messageLabel": "Mesaj",
   "onboardingContinue": "Continuă",
   "onboardingTitle": "Bun venit în AAC Board AI",

@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Tryck och håll inne för att rensa meddelandet.",
   "messagePlay": "Spela upp meddelande",
   "messageStop": "Stoppa meddelande",
+  "playbackFailed": "Det gick inte att spela upp ljudet",
   "messageLabel": "Meddelande",
   "onboardingContinue": "Fortsätt",
   "onboardingTitle": "Välkommen till AAC Board AI",

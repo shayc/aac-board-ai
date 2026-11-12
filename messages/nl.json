@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Houd ingedrukt om het bericht te wissen.",
   "messagePlay": "Bericht afspelen",
   "messageStop": "Bericht stoppen",
+  "playbackFailed": "Geluid kan niet worden afgespeeld",
   "messageLabel": "Bericht",
   "onboardingContinue": "Doorgaan",
   "onboardingTitle": "Welkom bij AAC Board AI",

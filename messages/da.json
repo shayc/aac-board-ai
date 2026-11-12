@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Tryk og hold nede for at rydde beskeden.",
   "messagePlay": "Afspil besked",
   "messageStop": "Stop besked",
+  "playbackFailed": "Lyden kunne ikke afspilles",
   "messageLabel": "Besked",
   "onboardingContinue": "Fortsæt",
   "onboardingTitle": "Velkommen til AAC Board AI",

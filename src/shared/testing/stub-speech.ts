@@ -27,6 +27,21 @@ export function preventSpeechEnd(
   speak.mockImplementation(() => undefined);
 }
 
+export function failSpeech(
+  speak: MockInstance<SpeechSynthesis["speak"]>,
+): void {
+  speak.mockImplementation((utterance) => {
+    queueMicrotask(() => {
+      utterance.dispatchEvent(
+        new SpeechSynthesisErrorEvent("error", {
+          utterance,
+          error: "synthesis-failed",
+        }),
+      );
+    });
+  });
+}
+
 interface StubVoice {
   voiceURI: string;
   name: string;

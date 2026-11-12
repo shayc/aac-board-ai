@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Maintenez appuyé pour effacer le message.",
   "messagePlay": "Lire le message",
   "messageStop": "Arrêter le message",
+  "playbackFailed": "Impossible de lire le son",
   "messageLabel": "Message",
   "onboardingContinue": "Continuer",
   "onboardingTitle": "Bienvenue dans AAC Board AI",

@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Tyhjennä viesti pitämällä painettuna.",
   "messagePlay": "Toista viesti",
   "messageStop": "Pysäytä viesti",
+  "playbackFailed": "Ääntä ei voitu toistaa",
   "messageLabel": "Viesti",
   "onboardingContinue": "Jatka",
   "onboardingTitle": "Tervetuloa käyttämään AAC Board AI:ta",

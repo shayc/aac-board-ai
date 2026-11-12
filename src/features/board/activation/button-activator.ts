@@ -69,8 +69,8 @@ export function createButtonActivator({
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(partsToPlay).then((outcome) => {
-      if (outcome === "completed") {
+    void playback.playMessage(partsToPlay).then((hasCompleted) => {
+      if (hasCompleted) {
         commitEdits(message.getParts(), actionsAfterPlay);
       }
     });
