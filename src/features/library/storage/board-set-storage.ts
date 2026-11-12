@@ -1,7 +1,7 @@
 import type { StringTranslations } from "@shared/board/board-types";
-import type { OBFBoard } from "@shayc/open-board-format";
 import { normalizeLocale } from "@shared/language/locale";
 import { htmlToText } from "@shared/utils/html-to-text";
+import type { OBFBoard } from "@shayc/open-board-format";
 import { nonBlankText } from "../non-blank-text";
 import {
   getBoardsDB,

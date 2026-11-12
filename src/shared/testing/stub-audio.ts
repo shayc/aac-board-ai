@@ -1,4 +1,4 @@
-import { type MockInstance, vi } from "vitest";
+import { vi, type MockInstance } from "vitest";
 
 export function stubAudio(): {
   play: MockInstance<HTMLAudioElement["play"]>;

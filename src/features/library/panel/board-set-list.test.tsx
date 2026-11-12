@@ -2,8 +2,8 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, test, vi } from "vitest";
-import { BoardSetList } from "./board-set-list";
 import { makeBoardSetRecord } from "../testing";
+import { BoardSetList } from "./board-set-list";
 
 function renderInRouter(children: ReactNode) {
   return renderWithProviders(<MemoryRouter>{children}</MemoryRouter>);

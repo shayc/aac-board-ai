@@ -1,6 +1,6 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
 

@@ -1,9 +1,9 @@
 import { AppDrawer } from "@app/shell/app-drawer";
 import {
-  TileSettings,
   MessageSettings,
   ScanningSettings,
   SuggestionSettings,
+  TileSettings,
 } from "@features/board";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";

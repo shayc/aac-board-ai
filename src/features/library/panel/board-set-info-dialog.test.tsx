@@ -2,8 +2,8 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test, vi } from "vitest";
-import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { makeBoardSetRecord } from "../testing";
+import { BoardSetInfoDialog } from "./board-set-info-dialog";
 
 describe("BoardSetInfoDialog", () => {
   test("shows the available metadata with no accessibility violations", async () => {

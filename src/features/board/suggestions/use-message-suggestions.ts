@@ -5,8 +5,8 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatus,
 } from "./derive-suggestion-status";
-import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
+import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import {
   areSuggestionsSupported,
   SUGGESTION_ENGINES,

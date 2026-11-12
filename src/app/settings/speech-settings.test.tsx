@@ -1,7 +1,7 @@
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
-import { expectNoA11yViolations } from "@shared/testing/axe";
 import { setSpeechVoiceURI } from "@shared/speech/speech-store";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";

@@ -13,8 +13,8 @@ import type {
   OBFMedia,
 } from "@shayc/open-board-format";
 import { nonBlankText } from "../non-blank-text";
-import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";
+import { sanitizeColor } from "./sanitize-color";
 
 export function obfToBoard(
   obfBoard: OBFBoard,

@@ -1,4 +1,4 @@
-import { type Mock, vi } from "vitest";
+import { vi, type Mock } from "vitest";
 
 type AINamespace = "Proofreader" | "Rewriter" | "Translator";
 

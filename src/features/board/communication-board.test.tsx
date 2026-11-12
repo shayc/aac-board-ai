@@ -11,15 +11,15 @@ import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
-import {
-  setTileBrightness,
-  setTileLabelPlacement,
-} from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
+import {
+  setTileBrightness,
+  setTileLabelPlacement,
+} from "./tile/tile-preferences-store";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   format: "open-board-0.1",

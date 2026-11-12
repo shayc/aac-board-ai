@@ -1,6 +1,8 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
-import { assertNever } from "@shared/utils/assert-never";
 import { createExternalStore } from "@shared/state/external-store";
+import { assertNever } from "@shared/utils/assert-never";
+import { playAudio } from "./outputs/play-audio";
+import { speak } from "./outputs/speak";
 import type {
   PlaybackCoordinator,
   PlaybackOutcome,
@@ -8,8 +10,6 @@ import type {
   PlaybackState,
   PlaybackStep,
 } from "./playback-types";
-import { playAudio } from "./outputs/play-audio";
-import { speak } from "./outputs/speak";
 
 interface PlaybackSession {
   abortController: AbortController;

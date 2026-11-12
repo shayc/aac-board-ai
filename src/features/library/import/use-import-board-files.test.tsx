@@ -1,7 +1,7 @@
 import { AppProviders } from "@shared/providers/app-providers";
+import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { MemoryRouter } from "react-router";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
   loadFixtureFile,
