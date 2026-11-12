@@ -98,6 +98,12 @@ export default defineConfig({
   ],
   rules: {
     curly: "error",
+    "import/no-duplicates": "error",
+    // Oxfmt orders import statements; this orders the names inside each one.
+    "sort-imports": [
+      "error",
+      { ignoreCase: true, ignoreDeclarationSort: true },
+    ],
     "no-restricted-globals": [
       "error",
       {
