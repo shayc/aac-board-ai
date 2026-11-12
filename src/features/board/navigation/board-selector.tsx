@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
+import { useBoardRoute } from "./use-board-navigation";
 
 interface BoardOption {
   id: string;
@@ -12,17 +13,12 @@ interface BoardOption {
 
 interface BoardSelectorProps {
   boards: readonly BoardSummary[];
-  boardId: string;
-  onSelect: (boardId: string) => void;
 }
 
-export function BoardSelector({
-  boards,
-  boardId,
-  onSelect,
-}: BoardSelectorProps) {
+export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
   const { language } = useLanguage();
+  const { boardId, goToBoard } = useBoardRoute();
   const options = toBoardOptions(boards, language);
 
   const selectedOption = options.find((option) => option.id === boardId);
@@ -38,7 +34,7 @@ export function BoardSelector({
       noOptionsText={t(m.boardSelectorNoOptions)}
       options={options}
       value={selectedOption}
-      onChange={(_event, option) => onSelect(option.id)}
+      onChange={(_event, option) => goToBoard(option.id)}
       disableClearable
       autoHighlight
       size="small"

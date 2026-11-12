@@ -1,7 +1,6 @@
 export { CommunicationBoard } from "./communication-board";
 export { MessageSettings } from "./message/message-settings";
 export { BoardSelector } from "./navigation/board-selector";
-export { useBoardRoute } from "./navigation/use-board-navigation";
 export { ScanningSettings } from "./scanning/scanning-settings";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
 export { areSuggestionsSupported } from "./suggestions/suggestion-support";

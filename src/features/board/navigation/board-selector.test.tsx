@@ -1,4 +1,4 @@
-import { listBoardSummaries, type BoardSummary } from "@features/library";
+import { listBoardSummaries } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -10,52 +10,32 @@ import {
 } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { useState } from "react";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { createMemoryRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
+import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { BoardSelector } from "./board-selector";
 
-interface SelectorHarnessProps {
-  boards: readonly BoardSummary[];
-  initialBoardId: string;
-  onSelect: (boardId: string) => void;
-}
-
-function SelectorHarness({
-  boards,
-  initialBoardId,
-  onSelect,
-}: SelectorHarnessProps) {
-  const [boardId, setBoardId] = useState(initialBoardId);
-
-  return (
-    <BoardSelector
-      boards={boards}
-      boardId={boardId}
-      onSelect={(selectedBoardId) => {
-        setBoardId(selectedBoardId);
-        onSelect(selectedBoardId);
-      }}
-    />
-  );
-}
-
 async function renderSelector(boardSetId: string, boardId: string) {
   const boards = await listBoardSummaries(boardSetId);
-  const onSelect = vi.fn<(boardId: string) => void>();
+  const router = createMemoryRouter(
+    [
+      {
+        path: "/sets/:boardSetId/boards/:boardId",
+        element: <BoardSelector boards={boards} />,
+      },
+    ],
+    { initialEntries: [`/sets/${boardSetId}/boards/${boardId}`] },
+  );
 
   const screen = await render(
     <AppProviders>
-      <SelectorHarness
-        boards={boards}
-        initialBoardId={boardId}
-        onSelect={onSelect}
-      />
+      <RouterProvider router={router} />
     </AppProviders>,
   );
 
-  return { onSelect, screen };
+  return { router, screen };
 }
 
 beforeEach(async () => {
@@ -96,30 +76,30 @@ describe("BoardSelector", () => {
     });
   });
 
-  test("selects a board and closes the popup when a board is clicked", async () => {
-    const { onSelect, screen } = await renderSelector("set-1", "root");
+  test("navigates and closes the popup when a board is clicked", async () => {
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").click();
     await screen.getByRole("option", { name: "Animals" }).click();
 
-    expect(onSelect).toHaveBeenCalledExactlyOnceWith("animals");
+    expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
     await expect
       .element(screen.getByRole("option", { name: "Animals" }))
       .not.toBeInTheDocument();
     await expect.element(screen.getByRole("combobox")).toHaveValue("Animals");
   });
 
-  test("selects with arrow keys and Enter", async () => {
-    const { onSelect, screen } = await renderSelector("set-1", "root");
+  test("navigates with arrow keys and Enter", async () => {
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").click();
     await userEvent.keyboard("{ArrowDown}{Enter}");
 
-    expect(onSelect).toHaveBeenCalledExactlyOnceWith("animals");
+    expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
   });
 
   test("filters while typing and selects the first match with Enter", async () => {
-    const { onSelect, screen } = await renderSelector("set-1", "root");
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").fill("ani");
 
@@ -132,7 +112,7 @@ describe("BoardSelector", () => {
 
     await userEvent.keyboard("{Enter}");
 
-    expect(onSelect).toHaveBeenCalledExactlyOnceWith("animals");
+    expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
   });
 
   test("updates popup labels and empty results when the locale changes", async () => {
@@ -159,7 +139,7 @@ describe("BoardSelector", () => {
   });
 
   test("closes the popup on Escape and restores the current board name on blur", async () => {
-    const { onSelect, screen } = await renderSelector("set-1", "root");
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").fill("ani");
     await userEvent.keyboard("{Escape}");
@@ -171,7 +151,7 @@ describe("BoardSelector", () => {
     await userEvent.tab();
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Home");
-    expect(onSelect).not.toHaveBeenCalled();
+    expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
   });
 
   test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
