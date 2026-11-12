@@ -12,18 +12,10 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
+import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import {
-  assert,
-  beforeEach,
-  describe,
-  expect,
-  onTestFinished,
-  test,
-  vi,
-} from "vitest";
-import { page } from "vitest/browser";
+import { assert, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
@@ -290,9 +282,7 @@ describe("app flow", () => {
   });
 
   test("a long ?board= link host wraps inside the dialog on a narrow screen", async () => {
-    const { innerWidth, innerHeight } = window;
-    onTestFinished(() => page.viewport(innerWidth, innerHeight));
-    await page.viewport(320, 640);
+    await setTestViewport(320, 640);
 
     const host = "boards.examplecorporationwithaverylongname.example";
     const { screen } = await renderApp(

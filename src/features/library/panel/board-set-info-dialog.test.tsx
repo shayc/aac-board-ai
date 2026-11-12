@@ -1,15 +1,9 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import type { ReactNode } from "react";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test, vi } from "vitest";
-import { page } from "vitest/browser";
-import { render } from "vitest-browser-react";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { makeBoardSetRecord } from "../testing";
-
-function renderWithProviders(children: ReactNode) {
-  return render(<AppProviders>{children}</AppProviders>);
-}
 
 describe("BoardSetInfoDialog", () => {
   test("shows the available metadata with no accessibility violations", async () => {
@@ -58,9 +52,7 @@ describe("BoardSetInfoDialog", () => {
     await expect.element(screen.getByRole("dialog")).toBeVisible();
 
     await screen.rerender(
-      <AppProviders>
-        <BoardSetInfoDialog boardSet={null} onClose={vi.fn()} />
-      </AppProviders>,
+      <BoardSetInfoDialog boardSet={null} onClose={vi.fn()} />,
     );
 
     expect(screen.getByText("Core Words").query()).not.toBeNull();
@@ -87,27 +79,17 @@ describe("BoardSetInfoDialog", () => {
   });
 
   test("stays sized to its content on small screens", async () => {
-    const originalWidth = window.innerWidth;
-    const originalHeight = window.innerHeight;
+    await setTestViewport(390, 800);
+    const screen = await renderWithProviders(
+      <BoardSetInfoDialog boardSet={makeBoardSetRecord()} onClose={vi.fn()} />,
+    );
+    const dialog = screen.getByRole("dialog");
 
-    try {
-      await page.viewport(390, 800);
-      const screen = await renderWithProviders(
-        <BoardSetInfoDialog
-          boardSet={makeBoardSetRecord()}
-          onClose={vi.fn()}
-        />,
-      );
-      const dialog = screen.getByRole("dialog");
+    await expect.element(dialog).toBeVisible();
 
-      await expect.element(dialog).toBeVisible();
-
-      expect(dialog.element().getBoundingClientRect().height).toBeLessThan(
-        window.innerHeight,
-      );
-    } finally {
-      await page.viewport(originalWidth, originalHeight);
-    }
+    expect(dialog.element().getBoundingClientRect().height).toBeLessThan(
+      window.innerHeight,
+    );
   });
 
   test("omits the author line and facts when those fields are absent", async () => {

@@ -1,13 +1,7 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import type { ReactNode } from "react";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { SuggestionBar, type SuggestionBarProps } from "./suggestion-bar";
-
-function renderWithProviders(children: ReactNode) {
-  return render(<AppProviders>{children}</AppProviders>);
-}
 
 function makeProps(
   overrides: Partial<SuggestionBarProps> = {},

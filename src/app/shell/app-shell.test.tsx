@@ -1,15 +1,11 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter, RouterProvider } from "react-router";
-import { afterEach, describe, expect, test } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { describe, expect, test } from "vitest";
+import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { AppShell } from "./app-shell";
-
-const originalViewport = {
-  width: window.innerWidth,
-  height: window.innerHeight,
-};
 
 function renderAppShell() {
   const router = createMemoryRouter([
@@ -38,10 +34,6 @@ async function renderAppShellPastOnboarding() {
 }
 
 describe("AppShell", () => {
-  afterEach(async () => {
-    await page.viewport(originalViewport.width, originalViewport.height);
-  });
-
   test("has no accessibility violations", async () => {
     await renderAppShell();
 
@@ -49,7 +41,7 @@ describe("AppShell", () => {
   });
 
   test("moves focus into the library on open and back on close on desktop", async () => {
-    await page.viewport(1200, 800);
+    await setTestViewport(1200, 800);
     const screen = await renderAppShellPastOnboarding();
 
     await screen.getByRole("button", { name: "Open library" }).click();

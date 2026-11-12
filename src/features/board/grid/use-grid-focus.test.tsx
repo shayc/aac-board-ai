@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent, type Locator } from "vitest/browser";
+import { getCellPosition } from "../testing/get-cell-position";
 import { Grid, type GridItemProps } from "./grid";
 
 interface TestItem {
@@ -18,23 +19,6 @@ function renderButton(item: TestItem, props: GridItemProps) {
       {item.label}
     </button>
   );
-}
-
-function getCellPosition(item: Locator): { row: number; column: number } {
-  const cell = item.element().closest("[role='gridcell']");
-
-  if (!cell) {
-    throw new Error("Item is not inside a grid cell");
-  }
-
-  const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
-  const column = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
-
-  if (isNaN(row) || isNaN(column)) {
-    throw new Error("Grid cell missing valid aria-rowindex or aria-colindex");
-  }
-
-  return { row, column };
 }
 
 async function press(
@@ -174,6 +158,32 @@ describe("useGridFocus", () => {
       await expect
         .element(screen.getByRole("grid", { name: "Renamed board" }))
         .toBeInTheDocument();
+      expect(document.activeElement).toBe(document.body);
+    });
+
+    test("leaves focus outside the grid when it re-renders with equal items in a new array", async () => {
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={makeItems(1, 2, 3, 4)}
+          renderItem={renderButton}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1" });
+      item1.element().focus();
+      item1.element().blur();
+
+      await screen.rerender(
+        <Grid
+          rows={2}
+          columns={2}
+          items={makeItems(1, 2, 3, 4)}
+          renderItem={renderButton}
+        />,
+      );
+
       expect(document.activeElement).toBe(document.body);
     });
 

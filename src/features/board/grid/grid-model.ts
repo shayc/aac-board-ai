@@ -1,5 +1,7 @@
 export type GridOrder = readonly (readonly (string | null)[])[];
 
+export type GridCells = readonly (readonly ({ id: string } | undefined)[])[];
+
 export interface GridPosition {
   row: number;
   column: number;
@@ -32,6 +34,10 @@ export function buildGrid<TItem extends { id: string }>(
       return items[index];
     }),
   );
+}
+
+export function gridArrangementKey(grid: GridCells): string {
+  return JSON.stringify(grid.map((row) => row.map((cell) => cell?.id ?? null)));
 }
 
 export function findFirstOccupiedPosition(

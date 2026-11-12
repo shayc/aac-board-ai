@@ -1,14 +1,8 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import type { ReactNode } from "react";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { makeBoardSetRecord } from "../testing";
-
-function renderWithProviders(children: ReactNode) {
-  return render(<AppProviders>{children}</AppProviders>);
-}
 
 describe("BoardSetDeleteDialog", () => {
   test("names the board set in the warning with no accessibility violations", async () => {
@@ -45,13 +39,11 @@ describe("BoardSetDeleteDialog", () => {
     await expect.element(screen.getByRole("dialog")).toBeVisible();
 
     await screen.rerender(
-      <AppProviders>
-        <BoardSetDeleteDialog
-          boardSet={null}
-          onDelete={vi.fn()}
-          onClose={vi.fn()}
-        />
-      </AppProviders>,
+      <BoardSetDeleteDialog
+        boardSet={null}
+        onDelete={vi.fn()}
+        onClose={vi.fn()}
+      />,
     );
 
     expect(screen.getByText(/Core Words/).query()).not.toBeNull();

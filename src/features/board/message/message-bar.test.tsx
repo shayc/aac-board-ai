@@ -1,17 +1,11 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
-import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
-import { render } from "vitest-browser-react";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
-
-function renderWithProviders(children: ReactNode) {
-  return render(<AppProviders>{children}</AppProviders>);
-}
 
 function createProps(
   overrides: Partial<MessageBarProps> = {},
@@ -37,11 +31,9 @@ const ACTIVE_SCROLL_PART_ID = String(ACTIVE_SCROLL_PART_INDEX);
 
 function ScrollableMessageBar(props: MessageBarProps) {
   return (
-    <AppProviders>
-      <div style={{ width: 320 }}>
-        <MessageBar {...props} />
-      </div>
-    </AppProviders>
+    <div style={{ width: 320 }}>
+      <MessageBar {...props} />
+    </div>
   );
 }
 
@@ -94,7 +86,7 @@ describe("MessageBar", () => {
   });
 
   test("lets the keyboard reach and scroll a message longer than the bar", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <ScrollableMessageBar {...createProps({ parts: SCROLL_PARTS })} />,
     );
     const message = screen.getByRole("list", { name: "Message" });
@@ -151,7 +143,9 @@ describe("MessageBar", () => {
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {
       const props = createProps();
-      const screen = await render(<ScrollableMessageBar {...props} />);
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
       const scroller = getScrollContainer(screen.container);
 
       expect(scroller.scrollLeft).toBe(0);
@@ -173,7 +167,9 @@ describe("MessageBar", () => {
 
     test("scrolls the active part into view when it changes during playback", async () => {
       const props = createProps({ parts: SCROLL_PARTS });
-      const screen = await render(<ScrollableMessageBar {...props} />);
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
       const scroller = getScrollContainer(screen.container);
       await waitForAnimationFrame();
 
@@ -211,7 +207,9 @@ describe("MessageBar", () => {
         activePartId: ACTIVE_SCROLL_PART_ID,
         isPlaying: true,
       });
-      const screen = await render(<ScrollableMessageBar {...props} />);
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
       const scroller = getScrollContainer(screen.container);
       await waitForAnimationFrame();
       expect(scroller.scrollLeft).toBeGreaterThan(0);
@@ -273,11 +271,7 @@ describe("MessageBar", () => {
       play.element().focus();
       await expect.element(play).toHaveFocus();
 
-      await screen.rerender(
-        <AppProviders>
-          <MessageBar {...props} parts={[]} />
-        </AppProviders>,
-      );
+      await screen.rerender(<MessageBar {...props} parts={[]} />);
 
       await expect.element(play).toHaveAttribute("aria-disabled", "true");
       await expect.element(play).toHaveFocus();
