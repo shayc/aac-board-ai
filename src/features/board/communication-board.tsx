@@ -78,9 +78,7 @@ export function CommunicationBoard({
     />
   );
 
-  const controlsPlacement = isSmallScreen ? "bottom" : "top";
-  const isActionRowVisible =
-    controlsPlacement === "top" || suggestions.isSupported;
+  const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
 
   return (
     <ScanningScope>
@@ -104,7 +102,7 @@ export function CommunicationBoard({
               sx={{ justifyContent: "space-between" }}
             >
               <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-                {controlsPlacement === "top" && navigationButtons}
+                {!isSmallScreen && navigationButtons}
 
                 {suggestions.isSupported && (
                   <SuggestionBar
@@ -116,7 +114,7 @@ export function CommunicationBoard({
                 )}
               </Stack>
 
-              {controlsPlacement === "top" && backspaceButton}
+              {!isSmallScreen && backspaceButton}
             </Stack>
           )}
         </Stack>
@@ -133,7 +131,7 @@ export function CommunicationBoard({
           />
         </Box>
 
-        {controlsPlacement === "bottom" && (
+        {isSmallScreen && (
           <Stack
             {...scanGroupProps}
             direction="row"
