@@ -1,6 +1,7 @@
 import { DocumentLanguage } from "@shared/language/document-language";
 import { PlaybackProvider } from "@shared/playback/playback-provider";
 import { SnackbarProvider } from "@shared/snackbar/snackbar-provider";
+import { getSpeechSettings } from "@shared/speech/speech-store";
 import { ThemeProvider } from "@shared/theme/theme-provider";
 import type { ReactNode } from "react";
 
@@ -10,7 +11,7 @@ interface AppProvidersProps {
 
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    <PlaybackProvider>
+    <PlaybackProvider getSpeechSettings={getSpeechSettings}>
       <ThemeProvider>
         <DocumentLanguage />
         <SnackbarProvider>{children}</SnackbarProvider>

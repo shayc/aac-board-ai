@@ -12,7 +12,7 @@ import {
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
 import { resolveVoice } from "./resolve-voice";
-import { getSpeechSynthesis } from "./speech-synthesis";
+import { getSpeechSynthesis, type SpeechSettings } from "./speech-synthesis";
 
 interface SpeechPreferences {
   voiceURI: string | null;
@@ -80,10 +80,6 @@ function updatePreferences(patch: Partial<SpeechPreferences>): void {
   }));
 }
 
-export function getSpeechPreferences(): SpeechPreferences {
-  return speechPreferencesStore.getSnapshot();
-}
-
 export function setSpeechVoiceURI(voiceURI: string | null): void {
   updatePreferences({ voiceURI });
 }
@@ -100,10 +96,6 @@ export function setSpeechVolume(volume: number): void {
   updatePreferences({ volume });
 }
 
-export function getVoicesByLanguage(): VoicesByLanguage {
-  return voicesByLanguageStore.getSnapshot();
-}
-
 export function useVoicesByLanguage(): VoicesByLanguage {
   return useExternalStore(voicesByLanguageStore);
 }
@@ -112,12 +104,19 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechVoice(): SpeechSynthesisVoice | null {
-  return resolveVoice(
-    getVoicesByLanguage(),
-    getStoredLanguage(),
-    getSpeechPreferences().voiceURI,
-  );
+export function getSpeechSettings(): SpeechSettings {
+  const lang = getStoredLanguage();
+  const voicesByLanguage = voicesByLanguageStore.getSnapshot();
+  const { voiceURI, rate, pitch, volume } =
+    speechPreferencesStore.getSnapshot();
+
+  return {
+    lang,
+    voice: resolveVoice(voicesByLanguage, lang, voiceURI),
+    rate,
+    pitch,
+    volume,
+  };
 }
 
 export function useSpeechVoice(): SpeechSynthesisVoice | null {

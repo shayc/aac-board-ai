@@ -1,4 +1,4 @@
-import { PlaybackProvider } from "@shared/playback/playback-provider";
+import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
@@ -12,7 +12,7 @@ function renderPlayback() {
       ...useBoardPlayback(),
       activePartId: useActiveMessagePartId(),
     }),
-    { wrapper: PlaybackProvider },
+    { wrapper: AppProviders },
   );
 }
 

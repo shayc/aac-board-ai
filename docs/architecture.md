@@ -101,6 +101,11 @@ Playback uses slice subscriptions: each component tracks only the progress field
 it needs. Word-boundary updates rerender only components whose selected fields
 change.
 
+Device output does not read settings stores. `AppProviders` gives the playback
+coordinator a `getSpeechSettings` function, and the coordinator calls it for
+each speech step, so every utterance uses the language, voice, rate, pitch, and
+volume current at that moment.
+
 The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` do not synchronize across tabs. MUI
 persists and synchronizes theme mode separately.
