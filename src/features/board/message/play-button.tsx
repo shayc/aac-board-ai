@@ -26,10 +26,9 @@ export function PlayButton({
 
   return (
     <Fab
-      {...focusableDisabledProps(disabled)}
+      {...focusableDisabledProps(disabled, handleClick)}
       aria-label={label}
       color={isPlaying ? "default" : "primary"}
-      onClick={disabled ? undefined : handleClick}
       sx={{
         alignSelf: "center",
         flexShrink: 0,

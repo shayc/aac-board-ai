@@ -25,24 +25,22 @@ export function NavigationButtons({
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
       <Button
-        {...focusableDisabledProps(!canGoBack)}
+        {...focusableDisabledProps(!canGoBack, onBack)}
         aria-label={t(m.navBack)}
         size="large"
         color="inherit"
         variant="contained"
-        onClick={canGoBack ? onBack : undefined}
         sx={{ width: 72 }}
       >
         <ArrowBackOutlinedIcon sx={flipForRTL} />
       </Button>
 
       <Button
-        {...focusableDisabledProps(!canGoHome)}
+        {...focusableDisabledProps(!canGoHome, onHome)}
         aria-label={t(m.navHome)}
         size="large"
         color="inherit"
         variant="contained"
-        onClick={canGoHome ? onHome : undefined}
         sx={{ width: 72 }}
       >
         <HomeOutlinedIcon />
