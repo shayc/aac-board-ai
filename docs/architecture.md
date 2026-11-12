@@ -31,7 +31,10 @@ use on restricted networks; the trade-off is no built-in cross-device sync.
 A static host serves the app and updates. The service worker caches the app shell
 after the first successful load and third-party images as they are displayed.
 Once the shell and board are available locally, core communication works offline.
-Playback depends on locally available media and speech voices.
+Playback depends on locally available media and speech voices. Storing a board
+set asks the browser for persistent storage, so boards are not evicted when the
+device runs low on space; browsers may prompt or decline, and the app works
+either way.
 
 ```mermaid
 flowchart LR

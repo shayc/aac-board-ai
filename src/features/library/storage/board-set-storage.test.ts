@@ -71,6 +71,32 @@ describe("insertBoardSet", () => {
     expect(rootBoard).toEqual(source);
   });
 
+  test("asks the browser to keep stored boards only once a set is stored", async () => {
+    const persist = vi
+      .spyOn(navigator.storage, "persist")
+      .mockResolvedValue(true);
+
+    await expect(
+      insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
+    ).rejects.toThrow("Root board not found");
+
+    expect(persist).not.toHaveBeenCalled();
+
+    await insertBoardSet(makeBoardSetInput());
+
+    expect(persist).toHaveBeenCalledOnce();
+  });
+
+  test("stores a set without asking to persist outside a secure context", async () => {
+    vi.spyOn(window, "isSecureContext", "get").mockReturnValue(false);
+    const persist = vi.spyOn(navigator.storage, "persist");
+
+    await insertBoardSet(makeBoardSetInput({ id: "insecure" }));
+
+    expect(persist).not.toHaveBeenCalled();
+    expect(await getBoardSetRecord("insecure")).toBeDefined();
+  });
+
   test("rejects a missing root without storing a partial set", async () => {
     await expect(
       insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),

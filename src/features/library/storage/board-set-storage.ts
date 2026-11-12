@@ -159,6 +159,8 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
 
     await boardSetStore.add(record);
   });
+
+  requestPersistentStorage();
 }
 
 function validateBoardSetInput({
@@ -207,4 +209,13 @@ function buildBoardSetRecord(
     gridRows: rootBoard.grid.rows,
     gridColumns: rootBoard.grid.columns,
   };
+}
+
+function requestPersistentStorage(): void {
+  if (!window.isSecureContext) {
+    return;
+  }
+
+  // Not awaited: Firefox settles only once the user answers its prompt.
+  void navigator.storage.persist();
 }
