@@ -177,6 +177,32 @@ describe("useGridFocus", () => {
       expect(document.activeElement).toBe(document.body);
     });
 
+    test("leaves focus outside the grid when it re-renders with equal items in a new array", async () => {
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={makeItems(1, 2, 3, 4)}
+          renderItem={renderButton}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1" });
+      item1.element().focus();
+      item1.element().blur();
+
+      await screen.rerender(
+        <Grid
+          rows={2}
+          columns={2}
+          items={makeItems(1, 2, 3, 4)}
+          renderItem={renderButton}
+        />,
+      );
+
+      expect(document.activeElement).toBe(document.body);
+    });
+
     test("returns lost focus to the remembered cell when the grid changes", async () => {
       const screen = await render(
         <Grid

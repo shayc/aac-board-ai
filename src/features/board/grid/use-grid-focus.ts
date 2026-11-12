@@ -7,7 +7,12 @@ import {
   findGridPosition,
 } from "./grid-dom";
 import { findGridKeyTarget } from "./grid-key-navigation";
-import { findFirstOccupiedPosition, type GridPosition } from "./grid-model";
+import {
+  findFirstOccupiedPosition,
+  gridArrangementKey,
+  type GridCells,
+  type GridPosition,
+} from "./grid-model";
 
 interface UseGridFocusReturn {
   rootRef: RefObject<HTMLDivElement | null>;
@@ -15,9 +20,7 @@ interface UseGridFocusReturn {
   tabStopPosition: GridPosition;
 }
 
-export function useGridFocus(
-  grid: readonly (readonly unknown[])[],
-): UseGridFocusReturn {
+export function useGridFocus(grid: GridCells): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),
@@ -62,15 +65,18 @@ export function useGridFocus(
     target?.focus();
   });
 
-  const previousGridRef = useRef(grid);
+  // A focused tile drops focus to the body only when it unmounts, which takes
+  // a change in which tile sits where; the grid array itself is new each render.
+  const arrangementKey = gridArrangementKey(grid);
+  const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {
-    if (previousGridRef.current === grid) {
+    if (previousArrangementKeyRef.current === arrangementKey) {
       return;
     }
 
-    previousGridRef.current = grid;
+    previousArrangementKeyRef.current = arrangementKey;
     restoreLostFocus();
-  }, [grid]);
+  }, [arrangementKey]);
 
   const rememberedCell =
     grid[rememberedPosition.row]?.[rememberedPosition.column];
