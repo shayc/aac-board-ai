@@ -1,12 +1,12 @@
 import type { BuildName, RunResults, TimingSamples } from "./results.ts";
 import {
+  type ConfidenceInterval,
   differenceInterval,
   holmAdjust,
   median,
   signedRankP,
   smallestSignedRankP,
   typicalDifference,
-  type ConfidenceInterval,
 } from "./stats.ts";
 
 export const SIGNIFICANCE_LEVEL = 0.05;

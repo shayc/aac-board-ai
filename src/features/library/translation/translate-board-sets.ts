@@ -3,8 +3,8 @@ import { createTranslator } from "@shayc/react-built-in-ai";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
 import {
-  saveBoardSetTranslations,
   type BoardSetRecord,
+  saveBoardSetTranslations,
 } from "../storage/board-set-storage";
 import {
   collectBoardStrings,

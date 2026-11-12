@@ -4,12 +4,12 @@ import { htmlToText } from "@shared/utils/html-to-text";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { nonBlankText } from "../non-blank-text";
 import {
+  type BoardRecord,
+  type BoardSetRecord,
   getBoardsDB,
   normalizeAssetPath,
   runTransaction,
   validateId,
-  type BoardRecord,
-  type BoardSetRecord,
 } from "./boards-db";
 
 export { MAX_ID_LENGTH } from "./boards-db";

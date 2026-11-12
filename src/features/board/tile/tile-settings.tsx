@@ -16,8 +16,8 @@ import {
   setTileSaturation,
   TILE_BRIGHTNESS,
   TILE_SATURATION,
-  useTilePreferences,
   type TileLabelPlacement,
+  useTilePreferences,
 } from "./tile-preferences-store";
 
 // Ten steps each, so the sliders feel alike despite their different ranges.

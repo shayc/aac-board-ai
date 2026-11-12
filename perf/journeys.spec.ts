@@ -1,7 +1,7 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page, test } from "@playwright/test";
 import {
-  measureJourney,
   type JourneySample,
+  measureJourney,
   type PageProbe,
 } from "./harness.ts";
 import { IMPORT_TIMEOUT_MS } from "./settings.ts";

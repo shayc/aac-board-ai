@@ -1,5 +1,5 @@
 import { importBoardFileFromURL, rootBoardPath } from "@features/library";
-import { redirect, type ActionFunctionArgs } from "react-router";
+import { type ActionFunctionArgs, redirect } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 export async function rootIndexAction({

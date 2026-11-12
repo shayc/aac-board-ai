@@ -1,6 +1,6 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useProofreader } from "@shayc/react-built-in-ai";
-import { toSuggestionSource, type SuggestionSource } from "./suggestion-source";
+import { type SuggestionSource, toSuggestionSource } from "./suggestion-source";
 
 interface UseProofreaderSourceOptions {
   text: string;

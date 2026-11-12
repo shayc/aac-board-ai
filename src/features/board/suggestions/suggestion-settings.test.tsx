@@ -1,3 +1,4 @@
+import readme from "/README.md?raw";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
@@ -7,7 +8,6 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import readme from "/README.md?raw";
 import { SuggestionSettings } from "./suggestion-settings";
 
 function renderSuggestionsSettings() {

@@ -4,8 +4,8 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import { createMemoryRouter, Outlet } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { LibraryDrawer } from "./library-drawer";
 
 describe("LibraryDrawer", () => {

@@ -3,8 +3,8 @@ import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import {
-  parseClampedNumber,
   type ClampedNumberOptions,
+  parseClampedNumber,
 } from "@shared/utils/parse-clamped-number";
 
 const SCAN_METHODS = ["auto", "step"] as const;

@@ -1,10 +1,10 @@
 import { m } from "@paraglide/messages.js";
-import { useTranslate, type Translate } from "@shared/language/use-translate";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { isRouteErrorResponse, useRouteError } from "react-router";
 import {
   isRouteErrorPayload,
-  routeErrorCodes,
   type RouteErrorCode,
+  routeErrorCodes,
 } from "./route-error";
 import { RouteErrorPage } from "./route-error-page";
 

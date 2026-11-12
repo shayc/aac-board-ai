@@ -1,5 +1,5 @@
 import type { OBFBoard } from "@shayc/open-board-format";
-import { openDB, type DBSchema, type IDBPDatabase } from "idb";
+import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 
 export interface BoardSetRecord {
   readonly id: string;

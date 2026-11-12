@@ -4,8 +4,8 @@ import { setSpeechVoiceURI } from "@shared/speech/speech-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
-import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { SpeechSettings } from "./speech-settings";
 
 function renderSpeechSettings() {

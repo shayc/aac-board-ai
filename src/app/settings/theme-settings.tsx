@@ -9,7 +9,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useId, type MouseEvent } from "react";
+import { type MouseEvent, useId } from "react";
 
 const themeOptions = [
   { value: "system", message: m.themeSystem, Icon: DesktopWindowsOutlinedIcon },

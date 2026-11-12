@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLastNonNull } from "@shared/hooks/use-last-non-null";
-import { useTranslate, type Translate } from "@shared/language/use-translate";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
 interface BoardSetInfoDialogProps {

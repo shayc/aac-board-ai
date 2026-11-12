@@ -1,11 +1,11 @@
 import {
+  type DOMAttributes,
+  type FocusEvent,
+  type RefObject,
   useEffect,
   useEffectEvent,
   useRef,
   useState,
-  type DOMAttributes,
-  type FocusEvent,
-  type RefObject,
 } from "react";
 import { useKeyboard } from "react-aria";
 import {

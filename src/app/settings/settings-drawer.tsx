@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
-import { useId, type ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 import { version } from "../../../package.json";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";

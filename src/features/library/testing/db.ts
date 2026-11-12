@@ -1,8 +1,8 @@
 import { deleteDB, openDB } from "idb";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
-  insertBoardSet,
   type BoardSetInput,
+  insertBoardSet,
 } from "../storage/board-set-storage";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
 import { makeOBFBoard } from "./fixtures";

@@ -8,8 +8,8 @@ import {
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 import {
-  parseClampedNumber,
   type ClampedNumberOptions,
+  parseClampedNumber,
 } from "@shared/utils/parse-clamped-number";
 import { resolveVoice } from "./resolve-voice";
 import { getSpeechSynthesis, type SpeechParameters } from "./speech-synthesis";

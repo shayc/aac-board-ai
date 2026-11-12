@@ -6,7 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { useState, type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
 const DRAWER_BASE_WIDTH = "320px";
 

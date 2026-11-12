@@ -3,8 +3,8 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, test } from "vitest";
-import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { AppShell } from "./app-shell";
 
 function renderAppShell() {

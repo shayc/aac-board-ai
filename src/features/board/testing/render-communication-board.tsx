@@ -1,7 +1,7 @@
 import { obfToBoard } from "@features/library/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
-import { MemoryRouter, type InitialEntry } from "react-router";
+import { type InitialEntry, MemoryRouter } from "react-router";
 import { render } from "vitest-browser-react";
 import { CommunicationBoard } from "../communication-board";
 
