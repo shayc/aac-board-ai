@@ -372,6 +372,14 @@ Test files may also import the library's
 types are used by both features and live in
 [`shared/board/board-types.ts`](../src/shared/board/board-types.ts).
 
+The library also owns the URL scheme, in
+[`board-paths.ts`](../src/features/library/board-paths.ts): the route segments
+and the functions that build board paths. The library needs them to link to
+board sets and to open an imported one, and it may import no feature, so they
+cannot live in the board. The app declares its routes from the same segments,
+and the board matches and builds its links with them, so the scheme has one
+definition.
+
 Inside a feature, folders group related code and collaborate through relative
 imports; they are not separate boundaries. The library's folders still depend
 in one direction, so a folder's name tells which layer it is in:

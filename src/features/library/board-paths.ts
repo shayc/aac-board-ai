@@ -1,6 +1,8 @@
 import type { BoardKey } from "@shared/board/board-types";
 import { generatePath, matchPath } from "react-router";
 
+// The URL scheme lives in the library because the library links and redirects
+// to boards and may import no feature, while the board and the app may import it.
 export const BOARD_SET_SEGMENT = "sets/:boardSetId";
 export const BOARD_SEGMENT = "boards/:boardId";
 export const BOARD_ROUTE_PATTERN = `/${BOARD_SET_SEGMENT}/${BOARD_SEGMENT}`;
