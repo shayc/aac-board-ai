@@ -5,8 +5,7 @@ export async function expectNoA11yViolations(
   target: Element,
   options: axe.RunOptions = {},
 ) {
-  // Mid-transition colors (a dialog fading in) fail color-contrast. Infinite
-  // animations, such as spinners, never finish.
+  // Wait for final contrast colors while allowing infinite spinners to keep running.
   const finiteAnimations = target
     .getAnimations({ subtree: true })
     .filter(

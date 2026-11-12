@@ -41,7 +41,6 @@ export type BoardAction =
 export type StringTranslations = ReadonlyMap<string, string>;
 
 /**
- * BCP 47 locale → string translations. Imported boards may key by region
- * (`es-ES`); translations cached on this device key by language code (`es`).
+ * Imported keys may include a region (`es-ES`). Cached translations use language codes (`es`).
  */
 export type TranslationsByLocale = ReadonlyMap<string, StringTranslations>;

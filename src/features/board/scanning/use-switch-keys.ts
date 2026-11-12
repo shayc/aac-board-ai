@@ -1,13 +1,6 @@
 import { useEffect, useEffectEvent, type RefObject } from "react";
 import { isScanningScopeCovered } from "./scan-targets";
 
-/**
- * Reports presses of the switch keys in `keyActions`. A switch key counts
- * wherever keyboard focus is, because focus often rests outside the scope,
- * such as on the button that opened a drawer that has since closed. Keys
- * typed into a text field are left alone, and so are keys pressed while a
- * dialog, drawer, or menu covers the scope.
- */
 export function useSwitchKeys<Action>(
   scopeRef: RefObject<HTMLElement | null>,
   keyActions: ReadonlyMap<string, Action>,
@@ -49,6 +42,7 @@ export function useSwitchKeys<Action>(
       }
     }
 
+    // Focus can remain outside the scope after a drawer closes.
     const options = { capture: true };
     document.addEventListener("keydown", handleKeyDown, options);
     document.addEventListener("keyup", handleKeyUp, options);

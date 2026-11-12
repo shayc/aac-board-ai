@@ -4,12 +4,6 @@ import {
   type ImportedBoardSet,
 } from "./board-import";
 
-/**
- * Hard cap on a board download, enforced while the response streams so an
- * oversized transfer is cancelled mid-flight instead of buffered whole.
- * Generous versus real boards (observed up to ~70MB) but bounded — the
- * network-side counterpart of `BOARD_IMPORT_LIMITS`.
- */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
 type BoardURLErrorCode =
@@ -27,8 +21,7 @@ class BoardURLError extends Error {
   }
 }
 
-// The ?board= param is attacker-controlled, so only http(s) may reach fetch —
-// schemes like data: would smuggle a payload past any host-based reasoning.
+// URL-import confirmation relies on a verifiable network host.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
@@ -115,14 +108,11 @@ async function downloadBoard(
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
 
-  // A ?board= link is confirmed by its host, so an open redirect on a trusted
-  // host must not hand the import to another one. Same-host redirects, such as
-  // http to https or a moved path, still follow.
+  // The response must come from the host the user confirmed.
   if (response.redirected) {
     assertSameHost(url, response);
   }
 
-  // A null body has no payload to exceed the download cap.
   const reader = response.body?.getReader();
   if (!reader) {
     return response.blob();

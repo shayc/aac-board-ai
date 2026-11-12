@@ -115,8 +115,7 @@ async function paintTileAtBrightness(
   overrides: Partial<BoardButton>,
 ): Promise<Rgb> {
   setTileBrightness(brightness);
-  // A pointer left over the tile by an earlier test would add the hover tint
-  // to the colors under measurement.
+  // A pointer left by another test can tint the measured colors.
   const screen = await renderInTheme(
     <Unhoverable>{tileElement(overrides)}</Unhoverable>,
   );
@@ -421,7 +420,6 @@ describe("Tile", () => {
   });
 
   test("eases its symbol with the same timing as its own colors", async () => {
-    // The app's theme sets the button timing the symbol has to match.
     const screen = await render(
       <ThemeProvider>
         {tileElement({ imageSrc: TEST_IMAGE_SRC })}

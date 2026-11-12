@@ -7,7 +7,6 @@ import { listBoardRecords } from "./board-content-storage";
 export interface BoardSummary {
   id: string;
   name: string;
-  /** Language code → the board's name, for each language its strings cover. */
   namesByLanguage: Readonly<Record<string, string>>;
 }
 

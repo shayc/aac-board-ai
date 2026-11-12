@@ -14,9 +14,7 @@ export function toSuggestionSource(
   request: UseLatestAsyncReturn<string>,
 ): SuggestionSource {
   function enable() {
-    // Enabling is best-effort: the engine's status is the user-facing feedback,
-    // so a rejection here (e.g. the gesture expired) has nothing useful to add.
-    // From `error`, preparing is the retry; in any other state it is harmless.
+    // Engine status exposes preparation failures to the UI.
     void engine.prepare().catch(() => undefined);
   }
 

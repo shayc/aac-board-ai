@@ -15,7 +15,6 @@
       "@paraglide/*": ["./src/paraglide/*"]
     },
 
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
@@ -25,7 +24,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,

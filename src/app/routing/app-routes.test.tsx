@@ -46,8 +46,7 @@ async function renderApp(initialEntry = "/") {
   return { router, screen };
 }
 
-// Where a substring is painted, which can differ from its order in the DOM
-// once the bidi algorithm reorders runs.
+// DOM text order alone misses bidi rendering errors.
 function textLeft(element: Element, substring: string): number {
   const node = element.firstChild;
   assert(node instanceof Text);
@@ -170,7 +169,6 @@ describe("app flow", () => {
       .toBeVisible();
 
     await screen.getByRole("button", { name: "cat" }).click();
-    // Tile taps speak per-tile feedback; only the played message is asserted.
     speech.speak.mockClear();
 
     await screen.getByRole("button", { name: "Play message" }).click();
@@ -471,7 +469,6 @@ describe("app flow", () => {
         boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
       },
     ]);
-    // Newer, so the library lists it before the set on screen.
     now.mockReturnValue(2);
     await seedBoardSets([
       {
@@ -594,8 +591,6 @@ describe("app flow", () => {
       .element(notice)
       .toHaveTextContent("Descargando modelo de traducción…0% completado");
 
-    // The same alert carries both states, so a screen reader hears the
-    // change instead of a region that was removed and added again.
     const downloadNotice = notice.element();
     download.resolve();
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
@@ -617,8 +612,7 @@ describe("app flow", () => {
     const notice = screen.getByRole("status");
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
 
-    // The next language's pass never gets as far as translating, so only the
-    // language change itself can clear the status.
+    // Leave preparation pending to isolate the language change's status reset.
     translator.create.mockImplementation(() => new Promise(() => {}));
     setStoredLanguage("fr");
 
@@ -647,7 +641,6 @@ describe("app flow", () => {
   });
 });
 
-// A set whose boardSetId collides with what the OBZ fixture URL derives.
 function seedExistingLotsOfStuffSet() {
   return seedBoardSets([
     {

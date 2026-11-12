@@ -22,7 +22,6 @@ export interface TimeSpan {
   end: number;
 }
 
-/** One page of a sample, with the in-page probe installed. */
 export class PageProbe {
   readonly page: Page;
   readonly #cdp: CDPSession;
@@ -32,11 +31,7 @@ export class PageProbe {
     this.#cdp = cdp;
   }
 
-  /**
-   * Clicks `target` and waits for the first rendered frame in which `result`
-   * is visible. The interval starts at the pointerdown, so it covers
-   * everything the page does from the press to that frame.
-   */
+  /** Measures pointerdown to the first painted frame containing `result`. */
   async tap(target: Locator, result: string): Promise<TimeSpan> {
     await this.page.evaluate(
       ([name, selector]) => {
@@ -52,7 +47,6 @@ export class PageProbe {
     };
   }
 
-  /** When a selector watched since the page opened first rendered. */
   visibleAt(name: string): Promise<number> {
     return this.page.evaluate(
       ([watchName, timeout]) => window.__perf.visibleAt(watchName, timeout),
@@ -74,7 +68,6 @@ export class PageProbe {
   }
 }
 
-/** One run of a journey in a fresh browser context, and its timings. */
 export class JourneySample {
   readonly timings = new Map<string, number[]>();
   readonly #context: BrowserContext;
@@ -101,10 +94,8 @@ export class JourneySample {
 }
 
 /**
- * Measures a journey on both builds in ROUND_COUNT rounds. A round runs the
- * journey once per build, back to back, so whatever the machine is doing at
- * that moment slows both alike. Each sample gets a fresh browser context, and
- * one warm-up sample per build is discarded.
+ * Pair builds within each round to reduce bias from machine drift.
+ * Discard one warm-up sample per build.
  */
 export async function measureJourney(
   browser: Browser,
@@ -125,8 +116,7 @@ export async function measureJourney(
   await writeJourneyResult(browser, journey, samples);
 }
 
-// Whichever build runs second in a round finds caches warmer, so the builds
-// take turns going first.
+// Alternate order to balance the second build's warmer caches.
 function buildOrder(round: number): BuildName[] {
   return round % 2 === 0 ? BUILD_NAMES : BUILD_NAMES.toReversed();
 }
@@ -136,7 +126,6 @@ async function runSample(
   build: BuildName,
   runJourney: (sample: JourneySample) => Promise<void>,
 ): Promise<JourneySample> {
-  // The working tree's build is served at the configured baseURL.
   const context = await browser.newContext(
     build === "base" ? { baseURL: BASE_BUILD_URL } : {},
   );
@@ -155,8 +144,7 @@ async function writeJourneyResult(
   journey: string,
   samples: Record<BuildName, JourneySample[]>,
 ): Promise<void> {
-  // A timing recorded several times in one sample (one per tap) contributes
-  // its median, so every sample weighs the same in the comparison.
+  // Per-sample medians give samples equal weight regardless of tap count.
   const timings: Record<string, TimingSamples> = {};
   for (const build of BUILD_NAMES) {
     for (const sample of samples[build]) {

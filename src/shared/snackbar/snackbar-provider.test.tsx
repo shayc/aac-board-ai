@@ -8,7 +8,6 @@ import { page } from "vitest/browser";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
-// Keeps queued messages from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
 
 function ShowButtons({
@@ -69,9 +68,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "outside" }).click();
 
-    // A clickaway-triggered close would unmount the alert once its exit
-    // transition ends, so prove it outlives that window: the disappearance
-    // matcher must time out.
+    // Observe past the exit transition to catch a delayed clickaway dismissal.
     await expect(
       expect
         .element(screen.getByRole("status"), { timeout: 500 })
@@ -89,8 +86,7 @@ describe("SnackbarProvider", () => {
     await screen.getByRole("button", { name: "show-saved" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
 
-    // Axe computes color contrast against blended colors while the Grow
-    // transition is still animating opacity, so wait for it to settle.
+    // Axe needs the final opacity for color-contrast checks.
     await vi.waitFor(() => {
       const alert = screen.getByRole("status").element();
       expect(getComputedStyle(alert).opacity).toBe("1");

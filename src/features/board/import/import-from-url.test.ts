@@ -9,8 +9,6 @@ import {
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 
-// A constructed Response can't follow a redirect, so set where the fetch
-// ended up the way the network would.
 function redirectedResponse(body: BodyInit, finalURL: string): Response {
   const response = new Response(body);
   Object.defineProperties(response, {

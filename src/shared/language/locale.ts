@@ -6,10 +6,7 @@ function parseLocale(locale: string): Intl.Locale | undefined {
   }
 }
 
-/**
- * Returns the canonical BCP 47 base name, accepting `_` separators and
- * stripping extensions. Returns the input unchanged when parsing fails.
- */
+/** Accepts `_` separators, strips extensions, and preserves invalid input. */
 export function normalizeLocale(locale: string): string {
   return parseLocale(locale)?.baseName ?? locale;
 }
@@ -20,23 +17,14 @@ export function getLanguageCode(locale: string): string {
   return language.toLowerCase();
 }
 
-/**
- * Returns the explicit region subtag in canonical form, or `undefined` when
- * none is present (`fr-CA` → `CA`; `fr` → `undefined`).
- */
 export function getRegionCode(locale: string): string | undefined {
   return parseLocale(locale)?.region;
 }
 
-/**
- * Returns the region code inferred by `Intl.Locale.maximize()` (`fr` → `FR`;
- * `en` → `US`), or `undefined` when no region can be inferred.
- */
 export function getLikelyRegionCode(language: string): string | undefined {
   return parseLocale(language)?.maximize().region;
 }
 
-/** Returns the primary language's endonym (`es` → `español`; `fr` → `français`). */
 export function getNativeLanguageName(locale: string): string {
   const language = getLanguageCode(locale);
 

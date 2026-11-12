@@ -51,7 +51,5 @@ export function useUILocale(): Locale {
   return resolveUILocale(useStoredLanguage());
 }
 
-// The communication language store is the app's locale authority. Paraglide
-// delegates to it so message functions and React always observe one snapshot.
 overwriteGetLocale(getUILocale);
 overwriteSetLocale(setStoredLanguage);

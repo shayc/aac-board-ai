@@ -25,7 +25,6 @@ import type {
 } from "./results.ts";
 import { parseRoundCount } from "./settings.ts";
 
-/** Where a build's code comes from: a label for the report and a commit. */
 interface BuildSource {
   source: string;
   commit: string;
@@ -38,10 +37,7 @@ const { values: flags } = parseArgs({
   },
 });
 
-// Without a listener, Ctrl-C ends this process while a command is still
-// running and skips buildBase's cleanup. A listener only runs once the
-// interrupted command has failed and that cleanup, which is synchronous, is
-// done.
+// Defer exit until spawnSync returns and buildBase's synchronous cleanup finishes.
 for (const signal of ["SIGINT", "SIGTERM"] as const) {
   process.on(signal, () => {
     process.exit(128 + os.constants.signals[signal]);
@@ -59,11 +55,9 @@ async function compare(
   baseRef: string,
   rounds: string | undefined,
 ): Promise<void> {
-  // Checked before the builds, which take minutes.
   const roundCount = parseRoundCount(rounds);
 
-  // Read before building, so the report names what was built even if the
-  // repository moves on during the run.
+  // Capture source identities before the repository can change during the builds.
   const builds: Record<BuildName, BuildSource> = {
     base: { source: baseRef, commit: resolveCommit(baseRef) },
     current: readWorkingTreeSource(),
@@ -84,7 +78,6 @@ async function compare(
   printReport(results, compareBuilds(results));
 }
 
-// Both builds come from the same command, so they differ only by their source.
 function buildApp(sourceDir: string, distDir: string): void {
   run(
     "npx",
@@ -93,10 +86,6 @@ function buildApp(sourceDir: string, distDir: string): void {
   );
 }
 
-/**
- * Checks the base commit out into a temporary worktree, installs its own
- * dependencies and builds it. The build is kept until the base commit changes.
- */
 async function buildBase(commit: string): Promise<void> {
   if (existsSync(BASE_BUILD_FILE)) {
     const built = JSON.parse(await readFile(BASE_BUILD_FILE, "utf8")) as {
@@ -171,7 +160,6 @@ async function describeBuild(
   };
 }
 
-// Vite fingerprints its output, so identical source gives an identical hash.
 async function hashBuild(distDir: string): Promise<string> {
   const entries = await readdir(distDir, {
     recursive: true,

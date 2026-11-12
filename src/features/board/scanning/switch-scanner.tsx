@@ -30,9 +30,6 @@ const SWITCH_KEY_ACTIONS: Record<
   ]),
 };
 
-// An automatic scan stops moving while nobody is selecting: it pauses after
-// this many passes over the groups, and moves on from a group after as many
-// over its items. A step scan only moves on a press, so it keeps going around.
 const MAX_PASSES: Record<ScanMethod, number> = {
   auto: 2,
   step: Infinity,
@@ -44,11 +41,6 @@ interface SwitchScannerProps {
   intervalMs: number;
 }
 
-/**
- * Scans the scan groups inside the scope. Renders nothing: it highlights the
- * current targets in place and clicks the selected one, so scanned controls
- * need no scanning code of their own.
- */
 export function SwitchScanner({
   scopeRef,
   method,
@@ -64,7 +56,6 @@ export function SwitchScanner({
       return;
     }
 
-    // Nobody can follow a scan under a dialog or drawer, so it pauses there.
     if (isScanningScopeCovered(scope)) {
       setPosition(null);
 
@@ -85,8 +76,7 @@ export function SwitchScanner({
       return;
     }
 
-    // Flushed so the restart reads the groups the activation leaves behind,
-    // such as a play button the first message part has just enabled.
+    // Commit activation before reading the newly enabled scan targets.
     flushSync(() => selection.target.click());
     setPosition(startScan(listScanGroups(scope)));
   }
@@ -115,9 +105,6 @@ export function SwitchScanner({
       position.level === "items" ? position.item : position.container;
     const removeHighlight = highlightScanTarget(target);
 
-    // The board can remove the highlighted control or group at any time, such
-    // as when another board has fewer rows. Restarting shows the scan again
-    // from the first group, with a full interval.
     const observer = new MutationObserver(() => {
       if (!target.isConnected) {
         setPosition(startScan(listScanGroups(scope)));

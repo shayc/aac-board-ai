@@ -32,8 +32,7 @@ function desaturate(color: string, saturation: number): string {
   return `oklch(from ${color} l calc(c * ${saturation}) h)`;
 }
 
-// The same per-channel multiplication as the `brightness()` filter on the
-// tile's symbol, so the symbol and the tile behind it dim by the same amount.
+// Match the symbol's CSS brightness filter.
 function dim(color: string): string {
   const dimmed = (channel: "r" | "g" | "b") =>
     `calc(${channel} * var(--tile-brightness))`;
@@ -111,8 +110,6 @@ function tileSx(theme: Theme) {
     },
     "& img": {
       filter: "brightness(var(--tile-brightness))",
-      // The tile's own colors ease with the button feedback timing; without
-      // the same easing the symbol would jump ahead of the tile behind it.
       transition: buttonFeedbackTransition(theme, ["filter"]),
     },
   } as const;

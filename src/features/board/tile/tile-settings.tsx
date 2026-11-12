@@ -20,7 +20,6 @@ import {
 } from "./tile-preferences-store";
 import { LabelPlacementPreview } from "./label-placement-preview";
 
-// Ten steps each, so the two sliders feel alike though their ranges differ.
 const BRIGHTNESS_STEP = 0.03;
 const SATURATION_STEP = 0.1;
 

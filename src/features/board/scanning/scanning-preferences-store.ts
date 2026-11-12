@@ -9,10 +9,7 @@ import {
 
 const SCAN_METHODS = ["auto", "step"] as const;
 
-/**
- * `auto` moves the highlight on a timer and one switch selects; `step` moves
- * it with one switch and selects with another.
- */
+/** Auto uses one switch to select. Step uses separate move and select switches. */
 export type ScanMethod = (typeof SCAN_METHODS)[number];
 
 interface ScanningPreferences {

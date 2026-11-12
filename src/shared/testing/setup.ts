@@ -1,9 +1,7 @@
 import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
-// Built-in AI namespaces the app reads off globalThis. Their ambient state can
-// differ between local and CI Chromium, so default them to absent; tests opt in
-// with the stub helpers in stub-built-in-ai.ts.
+// Keep tests independent of the browser's installed AI models.
 const BUILT_IN_AI_NAMESPACES = ["Proofreader", "Rewriter", "Translator"];
 
 function clearStorage() {
@@ -16,8 +14,7 @@ beforeEach(() => {
     vi.stubGlobal(namespace, undefined);
   }
   clearStorage();
-  // Clearing storage does not reset module-scoped stores. Reloading restores
-  // their defaults and persists them again.
+  // Module-scoped stores survive localStorage.clear().
   reloadPersistedStores();
 });
 afterEach(clearStorage);

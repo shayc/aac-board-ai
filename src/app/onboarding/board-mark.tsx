@@ -6,7 +6,7 @@ const TILE_ROWS = [
   ["#F9C99A", "#BFE3C6", "#ECEEF2"],
 ];
 
-// Matches the installed app icon (public/board.svg), not the app background.
+// Keep in sync with public/board.svg.
 const MARK_BACKGROUND = "#0e1014";
 
 const MARK_SIZE = 560;

@@ -53,8 +53,6 @@ export function useMessageSuggestions(
 
   const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
 
-  // Other hook instances can start these downloads; global progress keeps the
-  // suggestion bar in sync with them.
   const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
   const phrases = selectSuggestionPhrases(

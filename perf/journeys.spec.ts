@@ -9,12 +9,9 @@ const STARTER_BOARD = "First Words";
 const CORE_BOARD = "Quick Core 60";
 const LINKED_BOARD = "Core 60 - eat";
 
-// The message bar has no role or name of its own; its parts sit in the element
-// just before the play button.
 const MESSAGE_PARTS = ':has(+ [aria-label="Play message"]) > *';
 
-// A grid behind an open dialog or drawer is rendered but hidden from assistive
-// technology, so it does not count as usable yet.
+// A covered grid is unusable even while its tiles are rendered.
 function gridSelector(boardName: string): string {
   return `[role="grid"][aria-label="${boardName}"]:not([aria-hidden="true"] *, [inert] *)`;
 }
@@ -37,8 +34,7 @@ async function waitForServiceWorkerControl(page: Page): Promise<void> {
     .toBe(true);
 }
 
-// The starter board has 12 tiles and no symbols, so tile taps run on the
-// largest bundled board set instead.
+// Exercise a symbol-heavy board for representative tile timings.
 async function openCoreBoard(page: Page): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "Continue" }).click();

@@ -26,7 +26,6 @@ function run(timings: Record<string, TimingSamples>): RunResults {
   };
 }
 
-// Each round is slower than the last, the way a warming laptop drifts.
 function driftingRounds(shift: number): TimingSamples {
   const base = Array.from(
     { length: ROUND_COUNT },

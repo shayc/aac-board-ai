@@ -1,4 +1,3 @@
-/** The two builds a run compares: a git ref and the working tree. */
 export type BuildName = "base" | "current";
 
 /** Milliseconds per round for each build; the same index is the same round. */

@@ -12,8 +12,7 @@ import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
-// Stub voices are not native SpeechSynthesisVoice objects, so replace the
-// accessor to test voice selection.
+// The native accessor rejects stub SpeechSynthesisVoice objects.
 function stubUtteranceVoiceAccessor(): void {
   const voices = new WeakMap<
     SpeechSynthesisUtterance,

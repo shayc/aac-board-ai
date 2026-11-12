@@ -39,8 +39,6 @@ export function BoardSetInfoDialog({
           pt: 0,
           overflowX: "hidden",
           overflowY: "auto",
-          // Descriptions carry URLs and credits people need to copy; the app
-          // turns selection off globally for the board.
           userSelect: "text",
         }}
       >
@@ -60,8 +58,6 @@ export function BoardSetInfoDialog({
   );
 }
 
-// Plain text rather than chips: chips elsewhere in the app are tappable, and
-// these facts are not.
 function FactLine({ facts }: { facts: string[] }) {
   return (
     <Stack

@@ -23,12 +23,6 @@ interface TranslateBoardSetsOptions extends TranslationOptions {
 
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
-/**
- * Translates every board set not yet in `language` and saves the result.
- * A set the translator fails on stays in its source language until the next
- * run, and an abort stops between sets. Storage and other errors reject, so
- * they surface instead of passing for a missing translation model.
- */
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
@@ -53,10 +47,8 @@ export async function translateBoardSets(
   }
 }
 
-// The set name is saved in the same transaction as its boards' translations,
-// so it marks the whole set as translated without reading any board. A set's
-// own language doesn't: it is only its root board's, and other boards may
-// differ.
+// The name and all board translations commit atomically, making it a completion marker.
+// The set's locale describes only its root board.
 function isBoardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,
@@ -84,10 +76,7 @@ async function translateBoardSet(
     ]);
   }
 
-  // Translation is optional, so a refused model, a failed request, or an
-  // abort leaves the set as it is; the next language change or app start
-  // retries. Without the Translator API, createTranslator rejects, so only a
-  // set whose file ships every translation is saved.
+  // Optional AI failures leave the set available for a later retry.
   const translationsBySourceLanguage = await translateBySourceLanguage(
     stringsBySourceLanguage,
     language,
@@ -132,8 +121,6 @@ async function listBoards(boardSetId: string): Promise<Board[]> {
   return records.map(({ obf }) => obfToBoard(obf));
 }
 
-// The set name usually comes from its root board's name, so a board file that
-// ships translations already has the name in the language.
 function findNameInLanguage(
   boardSet: BoardSetRecord,
   boards: readonly Board[],
@@ -200,15 +187,12 @@ async function translateBySourceLanguage(
   const translators = new Map<string, OpenTranslator>();
 
   try {
-    // Every translator opens before any string is translated, so a refused
-    // one (model not downloaded, unsupported pair) wastes no translation.
     for (const sourceLanguage of stringsBySourceLanguage.keys()) {
       const translator = await createTranslator({
         sourceLanguage,
         targetLanguage,
         signal,
-        // Also reported while a model downloads: the notice shows the
-        // download first, and the status is already set when it ends.
+        // Keep translation status active across the model-download handoff.
         onDownloadProgress: onTranslating,
       });
       translators.set(sourceLanguage, translator);

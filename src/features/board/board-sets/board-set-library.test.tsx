@@ -178,8 +178,7 @@ describe("BoardSetLibrary", () => {
   });
 
   describe("downloading", () => {
-    // Downloads outlive the component, so one left pending by a failed
-    // assertion would block every later download of the same board set.
+    // Pending downloads survive unmount and can block later tests.
     afterEach(() => {
       cancelBoardSetDownload(starterBoardSet.url);
     });
@@ -464,7 +463,6 @@ describe("BoardSetLibrary", () => {
     function captureSavedFile(): Promise<File> {
       const { promise, resolve, reject } = Promise.withResolvers<File>();
 
-      // Saving a file is device output; read it back instead of downloading.
       vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(
         function (this: HTMLAnchorElement) {
           const { download } = this;

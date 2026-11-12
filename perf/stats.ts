@@ -12,12 +12,7 @@ export function median(values: number[]): number {
   return (lower + upper) / 2;
 }
 
-/**
- * Two-sided exact Wilcoxon signed-rank test of paired differences. Zero
- * differences are left out and tied sizes share their average rank. The p-value
- * counts every way of assigning signs to the observed ranks, so it stays exact
- * with ties and with few differences.
- */
+/** Exact two-sided Wilcoxon signed-rank p-value, omitting zeros and averaging ties. */
 export function signedRankP(differences: number[]): number {
   const changed = differences.filter((difference) => difference !== 0);
   if (changed.length === 0) {
@@ -40,18 +35,14 @@ export function signedRankP(differences: number[]): number {
   );
 }
 
-/**
- * The Hodges–Lehmann estimate of a typical paired difference: the median of
- * the averages of every pair of differences.
- */
+/** Hodges–Lehmann estimate for paired differences. */
 export function typicalDifference(differences: number[]): number {
   return median(pairAverages(differences));
 }
 
 /**
- * The confidence interval that goes with the signed-rank test: the differences
- * the test would not reject. Undefined when there are too few differences for any
- * interval to reach the confidence level.
+ * Signed-rank confidence interval. Undefined when the sample count cannot
+ * support the requested confidence.
  */
 export function differenceInterval(
   differences: number[],
@@ -77,11 +68,7 @@ export function differenceInterval(
   return low === undefined || high === undefined ? undefined : { low, high };
 }
 
-/**
- * Holm's correction for testing several metrics at once. Comparing the
- * adjusted p-values with a significance level keeps the chance of flagging
- * anything at all, when nothing changed, below that level.
- */
+/** Holm–Bonferroni adjustment controls family-wise error across all metrics. */
 export function holmAdjust(pValues: number[]): number[] {
   const ascending = pValues
     .map((p, index) => ({ p, index }))
@@ -97,7 +84,6 @@ export function holmAdjust(pValues: number[]): number[] {
   return adjusted;
 }
 
-/** The smallest p the signed-rank test can report for this many differences. */
 export function smallestSignedRankP(differenceCount: number): number {
   return 2 / 2 ** differenceCount;
 }
@@ -125,10 +111,7 @@ function rank(values: number[]): number[] {
   return ranks;
 }
 
-/**
- * The probability of each sum of the positive ranks when every rank is
- * positive or negative with equal chance, indexed by that sum.
- */
+/** Indexed by positive-rank sum, with each sign equally probable under the null. */
 function rankSumDistribution(integerRanks: number[]): number[] {
   let distribution = [1];
 
