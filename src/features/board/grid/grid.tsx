@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { ReactNode, Ref } from "react";
+import type { ReactNode } from "react";
 import { scanGroupProps } from "../scanning/scan-targets";
 import {
   createGridContentSx,
@@ -23,7 +23,6 @@ interface GridProps<TItem extends { id: string }> {
   order?: GridOrder;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
   gap?: number;
-  ref?: Ref<HTMLDivElement>;
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -34,13 +33,12 @@ export function Grid<TItem extends { id: string }>({
   order,
   renderItem,
   gap = 1,
-  ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
 
   return (
-    <Box ref={ref} sx={(theme) => createGridViewportSx(theme, gap)}>
+    <Box sx={(theme) => createGridViewportSx(theme, gap)}>
       <Stack
         {...rootProps}
         ref={rootRef}
