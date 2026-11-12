@@ -14,7 +14,6 @@ export {
 } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
-export { obfToBoard } from "./obf/obf-to-board";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export {
   getBoardSetRecord,

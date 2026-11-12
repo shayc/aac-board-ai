@@ -2,10 +2,10 @@ import { BoardTranslationNotice } from "@features/library";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
-import { useLanguageOptions } from "@shared/language/use-language-options";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { SettingsSelect } from "@shared/ui/settings-select";
+import { useLanguageOptions } from "./use-language-options";
 
 export function LanguageSettings() {
   const t = useTranslate();
