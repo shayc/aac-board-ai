@@ -14,10 +14,11 @@ export function BoardControlButton({
   return (
     <Button
       {...props}
-      {...focusableDisabledProps(disabled, onClick)}
+      {...focusableDisabledProps(disabled)}
       size="large"
       color="inherit"
       variant="contained"
+      onClick={disabled ? undefined : onClick}
       sx={{ width: 72 }}
     />
   );
