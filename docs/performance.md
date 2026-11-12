@@ -56,9 +56,9 @@ machine that set them; on other hardware, re-measure before trusting a row.
 machine.
 
 Every timing a journey records needs a budget, and every budget needs a
-measurement: the run fails if either is missing. It also fails if the CPU
-slowdown in [perf/settings.ts](../perf/settings.ts) no longer matches the one
-the budgets were set at, because every timing limit then needs re-measuring.
+measurement: the run fails if either is missing. The timing limits hold for
+the CPU slowdown in [perf/settings.ts](../perf/settings.ts); changing it
+shifts every timing, so re-measure them in the same change.
 
 ## Compare with a git ref
 

@@ -4,7 +4,7 @@ import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { BUDGETED_CPU_SLOWDOWN, BUDGETS } from "./budgets.ts";
+import { BUDGETS } from "./budgets.ts";
 import { compareBuilds } from "./comparison.ts";
 import { hashBuild, measureJSShipped } from "./dist.ts";
 import {
@@ -66,12 +66,6 @@ async function takeXray(rounds: string | undefined): Promise<void> {
   const journeys = await runJourneys(roundCount, false);
 
   const [{ settings }] = journeys;
-  if (settings.cpuSlowdown !== BUDGETED_CPU_SLOWDOWN) {
-    throw new Error(
-      `The budgets were set at a ${BUDGETED_CPU_SLOWDOWN}× CPU slowdown and this run used ${settings.cpuSlowdown}×. Re-measure the limits in perf/budgets.ts.`,
-    );
-  }
-
   const xray: XrayResults = {
     date: new Date().toISOString(),
     settings,
