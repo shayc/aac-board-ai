@@ -1,3 +1,5 @@
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
 import {
   type Browser,
   type BrowserContext,
@@ -5,8 +7,6 @@ import {
   type Locator,
   type Page,
 } from "@playwright/test";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { installPagePerf } from "./page-perf.ts";
 import { RAW_RESULTS_DIR } from "./paths.ts";
 import type { BuildName, JourneyResult, TimingSamples } from "./results.ts";
