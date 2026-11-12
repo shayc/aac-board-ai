@@ -8,20 +8,20 @@ interface AACSymbolProps {
   imageSrc?: string;
   label: string;
   labelPlacement?: SymbolLabelPlacement;
-  isLabelHidden?: boolean;
-  isImageHidden?: boolean;
+  isLabelVisible?: boolean;
+  isImageVisible?: boolean;
 }
 
 export function AACSymbol({
   imageSrc,
   label,
   labelPlacement = "bottom",
-  isLabelHidden = false,
-  isImageHidden = false,
+  isLabelVisible = true,
+  isImageVisible = true,
 }: AACSymbolProps) {
   const hasLabel = label.trim() !== "";
-  const isImageShown = Boolean(imageSrc) && !(isImageHidden && hasLabel);
-  const isLabelShown = !(isLabelHidden && isImageShown);
+  const isImageDisplayed = Boolean(imageSrc) && (isImageVisible || !hasLabel);
+  const isLabelDisplayed = isLabelVisible || !isImageDisplayed;
 
   return (
     <Box
@@ -37,7 +37,7 @@ export function AACSymbol({
         textAlign: "center",
       }}
     >
-      {isImageShown && (
+      {isImageDisplayed && (
         <Box
           component="span"
           sx={{
@@ -68,10 +68,10 @@ export function AACSymbol({
       <Typography
         component="span"
         noWrap
-        variant={isImageShown ? "body2" : "h5"}
+        variant={isImageDisplayed ? "body2" : "h5"}
         sx={[
           { flexShrink: 0, lineHeight: 1.2, fontWeight: "fontWeightBold" },
-          !isLabelShown && visuallyHidden,
+          !isLabelDisplayed && visuallyHidden,
         ]}
       >
         {label}

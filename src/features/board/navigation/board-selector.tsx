@@ -12,18 +12,18 @@ interface BoardOption {
 }
 
 interface BoardSelectorProps {
-  summaries: readonly BoardSummary[];
+  boards: readonly BoardSummary[];
 }
 
-export function BoardSelector({ summaries }: BoardSelectorProps) {
+export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
   const { language } = useLanguage();
   const { boardId, goToBoard } = useBoardRoute();
-  const boards = toBoardOptions(summaries, language);
+  const options = toBoardOptions(boards, language);
 
-  const selectedBoard = boards.find((board) => board.id === boardId);
+  const selectedOption = options.find((option) => option.id === boardId);
 
-  if (!selectedBoard) {
+  if (!selectedOption) {
     return null;
   }
 
@@ -32,17 +32,17 @@ export function BoardSelector({ summaries }: BoardSelectorProps) {
       openText={t(m.boardSelectorOpen)}
       closeText={t(m.boardSelectorClose)}
       noOptionsText={t(m.boardSelectorNoOptions)}
-      options={boards}
-      value={selectedBoard}
-      onChange={(_event, board) => goToBoard(board.id)}
+      options={options}
+      value={selectedOption}
+      onChange={(_event, option) => goToBoard(option.id)}
       disableClearable
       autoHighlight
       size="small"
       slotProps={{
         popupIndicator: { sx: { border: "none" } },
       }}
-      getOptionLabel={(board) => board.name}
-      getOptionKey={(board) => board.id}
+      getOptionLabel={(option) => option.name}
+      getOptionKey={(option) => option.id}
       isOptionEqualToValue={(option, selected) => option.id === selected.id}
       renderInput={(params) => (
         <TextField
@@ -62,13 +62,13 @@ export function BoardSelector({ summaries }: BoardSelectorProps) {
 }
 
 function toBoardOptions(
-  summaries: readonly BoardSummary[],
+  boards: readonly BoardSummary[],
   language: string,
 ): BoardOption[] {
-  return summaries
-    .map(({ id, name, namesByLanguage }) => ({
+  return boards
+    .map(({ id, name, translatedNames }) => ({
       id,
-      name: namesByLanguage[language] ?? name,
+      name: translatedNames[language] ?? name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }

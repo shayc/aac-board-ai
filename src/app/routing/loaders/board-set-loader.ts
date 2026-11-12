@@ -11,7 +11,7 @@ export const BOARD_SET_ROUTE_ID = "board-set";
 interface BoardSetRouteData {
   /** Undefined for a set that isn't stored; the board loader reports it. */
   rootBoardId: string | undefined;
-  summaries: BoardSummary[];
+  boards: BoardSummary[];
 }
 
 export async function boardSetLoader({
@@ -22,10 +22,10 @@ export async function boardSetLoader({
     throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
   }
 
-  const [boardSet, summaries] = await Promise.all([
+  const [boardSet, boards] = await Promise.all([
     getBoardSetRecord(boardSetId),
     listBoardSummaries(boardSetId),
   ]);
 
-  return { rootBoardId: boardSet?.rootBoardId, summaries };
+  return { rootBoardId: boardSet?.rootBoardId, boards };
 }

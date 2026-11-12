@@ -15,7 +15,7 @@ import {
   buildAssetInputs,
   importBoardFile,
   importEachBoardFile,
-} from "./board-import";
+} from "./board-file-import";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 const OBF_FIXTURE = "lots-of-stuff.obf";

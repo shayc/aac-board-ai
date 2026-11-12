@@ -2,7 +2,7 @@ import {
   createExternalStore,
   useExternalStore,
 } from "@shared/state/external-store";
-import type { ImportedBoardSet } from "../import/board-import";
+import type { ImportedBoardSet } from "../import/board-file-import";
 import {
   importBoardFileFromURL,
   type DownloadProgress,

@@ -3,7 +3,10 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
-import { importEachBoardFile, type ImportedBoardSet } from "./board-import";
+import {
+  importEachBoardFile,
+  type ImportedBoardSet,
+} from "./board-file-import";
 import { pickFiles } from "./pick-files";
 import { summarizeImport } from "./summarize-import";
 

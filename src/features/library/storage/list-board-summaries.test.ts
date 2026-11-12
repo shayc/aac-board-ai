@@ -30,7 +30,7 @@ test("maps stored boards to summaries with their names by language", async () =>
     {
       id: "a",
       name: "Food",
-      namesByLanguage: { es: "Comida" },
+      translatedNames: { es: "Comida" },
     },
   ]);
 });
@@ -55,5 +55,5 @@ test("takes a name from the first locale of a language, as the board itself does
 
   const [summary] = await listBoardSummaries("set-1");
 
-  expect(summary?.namesByLanguage).toEqual({ fr: "Nourriture" });
+  expect(summary?.translatedNames).toEqual({ fr: "Nourriture" });
 });

@@ -23,8 +23,8 @@ interface AppHeaderProps {
 
 export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   const t = useTranslate();
-  const boardSummaries =
-    useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.summaries;
+  const boards =
+    useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.boards;
 
   return (
     <AppBar position="static">
@@ -52,7 +52,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
         </Tooltip>
 
         <Box sx={{ minWidth: 0 }}>
-          {boardSummaries && <BoardSelector summaries={boardSummaries} />}
+          {boards && <BoardSelector boards={boards} />}
         </Box>
 
         <Tooltip title={t(m.settingsOpen)}>

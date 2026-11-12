@@ -1,6 +1,6 @@
 import { extractOBZ } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
-import { importBoardFile } from "../import/board-import";
+import { importBoardFile } from "../import/board-file-import";
 import { listBoardRecords } from "../storage/board-content-storage";
 import {
   getBoardSetRecord,
@@ -60,7 +60,7 @@ describe("boardSetToOBZ", () => {
     const boardSet = await importFixtureSet();
     await saveBoardSetTranslations(boardSet.id, "es", {
       name: "Muchas cosas",
-      stringsByBoardId: new Map([
+      translationsByBoardId: new Map([
         [boardSet.rootBoardId, new Map([["happy", "feliz"]])],
       ]),
     });

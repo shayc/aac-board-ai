@@ -12,7 +12,7 @@ import {
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
 import { resolveVoice } from "./resolve-voice";
-import { getSpeechSynthesis, type SpeechSettings } from "./speech-synthesis";
+import { getSpeechSynthesis, type SpeechParameters } from "./speech-synthesis";
 
 interface SpeechPreferences {
   voiceURI: string | null;
@@ -104,15 +104,15 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechSettings(): SpeechSettings {
-  const lang = getStoredLanguage();
+export function getSpeechParameters(): SpeechParameters {
+  const language = getStoredLanguage();
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();
 
   return {
-    lang,
-    voice: resolveVoice(voicesByLanguage, lang, voiceURI),
+    language,
+    voice: resolveVoice(voicesByLanguage, language, voiceURI),
     rate,
     pitch,
     volume,

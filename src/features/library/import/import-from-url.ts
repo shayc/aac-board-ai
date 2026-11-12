@@ -2,7 +2,7 @@ import {
   deriveBoardSetId,
   importBoardFile,
   type ImportedBoardSet,
-} from "./board-import";
+} from "./board-file-import";
 
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
@@ -60,7 +60,7 @@ export async function importBoardFileFromURL(
   { signal, onProgress, onImportStart }: ImportBoardFileFromURLOptions = {},
 ): Promise<ImportedBoardSet> {
   const boardURL = parseBoardURL(url);
-  const blob = await downloadBoard(boardURL, { signal, onProgress });
+  const blob = await downloadBoardFile(boardURL, { signal, onProgress });
   signal?.throwIfAborted();
   onImportStart?.();
 
@@ -96,7 +96,7 @@ function assertSameHost(requestedURL: URL, response: Response): void {
   );
 }
 
-async function downloadBoard(
+async function downloadBoardFile(
   url: URL,
   {
     signal,

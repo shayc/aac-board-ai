@@ -145,7 +145,7 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
   });
 
   const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";
-  const isLabelHidden = labelPlacement === "hidden";
+  const isLabelVisible = labelPlacement !== "hidden";
 
   return (
     <Button
@@ -160,7 +160,7 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
         label={button.label}
         imageSrc={button.imageSrc}
         labelPlacement={symbolLabelPlacement}
-        isLabelHidden={isLabelHidden}
+        isLabelVisible={isLabelVisible}
       />
     </Button>
   );

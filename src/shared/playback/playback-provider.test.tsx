@@ -1,4 +1,4 @@
-import type { SpeechSettings } from "@shared/speech/speech-synthesis";
+import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { Profiler, type ProfilerOnRenderCallback, type ReactNode } from "react";
@@ -7,8 +7,8 @@ import { render, renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
 import { useActiveCue, useIsPlaying, usePlayback } from "./use-playback";
 
-const speechSettings: SpeechSettings = {
-  lang: "en",
+const speechParameters: SpeechParameters = {
+  language: "en",
   voice: null,
   rate: 1,
   pitch: 1,
@@ -17,7 +17,7 @@ const speechSettings: SpeechSettings = {
 
 function TestPlaybackProvider({ children }: { children: ReactNode }) {
   return (
-    <PlaybackProvider getSpeechSettings={() => speechSettings}>
+    <PlaybackProvider getSpeechParameters={() => speechParameters}>
       {children}
     </PlaybackProvider>
   );
@@ -154,11 +154,11 @@ describe("PlaybackProvider", () => {
     expect(speech.spokenTexts()).toEqual(["hello"]);
   });
 
-  test("speaks each request with the settings current at that moment", async () => {
-    let currentSettings = speechSettings;
+  test("speaks each request with the parameters current at that moment", async () => {
+    let currentParameters = speechParameters;
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: ({ children }: { children: ReactNode }) => (
-        <PlaybackProvider getSpeechSettings={() => currentSettings}>
+        <PlaybackProvider getSpeechParameters={() => currentParameters}>
           {children}
         </PlaybackProvider>
       ),
@@ -169,7 +169,7 @@ describe("PlaybackProvider", () => {
     } as const;
 
     await result.current.play(request);
-    currentSettings = { ...speechSettings, lang: "he", rate: 1.5 };
+    currentParameters = { ...speechParameters, language: "he", rate: 1.5 };
     await result.current.play(request);
 
     const [first, second] = speech.speak.mock.calls.map(([spoken]) => spoken);

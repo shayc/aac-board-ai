@@ -1,6 +1,6 @@
 import {
   getSpeechSynthesis,
-  type SpeechSettings,
+  type SpeechParameters,
 } from "@shared/speech/speech-synthesis";
 
 interface SpeakOptions {
@@ -10,10 +10,10 @@ interface SpeakOptions {
 
 function buildUtterance(
   text: string,
-  { lang, voice, rate, pitch, volume }: SpeechSettings,
+  { language, voice, rate, pitch, volume }: SpeechParameters,
 ): SpeechSynthesisUtterance {
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = lang;
+  utterance.lang = language;
   utterance.voice = voice;
   utterance.rate = rate;
   utterance.pitch = pitch;
@@ -24,7 +24,7 @@ function buildUtterance(
 
 export function speak(
   text: string,
-  settings: SpeechSettings,
+  parameters: SpeechParameters,
   { signal, onBoundary }: SpeakOptions = {},
 ): Promise<void> {
   if (signal?.aborted) {
@@ -37,7 +37,7 @@ export function speak(
   }
 
   const { promise, resolve, reject } = Promise.withResolvers<void>();
-  const utterance = buildUtterance(text, settings);
+  const utterance = buildUtterance(text, parameters);
   const settled = new AbortController();
   const listenerOptions = { signal: settled.signal };
 

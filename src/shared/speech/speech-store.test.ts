@@ -3,7 +3,7 @@ import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
-  getSpeechSettings,
+  getSpeechParameters,
   parseSpeechPreferences,
   setSpeechPitch,
   setSpeechRate,
@@ -69,7 +69,7 @@ describe("parseSpeechPreferences", () => {
   );
 });
 
-describe("getSpeechSettings", () => {
+describe("getSpeechParameters", () => {
   beforeEach(() => {
     stubVoices([
       { voiceURI: "voice-1", name: "Voice One", lang: "en-US" },
@@ -85,8 +85,8 @@ describe("getSpeechSettings", () => {
     setSpeechPitch(0.5);
     setSpeechVolume(0.25);
 
-    expect(getSpeechSettings()).toMatchObject({
-      lang: "en",
+    expect(getSpeechParameters()).toMatchObject({
+      language: "en",
       voice: { voiceURI: "voice-2" },
       rate: 1.5,
       pitch: 0.5,
@@ -98,7 +98,10 @@ describe("getSpeechSettings", () => {
     setSpeechVoiceURI("voice-2");
     setStoredLanguage("fr");
 
-    expect(getSpeechSettings()).toMatchObject({ lang: "fr", voice: null });
+    expect(getSpeechParameters()).toMatchObject({
+      language: "fr",
+      voice: null,
+    });
   });
 
   test("gives a new language its own voice and keeps the saved voice", () => {
@@ -106,16 +109,16 @@ describe("getSpeechSettings", () => {
     setSpeechVoiceURI("voice-2");
 
     setStoredLanguage("he");
-    expect(getSpeechSettings().voice?.voiceURI).toBe("he-voice");
+    expect(getSpeechParameters().voice?.voiceURI).toBe("he-voice");
 
     setStoredLanguage("en");
-    expect(getSpeechSettings().voice?.voiceURI).toBe("voice-2");
+    expect(getSpeechParameters().voice?.voiceURI).toBe("voice-2");
   });
 
   test("clamps an out-of-range stored rate to the configured max", () => {
     localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
     reloadPersistedStores();
 
-    expect(getSpeechSettings().rate).toBe(SPEECH_RATE.max);
+    expect(getSpeechParameters().rate).toBe(SPEECH_RATE.max);
   });
 });
