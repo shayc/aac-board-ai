@@ -40,9 +40,9 @@ export function DownloadableBoardSetListItem({
     <ListItem
       secondaryAction={
         <DownloadButton
+          statusId={status ? statusId : undefined}
           name={name}
           phase={phase}
-          statusId={status ? statusId : undefined}
           onDownload={() => void download()}
           onCancel={cancel}
         />
@@ -65,17 +65,17 @@ export function DownloadableBoardSetListItem({
 }
 
 interface DownloadButtonProps {
+  statusId: string | undefined;
   name: string;
   phase: BoardSetDownloadPhase | undefined;
-  statusId: string | undefined;
   onDownload: () => void;
   onCancel: () => void;
 }
 
 function DownloadButton({
+  statusId,
   name,
   phase,
-  statusId,
   onDownload,
   onCancel,
 }: DownloadButtonProps) {
@@ -87,6 +87,7 @@ function DownloadButton({
   const label = isCancellable
     ? t(m.libraryCancelDownloadBoardSet, { name })
     : t(m.libraryDownloadBoardSet, { name });
+  const handleClick = isCancellable ? onCancel : onDownload;
 
   return (
     <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
@@ -95,7 +96,7 @@ function DownloadButton({
         aria-describedby={statusId}
         aria-disabled={isImporting}
         edge="end"
-        onClick={isCancellable ? onCancel : onDownload}
+        onClick={handleClick}
         sx={{ border: "none" }}
       >
         <DownloadButtonIcon phase={phase} />

@@ -113,13 +113,21 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   );
 }
 
+function isUrgent(severity: SnackbarSeverity) {
+  return severity === "error" || severity === "warning";
+}
+
+function defaultDurationMs(severity: SnackbarSeverity): number | null {
+  return isUrgent(severity) ? null : DEFAULT_SNACKBAR_DURATION_MS;
+}
+
 function snackbarSx(theme: Theme) {
   return {
     [theme.breakpoints.down("sm")]: {
       right: safeAreaGutter(theme.spacing(1), "right"),
       left: safeAreaGutter(theme.spacing(1), "left"),
     },
-  } as const;
+  };
 }
 
 function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
@@ -136,15 +144,7 @@ function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
         color: theme.colorSchemes.light?.palette[severity].main,
       }),
     },
-  } as const;
-}
-
-function isUrgent(severity: SnackbarSeverity) {
-  return severity === "error" || severity === "warning";
-}
-
-function defaultDurationMs(severity: SnackbarSeverity): number | null {
-  return isUrgent(severity) ? null : DEFAULT_SNACKBAR_DURATION_MS;
+  };
 }
 
 function snackbarReducer(

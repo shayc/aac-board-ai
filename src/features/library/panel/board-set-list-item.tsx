@@ -94,5 +94,5 @@ function secondaryActionRevealSx(theme: Theme) {
           { opacity: 1, pointerEvents: "auto" },
       },
     },
-  } as const;
+  };
 }

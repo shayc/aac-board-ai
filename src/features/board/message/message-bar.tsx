@@ -119,7 +119,7 @@ function scrollContainerSx(theme: Theme) {
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
     // Keep the focus ring inside the bar's clipped overflow.
     "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
-  } as const;
+  };
 }
 
 interface MessagePartItemProps {

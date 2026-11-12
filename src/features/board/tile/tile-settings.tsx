@@ -115,5 +115,5 @@ function labelPlacementRadioSx(theme: Theme) {
         boxShadow: "none",
       },
     },
-  } as const;
+  };
 }
