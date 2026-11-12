@@ -27,7 +27,9 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
 
   // AAC users depend on knowing their speech output failed, so a failure is
   // reported here, once, instead of being left to each caller.
-  async function play(request: PlaybackRequest): Promise<boolean> {
+  async function playAndReportFailure(
+    request: PlaybackRequest,
+  ): Promise<boolean> {
     const outcome = await playback.play(request);
 
     if (outcome === "failed") {
@@ -41,11 +43,17 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
   }
 
   function playMessage(parts: readonly MessagePart[]) {
-    return play({ owner: MESSAGE_OWNER, steps: planPlayback(parts) });
+    return playAndReportFailure({
+      owner: MESSAGE_OWNER,
+      steps: planPlayback(parts),
+    });
   }
 
   async function playPart(part: MessagePart) {
-    await play({ owner: TILE_OWNER, steps: planPlayback([part]) });
+    await playAndReportFailure({
+      owner: TILE_OWNER,
+      steps: planPlayback([part]),
+    });
   }
 
   return {
