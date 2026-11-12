@@ -11,11 +11,6 @@ import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
 import type { rootIndexLoader } from "./loaders/root-index-loader";
 
-// FSI/PDI preserve host order in RTL translations, including digit-led hosts.
-function isolateBidi(text: string): string {
-  return `⁨${text}⁩`;
-}
-
 export function BoardLinkPage() {
   const { boardHost } = useLoaderData<typeof rootIndexLoader>();
   const submit = useSubmit();
@@ -64,4 +59,9 @@ export function BoardLinkPage() {
       </Dialog>
     </>
   );
+}
+
+// FSI/PDI preserve host order in RTL translations, including digit-led hosts.
+function isolateBidi(text: string): string {
+  return `⁨${text}⁩`;
 }

@@ -24,43 +24,6 @@ import {
 const BRIGHTNESS_STEP = 0.03;
 const SATURATION_STEP = 0.1;
 
-interface LabelPlacementOptionProps {
-  label: string;
-  placement: TileLabelPlacement;
-}
-
-function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
-  return (
-    <FormControlLabel
-      value={placement}
-      control={
-        <Radio
-          checkedIcon={
-            <LabelPlacementPreview placement={placement} isSelected />
-          }
-          icon={<LabelPlacementPreview placement={placement} />}
-          sx={(theme) => ({
-            p: 0.5,
-            borderRadius: theme.vars.shape.borderRadius,
-            [`&.${buttonBaseClasses.focusVisible}`]: {
-              ...theme.focusVisible,
-              // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
-              "& svg:first-of-type": {
-                borderRadius: 0,
-                outline: "none",
-                boxShadow: "none",
-              },
-            },
-          })}
-        />
-      }
-      label={label}
-      labelPlacement="bottom"
-      sx={{ flex: 1, gap: 0.25, m: 0, textAlign: "center" }}
-    />
-  );
-}
-
 export function TileSettings() {
   const t = useTranslate();
   const uiLocale = useUILocale();
@@ -109,5 +72,42 @@ export function TileSettings() {
         formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>
+  );
+}
+
+interface LabelPlacementOptionProps {
+  label: string;
+  placement: TileLabelPlacement;
+}
+
+function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
+  return (
+    <FormControlLabel
+      value={placement}
+      control={
+        <Radio
+          checkedIcon={
+            <LabelPlacementPreview placement={placement} isSelected />
+          }
+          icon={<LabelPlacementPreview placement={placement} />}
+          sx={(theme) => ({
+            p: 0.5,
+            borderRadius: theme.vars.shape.borderRadius,
+            [`&.${buttonBaseClasses.focusVisible}`]: {
+              ...theme.focusVisible,
+              // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
+              "& svg:first-of-type": {
+                borderRadius: 0,
+                outline: "none",
+                boxShadow: "none",
+              },
+            },
+          })}
+        />
+      }
+      label={label}
+      labelPlacement="bottom"
+      sx={{ flex: 1, gap: 0.25, m: 0, textAlign: "center" }}
+    />
   );
 }

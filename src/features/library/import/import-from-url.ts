@@ -36,12 +36,12 @@ export function parseBoardURL(url: string): URL {
   return resolved;
 }
 
-function deriveFileName(url: URL): string {
-  return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
-}
-
 export function deriveBoardSetIdFromURL(url: string): string {
   return deriveBoardSetId(deriveFileName(parseBoardURL(url)));
+}
+
+function deriveFileName(url: URL): string {
+  return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
 }
 
 export interface DownloadProgress {
@@ -70,30 +70,6 @@ export async function importBoardFileFromURL(
 
   // Once local importing starts, let its atomic write finish even if navigation changes.
   return importBoardFile(file);
-}
-
-function expectedDownloadBytes(headers: Headers): number | undefined {
-  const contentLength = headers.get("content-length");
-  if (contentLength === null || headers.has("content-encoding")) {
-    return undefined;
-  }
-
-  const total = Number(contentLength);
-
-  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
-}
-
-function assertSameHost(requestedURL: URL, response: Response): void {
-  const servedHost = new URL(response.url).host;
-  if (servedHost === requestedURL.host) {
-    return;
-  }
-
-  void response.body?.cancel();
-  throw new BoardURLError(
-    "cross-host-redirect",
-    `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
-  );
 }
 
 async function downloadBoardFile(
@@ -146,4 +122,28 @@ async function downloadBoardFile(
   return new Blob(chunks, {
     type: response.headers.get("content-type") ?? "",
   });
+}
+
+function assertSameHost(requestedURL: URL, response: Response): void {
+  const servedHost = new URL(response.url).host;
+  if (servedHost === requestedURL.host) {
+    return;
+  }
+
+  void response.body?.cancel();
+  throw new BoardURLError(
+    "cross-host-redirect",
+    `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
+  );
+}
+
+function expectedDownloadBytes(headers: Headers): number | undefined {
+  const contentLength = headers.get("content-length");
+  if (contentLength === null || headers.has("content-encoding")) {
+    return undefined;
+  }
+
+  const total = Number(contentLength);
+
+  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
 }

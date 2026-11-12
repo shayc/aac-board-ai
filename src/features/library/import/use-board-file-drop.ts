@@ -13,10 +13,6 @@ interface UseBoardFileDropReturn {
   rootProps: BoardFileDropHandlers;
 }
 
-function containsFiles(event: DragEvent<HTMLElement>): boolean {
-  return event.dataTransfer.types.includes("Files");
-}
-
 export function useBoardFileDrop(): UseBoardFileDropReturn {
   const { importAndOpen } = useImportBoardFiles();
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
@@ -76,4 +72,8 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
     isDraggingFiles,
     rootProps: { onDragEnter, onDragOver, onDragLeave, onDrop },
   };
+}
+
+function containsFiles(event: DragEvent<HTMLElement>): boolean {
+  return event.dataTransfer.types.includes("Files");
 }

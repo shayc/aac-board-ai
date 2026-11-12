@@ -16,10 +16,6 @@ export interface UseBoardNavigationReturn {
   goHome: () => void;
 }
 
-function readCanGoBack(state: unknown): boolean {
-  return isRecord(state) && state.canGoBack === true;
-}
-
 export function useBoardRoute(): UseBoardRouteReturn {
   const navigate = useNavigate();
   const match = useMatch(BOARD_ROUTE_PATTERN);
@@ -68,4 +64,8 @@ export function useBoardNavigation(
   }
 
   return { canGoBack, canGoHome, goToBoard, goBack, goHome };
+}
+
+function readCanGoBack(state: unknown): boolean {
+  return isRecord(state) && state.canGoBack === true;
 }

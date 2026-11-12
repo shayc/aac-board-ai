@@ -8,20 +8,6 @@ interface SpeakOptions {
   onBoundary?: (charIndex: number) => void;
 }
 
-function buildUtterance(
-  text: string,
-  { language, voice, rate, pitch, volume }: SpeechParameters,
-): SpeechSynthesisUtterance {
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = language;
-  utterance.voice = voice;
-  utterance.rate = rate;
-  utterance.pitch = pitch;
-  utterance.volume = volume;
-
-  return utterance;
-}
-
 export function speak(
   text: string,
   parameters: SpeechParameters,
@@ -73,4 +59,18 @@ export function speak(
   synthesis.speak(utterance);
 
   return promise;
+}
+
+function buildUtterance(
+  text: string,
+  { language, voice, rate, pitch, volume }: SpeechParameters,
+): SpeechSynthesisUtterance {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = language;
+  utterance.voice = voice;
+  utterance.rate = rate;
+  utterance.pitch = pitch;
+  utterance.volume = volume;
+
+  return utterance;
 }

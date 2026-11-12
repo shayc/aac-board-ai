@@ -5,22 +5,16 @@ import {
 } from "@shared/language/locale";
 import type { VoicesByLanguage } from "./speech-store";
 
-function findPreferredRegionCode(
+export function resolveVoice(
+  voicesByLanguage: VoicesByLanguage,
   language: string,
-  preferredLocales: readonly string[],
-): string | undefined {
-  for (const locale of preferredLocales) {
-    if (getLanguageCode(locale) !== language) {
-      continue;
-    }
+  savedVoiceURI: string | null,
+  preferredLocales: readonly string[] = navigator.languages,
+): SpeechSynthesisVoice | null {
+  const voices = voicesByLanguage[language] ?? [];
+  const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
 
-    const region = getRegionCode(locale);
-    if (region) {
-      return region;
-    }
-  }
-
-  return getLikelyRegionCode(language);
+  return savedVoice ?? findFallbackVoice(voices, language, preferredLocales);
 }
 
 function findFallbackVoice(
@@ -37,14 +31,20 @@ function findFallbackVoice(
   return candidates.find((voice) => voice.default) ?? candidates[0] ?? null;
 }
 
-export function resolveVoice(
-  voicesByLanguage: VoicesByLanguage,
+function findPreferredRegionCode(
   language: string,
-  savedVoiceURI: string | null,
-  preferredLocales: readonly string[] = navigator.languages,
-): SpeechSynthesisVoice | null {
-  const voices = voicesByLanguage[language] ?? [];
-  const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
+  preferredLocales: readonly string[],
+): string | undefined {
+  for (const locale of preferredLocales) {
+    if (getLanguageCode(locale) !== language) {
+      continue;
+    }
 
-  return savedVoice ?? findFallbackVoice(voices, language, preferredLocales);
+    const region = getRegionCode(locale);
+    if (region) {
+      return region;
+    }
+  }
+
+  return getLikelyRegionCode(language);
 }

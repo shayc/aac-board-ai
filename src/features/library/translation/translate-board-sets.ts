@@ -104,18 +104,6 @@ async function translateBoardSet(
   return true;
 }
 
-function pickBoardTranslations(
-  board: Board,
-  findTranslation: (board: Board, text: string) => string,
-): StringTranslations {
-  return new Map(
-    Array.from(collectBoardStrings(board), (text) => [
-      text,
-      findTranslation(board, text),
-    ]),
-  );
-}
-
 async function listBoards(boardSetId: string): Promise<Board[]> {
   const records = await listBoardRecords(boardSetId);
 
@@ -237,4 +225,16 @@ async function translateStrings(
   );
 
   return new Map(entries);
+}
+
+function pickBoardTranslations(
+  board: Board,
+  findTranslation: (board: Board, text: string) => string,
+): StringTranslations {
+  return new Map(
+    Array.from(collectBoardStrings(board), (text) => [
+      text,
+      findTranslation(board, text),
+    ]),
+  );
 }

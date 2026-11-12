@@ -50,12 +50,6 @@ export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
-// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
-// for this set's board IDs and asset paths.
-function boardSetRange(boardSetId: string): IDBKeyRange {
-  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
-}
-
 export async function removeBoardSet(boardSetId: string): Promise<void> {
   validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
@@ -68,6 +62,12 @@ export async function removeBoardSet(boardSetId: string): Promise<void> {
     tx.objectStore("boardSets").delete(boardSetId),
     tx.done,
   ]);
+}
+
+// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
+// for this set's board IDs and asset paths.
+function boardSetRange(boardSetId: string): IDBKeyRange {
+  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
 export interface BoardSetTranslations {

@@ -101,6 +101,16 @@ function seedTwoBoardSet() {
   ]);
 }
 
+function seedExistingLotsOfStuffSet() {
+  return seedBoardSets([
+    {
+      id: "lots-of-stuff",
+      rootBoardId: "root-1",
+      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
+    },
+  ]);
+}
+
 describe("app flow", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -653,13 +663,3 @@ describe("app flow", () => {
       .toHaveAttribute("href", "/");
   });
 });
-
-function seedExistingLotsOfStuffSet() {
-  return seedBoardSets([
-    {
-      id: "lots-of-stuff",
-      rootBoardId: "root-1",
-      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
-    },
-  ]);
-}

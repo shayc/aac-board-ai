@@ -1,11 +1,3 @@
-function parseLocale(locale: string): Intl.Locale | undefined {
-  try {
-    return new Intl.Locale(locale.replaceAll("_", "-"));
-  } catch {
-    return undefined;
-  }
-}
-
 /** Accepts `_` separators, strips extensions, and preserves invalid input. */
 export function normalizeLocale(locale: string): string {
   return parseLocale(locale)?.baseName ?? locale;
@@ -35,5 +27,13 @@ export function getNativeLanguageName(locale: string): string {
     );
   } catch {
     return language;
+  }
+}
+
+function parseLocale(locale: string): Intl.Locale | undefined {
+  try {
+    return new Intl.Locale(locale.replaceAll("_", "-"));
+  } catch {
+    return undefined;
   }
 }
