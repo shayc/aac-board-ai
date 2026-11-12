@@ -7,7 +7,7 @@ import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import {
-  SCAN_INTERVAL_MS_RANGE,
+  SCAN_INTERVAL_MS,
   setScanIntervalMs,
   setScanMethod,
   setScanningEnabled,
@@ -63,8 +63,8 @@ export function ScanningSettings() {
           label={t(m.scanningInterval)}
           value={intervalMs}
           onChange={setScanIntervalMs}
-          min={SCAN_INTERVAL_MS_RANGE.min}
-          max={SCAN_INTERVAL_MS_RANGE.max}
+          min={SCAN_INTERVAL_MS.min}
+          max={SCAN_INTERVAL_MS.max}
           step={100}
           formatValue={(value) => secondsFormat.format(value / MS_PER_SECOND)}
         />

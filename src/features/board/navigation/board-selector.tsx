@@ -21,9 +21,9 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
   const { boardId, goToBoard } = useBoardRoute();
   const options = toBoardOptions(boards, language);
 
-  const selectedBoard = options.find((option) => option.id === boardId);
+  const selectedOption = options.find((option) => option.id === boardId);
 
-  if (!selectedBoard) {
+  if (!selectedOption) {
     return null;
   }
 
@@ -33,16 +33,16 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
       closeText={t(m.boardSelectorClose)}
       noOptionsText={t(m.boardSelectorNoOptions)}
       options={options}
-      value={selectedBoard}
-      onChange={(_event, board) => goToBoard(board.id)}
+      value={selectedOption}
+      onChange={(_event, option) => goToBoard(option.id)}
       disableClearable
       autoHighlight
       size="small"
       slotProps={{
         popupIndicator: { sx: { border: "none" } },
       }}
-      getOptionLabel={(board) => board.name}
-      getOptionKey={(board) => board.id}
+      getOptionLabel={(option) => option.name}
+      getOptionKey={(option) => option.id}
       isOptionEqualToValue={(option, selected) => option.id === selected.id}
       renderInput={(params) => (
         <TextField

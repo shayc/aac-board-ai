@@ -9,7 +9,7 @@ import {
   setSpeechRate,
   setSpeechVoiceURI,
   setSpeechVolume,
-  SPEECH_RATE_RANGE,
+  SPEECH_RATE,
 } from "./speech-store";
 
 describe("parseSpeechPreferences", () => {
@@ -119,6 +119,6 @@ describe("getSpeechParameters", () => {
     localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
     reloadPersistedStores();
 
-    expect(getSpeechParameters().rate).toBe(SPEECH_RATE_RANGE.max);
+    expect(getSpeechParameters().rate).toBe(SPEECH_RATE.max);
   });
 });

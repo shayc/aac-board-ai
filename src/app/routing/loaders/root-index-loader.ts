@@ -2,7 +2,7 @@ import {
   rootBoardPath,
   listBoardSetRecords,
   importBoardFileFromURL,
-  parseBoardFileURL,
+  parseBoardURL,
   starterBoardSet,
 } from "@features/library";
 import { redirect, type LoaderFunctionArgs } from "react-router";
@@ -10,7 +10,7 @@ import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 function boardLinkHost(boardURL: string): string {
   try {
-    return parseBoardFileURL(boardURL).host;
+    return parseBoardURL(boardURL).host;
   } catch {
     throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
   }

@@ -13,8 +13,8 @@ import {
   setTileBrightness,
   setTileLabelPlacement,
   setTileSaturation,
-  TILE_BRIGHTNESS_RANGE,
-  TILE_SATURATION_RANGE,
+  TILE_BRIGHTNESS,
+  TILE_SATURATION,
   useTilePreferences,
   type TileLabelPlacement,
 } from "./tile-preferences-store";
@@ -91,8 +91,8 @@ export function TileSettings() {
         label={t(m.tileBrightness)}
         value={brightness}
         onChange={setTileBrightness}
-        min={TILE_BRIGHTNESS_RANGE.min}
-        max={TILE_BRIGHTNESS_RANGE.max}
+        min={TILE_BRIGHTNESS.min}
+        max={TILE_BRIGHTNESS.max}
         step={BRIGHTNESS_STEP}
         isValueHidden
         formatValue={(value) => percentFormat.format(value)}
@@ -102,8 +102,8 @@ export function TileSettings() {
         label={t(m.tileSaturation)}
         value={saturation}
         onChange={setTileSaturation}
-        min={TILE_SATURATION_RANGE.min}
-        max={TILE_SATURATION_RANGE.max}
+        min={TILE_SATURATION.min}
+        max={TILE_SATURATION.max}
         step={SATURATION_STEP}
         isValueHidden
         formatValue={(value) => percentFormat.format(value)}

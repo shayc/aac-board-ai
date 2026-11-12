@@ -4,7 +4,7 @@ import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import {
   parseClampedNumber,
-  type NumberRange,
+  type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
 import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
 
@@ -23,14 +23,14 @@ interface TilePreferences {
   labelPlacement: TileLabelPlacement;
 }
 
-export const TILE_SATURATION_RANGE: NumberRange = {
+export const TILE_SATURATION: ClampedNumberOptions = {
   min: 0,
   max: 1,
   defaultValue: 1,
 };
 
 // 70% is the lowest level at which symbols and labels were visually checked.
-export const TILE_BRIGHTNESS_RANGE: NumberRange = {
+export const TILE_BRIGHTNESS: ClampedNumberOptions = {
   min: 0.7,
   max: 1,
   defaultValue: 1,
@@ -44,8 +44,8 @@ export function parseTilePreferences(raw: unknown): TilePreferences {
   const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
 
   return {
-    saturation: parseClampedNumber(stored.saturation, TILE_SATURATION_RANGE),
-    brightness: parseClampedNumber(stored.brightness, TILE_BRIGHTNESS_RANGE),
+    saturation: parseClampedNumber(stored.saturation, TILE_SATURATION),
+    brightness: parseClampedNumber(stored.brightness, TILE_BRIGHTNESS),
     areBordersVisible: parseBoolean(stored.areBordersVisible, false),
     labelPlacement: isTileLabelPlacement(stored.labelPlacement)
       ? stored.labelPlacement
