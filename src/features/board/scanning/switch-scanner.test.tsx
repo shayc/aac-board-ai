@@ -513,7 +513,9 @@ describe("switch scanning", () => {
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
       const yes = screen.getByRole("button", { name: "yes" }).element();
 
-      await userEvent.keyboard("{Tab}");
+      // The first stop is the play button, which stays focusable while it is
+      // disabled.
+      await userEvent.keyboard("{Tab}{Tab}");
       await expect
         .element(screen.getByRole("button", { name: "yes" }))
         .toHaveFocus();

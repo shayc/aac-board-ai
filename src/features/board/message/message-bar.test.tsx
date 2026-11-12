@@ -260,5 +260,31 @@ describe("MessageBar", () => {
 
       expect(onStop).toHaveBeenCalledTimes(1);
     });
+
+    test("keeps focus on play and ignores it once the message empties", async () => {
+      const onPlay = vi.fn();
+      const props = createProps({
+        parts: [{ id: "a", label: "Hello" }],
+        onPlay,
+      });
+
+      const screen = await renderWithProviders(<MessageBar {...props} />);
+      const play = screen.getByRole("button", { name: "Play message" });
+      play.element().focus();
+      await expect.element(play).toHaveFocus();
+
+      await screen.rerender(
+        <AppProviders>
+          <MessageBar {...props} parts={[]} />
+        </AppProviders>,
+      );
+
+      await expect.element(play).toHaveAttribute("aria-disabled", "true");
+      await expect.element(play).toHaveFocus();
+
+      await userEvent.keyboard("{Enter}");
+
+      expect(onPlay).not.toHaveBeenCalled();
+    });
   });
 });
