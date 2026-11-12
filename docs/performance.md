@@ -145,8 +145,9 @@ npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
 - Repeat the journey's taps from [perf/journeys.spec.ts](../perf/journeys.spec.ts).
 
 Two differences remain. The server drives Chrome rather than the lab's
-Chromium, so built-in AI may be available and suggestions may run. And speech
-is real, where the lab stubs it, so a word tap includes the call that starts
+Chromium, and Chrome supports built-in AI, so the app checks whether it is
+available; suggestions stay off until someone enables them. And speech is
+real, where the lab stubs it, so a word tap includes the call that starts
 speaking. Read those parts of a trace as extra work the lab does not time.
 
 The server starts Chrome with a fresh profile each time (`--isolated`), so
