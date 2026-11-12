@@ -30,44 +30,22 @@ export function DownloadableBoardSetListItem({
   url,
 }: DownloadableBoardSetListItemProps) {
   const t = useTranslate();
-  const endSide = useEndSide();
   const uiLocale = useUILocale();
   const statusId = useId();
   const { phase, download, cancel } = useBoardSetDownload({ name, url });
 
-  const isCancellable = phase !== undefined && phase.kind !== "importing";
   const status = phase && describeDownloadPhase(phase, t, uiLocale);
-
-  function handleClick() {
-    if (isCancellable) {
-      cancel();
-
-      return;
-    }
-
-    void download();
-  }
 
   return (
     <ListItem
       secondaryAction={
-        <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
-          <IconButton
-            aria-label={t(
-              isCancellable
-                ? m.libraryCancelDownloadBoardSet
-                : m.libraryDownloadBoardSet,
-              { name },
-            )}
-            aria-describedby={status ? statusId : undefined}
-            aria-disabled={phase?.kind === "importing"}
-            edge="end"
-            onClick={handleClick}
-            sx={{ border: "none" }}
-          >
-            <DownloadButtonIcon phase={phase} />
-          </IconButton>
-        </Tooltip>
+        <DownloadButton
+          statusId={status ? statusId : undefined}
+          name={name}
+          phase={phase}
+          onDownload={() => void download()}
+          onCancel={cancel}
+        />
       }
     >
       <ListItemText
@@ -83,6 +61,47 @@ export function DownloadableBoardSetListItem({
         </span>
       )}
     </ListItem>
+  );
+}
+
+interface DownloadButtonProps {
+  statusId: string | undefined;
+  name: string;
+  phase: BoardSetDownloadPhase | undefined;
+  onDownload: () => void;
+  onCancel: () => void;
+}
+
+function DownloadButton({
+  statusId,
+  name,
+  phase,
+  onDownload,
+  onCancel,
+}: DownloadButtonProps) {
+  const t = useTranslate();
+  const endSide = useEndSide();
+
+  const isImporting = phase?.kind === "importing";
+  const isCancellable = phase !== undefined && !isImporting;
+  const label = isCancellable
+    ? t(m.libraryCancelDownloadBoardSet, { name })
+    : t(m.libraryDownloadBoardSet, { name });
+  const handleClick = isCancellable ? onCancel : onDownload;
+
+  return (
+    <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
+      <IconButton
+        aria-label={label}
+        aria-describedby={statusId}
+        aria-disabled={isImporting}
+        edge="end"
+        onClick={handleClick}
+        sx={{ border: "none" }}
+      >
+        <DownloadButtonIcon phase={phase} />
+      </IconButton>
+    </Tooltip>
   );
 }
 

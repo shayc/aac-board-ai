@@ -1,6 +1,6 @@
 import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
@@ -44,7 +44,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   function showSnackbar(options: SnackbarOptions | string) {
     const snackbarOptions: SnackbarOptions =
@@ -82,6 +81,8 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     typeof state.current?.message === "function"
       ? state.current.message(t)
       : state.current?.message;
+  const autoHideDurationMs =
+    state.current?.durationMs ?? defaultDurationMs(severity);
 
   return (
     <SnackbarContext value={contextValue}>
@@ -91,20 +92,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={
-          state.current?.durationMs ?? defaultDurationMs(severity)
-        }
+        autoHideDuration={autoHideDurationMs}
         // Keep persistent errors clear of the board's bottom controls.
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
-        sx={(theme) =>
-          isSmallScreen
-            ? {
-                right: safeAreaGutter(theme.spacing(1), "right"),
-                left: safeAreaGutter(theme.spacing(1), "left"),
-              }
-            : {}
-        }
+        sx={snackbarSx}
       >
         <Alert
           role={isUrgent(severity) ? "alert" : "status"}
@@ -112,18 +104,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           action={state.current?.action}
           severity={severity}
           onClose={handleClose}
-          sx={(theme) => ({
-            width: "100%",
-            color: theme.vars.palette.SnackbarContent.color,
-            backgroundColor: theme.vars.palette.SnackbarContent.bg,
-            boxShadow: theme.vars.shadows[6],
-            [`& .${alertClasses.icon}`]: {
-              color: theme.colorSchemes.dark?.palette[severity].main,
-              ...theme.applyStyles("dark", {
-                color: theme.colorSchemes.light?.palette[severity].main,
-              }),
-            },
-          })}
+          sx={(theme) => createAlertSx(theme, severity)}
         >
           {message}
         </Alert>
@@ -138,6 +119,32 @@ function isUrgent(severity: SnackbarSeverity) {
 
 function defaultDurationMs(severity: SnackbarSeverity): number | null {
   return isUrgent(severity) ? null : DEFAULT_SNACKBAR_DURATION_MS;
+}
+
+function snackbarSx(theme: Theme) {
+  return {
+    [theme.breakpoints.down("sm")]: {
+      right: safeAreaGutter(theme.spacing(1), "right"),
+      left: safeAreaGutter(theme.spacing(1), "left"),
+    },
+  };
+}
+
+function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
+  return {
+    width: "100%",
+    color: theme.vars.palette.SnackbarContent.color,
+    backgroundColor: theme.vars.palette.SnackbarContent.bg,
+    boxShadow: theme.vars.shadows[6],
+    // The snackbar surface inverts the color scheme, so its icon takes the
+    // other scheme's severity color to keep contrast.
+    [`& .${alertClasses.icon}`]: {
+      color: theme.colorSchemes.dark?.palette[severity].main,
+      ...theme.applyStyles("dark", {
+        color: theme.colorSchemes.light?.palette[severity].main,
+      }),
+    },
+  };
 }
 
 function snackbarReducer(
