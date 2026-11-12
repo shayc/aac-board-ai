@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "누른 상태를 유지하면 메시지가 지워집니다.",
   "messagePlay": "메시지 재생",
   "messageStop": "메시지 중지",
+  "playbackFailed": "소리를 재생할 수 없습니다",
   "messageLabel": "메시지",
   "onboardingContinue": "계속",
   "onboardingTitle": "AAC Board AI에 오신 것을 환영합니다",

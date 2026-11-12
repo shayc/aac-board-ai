@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "押したままにするとメッセージを消去できます。",
   "messagePlay": "メッセージを再生",
   "messageStop": "メッセージを停止",
+  "playbackFailed": "音声を再生できませんでした",
   "messageLabel": "メッセージ",
   "onboardingContinue": "続ける",
   "onboardingTitle": "AAC Board AI へようこそ",

@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ.",
   "messagePlay": "ಸಂದೇಶವನ್ನು ಪ್ಲೇ ಮಾಡಿ",
   "messageStop": "ಸಂದೇಶವನ್ನು ನಿಲ್ಲಿಸಿ",
+  "playbackFailed": "ಧ್ವನಿಯನ್ನು ಪ್ಲೇ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "messageLabel": "ಸಂದೇಶ",
   "onboardingContinue": "ಮುಂದುವರಿಸಿ",
   "onboardingTitle": "AAC Board AI ಗೆ ಸ್ವಾಗತ",

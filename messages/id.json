@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Tekan dan tahan untuk menghapus pesan.",
   "messagePlay": "Putar pesan",
   "messageStop": "Hentikan pesan",
+  "playbackFailed": "Tidak dapat memutar suara",
   "messageLabel": "Pesan",
   "onboardingContinue": "Lanjutkan",
   "onboardingTitle": "Selamat datang di AAC Board AI",

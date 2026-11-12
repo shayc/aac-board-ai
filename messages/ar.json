@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "اضغط مع الاستمرار لمسح الرسالة.",
   "messagePlay": "تشغيل الرسالة",
   "messageStop": "إيقاف الرسالة",
+  "playbackFailed": "تعذر تشغيل الصوت",
   "messageLabel": "الرسالة",
   "onboardingContinue": "متابعة",
   "onboardingTitle": "مرحبًا بك في AAC Board AI",

@@ -1,7 +1,11 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
-import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
+import {
+  failSpeech,
+  preventSpeechEnd,
+  stubSpeech,
+} from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -352,6 +356,25 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByText("hi", { exact: true }))
         .toBeVisible();
+      await expect
+        .element(screen.getByRole("alert"))
+        .toHaveTextContent("Couldn't play sound");
+      expect(screen.getByRole("alert").elements()).toHaveLength(1);
+    });
+
+    test("tells the user when a tile fails to speak", async () => {
+      failSpeech(speech.speak);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect
+        .element(screen.getByRole("alert"))
+        .toHaveTextContent("Couldn't play sound");
+      expect(screen.getByRole("alert").elements()).toHaveLength(1);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
     });
 
     test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {

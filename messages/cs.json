@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Stisknutím a podržením zprávu vymažete.",
   "messagePlay": "Přehrát zprávu",
   "messageStop": "Zastavit zprávu",
+  "playbackFailed": "Zvuk se nepodařilo přehrát",
   "messageLabel": "Zpráva",
   "onboardingContinue": "Pokračovat",
   "onboardingTitle": "Vítejte v AAC Board AI",

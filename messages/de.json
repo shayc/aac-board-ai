@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Gedrückt halten, um die Nachricht zu löschen.",
   "messagePlay": "Nachricht abspielen",
   "messageStop": "Nachricht stoppen",
+  "playbackFailed": "Ton konnte nicht abgespielt werden",
   "messageLabel": "Nachricht",
   "onboardingContinue": "Weiter",
   "onboardingTitle": "Willkommen bei AAC Board AI",

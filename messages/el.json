@@ -124,6 +124,7 @@
   "messageBackspaceLongPressHint": "Πατήστε και κρατήστε πατημένο για εκκαθάριση του μηνύματος.",
   "messagePlay": "Αναπαραγωγή μηνύματος",
   "messageStop": "Διακοπή μηνύματος",
+  "playbackFailed": "Δεν ήταν δυνατή η αναπαραγωγή ήχου",
   "messageLabel": "Μήνυμα",
   "onboardingContinue": "Συνέχεια",
   "onboardingTitle": "Καλώς ήρθατε στο AAC Board AI",
