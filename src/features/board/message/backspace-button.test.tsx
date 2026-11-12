@@ -1,14 +1,8 @@
-import { AppProviders } from "@shared/providers/app-providers";
-import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
-import { render } from "vitest-browser-react";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
-
-function renderWithProviders(children: ReactNode) {
-  return render(<AppProviders>{children}</AppProviders>);
-}
 
 function createHandlers() {
   return {

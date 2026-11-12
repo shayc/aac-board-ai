@@ -2,9 +2,9 @@ import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { setTestViewport } from "@shared/testing/viewport";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { page } from "vitest/browser";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
@@ -115,24 +115,17 @@ describe("SnackbarProvider", () => {
   test.each([375, 1024])(
     "keeps a persistent error at the top, clear of controls along the bottom, at a viewport width of %i",
     async (width) => {
-      const originalWidth = window.innerWidth;
-      const originalHeight = window.innerHeight;
+      await setTestViewport(width, 667);
+      const screen = await renderSnackbars({
+        "show-error": { message: "failed", severity: "error" },
+      });
 
-      try {
-        await page.viewport(width, 667);
-        const screen = await renderSnackbars({
-          "show-error": { message: "failed", severity: "error" },
-        });
+      await screen.getByRole("button", { name: "show-error" }).click();
+      const alert = screen.getByRole("alert");
+      await expect.element(alert).toBeVisible();
 
-        await screen.getByRole("button", { name: "show-error" }).click();
-        const alert = screen.getByRole("alert");
-        await expect.element(alert).toBeVisible();
-
-        const bounds = alert.element().getBoundingClientRect();
-        expect(bounds.bottom).toBeLessThan(window.innerHeight / 2);
-      } finally {
-        await page.viewport(originalWidth, originalHeight);
-      }
+      const bounds = alert.element().getBoundingClientRect();
+      expect(bounds.bottom).toBeLessThan(window.innerHeight / 2);
     },
   );
 

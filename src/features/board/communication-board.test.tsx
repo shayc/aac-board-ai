@@ -7,9 +7,10 @@ import {
   stubSpeech,
 } from "@shared/testing/stub-speech";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
+import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { userEvent } from "vitest/browser";
 import {
   setTileBrightness,
   setTileLabelPlacement,
@@ -224,31 +225,25 @@ describe("CommunicationBoard", () => {
         overflowHint,
         wholeRows,
       }) => {
-        const originalWidth = window.innerWidth;
-        const originalHeight = window.innerHeight;
-        try {
-          await page.viewport(width, height);
-          const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
-          await expect.element(screen.getByRole("grid")).toBeVisible();
+        await setTestViewport(width, height);
+        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+        await expect.element(screen.getByRole("grid")).toBeVisible();
 
-          const atStart = measureBoardLayout(screen.container);
-          expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
-          expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
-          expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
-          expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
-          expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
-          expect(atStart.wholeRows).toBe(wholeRows);
-          expect(atStart.bottomHint).toBeCloseTo(overflowHint, 0);
-          expect(atStart.sideHint).toBeCloseTo(overflowHint, 0);
+        const atStart = measureBoardLayout(screen.container);
+        expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
+        expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
+        expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
+        expect(atStart.wholeRows).toBe(wholeRows);
+        expect(atStart.bottomHint).toBeCloseTo(overflowHint, 0);
+        expect(atStart.sideHint).toBeCloseTo(overflowHint, 0);
 
-          const atEnd = measureBoardLayout(screen.container, {
-            isScrolledToEnd: true,
-          });
-          expect(atEnd.lastRowToEdgeBelow).toBeCloseTo(pageMargin, 0);
-          expect(atEnd.topHint).toBeCloseTo(overflowHint, 0);
-        } finally {
-          await page.viewport(originalWidth, originalHeight);
-        }
+        const atEnd = measureBoardLayout(screen.container, {
+          isScrolledToEnd: true,
+        });
+        expect(atEnd.lastRowToEdgeBelow).toBeCloseTo(pageMargin, 0);
+        expect(atEnd.topHint).toBeCloseTo(overflowHint, 0);
       },
     );
   });
@@ -445,47 +440,41 @@ describe("CommunicationBoard", () => {
     test.each([390, 1024])(
       "edits the message with Backspace alongside board navigation at a viewport width of %i",
       async (width) => {
-        const originalWidth = window.innerWidth;
-        const originalHeight = window.innerHeight;
-        try {
-          await page.viewport(width, 800);
-          const screen = await renderCommunicationBoard(
-            SYMBOL_BOARD,
-            [`/sets/set-1/boards/${SYMBOL_BOARD.id}`],
-            SYMBOL_BOARD.id,
-          );
-          const backspace = screen.getByRole("button", { name: "Backspace" });
-          const play = screen.getByRole("button", { name: "Play message" });
+        await setTestViewport(width, 800);
+        const screen = await renderCommunicationBoard(
+          SYMBOL_BOARD,
+          [`/sets/set-1/boards/${SYMBOL_BOARD.id}`],
+          SYMBOL_BOARD.id,
+        );
+        const backspace = screen.getByRole("button", { name: "Backspace" });
+        const play = screen.getByRole("button", { name: "Play message" });
 
-          await expect
-            .element(backspace)
-            .toHaveAttribute("aria-disabled", "true");
-          await expect
-            .element(screen.getByRole("button", { name: "Go back" }))
-            .toBeVisible();
-          await expect
-            .element(screen.getByRole("button", { name: "Go home" }))
-            .toBeVisible();
+        await expect
+          .element(backspace)
+          .toHaveAttribute("aria-disabled", "true");
+        await expect
+          .element(screen.getByRole("button", { name: "Go back" }))
+          .toBeVisible();
+        await expect
+          .element(screen.getByRole("button", { name: "Go home" }))
+          .toBeVisible();
 
-          await screen.getByRole("button", { name: "hello" }).click();
-          await screen.getByRole("button", { name: "world" }).click();
-          await backspace.click();
-          speech.speak.mockClear();
-          await play.click();
+        await screen.getByRole("button", { name: "hello" }).click();
+        await screen.getByRole("button", { name: "world" }).click();
+        await backspace.click();
+        speech.speak.mockClear();
+        await play.click();
 
-          await vi.waitFor(() => {
-            expect(speech.spokenTexts()).toEqual(["hello"]);
-          });
+        await vi.waitFor(() => {
+          expect(speech.spokenTexts()).toEqual(["hello"]);
+        });
 
-          await backspace.click();
+        await backspace.click();
 
-          await expect
-            .element(backspace)
-            .toHaveAttribute("aria-disabled", "true");
-          await expect.element(play).toBeDisabled();
-        } finally {
-          await page.viewport(originalWidth, originalHeight);
-        }
+        await expect
+          .element(backspace)
+          .toHaveAttribute("aria-disabled", "true");
+        await expect.element(play).toBeDisabled();
       },
     );
 

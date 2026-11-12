@@ -1,22 +1,17 @@
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { BoardSetList } from "./board-set-list";
 import { makeBoardSetRecord } from "../testing";
 
-function renderWithProviders(children: ReactNode) {
-  return render(
-    <MemoryRouter>
-      <AppProviders>{children}</AppProviders>
-    </MemoryRouter>,
-  );
+function renderInRouter(children: ReactNode) {
+  return renderWithProviders(<MemoryRouter>{children}</MemoryRouter>);
 }
 
 describe("BoardSetList", () => {
   test("renders board links and identifies the active set", async () => {
-    const screen = await renderWithProviders(
+    const screen = await renderInRouter(
       <BoardSetList
         boardSets={[
           makeBoardSetRecord({
@@ -54,7 +49,7 @@ describe("BoardSetList", () => {
     ];
     const onShowInfo = vi.fn();
     const onRequestDelete = vi.fn();
-    const screen = await renderWithProviders(
+    const screen = await renderInRouter(
       <>
         {boardSets.map((boardSet) => (
           <BoardSetList
@@ -111,7 +106,7 @@ describe("BoardSetList", () => {
   test("routes the menu's Delete to onRequestDelete", async () => {
     const onShowInfo = vi.fn();
     const onRequestDelete = vi.fn();
-    const screen = await renderWithProviders(
+    const screen = await renderInRouter(
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         downloadableBoardSets={[]}
@@ -135,7 +130,7 @@ describe("BoardSetList", () => {
 
   test("routes the menu's Export to onExport", async () => {
     const onExport = vi.fn();
-    const screen = await renderWithProviders(
+    const screen = await renderInRouter(
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         downloadableBoardSets={[]}
