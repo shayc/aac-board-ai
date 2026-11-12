@@ -44,7 +44,6 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
       }
 
       event.preventDefault();
-      setRememberedPosition(next.position);
       next.element.focus();
     },
   });
