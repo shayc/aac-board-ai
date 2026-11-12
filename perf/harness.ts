@@ -10,12 +10,21 @@ import path from "node:path";
 import { installPagePerf } from "./page-perf.ts";
 import { RAW_RESULTS_DIR } from "./paths.ts";
 import type { BuildName, JourneyResult, TimingSamples } from "./results.ts";
-import { ACTION_TIMEOUT_MS, BASE_BUILD_URL, ROUND_COUNT } from "./settings.ts";
+import {
+  ACTION_TIMEOUT_MS,
+  BASE_BUILD_URL,
+  BUILD_NAMES,
+  CPU_SLOWDOWN,
+  ROUND_COUNT,
+} from "./settings.ts";
 import { median } from "./stats.ts";
 
-const CPU_SLOWDOWN = 4;
 const TAP_RESULT = "tap-result";
-const BUILD_NAMES: BuildName[] = ["base", "current"];
+
+interface MeasuredSample {
+  build: BuildName;
+  sample: JourneySample;
+}
 
 export interface TimeSpan {
   start: number;
@@ -32,7 +41,11 @@ export class PageProbe {
   }
 
   /** Measures pointerdown to the first painted frame containing `result`. */
-  async tap(target: Locator, result: string): Promise<TimeSpan> {
+  async tap(
+    target: Locator,
+    result: string,
+    timeoutMs = ACTION_TIMEOUT_MS,
+  ): Promise<TimeSpan> {
     await this.page.evaluate(
       ([name, selector]) => {
         window.__perf.watch(name, selector);
@@ -43,14 +56,14 @@ export class PageProbe {
 
     return {
       start: await this.page.evaluate(() => window.__perf.lastPointerDown),
-      end: await this.visibleAt(TAP_RESULT),
+      end: await this.visibleAt(TAP_RESULT, timeoutMs),
     };
   }
 
-  visibleAt(name: string): Promise<number> {
+  visibleAt(name: string, timeoutMs = ACTION_TIMEOUT_MS): Promise<number> {
     return this.page.evaluate(
       ([watchName, timeout]) => window.__perf.visibleAt(watchName, timeout),
-      [name, ACTION_TIMEOUT_MS] as const,
+      [name, timeoutMs] as const,
     );
   }
 
@@ -94,8 +107,9 @@ export class JourneySample {
 }
 
 /**
- * Pair builds within each round to reduce bias from machine drift.
- * Discard one warm-up sample per build.
+ * Measures every build once per round, after one discarded warm-up sample
+ * each. A comparison pairs its two builds within a round to reduce bias from
+ * machine drift.
  */
 export async function measureJourney(
   browser: Browser,
@@ -106,10 +120,13 @@ export async function measureJourney(
     await runSample(browser, build, runJourney);
   }
 
-  const samples: Record<BuildName, JourneySample[]> = { base: [], current: [] };
+  const samples: MeasuredSample[] = [];
   for (let round = 0; round < ROUND_COUNT; round += 1) {
     for (const build of buildOrder(round)) {
-      samples[build].push(await runSample(browser, build, runJourney));
+      samples.push({
+        build,
+        sample: await runSample(browser, build, runJourney),
+      });
     }
   }
 
@@ -142,16 +159,14 @@ async function runSample(
 async function writeJourneyResult(
   browser: Browser,
   journey: string,
-  samples: Record<BuildName, JourneySample[]>,
+  samples: MeasuredSample[],
 ): Promise<void> {
   // Per-sample medians give samples equal weight regardless of tap count.
   const timings: Record<string, TimingSamples> = {};
-  for (const build of BUILD_NAMES) {
-    for (const sample of samples[build]) {
-      for (const [name, values] of sample.timings) {
-        timings[name] ??= { base: [], current: [] };
-        timings[name][build].push(median(values));
-      }
+  for (const { build, sample } of samples) {
+    for (const [name, values] of sample.timings) {
+      const timing = (timings[name] ??= {});
+      (timing[build] ??= []).push(median(values));
     }
   }
 

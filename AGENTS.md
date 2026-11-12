@@ -17,7 +17,8 @@
 - Test: `npm test`
 - Test with coverage: `npm run test:coverage`
 - PWA offline test: `npm run test:pwa`
-- Local performance lab: `npm run perf` (see [docs/performance.md](docs/performance.md))
+- Performance x-ray: `npm run perf` — a budget scorecard in about a minute; run it after changing startup, the grid, tiles, the message bar or imports, and read `perf-results/xray.json` for the rows (see [docs/performance.md](docs/performance.md))
+- Performance comparison with a git ref: `npm run perf -- --base main`
 - Performance lab unit tests (Node's test runner, no browser): `npm run test:perf`
 - Test one file: `npm test -- <file-or-pattern>`
 - Lint specific files: `npm run lint -- <files>`

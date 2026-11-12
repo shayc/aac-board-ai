@@ -1,32 +1,83 @@
 # Performance lab
 
-A local harness that runs user journeys against two production builds, the
-working tree and a git ref, and prints how their timings differ. It runs on
-your machine only: no telemetry, uploads, accounts or hosted dashboards.
+A local harness that runs user journeys against production builds. It answers
+two questions: is the app healthy right now (the x-ray), and did a change make
+it slower than a git ref (a comparison). It runs on your machine only: no
+telemetry, uploads, accounts or hosted dashboards.
 
-## Run it
+## Take an x-ray
 
 ```bash
 npm run perf
 ```
 
-Builds the working tree and `main`, runs every journey on both, prints a table
-and writes every sample to `perf-results/results.json`. Keep the machine awake
-and otherwise idle while it runs.
+Builds the working tree, runs every journey 5 times and prints one row per
+budget in about a minute. Keep the machine awake and otherwise idle while it
+runs.
 
-```bash
-npm run perf -- --base HEAD~3
+```text
+Perf x-ray: 1 over, 1 watch, 6 ok
+
+  over   JS shipped (gzip)         431 kB  budget 420 kB
+  watch  open linked board         588 ms  budget 600 ms  (2 of 5 samples over)
+  ok     word tap                 30.8 ms  budget 100 ms
+  ok     back                      154 ms  budget 300 ms
+  …
 ```
 
-Compares with another commit, branch or tag instead of `main`.
+The first line is the verdict. Each row shows the median of its samples next
+to its budget, problems first, then in the order of how often a user meets
+each one:
+
+- `ok`: the samples are within budget, give or take one stray in five.
+- `over`: the samples are beyond budget, give or take one stray in five.
+- `watch`: the samples fell on both sides. Either the timing sits at its
+  budget or the machine was busy, so rerun on an idle machine before reading
+  anything into it.
+
+An x-ray reports; it does not gate. Rows that are over leave the exit code at
+0, and only a broken journey fails the run. The rows, their samples and the
+verdict are also written to `perf-results/xray.json`, which is the place to
+read them from a script or an agent.
+
+Run it after changing startup, the grid, tiles, the message bar or imports.
+When a row moves and you want to know whether your change did it, run a
+comparison.
+
+### Budgets
+
+The budgets live in [perf/budgets.ts](../perf/budgets.ts), one line each. A
+word tap is budgeted at the 100 ms a tap can take and still feel instant. The
+others are round numbers about half again above what the lab measured when
+they were set, because a busy machine alone slows a run by a quarter and a row
+should only go over when something is clearly wrong. Timings are tied to the
+machine that set them; on other hardware, re-measure before trusting a row.
+`JS shipped` is every script in the build, gzipped, and is the same on any
+machine.
+
+Every timing a journey records needs a budget, and every budget needs a
+measurement: the run fails if either is missing. The timing limits hold for
+the CPU slowdown in [perf/settings.ts](../perf/settings.ts); changing it
+shifts every timing, so re-measure them in the same change.
+
+## Compare with a git ref
 
 ```bash
-npm run perf -- --rounds 2
+npm run perf -- --base main
 ```
 
-Runs 2 rounds instead of 10, for a quick check that the journeys still work.
-That is too few to flag a change, and the output says so. The number has to be
-even, so each build goes first in half the rounds.
+Builds the working tree and `main`, runs every journey on both for 10 rounds,
+prints how their timings differ and writes every sample to
+`perf-results/results.json`. Any commit, branch or tag works as the base.
+
+```bash
+npm run perf -- --base main --rounds 2
+```
+
+Runs 2 rounds for a quick check that the journeys still work on both builds.
+That is too few to flag a change, and the output says so. A comparison needs an
+even number, so each build goes first in half the rounds. `--rounds` also sets
+the number of samples an x-ray takes.
 
 The base ref is checked out into a temporary git worktree, gets its own
 `npm ci`, and is built there. That takes a few minutes the first time; the
@@ -35,12 +86,20 @@ another commit. Delete `perf-results/base/` to rebuild it anyway, for instance
 after changing Node versions. Everything under `perf-results/` is generated and
 gitignored.
 
+The builds and the journeys print nothing unless they fail, so the report is
+the whole output. To watch a slow step, such as the first build of a base ref,
+add `--verbose`:
+
+```bash
+npm run perf -- --base main --verbose
+```
+
 ## Journeys
 
-| Journey           | What happens                                                                                             | Timings                                                                        |
-| ----------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `startup`         | Empty storage → onboarding → tap Continue → First Words grid. Then a new page once the app is installed. | `firstLaunch.toOnboarding`, `firstLaunch.continueToGrid`, `returnVisit.toGrid` |
-| `tileInteraction` | On Quick Core 60: tap I, want, to, open the linked “eat” board, tap drink, go back.                      | `wordTap`, `openBoardToGrid`, `backToGrid`                                     |
+| Journey           | What happens                                                                                                      | Timings                                                                        |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `startup`         | Empty storage → onboarding → tap Continue → First Words grid. Then a new page once the app is installed.          | `firstLaunch.toOnboarding`, `firstLaunch.continueToGrid`, `returnVisit.toGrid` |
+| `tileInteraction` | Download Quick Core 60 from the library. On it: tap I, want, to, open the linked “eat” board, tap drink, go back. | `importBoardSet`, `wordTap`, `openBoardToGrid`, `backToGrid`                   |
 
 Every journey asserts what the user would see, so a broken journey fails the
 run instead of reporting fast numbers. The journeys live in
@@ -48,11 +107,11 @@ run instead of reporting fast numbers. The journeys live in
 [perf/harness.ts](../perf/harness.ts), and the part that runs inside the page
 in [perf/page-perf.ts](../perf/page-perf.ts).
 
-The same journeys drive both builds, so they have to work on both. If a change
-renames a button a journey taps, the run fails on the base build; compare
-against a ref that already has the new name.
+In a comparison the same journeys drive both builds, so they have to work on
+both. If a change renames a button a journey taps, the run fails on the base
+build; compare against a ref that already has the new name.
 
-## Read the output
+## Read a comparison
 
 ```text
 tileInteraction
@@ -86,10 +145,12 @@ warns about it.
 
 ## Method
 
-- Both builds come from `vite build`, skipping the typecheck in
-  `npm run build`, and each is served with `vite preview` on its own
-  127.0.0.1 port: the working tree's on 4173, reusing the `webServer` from
-  [playwright.config.ts](../playwright.config.ts), and the base ref's on 4174.
+- Builds come from `vite build`, skipping the typecheck in `npm run build`, and
+  each is served with `vite preview` on its own 127.0.0.1 port: the working
+  tree's on 4173, reusing the `webServer` from
+  [playwright.config.ts](../playwright.config.ts), and a comparison's base ref
+  on 4174. The ports are fixed, so a second run on the same machine fails
+  instead of sharing the CPU with the first.
   [perf/playwright.config.ts](../perf/playwright.config.ts) extends that
   config, so `npm run test:pwa` never runs the journeys, and replaces its
   browser projects with Chromium alone.
@@ -97,12 +158,15 @@ warns about it.
   device settings (1280×720), en-US, service worker on.
 - A timing runs from its start (navigation, or a tap's `pointerdown`) to the
   first rendered frame that shows its result, read with `performance.now()`. A
-  result that does not appear within 15 seconds fails the journey.
+  result that does not appear within 15 seconds, or 60 for the import, fails
+  the journey.
 - The CPU is slowed 4× with `Emulation.setCPUThrottlingRate` during the timed
-  steps. Setup around them, such as downloading a board set, runs at full
-  speed.
+  steps. Setup around them runs at full speed, and that includes the board set
+  import: `importBoardSet` runs from the tap on Download to the set appearing
+  in the library, unslowed.
 - One journey at a time, one worker, a fresh browser context per sample, and
-  one discarded warm-up sample per build. A timing taken several times in one
+  one discarded warm-up sample per build. An x-ray measures the working tree
+  alone. A timing taken several times in one
   sample, such as word taps, contributes that sample's median.
 - `speechSynthesis` is stubbed in the page to end on a microtask, mirroring
   [stub-speech.ts](../src/shared/testing/stub-speech.ts), which depends on
@@ -112,23 +176,26 @@ warns about it.
   The journeys find the message's parts by position: the children of the
   element before the play button.
 
-`npm run test:perf` runs the unit tests for the statistics and the verdicts
-with Node's built-in test runner.
+`npm run test:perf` runs the unit tests for the statistics, the verdicts, the
+scorecard and its report with Node's built-in test runner.
 
 ## Limits
 
 - Numbers come from Chromium on the developer's machine with a simulated CPU
-  slowdown. They show how two builds differ; they do not predict speed on a
-  real iPad or Android tablet.
+  slowdown. They show how two builds differ, or whether a timing left its
+  usual range; they do not predict speed on a real iPad or Android tablet.
+- An x-ray compares against fixed budgets, so a machine that is busy for the
+  whole run reads slow across the board. A comparison cancels that out.
 - A frame counts as rendered when the main thread has finished its style,
   layout and paint. Compositing and display happen after that and are not
   measured.
 - A grid counts as shown once it is laid out with its tiles. Symbol images
   that load after that frame are not measured, so a change that only slows
   symbol loading goes unnoticed.
-- Other load on the machine cancels out between the builds but widens the
+- In a comparison, other load on the machine cancels out between the builds but widens the
   confidence intervals, so small changes go unflagged. A machine that sleeps
   mid-run stalls the browser and fails the journey.
-- The lab says whether a timing changed, not why. To find out, record the
+- The lab says whether a timing changed or went over, not why. To find out, record the
   journey in Chrome DevTools → Performance.
-- Not covered: WebKit/Safari, built-in AI, real speech, memory, imports, CI.
+- Not covered: WebKit/Safari, built-in AI, real speech, memory, imports from a
+  file or a link, CI.

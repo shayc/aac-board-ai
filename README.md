@@ -78,7 +78,7 @@ Open [http://localhost:5173](http://localhost:5173).
 
 To run tests in Chromium, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
-To measure performance locally, run `npm run perf`; see [docs/performance.md](docs/performance.md).
+To check performance against its budgets locally, run `npm run perf`; see [docs/performance.md](docs/performance.md).
 
 ## Architecture
 
