@@ -1,16 +1,16 @@
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
+import { getBoardRecord } from "../storage/board-content-storage";
 import {
   getBoardSetRecord,
-  listBoardRecords,
   listBoardSetRecords,
-} from "@features/library";
+} from "../storage/board-set-storage";
 import {
   makeBoardsDBUnreadable,
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
-} from "@features/library/testing";
+} from "../testing";
 import { translateBoardSets } from "./translate-board-sets";
 
 function seedFoodSet() {
@@ -51,9 +51,7 @@ async function runTranslation(
 }
 
 async function readStrings(boardSetId: string, boardId: string) {
-  const boards = await listBoardRecords(boardSetId);
-
-  return boards.find(({ id }) => id === boardId)?.obf.strings;
+  return (await getBoardRecord({ boardSetId, boardId }))?.obf.strings;
 }
 
 describe("translateBoardSets", () => {

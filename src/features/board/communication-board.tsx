@@ -17,7 +17,8 @@ import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
-import { SuggestionBar, useMessageSuggestions } from "@features/language-help";
+import { SuggestionBar } from "./suggestions/suggestion-bar";
+import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {

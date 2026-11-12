@@ -17,23 +17,38 @@ const indexedDBRestriction: ImportPattern = {
     "Storage owns all IndexedDB access — go through the library feature's storage module (@features/library from other features).",
 };
 
+const builtInAIRestriction: ImportPattern = {
+  group: ["@shayc/react-built-in-ai", "@shayc/react-built-in-ai/**"],
+  message:
+    "Built-in AI is optional — only the board's suggestions and the library's translation may use it, so nothing else comes to depend on a model.",
+};
+
+// Packages only their owning folder may import.
+const ownedPackageRestrictions = [indexedDBRestriction, builtInAIRestriction];
+
 type RestrictedImports = ["error", { patterns: ImportPattern[] }];
 
-function restrictStorageImports(
+function restrictImportsForOwnerOf(
+  ownedPackage: ImportPattern | undefined,
   ...patterns: ImportPattern[]
 ): RestrictedImports {
-  return ["error", { patterns: [muiBarrelRestriction, ...patterns] }];
+  const otherOwnedPackages = ownedPackageRestrictions.filter(
+    (restriction) => restriction !== ownedPackage,
+  );
+
+  return [
+    "error",
+    { patterns: [muiBarrelRestriction, ...otherOwnedPackages, ...patterns] },
+  ];
 }
 
 function restrictImports(...patterns: ImportPattern[]): RestrictedImports {
-  return restrictStorageImports(indexedDBRestriction, ...patterns);
+  return restrictImportsForOwnerOf(undefined, ...patterns);
 }
 
-// Each feature lists the features whose barrels it may import. The graph is
-// acyclic: board → language-help → library.
+// Each feature lists the features whose barrels it may import.
 const featureDependencies = {
-  board: ["language-help", "library"],
-  "language-help": ["library"],
+  board: ["library"],
   library: [],
 } satisfies Record<string, string[]>;
 
@@ -63,25 +78,35 @@ function featureBoundary(
   };
 }
 
-function featureOverrides(feature: Feature) {
-  const files = `src/features/${feature}/**/*.{ts,tsx}`;
-  const testFiles = `src/features/${feature}/**/*.test.{ts,tsx}`;
-  const testingFiles = `src/features/${feature}/testing/**/*.{ts,tsx}`;
+// With a folder, the overrides cover only that folder, which owns a package.
+function featureOverrides(
+  feature: Feature,
+  owner?: { folder: string; ownedPackage: ImportPattern },
+) {
+  const root = owner
+    ? `src/features/${feature}/${owner.folder}`
+    : `src/features/${feature}`;
+  const testFiles = [
+    `${root}/**/*.test.{ts,tsx}`,
+    `src/features/${feature}/testing/**/*.{ts,tsx}`,
+  ];
 
   return [
     {
-      files: [files],
-      excludeFiles: [testFiles, testingFiles],
+      files: [`${root}/**/*.{ts,tsx}`],
+      excludeFiles: testFiles,
       rules: {
-        "no-restricted-imports": restrictImports(
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          owner?.ownedPackage,
           featureBoundary(feature, { isTest: false }),
         ),
       },
     },
     {
-      files: [testFiles, testingFiles],
+      files: owner ? testFiles.slice(0, 1) : testFiles,
       rules: {
-        "no-restricted-imports": restrictImports(
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          owner?.ownedPackage,
           featureBoundary(feature, { isTest: true }),
         ),
       },
@@ -173,20 +198,36 @@ export default defineConfig({
       },
     },
     ...featureOverrides("board"),
-    ...featureOverrides("language-help"),
     ...featureOverrides("library"),
+    ...featureOverrides("board", {
+      folder: "suggestions",
+      ownedPackage: builtInAIRestriction,
+    }),
+    ...featureOverrides("library", {
+      folder: "translation",
+      ownedPackage: builtInAIRestriction,
+    }),
+    ...featureOverrides("library", {
+      folder: "storage",
+      ownedPackage: indexedDBRestriction,
+    }),
     {
-      // The only modules that may open the database: storage, and the test
-      // helpers that reset and corrupt it.
+      // Test helpers reset and corrupt the database, so they open it too.
+      files: ["src/features/library/testing/db.ts"],
+      rules: {
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          indexedDBRestriction,
+          featureBoundary("library", { isTest: true }),
+        ),
+      },
+    },
+    {
       files: [
         "src/features/library/storage/**/*.{ts,tsx}",
         "src/features/library/testing/db.ts",
       ],
       rules: {
         "no-restricted-globals": "off",
-        "no-restricted-imports": restrictStorageImports(
-          featureBoundary("library", { isTest: false }),
-        ),
       },
     },
     {

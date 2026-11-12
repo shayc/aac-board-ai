@@ -5,9 +5,9 @@ import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
+  useBoardSetTranslation,
   useImportBoardFilesOnLaunch,
 } from "@features/library";
-import { useBoardSetTranslation } from "@features/language-help";
 import Box from "@mui/material/Box";
 import { useState } from "react";
 import { Outlet } from "react-router";

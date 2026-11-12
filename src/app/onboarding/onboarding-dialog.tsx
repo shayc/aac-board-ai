@@ -1,4 +1,4 @@
-import { areSuggestionsSupported } from "@features/language-help";
+import { areSuggestionsSupported } from "@features/board";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import RecordVoiceOverOutlinedIcon from "@mui/icons-material/RecordVoiceOverOutlined";

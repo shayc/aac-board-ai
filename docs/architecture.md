@@ -146,7 +146,7 @@ Route loaders only read; they never translate or wait on a model:
 
 ### Translate board sets
 
-[`useBoardSetTranslation`](../src/features/language-help/translation/use-board-set-translation.ts)
+[`useBoardSetTranslation`](../src/features/library/translation/use-board-set-translation.ts)
 runs in the app shell on start, on a language change, and when sets are added
 or removed. Only a language change aborts the pass in progress; an added or
 removed set queues another pass behind it, so a model download started by the
@@ -171,12 +171,12 @@ gesture, stays in its source language until the next run. A storage or other
 error ends the pass and is reported, and passes queued behind it still run.
 
 The hook hands each pass to the
-[board translation coordinator](../src/features/language-help/translation/board-translation-coordinator.ts),
+[board translation coordinator](../src/features/library/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
 status published while a pass is translating a set. The status is set when a set's model download starts or, with no download, once
 its translation models are open, and cleared when the pass ends or the language
 changes. A pass aborted by a language change never touches the status again. The
-[board translation notice](../src/features/language-help/translation/board-translation-notice.tsx)
+[board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 shows a model download first and the translation after it. The status is already
 set when the download ends, so one alert carries both states.
 
@@ -328,36 +328,21 @@ for aliased imports:
 - Only the library's [`storage/`](../src/features/library/storage/) imports `idb`
   or uses the `indexedDB` global, so every other module reaches stored boards
   through the library's public entry point.
+- Only the board's [`suggestions/`](../src/features/board/suggestions/) and the
+  library's [`translation/`](../src/features/library/translation/) import the
+  built-in AI package, so nothing else can come to depend on a model.
 
-The three features depend on each other in one direction:
+There are two features, and the dependency runs one way: the board imports the
+library's public entry point, and the library imports no feature.
 
-```mermaid
-flowchart LR
-    accTitle: Allowed dependencies between features
-    accDescr: The board feature may import the public entry points of language help and the library. Language help may import the library's. The library imports no other feature.
+| Feature                               | Owns                                                                              |
+| ------------------------------------- | --------------------------------------------------------------------------------- |
+| [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning  |
+| [`library`](../src/features/library/) | Stored board sets: storage, import, export, OBF mapping, board paths, translation |
 
-    board["board"] --> help["language-help"]
-    board --> library["library"]
-    help --> library
-```
-
-| Feature                                           | Owns                                                                 | May import                 |
-| ------------------------------------------------- | -------------------------------------------------------------------- | -------------------------- |
-| [`board`](../src/features/board/)                 | Using a board: grid, tiles, message, activation, playback, scanning  | `language-help`, `library` |
-| [`language-help`](../src/features/language-help/) | Optional built-in AI: suggestions and board translation              | `library`                  |
-| [`library`](../src/features/library/)             | Stored board sets: storage, import, export, OBF mapping, board paths | no other feature           |
-
-The board reaches suggestions only through language help's public entry point,
-and nothing in the library depends on language help, so a board loads and
-renders with no built-in AI code on its path. The board's own translations,
-from the board file or saved on this device, are read by the library's
-[`board-translations.ts`](../src/features/library/translations/board-translations.ts);
-only producing new ones needs language help.
-
-Test files may also import the `testing` entry of a feature they are allowed to
-depend on, such as
-[`src/features/library/testing/`](../src/features/library/testing/index.ts).
-The runtime `Board` types are used by all three features and live in
+Test files may also import the library's
+[`testing`](../src/features/library/testing/index.ts) entry. The runtime `Board`
+types are used by both features and live in
 [`shared/board/board-types.ts`](../src/shared/board/board-types.ts).
 
 Inside a feature, folders group related code and collaborate through relative
@@ -368,13 +353,13 @@ imports; they are not separate boundaries.
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [tile settings](../src/features/board/tile/tile-settings.tsx),
 [message settings](../src/features/board/message/message-settings.tsx),
-[suggestion settings](../src/features/language-help/suggestions/suggestion-settings.tsx), and
+[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx), and
 [scanning settings](../src/features/board/scanning/scanning-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
-language settings render language help's
-[board translation notice](../src/features/language-help/translation/board-translation-notice.tsx)
+language settings render the library's
+[board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 instead of checking Translator support or translation progress themselves. Reusable field controls live in
 `shared/ui/` so features do not depend on the app layer.
 
@@ -387,17 +372,17 @@ preferences.
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
 are relative to `src/features/`.
 
-| Area                   | Source                                                                                                                                             | Responsibility                                                                   |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                                                                     | Compose the board UI and interaction adapters.                                   |
-| Board playback         | [board/playback/](../src/features/board/playback/)                                                                                                 | Plan board playback and highlighting; delegate device output to shared code.     |
-| Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                                                                                 | Scan the board's controls with one or two switches; own scanning preferences.    |
-| Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/)                                                   | Unify imports and map OBF records to runtime types.                              |
-| Export                 | [library/export/](../src/features/library/export/)                                                                                                 | Package a stored board set as an OBZ file.                                       |
-| Board persistence      | [library/storage/](../src/features/library/storage/)                                                                                               | Own all production IndexedDB access.                                             |
-| Board-set library      | [library/board-sets/](../src/features/library/board-sets/)                                                                                         | Maintain the reactive library and coordinate board-set creation and deletion.    |
-| Stored translations    | [library/translations/](../src/features/library/translations/)                                                                                     | Show a board in the communication language from the translations it already has. |
-| Optional language help | [language-help/suggestions/](../src/features/language-help/suggestions/), [language-help/translation/](../src/features/language-help/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text.  |
+| Area                   | Source                                                                                           | Responsibility                                                                    |
+| ---------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
+| Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                   | Compose the board UI and interaction adapters.                                    |
+| Board playback         | [board/playback/](../src/features/board/playback/)                                               | Plan board playback and highlighting; delegate device output to shared code.      |
+| Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                               | Scan the board's controls with one or two switches; own scanning preferences.     |
+| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Enable suggestion models and apply rewrite instructions to the message.           |
+| Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                               |
+| Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                        |
+| Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                              |
+| Board-set library      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and coordinate board-set creation and deletion.     |
+| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Show a board in the communication language and translate board sets that lack it. |
 
 ### App and shared code
 

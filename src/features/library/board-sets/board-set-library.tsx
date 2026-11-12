@@ -17,7 +17,7 @@ import { exportBoardSet } from "../export/board-set-export";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import { BOARD_SET_SEGMENT } from "../board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
-import { boardSetInLanguage } from "../translations/board-translations";
+import { boardSetInLanguage } from "../translation/board-translations";
 import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
