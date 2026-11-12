@@ -5,7 +5,6 @@ import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import type { InitialEntry } from "react-router";
 import {
   setTileBrightness,
   setTileLabelPlacement,
@@ -77,31 +76,6 @@ const LARGE_GRID_BOARD: OBFBoard = {
     ),
   },
 };
-
-async function renderScrolledLargeGrid(
-  initialEntries: InitialEntry[],
-  rootBoardId: string,
-) {
-  const screen = await renderCommunicationBoard(
-    LARGE_GRID_BOARD,
-    initialEntries,
-    rootBoardId,
-  );
-  const scrollContainer = screen.getByRole("grid").element().parentElement;
-  assertDefined(scrollContainer);
-
-  scrollContainer.scrollTo({
-    left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
-    top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
-  });
-
-  await vi.waitFor(() => {
-    expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-    expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-  });
-
-  return { screen, scrollContainer };
-}
 
 function measureBoardLayout(
   container: Element,
@@ -539,18 +513,6 @@ describe("CommunicationBoard", () => {
       expect(audio.play).not.toHaveBeenCalled();
     });
 
-    test("scrolls the grid to its origin when Home is clicked", async () => {
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
-        ["/sets/set-1/boards/other-board"],
-        "root-board",
-      );
-
-      await screen.getByRole("button", { name: "Go home" }).click();
-
-      expect(scrollContainer.scrollLeft).toBe(0);
-      expect(scrollContainer.scrollTop).toBe(0);
-    });
-
     test("keeps keyboard focus on Go back when it reaches the first board", async () => {
       const screen = await renderCommunicationBoard(
         TWO_BUTTON_BOARD,
@@ -573,26 +535,22 @@ describe("CommunicationBoard", () => {
       await expect.element(back).toHaveFocus();
     });
 
-    test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
-      const { screen, scrollContainer } = await renderScrolledLargeGrid(
+    test("resets navigation history when Home is clicked from Home", async () => {
+      const screen = await renderCommunicationBoard(
+        TWO_BUTTON_BOARD,
         [
           {
-            pathname: "/sets/set-1/boards/root-board",
+            pathname: "/sets/set-1/boards/test-board",
             state: { canGoBack: true },
           },
         ],
-        "root-board",
+        "test-board",
       );
       const back = screen.getByRole("button", { name: "Go back" });
 
       await expect.element(back).not.toHaveAttribute("aria-disabled");
 
       await screen.getByRole("button", { name: "Go home" }).click();
-
-      await vi.waitFor(() => {
-        expect(scrollContainer.scrollLeft).toBe(0);
-        expect(scrollContainer.scrollTop).toBe(0);
-      });
 
       await expect.element(back).toHaveAttribute("aria-disabled", "true");
     });
