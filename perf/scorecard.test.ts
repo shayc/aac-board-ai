@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { Budget } from "./budgets.ts";
-import { scoreMeasurements } from "./scorecard.ts";
+import { collectMeasurements, scoreMeasurements } from "./scorecard.ts";
 
 const TAP: Budget = { name: "tap", label: "tap", unit: "ms", limit: 100 };
 const SIZE: Budget = { name: "size", label: "size", unit: "kB", limit: 400 };
@@ -61,5 +61,34 @@ await test("scoreMeasurements refuses a budget that nothing measured", () => {
   assert.throws(
     () => scoreMeasurements({ tap: [30] }, [TAP, SIZE]),
     /Nothing measured size/,
+  );
+});
+
+await test("collectMeasurements gathers the working tree's samples from every journey", () => {
+  const settings = { browserVersion: "158.0", cpuSlowdown: 4, roundCount: 2 };
+
+  assert.deepEqual(
+    collectMeasurements([
+      {
+        journey: "startup",
+        settings,
+        timings: { launch: { current: [1, 2] } },
+      },
+      { journey: "tiles", settings, timings: { tap: { current: [3, 4] } } },
+    ]),
+    { launch: [1, 2], tap: [3, 4] },
+  );
+});
+
+await test("collectMeasurements refuses a timing that two journeys record", () => {
+  const settings = { browserVersion: "158.0", cpuSlowdown: 4, roundCount: 1 };
+
+  assert.throws(
+    () =>
+      collectMeasurements([
+        { journey: "startup", settings, timings: { tap: { current: [1] } } },
+        { journey: "tiles", settings, timings: { tap: { current: [3] } } },
+      ]),
+    /tiles records tap, which another journey already records/,
   );
 });

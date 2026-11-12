@@ -14,12 +14,17 @@ import {
   ACTION_TIMEOUT_MS,
   BASE_BUILD_URL,
   BUILD_NAMES,
+  CPU_SLOWDOWN,
   ROUND_COUNT,
 } from "./settings.ts";
 import { median } from "./stats.ts";
 
-const CPU_SLOWDOWN = 4;
 const TAP_RESULT = "tap-result";
+
+interface MeasuredSample {
+  build: BuildName;
+  sample: JourneySample;
+}
 
 export interface TimeSpan {
   start: number;
@@ -115,10 +120,13 @@ export async function measureJourney(
     await runSample(browser, build, runJourney);
   }
 
-  const samples: Record<BuildName, JourneySample[]> = { base: [], current: [] };
+  const samples: MeasuredSample[] = [];
   for (let round = 0; round < ROUND_COUNT; round += 1) {
     for (const build of buildOrder(round)) {
-      samples[build].push(await runSample(browser, build, runJourney));
+      samples.push({
+        build,
+        sample: await runSample(browser, build, runJourney),
+      });
     }
   }
 
@@ -151,16 +159,14 @@ async function runSample(
 async function writeJourneyResult(
   browser: Browser,
   journey: string,
-  samples: Record<BuildName, JourneySample[]>,
+  samples: MeasuredSample[],
 ): Promise<void> {
   // Per-sample medians give samples equal weight regardless of tap count.
   const timings: Record<string, TimingSamples> = {};
-  for (const build of BUILD_NAMES) {
-    for (const sample of samples[build]) {
-      for (const [name, values] of sample.timings) {
-        timings[name] ??= { base: [], current: [] };
-        timings[name][build].push(median(values));
-      }
+  for (const { build, sample } of samples) {
+    for (const [name, values] of sample.timings) {
+      const timing = (timings[name] ??= {});
+      (timing[build] ??= []).push(median(values));
     }
   }
 

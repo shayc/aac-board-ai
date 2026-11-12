@@ -3,10 +3,10 @@ import type { Scorecard } from "./scorecard.ts";
 export type BuildName = "base" | "current";
 
 /**
- * Milliseconds per round for each build; the same index is the same round.
- * A build that was not measured has no samples.
+ * Milliseconds per round for each build that was measured; the same index is
+ * the same round.
  */
-export type TimingSamples = Record<BuildName, number[]>;
+export type TimingSamples = Partial<Record<BuildName, number[]>>;
 
 export interface RunSettings {
   browserVersion: string;

@@ -8,6 +8,9 @@ export interface Budget {
   limit: number;
 }
 
+/** A different slowdown shifts every timing, so the limits need re-measuring. */
+export const BUDGETED_CPU_SLOWDOWN = 4;
+
 /**
  * Ordered by how often a user meets each one. A tap has to feel instant, so
  * its limit is the 100 ms perception threshold. The other limits are round

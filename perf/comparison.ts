@@ -32,12 +32,18 @@ export interface Comparison {
 
 export function compareBuilds(results: RunResults): Comparison {
   const measured = results.journeys.flatMap(({ journey, timings }) =>
-    Object.entries(timings).map(([timing, samples]) => ({
-      journey,
-      timing,
-      samples,
-      differences: roundDifferences(journey, timing, samples),
-    })),
+    Object.entries(timings).map(([timing, samples]) => {
+      const rounds = pairRounds(journey, timing, samples);
+
+      return {
+        journey,
+        timing,
+        samples: rounds,
+        differences: rounds.current.map(
+          (value, round) => value - (rounds.base[round] ?? Number.NaN),
+        ),
+      };
+    }),
   );
   const adjustedPs = holmAdjust(
     measured.map(({ differences }) => signedRankP(differences)),
@@ -68,18 +74,18 @@ export function compareBuilds(results: RunResults): Comparison {
   };
 }
 
-function roundDifferences(
+function pairRounds(
   journey: string,
   timing: string,
-  { base, current }: TimingSamples,
-): number[] {
+  { base = [], current = [] }: TimingSamples,
+): Required<TimingSamples> {
   if (base.length !== current.length) {
     throw new Error(
       `${journey} › ${timing} has ${base.length} base and ${current.length} current samples, so its rounds cannot be paired.`,
     );
   }
 
-  return current.map((value, round) => value - (base[round] ?? Number.NaN));
+  return { base, current };
 }
 
 function verdictOf(p: number, difference: number): Verdict {

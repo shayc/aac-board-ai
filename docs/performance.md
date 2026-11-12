@@ -56,7 +56,9 @@ machine that set them; on other hardware, re-measure before trusting a row.
 machine.
 
 Every timing a journey records needs a budget, and every budget needs a
-measurement: the run fails if either is missing.
+measurement: the run fails if either is missing. It also fails if the CPU
+slowdown in [perf/settings.ts](../perf/settings.ts) no longer matches the one
+the budgets were set at, because every timing limit then needs re-measuring.
 
 ## Compare with a git ref
 
@@ -85,7 +87,12 @@ after changing Node versions. Everything under `perf-results/` is generated and
 gitignored.
 
 The builds and the journeys print nothing unless they fail, so the report is
-the whole output.
+the whole output. To watch a slow step, such as the first build of a base ref,
+add `--verbose`:
+
+```bash
+npm run perf -- --base main --verbose
+```
 
 ## Journeys
 
@@ -151,7 +158,8 @@ warns about it.
   device settings (1280×720), en-US, service worker on.
 - A timing runs from its start (navigation, or a tap's `pointerdown`) to the
   first rendered frame that shows its result, read with `performance.now()`. A
-  result that does not appear within 15 seconds fails the journey.
+  result that does not appear within 15 seconds, or 60 for the import, fails
+  the journey.
 - The CPU is slowed 4× with `Emulation.setCPUThrottlingRate` during the timed
   steps. Setup around them runs at full speed, and that includes the board set
   import: `importBoardSet` runs from the tap on Download to the set appearing
@@ -168,8 +176,8 @@ warns about it.
   The message bar has no role or accessible name, so the journeys find its
   parts by position: the children of the element before the play button.
 
-`npm run test:perf` runs the unit tests for the statistics, the verdicts and
-the scorecard with Node's built-in test runner.
+`npm run test:perf` runs the unit tests for the statistics, the verdicts, the
+scorecard and its report with Node's built-in test runner.
 
 ## Limits
 
@@ -189,4 +197,5 @@ the scorecard with Node's built-in test runner.
   mid-run stalls the browser and fails the journey.
 - The lab says whether a timing changed or went over, not why. To find out, record the
   journey in Chrome DevTools → Performance.
-- Not covered: WebKit/Safari, built-in AI, real speech, memory, imports, CI.
+- Not covered: WebKit/Safari, built-in AI, real speech, memory, imports from a
+  file or a link, CI.

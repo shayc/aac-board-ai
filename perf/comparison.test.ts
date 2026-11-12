@@ -10,7 +10,7 @@ function run(timings: Record<string, TimingSamples>): RunResults {
   const settings = {
     browserVersion: "158.0.8127.18",
     cpuSlowdown: 4,
-    roundCount: timings[TIMING]?.base.length ?? ROUND_COUNT,
+    roundCount: timings[TIMING]?.base?.length ?? ROUND_COUNT,
   };
   const build = {
     source: "main",

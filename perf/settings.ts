@@ -4,6 +4,9 @@ export const ACTION_TIMEOUT_MS = 15_000;
 export const IMPORT_TIMEOUT_MS = 60_000;
 export const BASE_BUILD_URL = "http://127.0.0.1:4174";
 
+/** The budgets in budgets.ts were measured at this slowdown. */
+export const CPU_SLOWDOWN = 4;
+
 const XRAY_ROUND_COUNT = 5;
 const COMPARISON_ROUND_COUNT = 10;
 

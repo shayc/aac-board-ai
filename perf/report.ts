@@ -7,60 +7,72 @@ import type {
   RunSettings,
   XrayResults,
 } from "./results.ts";
-import {
-  countOverBudget,
-  type Scorecard,
-  type ScorecardRow,
-} from "./scorecard.ts";
+import type { Scorecard, ScorecardRow } from "./scorecard.ts";
 
-export function printScorecard(xray: XrayResults): void {
-  console.log(`\nPerf x-ray: ${formatCounts(xray.counts)}\n`);
-  for (const row of xray.rows) {
-    console.log(`  ${formatRow(row)}`);
-  }
+const MS_PER_SECOND = 1000;
+
+export function formatScorecard(xray: XrayResults): string {
+  const lines = [
+    "",
+    `Perf x-ray: ${formatCounts(xray.counts)}`,
+    "",
+    ...xray.rows.map((row) => `  ${formatRow(row)}`),
+  ];
 
   if (xray.counts.watch > 0) {
-    console.log(
-      "\nwatch: samples fell on both sides of the budget. Rerun on an idle machine to settle it.",
+    lines.push(
+      "",
+      "watch: samples fell on both sides of the budget. Rerun on an idle machine to settle it.",
     );
   }
 
-  console.log(`\n${formatBuild(xray.build)}`);
-  console.log(formatSettings(xray.settings));
-  console.log(`Samples: ${XRAY_FILE}`);
+  lines.push(
+    "",
+    formatBuild(xray.build),
+    formatSettings(xray.settings),
+    `Samples: ${XRAY_FILE}`,
+  );
+
+  return lines.join("\n");
 }
 
-export function printComparison(
+export function formatComparison(
   results: RunResults,
   comparison: Comparison,
-): void {
+): string {
   const { builds, settings } = results;
-
-  console.log(`\nBase:    ${formatBuild(builds.base)}`);
-  console.log(`Current: ${formatBuild(builds.current)}`);
-  console.log(formatSettings(settings));
+  const lines = [
+    "",
+    `Base:    ${formatBuild(builds.base)}`,
+    `Current: ${formatBuild(builds.current)}`,
+    formatSettings(settings),
+  ];
 
   for (const { journey } of results.journeys) {
-    console.log(`\n${journey}`);
+    lines.push("", journey);
     for (const timing of comparison.timings) {
       if (timing.journey === journey) {
-        console.log(`  ${formatTiming(timing)}`);
+        lines.push(`  ${formatTiming(timing)}`);
       }
     }
   }
 
   if (builds.base.buildHash === builds.current.buildHash) {
-    console.log(
-      "\nBoth builds are identical, so any flag is a false positive.",
+    lines.push(
+      "",
+      "Both builds are identical, so any flag is a false positive.",
     );
   }
   if (!comparison.canFlagChanges) {
-    console.log(
-      `\n${settings.roundCount} rounds are too few to flag a change in ${comparison.timings.length} timings; this run only shows that the journeys work.`,
+    lines.push(
+      "",
+      `${settings.roundCount} rounds are too few to flag a change in ${comparison.timings.length} timings; this run only shows that the journeys work.`,
     );
   }
 
-  console.log(`\nSamples: ${RESULTS_FILE}`);
+  lines.push("", `Samples: ${RESULTS_FILE}`);
+
+  return lines.join("\n");
 }
 
 function formatCounts(counts: Scorecard["counts"]): string {
@@ -86,18 +98,21 @@ function formatRow(row: ScorecardRow): string {
   ];
   const spread =
     row.state === "watch"
-      ? `  (${countOverBudget(row)} of ${row.samples.length} samples over)`
+      ? `  (${row.overCount} of ${row.samples.length} samples over)`
       : "";
 
   return `${columns.join("  ")}${spread}`;
 }
 
 function formatValue(value: number, unit: Unit): string {
-  if (unit === "ms" && value >= 1000) {
-    return `${(value / 1000).toFixed(1)} s`;
+  if (unit === "kB") {
+    return `${value.toFixed(0)} kB`;
   }
 
-  return `${unit === "kB" ? value.toFixed(0) : formatMs(value)} ${unit}`;
+  // Round before choosing the unit, so 999.6 ms reads as 1.0 s, not 1000 ms.
+  return Math.round(value) >= MS_PER_SECOND
+    ? `${(value / MS_PER_SECOND).toFixed(1)} s`
+    : `${formatMs(value)} ms`;
 }
 
 function formatBuild({ source, commit, buildHash }: BuildInfo): string {
