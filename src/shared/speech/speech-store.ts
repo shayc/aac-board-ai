@@ -3,6 +3,7 @@ import { getLanguageCode } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
 import {
   createExternalStore,
+  patchState,
   useExternalStore,
 } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
@@ -75,27 +76,20 @@ const speechPreferencesStore = createPersistedStore<SpeechPreferences>(
   parseSpeechPreferences,
 );
 
-function updatePreferences(patch: Partial<SpeechPreferences>): void {
-  speechPreferencesStore.setState((preferences) => ({
-    ...preferences,
-    ...patch,
-  }));
-}
-
 export function setSpeechVoiceURI(voiceURI: string | null): void {
-  updatePreferences({ voiceURI });
+  patchState(speechPreferencesStore, { voiceURI });
 }
 
 export function setSpeechRate(rate: number): void {
-  updatePreferences({ rate });
+  patchState(speechPreferencesStore, { rate });
 }
 
 export function setSpeechPitch(pitch: number): void {
-  updatePreferences({ pitch });
+  patchState(speechPreferencesStore, { pitch });
 }
 
 export function setSpeechVolume(volume: number): void {
-  updatePreferences({ volume });
+  patchState(speechPreferencesStore, { volume });
 }
 
 export function useVoicesByLanguage(): VoicesByLanguage {

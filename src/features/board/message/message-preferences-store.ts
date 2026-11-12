@@ -1,4 +1,4 @@
-import { useExternalStore } from "@shared/state/external-store";
+import { patchState, useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
@@ -22,21 +22,14 @@ const messagePreferencesStore = createPersistedStore<MessagePreferences>(
   parseMessagePreferences,
 );
 
-function updatePreferences(patch: Partial<MessagePreferences>): void {
-  messagePreferencesStore.setState((preferences) => ({
-    ...preferences,
-    ...patch,
-  }));
-}
-
 export function setMessageImagesVisible(areImagesVisible: boolean): void {
-  updatePreferences({ areImagesVisible });
+  patchState(messagePreferencesStore, { areImagesVisible });
 }
 
 export function setMessageHighlightingEnabled(
   isHighlightingEnabled: boolean,
 ): void {
-  updatePreferences({ isHighlightingEnabled });
+  patchState(messagePreferencesStore, { isHighlightingEnabled });
 }
 
 export function useMessagePreferences(): MessagePreferences {

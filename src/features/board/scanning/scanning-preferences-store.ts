@@ -1,4 +1,4 @@
-import { useExternalStore } from "@shared/state/external-store";
+import { patchState, useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
@@ -43,23 +43,16 @@ const scanningPreferencesStore = createPersistedStore<ScanningPreferences>(
   parseScanningPreferences,
 );
 
-function updatePreferences(patch: Partial<ScanningPreferences>): void {
-  scanningPreferencesStore.setState((preferences) => ({
-    ...preferences,
-    ...patch,
-  }));
-}
-
 export function setScanningEnabled(isEnabled: boolean): void {
-  updatePreferences({ isEnabled });
+  patchState(scanningPreferencesStore, { isEnabled });
 }
 
 export function setScanMethod(method: ScanMethod): void {
-  updatePreferences({ method });
+  patchState(scanningPreferencesStore, { method });
 }
 
 export function setScanIntervalMs(intervalMs: number): void {
-  updatePreferences({ intervalMs });
+  patchState(scanningPreferencesStore, { intervalMs });
 }
 
 export function useScanningPreferences(): ScanningPreferences {

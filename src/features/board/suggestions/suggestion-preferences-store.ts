@@ -1,4 +1,4 @@
-import { useExternalStore } from "@shared/state/external-store";
+import { patchState, useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 
@@ -27,10 +27,7 @@ const suggestionPreferencesStore = createPersistedStore<SuggestionPreferences>(
 export function setSuggestionCustomInstructions(
   customInstructions: string,
 ): void {
-  suggestionPreferencesStore.setState((preferences) => ({
-    ...preferences,
-    customInstructions,
-  }));
+  patchState(suggestionPreferencesStore, { customInstructions });
 }
 
 export function useSuggestionPreferences(): SuggestionPreferences {

@@ -39,6 +39,13 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
   return { subscribe, getSnapshot, setState };
 }
 
+export function patchState<T extends object>(
+  store: Pick<ExternalStore<T>, "setState">,
+  patch: Partial<T>,
+): void {
+  store.setState((state) => ({ ...state, ...patch }));
+}
+
 type SubscribableStore<T> = Pick<ExternalStore<T>, "subscribe" | "getSnapshot">;
 
 export function useExternalStore<T>(store: SubscribableStore<T>): T;
