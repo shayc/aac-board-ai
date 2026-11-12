@@ -19,7 +19,7 @@ import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
-import { BoardTile } from "./tile/board-tile";
+import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -73,7 +73,7 @@ export function CommunicationBoard({
   );
 
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
-    <BoardTile
+    <Tile
       key={`${board.id}/${button.id}`}
       button={button}
       onActivate={activateButton}

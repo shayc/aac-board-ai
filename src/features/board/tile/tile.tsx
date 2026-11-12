@@ -6,15 +6,11 @@ import { useTranslate } from "@shared/language/use-translate";
 import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
 import type { CSSProperties } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import type { TileLabelPlacement } from "./tile-preferences-store";
+import { useTilePreferences } from "./tile-preferences-store";
 
 interface TileProps {
-  tabIndex: number;
   button: BoardButton;
-  saturation: number;
-  brightness: number;
-  areBordersVisible: boolean;
-  labelPlacement: TileLabelPlacement;
+  tabIndex: number;
   onActivate: (button: BoardButton) => void;
 }
 
@@ -133,16 +129,10 @@ const folderTileSx = {
   },
 } as const;
 
-export function Tile({
-  tabIndex,
-  button,
-  saturation,
-  brightness,
-  areBordersVisible,
-  labelPlacement,
-  onActivate,
-}: TileProps) {
+export function Tile({ button, tabIndex, onActivate }: TileProps) {
   const t = useTranslate();
+  const { saturation, brightness, areBordersVisible, labelPlacement } =
+    useTilePreferences();
 
   const ariaLabel = button.label ? undefined : button.vocalization;
   const isFolder = Boolean(button.linkedBoardId);

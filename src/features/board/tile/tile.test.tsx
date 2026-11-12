@@ -11,7 +11,12 @@ import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
 import { render, type RenderResult } from "vitest-browser-react";
 import { Tile } from "./tile";
-import { TILE_BRIGHTNESS } from "./tile-preferences-store";
+import {
+  setTileBordersVisible,
+  setTileBrightness,
+  setTileSaturation,
+  TILE_BRIGHTNESS,
+} from "./tile-preferences-store";
 
 type Rgb = readonly [red: number, green: number, blue: number];
 
@@ -34,30 +39,9 @@ function makeButton(overrides: Partial<BoardButton>): BoardButton {
   return { id: "button", label: "Word", actions: [], ...overrides };
 }
 
-interface TileAppearance {
-  saturation?: number;
-  brightness?: number;
-  areBordersVisible?: boolean;
-}
-
-function tileElement(
-  overrides: Partial<BoardButton>,
-  {
-    saturation = 1,
-    brightness = 1,
-    areBordersVisible = false,
-  }: TileAppearance = {},
-) {
+function tileElement(overrides: Partial<BoardButton>) {
   return (
-    <Tile
-      tabIndex={0}
-      button={makeButton(overrides)}
-      saturation={saturation}
-      brightness={brightness}
-      areBordersVisible={areBordersVisible}
-      labelPlacement="top"
-      onActivate={vi.fn()}
-    />
+    <Tile button={makeButton(overrides)} tabIndex={0} onActivate={vi.fn()} />
   );
 }
 
@@ -130,11 +114,10 @@ async function paintTileAtBrightness(
   brightness: number,
   overrides: Partial<BoardButton>,
 ): Promise<Rgb> {
+  setTileBrightness(brightness);
   // A pointer left by another test can tint the measured colors.
   const screen = await renderInTheme(
-    <Unhoverable>
-      {tileElement(overrides, { brightness, areBordersVisible: true })}
-    </Unhoverable>,
+    <Unhoverable>{tileElement(overrides)}</Unhoverable>,
   );
   const styles = styleOf(screen.getByRole("button", { name: "Word" }));
   const painted = paint(styles.backgroundColor, styles.borderTopColor);
@@ -232,20 +215,15 @@ describe("Tile", () => {
   test.each([true, false])(
     "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
     async (areBordersVisible) => {
+      setTileBordersVisible(areBordersVisible);
       const screen = await renderInTheme(
         <>
-          {tileElement(
-            {
-              label: "Folder",
-              backgroundColor: "#3f51b5",
-              linkedBoardId: "folder",
-            },
-            { areBordersVisible },
-          )}
-          {tileElement(
-            { label: "Word", backgroundColor: "#3f51b5" },
-            { areBordersVisible },
-          )}
+          {tileElement({
+            label: "Folder",
+            backgroundColor: "#3f51b5",
+            linkedBoardId: "folder",
+          })}
+          {tileElement({ label: "Word", backgroundColor: "#3f51b5" })}
         </>,
       );
       const folder = screen.getByRole("button", { name: "Folder" });
@@ -299,12 +277,10 @@ describe("Tile", () => {
   ])(
     "draws the border $description",
     async ({ backgroundColor, borderColor }) => {
+      setTileBordersVisible(true);
       const screen = await renderInTheme(
         <Unhoverable>
-          {tileElement(
-            { label: "Bordered", backgroundColor, borderColor },
-            { areBordersVisible: true },
-          )}
+          {tileElement({ label: "Bordered", backgroundColor, borderColor })}
         </Unhoverable>,
       );
       const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
@@ -319,11 +295,9 @@ describe("Tile", () => {
   );
 
   test("keeps the border the background's color on hover when the tile has no border color", async () => {
+    setTileBordersVisible(true);
     const screen = await renderInTheme(
-      tileElement(
-        { label: "Bordered", backgroundColor: "#bbedc4" },
-        { areBordersVisible: true },
-      ),
+      tileElement({ label: "Bordered", backgroundColor: "#bbedc4" }),
     );
     const tile = screen.getByRole("button", { name: "Bordered" });
 
@@ -352,20 +326,16 @@ describe("Tile", () => {
       };
     };
 
+    setTileBordersVisible(true);
     const withBorders = await renderInTheme(
-      tileElement(
-        { label: "Bordered", ...bordered },
-        { areBordersVisible: true },
-      ),
+      tileElement({ label: "Bordered", ...bordered }),
     );
     const borderedOffset = contentOffset(withBorders, "Bordered");
     await withBorders.unmount();
 
+    setTileBordersVisible(false);
     const withoutBorders = await renderInTheme(
-      tileElement(
-        { label: "Bordered", ...bordered },
-        { areBordersVisible: false },
-      ),
+      tileElement({ label: "Bordered", ...bordered }),
     );
     const borderless = styleOf(
       withoutBorders.getByRole("button", { name: "Bordered" }),
@@ -381,11 +351,9 @@ describe("Tile", () => {
   });
 
   test("renders the background as gray at zero tile saturation", async () => {
+    setTileSaturation(0);
     const screen = await renderInTheme(
-      tileElement(
-        { label: "Muted", backgroundColor: "#ff0000" },
-        { saturation: 0 },
-      ),
+      tileElement({ label: "Muted", backgroundColor: "#ff0000" }),
     );
     const channels = paint(
       styleOf(screen.getByRole("button", { name: "Muted" })).backgroundColor,
@@ -407,6 +375,8 @@ describe("Tile", () => {
   ])(
     "scales each color channel by the tile brightness with $description",
     async (colors) => {
+      setTileBordersVisible(true);
+
       const bright = await paintTileAtBrightness(1, colors);
       const dimmed = await paintTileAtBrightness(TILE_BRIGHTNESS.min, colors);
 
@@ -419,13 +389,10 @@ describe("Tile", () => {
   test.each(["#ffffff", "#ffeb3b", "#3f51b5"])(
     "keeps the label readable on a %s background at the lowest brightness",
     async (backgroundColor) => {
+      setTileBrightness(TILE_BRIGHTNESS.min);
+
       const screen = await renderInTheme(
-        <Unhoverable>
-          {tileElement(
-            { backgroundColor },
-            { brightness: TILE_BRIGHTNESS.min },
-          )}
-        </Unhoverable>,
+        <Unhoverable>{tileElement({ backgroundColor })}</Unhoverable>,
       );
       const { color, backgroundColor: background } = styleOf(
         screen.getByRole("button", { name: "Word" }),
@@ -438,8 +405,10 @@ describe("Tile", () => {
   );
 
   test("dims its symbol by the tile brightness", async () => {
+    setTileBrightness(0.8);
+
     const screen = await renderInTheme(
-      tileElement({ imageSrc: TEST_IMAGE_SRC }, { brightness: 0.8 }),
+      tileElement({ imageSrc: TEST_IMAGE_SRC }),
     );
     const symbol = screen
       .getByRole("button", { name: "Word" })
@@ -474,15 +443,7 @@ describe("Tile", () => {
     const onActivate = vi.fn();
     const button = makeButton({ label: "Click me" });
     const screen = await renderInTheme(
-      <Tile
-        tabIndex={0}
-        button={button}
-        saturation={1}
-        brightness={1}
-        areBordersVisible={false}
-        labelPlacement="top"
-        onActivate={onActivate}
-      />,
+      <Tile button={button} tabIndex={0} onActivate={onActivate} />,
     );
 
     await screen.getByRole("button", { name: "Click me" }).click();
