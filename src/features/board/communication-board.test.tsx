@@ -195,10 +195,7 @@ describe("CommunicationBoard", () => {
   describe("layout", () => {
     // The board fills the screen below the app header, which takes 57px below
     // the "sm" breakpoint and 65px from it: these are a 375 x 812 phone and a
-    // 1024 x 768 tablet. A bar and the nearest tile are one page margin apart,
-    // and scrolled tiles pass a bar's controls at the clearance. Scrolled to
-    // the end, the last row is one page margin above the phone's bottom bar or
-    // the tablet's bottom edge.
+    // 1024 x 768 tablet.
     const LAYOUT_CASES = [
       {
         name: "a phone",
