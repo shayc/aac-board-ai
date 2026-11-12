@@ -14,7 +14,7 @@ export interface GridItemProps {
   tabIndex: number;
 }
 
-export type GridRowDataAttributes = Record<`data-${string}`, string>;
+type GridRowDataAttributes = Record<`data-${string}`, string>;
 
 interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
