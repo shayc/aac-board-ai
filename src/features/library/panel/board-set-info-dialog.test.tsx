@@ -45,6 +45,31 @@ describe("BoardSetInfoDialog", () => {
     await expectNoA11yViolations(document.body);
   });
 
+  test("keeps showing the board set while the dialog closes", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetInfoDialog
+        boardSet={makeBoardSetRecord({
+          name: "Core Words",
+          description: "A starter vocabulary board.",
+        })}
+        onClose={vi.fn()}
+      />,
+    );
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+
+    await screen.rerender(
+      <AppProviders>
+        <BoardSetInfoDialog boardSet={null} onClose={vi.fn()} />
+      </AppProviders>,
+    );
+
+    expect(screen.getByText("Core Words").query()).not.toBeNull();
+    expect(
+      screen.getByText("A starter vocabulary board.").query(),
+    ).not.toBeNull();
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+  });
+
   test("lets the description be selected for copying", async () => {
     const screen = await renderWithProviders(
       <BoardSetInfoDialog

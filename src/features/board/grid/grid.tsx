@@ -17,7 +17,7 @@ export interface GridItemProps {
 type GridRowDataAttributes = Record<`data-${string}`, string>;
 
 interface GridProps<TItem extends { id: string }> {
-  ariaLabel?: string;
+  "aria-label"?: string;
   items: readonly TItem[];
   rows: number;
   columns: number;
@@ -28,7 +28,7 @@ interface GridProps<TItem extends { id: string }> {
 }
 
 export function Grid<TItem extends { id: string }>({
-  ariaLabel,
+  "aria-label": ariaLabel,
   items,
   rows,
   columns,

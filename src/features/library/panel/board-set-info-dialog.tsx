@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useLastNonNull } from "@shared/hooks/use-last-non-null";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
@@ -20,16 +21,17 @@ export function BoardSetInfoDialog({
   onClose,
 }: BoardSetInfoDialogProps) {
   const t = useTranslate();
-  const facts = boardSet ? buildFacts(t, boardSet) : [];
+  const shownBoardSet = useLastNonNull(boardSet);
+  const facts = shownBoardSet ? buildFacts(t, shownBoardSet) : [];
 
   return (
     <Dialog open={boardSet !== null} onClose={onClose} fullWidth maxWidth="sm">
       <Box sx={{ px: 3, py: 2 }}>
-        <DialogTitle sx={{ p: 0 }}>{boardSet?.name}</DialogTitle>
+        <DialogTitle sx={{ p: 0 }}>{shownBoardSet?.name}</DialogTitle>
 
-        {boardSet?.author && (
+        {shownBoardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {t(m.libraryByAuthor, { author: boardSet.author })}
+            {t(m.libraryByAuthor, { author: shownBoardSet.author })}
           </Typography>
         )}
       </Box>
@@ -46,9 +48,9 @@ export function BoardSetInfoDialog({
       >
         {facts.length > 0 && <FactLine facts={facts} />}
 
-        {boardSet?.description && (
+        {shownBoardSet?.description && (
           <Typography variant="body1" sx={{ mt: 2, whiteSpace: "pre-line" }}>
-            {boardSet.description}
+            {shownBoardSet.description}
           </Typography>
         )}
       </DialogContent>

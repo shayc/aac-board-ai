@@ -25,6 +25,21 @@ describe("LoadingState", () => {
     await expectNoA11yViolations(screen.container);
   });
 
+  test("exposes the message to assistive technology once, as the indicator's name", async () => {
+    const screen = await render(
+      <AppProviders>
+        <LoadingState />
+      </AppProviders>,
+    );
+
+    await expect
+      .element(screen.getByRole("progressbar", { name: "Loading…" }))
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByText("Loading…"))
+      .toHaveAttribute("aria-hidden", "true");
+  });
+
   test("names the progress indicator with a custom loading message", async () => {
     const screen = await render(
       <AppProviders>

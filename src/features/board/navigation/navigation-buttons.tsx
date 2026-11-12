@@ -1,11 +1,10 @@
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
-import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { BoardControlButton } from "../board-control-button";
 
 interface NavigationButtonsProps {
   canGoBack: boolean;
@@ -24,29 +23,21 @@ export function NavigationButtons({
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
-      <Button
-        {...focusableDisabledProps(!canGoBack)}
+      <BoardControlButton
         aria-label={t(m.navBack)}
-        size="large"
-        color="inherit"
-        variant="contained"
-        onClick={canGoBack ? onBack : undefined}
-        sx={{ width: 72 }}
+        disabled={!canGoBack}
+        onClick={onBack}
       >
         <ArrowBackOutlinedIcon sx={flipForRTL} />
-      </Button>
+      </BoardControlButton>
 
-      <Button
-        {...focusableDisabledProps(!canGoHome)}
+      <BoardControlButton
         aria-label={t(m.navHome)}
-        size="large"
-        color="inherit"
-        variant="contained"
-        onClick={canGoHome ? onHome : undefined}
-        sx={{ width: 72 }}
+        disabled={!canGoHome}
+        onClick={onHome}
       >
         <HomeOutlinedIcon />
-      </Button>
+      </BoardControlButton>
     </Box>
   );
 }
