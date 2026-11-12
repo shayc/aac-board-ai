@@ -96,10 +96,6 @@ export function setSpeechVolume(volume: number): void {
   updatePreferences({ volume });
 }
 
-export function getVoicesByLanguage(): VoicesByLanguage {
-  return voicesByLanguageStore.getSnapshot();
-}
-
 export function useVoicesByLanguage(): VoicesByLanguage {
   return useExternalStore(voicesByLanguageStore);
 }
@@ -110,12 +106,13 @@ export function useSpeechPreferences(): SpeechPreferences {
 
 export function getSpeechSettings(): SpeechSettings {
   const lang = getStoredLanguage();
+  const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();
 
   return {
     lang,
-    voice: resolveVoice(getVoicesByLanguage(), lang, voiceURI),
+    voice: resolveVoice(voicesByLanguage, lang, voiceURI),
     rate,
     pitch,
     volume,
