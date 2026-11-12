@@ -109,8 +109,8 @@ warns about it.
   Vitest. Built-in AI is unavailable in this Chromium.
 - Host resolution fails for every host except 127.0.0.1.
 - The app code has no performance marks; everything is observed from outside.
-  The message bar has no role or accessible name, so the journeys find its
-  parts by position: the children of the element before the play button.
+  The journeys find the message's parts by position: the children of the
+  element before the play button.
 
 `npm run test:perf` runs the unit tests for the statistics and the verdicts
 with Node's built-in test runner.

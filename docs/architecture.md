@@ -88,10 +88,11 @@ State has distinct owners and lifetimes:
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding translations saved on this device. Board links
-carry the linked board's ID, which the OBF library resolves from the archive. Board-set records keep their translated names alongside.
-`obfToBoard` derives the runtime `Board` on each read, so runtime types can evolve
-without rewriting stored records. Storage schema changes require a versioned
-migration in [`boards-db.ts`](../src/features/library/storage/boards-db.ts).
+carry the linked board's ID, which the OBF library resolves from the archive.
+Board-set records store the set's translated names. `obfToBoard` derives the
+runtime `Board` on each read, so runtime types can evolve without rewriting
+stored records. Storage schema changes require a versioned migration in
+[`boards-db.ts`](../src/features/library/storage/boards-db.ts).
 
 React Context provides theme, playback controls, and snackbar access.
 Components subscribe to external stores through `useExternalStore`, a
@@ -112,12 +113,16 @@ persists and synchronizes theme mode separately.
 
 ## Core flows
 
-At `/`, a board URL supplied through `?board=` takes precedence: the app names the
-link's host and imports only after the user confirms, because `/` opens the newest
-board set and a link alone must not change it. URL downloads reject redirects to
-another host, so the named host is the one that serves the file. Otherwise, the
-app opens the first stored board set or imports the bundled starter board set if
-the library is empty.
+### Start at `/`
+
+At `/`, a board URL supplied through `?board=` takes precedence: the app names
+the link's host and imports only after the user confirms, because `/` opens the
+newest board set and a link alone must not change it. URL downloads reject
+redirects to another host, so the named host is the one that serves the file.
+Otherwise, the app opens the newest stored board set, or imports the bundled
+starter board set if the library is empty.
+
+### Import board files
 
 File selection, drag and drop, URL imports, and PWA file handling all use
 `importBoardFile`. Each imported file creates a separate board set. The three
@@ -126,11 +131,18 @@ skips files without a board file extension and reports when none remain. It
 imports the rest one at a time, so a failing file doesn't block the others, and
 reports the outcome in one message that names the file when exactly one fails.
 
+### Export a board set
+
 Export is the reverse, for one set at a time from its library menu.
 `boardSetToOBZ` packages the stored OBF records, which already carry the
-translations saved on this device, with the set's stored assets. `createOBZ`
-points board links at the boards it packages, media take the normalized path their file is stored under, and media whose file
-was never stored drop their path and fall back to `data` or `url`. The set name, translated into the communication language, names the file.
+translations saved on this device, with the set's stored assets:
+
+- `createOBZ` points board links at the boards it packages.
+- Media take the normalized path their file is stored under.
+- Media whose file was never stored drop their path and fall back to `data` or
+  `url`.
+
+The set name, translated into the communication language, names the file.
 
 ### Open a board
 
@@ -148,6 +160,12 @@ Route loaders only read; they never translate or wait on a model:
 2. The page renders the board in the communication language through
    `useBoardInLanguage`: the source board, or the board's own translations for
    that language, from the board file or saved on this device.
+
+Stored assets are immutable, so
+[each asset has one object URL](../src/features/library/storage/asset-urls.ts) for
+as long as its board set exists. Message parts keep their media after leaving
+the board they came from. A library refresh revokes the URLs of deleted board
+sets.
 
 ### Translate board sets
 
@@ -178,18 +196,13 @@ error ends the pass and is reported, and passes queued behind it still run.
 The hook hands each pass to the
 [board translation coordinator](../src/features/library/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status published while a pass is translating a set. The status is set when a set's model download starts or, with no download, once
-its translation models are open, and cleared when the pass ends or the language
-changes. A pass aborted by a language change never touches the status again. The
+status published while a pass is translating a set. The status is set when a
+set's model download starts or, with no download, once its translation models
+are open, and cleared when the pass ends or the language changes. A pass aborted
+by a language change never touches the status again. The
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 shows a model download first and the translation after it. The status is already
 set when the download ends, so one alert carries both states.
-
-Stored assets are immutable, so
-[each asset has one object URL](../src/features/library/storage/asset-urls.ts) for
-as long as its board set exists. Message parts keep their media after leaving
-the board they came from. A library refresh revokes the URLs of deleted board
-sets.
 
 ### Activate a tile
 
@@ -218,7 +231,8 @@ failed, and tells its callers only whether a message played to its end.
 
 ### Accessibility
 
-Controls have programmatic names and support pointer, keyboard, and switch input. The
+Controls have programmatic names and support pointer, keyboard, and switch
+input. The
 [board grid](../src/features/board/grid/grid.tsx) and its
 [keyboard behavior](../src/features/board/grid/use-grid-focus.ts) preserve
 these rules:
@@ -247,9 +261,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   spreads the row props the board hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
-  or item with an attribute, and clicks the selected one. Scanned controls therefore
-  need no scanning code, and disabled controls and empty groups drop out by
-  themselves.
+  or item with an attribute, and clicks the selected one. Scanned controls
+  therefore need no scanning code, and disabled controls and empty groups drop
+  out by themselves.
 - [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the
   pure state machine: the scan moves through groups, selecting a group moves
   through its items, and selecting an item activates it. A group with one item
@@ -259,8 +273,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   steps.
 - Automatic scanning moves on a timer and either switch selects. It starts on
   the first press, pauses after two passes over the groups, and moves on to the
-  next group after two passes over a group's items. Two-switch step scanning moves
-  with Space, selects with Enter, and keeps going around until a selection.
+  next group after two passes over a group's items. Two-switch step scanning
+  moves with Space, selects with Enter, and keeps going around until a
+  selection.
 - Switch keys count wherever focus is, including on a header button, and are
   kept from the focused control. Keys typed into a text field are left alone,
   and so are keys pressed while a dialog, drawer, or menu covers the board.
@@ -372,8 +387,9 @@ drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
 language settings render the library's
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-instead of checking Translator support or translation progress themselves. Reusable field controls live in
-`shared/ui/` so features do not depend on the app layer.
+instead of checking Translator support or translation progress themselves.
+Reusable field controls live in `shared/ui/` so features do not depend on the
+app layer.
 
 Closing or unmounting settings does not delete preferences. Removing a feature
 requires an explicit decision about retaining or deleting its persisted
@@ -455,6 +471,8 @@ AI availability, provisioning, and session lifecycle to
   and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
+- **Message part** — one item in the message, with its own label and any
+  vocalization, image, or sound.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
 - **Scroll clearance** — the room kept above and below the grid, between the
@@ -463,8 +481,6 @@ AI availability, provisioning, and session lifecycle to
   grid's edge, so the user can tell the board scrolls that way.
 - **Inset** — the part of the grid's viewport that whole rows or columns leave
   free: padding, plus a tile gap and the overflow hint where the grid scrolls.
-- **Message part** — one item in the message, with its own label and any
-  vocalization, image, or sound.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.
@@ -476,8 +492,9 @@ AI availability, provisioning, and session lifecycle to
   catalogs in [`messages/`](../messages/), which code reads as `m.someKey`, are
   unrelated.
 - **Translation** — UI text comes from the Paraglide message catalogs and is
-  read through `useTranslate()`. Board translation is separate: it shows board strings in the
-  communication language, reading the translations a board already has in
+  read through `useTranslate()`. Board translation is separate: it shows board
+  strings in the communication language, reading the translations a board
+  already has in
   [`board-translations.ts`](../src/features/library/translation/board-translations.ts)
   and producing missing ones with the Translator API in
   [`translate-board-sets.ts`](../src/features/library/translation/translate-board-sets.ts).
