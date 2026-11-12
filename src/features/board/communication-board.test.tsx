@@ -12,6 +12,7 @@ import {
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { TEST_IMAGE_SRC } from "./testing";
 import {
+  communicationBoardTree,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -519,7 +520,77 @@ describe("CommunicationBoard", () => {
       expect(audio.play).not.toHaveBeenCalled();
     });
 
-    test("does not scroll the grid when Home navigates to the home board", async () => {
+    test("shows the home board from the grid's origin", async () => {
+      const entries = ["/sets/set-1/boards/other-board"];
+      const screen = await renderCommunicationBoard(
+        LARGE_GRID_BOARD,
+        entries,
+        "root-board",
+      );
+      const grid = screen.getByRole("grid").element();
+      const scrollContainer = grid.parentElement;
+      assertDefined(scrollContainer);
+
+      scrollContainer.scrollTo({
+        left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
+        top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
+      });
+
+      await vi.waitFor(() => {
+        expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+        expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+      });
+
+      await screen.rerender(
+        communicationBoardTree(
+          { ...LARGE_GRID_BOARD, id: "root-board" },
+          entries,
+          "root-board",
+        ),
+      );
+
+      expect(scrollContainer.scrollLeft).toBe(0);
+      expect(scrollContainer.scrollTop).toBe(0);
+    });
+
+    test("keeps the grid's scroll position when another board is shown", async () => {
+      const entries = ["/sets/set-1/boards/other-board"];
+      const screen = await renderCommunicationBoard(
+        LARGE_GRID_BOARD,
+        entries,
+        "root-board",
+      );
+      const grid = screen.getByRole("grid").element();
+      const scrollContainer = grid.parentElement;
+      assertDefined(scrollContainer);
+
+      scrollContainer.scrollTo({
+        left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
+        top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
+      });
+
+      await vi.waitFor(() => {
+        expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+        expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+      });
+
+      // With focus on the page, the grid would take it for its first tile and
+      // scroll that tile into view.
+      screen.getByRole("button", { name: "Go home" }).element().focus();
+
+      await screen.rerender(
+        communicationBoardTree(
+          { ...LARGE_GRID_BOARD, id: "next-board" },
+          entries,
+          "root-board",
+        ),
+      );
+
+      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+    });
+
+    test("does not scroll the current board while Home navigates to the home board", async () => {
       const screen = await renderCommunicationBoard(
         LARGE_GRID_BOARD,
         ["/sets/set-1/boards/other-board"],
