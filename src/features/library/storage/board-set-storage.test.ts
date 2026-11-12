@@ -71,6 +71,22 @@ describe("insertBoardSet", () => {
     expect(rootBoard).toEqual(source);
   });
 
+  test("asks the browser to keep stored boards only once a set is stored", async () => {
+    const persist = vi
+      .spyOn(navigator.storage, "persist")
+      .mockResolvedValue(true);
+
+    await expect(
+      insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
+    ).rejects.toThrow("Root board not found");
+
+    expect(persist).not.toHaveBeenCalled();
+
+    await insertBoardSet(makeBoardSetInput());
+
+    expect(persist).toHaveBeenCalledOnce();
+  });
+
   test("rejects a missing root without storing a partial set", async () => {
     await expect(
       insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),

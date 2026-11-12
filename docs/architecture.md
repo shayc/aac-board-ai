@@ -89,7 +89,9 @@ State has distinct owners and lifetimes:
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding translations saved on this device. Board links
 carry the linked board's ID, which the OBF library resolves from the archive.
-Board-set records store the set's translated names. `obfToBoard` derives the
+Board-set records store the set's translated names. Storing a board set asks
+the browser for persistent storage, so boards survive eviction under storage
+pressure; browsers may decline or prompt, and the app works either way. `obfToBoard` derives the
 runtime `Board` on each read, so runtime types can evolve without rewriting
 stored records. Storage schema changes require a versioned migration in
 [`boards-db.ts`](../src/features/library/storage/boards-db.ts).

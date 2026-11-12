@@ -159,6 +159,8 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
 
     await boardSetStore.add(record);
   });
+
+  requestPersistentStorage();
 }
 
 function validateBoardSetInput({
@@ -207,4 +209,11 @@ function buildBoardSetRecord(
     gridRows: rootBoard.grid.rows,
     gridColumns: rootBoard.grid.columns,
   };
+}
+
+// Without persistence, browsers may evict IndexedDB under storage pressure,
+// silently deleting the boards someone communicates with. Not awaited, since
+// Firefox settles only once the user answers its permission prompt.
+function requestPersistentStorage(): void {
+  void navigator.storage.persist();
 }
