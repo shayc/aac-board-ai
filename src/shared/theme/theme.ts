@@ -7,7 +7,11 @@ import {
   type Shadows,
   type ThemeOptions,
 } from "@mui/material/styles";
-import { buttonFeedbackTiming, instantReleaseOnTouch } from "./button-feedback";
+import {
+  buttonFeedbackTiming,
+  buttonFeedbackTransition,
+  instantFeedbackOnTouch,
+} from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
@@ -255,14 +259,11 @@ const themeOptions = {
             backgroundColor: "currentColor",
             opacity: 0,
             pointerEvents: "none",
-            transition: theme.transitions.create("opacity", {
-              duration: theme.transitions.duration.shortest,
-              easing: theme.transitions.easing.easeOut,
-            }),
+            transition: buttonFeedbackTransition(theme, ["opacity"]),
             "@media (prefers-reduced-motion: reduce)": {
               transition: "none",
             },
-            ...instantReleaseOnTouch,
+            ...instantFeedbackOnTouch,
           },
           "&:active::before": {
             opacity: theme.vars.palette.action.activatedOpacity,

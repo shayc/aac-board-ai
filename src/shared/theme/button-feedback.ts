@@ -1,8 +1,9 @@
 import type { Theme } from "@mui/material/styles";
 
 // WebKit on iOS reapplies :active while it dispatches the mouse events that
-// follow a tap, so a release transition replays the press as a second flash.
-export const instantReleaseOnTouch = {
+// follow a tap, so any release transition replays the press as a second
+// flash. CSS can't time only the release, so touch feedback is instant.
+export const instantFeedbackOnTouch = {
   "@media (hover: none)": {
     transitionDuration: "0ms",
   },
@@ -14,7 +15,7 @@ export function buttonFeedbackTiming(theme: Theme) {
   return {
     transitionDuration: `${duration}ms`,
     transitionTimingFunction: easing,
-    ...instantReleaseOnTouch,
+    ...instantFeedbackOnTouch,
     "&:active": {
       transitionDuration: "0ms",
     },
