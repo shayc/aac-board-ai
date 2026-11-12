@@ -336,8 +336,9 @@ for aliased imports:
   internals.
 - `src/app/` composes features through public entry points such as
   [`src/features/board/index.ts`](../src/features/board/index.ts).
-- Only the library's [`storage/`](../src/features/library/storage/) imports `idb`
-  or uses the `indexedDB` global, so every other module reaches stored boards
+- Only the library's [`storage/`](../src/features/library/storage/) and its
+  [test database helper](../src/features/library/testing/db.ts) import `idb` or
+  use the `indexedDB` global, so every other module reaches stored boards
   through the library's public entry point.
 - Only the board's [`suggestions/`](../src/features/board/suggestions/) and the
   library's [`translation/`](../src/features/library/translation/) import the
@@ -474,8 +475,8 @@ AI availability, provisioning, and session lifecycle to
   [`features/board/message/`](../src/features/board/message/). The UI text
   catalogs in [`messages/`](../messages/), which code reads as `m.someKey`, are
   unrelated.
-- **Translation** — UI text is translated by Paraglide and read through
-  `useTranslate()`. Board translation is separate: it shows board strings in the
+- **Translation** — UI text comes from the Paraglide message catalogs and is
+  read through `useTranslate()`. Board translation is separate: it shows board strings in the
   communication language, reading the translations a board already has in
   [`board-translations.ts`](../src/features/library/translation/board-translations.ts)
   and producing missing ones with the Translator API in
@@ -490,7 +491,7 @@ AI availability, provisioning, and session lifecycle to
 - **Playback** — speaking text or playing recorded audio.
   [`shared/playback/`](../src/shared/playback/) owns device output and progress;
   [`features/board/playback/`](../src/features/board/playback/) turns message
-  parts into the steps to play.
+  parts into the steps to play and reports a playback that fails.
 - **Navigation** — moving between boards with Back, Home, and the board
   selector, in [`features/board/navigation/`](../src/features/board/navigation/).
   Moving focus between tiles is the grid's
