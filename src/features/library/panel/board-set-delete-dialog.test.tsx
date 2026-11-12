@@ -34,6 +34,30 @@ describe("BoardSetDeleteDialog", () => {
     await expectNoA11yViolations(document.body);
   });
 
+  test("keeps naming the board set while the dialog closes", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetDeleteDialog
+        boardSet={makeBoardSetRecord({ name: "Core Words" })}
+        onDelete={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+
+    await screen.rerender(
+      <AppProviders>
+        <BoardSetDeleteDialog
+          boardSet={null}
+          onDelete={vi.fn()}
+          onClose={vi.fn()}
+        />
+      </AppProviders>,
+    );
+
+    expect(screen.getByText(/Core Words/).query()).not.toBeNull();
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+  });
+
   test("renders nothing when no board set is targeted", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog

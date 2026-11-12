@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
+import { useLastNonNull } from "@shared/hooks/use-last-non-null";
 import { useTranslate } from "@shared/language/use-translate";
 import { useId } from "react";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -22,6 +23,7 @@ export function BoardSetDeleteDialog({
 }: BoardSetDeleteDialogProps) {
   const t = useTranslate();
   const descriptionId = useId();
+  const shownBoardSet = useLastNonNull(boardSet);
 
   return (
     <Dialog
@@ -33,8 +35,8 @@ export function BoardSetDeleteDialog({
 
       <DialogContent>
         <DialogContentText id={descriptionId}>
-          {boardSet
-            ? t(m.libraryDeleteIrreversible, { name: boardSet.name })
+          {shownBoardSet
+            ? t(m.libraryDeleteIrreversible, { name: shownBoardSet.name })
             : null}
         </DialogContentText>
       </DialogContent>
