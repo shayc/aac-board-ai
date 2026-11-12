@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { HTMLAttributes, ReactNode } from "react";
+import type { ReactNode } from "react";
 import {
   createGridContentSx,
   createGridViewportSx,
@@ -14,8 +14,7 @@ export interface GridItemProps {
   tabIndex: number;
 }
 
-export type GridRowAttributes = HTMLAttributes<HTMLDivElement> &
-  Record<`data-${string}`, string>;
+export type GridRowDataAttributes = Record<`data-${string}`, string>;
 
 interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
@@ -24,7 +23,7 @@ interface GridProps<TItem extends { id: string }> {
   columns: number;
   order?: GridOrder;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  rowProps?: GridRowAttributes;
+  rowProps?: GridRowDataAttributes;
   gap?: number;
 }
 
@@ -75,7 +74,7 @@ interface GridRowProps<TItem extends { id: string }> {
   rowIndex: number;
   tabStopColumn: number | undefined;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  rowProps: GridRowAttributes | undefined;
+  rowProps: GridRowDataAttributes | undefined;
 }
 
 function GridRow<TItem extends { id: string }>({

@@ -361,7 +361,7 @@ describe("Grid", () => {
   });
 
   describe("row props", () => {
-    test("spreads rowProps onto every row without replacing its role", async () => {
+    test("spreads rowProps onto every row", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },
@@ -373,7 +373,7 @@ describe("Grid", () => {
           rows={2}
           columns={1}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
-          rowProps={{ "data-testid": "grid-row", role: "presentation" }}
+          rowProps={{ "data-testid": "grid-row" }}
         />,
       );
 
