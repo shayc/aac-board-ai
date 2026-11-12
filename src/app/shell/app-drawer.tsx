@@ -14,18 +14,18 @@ interface AppDrawerProps {
   title: string;
   closeLabel: string;
   open: boolean;
+  onClose: () => void;
   anchor: "left" | "right";
   children: ReactNode;
-  onClose: () => void;
 }
 
 export function AppDrawer({
   title,
   closeLabel,
   open,
+  onClose,
   anchor,
   children,
-  onClose,
 }: AppDrawerProps) {
   return (
     <Drawer

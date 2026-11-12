@@ -10,8 +10,8 @@ function renderDrawer(open: boolean) {
         title="Panel"
         closeLabel="Close panel"
         open={open}
-        anchor="left"
         onClose={vi.fn()}
+        anchor="left"
       >
         <div style={{ height: 4000 }}>Tall content</div>
       </AppDrawer>

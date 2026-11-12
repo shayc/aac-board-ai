@@ -147,9 +147,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          items={items}
           rows={2}
           columns={2}
-          items={items}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
       );
@@ -173,9 +173,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          items={items}
           rows={2}
           columns={2}
-          items={items}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
       );
@@ -199,9 +199,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          items={items}
           rows={2}
           columns={2}
-          items={items}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
       );
@@ -217,9 +217,9 @@ describe("Grid", () => {
     test("renders no items when items is empty", async () => {
       const screen = await render(
         <Grid
+          items={[]}
           rows={2}
           columns={2}
-          items={[]}
           renderItem={(item: { id: string; label: string }, props) => (
             <button {...props}>{item.label}</button>
           )}
@@ -247,9 +247,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          items={items}
           rows={2}
           columns={2}
-          items={items}
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -279,9 +279,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          items={items}
           rows={2}
           columns={2}
-          items={items}
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -310,9 +310,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          items={items}
           rows={2}
           columns={2}
-          items={items}
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,

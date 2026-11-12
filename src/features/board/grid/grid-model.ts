@@ -7,12 +7,12 @@ export interface GridPosition {
   column: number;
 }
 
-export function buildGrid<TItem extends { id: string }>(
-  items: readonly TItem[],
+export function buildGrid<Item extends { id: string }>(
+  items: readonly Item[],
   rows: number,
   columns: number,
   order?: GridOrder,
-): (TItem | undefined)[][] {
+): (Item | undefined)[][] {
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
 

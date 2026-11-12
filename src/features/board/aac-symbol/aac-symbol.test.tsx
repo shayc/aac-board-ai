@@ -11,7 +11,7 @@ async function renderSymbol(
 ) {
   const screen = await render(
     <div style={{ width: 120, height }}>
-      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Action" {...props} />
+      <AACSymbol label="Action" imageSrc={TEST_IMAGE_SRC} {...props} />
     </div>,
   );
   const image = screen.container.querySelector("img");
@@ -40,7 +40,7 @@ describe("AACSymbol", () => {
 
   test("renders the image as decorative so the label names the symbol", async () => {
     const screen = await render(
-      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="" />,
+      <AACSymbol label="" imageSrc={TEST_IMAGE_SRC} />,
     );
 
     const image = screen.container.querySelector("img");
@@ -50,7 +50,7 @@ describe("AACSymbol", () => {
 
   test("renders only phrasing elements so it can sit inside a button", async () => {
     const screen = await render(
-      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Hello" />,
+      <AACSymbol label="Hello" imageSrc={TEST_IMAGE_SRC} />,
     );
 
     const symbol = screen.container.firstElementChild;
@@ -96,8 +96,8 @@ describe("AACSymbol", () => {
   test("shows only the label when the image is hidden", async () => {
     const screen = await render(
       <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
         label="Hello"
+        imageSrc={TEST_IMAGE_SRC}
         isImageVisible={false}
       />,
     );
@@ -108,7 +108,7 @@ describe("AACSymbol", () => {
 
   test("keeps a hidden image when the symbol has no label to show instead", async () => {
     const screen = await render(
-      <AACSymbol imageSrc={TEST_IMAGE_SRC} label=" " isImageVisible={false} />,
+      <AACSymbol label=" " imageSrc={TEST_IMAGE_SRC} isImageVisible={false} />,
     );
 
     expect(screen.container.querySelector("img")).not.toBeNull();

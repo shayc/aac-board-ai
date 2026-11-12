@@ -62,7 +62,11 @@ export function BoardSetInfoDialog({
   );
 }
 
-function FactLine({ facts }: { facts: string[] }) {
+interface FactLineProps {
+  facts: string[];
+}
+
+function FactLine({ facts }: FactLineProps) {
   return (
     <Stack
       direction="row"
