@@ -467,3 +467,32 @@ AI availability, provisioning, and session lifecycle to
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.
+
+### Terms with more than one meaning
+
+- **Message** — what the user composes from tiles and plays aloud, in
+  [`features/board/message/`](../src/features/board/message/). The UI text
+  catalogs in [`messages/`](../messages/), which code reads as `m.someKey`, are
+  unrelated.
+- **Translation** — UI text is translated by Paraglide and read through
+  `useTranslate()`. Board translation is separate: it shows board strings in the
+  communication language, reading the translations a board already has in
+  [`board-translations.ts`](../src/features/library/translation/board-translations.ts)
+  and producing missing ones with the Translator API in
+  [`translate-board-sets.ts`](../src/features/library/translation/translate-board-sets.ts).
+- **Store and storage** — a store is reactive state that components subscribe
+  to, held in memory or persisted to localStorage. Storage is IndexedDB, reached
+  only through [`library/storage/`](../src/features/library/storage/). The
+  [board-sets store](../src/features/library/board-sets/board-sets-store.ts)
+  sits on top of storage: `createBoardSet` and `deleteBoardSet` call storage's
+  `insertBoardSet` and `removeBoardSet`, then refresh the store and notify other
+  tabs.
+- **Playback** — speaking text or playing recorded audio.
+  [`shared/playback/`](../src/shared/playback/) owns device output and progress;
+  [`features/board/playback/`](../src/features/board/playback/) turns message
+  parts into the steps to play.
+- **Navigation** — moving between boards with Back, Home, and the board
+  selector, in [`features/board/navigation/`](../src/features/board/navigation/).
+  Moving focus between tiles is the grid's
+  [keyboard navigation](../src/features/board/grid/grid-key-navigation.ts), and
+  matching URLs to pages is [`app/routing/`](../src/app/routing/).

@@ -1,5 +1,5 @@
+import { randomId } from "@shared/utils/random-id";
 import type { MessagePart, MessagePartInput } from "./message-types";
-import { randomId } from "./random-id";
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
