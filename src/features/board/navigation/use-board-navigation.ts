@@ -1,6 +1,6 @@
+import { BOARD_ROUTE_PATTERN, boardPath } from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
 import { useLocation, useMatch, useNavigate } from "react-router";
-import { BOARD_ROUTE_PATTERN, boardPath } from "@features/library";
 
 interface UseBoardRouteReturn {
   boardSetId: string | undefined;

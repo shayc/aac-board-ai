@@ -1,3 +1,9 @@
+import { listBoardSummaries } from "@features/library";
+import {
+  makeOBFBoard,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/library/testing";
 import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
@@ -9,12 +15,6 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { listBoardSummaries } from "@features/library";
-import {
-  makeOBFBoard,
-  resetBoardsDB,
-  seedBoardSets,
-} from "@features/library/testing";
 import { BoardSelector } from "./board-selector";
 
 async function renderSelector(boardSetId: string, boardId: string) {

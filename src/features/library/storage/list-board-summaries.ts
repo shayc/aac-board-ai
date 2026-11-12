@@ -1,5 +1,5 @@
-import { getLanguageCode } from "@shared/language/locale";
 import type { TranslationsByLocale } from "@shared/board/board-types";
+import { getLanguageCode } from "@shared/language/locale";
 import { obfToTranslationsByLocale } from "../obf/obf-to-board";
 import { findStringTranslations } from "../translation/board-translations";
 import { listBoardRecords } from "./board-content-storage";

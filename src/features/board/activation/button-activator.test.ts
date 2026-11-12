@@ -1,7 +1,7 @@
+import type { BoardButton } from "@shared/board/board-types";
 import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
-import type { BoardButton } from "@shared/board/board-types";
 import type { MessagePart } from "../message/message-types";
 import { createButtonActivator } from "./button-activator";
 
