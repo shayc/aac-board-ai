@@ -1,3 +1,9 @@
+import { listBoardSummaries } from "@features/library";
+import {
+  makeOBFBoard,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/library/testing";
 import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
@@ -9,9 +15,6 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { insertBoardSet } from "../storage/board-set-storage";
-import { listBoardSummaries } from "../storage/list-board-summaries";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSelector } from "./board-selector";
 
 async function renderSelector(boardSetId: string, boardId: string) {
@@ -38,17 +41,19 @@ async function renderSelector(boardSetId: string, boardId: string) {
 beforeEach(async () => {
   setStoredLanguage(DEFAULT_LANGUAGE);
   await resetBoardsDB();
-  await insertBoardSet({
-    id: "set-1",
-    name: "Set",
-    rootBoardId: "root",
-    boards: [
-      makeOBFBoard({ id: "root", name: "Home" }),
-      makeOBFBoard({ id: "animals", name: "Animals" }),
-      makeOBFBoard({ id: "food", name: "Food" }),
-    ],
-    assets: [],
-  });
+  await seedBoardSets([
+    {
+      id: "set-1",
+      name: "Set",
+      rootBoardId: "root",
+      boards: [
+        makeOBFBoard({ id: "root", name: "Home" }),
+        makeOBFBoard({ id: "animals", name: "Animals" }),
+        makeOBFBoard({ id: "food", name: "Food" }),
+      ],
+      assets: [],
+    },
+  ]);
 });
 
 describe("BoardSelector", () => {
@@ -150,20 +155,22 @@ describe("BoardSelector", () => {
   });
 
   test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
-    await insertBoardSet({
-      id: "set-2",
-      name: "Set",
-      rootBoardId: "root",
-      boards: [
-        makeOBFBoard({
-          id: "root",
-          name: "Home",
-          strings: { es: { Home: "Inicio" } },
-        }),
-        makeOBFBoard({ id: "animals", name: "Animals" }),
-      ],
-      assets: [],
-    });
+    await seedBoardSets([
+      {
+        id: "set-2",
+        name: "Set",
+        rootBoardId: "root",
+        boards: [
+          makeOBFBoard({
+            id: "root",
+            name: "Home",
+            strings: { es: { Home: "Inicio" } },
+          }),
+          makeOBFBoard({ id: "animals", name: "Animals" }),
+        ],
+        assets: [],
+      },
+    ]);
 
     setStoredLanguage("es");
 
@@ -178,19 +185,21 @@ describe("BoardSelector", () => {
   });
 
   test("shows the name of a board named after an inherited object property that its translations leave out", async () => {
-    await insertBoardSet({
-      id: "set-2",
-      name: "Set",
-      rootBoardId: "root",
-      boards: [
-        makeOBFBoard({
-          id: "root",
-          name: "constructor",
-          strings: { es: { Home: "Inicio" } },
-        }),
-      ],
-      assets: [],
-    });
+    await seedBoardSets([
+      {
+        id: "set-2",
+        name: "Set",
+        rootBoardId: "root",
+        boards: [
+          makeOBFBoard({
+            id: "root",
+            name: "constructor",
+            strings: { es: { Home: "Inicio" } },
+          }),
+        ],
+        assets: [],
+      },
+    ]);
 
     setStoredLanguage("es");
 

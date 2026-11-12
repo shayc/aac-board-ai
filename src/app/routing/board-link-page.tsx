@@ -1,4 +1,3 @@
-import type { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -10,6 +9,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
+import type { rootIndexLoader } from "./loaders/root-index-loader";
 
 // FSI/PDI preserve host order in RTL translations, including digit-led hosts.
 function isolateBidi(text: string): string {

@@ -1,12 +1,12 @@
-import { listBoardSetRecords } from "@features/board";
-import { resetBoardsDB } from "@features/board/testing";
+import { listBoardSetRecords } from "@features/library";
+import { resetBoardsDB } from "@features/library/testing";
 import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexAction } from "./root-index-action";
 
 const FIXTURE_BOARD_URL =
-  "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
+  "/src/features/library/testing/sample-boards/lots-of-stuff.obz";
 const localizedImportFailure = {
   data: { code: routeErrorCodes.boardURLImportFailed },
   init: { status: 400 },

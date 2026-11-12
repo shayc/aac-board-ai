@@ -1,9 +1,9 @@
-import { listBoardSetRecords } from "@features/board";
+import { listBoardSetRecords } from "@features/library";
 import {
   makeBoardsDBUnreadable,
   resetBoardsDB,
   seedBoardSets,
-} from "@features/board/testing";
+} from "@features/library/testing";
 import { loaderArgs } from "@shared/testing/loader-args";
 import {
   assert,

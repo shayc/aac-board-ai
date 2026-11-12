@@ -1,8 +1,8 @@
 import { assertDefined } from "@shared/testing/assert-defined";
+import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import type { ComponentProps } from "react";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { TEST_IMAGE_SRC } from "../testing";
 import { AACSymbol } from "./aac-symbol";
 
 async function renderSymbol(

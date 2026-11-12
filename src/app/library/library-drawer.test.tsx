@@ -1,4 +1,4 @@
-import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
+import { resetBoardsDB, seedBoardSets } from "@features/library/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { createMemoryRouter, Outlet } from "react-router";

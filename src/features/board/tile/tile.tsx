@@ -1,11 +1,11 @@
 import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
+import type { BoardButton } from "@shared/board/board-types";
 import { useTranslate } from "@shared/language/use-translate";
 import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
 import type { CSSProperties } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import type { BoardButton } from "../board-types";
 import { useTilePreferences } from "./tile-preferences-store";
 
 interface TileProps {

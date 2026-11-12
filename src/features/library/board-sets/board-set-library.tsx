@@ -15,7 +15,7 @@ import { useState } from "react";
 import { useMatch, useNavigate } from "react-router";
 import { exportBoardSet } from "../export/board-set-export";
 import { useImportBoardFiles } from "../import/use-import-board-files";
-import { BOARD_SET_SEGMENT } from "../navigation/board-paths";
+import { BOARD_SET_SEGMENT } from "../board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { boardSetInLanguage } from "../translation/board-translations";
 import { listDownloadableBoardSets } from "./board-set-catalog";

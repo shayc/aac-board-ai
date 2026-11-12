@@ -6,6 +6,7 @@ import {
   preventSpeechEnd,
   stubSpeech,
 } from "@shared/testing/stub-speech";
+import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
@@ -14,7 +15,6 @@ import {
   setTileLabelPlacement,
 } from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
-import { TEST_IMAGE_SRC } from "./testing";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,

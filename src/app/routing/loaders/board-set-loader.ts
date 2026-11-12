@@ -2,7 +2,7 @@ import {
   getBoardSetRecord,
   listBoardSummaries,
   type BoardSummary,
-} from "@features/board";
+} from "@features/library";
 import type { LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 

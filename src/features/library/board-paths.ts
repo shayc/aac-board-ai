@@ -1,5 +1,5 @@
+import type { BoardKey } from "@shared/board/board-types";
 import { generatePath, matchPath } from "react-router";
-import type { BoardKey } from "../board-types";
 
 export const BOARD_SET_SEGMENT = "sets/:boardSetId";
 export const BOARD_SEGMENT = "boards/:boardId";

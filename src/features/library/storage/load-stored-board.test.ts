@@ -1,6 +1,6 @@
+import type { Board } from "@shared/board/board-types";
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { Board } from "../board-types";
 import { beforeEach, describe, expect, test } from "vitest";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";

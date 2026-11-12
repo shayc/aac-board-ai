@@ -20,7 +20,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
-import { rootBoardPath } from "../navigation/board-paths";
+import { rootBoardPath } from "../board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import type { CatalogBoardSet } from "./board-set-catalog";
 import { subscribeCompletedDownloads } from "./board-set-downloads";

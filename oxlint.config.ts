@@ -11,10 +11,66 @@ const muiBarrelRestriction: ImportPattern = {
     "@mui package roots are barrels — use a subpath, e.g. @mui/material/Button.",
 };
 
-function restrictImports(
+const indexedDBRestriction: ImportPattern = {
+  group: ["idb", "idb/**"],
+  message:
+    "Storage owns all IndexedDB access — go through the library feature's storage module (@features/library from other features).",
+};
+
+const builtInAIRestriction: ImportPattern = {
+  group: ["@shayc/react-built-in-ai", "@shayc/react-built-in-ai/**"],
+  message:
+    "Built-in AI is optional — only the board's suggestions and the library's translation may use it, so nothing else comes to depend on a model.",
+};
+
+// Packages only their owning folder may import.
+const ownedPackageRestrictions = [indexedDBRestriction, builtInAIRestriction];
+
+const boardBoundary: ImportPattern = {
+  group: ["@app/**", "@features/**", "!@features/library"],
+  message:
+    "The board feature is isolated from @app and may import only the library's barrel (@features/library) — otherwise use @shared or relative paths within the feature.",
+};
+
+const boardTestBoundary: ImportPattern = {
+  group: [...boardBoundary.group, "!@features/library/testing"],
+  message:
+    "The board feature is isolated from @app and may import only the library's barrel (@features/library) or test entry (@features/library/testing) — otherwise use @shared or relative paths within the feature.",
+};
+
+const libraryBoundary: ImportPattern = {
+  group: ["@app/**", "@features/**"],
+  message:
+    "The library feature is isolated from @app and other features — use @shared or relative paths within the feature.",
+};
+
+type RestrictedImports = ["error", { patterns: ImportPattern[] }];
+
+function restrictImports(...patterns: ImportPattern[]): RestrictedImports {
+  return [
+    "error",
+    {
+      patterns: [
+        muiBarrelRestriction,
+        ...ownedPackageRestrictions,
+        ...patterns,
+      ],
+    },
+  ];
+}
+
+function restrictImportsForOwnerOf(
+  ownedPackage: ImportPattern,
   ...patterns: ImportPattern[]
-): ["error", { patterns: ImportPattern[] }] {
-  return ["error", { patterns: [muiBarrelRestriction, ...patterns] }];
+): RestrictedImports {
+  const otherOwnedPackages = ownedPackageRestrictions.filter(
+    (restriction) => restriction !== ownedPackage,
+  );
+
+  return [
+    "error",
+    { patterns: [muiBarrelRestriction, ...otherOwnedPackages, ...patterns] },
+  ];
 }
 
 export default defineConfig({
@@ -42,6 +98,14 @@ export default defineConfig({
   ],
   rules: {
     curly: "error",
+    "no-restricted-globals": [
+      "error",
+      {
+        name: "indexedDB",
+        message:
+          "Storage owns all IndexedDB access — go through the library feature's storage module.",
+      },
+    ],
     "no-restricted-imports": restrictImports(),
     // ARIA grids and MUI primitives intentionally express semantics without table-specific elements.
     "jsx-a11y/prefer-tag-over-role": "off",
@@ -86,28 +150,77 @@ export default defineConfig({
       files: ["src/shared/**/*.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
-          group: ["@app/**", "@features/**", "@pages/**"],
+          group: ["@app/**", "@features/**"],
           message:
-            "@shared is a leaf layer — it imports nothing from @app, @features, or @pages.",
+            "@shared is a leaf layer — it imports nothing from @app or @features.",
         }),
       },
     },
     {
-      files: ["src/features/**/*.{ts,tsx}"],
+      files: ["src/features/board/**/*.{ts,tsx}"],
       rules: {
-        "no-restricted-imports": restrictImports({
-          group: ["@app/**", "@features/**", "@pages/**"],
-          message:
-            "A feature is isolated from @app, @pages, and other features — use @shared (e.g. @shared/testing) or relative paths within the feature.",
-        }),
+        "no-restricted-imports": restrictImports(boardBoundary),
       },
     },
     {
-      files: ["src/app/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
-      excludeFiles: [
-        "src/app/**/*.test.{ts,tsx}",
-        "src/pages/**/*.test.{ts,tsx}",
+      files: [
+        "src/features/board/**/*.test.{ts,tsx}",
+        "src/features/board/testing/**/*.{ts,tsx}",
       ],
+      rules: {
+        "no-restricted-imports": restrictImports(boardTestBoundary),
+      },
+    },
+    {
+      files: ["src/features/board/suggestions/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          builtInAIRestriction,
+          boardBoundary,
+        ),
+      },
+    },
+    {
+      files: ["src/features/board/suggestions/**/*.test.{ts,tsx}"],
+      rules: {
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          builtInAIRestriction,
+          boardTestBoundary,
+        ),
+      },
+    },
+    {
+      files: ["src/features/library/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-imports": restrictImports(libraryBoundary),
+      },
+    },
+    {
+      files: ["src/features/library/translation/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          builtInAIRestriction,
+          libraryBoundary,
+        ),
+      },
+    },
+    {
+      // Test helpers reset and corrupt the database, so they open it too.
+      files: [
+        "src/features/library/storage/**/*.{ts,tsx}",
+        "src/features/library/testing/db.ts",
+      ],
+      rules: {
+        "no-restricted-globals": "off",
+        "no-restricted-imports": restrictImportsForOwnerOf(
+          indexedDBRestriction,
+          libraryBoundary,
+        ),
+      },
+    },
+    {
+      files: ["src/app/**/*.{ts,tsx}"],
+      excludeFiles: ["src/app/**/*.test.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
           group: ["@features/*/**"],
@@ -117,12 +230,12 @@ export default defineConfig({
       },
     },
     {
-      files: ["src/app/**/*.test.{ts,tsx}", "src/pages/**/*.test.{ts,tsx}"],
+      files: ["src/app/**/*.test.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
           group: ["@features/*/**", "!@features/*/testing"],
           message:
-            "A feature's internals are private — use its barrel (@features/board) or test entry (@features/board/testing).",
+            "A feature's internals are private — use its barrel (@features/library) or test entry (@features/library/testing).",
         }),
       },
     },

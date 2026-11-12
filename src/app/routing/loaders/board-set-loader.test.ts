@@ -2,7 +2,7 @@ import {
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
-} from "@features/board/testing";
+} from "@features/library/testing";
 import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardSetLoader } from "./board-set-loader";

@@ -1,4 +1,4 @@
-import { BoardTranslationNotice } from "@features/board";
+import { BoardTranslationNotice } from "@features/library";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";

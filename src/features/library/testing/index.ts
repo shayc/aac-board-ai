@@ -12,5 +12,4 @@ export {
   makeCorruptBoardFile,
   makeOBFBoard,
   makeOversizedOBZ,
-  TEST_IMAGE_SRC,
 } from "./fixtures";

@@ -1,3 +1,10 @@
+import type {
+  Board,
+  BoardAction,
+  BoardButton,
+  BoardGrid,
+  TranslationsByLocale,
+} from "@shared/board/board-types";
 import { normalizeLocale } from "@shared/language/locale";
 import type {
   OBFBoard,
@@ -5,13 +12,6 @@ import type {
   OBFGrid,
   OBFMedia,
 } from "@shayc/open-board-format";
-import type {
-  Board,
-  BoardAction,
-  BoardButton,
-  BoardGrid,
-  TranslationsByLocale,
-} from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";

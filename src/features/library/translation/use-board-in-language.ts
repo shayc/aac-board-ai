@@ -1,5 +1,5 @@
+import type { Board } from "@shared/board/board-types";
 import { useLanguage } from "@shared/language/use-language";
-import type { Board } from "../board-types";
 import { findBoardInLanguage } from "./board-translations";
 
 export function useBoardInLanguage(board: Board): Board {

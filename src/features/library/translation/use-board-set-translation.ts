@@ -2,7 +2,7 @@ import { useLanguage } from "@shared/language/use-language";
 import { useEffect, useEffectEvent } from "react";
 import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { syncBoardSets, useBoardSets } from "../board-sets/board-sets-store";
-import { boardSetIdFromPath } from "../navigation/board-paths";
+import { boardSetIdFromPath } from "../board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import {
   queueBoardTranslationPass,

@@ -1,7 +1,7 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useNavigate } from "react-router";
-import { rootBoardPath } from "../navigation/board-paths";
+import { rootBoardPath } from "../board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
 import { importEachBoardFile, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./pick-files";

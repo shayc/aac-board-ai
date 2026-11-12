@@ -7,7 +7,7 @@ import {
   useBoardFileDrop,
   useBoardSetTranslation,
   useImportBoardFilesOnLaunch,
-} from "@features/board";
+} from "@features/library";
 import Box from "@mui/material/Box";
 import { useState } from "react";
 import { Outlet } from "react-router";

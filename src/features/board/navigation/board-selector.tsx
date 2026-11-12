@@ -1,9 +1,9 @@
+import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
-import type { BoardSummary } from "../storage/list-board-summaries";
 import { useBoardRoute } from "./use-board-navigation";
 
 interface BoardOption {
