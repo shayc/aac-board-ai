@@ -6,6 +6,11 @@ import { createButtonActivator } from "./button-activator";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
 
+const PLAY_THEN_CLEAR: BoardButton["actions"] = [
+  { kind: "play" },
+  { kind: "clear" },
+];
+
 function setup(initialParts: readonly MessagePart[] = []) {
   let currentParts = initialParts;
   const message = {
@@ -31,11 +36,6 @@ function setup(initialParts: readonly MessagePart[] = []) {
     navigation,
   };
 }
-
-const PLAY_THEN_CLEAR: BoardButton["actions"] = [
-  { kind: "play" },
-  { kind: "clear" },
-];
 
 function holdMessagePlayback(playback: ReturnType<typeof setup>["playback"]) {
   const { promise, resolve } = Promise.withResolvers<boolean>();
@@ -145,8 +145,8 @@ describe("createButtonActivator", () => {
     });
 
     const partsToPlay = playback.playMessage.mock.calls[0]?.[0];
-
     assertDefined(partsToPlay);
+
     expect(partsToPlay.map((part) => part.label)).toEqual(["s"]);
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith(partsToPlay);
   });

@@ -93,8 +93,8 @@ describe("BackspaceButton", () => {
         .getByRole("button", { name: "Backspace" })
         .element()
         .querySelector("svg");
-
       assertDefined(icon);
+
       expect(getComputedStyle(icon).transform).toBe(transform);
     },
   );

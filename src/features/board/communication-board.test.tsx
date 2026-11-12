@@ -316,8 +316,8 @@ describe("CommunicationBoard", () => {
       await expect.element(message).toBeVisible();
 
       const utterance = speech.speak.mock.calls[0]?.[0];
-
       assertDefined(utterance);
+
       utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
 
       await expect.element(message).not.toBeInTheDocument();
@@ -336,8 +336,8 @@ describe("CommunicationBoard", () => {
         .toBeVisible();
 
       const utterance = speech.speak.mock.calls[0]?.[0];
-
       assertDefined(utterance);
+
       utterance.dispatchEvent(
         new SpeechSynthesisErrorEvent("error", {
           utterance,
