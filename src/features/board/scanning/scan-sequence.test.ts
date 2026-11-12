@@ -37,6 +37,7 @@ function advanceTimes(
   maxPasses = NO_PAUSE,
 ): ScanPosition<string> | null {
   let current = position;
+
   for (let step = 0; step < times; step++) {
     current = advanceScan(GROUPS, current, maxPasses);
   }

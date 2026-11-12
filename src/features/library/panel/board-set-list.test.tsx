@@ -79,6 +79,7 @@ describe("BoardSetList", () => {
     expect(new Set(labelIds).size).toBe(2);
 
     const menuIds: string[] = [];
+
     for (const [index, boardSet] of boardSets.entries()) {
       const trigger = screen.getByRole("button", {
         name: `More options for ${boardSet.name}`,

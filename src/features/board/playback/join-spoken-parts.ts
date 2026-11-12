@@ -21,6 +21,7 @@ export function joinSpokenParts(
   const spans: PartSpan[] = [];
 
   let offset = 0;
+
   for (const part of parts) {
     const chunk = part.text.trim().replace(/\s+/g, " ");
     chunks.push(chunk);
