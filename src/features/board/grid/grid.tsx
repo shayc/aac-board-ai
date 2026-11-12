@@ -40,7 +40,7 @@ export function Grid<TItem extends { id: string }>({
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
 
   return (
-    <Box ref={ref} sx={createGridViewportSx}>
+    <Box ref={ref} sx={(theme) => createGridViewportSx(theme, gap)}>
       <Stack
         {...rootProps}
         ref={rootRef}

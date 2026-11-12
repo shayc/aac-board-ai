@@ -286,6 +286,33 @@ Theme colors are defined centrally in
 [`theme-colors.ts`](../src/shared/theme/theme-colors.ts). Theme mode is set before
 the first paint to avoid a flash of the wrong color scheme.
 
+### Board spacing
+
+The board places its bars, and the grid pads itself, with the spacing in
+[`board-spacing.ts`](../src/features/board/board-spacing.ts), so the space
+between any two of them changes in one place. Two values exist for each side of
+the `sm` breakpoint: the page margin and the scroll clearance. The grid's
+padding is derived from them in the same file, so the grid itself knows nothing
+about the bars around it.
+
+- The bars above the grid sit one page margin apart. The board keeps the scroll
+  clearance above and below the grid at every size, whether a bar or the
+  screen's edge is next to it. The grid pads its top and bottom by the page
+  margin minus that clearance, so its first and last rows are one page margin
+  from whatever is next to them, the same as its sides.
+- The grid's
+  [layout](../src/features/board/grid/grid-layout.ts) takes a padding for each
+  axis and one overflow hint. Changing a padding does not change the hint.
+- The grid's viewport sets its scroll padding to half the inset of an axis that
+  scrolls. A row or column at rest, and a tile scrolled in because it took
+  focus, sit that far from the edge with the same hint of both neighbors.
+- Where the scroll rests at its start or end and a hint shows next to a bar, the
+  space between that bar and the nearest whole row is the clearance, the
+  overflow hint, and one tile gap. Making one of the three smaller is the only
+  way to make that space smaller. Mid-scroll the space is the clearance plus the
+  scroll padding, which is smaller wherever the grid's padding is less than a
+  gap plus the hint.
+
 ## Module boundaries and code map
 
 Cross-boundary imports use path aliases. Oxlint enforces these dependency rules
@@ -394,6 +421,14 @@ AI availability, provisioning, and session lifecycle to
   and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
+- **Page margin** — the space between the screen's edges and the board's
+  content, and between one bar and the next.
+- **Scroll clearance** — the room kept above and below the grid, between the
+  tiles scrolling past and a bar's controls or the screen's edge.
+- **Overflow hint** — the part of the next row or column that shows past the
+  grid's edge, so the user can tell the board scrolls that way.
+- **Inset** — the part of the grid's viewport that whole rows or columns leave
+  free: padding, plus a tile gap and the overflow hint where the grid scrolls.
 - **Message part** — one item in the message, with its own label and any
   vocalization, image, or sound.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and

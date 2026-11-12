@@ -11,8 +11,11 @@ import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
 
-// The test viewport is below "sm", where the grid uses compact padding.
-const PADDING_PX = 16;
+// The test viewport is below "sm", where the grid's top and bottom padding is
+// smaller than its side padding and the overflow hint is the same on both axes.
+const PADDING_PX = { columns: 16, rows: 12 };
+const OVERFLOW_HINT_PX = 8;
+const GAP_PX = 8;
 const MIN_CELL_SIZES_PX = { columns: 88, rows: 96 };
 
 const AXES = {
@@ -38,6 +41,11 @@ async function measureTracks(
   axis: Axis,
   containerSize: number,
   tracks: number,
+  {
+    itemSize,
+    scrollToTrack,
+    focusTrack,
+  }: { itemSize?: number; scrollToTrack?: number; focusTrack?: number } = {},
 ) {
   const isColumns = axis === "columns";
   const items = Array.from({ length: tracks }, (_, index) => ({
@@ -59,7 +67,14 @@ async function measureTracks(
           items={items}
           rows={isColumns ? 1 : tracks}
           columns={isColumns ? tracks : 1}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+          renderItem={(item, props) => (
+            <button
+              {...props}
+              style={{ flexShrink: 0, [AXES[axis].size]: itemSize }}
+            >
+              {item.label}
+            </button>
+          )}
         />
       </div>
     </MUIThemeProvider>,
@@ -69,6 +84,16 @@ async function measureTracks(
   const scroller = grid.parentElement;
   assertDefined(scroller);
 
+  if (scrollToTrack !== undefined) {
+    scrollTrackToStart(grid, axis, scrollToTrack);
+  }
+
+  if (focusTrack !== undefined) {
+    const item = grid.querySelectorAll("button").item(focusTrack);
+    assertDefined(item);
+    item.focus();
+  }
+
   const { start, end, size, scrollSize, clientSize } = AXES[axis];
   const viewport = scroller.getBoundingClientRect();
   const cells = Array.from(grid.querySelectorAll("[role='gridcell']"), (cell) =>
@@ -76,16 +101,41 @@ async function measureTracks(
   );
   const visibleCells = cells.filter(
     (cell) =>
-      cell[start] >= viewport[start] && cell[end] <= viewport[end] + 0.5,
+      cell[start] >= viewport[start] - 0.5 && cell[end] <= viewport[end] + 0.5,
+  );
+  const firstVisibleCell = visibleCells.at(0);
+  const lastVisibleCell = visibleCells.at(-1);
+  const leadingCell = cells.find(
+    (cell) =>
+      cell[start] < viewport[start] - 0.5 && cell[end] > viewport[start],
+  );
+  const trailingCell = cells.find(
+    (cell) => cell[start] < viewport[end] && cell[end] > viewport[end] + 0.5,
   );
 
   return {
     cellSize: cells[0]?.[size],
-    lastVisibleCellEnd: visibleCells.at(-1)?.[end],
-    viewportContentEnd: viewport[end] - PADDING_PX,
     visibleCellCount: visibleCells.length,
+    leadingSpace: firstVisibleCell && firstVisibleCell[start] - viewport[start],
+    trailingSpace: lastVisibleCell && viewport[end] - lastVisibleCell[end],
+    leadingHint: leadingCell ? leadingCell[end] - viewport[start] : 0,
+    trailingHint: trailingCell ? viewport[end] - trailingCell[start] : 0,
     overflows: scroller[scrollSize] > scroller[clientSize] + 1,
   };
+}
+
+// Rows snap on the block axis and cells on the inline axis, so each axis
+// scrolls the element that snaps on it.
+function scrollTrackToStart(grid: Element, axis: Axis, index: number) {
+  const selector = axis === "columns" ? "[role='gridcell']" : "[role='row']";
+  const track = grid.querySelectorAll(selector).item(index);
+  assertDefined(track);
+
+  track.scrollIntoView({
+    block: "start",
+    inline: "start",
+    behavior: "instant",
+  });
 }
 
 function getCellPosition(item: Locator): { row: number; column: number } {
@@ -330,11 +380,68 @@ describe("Grid", () => {
 
         expect(layout.visibleCellCount).toBe(visible);
         expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZES_PX[axis]);
-        expect(layout.lastVisibleCellEnd).toBeCloseTo(
-          layout.viewportContentEnd,
-          0,
-        );
+        expect(layout.leadingSpace).toBeCloseTo(PADDING_PX[axis], 0);
         expect(layout.overflows).toBe(tracks > visible);
+
+        // An axis that scrolls ends its last whole track a gap and a hint
+        // before the edge; an axis that fits ends it at the padding.
+        const expectedTrailingSpace = layout.overflows
+          ? GAP_PX + OVERFLOW_HINT_PX
+          : PADDING_PX[axis];
+        expect(layout.trailingSpace).toBeCloseTo(expectedTrailingSpace, 0);
+      },
+    );
+
+    test.each(["columns", "rows"] as const)(
+      "shows the same hint of the %s on both sides of a track scrolled to the start",
+      async (axis) => {
+        const layout = await measureTracks(axis, 375, 20, {
+          scrollToTrack: 5,
+        });
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.leadingHint).toBeGreaterThan(0);
+        expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
+          1,
+        );
+      },
+    );
+
+    test.each(["columns", "rows"] as const)(
+      "shows a hint of the %s on the leading side only at the end of the scroll",
+      async (axis) => {
+        const layout = await measureTracks(axis, 375, 20, {
+          scrollToTrack: 19,
+        });
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.leadingHint).toBeCloseTo(OVERFLOW_HINT_PX, 0);
+        expect(layout.trailingSpace).toBeCloseTo(PADDING_PX[axis], 0);
+      },
+    );
+
+    // Without help the browser leaves a focused element where it is as long as
+    // any part of it shows, and the hint is such a part.
+    test.each(["columns", "rows"] as const)(
+      "scrolls the hinted track of the %s into view when its item takes focus",
+      async (axis) => {
+        const layout = await measureTracks(axis, 375, 20, { focusTrack: 3 });
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.leadingHint).toBeGreaterThan(0);
+        expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
+          1,
+        );
+      },
+    );
+
+    test.each(["columns", "rows"] as const)(
+      "keeps %s at the fitted size when an item is larger than its cell",
+      async (axis) => {
+        const layout = await measureTracks(axis, 375, 20, { itemSize: 150 });
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.trailingHint).toBeCloseTo(OVERFLOW_HINT_PX, 0);
       },
     );
 

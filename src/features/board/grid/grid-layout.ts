@@ -1,16 +1,55 @@
 import type { Theme } from "@mui/material/styles";
+import { GRID_PADDING } from "../board-spacing";
 
-// A tile's symbol and label need the extra height; its width can go narrower
-// so that wide boards fit more columns before they scroll.
-const GRID_MIN_CELL_WIDTH_PX = 88;
-const GRID_MIN_CELL_HEIGHT_PX = 96;
-const GRID_GAP_UNIT_PX = 8;
-const GRID_COMPACT_PADDING_PX = 16;
-const GRID_REGULAR_PADDING_PX = 24;
-const GRID_PADDING = "var(--grid-padding)";
+// The theme's spacing unit as a number: container queries compare against
+// lengths, and the theme only offers its unit as a CSS variable.
+const GRID_SPACING_UNIT_PX = 8;
 const GRID_GAP = "var(--grid-gap)";
-const GRID_CELL_WIDTH = "var(--grid-cell-width)";
-const GRID_CELL_HEIGHT = "var(--grid-cell-height)";
+
+type Breakpoint = "xs" | "sm";
+
+// How much of the next row or column shows past the edge of an axis that
+// scrolls, so the user can tell the board scrolls that way.
+const OVERFLOW_HINT_PX: Record<Breakpoint, number> = { xs: 8, sm: 16 };
+
+const AXES = {
+  inline: {
+    containerFeature: "min-width",
+    viewportSize: "100cqi",
+    cellSize: "--grid-cell-width",
+    // A tile's width can go narrower than its height, so that wide boards fit
+    // more columns before they scroll.
+    minCellSizePx: 88,
+    paddingPx: {
+      xs: spacingUnitsToPx(GRID_PADDING.inline.xs),
+      sm: spacingUnitsToPx(GRID_PADDING.inline.sm),
+    },
+    paddingProperty: "px",
+    extentProperty: "minWidth",
+  },
+  block: {
+    containerFeature: "min-height",
+    viewportSize: "100cqb",
+    cellSize: "--grid-cell-height",
+    // A tile's symbol and label need the extra height.
+    minCellSizePx: 96,
+    paddingPx: {
+      xs: spacingUnitsToPx(GRID_PADDING.block.xs),
+      sm: spacingUnitsToPx(GRID_PADDING.block.sm),
+    },
+    paddingProperty: "py",
+    // A definite height, not a minimum: rows share it equally, so a row is
+    // always the fitted cell height. With only a minimum the height would be
+    // indefinite, rows would size to their content, and a tile taller than the
+    // fitted height would push the next row's overflow hint out of view.
+    extentProperty: "height",
+  },
+} as const;
+
+type GridAxis = (typeof AXES)[keyof typeof AXES];
+
+const GRID_CELL_WIDTH = `var(${AXES.inline.cellSize})`;
+const GRID_CELL_HEIGHT = `var(${AXES.block.cellSize})`;
 
 interface GridLayoutOptions {
   rows: number;
@@ -35,17 +74,31 @@ export const gridRowSx = {
   scrollSnapAlign: "start none",
 } as const;
 
-export function createGridViewportSx(theme: Theme) {
+export function createGridViewportSx(theme: Theme, gap: number) {
+  const gapPx = spacingUnitsToPx(gap);
+
   return {
-    "--grid-padding": formatPx(GRID_REGULAR_PADDING_PX),
     containerType: "size",
     height: "100%",
     overflow: "auto",
     scrollSnapType: "both proximity",
-    scrollPadding: GRID_PADDING,
-    [theme.breakpoints.down("sm")]: {
-      "--grid-padding": formatPx(GRID_COMPACT_PADDING_PX),
-    },
+    [theme.breakpoints.down("sm")]: createScrollPadding("xs", gapPx),
+    [theme.breakpoints.up("sm")]: createScrollPadding("sm", gapPx),
+  };
+}
+
+// A track scrolled to rest sits half the scrolling inset from the edge, which
+// leaves the same hint of its neighbors on both sides. The hint is narrower
+// than this padding, so a hinted tile that takes focus counts as out of view
+// and the browser scrolls all of it in.
+function createScrollPadding(breakpoint: Breakpoint, gapPx: number) {
+  return {
+    scrollPaddingInline: formatPx(
+      calculateScrollingInsetPx(AXES.inline, breakpoint, gapPx) / 2,
+    ),
+    scrollPaddingBlock: formatPx(
+      calculateScrollingInsetPx(AXES.block, breakpoint, gapPx) / 2,
+    ),
   };
 }
 
@@ -53,118 +106,101 @@ export function createGridContentSx(
   theme: Theme,
   { rows, columns, gap }: GridLayoutOptions,
 ) {
-  const gapPx = gapUnitsToPx(gap);
+  const gapPx = spacingUnitsToPx(gap);
 
-  return {
-    "--grid-visible-columns": 1,
-    "--grid-visible-rows": 1,
-    "--grid-gap": formatPx(gapPx),
-    "--grid-cell-width": createCellSizeExpression(
-      "100cqi",
-      "var(--grid-visible-columns)",
-      GRID_MIN_CELL_WIDTH_PX,
-    ),
-    "--grid-cell-height": createCellSizeExpression(
-      "100cqb",
-      "var(--grid-visible-rows)",
-      GRID_MIN_CELL_HEIGHT_PX,
-    ),
-    minWidth: createGridExtentExpression(GRID_CELL_WIDTH, columns),
-    minHeight: createGridExtentExpression(GRID_CELL_HEIGHT, rows),
-    gap: GRID_GAP,
-    p: GRID_PADDING,
-    [theme.breakpoints.down("sm")]: createVisibleTrackQueries(
-      rows,
-      columns,
-      gapPx,
-      GRID_COMPACT_PADDING_PX,
-    ),
-    [theme.breakpoints.up("sm")]: createVisibleTrackQueries(
-      rows,
-      columns,
-      gapPx,
-      GRID_REGULAR_PADDING_PX,
-    ),
-  };
-}
-
-function createVisibleTrackQueries(
-  rows: number,
-  columns: number,
-  gapPx: number,
-  paddingPx: number,
-): Record<string, Record<string, number>> {
-  return {
-    ...createTrackAxisQueries(
-      "min-width",
-      "--grid-visible-columns",
-      columns,
-      GRID_MIN_CELL_WIDTH_PX,
-      gapPx,
-      paddingPx,
-    ),
-    ...createTrackAxisQueries(
-      "min-height",
-      "--grid-visible-rows",
-      rows,
-      GRID_MIN_CELL_HEIGHT_PX,
-      gapPx,
-      paddingPx,
-    ),
-  };
-}
-
-function createTrackAxisQueries(
-  feature: "min-width" | "min-height",
-  property: "--grid-visible-columns" | "--grid-visible-rows",
-  count: number,
-  minCellSizePx: number,
-  gapPx: number,
-  paddingPx: number,
-): Record<string, Record<string, number>> {
-  const queries: Record<string, Record<string, number>> = {};
-
-  for (let visibleTracks = 2; visibleTracks <= count; visibleTracks++) {
-    const thresholdPx = calculateTrackFitThresholdPx(
-      visibleTracks,
-      minCellSizePx,
-      gapPx,
-      paddingPx,
-    );
-
-    queries[`@container (${feature}: ${formatPx(thresholdPx)})`] = {
-      [property]: visibleTracks,
+  function createBreakpointRules(breakpoint: Breakpoint) {
+    return {
+      ...createAxisRules({
+        axis: AXES.inline,
+        breakpoint,
+        trackCount: columns,
+        gapPx,
+      }),
+      ...createAxisRules({
+        axis: AXES.block,
+        breakpoint,
+        trackCount: rows,
+        gapPx,
+      }),
     };
   }
 
-  return queries;
+  return {
+    "--grid-gap": formatPx(gapPx),
+    gap: GRID_GAP,
+    [theme.breakpoints.down("sm")]: createBreakpointRules("xs"),
+    [theme.breakpoints.up("sm")]: createBreakpointRules("sm"),
+  };
 }
 
-function calculateTrackFitThresholdPx(
-  count: number,
-  minCellSizePx: number,
+interface AxisLayout {
+  axis: GridAxis;
+  breakpoint: Breakpoint;
+  trackCount: number;
+  gapPx: number;
+}
+
+type AxisRules = Record<string, string | Record<string, string>>;
+
+// One track is visible unless a container query finds room for more.
+function createAxisRules(layout: AxisLayout): AxisRules {
+  const { axis, breakpoint, trackCount, gapPx } = layout;
+  const paddingPx = axis.paddingPx[breakpoint];
+  const gapsAndPaddingPx = (trackCount - 1) * gapPx + 2 * paddingPx;
+
+  const rules: AxisRules = {
+    [axis.paddingProperty]: formatPx(paddingPx),
+    [axis.extentProperty]: `calc(${trackCount} * var(${axis.cellSize}) + ${formatPx(gapsAndPaddingPx)})`,
+    ...createTrackFit(layout, 1).cellSize,
+  };
+
+  for (let visibleTracks = 2; visibleTracks <= trackCount; visibleTracks++) {
+    const { minViewportSizePx, cellSize } = createTrackFit(
+      layout,
+      visibleTracks,
+    );
+
+    rules[
+      `@container (${axis.containerFeature}: ${formatPx(minViewportSizePx)})`
+    ] = cellSize;
+  }
+
+  return rules;
+}
+
+function createTrackFit(
+  { axis, breakpoint, trackCount, gapPx }: AxisLayout,
+  visibleTracks: number,
+) {
+  // The inset is the part of the viewport that whole tracks leave free. An axis
+  // that fits needs only its padding on both sides. An axis that scrolls needs
+  // its padding on one side and, on the other, a gap and the hint of the next
+  // track; at the far end of the scroll the two sides swap.
+  const isScrollable = visibleTracks < trackCount;
+  const insetPx = isScrollable
+    ? calculateScrollingInsetPx(axis, breakpoint, gapPx)
+    : 2 * axis.paddingPx[breakpoint];
+  const gapsAndInsetPx = (visibleTracks - 1) * gapPx + insetPx;
+  const fittedCellSize = `calc((${axis.viewportSize} - ${formatPx(gapsAndInsetPx)}) / ${visibleTracks})`;
+
+  return {
+    minViewportSizePx: visibleTracks * axis.minCellSizePx + gapsAndInsetPx,
+    cellSize: {
+      [axis.cellSize]: `max(${formatPx(axis.minCellSizePx)}, ${fittedCellSize})`,
+    },
+  };
+}
+
+function calculateScrollingInsetPx(
+  axis: GridAxis,
+  breakpoint: Breakpoint,
   gapPx: number,
-  paddingPx: number,
 ): number {
-  return count * minCellSizePx + (count - 1) * gapPx + 2 * paddingPx;
+  return axis.paddingPx[breakpoint] + gapPx + OVERFLOW_HINT_PX[breakpoint];
 }
 
-function createCellSizeExpression(
-  viewportSize: string,
-  visibleTracks: string,
-  minCellSizePx: number,
-): string {
-  const availableSize = `${viewportSize} - 2 * ${GRID_PADDING} - (${visibleTracks} - 1) * ${GRID_GAP}`;
-
-  return `max(${formatPx(minCellSizePx)}, calc((${availableSize}) / ${visibleTracks}))`;
-}
-
-function createGridExtentExpression(cellSize: string, count: number): string {
-  return `calc(${count} * ${cellSize} + ${count - 1} * ${GRID_GAP} + 2 * ${GRID_PADDING})`;
-}
-
-function gapUnitsToPx(gap: number): number {
-  return gap * GRID_GAP_UNIT_PX;
+function spacingUnitsToPx(units: number): number {
+  return units * GRID_SPACING_UNIT_PX;
 }
 
 function formatPx(value: number): string {

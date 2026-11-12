@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { safeAreaInset } from "@shared/theme/safe-area";
+import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
+import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -96,6 +96,11 @@ export function CommunicationBoard({
     />
   );
 
+  // On a small screen the buttons move to the bottom bar, which leaves this row
+  // with nothing to show unless suggestions are available. Rendered empty, it
+  // would still take a page margin above the grid.
+  const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
+
   return (
     <ScanningScope>
       <Stack
@@ -107,31 +112,38 @@ export function CommunicationBoard({
           pr: { sm: safeAreaInset("right") },
         }}
       >
-        <PlaybackMessageBar parts={message.parts} playback={playback} />
+        <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
+          <PlaybackMessageBar parts={message.parts} playback={playback} />
 
-        <Stack
-          {...scanGroupProps}
-          direction="row"
-          spacing={2}
-          sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
-        >
-          <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-            {!isSmallScreen && navigationButtons}
+          {isActionRowVisible && (
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={2}
+              sx={{ justifyContent: "space-between" }}
+            >
+              <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
+                {!isSmallScreen && navigationButtons}
 
-            {suggestions.isSupported && (
-              <SuggestionBar
-                status={suggestions.status}
-                phrases={suggestions.phrases}
-                onEnable={suggestions.enable}
-                onPhraseSelect={message.replaceWithText}
-              />
-            )}
-          </Stack>
+                {suggestions.isSupported && (
+                  <SuggestionBar
+                    status={suggestions.status}
+                    phrases={suggestions.phrases}
+                    onEnable={suggestions.enable}
+                    onPhraseSelect={message.replaceWithText}
+                  />
+                )}
+              </Stack>
 
-          {!isSmallScreen && backspaceButton}
+              {!isSmallScreen && backspaceButton}
+            </Stack>
+          )}
         </Stack>
 
-        <Box sx={{ flex: 1, minHeight: 0 }}>
+        {/* The clearance sits above and below the grid at every size, so
+            scrolled tiles stop short of a bar and of the screen's bottom edge
+            alike. */}
+        <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
           <Grid<BoardButton>
             ref={gridViewportRef}
             ariaLabel={board.name || t(m.boardGridLabel)}
@@ -144,18 +156,22 @@ export function CommunicationBoard({
         </Box>
 
         {isSmallScreen && (
-          <Toolbar
+          <Stack
             {...scanGroupProps}
-            sx={{
-              alignItems: "flex-end",
+            direction="row"
+            spacing={2}
+            sx={(theme) => ({
               justifyContent: "space-between",
-              gap: 2,
-              pb: safeAreaInset("bottom"),
-            }}
+              px: PAGE_MARGIN,
+              // As tight below the buttons as the clearance above them: this
+              // bar is all the margin the screen's bottom edge gets, plus the
+              // safe area.
+              pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
+            })}
           >
             {navigationButtons}
             {backspaceButton}
-          </Toolbar>
+          </Stack>
         )}
       </Stack>
     </ScanningScope>

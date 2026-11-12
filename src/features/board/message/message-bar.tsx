@@ -55,11 +55,7 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack
-      {...scanGroupProps}
-      direction="row"
-      sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}
-    >
+    <Stack {...scanGroupProps} direction="row" sx={{ userSelect: "text" }}>
       <Stack
         className={LIGHT_SCHEME_CLASS}
         direction="row"
