@@ -220,7 +220,7 @@ describe("useBoardPlayback", () => {
       });
     });
 
-    const { result } = await renderPlayback();
+    const { result, rerender } = await renderPlayback();
 
     const firstPlay = result.current.playMessage([{ id: "1", label: "first" }]);
     const secondPlay = result.current.playMessage([
@@ -232,6 +232,8 @@ describe("useBoardPlayback", () => {
     await expect(firstPlay).resolves.toBe(false);
     await expect(secondPlay).resolves.toBe(true);
     expect(speech.spokenTexts()).toEqual(["first", "second"]);
+    await rerender();
+
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
@@ -282,23 +284,26 @@ describe("useBoardPlayback", () => {
   });
 
   test("resolves as completed without reporting anything", async () => {
-    const { result } = await renderPlayback();
+    const { result, rerender } = await renderPlayback();
 
     await expect(
       result.current.playMessage([{ id: "1", label: "hi" }]),
     ).resolves.toBe(true);
+    await rerender();
 
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
   test("resolves a stopped message as not completed without reporting it", async () => {
     speech.speak.mockImplementationOnce(() => undefined);
-    const { result } = await renderPlayback();
+    const { result, rerender } = await renderPlayback();
 
     const playPromise = result.current.playMessage([{ id: "1", label: "hi" }]);
     result.current.stop();
 
     await expect(playPromise).resolves.toBe(false);
+    await rerender();
+
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 });
