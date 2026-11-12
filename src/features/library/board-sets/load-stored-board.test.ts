@@ -3,8 +3,8 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
-import { BoardNotFoundError } from "./board-content-storage";
-import { insertBoardSet } from "./board-set-storage";
+import { BoardNotFoundError } from "../storage/board-content-storage";
+import { insertBoardSet } from "../storage/board-set-storage";
 import { loadStoredBoard } from "./load-stored-board";
 
 const SET_ID = "loader-test-set";

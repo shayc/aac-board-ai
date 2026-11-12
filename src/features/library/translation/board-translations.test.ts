@@ -4,7 +4,6 @@ import {
   applyTranslations,
   collectBoardStrings,
   findBoardInLanguage,
-  findStringTranslations,
   getSourceLanguage,
 } from "./board-translations";
 
@@ -45,24 +44,6 @@ describe("getSourceLanguage", () => {
     expect(getSourceLanguage(mockBoard)).toBe("en");
     expect(getSourceLanguage({ ...mockBoard, locale: undefined })).toBe("en");
     expect(getSourceLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
-  });
-});
-
-describe("findStringTranslations", () => {
-  test("matches regional translations by base language", () => {
-    expect(findStringTranslations(mockBoard.translationsByLocale, "es")).toBe(
-      spanishTranslations,
-    );
-    expect(findStringTranslations(mockBoard.translationsByLocale, "fr")).toBe(
-      frenchTranslations,
-    );
-  });
-
-  test("returns nothing for an untranslated language", () => {
-    expect(
-      findStringTranslations(mockBoard.translationsByLocale, "de"),
-    ).toBeUndefined();
-    expect(findStringTranslations(new Map(), "es")).toBeUndefined();
   });
 });
 

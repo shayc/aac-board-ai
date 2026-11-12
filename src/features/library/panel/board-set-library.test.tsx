@@ -7,10 +7,10 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
-import { starterBoardSet } from "./board-set-catalog";
-import { cancelBoardSetDownload } from "./board-set-downloads";
+import { starterBoardSet } from "../catalog/board-set-catalog";
+import { cancelBoardSetDownload } from "../catalog/board-set-downloads";
 import { BoardSetLibrary } from "./board-set-library";
-import { refreshBoardSets } from "./board-sets-store";
+import { refreshBoardSets } from "../board-sets/board-sets-store";
 
 function renderBoardSetLibrary() {
   return render(

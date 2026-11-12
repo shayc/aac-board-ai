@@ -1,8 +1,11 @@
 import type { Board, BoardKey } from "@shared/board/board-types";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
-import { getAssetURL } from "./asset-urls";
-import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
+import { getAssetURL } from "../storage/asset-urls";
+import {
+  BoardNotFoundError,
+  getBoardRecord,
+} from "../storage/board-content-storage";
 
 export async function loadStoredBoard(
   key: BoardKey,

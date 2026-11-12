@@ -373,7 +373,14 @@ types are used by both features and live in
 [`shared/board/board-types.ts`](../src/shared/board/board-types.ts).
 
 Inside a feature, folders group related code and collaborate through relative
-imports; they are not separate boundaries.
+imports; they are not separate boundaries. The library's folders still depend
+in one direction, so a folder's name tells which layer it is in:
+
+1. `storage/` and `obf/` import no other library folder.
+2. `board-sets/` reads and writes storage and maps what it reads through `obf/`.
+3. `import/`, `export/`, and `translation/` build on those.
+4. `catalog/` downloads through `import/`.
+5. `panel/` is the library's UI and may use all of the above.
 
 ### Settings composition
 
@@ -400,17 +407,19 @@ preferences.
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
 are relative to `src/features/`.
 
-| Area                   | Source                                                                                           | Responsibility                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------- |
-| Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                   | Compose the board UI and interaction adapters.                                    |
-| Board playback         | [board/playback/](../src/features/board/playback/)                                               | Plan board playback and highlighting; delegate device output to shared code.      |
-| Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                               | Scan the board's controls with one or two switches; own scanning preferences.     |
-| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Enable suggestion models and apply rewrite instructions to the message.           |
-| Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                               |
-| Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                        |
-| Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                              |
-| Board-set library      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and coordinate board-set creation and deletion.     |
-| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Show a board in the communication language and translate board sets that lack it. |
+| Area                   | Source                                                                                           | Responsibility                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                   | Compose the board UI and interaction adapters.                                                        |
+| Board playback         | [board/playback/](../src/features/board/playback/)                                               | Plan board playback and highlighting; delegate device output to shared code.                          |
+| Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                               | Scan the board's controls with one or two switches; own scanning preferences.                         |
+| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Enable suggestion models and apply rewrite instructions to the message.                               |
+| Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                                                   |
+| Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
+| Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
+| Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library, create and delete board sets, and read stored boards as runtime types. |
+| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and download them.                                                        |
+| Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
+| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Show a board in the communication language and translate board sets that lack it.                     |
 
 ### App and shared code
 

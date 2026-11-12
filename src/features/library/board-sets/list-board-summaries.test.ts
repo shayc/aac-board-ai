@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, test } from "vitest";
 import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
-import { insertBoardSet } from "./board-set-storage";
-import { closeBoardsDB } from "./boards-db";
+import { insertBoardSet } from "../storage/board-set-storage";
+import { closeBoardsDB } from "../storage/boards-db";
 import { listBoardSummaries } from "./list-board-summaries";
 
 beforeEach(async () => {
