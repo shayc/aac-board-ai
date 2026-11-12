@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import type { Board, BoardButton } from "@shared/board/board-types";
@@ -139,7 +138,11 @@ export function CommunicationBoard({
             {...scanGroupProps}
             direction="row"
             spacing={2}
-            sx={bottomControlsSx}
+            sx={(theme) => ({
+              justifyContent: "space-between",
+              px: PAGE_MARGIN,
+              pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
+            })}
           >
             {navigationButtons}
             {backspaceButton}
@@ -148,12 +151,4 @@ export function CommunicationBoard({
       </Stack>
     </ScanningScope>
   );
-}
-
-function bottomControlsSx(theme: Theme) {
-  return {
-    justifyContent: "space-between",
-    px: PAGE_MARGIN,
-    pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
-  };
 }

@@ -34,18 +34,7 @@ export function DownloadableBoardSetListItem({
   const statusId = useId();
   const { phase, download, cancel } = useBoardSetDownload({ name, url });
 
-  const isCancellable = phase !== undefined && phase.kind !== "importing";
   const status = phase && describeDownloadPhase(phase, t, uiLocale);
-
-  function handleClick() {
-    if (isCancellable) {
-      cancel();
-
-      return;
-    }
-
-    void download();
-  }
 
   return (
     <ListItem
@@ -53,9 +42,9 @@ export function DownloadableBoardSetListItem({
         <DownloadButton
           name={name}
           phase={phase}
-          isCancellable={isCancellable}
           describedById={status ? statusId : undefined}
-          onClick={handleClick}
+          onDownload={() => void download()}
+          onCancel={cancel}
         />
       }
     >
@@ -78,21 +67,23 @@ export function DownloadableBoardSetListItem({
 interface DownloadButtonProps {
   name: string;
   phase: BoardSetDownloadPhase | undefined;
-  isCancellable: boolean;
   describedById: string | undefined;
-  onClick: () => void;
+  onDownload: () => void;
+  onCancel: () => void;
 }
 
 function DownloadButton({
   name,
   phase,
-  isCancellable,
   describedById,
-  onClick,
+  onDownload,
+  onCancel,
 }: DownloadButtonProps) {
   const t = useTranslate();
   const endSide = useEndSide();
 
+  const isImporting = phase?.kind === "importing";
+  const isCancellable = phase !== undefined && !isImporting;
   const label = isCancellable
     ? t(m.libraryCancelDownloadBoardSet, { name })
     : t(m.libraryDownloadBoardSet, { name });
@@ -102,9 +93,9 @@ function DownloadButton({
       <IconButton
         aria-label={label}
         aria-describedby={describedById}
-        aria-disabled={phase?.kind === "importing"}
+        aria-disabled={isImporting}
         edge="end"
-        onClick={onClick}
+        onClick={isCancellable ? onCancel : onDownload}
         sx={{ border: "none" }}
       >
         <DownloadButtonIcon phase={phase} />

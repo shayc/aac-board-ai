@@ -119,7 +119,7 @@ function snackbarSx(theme: Theme) {
       right: safeAreaGutter(theme.spacing(1), "right"),
       left: safeAreaGutter(theme.spacing(1), "left"),
     },
-  };
+  } as const;
 }
 
 function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
@@ -136,7 +136,7 @@ function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
         color: theme.colorSchemes.light?.palette[severity].main,
       }),
     },
-  };
+  } as const;
 }
 
 function isUrgent(severity: SnackbarSeverity) {
