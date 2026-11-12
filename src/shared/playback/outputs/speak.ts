@@ -1,21 +1,18 @@
-import { getStoredLanguage } from "@shared/language/language-store";
-import {
-  getSpeechPreferences,
-  getSpeechVoice,
-} from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
+import type { SpeechSettings } from "../playback-types";
 
 interface SpeakOptions {
   signal?: AbortSignal;
   onBoundary?: (charIndex: number) => void;
 }
 
-function buildUtterance(text: string): SpeechSynthesisUtterance {
-  const { rate, pitch, volume } = getSpeechPreferences();
-
+function buildUtterance(
+  text: string,
+  { lang, voice, rate, pitch, volume }: SpeechSettings,
+): SpeechSynthesisUtterance {
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = getStoredLanguage();
-  utterance.voice = getSpeechVoice();
+  utterance.lang = lang;
+  utterance.voice = voice;
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;
@@ -25,6 +22,7 @@ function buildUtterance(text: string): SpeechSynthesisUtterance {
 
 export function speak(
   text: string,
+  settings: SpeechSettings,
   { signal, onBoundary }: SpeakOptions = {},
 ): Promise<void> {
   if (signal?.aborted) {
@@ -37,7 +35,7 @@ export function speak(
   }
 
   const { promise, resolve, reject } = Promise.withResolvers<void>();
-  const utterance = buildUtterance(text);
+  const utterance = buildUtterance(text, settings);
   const settled = new AbortController();
   const listenerOptions = { signal: settled.signal };
 

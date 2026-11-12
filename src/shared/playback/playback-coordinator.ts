@@ -6,6 +6,7 @@ import type {
   PlaybackRequest,
   PlaybackState,
   PlaybackStep,
+  SpeechSettings,
 } from "./playback-types";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
@@ -15,7 +16,9 @@ interface PlaybackSession {
   request: PlaybackRequest;
 }
 
-export function createPlaybackCoordinator(): PlaybackCoordinator {
+export function createPlaybackCoordinator(
+  getSpeechSettings: () => SpeechSettings,
+): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
   let currentSession: PlaybackSession | null = null;
 
@@ -49,7 +52,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
       case "speech": {
         const { cueAt } = step;
         setActiveCue(session, cueAt?.(0) ?? null);
-        await speak(step.text, {
+        await speak(step.text, getSpeechSettings(), {
           signal,
           onBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))

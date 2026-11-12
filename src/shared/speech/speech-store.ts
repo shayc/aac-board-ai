@@ -1,6 +1,7 @@
 import { getStoredLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
+import type { SpeechSettings } from "@shared/playback/playback-types";
 import {
   createExternalStore,
   useExternalStore,
@@ -80,10 +81,6 @@ function updatePreferences(patch: Partial<SpeechPreferences>): void {
   }));
 }
 
-export function getSpeechPreferences(): SpeechPreferences {
-  return speechPreferencesStore.getSnapshot();
-}
-
 export function setSpeechVoiceURI(voiceURI: string | null): void {
   updatePreferences({ voiceURI });
 }
@@ -112,12 +109,18 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechVoice(): SpeechSynthesisVoice | null {
-  return resolveVoice(
-    getVoicesByLanguage(),
-    getStoredLanguage(),
-    getSpeechPreferences().voiceURI,
-  );
+export function getSpeechSettings(): SpeechSettings {
+  const lang = getStoredLanguage();
+  const { voiceURI, rate, pitch, volume } =
+    speechPreferencesStore.getSnapshot();
+
+  return {
+    lang,
+    voice: resolveVoice(getVoicesByLanguage(), lang, voiceURI),
+    rate,
+    pitch,
+    volume,
+  };
 }
 
 export function useSpeechVoice(): SpeechSynthesisVoice | null {

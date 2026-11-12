@@ -1,5 +1,16 @@
-import { describe, expect, test } from "vitest";
-import { parseSpeechPreferences } from "./speech-store";
+import { setStoredLanguage } from "@shared/language/language-store";
+import { reloadPersistedStores } from "@shared/state/persisted-store";
+import { stubVoices } from "@shared/testing/stub-speech";
+import { beforeEach, describe, expect, test } from "vitest";
+import {
+  getSpeechSettings,
+  parseSpeechPreferences,
+  setSpeechPitch,
+  setSpeechRate,
+  setSpeechVoiceURI,
+  setSpeechVolume,
+  SPEECH_RATE,
+} from "./speech-store";
 
 describe("parseSpeechPreferences", () => {
   test("uses defaults when the preferences are absent", () => {
@@ -56,4 +67,55 @@ describe("parseSpeechPreferences", () => {
       expect(parseSpeechPreferences({ [key]: value })[key]).toBe(expected);
     },
   );
+});
+
+describe("getSpeechSettings", () => {
+  beforeEach(() => {
+    stubVoices([
+      { voiceURI: "voice-1", name: "Voice One", lang: "en-US" },
+      { voiceURI: "voice-2", name: "Voice Two", lang: "en-US" },
+      { voiceURI: "he-voice", name: "Carmit", lang: "he-IL" },
+    ]);
+  });
+
+  test("combines the stored language with the saved voice, rate, pitch, and volume", () => {
+    setStoredLanguage("en");
+    setSpeechVoiceURI("voice-2");
+    setSpeechRate(1.5);
+    setSpeechPitch(0.5);
+    setSpeechVolume(0.25);
+
+    expect(getSpeechSettings()).toMatchObject({
+      lang: "en",
+      voice: { voiceURI: "voice-2" },
+      rate: 1.5,
+      pitch: 0.5,
+      volume: 0.25,
+    });
+  });
+
+  test("leaves the voice to the browser when the language has no voices", () => {
+    setSpeechVoiceURI("voice-2");
+    setStoredLanguage("fr");
+
+    expect(getSpeechSettings()).toMatchObject({ lang: "fr", voice: null });
+  });
+
+  test("gives a new language its own voice and keeps the saved voice", () => {
+    setStoredLanguage("en");
+    setSpeechVoiceURI("voice-2");
+
+    setStoredLanguage("he");
+    expect(getSpeechSettings().voice?.voiceURI).toBe("he-voice");
+
+    setStoredLanguage("en");
+    expect(getSpeechSettings().voice?.voiceURI).toBe("voice-2");
+  });
+
+  test("clamps an out-of-range stored rate to the configured max", () => {
+    localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
+    reloadPersistedStores();
+
+    expect(getSpeechSettings().rate).toBe(SPEECH_RATE.max);
+  });
 });

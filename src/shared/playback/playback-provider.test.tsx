@@ -1,10 +1,27 @@
 import { stubAudio } from "@shared/testing/stub-audio";
 import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
-import { Profiler, type ProfilerOnRenderCallback } from "react";
+import { Profiler, type ProfilerOnRenderCallback, type ReactNode } from "react";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render, renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
+import type { SpeechSettings } from "./playback-types";
 import { useActiveCue, useIsPlaying, usePlayback } from "./use-playback";
+
+const speechSettings: SpeechSettings = {
+  lang: "en",
+  voice: null,
+  rate: 1,
+  pitch: 1,
+  volume: 1,
+};
+
+function TestPlaybackProvider({ children }: { children: ReactNode }) {
+  return (
+    <PlaybackProvider getSpeechSettings={() => speechSettings}>
+      {children}
+    </PlaybackProvider>
+  );
+}
 
 function PlaybackControls() {
   const playback = usePlayback();
@@ -50,7 +67,7 @@ describe("PlaybackProvider", () => {
   test("interrupts speech from another owner when new audio is requested", async () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result } = await renderHook(() => usePlayback(), {
-      wrapper: PlaybackProvider,
+      wrapper: TestPlaybackProvider,
     });
 
     const speechResult = result.current.play({
@@ -71,7 +88,7 @@ describe("PlaybackProvider", () => {
   test("interrupts and pauses audio when new speech is requested", async () => {
     audio.play.mockImplementationOnce(() => Promise.resolve());
     const { result } = await renderHook(() => usePlayback(), {
-      wrapper: PlaybackProvider,
+      wrapper: TestPlaybackProvider,
     });
 
     const audioResult = result.current.play({
@@ -93,7 +110,7 @@ describe("PlaybackProvider", () => {
     preventSpeechEnd(speech.speak);
     const { result, rerender } = await renderHook(
       () => ({ playback: usePlayback(), isTilePlaying: useIsPlaying("tile") }),
-      { wrapper: PlaybackProvider },
+      { wrapper: TestPlaybackProvider },
     );
     const { playback } = result.current;
 
@@ -122,7 +139,7 @@ describe("PlaybackProvider", () => {
       Promise.reject(new DOMException("Blocked", "NotAllowedError")),
     );
     const { result } = await renderHook(() => usePlayback(), {
-      wrapper: PlaybackProvider,
+      wrapper: TestPlaybackProvider,
     });
 
     const outcome = result.current.play({
@@ -137,6 +154,29 @@ describe("PlaybackProvider", () => {
     expect(speech.spokenTexts()).toEqual(["hello"]);
   });
 
+  test("speaks each request with the settings current at that moment", async () => {
+    let currentSettings = speechSettings;
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <PlaybackProvider getSpeechSettings={() => currentSettings}>
+          {children}
+        </PlaybackProvider>
+      ),
+    });
+    const request = {
+      owner: "message",
+      steps: [{ kind: "speech", text: "hello" }],
+    } as const;
+
+    await result.current.play(request);
+    currentSettings = { ...speechSettings, lang: "he", rate: 1.5 };
+    await result.current.play(request);
+
+    const [first, second] = speech.speak.mock.calls.map(([spoken]) => spoken);
+    expect(first).toMatchObject({ lang: "en", rate: 1 });
+    expect(second).toMatchObject({ lang: "he", rate: 1.5 });
+  });
+
   test("rerenders each subscriber only for the playback state it reads", async () => {
     let utterance: SpeechSynthesisUtterance | undefined;
     speech.speak.mockImplementationOnce((spoken) => {
@@ -147,7 +187,7 @@ describe("PlaybackProvider", () => {
       commits[id as keyof typeof commits] += 1;
     };
     const screen = await render(
-      <PlaybackProvider>
+      <TestPlaybackProvider>
         <Profiler id="controls" onRender={countCommit}>
           <PlaybackControls />
         </Profiler>
@@ -157,7 +197,7 @@ describe("PlaybackProvider", () => {
         <Profiler id="tracking" onRender={countCommit}>
           <ActiveCue />
         </Profiler>
-      </PlaybackProvider>,
+      </TestPlaybackProvider>,
     );
 
     await screen.getByRole("button", { name: "Play" }).click();

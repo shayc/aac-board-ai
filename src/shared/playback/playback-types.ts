@@ -12,6 +12,14 @@ export type PlaybackStep =
       cueAt?: (charIndex: number) => string | null;
     };
 
+export interface SpeechSettings {
+  lang: string;
+  voice: SpeechSynthesisVoice | null;
+  rate: number;
+  pitch: number;
+  volume: number;
+}
+
 export interface PlaybackRequest {
   owner: string;
   steps: readonly PlaybackStep[];
