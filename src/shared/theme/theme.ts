@@ -7,7 +7,7 @@ import {
   type Shadows,
   type ThemeOptions,
 } from "@mui/material/styles";
-import { buttonFeedbackTiming } from "./button-feedback";
+import { buttonFeedbackTiming, instantReleaseOnTouch } from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
@@ -262,6 +262,7 @@ const themeOptions = {
             "@media (prefers-reduced-motion: reduce)": {
               transition: "none",
             },
+            ...instantReleaseOnTouch,
           },
           "&:active::before": {
             opacity: theme.vars.palette.action.activatedOpacity,
