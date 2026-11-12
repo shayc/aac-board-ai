@@ -1,6 +1,11 @@
+import type { Scorecard } from "./scorecard.ts";
+
 export type BuildName = "base" | "current";
 
-/** Milliseconds per round for each build; the same index is the same round. */
+/**
+ * Milliseconds per round for each build; the same index is the same round.
+ * A build that was not measured has no samples.
+ */
 export type TimingSamples = Record<BuildName, number[]>;
 
 export interface RunSettings {
@@ -26,4 +31,10 @@ export interface RunResults {
   settings: RunSettings;
   builds: Record<BuildName, BuildInfo>;
   journeys: JourneyResult[];
+}
+
+export interface XrayResults extends Scorecard {
+  date: string;
+  settings: RunSettings;
+  build: BuildInfo;
 }

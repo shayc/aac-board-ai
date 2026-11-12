@@ -4,11 +4,13 @@ import {
   type JourneySample,
   type PageProbe,
 } from "./harness.ts";
+import { IMPORT_TIMEOUT_MS } from "./settings.ts";
 
 const STARTER_BOARD = "First Words";
 const CORE_BOARD = "Quick Core 60";
 const LINKED_BOARD = "Core 60 - eat";
 
+const IMPORTED_CORE_BOARD_SET = `[aria-label="More options for ${CORE_BOARD}"]`;
 const MESSAGE_PARTS = ':has(+ [aria-label="Play message"]) > *';
 
 // A covered grid is unusable even while its tiles are rendered.
@@ -35,12 +37,24 @@ async function waitForServiceWorkerControl(page: Page): Promise<void> {
 }
 
 // Exercise a symbol-heavy board for representative tile timings.
-async function openCoreBoard(page: Page): Promise<void> {
+async function openCoreBoard(
+  sample: JourneySample,
+  probe: PageProbe,
+): Promise<void> {
+  const { page } = probe;
+
   await page.goto("/");
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByRole("button", { name: "Open library" }).click();
-  await page.getByRole("button", { name: `Download ${CORE_BOARD}` }).click();
-  await page.getByRole("link", { name: CORE_BOARD }).click({ timeout: 60_000 });
+  sample.record(
+    "importBoardSet",
+    await probe.tap(
+      page.getByRole("button", { name: `Download ${CORE_BOARD}` }),
+      IMPORTED_CORE_BOARD_SET,
+      IMPORT_TIMEOUT_MS,
+    ),
+  );
+  await page.getByRole("link", { name: CORE_BOARD }).click();
   await page.getByRole("button", { name: "Close library" }).click();
   await expect(page.getByRole("grid", { name: CORE_BOARD })).toBeVisible();
   await waitForServiceWorkerControl(page);
@@ -103,7 +117,7 @@ test("tileInteraction", async ({ browser }) => {
   await measureJourney(browser, "tileInteraction", async (sample) => {
     const probe = await sample.openPage();
     const { page } = probe;
-    await openCoreBoard(page);
+    await openCoreBoard(sample, probe);
 
     await probe.slowCPUDuring(async () => {
       const message: string[] = [];
