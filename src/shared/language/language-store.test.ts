@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import {
   DEFAULT_LANGUAGE,
   getPreferredLanguage,
@@ -13,14 +13,18 @@ describe("parseStoredLanguage", () => {
     expect(parseStoredLanguage("he")).toBe("he");
   });
 
-  test("falls back to the default for a non-string value", () => {
-    expect(parseStoredLanguage({ not: "a string" })).toBe(DEFAULT_LANGUAGE);
-    expect(parseStoredLanguage(undefined)).toBe(DEFAULT_LANGUAGE);
-    expect(parseStoredLanguage(42)).toBe(DEFAULT_LANGUAGE);
+  test("falls back to the preferred browser language for a non-string value", () => {
+    vi.spyOn(navigator, "languages", "get").mockReturnValue(["fr-CA"]);
+
+    expect(parseStoredLanguage({ not: "a string" })).toBe("fr");
+    expect(parseStoredLanguage(undefined)).toBe("fr");
+    expect(parseStoredLanguage(42)).toBe("fr");
   });
 
-  test("falls back to the default for an empty string", () => {
-    expect(parseStoredLanguage("")).toBe(DEFAULT_LANGUAGE);
+  test("falls back to the preferred browser language for an empty string", () => {
+    vi.spyOn(navigator, "languages", "get").mockReturnValue(["fr-CA"]);
+
+    expect(parseStoredLanguage("")).toBe("fr");
   });
 });
 
