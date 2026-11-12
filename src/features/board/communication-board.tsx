@@ -130,7 +130,7 @@ export function CommunicationBoard({
             columns={board.grid.columns}
             order={board.grid.order}
             renderItem={renderTile}
-            rowAttributes={scanGroupProps}
+            rowProps={scanGroupProps}
           />
         </Box>
 

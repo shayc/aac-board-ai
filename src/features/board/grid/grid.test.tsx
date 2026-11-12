@@ -361,7 +361,7 @@ describe("Grid", () => {
   });
 
   describe("row props", () => {
-    test("spreads rowAttributes onto every row", async () => {
+    test("spreads rowProps onto every row", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },
@@ -373,7 +373,7 @@ describe("Grid", () => {
           rows={2}
           columns={1}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
-          rowAttributes={{ "data-testid": "grid-row" }}
+          rowProps={{ "data-testid": "grid-row" }}
         />,
       );
 
