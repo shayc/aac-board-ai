@@ -129,9 +129,10 @@ The lab says whether a timing changed or went over, not why. A performance
 trace of the journey does: it shows the long tasks, layouts and layout shifts
 behind a slow row.
 
-An agent can record one with the `chrome-devtools` server in
+In VS Code, an agent can record one with the `chrome-devtools` server in
 [.vscode/mcp.json](../.vscode/mcp.json) and get a short summary of what is
-slow. To trace what the lab measured, match its setup:
+slow. Other agents read their own MCP configuration and need the server added
+there. To trace what the lab measured, match its setup:
 
 ```bash
 npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
@@ -142,6 +143,11 @@ npm run build && npm run preview -- --host 127.0.0.1 --port 4173 --strictPort
 - Slow the CPU 4×, the `CPU_SLOWDOWN` in [perf/settings.ts](../perf/settings.ts),
   and use a 1280×720 viewport.
 - Repeat the journey's taps from [perf/journeys.spec.ts](../perf/journeys.spec.ts).
+
+Two differences remain. The server drives Chrome rather than the lab's
+Chromium, so built-in AI may be available and suggestions may run. And speech
+is real, where the lab stubs it, so a word tap includes the call that starts
+speaking. Read those parts of a trace as extra work the lab does not time.
 
 The server starts Chrome with a fresh profile each time (`--isolated`), so
 storage and the service worker start empty, as in a first launch. It is also
