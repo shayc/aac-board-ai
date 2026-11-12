@@ -112,20 +112,11 @@ Preferences managed by `createPersistedStore` do not synchronize across tabs. MU
 persists and synchronizes theme mode separately.
 
 Stores are module singletons that start working when first imported, so they
-need no provider and their loading starts before React renders:
-
-- A persisted store reads its preference from localStorage.
-- The [board-sets store](../src/features/library/board-sets/board-sets-store.ts)
-  opens its `BroadcastChannel` and starts reading the stored sets.
-- The [speech store](../src/shared/speech/speech-store.ts) reads the voice
-  catalog and listens for voice changes.
-- The [language store](../src/shared/language/language-store.ts) points
-  Paraglide's locale at the stored language.
-
-The cost is that a store outlives a test, so tests reset the state behind it.
-The shared [test setup](../src/shared/testing/setup.ts) clears localStorage and
-calls `reloadPersistedStores` before each test. Tests that touch stored boards
-call `resetBoardsDB` from the library's
+need no provider and their loading starts before React renders. The cost is that
+a store outlives a test, so tests reset the state behind it. The shared [test
+setup](../src/shared/testing/setup.ts) clears localStorage and calls
+`reloadPersistedStores` before each test. Tests that touch stored boards call
+`resetBoardsDB` from the library's
 [`testing`](../src/features/library/testing/index.ts) entry, which empties
 IndexedDB and refreshes the board-sets store.
 
@@ -391,12 +382,7 @@ types are used by both features and live in
 [`shared/board/board-types.ts`](../src/shared/board/board-types.ts).
 
 The library also owns the URL scheme, in
-[`board-paths.ts`](../src/features/library/board-paths.ts): the route segments
-and the functions that build board paths. The library needs them to link to
-board sets and to open an imported one, and it may import no feature, so they
-cannot live in the board. The app declares its routes from the same segments,
-and the board matches and builds its links with them, so the scheme has one
-definition.
+[`board-paths.ts`](../src/features/library/board-paths.ts), which says why.
 
 Inside a feature, folders group related code and collaborate through relative
 imports; they are not separate boundaries. The library's folders still depend
