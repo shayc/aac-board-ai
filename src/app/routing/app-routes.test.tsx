@@ -427,6 +427,29 @@ describe("app flow", () => {
     expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSetData);
   });
 
+  test("choosing a board in the header's board list opens it and enables Back", async () => {
+    await seedTwoBoardSet();
+
+    const { screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await screen.getByRole("combobox", { name: "Board" }).click();
+    await screen.getByRole("option", { name: "Fruit" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Fruit" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("combobox", { name: "Board" }))
+      .toHaveValue("Fruit");
+
+    await screen.getByRole("button", { name: "Go back" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Home" }))
+      .toBeVisible();
+  });
+
   test("changing the language translates the board, board list, and library in place", async () => {
     await seedTwoBoardSet();
     stubTranslator((input) => `[es] ${input}`);

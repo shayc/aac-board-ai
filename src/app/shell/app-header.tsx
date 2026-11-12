@@ -2,7 +2,7 @@ import {
   BOARD_SET_ROUTE_ID,
   type boardSetLoader,
 } from "@app/routing/loaders/board-set-loader";
-import { BoardSelector } from "@features/board";
+import { BoardSelector, useBoardRoute } from "@features/board";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -25,6 +25,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   const t = useTranslate();
   const boards =
     useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.boards;
+  const { boardId, goToBoard } = useBoardRoute();
 
   return (
     <AppBar position="static">
@@ -52,7 +53,13 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
         </Tooltip>
 
         <Box sx={{ minWidth: 0 }}>
-          {boards && <BoardSelector boards={boards} />}
+          {boards && boardId && (
+            <BoardSelector
+              boards={boards}
+              boardId={boardId}
+              onSelect={goToBoard}
+            />
+          )}
         </Box>
 
         <Tooltip title={t(m.settingsOpen)}>
