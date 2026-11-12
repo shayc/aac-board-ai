@@ -9,15 +9,15 @@ import {
 import {
   collectBoardStrings,
   findStringTranslations,
-  getBoardLanguage,
+  getSourceLanguage,
 } from "./board-translations";
 
-export interface TranslationOptions {
+export interface TranslationPassOptions {
   signal: AbortSignal;
   onTranslating: () => void;
 }
 
-interface TranslateBoardSetsOptions extends TranslationOptions {
+interface TranslateBoardSetsOptions extends TranslationPassOptions {
   onTranslated: (boardSetId: string) => void;
 }
 
@@ -60,7 +60,7 @@ function isBoardSetInLanguage(
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
-  { signal, onTranslating }: TranslationOptions,
+  { signal, onTranslating }: TranslationPassOptions,
 ): Promise<boolean> {
   const boards = await listBoards(boardSet.id);
   const nameInLanguage = findNameInLanguage(boardSet, boards, language);
@@ -72,7 +72,7 @@ async function translateBoardSet(
     boardsMissingLanguage,
   );
   if (nameInLanguage === undefined) {
-    addStrings(stringsBySourceLanguage, getBoardLanguage(boardSet), [
+    addStrings(stringsBySourceLanguage, getSourceLanguage(boardSet), [
       boardSet.name,
     ]);
   }
@@ -88,7 +88,7 @@ async function translateBoardSet(
   }
 
   const findTranslation = (source: { locale?: string }, text: string) =>
-    translationsBySourceLanguage.get(getBoardLanguage(source))?.get(text) ??
+    translationsBySourceLanguage.get(getSourceLanguage(source))?.get(text) ??
     text;
 
   await saveBoardSetTranslations(boardSet.id, language, {
@@ -127,7 +127,7 @@ function findNameInLanguage(
   boards: readonly Board[],
   language: string,
 ): string | undefined {
-  if (getBoardLanguage(boardSet) === language) {
+  if (getSourceLanguage(boardSet) === language) {
     return boardSet.name;
   }
 
@@ -143,7 +143,7 @@ function findNameInLanguage(
 
 function isBoardInLanguage(board: Board, language: string): boolean {
   return (
-    getBoardLanguage(board) === language ||
+    getSourceLanguage(board) === language ||
     findStringTranslations(board.translationsByLocale, language) !== undefined
   );
 }
@@ -155,7 +155,7 @@ function collectStringsBySourceLanguage(
   for (const board of boards) {
     addStrings(
       stringsBySourceLanguage,
-      getBoardLanguage(board),
+      getSourceLanguage(board),
       collectBoardStrings(board),
     );
   }
@@ -179,7 +179,7 @@ function addStrings(
 async function translateBySourceLanguage(
   stringsBySourceLanguage: ReadonlyMap<string, Set<string>>,
   targetLanguage: string,
-  { signal, onTranslating }: TranslationOptions,
+  { signal, onTranslating }: TranslationPassOptions,
 ): Promise<Map<string, StringTranslations>> {
   if (stringsBySourceLanguage.size === 0) {
     return new Map();

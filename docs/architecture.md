@@ -151,7 +151,7 @@ Route loaders only read; they never translate or wait on a model:
 
 ### Translate board sets
 
-[`useBoardSetTranslation`](../src/features/library/translation/use-board-set-translation.ts)
+[`useTranslateBoardSets`](../src/features/library/translation/use-translate-board-sets.ts)
 runs in the app shell on start, on a language change, and when sets are added
 or removed. Only a language change aborts the pass in progress; an added or
 removed set queues another pass behind it, so a model download started by the
@@ -442,8 +442,8 @@ AI availability, provisioning, and session lifecycle to
 - **Board** — a grid of communication tiles.
 - **Board set** — a collection of linked boards with a root board, imported as a
   unit.
-- **Library** — the board sets stored on this device, listed alongside bundled
-  board sets that can be downloaded.
+- **Library** — the board sets stored on this device, listed alongside the
+  catalog of bundled board sets that can be downloaded.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It

@@ -10,10 +10,10 @@ import {
 } from "./board-translation-coordinator";
 import {
   translateBoardSets,
-  type TranslationOptions,
+  type TranslationPassOptions,
 } from "./translate-board-sets";
 
-export function useBoardSetTranslation(): void {
+export function useTranslateBoardSets(): void {
   const { language } = useLanguage();
   const { boardSets, isLoading } = useBoardSets();
   const { revalidate } = useRevalidator();
@@ -35,9 +35,9 @@ export function useBoardSetTranslation(): void {
     void syncBoardSets();
   });
 
-  const translate = useEffectEvent((options: TranslationOptions) =>
+  const translate = useEffectEvent((options: TranslationPassOptions) =>
     translateBoardSets(
-      visibleFirst(boardSets, boardSetIdFromPath(pathname)),
+      activeFirst(boardSets, boardSetIdFromPath(pathname)),
       language,
       {
         ...options,
@@ -57,12 +57,12 @@ export function useBoardSetTranslation(): void {
   useEffect(() => stopBoardTranslation, []);
 }
 
-function visibleFirst(
+function activeFirst(
   boardSets: readonly BoardSetRecord[],
-  visibleBoardSetId: string | undefined,
+  activeBoardSetId: string | undefined,
 ): BoardSetRecord[] {
-  const visible = boardSets.filter(({ id }) => id === visibleBoardSetId);
-  const others = boardSets.filter(({ id }) => id !== visibleBoardSetId);
+  const active = boardSets.filter(({ id }) => id === activeBoardSetId);
+  const others = boardSets.filter(({ id }) => id !== activeBoardSetId);
 
-  return [...visible, ...others];
+  return [...active, ...others];
 }

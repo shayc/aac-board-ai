@@ -5,18 +5,18 @@ import {
   stopBoardTranslation,
   useIsTranslatingBoards,
 } from "./board-translation-coordinator";
-import type { TranslationOptions } from "./translate-board-sets";
+import type { TranslationPassOptions } from "./translate-board-sets";
 
 interface HeldPass {
-  pass: (options: TranslationOptions) => Promise<void>;
-  options: () => TranslationOptions;
+  pass: (options: TranslationPassOptions) => Promise<void>;
+  options: () => TranslationPassOptions;
   hasStarted: () => boolean;
   finish: () => void;
 }
 
 function holdPass(): HeldPass {
   const { promise, resolve } = Promise.withResolvers<void>();
-  let started: TranslationOptions | undefined;
+  let started: TranslationPassOptions | undefined;
 
   return {
     pass: (options) => {

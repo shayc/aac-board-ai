@@ -7,13 +7,13 @@ import { getLanguageCode } from "@shared/language/locale";
 import { nonBlankText } from "../non-blank-text";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
-const DEFAULT_BOARD_LANGUAGE = "en";
+const DEFAULT_SOURCE_LANGUAGE = "en";
 
 export function findBoardInLanguage(
   board: Board,
   language: string,
 ): Board | undefined {
-  if (getBoardLanguage(board) === language) {
+  if (getSourceLanguage(board) === language) {
     return board;
   }
 
@@ -25,8 +25,8 @@ export function findBoardInLanguage(
   return translations ? applyTranslations(board, translations) : undefined;
 }
 
-export function getBoardLanguage({ locale }: { locale?: string }): string {
-  return locale ? getLanguageCode(locale) : DEFAULT_BOARD_LANGUAGE;
+export function getSourceLanguage({ locale }: { locale?: string }): string {
+  return locale ? getLanguageCode(locale) : DEFAULT_SOURCE_LANGUAGE;
 }
 
 export function boardSetInLanguage(
