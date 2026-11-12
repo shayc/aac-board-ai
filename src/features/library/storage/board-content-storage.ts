@@ -1,4 +1,4 @@
-import type { BoardKey } from "@shared/board/board-types";
+import type { BoardKey } from "../board-types";
 import { type BoardRecord, getBoardsDB, normalizeAssetPath } from "./boards-db";
 
 export { normalizeAssetPath } from "./boards-db";

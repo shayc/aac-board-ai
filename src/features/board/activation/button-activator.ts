@@ -1,4 +1,4 @@
-import type { BoardAction, BoardButton } from "@shared/board/board-types";
+import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import {
   appendSpace,

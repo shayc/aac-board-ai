@@ -1,9 +1,9 @@
+import { getLanguageCode } from "@shared/language/locale";
 import type {
   Board,
   StringTranslations,
   TranslationsByLocale,
-} from "@shared/board/board-types";
-import { getLanguageCode } from "@shared/language/locale";
+} from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 

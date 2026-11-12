@@ -1,4 +1,4 @@
-import type { BoardButton } from "@shared/board/board-types";
+import type { BoardButton } from "@features/library";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import type { MessagePart } from "../message/message-types";

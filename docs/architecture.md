@@ -377,10 +377,11 @@ library's public entry point, and the library imports no feature.
 | [`library`](../src/features/library/) | Stored board sets                                                                | [library/board-sets/](../src/features/library/board-sets/) | Maintain the reactive library, create and delete board sets, and read stored boards as runtime types. |
 
 Test files may also import the library's
-[`testing`](../src/features/library/testing/index.ts) entry. The runtime `Board`
-types are used by both features and live in
-[`shared/board/board-types.ts`](../src/shared/board/board-types.ts).
+[`testing`](../src/features/library/testing/index.ts) entry.
 
+The library owns the runtime `Board` types, in
+[`board-types.ts`](../src/features/library/board-types.ts), because it builds
+them from imported files; the board reads them through the public entry point.
 The library also owns the URL scheme, in
 [`board-paths.ts`](../src/features/library/board-paths.ts), which says why.
 

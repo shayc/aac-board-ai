@@ -95,7 +95,7 @@ See [docs/architecture.md](docs/architecture.md) for design decisions, data flow
 
 Three short files show how a selected tile becomes part of a spoken message:
 
-1. [`board-types.ts`](src/shared/board/board-types.ts): the data. A `Board` is a grid of `BoardButton`s, the model both features share.
+1. [`board-types.ts`](src/features/library/board-types.ts): the data. A `Board` is a grid of `BoardButton`s, the model both features share.
 2. [`communication-board.tsx`](src/features/board/communication-board.tsx): the board screen. It wires message, suggestions, playback and navigation together, and its imports are a table of contents for `features/board/`.
 3. [`button-activator.ts`](src/features/board/activation/button-activator.ts): what activating a tile does. It opens a linked board, adds to the message and plays it, or runs the tile's actions.
 

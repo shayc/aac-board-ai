@@ -1,5 +1,5 @@
-import type { Board, BoardKey } from "@shared/board/board-types";
 import type { OBFBoard } from "@shayc/open-board-format";
+import type { Board, BoardKey } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { getAssetURL } from "../storage/asset-urls";
 import {

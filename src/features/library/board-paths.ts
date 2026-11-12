@@ -1,5 +1,5 @@
-import type { BoardKey } from "@shared/board/board-types";
 import { generatePath, matchPath } from "react-router";
+import type { BoardKey } from "./board-types";
 
 // The URL scheme lives in the library because the library links and redirects
 // to boards and may import no feature, while the board and the app may import it.
