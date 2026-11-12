@@ -5,7 +5,7 @@ import {
   collectBoardStrings,
   findBoardInLanguage,
   findStringTranslations,
-  getBoardLanguage,
+  getSourceLanguage,
 } from "./board-translations";
 
 const spanishTranslations = new Map([
@@ -40,11 +40,11 @@ const mockBoard: Board = {
   ]),
 };
 
-describe("getBoardLanguage", () => {
+describe("getSourceLanguage", () => {
   test("returns the base language of the board locale, defaulting to English", () => {
-    expect(getBoardLanguage(mockBoard)).toBe("en");
-    expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
-    expect(getBoardLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
+    expect(getSourceLanguage(mockBoard)).toBe("en");
+    expect(getSourceLanguage({ ...mockBoard, locale: undefined })).toBe("en");
+    expect(getSourceLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
   });
 });
 

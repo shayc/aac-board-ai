@@ -20,42 +20,42 @@ export function obfToBoard(
   obfBoard: OBFBoard,
   assetURLByPath: ReadonlyMap<string, string> = new Map(),
 ): Board {
-  const imageSourceById = buildMediaSourceById(obfBoard.images, assetURLByPath);
-  const soundSourceById = buildMediaSourceById(obfBoard.sounds, assetURLByPath);
+  const imageSrcById = buildMediaSrcById(obfBoard.images, assetURLByPath);
+  const soundSrcById = buildMediaSrcById(obfBoard.sounds, assetURLByPath);
 
   return {
     id: obfBoard.id,
     name: nonBlankText(obfBoard.name) ?? "",
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
-      obfToBoardButton(obfButton, imageSourceById, soundSourceById),
+      obfToBoardButton(obfButton, imageSrcById, soundSrcById),
     ),
     grid: obfToBoardGrid(obfBoard.grid),
     translationsByLocale: obfToTranslationsByLocale(obfBoard.strings),
   };
 }
 
-function buildMediaSourceById(
+function buildMediaSrcById(
   media: readonly OBFMedia[] | undefined,
   assetURLByPath: ReadonlyMap<string, string>,
 ): Map<string, string> {
-  const mediaSourceById = new Map<string, string>();
+  const mediaSrcById = new Map<string, string>();
 
   if (!media) {
-    return mediaSourceById;
+    return mediaSrcById;
   }
 
   for (const item of media) {
-    const source = resolveMediaSource(item, assetURLByPath);
-    if (source) {
-      mediaSourceById.set(item.id, source);
+    const src = resolveMediaSrc(item, assetURLByPath);
+    if (src) {
+      mediaSrcById.set(item.id, src);
     }
   }
 
-  return mediaSourceById;
+  return mediaSrcById;
 }
 
-function resolveMediaSource(
+function resolveMediaSrc(
   media: OBFMedia,
   assetURLByPath: ReadonlyMap<string, string>,
 ): string | undefined {
@@ -66,8 +66,8 @@ function resolveMediaSource(
 
 function obfToBoardButton(
   obfButton: OBFButton,
-  imageSourceById: Map<string, string>,
-  soundSourceById: Map<string, string>,
+  imageSrcById: Map<string, string>,
+  soundSrcById: Map<string, string>,
 ): BoardButton {
   return {
     id: obfButton.id,
@@ -76,10 +76,10 @@ function obfToBoardButton(
     backgroundColor: sanitizeColor(obfButton.background_color),
     borderColor: sanitizeColor(obfButton.border_color),
     imageSrc: obfButton.image_id
-      ? imageSourceById.get(obfButton.image_id)
+      ? imageSrcById.get(obfButton.image_id)
       : undefined,
     soundSrc: obfButton.sound_id
-      ? soundSourceById.get(obfButton.sound_id)
+      ? soundSrcById.get(obfButton.sound_id)
       : undefined,
     actions: collectActions(obfButton),
     linkedBoardId: obfButton.load_board?.id,

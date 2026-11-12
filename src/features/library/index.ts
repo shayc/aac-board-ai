@@ -24,6 +24,6 @@ export { listBoardSummaries } from "./storage/list-board-summaries";
 export { loadStoredBoard } from "./storage/load-stored-board";
 export { BoardTranslationNotice } from "./translation/board-translation-notice";
 export { useBoardInLanguage } from "./translation/use-board-in-language";
-export { useBoardSetTranslation } from "./translation/use-board-set-translation";
+export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
 export type { BoardSummary } from "./storage/list-board-summaries";

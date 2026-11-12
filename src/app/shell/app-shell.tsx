@@ -5,7 +5,7 @@ import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
-  useBoardSetTranslation,
+  useTranslateBoardSets,
   useImportBoardFilesOnLaunch,
 } from "@features/library";
 import Box from "@mui/material/Box";
@@ -20,7 +20,7 @@ export function AppShell() {
   const fileDrop = useBoardFileDrop();
 
   useImportBoardFilesOnLaunch();
-  useBoardSetTranslation();
+  useTranslateBoardSets();
 
   return (
     <Box

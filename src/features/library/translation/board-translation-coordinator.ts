@@ -2,9 +2,9 @@ import {
   createExternalStore,
   useExternalStore,
 } from "@shared/state/external-store";
-import type { TranslationOptions } from "./translate-board-sets";
+import type { TranslationPassOptions } from "./translate-board-sets";
 
-type TranslationPass = (options: TranslationOptions) => Promise<void>;
+type TranslationPass = (options: TranslationPassOptions) => Promise<void>;
 
 interface TranslationRun {
   readonly language: string;
