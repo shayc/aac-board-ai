@@ -11,7 +11,6 @@ interface UseBoardRouteReturn {
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;
   canGoHome: boolean;
-  isHome: boolean;
   goToBoard: (targetBoardId: string) => void;
   goBack: () => void;
   goHome: () => void;
@@ -44,11 +43,10 @@ export function useBoardNavigation(
 ): UseBoardNavigationReturn {
   const navigate = useNavigate();
   const location = useLocation();
-  const { boardSetId, boardId, goToBoard } = useBoardRoute();
+  const { boardSetId, goToBoard } = useBoardRoute();
 
   const canGoBack = readCanGoBack(location.state);
   const canGoHome = Boolean(rootBoardId);
-  const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
   function goBack() {
     if (!boardSetId || !canGoBack) {
@@ -69,5 +67,5 @@ export function useBoardNavigation(
     });
   }
 
-  return { canGoBack, canGoHome, isHome, goToBoard, goBack, goHome };
+  return { canGoBack, canGoHome, goToBoard, goBack, goHome };
 }
