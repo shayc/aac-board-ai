@@ -11,9 +11,9 @@ import { pickFiles } from "./pick-files";
 import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
-  pickAndImport: () => Promise<void>;
   importFiles: (files: readonly File[]) => Promise<ImportedBoardSet[]>;
   importAndOpen: (files: readonly File[]) => Promise<void>;
+  pickAndImport: () => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
@@ -69,8 +69,8 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   }
 
   return {
-    pickAndImport,
     importFiles,
     importAndOpen,
+    pickAndImport,
   };
 }

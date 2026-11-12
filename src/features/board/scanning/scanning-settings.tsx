@@ -19,12 +19,13 @@ const MS_PER_SECOND = 1000;
 export function ScanningSettings() {
   const t = useTranslate();
   const uiLocale = useUILocale();
+  const { isEnabled, method, intervalMs } = useScanningPreferences();
+
   const secondsFormat = new Intl.NumberFormat(uiLocale, {
     style: "unit",
     unit: "second",
     minimumFractionDigits: 1,
   });
-  const { isEnabled, method, intervalMs } = useScanningPreferences();
 
   return (
     <>

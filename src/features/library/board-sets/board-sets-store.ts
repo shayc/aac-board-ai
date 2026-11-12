@@ -23,6 +23,8 @@ const boardSetsStore = createExternalStore<BoardSetsSnapshot>({
   error: undefined,
 });
 
+const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
+
 export async function refreshBoardSets(): Promise<void> {
   try {
     const boardSets = await listBoardSetRecords();
@@ -43,7 +45,6 @@ export async function syncBoardSets(): Promise<void> {
   boardSetsSyncChannel.postMessage(undefined);
 }
 
-const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
 boardSetsSyncChannel.addEventListener("message", () => {
   void refreshBoardSets();
 });

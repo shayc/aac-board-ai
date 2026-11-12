@@ -27,9 +27,10 @@ const SATURATION_STEP = 0.1;
 export function TileSettings() {
   const t = useTranslate();
   const uiLocale = useUILocale();
-  const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
   const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
+
+  const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
 
   return (
     <Stack spacing={3}>

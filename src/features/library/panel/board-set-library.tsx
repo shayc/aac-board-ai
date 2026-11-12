@@ -32,9 +32,6 @@ export function BoardSetLibrary() {
   })?.params.boardSetId;
   const { language } = useLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
-  const boardSets = storedBoardSets.map((boardSet) =>
-    boardSetInLanguage(boardSet, language),
-  );
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -42,6 +39,9 @@ export function BoardSetLibrary() {
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
+  const boardSets = storedBoardSets.map((boardSet) =>
+    boardSetInLanguage(boardSet, language),
+  );
   const downloadableBoardSets = listDownloadableBoardSets(boardSets);
 
   async function handleDelete() {
