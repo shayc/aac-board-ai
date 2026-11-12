@@ -1,7 +1,7 @@
+import type { SpeechSettings } from "@shared/speech/speech-synthesis";
 import { type ReactNode, useEffect, useState } from "react";
 import { PlaybackContext } from "./playback-context";
 import { createPlaybackCoordinator } from "./playback-coordinator";
-import type { SpeechSettings } from "./playback-types";
 
 interface PlaybackProviderProps {
   children: ReactNode;

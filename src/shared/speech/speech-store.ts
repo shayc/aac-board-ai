@@ -1,7 +1,6 @@
 import { getStoredLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
-import type { SpeechSettings } from "@shared/playback/playback-types";
 import {
   createExternalStore,
   useExternalStore,
@@ -13,7 +12,7 @@ import {
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
 import { resolveVoice } from "./resolve-voice";
-import { getSpeechSynthesis } from "./speech-synthesis";
+import { getSpeechSynthesis, type SpeechSettings } from "./speech-synthesis";
 
 interface SpeechPreferences {
   voiceURI: string | null;

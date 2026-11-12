@@ -1,10 +1,10 @@
+import type { SpeechSettings } from "@shared/speech/speech-synthesis";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { Profiler, type ProfilerOnRenderCallback, type ReactNode } from "react";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render, renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
-import type { SpeechSettings } from "./playback-types";
 import { useActiveCue, useIsPlaying, usePlayback } from "./use-playback";
 
 const speechSettings: SpeechSettings = {

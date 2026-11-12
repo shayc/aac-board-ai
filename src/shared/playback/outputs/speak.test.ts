@@ -1,7 +1,7 @@
+import type { SpeechSettings } from "@shared/speech/speech-synthesis";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import type { SpeechSettings } from "../playback-types";
 import { speak } from "./speak";
 
 const settings: SpeechSettings = {

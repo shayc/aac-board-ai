@@ -1,3 +1,4 @@
+import type { SpeechSettings } from "@shared/speech/speech-synthesis";
 import { assertNever } from "@shared/utils/assert-never";
 import { createExternalStore } from "@shared/state/external-store";
 import type {
@@ -6,7 +7,6 @@ import type {
   PlaybackRequest,
   PlaybackState,
   PlaybackStep,
-  SpeechSettings,
 } from "./playback-types";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";

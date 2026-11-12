@@ -1,5 +1,7 @@
-import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
-import type { SpeechSettings } from "../playback-types";
+import {
+  getSpeechSynthesis,
+  type SpeechSettings,
+} from "@shared/speech/speech-synthesis";
 
 interface SpeakOptions {
   signal?: AbortSignal;
