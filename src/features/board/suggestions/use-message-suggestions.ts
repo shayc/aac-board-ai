@@ -49,9 +49,9 @@ export function useMessageSuggestions(
     language,
     tone: "more-casual",
   });
-  const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
-
   const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
+
+  const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
   const phrases = selectSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),
