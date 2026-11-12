@@ -41,6 +41,7 @@ export function DownloadableBoardSetListItem({
   function handleClick() {
     if (isCancellable) {
       cancel();
+
       return;
     }
 

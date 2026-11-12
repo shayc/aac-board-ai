@@ -36,7 +36,6 @@ export function useMessageSuggestions(
   );
 
   const { language } = useLanguage();
-
   const proofreaderSource = useProofreaderSource({ text, language });
   const rewriterSource = useRewriterSource({
     text,
@@ -50,11 +49,9 @@ export function useMessageSuggestions(
     language,
     tone: "more-casual",
   });
-
   const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
 
   const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
-
   const phrases = selectSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),

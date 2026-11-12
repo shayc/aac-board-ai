@@ -201,8 +201,8 @@ describe("app flow", () => {
     });
 
     const element = audio.play.mock.contexts[0];
-
     assert(element instanceof HTMLAudioElement);
+
     const response = await fetch(element.src);
 
     expect(await response.text()).toBe("recording");

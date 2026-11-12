@@ -31,15 +31,13 @@ export function CommunicationBoard({
   rootBoardId,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
-
   const playback = useBoardPlayback();
-
   const navigation = useBoardNavigation(rootBoardId);
+  const shortcuts = useBoardShortcuts({ message, playback });
 
   // Stable callbacks let React Compiler reuse the activator across message and
   // playback updates, avoiding a rerender of every tile.
@@ -51,7 +49,6 @@ export function CommunicationBoard({
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
   });
-  const shortcuts = useBoardShortcuts({ message, playback });
 
   const hasMessage = message.parts.length > 0;
 

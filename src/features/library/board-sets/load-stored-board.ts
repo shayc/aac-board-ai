@@ -12,11 +12,9 @@ export async function loadStoredBoard(
   signal?: AbortSignal,
 ): Promise<Board> {
   const obfBoard = await readOBFBoard(key);
-
   signal?.throwIfAborted();
 
   const assetURLByPath = await resolveAssetURLs(key.boardSetId, obfBoard);
-
   signal?.throwIfAborted();
 
   return obfToBoard(obfBoard, assetURLByPath);

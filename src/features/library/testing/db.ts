@@ -22,6 +22,7 @@ export async function resetBoardsDB(): Promise<void> {
 async function clearBoardsDB(): Promise<void> {
   const db = await getBoardsDB();
   const tx = db.transaction(STORE_NAMES, "readwrite");
+
   for (const name of STORE_NAMES) {
     await tx.objectStore(name).clear();
   }

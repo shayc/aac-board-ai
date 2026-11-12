@@ -37,7 +37,6 @@ function findTranslatedNames(
       translationsByLocale,
       language,
     )?.get(name);
-
     if (translatedName !== undefined) {
       translatedNames[language] = translatedName;
     }

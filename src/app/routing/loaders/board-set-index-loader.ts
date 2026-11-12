@@ -7,7 +7,6 @@ export async function boardSetIndexLoader({
 }: LoaderFunctionArgs): Promise<Response> {
   const { boardSetId } = params;
   const boardSet = boardSetId ? await getBoardSetRecord(boardSetId) : undefined;
-
   if (!boardSet) {
     throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
   }

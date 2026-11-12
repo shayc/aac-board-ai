@@ -59,6 +59,7 @@ export function BoardSetLibrary() {
         message: (t) => t(m.libraryDeleteFailed, { name }),
         severity: "error",
       });
+
       return;
     }
 

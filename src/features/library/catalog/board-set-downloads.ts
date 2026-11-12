@@ -55,7 +55,6 @@ function publishProgress(url: string, progress: DownloadProgress) {
     phase?.kind === "downloading" &&
     phase.total === progress.total &&
     visibleProgressStep(phase) === visibleProgressStep(progress);
-
   if (isUnchanged) {
     return;
   }

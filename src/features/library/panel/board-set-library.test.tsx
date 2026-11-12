@@ -71,6 +71,7 @@ function recordUnavailableButtons() {
   return {
     stop: () => {
       observer.disconnect();
+
       return buttons;
     },
   };

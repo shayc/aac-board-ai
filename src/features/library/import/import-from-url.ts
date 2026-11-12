@@ -25,7 +25,6 @@ class BoardURLError extends Error {
 // http(s) may reach fetch. Schemes such as data: carry a payload with no host.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
-
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
     throw new BoardURLError(
       "unsupported-scheme",
@@ -80,7 +79,6 @@ async function downloadBoardFile(
   }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
 ): Promise<Blob> {
   const response = await fetch(url, { signal });
-
   if (!response.ok) {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }

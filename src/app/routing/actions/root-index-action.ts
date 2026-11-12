@@ -6,7 +6,6 @@ export async function rootIndexAction({
   request,
 }: ActionFunctionArgs): Promise<Response> {
   const boardURL = new URL(request.url).searchParams.get("board");
-
   if (!boardURL) {
     return redirect("/");
   }

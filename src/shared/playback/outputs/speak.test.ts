@@ -68,7 +68,6 @@ describe("speak", () => {
     });
 
     const utterance = speech.speak.mock.calls[0]?.[0];
-
     assertDefined(utterance);
     expect(utterance.lang).toBe("he");
     expect(utterance.voice).toBe(voice);

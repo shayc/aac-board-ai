@@ -67,7 +67,6 @@ export function normalizeAssetPath(rawPath: string): string {
     .replaceAll("\\", "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
-
   if (!path) {
     throw new Error("Path cannot be empty");
   }

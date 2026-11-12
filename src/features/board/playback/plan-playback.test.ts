@@ -18,7 +18,6 @@ describe("planPlayback", () => {
 
     expect(steps).toHaveLength(1);
     const step = steps[0];
-
     if (step?.kind !== "speech") {
       throw new Error("Expected a speech step");
     }

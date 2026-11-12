@@ -23,6 +23,7 @@ function setup(initialParts: readonly MessagePart[] = []) {
     ),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
+
   return {
     activateButton: createButtonActivator({ message, playback, navigation }),
     message,

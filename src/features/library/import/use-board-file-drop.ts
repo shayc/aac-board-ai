@@ -47,6 +47,7 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
 
     if (!event.relatedTarget) {
       clearDrag();
+
       return;
     }
 

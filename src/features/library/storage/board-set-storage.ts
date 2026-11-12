@@ -52,6 +52,7 @@ export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
 
 export async function removeBoardSet(boardSetId: string): Promise<void> {
   validateId(boardSetId, "boardSetId");
+
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
   const keyRange = boardSetRange(boardSetId);
@@ -169,6 +170,7 @@ function validateBoardSetInput({
   validateId(rootBoardId, "rootBoardId");
 
   const boardIds = new Set<string>();
+
   for (const obf of boards) {
     validateId(obf.id, "boardId");
     if (boardIds.has(obf.id)) {

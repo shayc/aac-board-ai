@@ -27,7 +27,6 @@ export async function boardSetToOBZ({
     id,
     records.map((record) => record.obf),
   );
-
   const boards = records.map((record) => withPackagedMedia(record.obf, assets));
 
   return createOBZ(boards, rootBoardId, assets);

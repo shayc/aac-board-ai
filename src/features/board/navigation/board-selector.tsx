@@ -19,10 +19,9 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
   const { language } = useLanguage();
   const { boardId, goToBoard } = useBoardRoute();
+
   const options = toBoardOptions(boards, language);
-
   const selectedOption = options.find((option) => option.id === boardId);
-
   if (!selectedOption) {
     return null;
   }

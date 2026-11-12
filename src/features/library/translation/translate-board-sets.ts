@@ -140,6 +140,7 @@ function collectStringsBySourceLanguage(
   boards: readonly Board[],
 ): Map<string, Set<string>> {
   const stringsBySourceLanguage = new Map<string, Set<string>>();
+
   for (const board of boards) {
     addStrings(
       stringsBySourceLanguage,
@@ -157,6 +158,7 @@ function addStrings(
   strings: Iterable<string>,
 ) {
   const collected = stringsBySourceLanguage.get(sourceLanguage) ?? new Set();
+
   for (const text of strings) {
     collected.add(text);
   }

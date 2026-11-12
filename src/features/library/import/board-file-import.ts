@@ -111,6 +111,7 @@ export function buildAssetInputs(
   return Array.from(resources)
     .filter(([path]) => {
       const lowerPath = path.toLowerCase();
+
       return !lowerPath.endsWith(".obf") && lowerPath !== "manifest.json";
     })
     .map(([path, buffer]) => {
