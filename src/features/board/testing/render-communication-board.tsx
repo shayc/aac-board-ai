@@ -1,4 +1,4 @@
-import { obfToBoard } from "@features/library";
+import { obfToBoard } from "@features/library/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter, type InitialEntry } from "react-router";

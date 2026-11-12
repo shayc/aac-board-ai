@@ -13,3 +13,4 @@ export {
   makeOBFBoard,
   makeOversizedOBZ,
 } from "./fixtures";
+export { obfToBoard } from "../obf/obf-to-board";
