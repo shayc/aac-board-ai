@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
+import Chip, { chipClasses } from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
@@ -42,7 +42,6 @@ export function SuggestionBar({
         sx={{
           display: "flex",
           alignItems: "center",
-          height: "100%",
           gap: 2,
           marginInlineEnd: "auto",
           overflowX: "auto",
@@ -52,8 +51,23 @@ export function SuggestionBar({
           <Chip
             key={phrase}
             label={phrase}
-            variant="outlined"
             onClick={() => onPhraseSelect(phrase)}
+            sx={(theme) => ({
+              flexShrink: 0,
+              height: 48,
+              maxWidth: "none",
+              fontSize: theme.typography.pxToRem(16),
+              "&, &:hover": {
+                bgcolor: `color-mix(in srgb, ${theme.vars.palette.primary.main} 16%, ${theme.vars.palette.background.paper})`,
+              },
+              "@media (hover: hover)": {
+                "&:hover": {
+                  bgcolor: `color-mix(in srgb, ${theme.vars.palette.primary.main} 24%, ${theme.vars.palette.background.paper})`,
+                },
+              },
+              // Keep the keyboard focus ring inside the scrolling row.
+              [`&.${chipClasses.focusVisible}`]: { outlineOffset: -3 },
+            })}
           />
         ))}
       </Box>
