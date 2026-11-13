@@ -1,6 +1,7 @@
 export interface MessagePartInput {
   readonly label?: string;
-  // Backspace removes a spelled word one letter at a time, and any other part whole.
+  // Backspace removes a spelled word one letter at a time, and any other part
+  // whole.
   readonly isSpelled?: boolean;
   readonly vocalization?: string;
   readonly imageSrc?: string;

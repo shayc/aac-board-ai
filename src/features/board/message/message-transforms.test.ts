@@ -35,11 +35,11 @@ describe("createPart", () => {
 });
 
 describe("messageParts", () => {
-  test("lists the spelled word after the finished parts", () => {
+  test("lists the open word after the finished parts", () => {
     expect(labels(spelling("wor", [HELLO]))).toEqual(["hello", "wor"]);
   });
 
-  test("keeps the finished parts array when no word is being spelled", () => {
+  test("keeps the finished parts array when there is no open word", () => {
     const parts = [HELLO];
 
     expect(messageParts(finishedMessage(parts))).toBe(parts);
@@ -55,7 +55,7 @@ describe("appendPart", () => {
     expect(message).toEqual(finishedMessage([HELLO, part]));
   });
 
-  test("finishes the spelled word before the appended part", () => {
+  test("finishes the open word before the appended part", () => {
     const part: MessagePart = { id: "2", label: "there" };
 
     const message = appendPart(spelling("hi"), part);
@@ -66,7 +66,7 @@ describe("appendPart", () => {
 });
 
 describe("appendText", () => {
-  test("starts a spelled word when the message is empty", () => {
+  test("opens a spelled word when the message is empty", () => {
     const message = appendText(EMPTY_MESSAGE, "h");
 
     expect(message.finishedParts).toEqual([]);
@@ -75,7 +75,7 @@ describe("appendText", () => {
     expect(message.openWord?.isSpelled).toBe(true);
   });
 
-  test("adds letters to the word being spelled", () => {
+  test("adds letters to the open word", () => {
     const message = appendText(spelling("ca"), "t");
 
     expect(message.openWord?.label).toBe("cat");
@@ -88,7 +88,7 @@ describe("appendText", () => {
       description: "with media",
       part: { id: "1", label: "the", imageSrc: "img.png" },
     },
-  ])("starts a new word after a finished part $description", ({ part }) => {
+  ])("opens a new word after a finished part $description", ({ part }) => {
     const message = appendText(finishedMessage([part]), "c");
 
     expect(message.finishedParts).toEqual([part]);
@@ -103,7 +103,7 @@ describe("appendText", () => {
 });
 
 describe("finishSpelling", () => {
-  test("turns the spelled word into a finished part", () => {
+  test("turns the open word into a finished part", () => {
     const message = finishSpelling(spelling("world", [HELLO]));
 
     expect(message).toEqual(
@@ -120,7 +120,7 @@ describe("finishSpelling", () => {
     expect(labels(message)).toEqual(["hi", "u"]);
   });
 
-  test("returns the same message when no word is being spelled", () => {
+  test("returns the same message when there is no open word", () => {
     const original = finishedMessage([HELLO]);
 
     expect(finishSpelling(original)).toBe(original);
@@ -130,7 +130,7 @@ describe("finishSpelling", () => {
 describe("applyBackspace", () => {
   const graphemes = ["😀", "é", "שָׁ", "👍🏽", "👨‍👩‍👧‍👦", "🇮🇱", "✌️", "1️⃣"];
 
-  test("removes one character from the word being spelled", () => {
+  test("removes one character from the open word", () => {
     const message = applyBackspace(spelling("world", [HELLO]));
 
     expect(message).toEqual(spelling("worl", [HELLO]));
@@ -143,7 +143,7 @@ describe("applyBackspace", () => {
   });
 
   test.each(["w", ...graphemes])(
-    "stops spelling when the word's only grapheme is removed (%s)",
+    "closes the open word when its only grapheme is removed (%s)",
     (label) => {
       const message = applyBackspace(spelling(label, [HELLO]));
 

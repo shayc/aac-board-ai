@@ -48,7 +48,7 @@ describe("useMessage", () => {
     expect(result.current.parts).toHaveLength(0);
   });
 
-  test("lists the word being spelled after the finished parts", async () => {
+  test("lists the open word after the finished parts", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want");
@@ -64,7 +64,7 @@ describe("useMessage", () => {
     expect(result.current.text).toBe("I want tea");
   });
 
-  test("removes one letter at a time from the word being spelled", async () => {
+  test("removes one letter at a time from the open word", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.setCurrent(appendText(EMPTY_MESSAGE, "tea"));
