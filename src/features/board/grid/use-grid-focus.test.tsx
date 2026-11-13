@@ -180,12 +180,14 @@ describe("useGridFocus", () => {
     });
 
     test("leaves focus outside the grid when it re-renders with equal items in a new array", async () => {
+      const items = makeItems(1, 2, 3, 4);
+      const equalItems = makeItems(1, 2, 3, 4);
+
       const screen = await render(
         <Grid
           aria-label="Board"
-          items={makeItems(1, 2, 3, 4)}
-
-          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2)}
+          items={items}
+          order={rowMajorOrder(items, 2)}
           renderItem={renderButton}
         />,
       );
@@ -197,9 +199,8 @@ describe("useGridFocus", () => {
       await screen.rerender(
         <Grid
           aria-label="Board"
-          items={makeItems(1, 2, 3, 4)}
-
-          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2)}
+          items={equalItems}
+          order={rowMajorOrder(equalItems, 2)}
           renderItem={renderButton}
         />,
       );
@@ -208,12 +209,14 @@ describe("useGridFocus", () => {
     });
 
     test("returns lost focus to the remembered cell when the grid changes", async () => {
+      const oldItems = makeItems(1, 2, 3, 4);
+      const newItems = makeItems(5, 6, 7, 8);
+
       const screen = await render(
         <Grid
           aria-label="Board"
-          items={makeItems(1, 2, 3, 4)}
-
-          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2)}
+          items={oldItems}
+          order={rowMajorOrder(oldItems, 2)}
           renderItem={renderButton}
         />,
       );
@@ -226,9 +229,8 @@ describe("useGridFocus", () => {
       await screen.rerender(
         <Grid
           aria-label="Board"
-          items={makeItems(5, 6, 7, 8)}
-
-          order={rowMajorOrder(makeItems(5, 6, 7, 8), 2)}
+          items={newItems}
+          order={rowMajorOrder(newItems, 2)}
           renderItem={renderButton}
         />,
       );
@@ -240,16 +242,28 @@ describe("useGridFocus", () => {
     });
 
     test("keeps the scroll position when lost focus returns to a tile in another column", async () => {
+      const oldItems = makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
+      const newItems = makeItems(
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+      );
+
       const screen = await render(
         <div style={{ width: 375, height: 400 }}>
           <Grid
             aria-label="Board"
-            items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
-
-            order={rowMajorOrder(
-              makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-              6,
-            )}
+            items={oldItems}
+            order={rowMajorOrder(oldItems, 6)}
             renderItem={renderButton}
           />
         </div>,
@@ -261,12 +275,8 @@ describe("useGridFocus", () => {
         <div style={{ width: 375, height: 400 }}>
           <Grid
             aria-label="Board"
-            items={makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)}
-
-            order={rowMajorOrder(
-              makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),
-              6,
-            )}
+            items={newItems}
+            order={rowMajorOrder(newItems, 6)}
             renderItem={renderButton}
           />
         </div>,
@@ -287,12 +297,13 @@ describe("useGridFocus", () => {
       { key: "ArrowLeft", target: "Item 4" },
       { key: "ArrowRight", target: "Item 6" },
     ])("moves focus to the adjacent cell on $key", async ({ key, target }) => {
+      const items = makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
       const screen = await render(
         <Grid
           aria-label="Board"
-          items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
-
-          order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3)}
+          items={items}
+          order={rowMajorOrder(items, 3)}
           renderItem={renderButton}
         />,
       );
@@ -405,16 +416,20 @@ describe("useGridFocus", () => {
     });
 
     test.each(["ctrlKey", "metaKey", "shiftKey", "altKey"] as const)(
-      "does not move focus on an arrow pressed with %s",
+      "leaves an arrow pressed with %s to outer handlers",
       async (modifier) => {
-        const screen = await render(
-          <Grid
-            aria-label="Board"
-            items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
+        const items = makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        const handleOuterKeyDown = vi.fn();
 
-            order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3)}
-            renderItem={renderButton}
-          />,
+        const screen = await render(
+          <div role="presentation" onKeyDown={handleOuterKeyDown}>
+            <Grid
+              aria-label="Board"
+              items={items}
+              order={rowMajorOrder(items, 3)}
+              renderItem={renderButton}
+            />
+          </div>,
         );
         const center = screen.getByRole("button", {
           name: "Item 5",
@@ -424,6 +439,9 @@ describe("useGridFocus", () => {
         await press(center, "ArrowRight", { [modifier]: true });
 
         await expect.element(center).toHaveFocus();
+        expect(handleOuterKeyDown).toHaveBeenCalledWith(
+          expect.objectContaining({ key: "ArrowRight" }),
+        );
       },
     );
   });
