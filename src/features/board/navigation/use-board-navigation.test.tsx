@@ -23,14 +23,24 @@ interface NavTestHook {
   navigate: NavigateFunction;
 }
 
+interface SetupOptions {
+  pathname?: string;
+  state?: unknown;
+  rootBoardId?: string;
+}
+
 function setup(
-  pathname = DEFAULT_PATH,
-  state?: unknown,
-  hasRootBoard = true,
+  options: SetupOptions = {},
 ): Promise<RenderHookResult<NavTestHook, unknown>> {
+  const {
+    pathname = DEFAULT_PATH,
+    state,
+    rootBoardId,
+  } = { rootBoardId: "root-1", ...options };
+
   return renderHook(
     (): NavTestHook => ({
-      nav: useBoardNavigation(hasRootBoard ? "root-1" : undefined),
+      nav: useBoardNavigation(rootBoardId),
       location: useLocation(),
       navigate: useNavigate(),
     }),
@@ -58,8 +68,9 @@ describe("useBoardNavigation", () => {
     });
 
     test("is true when a board navigation enables Back", async () => {
-      const { result } = await setup("/sets/set-1/boards/board-2", {
-        canGoBack: true,
+      const { result } = await setup({
+        pathname: "/sets/set-1/boards/board-2",
+        state: { canGoBack: true },
       });
 
       expect(result.current.nav.canGoBack).toBe(true);
@@ -72,7 +83,7 @@ describe("useBoardNavigation", () => {
       { canGoBack: "true" },
       { canGoBack: false },
     ])("ignores disabled or malformed history state %j", async (state) => {
-      const { result } = await setup(DEFAULT_PATH, state);
+      const { result } = await setup({ state });
 
       expect(result.current.nav.canGoBack).toBe(false);
     });
@@ -86,7 +97,7 @@ describe("useBoardNavigation", () => {
     });
 
     test("is false when the root board is unknown", async () => {
-      const { result } = await setup(DEFAULT_PATH, undefined, false);
+      const { result } = await setup({ rootBoardId: undefined });
 
       expect(result.current.nav.canGoHome).toBe(false);
     });
@@ -105,8 +116,9 @@ describe("useBoardNavigation", () => {
     });
 
     test("keeps Back enabled through successive board navigations", async () => {
-      const { result, act } = await setup("/sets/set-1/boards/board-2", {
-        canGoBack: true,
+      const { result, act } = await setup({
+        pathname: "/sets/set-1/boards/board-2",
+        state: { canGoBack: true },
       });
 
       await act(() => result.current.nav.goToBoard("board-3"));
@@ -142,6 +154,7 @@ describe("useBoardNavigation", () => {
       const { result, act } = await setup();
 
       await act(() => result.current.nav.goToBoard("board-2"));
+
       expect(result.current.location.pathname).toBe(
         "/sets/set-1/boards/board-2",
       );
@@ -170,8 +183,9 @@ describe("useBoardNavigation", () => {
 
   describe("goHome", () => {
     test("navigates to the root board and disables board Back", async () => {
-      const { result, act } = await setup("/sets/set-1/boards/board-2", {
-        canGoBack: true,
+      const { result, act } = await setup({
+        pathname: "/sets/set-1/boards/board-2",
+        state: { canGoBack: true },
       });
 
       await act(() => result.current.nav.goHome());
@@ -183,16 +197,19 @@ describe("useBoardNavigation", () => {
     });
 
     test("replaces the current entry so browser back skips it", async () => {
-      const { result, act } = await setup("/sets/set-1/boards/board-2", {
-        canGoBack: true,
+      const { result, act } = await setup({
+        pathname: "/sets/set-1/boards/board-2",
+        state: { canGoBack: true },
       });
 
       await act(() => result.current.nav.goToBoard("board-3"));
+
       expect(result.current.location.pathname).toBe(
         "/sets/set-1/boards/board-3",
       );
 
       await act(() => result.current.nav.goHome());
+
       expect(result.current.location.pathname).toBe(
         "/sets/set-1/boards/root-1",
       );
@@ -205,7 +222,7 @@ describe("useBoardNavigation", () => {
     });
 
     test("does nothing when the root board is unknown", async () => {
-      const { result, act } = await setup(DEFAULT_PATH, undefined, false);
+      const { result, act } = await setup({ rootBoardId: undefined });
 
       await act(() => result.current.nav.goHome());
 
