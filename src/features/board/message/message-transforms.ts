@@ -1,67 +1,89 @@
 import { randomId } from "@shared/utils/random-id";
-import type { MessagePart, MessagePartInput } from "./message-types";
+import type { Message, TextPart, TilePart } from "./message-types";
+
+export const EMPTY_MESSAGE: Message = { parts: [], isWordOpen: false };
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
 });
 
-export function createPart(content: MessagePartInput): MessagePart {
-  return { ...content, id: randomId(), label: content.label ?? "" };
+export function createTilePart(
+  content: Omit<TilePart, "kind" | "id">,
+): TilePart {
+  return { ...content, kind: "tile", id: randomId() };
 }
 
-export function appendPart(
-  parts: readonly MessagePart[],
-  content: MessagePartInput,
-): readonly MessagePart[] {
-  return [...parts, createPart(content)];
+export function createTextPart(label: string): TextPart {
+  return { kind: "text", id: randomId(), label };
 }
 
-export function appendSpace(
-  parts: readonly MessagePart[],
-): readonly MessagePart[] {
-  return appendPart(parts, { label: "" });
+export function appendTilePart(message: Message, part: TilePart): Message {
+  return { parts: [...message.parts, part], isWordOpen: false };
 }
 
-export function appendText(
-  parts: readonly MessagePart[],
-  text: string,
-): readonly MessagePart[] {
-  const lastPart = parts.at(-1);
-  if (!lastPart || !isTextOnlyPart(lastPart)) {
-    return appendPart(parts, { label: text });
+export function spell(message: Message, text: string): Message {
+  if (!text) {
+    return message;
   }
 
-  return parts.with(-1, {
-    ...lastPart,
-    label: `${lastPart.label}${text}`,
-  });
+  const lastPart = message.parts.at(-1);
+  if (!message.isWordOpen || lastPart?.kind !== "text") {
+    return {
+      parts: [...message.parts, createTextPart(text)],
+      isWordOpen: true,
+    };
+  }
+
+  return {
+    parts: message.parts.with(-1, {
+      ...lastPart,
+      label: `${lastPart.label}${text}`,
+    }),
+    isWordOpen: true,
+  };
 }
 
-export function applyBackspace(
-  parts: readonly MessagePart[],
-): readonly MessagePart[] {
-  const lastPart = parts.at(-1);
+export function closeWord(message: Message): Message {
+  if (!message.isWordOpen) {
+    return message;
+  }
+
+  return { ...message, isWordOpen: false };
+}
+
+export function applyBackspace(message: Message): Message {
+  const lastPart = message.parts.at(-1);
   if (!lastPart) {
-    return parts;
+    return message;
   }
 
-  if (!isTextOnlyPart(lastPart) || !lastPart.label) {
-    return parts.slice(0, -1);
+  if (lastPart.kind === "tile") {
+    return removeLastPart(message);
   }
 
-  const lastGrapheme = graphemeSegmenter
-    .segment(lastPart.label)
-    .containing(lastPart.label.length - 1);
-  if (!lastGrapheme || lastGrapheme.index === 0) {
-    return parts.slice(0, -1);
+  if (!message.isWordOpen) {
+    return { ...message, isWordOpen: true };
   }
 
-  return parts.with(-1, {
-    ...lastPart,
-    label: lastPart.label.slice(0, lastGrapheme.index),
-  });
+  const label = removeLastGrapheme(lastPart.label);
+  if (!label) {
+    return removeLastPart(message);
+  }
+
+  return {
+    parts: message.parts.with(-1, { ...lastPart, label }),
+    isWordOpen: true,
+  };
 }
 
-function isTextOnlyPart(part: MessagePart): boolean {
-  return !part.imageSrc && !part.soundSrc && !part.vocalization;
+function removeLastPart(message: Message): Message {
+  return { parts: message.parts.slice(0, -1), isWordOpen: false };
+}
+
+function removeLastGrapheme(text: string): string {
+  const lastGrapheme = graphemeSegmenter
+    .segment(text)
+    .containing(text.length - 1);
+
+  return text.slice(0, lastGrapheme?.index ?? 0);
 }

@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setClearsAfterSpeaking } from "./message-preferences-store";
+import { spell } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -55,10 +56,23 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     message.backspace();
 
-    expect(message.getParts().map((part) => part.label)).toEqual([
+    expect(message.getState().parts.map((part) => part.label)).toEqual([
       "I",
       "want",
       "wate",
+    ]);
+  });
+
+  test("leaves the last suggested word open for spelling", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want");
+    message.setState(spell(message.getState(), "s"));
+
+    expect(message.getState().parts.map((part) => part.label)).toEqual([
+      "I",
+      "wants",
     ]);
   });
 
@@ -70,8 +84,8 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
 
     expect(message.isAwaitingNewMessage()).toBe(true);
-    expect(message.getPartsToAddTo()).toEqual([]);
-    expect(message.getParts()).toHaveLength(3);
+    expect(message.getStateToAddTo().parts).toEqual([]);
+    expect(message.getState().parts).toHaveLength(3);
   });
 
   test("adds to the spoken message once it is edited", async () => {
@@ -82,7 +96,7 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     message.backspace();
 
-    expect(message.getPartsToAddTo()).toBe(message.getParts());
+    expect(message.getStateToAddTo()).toBe(message.getState());
   });
 
   test("adds to the spoken message when clearing after speaking is off", async () => {
@@ -93,7 +107,7 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(message.getPartsToAddTo()).toBe(message.getParts());
+    expect(message.getStateToAddTo()).toBe(message.getState());
   });
 
   test("adds to the message when its playback did not complete", async () => {
@@ -104,7 +118,7 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     await trackSettledPlayback(message, false);
 
-    expect(message.getPartsToAddTo()).toBe(message.getParts());
+    expect(message.getStateToAddTo()).toBe(message.getState());
   });
 
   test("adds to a spoken message while it is playing again", async () => {
@@ -114,11 +128,11 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
     message.trackPlayback(
-      message.getParts(),
+      message.getState().parts,
       Promise.withResolvers<boolean>().promise,
     );
 
-    expect(message.getPartsToAddTo()).toBe(message.getParts());
+    expect(message.getStateToAddTo()).toBe(message.getState());
   });
 
   test("adds to the message when it changed while playing", async () => {
@@ -127,11 +141,11 @@ describe("useMessage", () => {
 
     message.replaceWithText("I want water");
     const completion = Promise.resolve(true);
-    message.trackPlayback(message.getParts(), completion);
+    message.trackPlayback(message.getState().parts, completion);
     message.backspace();
     await completion;
 
-    expect(message.getPartsToAddTo()).toBe(message.getParts());
+    expect(message.getStateToAddTo()).toBe(message.getState());
   });
 });
 
@@ -140,6 +154,6 @@ async function trackSettledPlayback(
   hasCompleted: boolean,
 ) {
   const completion = Promise.resolve(hasCompleted);
-  message.trackPlayback(message.getParts(), completion);
+  message.trackPlayback(message.getState().parts, completion);
   await completion;
 }

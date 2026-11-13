@@ -43,10 +43,10 @@ export function CommunicationBoard({
 
   const activateButton = createButtonActivator({
     message: {
-      getParts: message.getParts,
+      getState: message.getState,
       isAwaitingNewMessage: message.isAwaitingNewMessage,
-      getPartsToAddTo: message.getPartsToAddTo,
-      setParts: message.setParts,
+      getStateToAddTo: message.getStateToAddTo,
+      setState: message.setState,
     },
     playback: {
       playMessage: playback.playMessage,
@@ -98,7 +98,11 @@ export function CommunicationBoard({
         }}
       >
         <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
-          <PlaybackMessageBar parts={message.parts} playback={playback} />
+          <PlaybackMessageBar
+            parts={message.parts}
+            isWordOpen={message.isWordOpen}
+            playback={playback}
+          />
 
           {isActionRowVisible && (
             <Stack

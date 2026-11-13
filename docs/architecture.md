@@ -226,6 +226,11 @@ coordinates message updates, navigation, and playback:
 
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.
+   A spelling action (OBF `+a`) extends the word being spelled, starting a text
+   part if there is none; a space action (OBF `:space`) or a new tile part closes
+   the word. Backspace removes one character from the word being spelled,
+   reopens a closed word without removing a character, and removes a tile part
+   whole.
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
    finishes uninterrupted. The played message stays visible during playback and
@@ -530,8 +535,12 @@ AI availability, provisioning, and session lifecycle to
   and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
-- **Message part** — one item in the message, with its own label and any
-  vocalization, image, or sound.
+- **Message part** — one item in the message. A tile part comes from a tile,
+  with its label and any vocalization, image, or sound, and backspace removes it
+  whole. A text part is a word that was spelled or taken from a suggestion, and
+  backspace removes one character at a time. Spelling extends the last text part
+  until a space or another tile closes the word; the first backspace on a closed
+  word reopens it. The message bar marks the open word with a caret.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
 - **Scroll clearance** — the room kept above and below the grid, between the

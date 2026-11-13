@@ -1,15 +1,20 @@
 import { useRef, useState } from "react";
 import { useMessagePreferences } from "./message-preferences-store";
-import { applyBackspace, createPart } from "./message-transforms";
-import type { MessagePart } from "./message-types";
+import {
+  applyBackspace,
+  createTextPart,
+  EMPTY_MESSAGE,
+} from "./message-transforms";
+import type { Message, MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
+  isWordOpen: boolean;
   text: string;
-  getParts: () => readonly MessagePart[];
+  getState: () => Message;
   isAwaitingNewMessage: () => boolean;
-  getPartsToAddTo: () => readonly MessagePart[];
-  setParts: (parts: readonly MessagePart[]) => void;
+  getStateToAddTo: () => Message;
+  setState: (state: Message) => void;
   trackPlayback: (
     playedParts: readonly MessagePart[],
     completion: Promise<boolean>,
@@ -21,13 +26,13 @@ export interface UseMessageReturn {
 
 export function useMessage(): UseMessageReturn {
   const { clearsAfterSpeaking } = useMessagePreferences();
-  const [parts, setPartsState] = useState<readonly MessagePart[]>([]);
-  const partsRef = useRef(parts);
+  const [state, setRenderedState] = useState(EMPTY_MESSAGE);
+  const stateRef = useRef(state);
   const isSpokenRef = useRef(false);
-  const text = parts.map((part) => part.label).join(" ");
+  const text = state.parts.map((part) => part.label).join(" ");
 
-  function getParts() {
-    return partsRef.current;
+  function getState() {
+    return stateRef.current;
   }
 
   // A spoken message stays visible until the next addition replaces it, so
@@ -36,14 +41,14 @@ export function useMessage(): UseMessageReturn {
     return clearsAfterSpeaking && isSpokenRef.current;
   }
 
-  function getPartsToAddTo() {
-    return isAwaitingNewMessage() ? [] : partsRef.current;
+  function getStateToAddTo() {
+    return isAwaitingNewMessage() ? EMPTY_MESSAGE : stateRef.current;
   }
 
-  function setParts(next: readonly MessagePart[]) {
-    partsRef.current = next;
+  function setState(next: Message) {
+    stateRef.current = next;
     isSpokenRef.current = false;
-    setPartsState(next);
+    setRenderedState(next);
   }
 
   // Only a playback that reaches the end of the current message counts, so a
@@ -55,30 +60,35 @@ export function useMessage(): UseMessageReturn {
     isSpokenRef.current = false;
 
     void completion.then((hasCompleted) => {
-      isSpokenRef.current = hasCompleted && playedParts === partsRef.current;
+      isSpokenRef.current =
+        hasCompleted && playedParts === stateRef.current.parts;
     });
   }
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    setParts(words.map((word) => createPart({ label: word })));
+    setState({
+      parts: words.map(createTextPart),
+      isWordOpen: words.length > 0,
+    });
   }
 
   function backspace() {
-    setParts(applyBackspace(getParts()));
+    setState(applyBackspace(getState()));
   }
 
   function clear() {
-    setParts([]);
+    setState(EMPTY_MESSAGE);
   }
 
   return {
-    parts,
+    parts: state.parts,
+    isWordOpen: state.isWordOpen,
     text,
-    getParts,
+    getState,
     isAwaitingNewMessage,
-    getPartsToAddTo,
-    setParts,
+    getStateToAddTo,
+    setState,
     trackPlayback,
     replaceWithText,
     backspace,
