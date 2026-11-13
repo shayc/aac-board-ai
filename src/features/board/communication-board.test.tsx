@@ -12,8 +12,8 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import {
-  setMessageAutoClearEnabled,
   setMessageImagesVisible,
+  setStartsNewMessageAfterSpeaking,
 } from "./message/message-preferences-store";
 import {
   renderCommunicationBoard,
@@ -446,7 +446,7 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems).toHaveTextContent("world");
     });
 
-    test("starts a new word after a spelled word is spoken", async () => {
+    test("keeps spelling on a keyboard that speaks each letter", async () => {
       const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
       const spellButton = screen.getByRole("button", { name: "S" });
 
@@ -457,12 +457,12 @@ describe("CommunicationBoard", () => {
       await spellButton.click();
 
       await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["s", "s"]);
+        expect(speech.spokenTexts()).toEqual(["s", "ss"]);
       });
       const messageItems = getMessageItems(screen);
       await expect.element(messageItems).toHaveLength(1);
       await expect
-        .element(messageItems.getByText("s", { exact: true }))
+        .element(messageItems.getByText("ss", { exact: true }))
         .toBeVisible();
     });
 
@@ -494,8 +494,25 @@ describe("CommunicationBoard", () => {
       await expect.element(getMessageItems(screen)).toHaveLength(2);
     });
 
+    test("adds to a spoken message whose replay was stopped", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const play = screen.getByRole("button", { name: "Play message" });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await play.click();
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
+      });
+      preventSpeechEnd(speech.speak);
+      await play.click();
+      await screen.getByRole("button", { name: "Stop message" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expect.element(getMessageItems(screen)).toHaveLength(2);
+    });
+
     test("adds to a spoken message when starting a new message is turned off", async () => {
-      setMessageAutoClearEnabled(false);
+      setStartsNewMessageAfterSpeaking(false);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();

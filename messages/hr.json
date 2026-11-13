@@ -92,7 +92,7 @@
   "speechPreviewSample": "Bok, ovo je moj glas!",
   "messageImages": "Prikaži slike",
   "messageHighlight": "Isticanje tijekom govora",
-  "messageAutoClear": "Započni novu poruku nakon govora",
+  "messageStartNewAfterSpeaking": "Započinjanje nove poruke nakon govora",
   "tileSaturation": "Intenzitet boje",
   "tileBrightness": "Svjetlina",
   "tileBorders": "Prikaži obrube",

@@ -9,38 +9,47 @@ export interface UseMessageReturn {
   getParts: () => readonly MessagePart[];
   getPartsToAddTo: () => readonly MessagePart[];
   setParts: (parts: readonly MessagePart[]) => void;
-  markSpoken: (parts: readonly MessagePart[]) => void;
+  recordPlayback: (
+    playedParts: readonly MessagePart[],
+    hasCompleted: boolean,
+  ) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
   clear: () => void;
 }
 
 export function useMessage(): UseMessageReturn {
-  const { isAutoClearEnabled } = useMessagePreferences();
+  const { startsNewMessageAfterSpeaking } = useMessagePreferences();
   const [parts, setPartsState] = useState<readonly MessagePart[]>([]);
   const partsRef = useRef(parts);
-  const spokenPartsRef = useRef<readonly MessagePart[] | null>(null);
+  const isSpokenRef = useRef(false);
   const text = parts.map((part) => part.label).join(" ");
 
   function getParts() {
     return partsRef.current;
   }
 
-  // Every edit makes a new array, so a message counts as spoken only until it
-  // changes. It stays visible after speaking so listeners can still read it.
+  // A spoken message stays visible until the next addition replaces it, so
+  // listeners who missed it can still read it.
   function getPartsToAddTo() {
-    const isSpoken = partsRef.current === spokenPartsRef.current;
+    const isReplaced = startsNewMessageAfterSpeaking && isSpokenRef.current;
 
-    return isAutoClearEnabled && isSpoken ? [] : partsRef.current;
+    return isReplaced ? [] : partsRef.current;
   }
 
   function setParts(next: readonly MessagePart[]) {
     partsRef.current = next;
+    isSpokenRef.current = false;
     setPartsState(next);
   }
 
-  function markSpoken(spoken: readonly MessagePart[]) {
-    spokenPartsRef.current = spoken;
+  // Only a playback that reaches the end of the current message counts, so a
+  // replay that is stopped leaves the message open for more.
+  function recordPlayback(
+    playedParts: readonly MessagePart[],
+    hasCompleted: boolean,
+  ) {
+    isSpokenRef.current = hasCompleted && playedParts === partsRef.current;
   }
 
   function replaceWithText(input: string) {
@@ -62,7 +71,7 @@ export function useMessage(): UseMessageReturn {
     getParts,
     getPartsToAddTo,
     setParts,
-    markSpoken,
+    recordPlayback,
     replaceWithText,
     backspace,
     clear,

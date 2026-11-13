@@ -92,7 +92,7 @@
   "speechPreviewSample": "வணக்கம், இது என் குரல்!",
   "messageImages": "படங்களைக் காட்டு",
   "messageHighlight": "பேசும்போது தனிப்படுத்திக் காட்டு",
-  "messageAutoClear": "பேசிய பிறகு புதிய செய்தியைத் தொடங்கு",
+  "messageStartNewAfterSpeaking": "பேசிய பிறகு புதிய செய்தியைத் தொடங்கு",
   "tileSaturation": "வண்ணத் தீவிரம்",
   "tileBrightness": "ஒளிர்வு",
   "tileBorders": "எல்லைகளைக் காட்டு",

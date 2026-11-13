@@ -92,7 +92,7 @@
   "speechPreviewSample": "Cześć, to mój głos!",
   "messageImages": "Pokaż obrazy",
   "messageHighlight": "Podświetlaj podczas mówienia",
-  "messageAutoClear": "Zaczynaj nową wiadomość po mówieniu",
+  "messageStartNewAfterSpeaking": "Zaczynaj nową wiadomość po mówieniu",
   "tileSaturation": "Intensywność kolorów",
   "tileBrightness": "Jasność",
   "tileBorders": "Pokaż obramowania",

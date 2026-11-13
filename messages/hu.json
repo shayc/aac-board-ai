@@ -92,7 +92,7 @@
   "speechPreviewSample": "Szia, ez az én hangom!",
   "messageImages": "Képek megjelenítése",
   "messageHighlight": "Kiemelés beszéd közben",
-  "messageAutoClear": "Új üzenet kezdése beszéd után",
+  "messageStartNewAfterSpeaking": "Új üzenet kezdése beszéd után",
   "tileSaturation": "Színintenzitás",
   "tileBrightness": "Fényerő",
   "tileBorders": "Szegélyek megjelenítése",

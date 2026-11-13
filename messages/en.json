@@ -92,7 +92,7 @@
   "speechPreviewSample": "Hi, this is my voice!",
   "messageImages": "Show images",
   "messageHighlight": "Highlight while speaking",
-  "messageAutoClear": "Start a new message after speaking",
+  "messageStartNewAfterSpeaking": "Start a new message after speaking",
   "tileSaturation": "Color intensity",
   "tileBrightness": "Brightness",
   "tileBorders": "Show borders",

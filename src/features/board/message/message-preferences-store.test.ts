@@ -2,11 +2,11 @@ import { describe, expect, test } from "vitest";
 import { parseMessagePreferences } from "./message-preferences-store";
 
 describe("parseMessagePreferences", () => {
-  test("shows images, highlights while speaking, and auto-clears when absent", () => {
+  test("shows images, highlights while speaking, and starts a new message after speaking when absent", () => {
     expect(parseMessagePreferences(undefined)).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,
-      isAutoClearEnabled: true,
+      startsNewMessageAfterSpeaking: true,
     });
   });
 
@@ -15,12 +15,12 @@ describe("parseMessagePreferences", () => {
       parseMessagePreferences({
         areImagesVisible: "no",
         isHighlightingEnabled: "yes",
-        isAutoClearEnabled: 0,
+        startsNewMessageAfterSpeaking: 0,
       }),
     ).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,
-      isAutoClearEnabled: true,
+      startsNewMessageAfterSpeaking: true,
     });
   });
 
@@ -29,12 +29,12 @@ describe("parseMessagePreferences", () => {
       parseMessagePreferences({
         areImagesVisible: false,
         isHighlightingEnabled: false,
-        isAutoClearEnabled: false,
+        startsNewMessageAfterSpeaking: false,
       }),
     ).toEqual({
       areImagesVisible: false,
       isHighlightingEnabled: false,
-      isAutoClearEnabled: false,
+      startsNewMessageAfterSpeaking: false,
     });
   });
 });

@@ -9,6 +9,7 @@ import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
+import type { MessagePart } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -35,17 +36,17 @@ export function CommunicationBoard({
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
-  const playback = useBoardPlayback({
-    onMessageComplete: message.markSpoken,
-  });
+  const playback = useBoardPlayback();
   const navigation = useBoardNavigation(rootBoardId);
-  const shortcuts = useBoardShortcuts({ message, playback });
+  const messagePlayback = { ...playback, playMessage: playWholeMessage };
+  const shortcuts = useBoardShortcuts({ message, playback: messagePlayback });
 
   const activateButton = createButtonActivator({
     message: {
       getParts: message.getParts,
       getPartsToAddTo: message.getPartsToAddTo,
       setParts: message.setParts,
+      recordPlayback: message.recordPlayback,
     },
     playback: {
       playMessage: playback.playMessage,
@@ -96,7 +97,10 @@ export function CommunicationBoard({
         }}
       >
         <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
-          <PlaybackMessageBar parts={message.parts} playback={playback} />
+          <PlaybackMessageBar
+            parts={message.parts}
+            playback={messagePlayback}
+          />
 
           {isActionRowVisible && (
             <Stack
@@ -153,4 +157,11 @@ export function CommunicationBoard({
       </Stack>
     </ScanningScope>
   );
+
+  async function playWholeMessage(parts: readonly MessagePart[]) {
+    const hasCompleted = await playback.playMessage(parts);
+    message.recordPlayback(parts, hasCompleted);
+
+    return hasCompleted;
+  }
 }

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { setMessageAutoClearEnabled } from "./message-preferences-store";
+import { setStartsNewMessageAfterSpeaking } from "./message-preferences-store";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -67,7 +67,7 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water");
-    message.markSpoken(message.getParts());
+    message.recordPlayback(message.getParts(), true);
 
     expect(message.getPartsToAddTo()).toEqual([]);
     expect(message.getParts()).toHaveLength(3);
@@ -78,19 +78,42 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water");
-    message.markSpoken(message.getParts());
+    message.recordPlayback(message.getParts(), true);
     message.backspace();
 
     expect(message.getPartsToAddTo()).toBe(message.getParts());
   });
 
-  test("adds to the spoken message when auto-clear is off", async () => {
-    setMessageAutoClearEnabled(false);
+  test("adds to the spoken message when starting a new message is off", async () => {
+    setStartsNewMessageAfterSpeaking(false);
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
     message.replaceWithText("I want water");
-    message.markSpoken(message.getParts());
+    message.recordPlayback(message.getParts(), true);
+
+    expect(message.getPartsToAddTo()).toBe(message.getParts());
+  });
+
+  test("adds to the message when its playback did not complete", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    message.recordPlayback(message.getParts(), true);
+    message.recordPlayback(message.getParts(), false);
+
+    expect(message.getPartsToAddTo()).toBe(message.getParts());
+  });
+
+  test("adds to the message when it changed while playing", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    const playedParts = message.getParts();
+    message.backspace();
+    message.recordPlayback(playedParts, true);
 
     expect(message.getPartsToAddTo()).toBe(message.getParts());
   });

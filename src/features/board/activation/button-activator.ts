@@ -12,7 +12,10 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "getParts" | "getPartsToAddTo" | "setParts">;
+  message: Pick<
+    UseMessageReturn,
+    "getParts" | "getPartsToAddTo" | "setParts" | "recordPlayback"
+  >;
   playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
@@ -70,24 +73,31 @@ export function createButtonActivator({
       actionsBeforePlay,
     );
     const actionsAfterPlay = actions.slice(playIndex + 1);
+    // A tile that spells and then plays echoes the word being typed, so only a
+    // tile that plays the message as it stands counts as speaking it.
+    const isWholeMessage = !actionsBeforePlay.some(isMessageEdit);
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
     void playback.playMessage(partsToPlay).then((hasCompleted) => {
+      if (isWholeMessage) {
+        message.recordPlayback(partsToPlay, hasCompleted);
+      }
+
       if (hasCompleted) {
         commitEdits(message.getParts(), actionsAfterPlay);
       }
     });
   }
 
-  // Spelling after a spoken message starts a new one, as a tile does, while
-  // other edits such as backspace change the spoken message.
+  // Spelling or a space after a spoken message starts a new one, as a tile
+  // does, while backspace and clear change the spoken message.
   function getPartsToEdit(actions: readonly BoardAction[]) {
     const firstEdit = actions.find(isMessageEdit);
+    const isAddition =
+      firstEdit?.kind === "spell" || firstEdit?.kind === "space";
 
-    return firstEdit?.kind === "spell"
-      ? message.getPartsToAddTo()
-      : message.getParts();
+    return isAddition ? message.getPartsToAddTo() : message.getParts();
   }
 
   function commitEdits(

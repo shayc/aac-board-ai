@@ -92,7 +92,7 @@
   "speechPreviewSample": "ನಮಸ್ಕಾರ, ಇದು ನನ್ನ ಧ್ವನಿ!",
   "messageImages": "ಚಿತ್ರಗಳನ್ನು ತೋರಿಸಿ",
   "messageHighlight": "ಮಾತನಾಡುವಾಗ ಹೈಲೈಟ್ ಮಾಡಿ",
-  "messageAutoClear": "ಮಾತನಾಡಿದ ನಂತರ ಹೊಸ ಸಂದೇಶ ಪ್ರಾರಂಭಿಸಿ",
+  "messageStartNewAfterSpeaking": "ಮಾತನಾಡಿದ ನಂತರ ಹೊಸ ಸಂದೇಶ ಪ್ರಾರಂಭಿಸಿ",
   "tileSaturation": "ಬಣ್ಣದ ತೀವ್ರತೆ",
   "tileBrightness": "ಹೊಳಪು",
   "tileBorders": "ಗಡಿಗಳನ್ನು ತೋರಿಸಿ",
