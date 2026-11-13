@@ -24,12 +24,16 @@ function setup(
     isWordOpen: false,
     isSpoken,
   };
-  const message = {
+
+  return setupWithMessage({
     getState: () => currentState,
     setState: vi.fn<ActivationOptions["message"]["setState"]>((state) => {
       currentState = state;
     }),
-  };
+  });
+}
+
+function setupWithMessage<T extends ActivationOptions["message"]>(message: T) {
   const playback = {
     playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() =>
       Promise.resolve(true),
@@ -309,28 +313,6 @@ describe("createButtonActivator", () => {
     expect(playback.echoMessage).not.toHaveBeenCalled();
   });
 
-  test("replays a spoken message without committing when clearing after speaking is off", async () => {
-    setClearsAfterSpeaking(false);
-    const { result } = await renderHook(() => useMessage());
-    const { getState, trackPlayback, replaceWithText } = result.current;
-    const setState = vi.fn(result.current.setState);
-    const { playback, navigation } = setup();
-    const activateButton = createButtonActivator({
-      message: { getState, setState },
-      playback,
-      navigation,
-    });
-    replaceWithText("hi");
-    const spoken = Promise.resolve(true);
-    trackPlayback(spoken);
-    await spoken;
-
-    activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
-
-    expect(playback.playMessage).toHaveBeenCalledOnce();
-    expect(setState).not.toHaveBeenCalled();
-  });
-
   describe("after the message is spoken", () => {
     const SPOKEN_PARTS: MessagePart[] = [
       { kind: "tile", id: "1", label: "hello" },
@@ -413,6 +395,29 @@ describe("createButtonActivator", () => {
       expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(
         SPOKEN_PARTS,
       );
+      expect(message.setState).not.toHaveBeenCalled();
+    });
+  });
+
+  // The hook hands out a fresh copy of a spoken message while clearing after
+  // speaking is off, which a hand-rolled message cannot stand in for.
+  describe("with the message hook", () => {
+    test("replays a spoken message without committing when clearing after speaking is off", async () => {
+      setClearsAfterSpeaking(false);
+      const { result } = await renderHook(() => useMessage());
+      const { getState, trackPlayback, replaceWithText } = result.current;
+      const { activateButton, message, playback } = setupWithMessage({
+        getState,
+        setState: vi.fn(result.current.setState),
+      });
+      replaceWithText("hi");
+      const spoken = Promise.resolve(true);
+      trackPlayback(spoken);
+      await spoken;
+
+      activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
+
+      expect(playback.playMessage).toHaveBeenCalledOnce();
       expect(message.setState).not.toHaveBeenCalled();
     });
   });
