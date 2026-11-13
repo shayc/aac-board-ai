@@ -174,7 +174,9 @@ Route loaders only read; they never translate or wait on a model:
    out of the loaded board, so its tile is an ordinary tile.
 2. The page renders the board in the communication language through
    `useBoardInLanguage`: the source board, or the board's own translations for
-   that language, from the board file or saved on this device.
+   that language, from the board file or saved on this device. The hook also
+   names the language the board ended up in: the board file's own when it has
+   no translation, and unknown when the file declares none.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for
@@ -328,10 +330,20 @@ voice or translation model. Speech uses the saved voice only when it speaks
 the communication language; otherwise it picks one of that language's voices,
 or leaves the choice to the browser, without changing the saved voice.
 
-Paraglide message catalogs provide UI text. The document's `lang` names the UI
-locale, so a communication language without a catalog keeps `lang` on the
-fallback locale its UI text is shown in. Direction-specific Emotion caches,
-right-to-left (RTL) styling, and logical CSS support both text directions.
+Paraglide message catalogs provide UI text. The document's `lang` and `dir`
+follow the UI locale, so a communication language without a catalog keeps both
+on the fallback locale its UI text is shown in. The communication board sets its
+own `dir` from the communication language, so a right-to-left language without
+a catalog still gets a right-to-left board under a left-to-right app shell.
+Tiles and message parts carry the `lang` of the language the board is shown in,
+and suggestions carry the communication language, so assistive technology
+pronounces them correctly whatever the UI locale is. A board whose file declares
+no language carries no `lang` and inherits the document's.
+
+Direction-specific Emotion caches, right-to-left (RTL) styling, and logical CSS
+support both text directions.
+[`DirectionProvider`](../src/shared/theme/direction-provider.tsx) applies them
+to a subtree: once for the app, from the UI locale, and once for the board.
 
 ### Theming
 

@@ -139,4 +139,19 @@ describe("AppShell", () => {
       .toBeVisible();
     expect(document.documentElement).toHaveAttribute("lang", "en");
   });
+
+  test("keeps the document direction on the fallback locale for a right-to-left language with voices but no UI text", async () => {
+    stubVoices([{ voiceURI: "ur-1", name: "Asad", lang: "ur-PK" }]);
+    const screen = await renderAppShellPastOnboarding();
+    await screen.getByRole("button", { name: "Open settings" }).click();
+
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: "اردو" }).click();
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Voice" }))
+      .toHaveTextContent("Asad");
+    expect(document.documentElement).toHaveAttribute("lang", "en");
+    expect(document.documentElement).toHaveAttribute("dir", "ltr");
+  });
 });

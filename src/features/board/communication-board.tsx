@@ -3,7 +3,9 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
+import { DirectionProvider } from "@shared/theme/direction-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
@@ -23,14 +25,18 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
+  /** The language the board's text is in, when known; it may not be the communication language. */
+  language: string | undefined;
   rootBoardId: string | undefined;
 }
 
 export function CommunicationBoard({
   board,
+  language,
   rootBoardId,
 }: CommunicationBoardProps) {
   const t = useTranslate();
+  const communication = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
@@ -74,6 +80,7 @@ export function CommunicationBoard({
     <Tile
       key={`${board.id}/${button.id}`}
       button={button}
+      language={language}
       onActivate={activateButton}
       {...gridItemProps}
     />
@@ -82,76 +89,91 @@ export function CommunicationBoard({
   const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
 
   return (
-    <ScanningScope>
-      <Stack
-        {...shortcuts.rootProps}
-        direction="column"
-        sx={{
-          height: "100%",
-          pl: { sm: safeAreaInset("left") },
-          pr: { sm: safeAreaInset("right") },
-        }}
-      >
-        <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
-          <PlaybackMessageBar
-            parts={message.parts}
-            isWordOpen={message.isWordOpen}
-            playback={playback}
-          />
+    <DirectionProvider direction={communication.direction}>
+      <ScanningScope>
+        <Stack
+          {...shortcuts.rootProps}
+          dir={communication.direction}
+          direction="column"
+          sx={{
+            height: "100%",
+            pl: { sm: safeAreaInset("left") },
+            pr: { sm: safeAreaInset("right") },
+          }}
+        >
+          <Stack
+            spacing={PAGE_MARGIN}
+            sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}
+          >
+            <PlaybackMessageBar
+              parts={message.parts}
+              language={language}
+              isWordOpen={message.isWordOpen}
+              playback={playback}
+            />
 
-          {isActionRowVisible && (
+            {isActionRowVisible && (
+              <Stack
+                {...scanGroupProps}
+                direction="row"
+                spacing={2}
+                sx={{ justifyContent: "space-between" }}
+              >
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  sx={{ flex: 1, minWidth: 0 }}
+                >
+                  {!isSmallScreen && navigationButtons}
+
+                  {suggestions.isSupported && (
+                    <SuggestionBar
+                      status={suggestions.status}
+                      phrases={suggestions.phrases}
+                      language={communication.language}
+                      onEnable={suggestions.enable}
+                      onPhraseSelect={message.replaceWithText}
+                    />
+                  )}
+                </Stack>
+
+                {!isSmallScreen && backspaceButton}
+              </Stack>
+            )}
+          </Stack>
+
+          <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
+            <Grid<BoardButton>
+              aria-label={board.name || t(m.boardGridLabel)}
+              items={board.buttons}
+              rows={board.grid.rows}
+              columns={board.grid.columns}
+              order={board.grid.order}
+              rowProps={scanGroupProps}
+              renderItem={renderTile}
+            />
+          </Box>
+
+          {isSmallScreen && (
             <Stack
               {...scanGroupProps}
               direction="row"
               spacing={2}
-              sx={{ justifyContent: "space-between" }}
+              sx={(theme) => ({
+                justifyContent: "space-between",
+                px: PAGE_MARGIN,
+                pb: safeAreaGutter(
+                  theme.spacing(SCROLL_CLEARANCE.xs),
+                  "bottom",
+                ),
+              })}
             >
-              <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-                {!isSmallScreen && navigationButtons}
-
-                {suggestions.isSupported && (
-                  <SuggestionBar
-                    status={suggestions.status}
-                    phrases={suggestions.phrases}
-                    onEnable={suggestions.enable}
-                    onPhraseSelect={message.replaceWithText}
-                  />
-                )}
-              </Stack>
-
-              {!isSmallScreen && backspaceButton}
+              {navigationButtons}
+              {backspaceButton}
             </Stack>
           )}
         </Stack>
-
-        <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
-          <Grid<BoardButton>
-            aria-label={board.name || t(m.boardGridLabel)}
-            items={board.buttons}
-            rows={board.grid.rows}
-            columns={board.grid.columns}
-            order={board.grid.order}
-            rowProps={scanGroupProps}
-            renderItem={renderTile}
-          />
-        </Box>
-
-        {isSmallScreen && (
-          <Stack
-            {...scanGroupProps}
-            direction="row"
-            spacing={2}
-            sx={(theme) => ({
-              justifyContent: "space-between",
-              px: PAGE_MARGIN,
-              pb: safeAreaGutter(theme.spacing(SCROLL_CLEARANCE.xs), "bottom"),
-            })}
-          >
-            {navigationButtons}
-            {backspaceButton}
-          </Stack>
-        )}
-      </Stack>
-    </ScanningScope>
+      </ScanningScope>
+    </DirectionProvider>
   );
 }

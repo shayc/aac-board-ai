@@ -1,5 +1,6 @@
 import {
   baseLocale,
+  getTextDirection,
   isLocale,
   type Locale,
   overwriteGetLocale,
@@ -49,6 +50,10 @@ export function getUILocale(): Locale {
 
 export function useUILocale(): Locale {
   return resolveUILocale(useStoredLanguage());
+}
+
+export function useUIDirection(): "ltr" | "rtl" {
+  return getTextDirection(useUILocale());
 }
 
 overwriteGetLocale(getUILocale);

@@ -27,11 +27,12 @@ const folderTileSx = {
 
 interface TileProps {
   button: BoardButton;
+  language: string | undefined;
   tabIndex: number;
   onActivate: (button: BoardButton) => void;
 }
 
-export function Tile({ button, tabIndex, onActivate }: TileProps) {
+export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
   const t = useTranslate();
   const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
@@ -53,6 +54,8 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
     <Button
       aria-label={ariaLabel}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
+      // The description is UI text, but the name is what must be pronounced right.
+      lang={language}
       tabIndex={tabIndex}
       style={colorStyle}
       onClick={() => onActivate(button)}

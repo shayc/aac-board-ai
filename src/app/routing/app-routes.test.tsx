@@ -460,12 +460,18 @@ describe("app flow", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Home" }))
       .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "fruit", exact: true }))
+      .toHaveAttribute("lang", "en");
 
     setStoredLanguage("es");
 
     await expect
       .element(screen.getByRole("grid", { name: "[es] Home" }))
       .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "[es] fruit" }))
+      .toHaveAttribute("lang", "es");
     await expect
       .element(screen.getByRole("combobox", { name: "Tablero" }))
       .toHaveValue("[es] Home");

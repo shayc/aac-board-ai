@@ -41,7 +41,12 @@ function makeButton(overrides: Partial<BoardButton>): BoardButton {
 
 function tileElement(overrides: Partial<BoardButton>) {
   return (
-    <Tile button={makeButton(overrides)} tabIndex={0} onActivate={vi.fn()} />
+    <Tile
+      button={makeButton(overrides)}
+      language="en"
+      tabIndex={0}
+      onActivate={vi.fn()}
+    />
   );
 }
 
@@ -443,7 +448,12 @@ describe("Tile", () => {
     const onActivate = vi.fn();
     const button = makeButton({ label: "Click me" });
     const screen = await renderInTheme(
-      <Tile button={button} tabIndex={0} onActivate={onActivate} />,
+      <Tile
+        button={button}
+        language="en"
+        tabIndex={0}
+        onActivate={onActivate}
+      />,
     );
 
     await screen.getByRole("button", { name: "Click me" }).click();
