@@ -2,6 +2,7 @@ import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { red } from "@mui/material/colors";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
+import { paperClasses } from "@mui/material/Paper";
 import {
   createTheme,
   type Shadows,
@@ -69,10 +70,10 @@ const shadows = [
 ] as Shadows;
 
 function softShadow(elevation: number) {
-  const ring = "0 0 0 1px rgb(16 24 40 / 0.05)";
-  const key = `0 ${Math.ceil(elevation / 2)}px ${elevation + 1}px rgb(16 24 40 / 0.06)`;
+  const ring = "0 0 0 1px light-dark(rgb(16 24 40 / 0.05), transparent)";
+  const key = `0 ${Math.ceil(elevation / 2)}px ${elevation + 1}px light-dark(rgb(16 24 40 / 0.06), rgb(0 0 0 / 0.6))`;
   const ambientAlpha = (0.1 + elevation * 0.003).toFixed(3);
-  const ambient = `0 ${2 * elevation}px ${4 * elevation}px -${1.5 * elevation}px rgb(16 24 40 / ${ambientAlpha})`;
+  const ambient = `0 ${2 * elevation}px ${4 * elevation}px -${1.5 * elevation}px light-dark(rgb(16 24 40 / ${ambientAlpha}), rgb(0 0 0 / 0.4))`;
 
   return `${ring}, ${key}, ${ambient}`;
 }
@@ -159,11 +160,17 @@ const themeOptions = {
     },
     MuiPaper: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           // MUI's dark elevation overlay would add surface steps beyond
           // background.default and background.paper.
           backgroundImage: "none",
-        },
+          "@media screen": theme.applyStyles("dark", {
+            [`&.${paperClasses.elevation}:not(.${paperClasses.elevation0})`]: {
+              boxShadow:
+                "inset 0 0 0 1px rgb(255 255 255 / 0.08), var(--Paper-shadow)",
+            },
+          }),
+        }),
       },
     },
     MuiAppBar: {
