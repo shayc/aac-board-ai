@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { spellText } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -54,10 +55,24 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     message.backspace();
 
-    expect(message.getParts().map((part) => part.label)).toEqual([
+    expect(message.getState().parts.map((part) => part.label)).toEqual([
       "I",
       "want",
       "wate",
+    ]);
+  });
+
+  test("treats a suggested phrase as finished words", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want");
+    message.setState(spellText(message.getState(), "s"));
+
+    expect(message.getState().parts.map((part) => part.label)).toEqual([
+      "I",
+      "want",
+      "s",
     ]);
   });
 });

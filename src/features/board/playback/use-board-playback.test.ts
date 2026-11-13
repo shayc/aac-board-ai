@@ -42,8 +42,8 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
+      { kind: "tile", id: "1", label: "I" },
+      { kind: "tile", id: "2", label: "want" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -70,9 +70,9 @@ describe("useBoardPlayback", () => {
 
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
     const parts: MessagePart[] = [
-      { id: "1", label: "before" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { id: "3", label: "after" },
+      { kind: "tile", id: "1", label: "before" },
+      { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { kind: "tile", id: "3", label: "after" },
     ];
 
     const callOrder: string[] = [];
@@ -103,7 +103,11 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playPart({ id: "1", label: "hi" });
+    const playPromise = result.current.playPart({
+      kind: "tile",
+      id: "1",
+      label: "hi",
+    });
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);
@@ -124,7 +128,7 @@ describe("useBoardPlayback", () => {
       };
     });
 
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const parts: MessagePart[] = [{ kind: "tile", id: "1", label: "hi" }];
 
     const { result, rerender } = await renderPlayback();
 
@@ -153,9 +157,9 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { id: "1", label: "before" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { id: "3", label: "after" },
+      { kind: "tile", id: "1", label: "before" },
+      { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { kind: "tile", id: "3", label: "after" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -189,8 +193,8 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
+      { kind: "tile", id: "1", label: "I" },
+      { kind: "tile", id: "2", label: "want" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -222,9 +226,11 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    const firstPlay = result.current.playMessage([{ id: "1", label: "first" }]);
+    const firstPlay = result.current.playMessage([
+      { kind: "tile", id: "1", label: "first" },
+    ]);
     const secondPlay = result.current.playMessage([
-      { id: "2", label: "second" },
+      { kind: "tile", id: "2", label: "second" },
     ]);
 
     resolveFirstSpeak?.();
@@ -242,7 +248,7 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([{ id: "1", label: "hi" }]),
+      result.current.playMessage([{ kind: "tile", id: "1", label: "hi" }]),
     ).resolves.toBe(false);
     await rerender();
 
@@ -257,7 +263,7 @@ describe("useBoardPlayback", () => {
     failSpeech(speech.speak);
     const { result } = await renderPlayback();
 
-    await result.current.playPart({ id: "1", label: "hi" });
+    await result.current.playPart({ kind: "tile", id: "1", label: "hi" });
 
     await expect
       .element(page.getByRole("alert"))
@@ -271,8 +277,8 @@ describe("useBoardPlayback", () => {
 
     await expect(
       result.current.playMessage([
-        { id: "1", label: "before" },
-        { id: "2", label: "ding", soundSrc: "ding.mp3" },
+        { kind: "tile", id: "1", label: "before" },
+        { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
       ]),
     ).resolves.toBe(false);
 
@@ -287,7 +293,7 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([{ id: "1", label: "hi" }]),
+      result.current.playMessage([{ kind: "tile", id: "1", label: "hi" }]),
     ).resolves.toBe(true);
     await rerender();
 
@@ -298,7 +304,9 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playMessage([{ id: "1", label: "hi" }]);
+    const playPromise = result.current.playMessage([
+      { kind: "tile", id: "1", label: "hi" },
+    ]);
     result.current.stop();
 
     await expect(playPromise).resolves.toBe(false);

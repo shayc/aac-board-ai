@@ -523,8 +523,11 @@ AI availability, provisioning, and session lifecycle to
   and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
-- **Message part** — one item in the message, with its own label and any
-  vocalization, image, or sound.
+- **Message part** — one item in the message. A tile part comes from a tile,
+  with its label and any vocalization, image, or sound, and backspace removes it
+  whole. A text part is a word that was spelled or taken from a suggestion, and
+  backspace removes one character at a time. Spelling extends the last text part
+  until a space or another tile ends the word.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
 - **Scroll clearance** — the room kept above and below the grid, between the

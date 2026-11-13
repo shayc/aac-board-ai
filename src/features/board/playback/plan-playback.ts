@@ -21,7 +21,7 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   }
 
   for (const part of parts) {
-    if (part.soundSrc) {
+    if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
       steps.push({
         kind: "audio",
@@ -44,5 +44,8 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
 }
 
 function getSpokenText(part: MessagePart): string {
-  return (part.vocalization ?? part.label).trim().toLowerCase();
+  const text =
+    part.kind === "tile" ? (part.vocalization ?? part.label) : part.label;
+
+  return text.trim().toLowerCase();
 }

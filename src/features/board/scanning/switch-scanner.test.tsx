@@ -312,8 +312,10 @@ describe("switch scanning", () => {
       await pressSwitch();
 
       await expect
-        .element(screen.getByText("ye", { exact: true }))
-        .toBeVisible();
+        .element(
+          screen.getByRole("list", { name: "Message" }).getByRole("listitem"),
+        )
+        .not.toBeInTheDocument();
     });
 
     test("counts a held switch as one press", async () => {

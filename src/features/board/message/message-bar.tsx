@@ -75,7 +75,7 @@ export function MessageBar({
           <MessagePartItem
             key={part.id}
             label={part.label}
-            imageSrc={part.imageSrc}
+            imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
             isActive={part.id === activePartId}
             isImageVisible={areImagesVisible}
           />

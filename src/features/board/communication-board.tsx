@@ -40,7 +40,7 @@ export function CommunicationBoard({
   const shortcuts = useBoardShortcuts({ message, playback });
 
   const activateButton = createButtonActivator({
-    message: { getParts: message.getParts, setParts: message.setParts },
+    message: { getState: message.getState, setState: message.setState },
     playback: {
       playMessage: playback.playMessage,
       playPart: playback.playPart,

@@ -1,6 +1,6 @@
 import type { PlaybackStep } from "@shared/playback/playback-types";
 import { describe, expect, test } from "vitest";
-import { createPart } from "../message/message-transforms";
+import { createTilePart } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
@@ -11,8 +11,8 @@ describe("planPlayback", () => {
 
   test("merges a run of text parts into a single speech step", () => {
     const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
+      { kind: "tile", id: "1", label: "I" },
+      { kind: "tile", id: "2", label: "want" },
     ];
 
     const steps = planPlayback(parts);
@@ -24,7 +24,7 @@ describe("planPlayback", () => {
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
-    const part = createPart({ soundSrc: "bell.mp3" });
+    const part = createTilePart({ label: "", soundSrc: "bell.mp3" });
     const steps = planPlayback([part]);
 
     expect(steps).toEqual([{ kind: "audio", cue: part.id, src: "bell.mp3" }]);
@@ -32,9 +32,9 @@ describe("planPlayback", () => {
 
   test("preserves order when a sound breaks a text run", () => {
     const parts: MessagePart[] = [
-      { id: "1", label: "hello" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { id: "3", label: "world" },
+      { kind: "tile", id: "1", label: "hello" },
+      { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { kind: "tile", id: "3", label: "world" },
     ];
 
     const steps = planPlayback(parts);
@@ -48,7 +48,7 @@ describe("planPlayback", () => {
 
   test("speaks the vocalization rather than the label when present", () => {
     const steps = planPlayback([
-      { id: "1", label: "🙂", vocalization: "Happy" },
+      { kind: "tile", id: "1", label: "🙂", vocalization: "Happy" },
     ]);
 
     const step = getOnlySpeechStep(steps);
@@ -58,8 +58,8 @@ describe("planPlayback", () => {
 
   test("skips parts with no spoken text, such as inserted spaces", () => {
     const steps = planPlayback([
-      { id: "1", label: "hi" },
-      { id: "2", label: "" },
+      { kind: "tile", id: "1", label: "hi" },
+      { kind: "tile", id: "2", label: "" },
     ]);
 
     const step = getOnlySpeechStep(steps);
@@ -68,21 +68,21 @@ describe("planPlayback", () => {
   });
 
   test.each([
-    { source: "label", part: { id: "1", label: " " } },
+    { source: "label", part: { kind: "tile", id: "1", label: " " } },
     {
       source: "vocalization",
-      part: { id: "1", label: "hello", vocalization: " \t" },
+      part: { kind: "tile", id: "1", label: "hello", vocalization: " \t" },
     },
-  ])("returns no steps for a whitespace-only $source", ({ part }) => {
+  ] as const)("returns no steps for a whitespace-only $source", ({ part }) => {
     expect(planPlayback([part])).toEqual([]);
   });
 
   test("skips whitespace-only parts within and at the end of a speech run", () => {
     const steps = planPlayback([
-      { id: "1", label: "hello" },
-      { id: "2", label: " " },
-      { id: "3", label: "world" },
-      { id: "4", label: "goodbye", vocalization: " " },
+      { kind: "tile", id: "1", label: "hello" },
+      { kind: "tile", id: "2", label: " " },
+      { kind: "tile", id: "3", label: "world" },
+      { kind: "tile", id: "4", label: "goodbye", vocalization: " " },
     ]);
 
     const step = getOnlySpeechStep(steps);

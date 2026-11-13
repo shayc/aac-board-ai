@@ -1,18 +1,20 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import {
-  appendSpace,
-  appendText,
+  appendPart,
   applyBackspace,
-  createPart,
+  createTilePart,
+  EMPTY_MESSAGE,
+  finishWord,
+  spellText,
 } from "../message/message-transforms";
-import type { MessagePart } from "../message/message-types";
+import type { MessageState } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "getParts" | "setParts">;
+  message: Pick<UseMessageReturn, "getState" | "setState">;
   playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
@@ -41,14 +43,14 @@ export function createButtonActivator({
   }
 
   function composeAndPlayButton(button: BoardButton) {
-    const part = createPart({
+    const part = createTilePart({
       label: button.label,
       vocalization: button.vocalization,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
     });
 
-    message.setParts([...message.getParts(), part]);
+    message.setState(appendPart(message.getState(), part));
     void playback.playPart(part);
   }
 
@@ -59,39 +61,36 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      commitEdits(message.getParts(), actions);
+      commitEdits(message.getState(), actions);
 
       return;
     }
 
-    const partsToPlay = commitEdits(
-      message.getParts(),
+    const messageToPlay = commitEdits(
+      message.getState(),
       actions.slice(0, playIndex),
     );
     const actionsAfterPlay = actions.slice(playIndex + 1);
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(partsToPlay).then((hasCompleted) => {
+    void playback.playMessage(messageToPlay.parts).then((hasCompleted) => {
       if (hasCompleted) {
-        commitEdits(message.getParts(), actionsAfterPlay);
+        commitEdits(message.getState(), actionsAfterPlay);
       }
     });
   }
 
-  function commitEdits(
-    parts: readonly MessagePart[],
-    actions: readonly BoardAction[],
-  ) {
+  function commitEdits(state: MessageState, actions: readonly BoardAction[]) {
     const edits = actions.filter(isMessageEdit);
     if (edits.length === 0) {
-      return parts;
+      return state;
     }
 
-    const editedParts = edits.reduce(applyEdit, parts);
-    message.setParts(editedParts);
+    const editedState = edits.reduce(applyEdit, state);
+    message.setState(editedState);
 
-    return editedParts;
+    return editedState;
   }
 
   return activateButton;
@@ -103,19 +102,16 @@ function isMessageEdit(action: BoardAction): action is MessageEdit {
   return action.kind !== "home" && action.kind !== "play";
 }
 
-function applyEdit(
-  parts: readonly MessagePart[],
-  edit: MessageEdit,
-): readonly MessagePart[] {
+function applyEdit(state: MessageState, edit: MessageEdit): MessageState {
   switch (edit.kind) {
     case "spell":
-      return appendText(parts, edit.text);
+      return spellText(state, edit.text);
     case "space":
-      return appendSpace(parts);
+      return finishWord(state);
     case "backspace":
-      return applyBackspace(parts);
+      return applyBackspace(state);
     case "clear":
-      return [];
+      return EMPTY_MESSAGE;
     default:
       return assertNever(edit);
   }
