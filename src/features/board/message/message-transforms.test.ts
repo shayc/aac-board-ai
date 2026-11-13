@@ -6,6 +6,7 @@ import {
   createTextPart,
   createTilePart,
   EMPTY_MESSAGE,
+  markSpoken,
   spell,
 } from "./message-transforms";
 import type { Message, TilePart } from "./message-types";
@@ -33,7 +34,7 @@ describe("createTilePart", () => {
 
 describe("appendTilePart", () => {
   test("appends the part and leaves the input untouched", () => {
-    const original: Message = { parts: [HELLO_TILE], isWordOpen: false };
+    const original: Message = { ...EMPTY_MESSAGE, parts: [HELLO_TILE] };
 
     const message = appendTilePart(
       original,
@@ -83,6 +84,7 @@ describe("spell", () => {
     const closed: Message = {
       parts: [createTextPart("want")],
       isWordOpen: false,
+      isSpoken: false,
     };
 
     const message = spell(closed, "s");
@@ -203,5 +205,41 @@ describe("applyBackspace", () => {
 
   test("leaves an empty message as it is", () => {
     expect(applyBackspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
+  });
+});
+
+describe("a spoken message", () => {
+  const spoken = markSpoken(spell(EMPTY_MESSAGE, "hi"), true);
+
+  test("is replaced by the next tile", () => {
+    const message = appendTilePart(spoken, HELLO_TILE);
+
+    expect(labelsOf(message)).toEqual(["hello"]);
+    expect(message.isSpoken).toBe(false);
+  });
+
+  test("is replaced by the next letter", () => {
+    const message = spell(spoken, "y");
+
+    expect(labelsOf(message)).toEqual(["y"]);
+    expect(message.isSpoken).toBe(false);
+  });
+
+  test("stays as it is for a space", () => {
+    expect(closeWord(spoken)).toBe(spoken);
+  });
+
+  test("is edited by backspace, and then added to", () => {
+    const message = spell(applyBackspace(spoken), "t");
+
+    expect(labelsOf(message)).toEqual(["ht"]);
+  });
+
+  test("is added to once a backspace reopens its closed word", () => {
+    const closed = markSpoken(closeWord(spell(EMPTY_MESSAGE, "hi")), true);
+
+    const message = spell(applyBackspace(closed), "t");
+
+    expect(labelsOf(message)).toEqual(["hit"]);
   });
 });

@@ -16,15 +16,15 @@ function setup(
   initialParts: readonly MessagePart[] = [],
   { isSpoken = false } = {},
 ) {
-  let currentState: Message = { parts: initialParts, isWordOpen: false };
-  let isCurrentSpoken = isSpoken;
+  let currentState: Message = {
+    parts: initialParts,
+    isWordOpen: false,
+    isSpoken,
+  };
   const message = {
     getState: () => currentState,
-    isAwaitingNewMessage: () => isCurrentSpoken,
-    getStateToAddTo: () => (isCurrentSpoken ? EMPTY_MESSAGE : currentState),
     setState: vi.fn<ActivationOptions["message"]["setState"]>((state) => {
       currentState = state;
-      isCurrentSpoken = false;
     }),
   };
   const playback = {
@@ -216,6 +216,7 @@ describe("createButtonActivator", () => {
         { kind: "text", id: "2", label: "there" },
       ],
       isWordOpen: false,
+      isSpoken: false,
     });
     await settlePlayback(true);
 
@@ -226,6 +227,25 @@ describe("createButtonActivator", () => {
       "there",
       "!",
     ]);
+  });
+
+  test("applies edits after play to the message it has just spoken", async () => {
+    const { activateButton, message, playback } = setup([
+      { kind: "text", id: "1", label: "hi" },
+    ]);
+    const settlePlayback = holdMessagePlayback(playback);
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "play" }, { kind: "spell", text: "!" }],
+    });
+    message.setState({ ...message.getState(), isSpoken: true });
+    await settlePlayback(true);
+
+    const committed = message.setState.mock.lastCall?.[0];
+    assertDefined(committed);
+    expect(committed.parts.map((part) => part.label)).toEqual(["hi", "!"]);
   });
 
   test("closes the word being spelled when space follows play", async () => {
@@ -263,6 +283,21 @@ describe("createButtonActivator", () => {
     await settlePlayback(false);
 
     expect(message.setState).not.toHaveBeenCalled();
+  });
+
+  test("speaks the message for a space that changes nothing, followed by play", () => {
+    const { activateButton, playback } = setup([
+      { kind: "tile", id: "1", label: "hello" },
+    ]);
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "space" }, { kind: "play" }],
+    });
+
+    expect(playback.playMessage).toHaveBeenCalledOnce();
+    expect(playback.echoMessage).not.toHaveBeenCalled();
   });
 
   describe("after the message is spoken", () => {

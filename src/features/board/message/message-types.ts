@@ -21,4 +21,8 @@ export interface Message {
   // True while the last part is a text part that spelling still extends. A
   // space or a new tile closes the word, so it is never true for a tile part.
   readonly isWordOpen: boolean;
+  // True once the message has played to its end unchanged. It stays visible so
+  // listeners who missed it can still read it, and the next tile or letter
+  // starts a new message. Any edit, such as a backspace, makes it false again.
+  readonly isSpoken: boolean;
 }

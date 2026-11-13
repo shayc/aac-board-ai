@@ -326,8 +326,7 @@ describe("useBoardPlayback", () => {
     await result.current.playMessage(parts);
 
     expect(onMessagePlayback).toHaveBeenCalledOnce();
-    const [reportedParts, completion] = onMessagePlayback.mock.calls[0] ?? [];
-    expect(reportedParts).toBe(parts);
+    const [completion] = onMessagePlayback.mock.calls[0] ?? [];
     await expect(completion).resolves.toBe(true);
   });
 

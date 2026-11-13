@@ -6,6 +6,7 @@ import {
   closeWord,
   createTilePart,
   EMPTY_MESSAGE,
+  markSpoken,
   spell,
 } from "../message/message-transforms";
 import type { Message } from "../message/message-types";
@@ -14,10 +15,7 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<
-    UseMessageReturn,
-    "getState" | "isAwaitingNewMessage" | "getStateToAddTo" | "setState"
-  >;
+  message: Pick<UseMessageReturn, "getState" | "setState">;
   playback: Pick<
     UseBoardPlaybackReturn,
     "playMessage" | "echoMessage" | "playPart"
@@ -56,7 +54,7 @@ export function createButtonActivator({
       soundSrc: button.soundSrc,
     });
 
-    message.setState(appendTilePart(message.getStateToAddTo(), part));
+    message.setState(appendTilePart(message.getState(), part));
     void playback.playPart(part);
   }
 
@@ -67,61 +65,39 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      commitEdits(message.getState(), getEditsToApply(actions));
+      commitEdits(message.getState(), actions.filter(isMessageEdit));
 
       return;
     }
 
-    const editsBeforePlay = getEditsToApply(actions.slice(0, playIndex));
-    const messageToPlay = commitEdits(message.getState(), editsBeforePlay);
+    const messageBeforeEdits = message.getState();
+    const editsBeforePlay = actions.slice(0, playIndex).filter(isMessageEdit);
+    const messageToPlay = commitEdits(messageBeforeEdits, editsBeforePlay);
     const editsAfterPlay = actions.slice(playIndex + 1).filter(isMessageEdit);
 
     // A tile that spells and then plays echoes the word being typed, so only a
     // tile that plays the message as it stands speaks it.
     const play =
-      editsBeforePlay.length === 0
+      messageToPlay === messageBeforeEdits
         ? playback.playMessage
         : playback.echoMessage;
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
-    // without interruption, keeping the message visible while it plays.
+    // without interruption, keeping the message visible while it plays. They
+    // belong to the message just spoken, so they change it instead of starting
+    // a new one.
     void play(messageToPlay.parts).then((hasCompleted) => {
-      if (hasCompleted) {
-        commitEdits(message.getState(), editsAfterPlay);
+      if (hasCompleted && editsAfterPlay.length > 0) {
+        commitEdits(markSpoken(message.getState(), false), editsAfterPlay);
       }
     });
   }
 
-  // A spoken message has no word for a space to end, so spaces before the next
-  // letter are skipped. That letter starts a new message, as a tile does, while
-  // backspace changes the spoken one.
-  function getEditsToApply(
-    actions: readonly BoardAction[],
-  ): readonly MessageEdit[] {
-    const edits = actions.filter(isMessageEdit);
-    if (!message.isAwaitingNewMessage()) {
-      return edits;
+  function commitEdits(from: Message, edits: readonly MessageEdit[]): Message {
+    const edited = edits.reduce(applyEdit, from);
+    if (edited !== message.getState()) {
+      message.setState(edited);
     }
-
-    const firstWordEditIndex = edits.findIndex((edit) => edit.kind !== "space");
-    if (firstWordEditIndex === -1) {
-      return [];
-    }
-
-    const wordEdits = edits.slice(firstWordEditIndex);
-
-    return wordEdits[0]?.kind === "spell"
-      ? [{ kind: "clear" }, ...wordEdits]
-      : wordEdits;
-  }
-
-  function commitEdits(current: Message, edits: readonly MessageEdit[]) {
-    if (edits.length === 0) {
-      return current;
-    }
-
-    const edited = edits.reduce(applyEdit, current);
-    message.setState(edited);
 
     return edited;
   }
