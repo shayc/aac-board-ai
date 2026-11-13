@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { resetBoardsDB } from "../testing";
-import { closeBoardsDB, getBoardsDB, normalizeAssetPath } from "./boards-db";
+import { closeBoardsDB, getBoardsDB } from "./boards-db";
 
 beforeEach(async () => {
   await resetBoardsDB();
@@ -31,13 +31,4 @@ describe("getBoardsDB", () => {
     });
     expect((await second.get("boardSets", "set-1"))?.name).toBe("Persisted");
   });
-});
-
-describe("normalizeAssetPath", () => {
-  test.each(["", "/", "////", "\\"])(
-    "returns an empty path when %j names no file",
-    (rawPath) => {
-      expect(normalizeAssetPath(rawPath)).toBe("");
-    },
-  );
 });

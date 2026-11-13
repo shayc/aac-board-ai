@@ -154,6 +154,37 @@ describe("importBoardFileFromURL", () => {
     expect(cancelled).toBe(true);
   });
 
+  test("rejects a download whose declared size exceeds the cap without reading it", async () => {
+    let pulled = false;
+    let cancelled = false;
+    const body = new ReadableStream<Uint8Array>(
+      {
+        pull() {
+          pulled = true;
+        },
+        cancel() {
+          cancelled = true;
+        },
+      },
+      { highWaterMark: 0 },
+    );
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(body, {
+        headers: { "content-length": String(MAX_BOARD_DOWNLOAD_BYTES + 1) },
+      }),
+    );
+
+    await expect(
+      importBoardFileFromURL("https://example.com/huge.obz"),
+    ).rejects.toMatchObject({
+      name: "BoardURLError",
+      code: "download-too-large",
+    });
+
+    expect(pulled).toBe(false);
+    expect(cancelled).toBe(true);
+  });
+
   test("reports download progress against the content length", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(

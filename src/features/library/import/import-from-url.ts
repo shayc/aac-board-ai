@@ -88,12 +88,14 @@ async function downloadBoardFile(
     assertSameHost(url, response);
   }
 
+  const total = expectedDownloadBytes(response.headers);
+  assertWithinSizeCap(total, response);
+
   const reader = response.body?.getReader();
   if (!reader) {
     return response.blob();
   }
 
-  const total = expectedDownloadBytes(response.headers);
   const chunks: BlobPart[] = [];
   let receivedBytes = 0;
   onProgress?.({ loaded: receivedBytes, total });
@@ -107,10 +109,7 @@ async function downloadBoardFile(
     receivedBytes += value.byteLength;
     if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
       await reader.cancel();
-      throw new BoardURLError(
-        "download-too-large",
-        `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
-      );
+      throw downloadTooLargeError();
     }
 
     chunks.push(value);
@@ -144,4 +143,23 @@ function expectedDownloadBytes(headers: Headers): number | undefined {
   const total = Number(contentLength);
 
   return Number.isSafeInteger(total) && total > 0 ? total : undefined;
+}
+
+function assertWithinSizeCap(
+  total: number | undefined,
+  response: Response,
+): void {
+  if (total === undefined || total <= MAX_BOARD_DOWNLOAD_BYTES) {
+    return;
+  }
+
+  void response.body?.cancel();
+  throw downloadTooLargeError();
+}
+
+function downloadTooLargeError(): BoardURLError {
+  return new BoardURLError(
+    "download-too-large",
+    `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
+  );
 }

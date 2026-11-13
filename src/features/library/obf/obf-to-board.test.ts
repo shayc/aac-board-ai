@@ -427,6 +427,43 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd.mp3");
     });
 
+    test("falls back to url when data is an empty string", () => {
+      const obfBoard = makeOBFBoard({
+        buttons: [
+          {
+            id: "btn-1",
+            label: "Media",
+            image_id: "img-1",
+            sound_id: "snd-1",
+          },
+        ],
+        grid: {
+          rows: 1,
+          columns: 1,
+          order: [["btn-1"]],
+        },
+        images: [
+          {
+            id: "img-1",
+            data: "",
+            url: "https://example.com/img.png",
+          },
+        ],
+        sounds: [
+          {
+            id: "snd-1",
+            data: "",
+            url: "https://example.com/snd.mp3",
+          },
+        ],
+      });
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0]?.imageSrc).toBe("https://example.com/img.png");
+      expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd.mp3");
+    });
+
     test("returns undefined imageSrc/soundSrc for unknown ids", () => {
       const obfBoard = makeOBFBoard({
         buttons: [
