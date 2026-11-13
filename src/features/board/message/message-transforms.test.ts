@@ -130,17 +130,49 @@ describe("applyBackspace", () => {
     expect(original[1]?.label).toBe(`a${grapheme}`);
   });
 
-  test.each(["w", "", ...graphemes])(
-    "removes the entire text-only part containing at most one grapheme (%s)",
+  test.each(["w", ...graphemes])(
+    "empties a one-grapheme word that follows text, keeping its space (%s)",
     (label) => {
       const parts = applyBackspace([
         { id: "1", label: "hello" },
         { id: "2", label },
       ]);
 
-      expect(parts).toEqual([{ id: "1", label: "hello" }]);
+      expect(parts).toEqual([
+        { id: "1", label: "hello" },
+        { id: "2", label: "" },
+      ]);
     },
   );
+
+  test("removes a trailing space", () => {
+    const parts = applyBackspace([
+      { id: "1", label: "hello" },
+      { id: "2", label: "" },
+    ]);
+
+    expect(parts).toEqual([{ id: "1", label: "hello" }]);
+  });
+
+  test.each(["w", ...graphemes])(
+    "removes a one-grapheme word that follows a part with media (%s)",
+    (label) => {
+      const parts = applyBackspace([
+        { id: "1", label: "hello", imageSrc: "img.png" },
+        { id: "2", label },
+      ]);
+
+      expect(parts).toEqual([{ id: "1", label: "hello", imageSrc: "img.png" }]);
+    },
+  );
+
+  test("starts a new word after backspacing a one-letter word", () => {
+    const spelled = appendText(appendSpace(appendText([], "hi")), "y");
+
+    const parts = appendText(applyBackspace(spelled), "o");
+
+    expect(parts.map((part) => part.label)).toEqual(["hi", "o"]);
+  });
 
   test("removes the entire part if it is not text-only", () => {
     const parts = applyBackspace([

@@ -52,14 +52,18 @@ export function applyBackspace(
   const lastGrapheme = graphemeSegmenter
     .segment(lastPart.label)
     .containing(lastPart.label.length - 1);
-  if (!lastGrapheme || lastGrapheme.index === 0) {
+  const label = lastPart.label.slice(0, lastGrapheme?.index ?? 0);
+
+  // A word typed after text sits behind a space. Emptying it keeps that space,
+  // so the next letter starts a new word instead of joining the previous one.
+  const previousPart = parts.at(-2);
+  const followsText =
+    previousPart !== undefined && isTextOnlyPart(previousPart);
+  if (!label && !followsText) {
     return parts.slice(0, -1);
   }
 
-  return parts.with(-1, {
-    ...lastPart,
-    label: lastPart.label.slice(0, lastGrapheme.index),
-  });
+  return parts.with(-1, { ...lastPart, label });
 }
 
 function isTextOnlyPart(part: MessagePart): boolean {
