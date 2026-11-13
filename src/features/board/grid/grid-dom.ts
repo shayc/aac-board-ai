@@ -3,11 +3,6 @@ import type { GridPosition } from "./grid-model";
 const GRID_CELL_SELECTOR = "[role='gridcell']";
 const GRID_FOCUSABLE_SELECTOR = "[tabindex]";
 
-export interface GridFocusTarget {
-  element: HTMLElement;
-  position: GridPosition;
-}
-
 export function findGridPosition(
   target: EventTarget | null,
 ): GridPosition | null {
@@ -15,47 +10,7 @@ export function findGridPosition(
     return null;
   }
 
-  return readGridPosition(target.closest(GRID_CELL_SELECTOR));
-}
-
-export function findGridFocusableAt(
-  root: HTMLElement,
-  position: GridPosition,
-): HTMLElement | null {
-  return root.querySelector<HTMLElement>(
-    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.column + 1}'] ${GRID_FOCUSABLE_SELECTOR}`,
-  );
-}
-
-export function findFirstGridFocusable(root: HTMLElement): HTMLElement | null {
-  return root.querySelector<HTMLElement>(
-    `${GRID_CELL_SELECTOR} ${GRID_FOCUSABLE_SELECTOR}`,
-  );
-}
-
-export function listGridFocusTargets(
-  root: HTMLElement,
-  row?: number,
-): GridFocusTarget[] {
-  const targets: GridFocusTarget[] = [];
-
-  for (const cell of root.querySelectorAll<HTMLElement>(GRID_CELL_SELECTOR)) {
-    const position = readGridPosition(cell);
-    if (!position || (row !== undefined && position.row !== row)) {
-      continue;
-    }
-
-    for (const element of cell.querySelectorAll<HTMLElement>(
-      GRID_FOCUSABLE_SELECTOR,
-    )) {
-      targets.push({ element, position });
-    }
-  }
-
-  return targets;
-}
-
-function readGridPosition(cell: Element | null): GridPosition | null {
+  const cell = target.closest(GRID_CELL_SELECTOR);
   if (!cell) {
     return null;
   }
@@ -68,4 +23,13 @@ function readGridPosition(cell: Element | null): GridPosition | null {
   }
 
   return { row, column };
+}
+
+export function findGridFocusableAt(
+  root: HTMLElement,
+  position: GridPosition,
+): HTMLElement | null {
+  return root.querySelector<HTMLElement>(
+    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.column + 1}'] ${GRID_FOCUSABLE_SELECTOR}`,
+  );
 }

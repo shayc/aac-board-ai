@@ -41,14 +41,21 @@ export function gridArrangementKey(grid: GridCells): string {
 }
 
 export function findFirstOccupiedPosition(grid: GridCells): GridPosition {
+  return listOccupiedPositions(grid)[0] ?? { row: 0, column: 0 };
+}
+
+export function listOccupiedPositions(grid: GridCells): GridPosition[] {
+  const positions: GridPosition[] = [];
+
   for (const [row, cells] of grid.entries()) {
-    const column = cells.findIndex(Boolean);
-    if (column !== -1) {
-      return { row, column };
+    for (const [column, cell] of cells.entries()) {
+      if (cell) {
+        positions.push({ row, column });
+      }
     }
   }
 
-  return { row: 0, column: 0 };
+  return positions;
 }
 
 export function isSameGridPosition(

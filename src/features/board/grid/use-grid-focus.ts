@@ -8,12 +8,8 @@ import {
   useState,
 } from "react";
 import { useKeyboard } from "react-aria";
-import {
-  findFirstGridFocusable,
-  findGridFocusableAt,
-  findGridPosition,
-} from "./grid-dom";
-import { findGridKeyTarget } from "./grid-key-navigation";
+import { findGridFocusableAt, findGridPosition } from "./grid-dom";
+import { findGridKeyTarget, type GridKeyEvent } from "./grid-key-navigation";
 import {
   findFirstOccupiedPosition,
   gridArrangementKey,
@@ -36,8 +32,7 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
-      const root = rootRef.current;
-      const next = root ? findGridKeyTarget(event, root) : null;
+      const next = findKeyTargetElement(rootRef.current, grid, event);
       if (!next) {
         event.continuePropagation();
 
@@ -45,33 +40,23 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
       }
 
       event.preventDefault();
-      next.element.focus();
+      next.focus();
     },
   });
 
-  function handleFocus(event: FocusEvent<HTMLElement>) {
-    const position = findGridPosition(event.target);
-    if (position) {
-      setRememberedPosition((remembered) =>
-        isSameGridPosition(remembered, position) ? remembered : position,
-      );
-    }
-  }
-
+  const rememberedCell =
+    grid[rememberedPosition.row]?.[rememberedPosition.column];
+  const tabStopPosition = rememberedCell
+    ? rememberedPosition
+    : findFirstOccupiedPosition(grid);
   const restoreLostFocus = useEffectEvent(() => {
     if (document.activeElement !== document.body) {
       return;
     }
 
     const root = rootRef.current;
-    if (!root) {
-      return;
-    }
-
-    const target =
-      findGridFocusableAt(root, rememberedPosition) ??
-      findFirstGridFocusable(root);
-    target?.focus();
+    const tabStop = root && findGridFocusableAt(root, tabStopPosition);
+    tabStop?.focus();
   });
 
   // A focused tile drops focus to the body only when it unmounts, which takes
@@ -87,15 +72,34 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
     restoreLostFocus();
   }, [arrangementKey]);
 
-  const rememberedCell =
-    grid[rememberedPosition.row]?.[rememberedPosition.column];
-  const tabStopPosition = rememberedCell
-    ? rememberedPosition
-    : findFirstOccupiedPosition(grid);
+  function handleFocus(event: FocusEvent<HTMLElement>) {
+    const position = findGridPosition(event.target);
+    if (position) {
+      setRememberedPosition((remembered) =>
+        isSameGridPosition(remembered, position) ? remembered : position,
+      );
+    }
+  }
 
   return {
     rootRef,
     rootProps: { ...keyboardProps, onFocus: handleFocus },
     tabStopPosition,
   };
+}
+
+function findKeyTargetElement(
+  root: HTMLElement | null,
+  grid: GridCells,
+  event: GridKeyEvent & { target: EventTarget | null },
+): HTMLElement | null {
+  const from = findGridPosition(event.target);
+  if (!root || !from) {
+    return null;
+  }
+
+  const direction = root.matches(":dir(rtl)") ? "rtl" : "ltr";
+  const target = findGridKeyTarget(grid, from, event, direction);
+
+  return target && findGridFocusableAt(root, target);
 }
