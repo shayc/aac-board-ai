@@ -61,7 +61,8 @@ function resolveMediaSrc(
 ): string | undefined {
   const assetURL = media.path ? assetURLByPath.get(media.path) : undefined;
 
-  return assetURL ?? media.data ?? media.url;
+  // OBF validation accepts an empty string as a source.
+  return assetURL || media.data || media.url;
 }
 
 function obfToBoardButton(
