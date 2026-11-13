@@ -57,9 +57,8 @@ function collectMediaPaths(obfBoard: OBFBoard): Set<string> {
   return new Set(media.flatMap((item) => (item.path ? [item.path] : [])));
 }
 
-// A board file may link to boards it does not carry, such as one board saved
-// out of a larger set. The stored OBF keeps those links for export; a loaded
-// board offers only the links it can follow.
+// Broken links are dropped here, not at import: the stored file keeps them so
+// export writes back what was imported.
 function withoutBrokenLinks(
   board: Board,
   storedBoardIds: ReadonlySet<string>,
