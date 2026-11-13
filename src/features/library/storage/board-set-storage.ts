@@ -203,22 +203,14 @@ function buildBoardSetRecord(
 }
 
 function buildAssetRecords({ id, assets }: BoardSetInput): AssetRecord[] {
-  const recordsByPath = new Map<string, AssetRecord>();
-
-  for (const { path: rawPath, blob } of assets) {
+  return assets.map(({ path: rawPath, blob }) => {
     const path = normalizeAssetPath(rawPath);
     if (!path) {
       throw new Error(`Invalid asset path: ${rawPath}`);
     }
 
-    if (recordsByPath.has(path)) {
-      throw new Error(`Duplicate asset path: ${path}`);
-    }
-
-    recordsByPath.set(path, { boardSetId: id, path, blob });
-  }
-
-  return [...recordsByPath.values()];
+    return { boardSetId: id, path, blob };
+  });
 }
 
 function requestPersistentStorage(): void {

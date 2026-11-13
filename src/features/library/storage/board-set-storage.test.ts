@@ -220,19 +220,19 @@ describe("insertBoardSet", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("rejects assets whose paths name the same file without storing the set", async () => {
-    await expect(
-      insertBoardSet(
-        makeBoardSetInput({
-          assets: [
-            { path: "images/a.png", blob: new Blob(["first"]) },
-            { path: "images//a.png", blob: new Blob(["second"]) },
-          ],
-        }),
-      ),
-    ).rejects.toThrow("Duplicate asset path: images/a.png");
+  test("stores the later asset when two paths name the same file", async () => {
+    await insertBoardSet(
+      makeBoardSetInput({
+        assets: [
+          { path: "images/a.png", blob: new Blob(["first"]) },
+          { path: "images//a.png", blob: new Blob(["second"]) },
+        ],
+      }),
+    );
 
-    expect(await listBoardSetRecords()).toEqual([]);
+    const asset = await getAssetBlob("set-1", "images/a.png");
+    assertDefined(asset);
+    expect(await asset.text()).toBe("second");
   });
 
   test("rejects empty boardSetId", async () => {
