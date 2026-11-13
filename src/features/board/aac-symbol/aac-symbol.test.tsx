@@ -24,7 +24,7 @@ async function renderSymbol(
 }
 
 describe("AACSymbol", () => {
-  test("renders nothing without an image or label", async () => {
+  test("renders no content without an image or label", async () => {
     const screen = await render(<AACSymbol label="" />);
 
     expect(screen.container.textContent).toBe("");
@@ -38,7 +38,7 @@ describe("AACSymbol", () => {
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
-  test("renders the image as decorative so the label names the symbol", async () => {
+  test("renders the image as decorative even without a label", async () => {
     const screen = await render(
       <AACSymbol label="" imageSrc={TEST_IMAGE_SRC} />,
     );
