@@ -20,6 +20,16 @@ export async function getBoardRecord({
   return db.get("boards", [boardSetId, boardId]);
 }
 
+export async function hasBoardRecord({
+  boardSetId,
+  boardId,
+}: BoardKey): Promise<boolean> {
+  const db = await getBoardsDB();
+  const storedKey = await db.getKey("boards", [boardSetId, boardId]);
+
+  return storedKey !== undefined;
+}
+
 export async function listBoardRecords(
   boardSetId: string,
 ): Promise<BoardRecord[]> {
