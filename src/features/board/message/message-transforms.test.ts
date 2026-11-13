@@ -112,10 +112,10 @@ describe("finishSpelling", () => {
     expect(labels(message)).toEqual(["hi", "u"]);
   });
 
-  test("adds nothing when no word is being spelled", () => {
-    expect(finishSpelling(finishedMessage([HELLO]))).toEqual(
-      finishedMessage([HELLO]),
-    );
+  test("returns the same message when no word is being spelled", () => {
+    const original = finishedMessage([HELLO]);
+
+    expect(finishSpelling(original)).toBe(original);
   });
 });
 
@@ -161,7 +161,7 @@ describe("applyBackspace", () => {
     expect(message).toEqual(finishedMessage([HELLO]));
   });
 
-  test("leaves an empty message empty", () => {
-    expect(applyBackspace(EMPTY_MESSAGE)).toEqual(EMPTY_MESSAGE);
+  test("returns the same message when there is nothing to remove", () => {
+    expect(applyBackspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
   });
 });

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { appendText, EMPTY_MESSAGE } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -45,6 +46,43 @@ describe("useMessage", () => {
     await rerender();
 
     expect(result.current.parts).toHaveLength(0);
+  });
+
+  test("lists the word being spelled after the finished parts", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("I want");
+    result.current.setCurrent(appendText(result.current.getCurrent(), "t"));
+    result.current.setCurrent(appendText(result.current.getCurrent(), "ea"));
+    await rerender();
+
+    expect(result.current.parts.map((part) => part.label)).toEqual([
+      "I",
+      "want",
+      "tea",
+    ]);
+    expect(result.current.text).toBe("I want tea");
+  });
+
+  test("removes one letter at a time from the word being spelled", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setCurrent(appendText(EMPTY_MESSAGE, "tea"));
+    result.current.backspace();
+    await rerender();
+
+    expect(result.current.text).toBe("te");
+  });
+
+  test("keeps the parts array across renders that leave the message alone", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setCurrent(appendText(EMPTY_MESSAGE, "t"));
+    await rerender();
+    const { parts } = result.current;
+    await rerender();
+
+    expect(result.current.parts).toBe(parts);
   });
 
   test("exposes each edit to handlers before the next render", async () => {

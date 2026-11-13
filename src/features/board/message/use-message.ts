@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   applyBackspace,
   createPart,
@@ -21,10 +21,8 @@ export interface UseMessageReturn {
 export function useMessage(): UseMessageReturn {
   const [message, setMessage] = useState(EMPTY_MESSAGE);
   const messageRef = useRef(message);
-  // The message bar scrolls to the end whenever this array changes, so it
-  // must keep its identity across renders that leave the message alone.
-  const parts = useMemo(() => messageParts(message), [message]);
 
+  const parts = messageParts(message);
   const text = parts.map((part) => part.label).join(" ");
 
   function getCurrent() {

@@ -29,6 +29,23 @@ const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 1, order: [["btn-1"]] },
 };
 
+const KEYBOARD_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "keyboard-board",
+  locale: "en",
+  buttons: [
+    { id: "word", label: "the" },
+    { id: "letter-c", label: "C", action: "+c" },
+    { id: "letter-a", label: "A", action: "+a" },
+    { id: "space", label: "space", action: ":space" },
+  ],
+  grid: {
+    rows: 1,
+    columns: 4,
+    order: [["word", "letter-c", "letter-a", "space"]],
+  },
+};
+
 const SPEAK_THEN_CLEAR_BOARD: OBFBoard = {
   format: "open-board-0.1",
   id: "speak-then-clear-board",
@@ -269,6 +286,47 @@ describe("CommunicationBoard", () => {
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["s"]);
       });
+    });
+
+    test("spells a new word after a word tile and ends it with space", async () => {
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+      const messageItems = screen
+        .getByRole("list", { name: "Message" })
+        .getByRole("listitem");
+
+      await screen.getByRole("button", { name: "the" }).click();
+      await screen.getByRole("button", { name: "C", exact: true }).click();
+      await screen.getByRole("button", { name: "A", exact: true }).click();
+      await screen.getByRole("button", { name: "space" }).click();
+      await screen.getByRole("button", { name: "the" }).click();
+
+      await expect.element(messageItems).toHaveLength(3);
+      await expect.element(messageItems.nth(0)).toHaveTextContent("the");
+      await expect.element(messageItems.nth(1)).toHaveTextContent("ca");
+      await expect.element(messageItems.nth(2)).toHaveTextContent("the");
+    });
+
+    test("removes letters from the word being spelled, then whole words", async () => {
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+      const messageItems = screen
+        .getByRole("list", { name: "Message" })
+        .getByRole("listitem");
+      const backspace = screen.getByRole("button", { name: "Backspace" });
+
+      await screen.getByRole("button", { name: "the" }).click();
+      await screen.getByRole("button", { name: "C", exact: true }).click();
+      await screen.getByRole("button", { name: "A", exact: true }).click();
+
+      await backspace.click();
+      await expect
+        .element(messageItems.nth(1).getByText("c", { exact: true }))
+        .toBeVisible();
+
+      await backspace.click();
+      await expect.element(messageItems).toHaveLength(1);
+
+      await backspace.click();
+      await expect.element(messageItems).toHaveLength(0);
     });
 
     test("speaks a tile's actions instead of its vocalization or sound", async () => {

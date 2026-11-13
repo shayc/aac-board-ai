@@ -41,15 +41,15 @@ export function appendText(message: Message, text: string): Message {
 }
 
 export function finishSpelling(message: Message): Message {
-  return finishedMessage(messageParts(message));
+  return message.spelledWord ? finishedMessage(messageParts(message)) : message;
 }
 
-export function applyBackspace({
-  finishedParts,
-  spelledWord,
-}: Message): Message {
+export function applyBackspace(message: Message): Message {
+  const { finishedParts, spelledWord } = message;
   if (!spelledWord) {
-    return finishedMessage(finishedParts.slice(0, -1));
+    return finishedParts.length > 0
+      ? finishedMessage(finishedParts.slice(0, -1))
+      : message;
   }
 
   const label = withoutLastGrapheme(spelledWord.label);
