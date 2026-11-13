@@ -153,6 +153,17 @@ async function measureLuminanceOnHover(backgroundColor?: string) {
   };
 }
 
+async function measureTransitions() {
+  const screen = await render(
+    <ThemeProvider>{tileElement({ imageSrc: TEST_IMAGE_SRC })}</ThemeProvider>,
+  );
+  const tile = screen.getByRole("button", { name: "Word" });
+  const symbol = tile.element().querySelector("img");
+  assertDefined(symbol);
+
+  return { tile: styleOf(tile), symbol: getComputedStyle(symbol) };
+}
+
 async function measureLabelAndSymbol(placement: TileLabelPlacement) {
   setTileLabelPlacement(placement);
   const screen = await renderInTheme(
@@ -440,35 +451,24 @@ describe("Tile", () => {
     expect(getComputedStyle(symbol).filter).toBe("brightness(0.8)");
   });
 
-  test.each([
-    { pointer: "a mouse", isInstant: false, preparePointer: async () => {} },
-    { pointer: "touch", isInstant: true, preparePointer: emulateTouchDevice },
-  ])(
-    "times its symbol's dimming like its own colors with $pointer",
-    async ({ isInstant, preparePointer }) => {
-      await preparePointer();
+  test("eases its symbol with the same timing as its own colors", async () => {
+    const { tile, symbol } = await measureTransitions();
 
-      const screen = await render(
-        <ThemeProvider>
-          {tileElement({ imageSrc: TEST_IMAGE_SRC })}
-        </ThemeProvider>,
-      );
-      const tile = screen.getByRole("button", { name: "Word" });
-      const symbol = tile.element().querySelector("img");
-      assertDefined(symbol);
-      const tileStyles = styleOf(tile);
-      const symbolStyles = getComputedStyle(symbol);
+    expect(symbol.transitionProperty).toContain("filter");
+    expect(symbol.transitionDuration).not.toBe("0s");
+    expect(symbol.transitionDuration).toBe(tile.transitionDuration);
+    expect(symbol.transitionTimingFunction).toBe(tile.transitionTimingFunction);
+  });
 
-      expect(symbolStyles.transitionProperty).toContain("filter");
-      expect(symbolStyles.transitionDuration).toBe(
-        tileStyles.transitionDuration,
-      );
-      expect(symbolStyles.transitionTimingFunction).toBe(
-        tileStyles.transitionTimingFunction,
-      );
-      expect(tileStyles.transitionDuration === "0s").toBe(isInstant);
-    },
-  );
+  test("swaps its symbol's dimming instantly on touch, like its own colors", async () => {
+    await emulateTouchDevice();
+
+    const { tile, symbol } = await measureTransitions();
+
+    expect(symbol.transitionProperty).toContain("filter");
+    expect(symbol.transitionDuration).toBe("0s");
+    expect(symbol.transitionDuration).toBe(tile.transitionDuration);
+  });
 
   test("places its label above or below its symbol as the label placement says", async () => {
     const top = await measureLabelAndSymbol("top");
