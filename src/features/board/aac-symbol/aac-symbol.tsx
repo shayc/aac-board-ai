@@ -2,6 +2,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 
+// A container that knows its own size, such as a tile, sets this to scale the
+// label with it.
+export const SYMBOL_LABEL_FONT_SIZE_PROPERTY = "--symbol-label-font-size";
+
 export type SymbolLabelPlacement = "top" | "bottom";
 
 interface AACSymbolProps {
@@ -72,6 +76,10 @@ export function AACSymbol({
         variant={isImageDisplayed ? "body2" : "h5"}
         sx={[
           { flexShrink: 0, lineHeight: 1.2, fontWeight: "fontWeightBold" },
+          isImageDisplayed &&
+            ((theme) => ({
+              fontSize: `var(${SYMBOL_LABEL_FONT_SIZE_PROPERTY}, ${theme.typography.body2.fontSize})`,
+            })),
           !isLabelDisplayed && visuallyHidden,
         ]}
       >

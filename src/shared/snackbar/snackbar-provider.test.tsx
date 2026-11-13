@@ -1,3 +1,5 @@
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
 import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
@@ -112,20 +114,38 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("status")).toHaveTextContent("done");
   });
 
-  test.each([375, 1024])(
-    "keeps a persistent error at the top, clear of controls along the bottom, at a viewport width of %i",
-    async (width) => {
-      await setTestViewport(width, 667);
-      const screen = await renderSnackbars({
-        "show-error": { message: "failed", severity: "error" },
-      });
+  test.each([
+    { screen: "a phone", width: 375, height: 667 },
+    { screen: "a phone on its side", width: 568, height: 320 },
+    { screen: "a desktop", width: 1024, height: 667 },
+  ])(
+    "keeps a persistent error below the app bar and clear of controls along the bottom on $screen",
+    async ({ width, height }) => {
+      await setTestViewport(width, height);
+      const screen = await render(
+        <AppProviders>
+          <AppBar position="static">
+            <Toolbar />
+          </AppBar>
+          <ShowButtons
+            snackbars={{
+              "show-error": { message: "failed", severity: "error" },
+            }}
+          />
+        </AppProviders>,
+      );
 
       await screen.getByRole("button", { name: "show-error" }).click();
       const alert = screen.getByRole("alert");
       await expect.element(alert).toBeVisible();
 
-      const bounds = alert.element().getBoundingClientRect();
-      expect(bounds.bottom).toBeLessThan(window.innerHeight / 2);
+      const appBarBounds = screen
+        .getByRole("banner")
+        .element()
+        .getBoundingClientRect();
+      const alertBounds = alert.element().getBoundingClientRect();
+      expect(alertBounds.top).toBeGreaterThan(appBarBounds.bottom);
+      expect(alertBounds.bottom).toBeLessThan(window.innerHeight / 2);
     },
   );
 

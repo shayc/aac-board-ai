@@ -112,7 +112,6 @@ function scrollContainerSx(theme: Theme) {
   return {
     flexGrow: 1,
     alignItems: "center",
-    py: 1,
     px: 2,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
@@ -140,7 +139,8 @@ function MessagePartItem({
       role="listitem"
       direction="row"
       sx={(theme) => ({
-        p: 1,
+        py: 0.5,
+        px: 1,
         borderRadius: theme.vars.shape.borderRadius,
         outline: isActive
           ? `2px solid ${theme.vars.palette.primary.main}`

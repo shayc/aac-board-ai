@@ -4,6 +4,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { toolbarOffset } from "@shared/theme/toolbar-offset";
 import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -123,6 +124,9 @@ function defaultDurationMs(severity: SnackbarSeverity): number | null {
 
 function snackbarSx(theme: Theme) {
   return {
+    // Sitting below the app bar keeps its controls reachable while a
+    // persistent error stays on screen.
+    ...toolbarOffset(theme, theme.spacing(1)),
     [theme.breakpoints.down("sm")]: {
       right: safeAreaGutter(theme.spacing(1), "right"),
       left: safeAreaGutter(theme.spacing(1), "left"),

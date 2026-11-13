@@ -5,7 +5,10 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
 import type { CSSProperties } from "react";
-import { AACSymbol } from "../aac-symbol/aac-symbol";
+import {
+  AACSymbol,
+  SYMBOL_LABEL_FONT_SIZE_PROPERTY,
+} from "../aac-symbol/aac-symbol";
 import { useTilePreferences } from "./tile-preferences-store";
 
 const folderTileSx = {
@@ -115,10 +118,15 @@ function tileSx(theme: Theme) {
     `var(--tile-background-color, ${theme.vars.palette.background.paper})`,
   );
   const borderColor = dim("var(--tile-border-color, transparent)");
+  // The shorter side decides, so a wide but short tile keeps its label small
+  // and leaves the height to the symbol.
+  const labelFontSize = `clamp(${theme.typography.body2.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
 
   return {
+    [SYMBOL_LABEL_FONT_SIZE_PROPERTY]: labelFontSize,
     position: "relative",
     display: "grid",
+    containerType: "size",
     alignItems: "stretch",
     justifyContent: "stretch",
     width: "100%",

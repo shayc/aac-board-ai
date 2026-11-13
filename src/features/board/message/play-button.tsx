@@ -30,15 +30,21 @@ export function PlayButton({
       aria-label={label}
       color={isPlaying ? "default" : "primary"}
       onClick={disabled ? undefined : handleClick}
-      sx={{
+      sx={(theme) => ({
         alignSelf: "center",
         flexShrink: 0,
-        width: 80,
-        height: 80,
-        my: 2,
-        marginInlineEnd: 2,
+        width: 72,
+        height: 72,
+        my: 1,
+        marginInlineEnd: 1,
         [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-      }}
+        // A tint of the play color reads as "not yet" in an empty bar; MUI's
+        // solid grey would be the heaviest shape on screen.
+        [`&.${fabClasses.disabled}`]: {
+          color: `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.disabledOpacity})`,
+          backgroundColor: `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.activatedOpacity})`,
+        },
+      })}
     >
       {isPlaying ? <StopIcon sx={iconSx} /> : <PlayArrowIcon sx={iconSx} />}
     </Fab>
