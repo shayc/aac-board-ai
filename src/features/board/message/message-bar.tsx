@@ -153,13 +153,13 @@ function MessagePartItem({
           : "none",
         outlineOffset: -2,
         // A caret marks the word that spelling still extends, so a space or
-        // a backspace that only closes or reopens it has a visible result.
+        // a backspace that only closes or reopens it has a visible result. It
+        // is a border because forced-colors mode repaints backgrounds.
         ...(isOpen && {
           "&::after": {
             content: '""',
-            width: "2px",
             marginInlineStart: "2px",
-            bgcolor: "currentColor",
+            borderInlineStart: "2px solid currentColor",
           },
         }),
       })}
