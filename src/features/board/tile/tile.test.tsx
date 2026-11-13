@@ -5,6 +5,7 @@ import {
 } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
+import { emulateTouchDevice } from "@shared/testing/touch-device";
 import { ThemeProvider } from "@shared/theme/theme-provider";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
@@ -14,8 +15,10 @@ import { Tile } from "./tile";
 import {
   setTileBordersVisible,
   setTileBrightness,
+  setTileLabelPlacement,
   setTileSaturation,
   TILE_BRIGHTNESS,
+  type TileLabelPlacement,
 } from "./tile-preferences-store";
 
 type Rgb = readonly [red: number, green: number, blue: number];
@@ -148,6 +151,24 @@ async function measureLuminanceOnHover(backgroundColor?: string) {
     resting: backgroundLuminance(restingTile),
     hovered: backgroundLuminance(hoveredTile),
   };
+}
+
+async function measureLabelAndSymbol(placement: TileLabelPlacement) {
+  setTileLabelPlacement(placement);
+  const screen = await renderInTheme(
+    <div style={{ width: 160, height: 160 }}>
+      {tileElement({ label: "Placed", imageSrc: TEST_IMAGE_SRC })}
+    </div>,
+  );
+  const symbol = screen.container.querySelector("img");
+  assertDefined(symbol);
+  const measured = {
+    label: screen.getByText("Placed").element().getBoundingClientRect(),
+    symbol: symbol.getBoundingClientRect(),
+  };
+  await screen.unmount();
+
+  return measured;
 }
 
 describe("Tile", () => {
@@ -437,6 +458,30 @@ describe("Tile", () => {
     expect(symbolStyles.transitionTimingFunction).toBe(
       tileStyles.transitionTimingFunction,
     );
+  });
+
+  test("swaps its symbol's dimming instantly on touch, like its own colors", async () => {
+    await emulateTouchDevice();
+
+    const screen = await render(
+      <ThemeProvider>
+        {tileElement({ imageSrc: TEST_IMAGE_SRC })}
+      </ThemeProvider>,
+    );
+    const tile = screen.getByRole("button", { name: "Word" });
+    const symbol = tile.element().querySelector("img");
+    assertDefined(symbol);
+
+    expect(styleOf(tile).transitionDuration).toBe("0s");
+    expect(getComputedStyle(symbol).transitionDuration).toBe("0s");
+  });
+
+  test("places its label above or below its symbol as the label placement says", async () => {
+    const top = await measureLabelAndSymbol("top");
+    const bottom = await measureLabelAndSymbol("bottom");
+
+    expect(top.label.bottom).toBeLessThanOrEqual(top.symbol.top);
+    expect(bottom.label.top).toBeGreaterThanOrEqual(bottom.symbol.bottom);
   });
 
   test("activates with its button when clicked", async () => {

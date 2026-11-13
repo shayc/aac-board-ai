@@ -3,7 +3,10 @@ import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
+import {
+  buttonFeedbackTransition,
+  instantFeedbackOnTouch,
+} from "@shared/theme/button-feedback";
 import type { CSSProperties } from "react";
 import {
   AACSymbol,
@@ -15,8 +18,8 @@ const folderTileSx = {
   "&::after": {
     content: '""',
     position: "absolute",
-    top: -2,
-    insetInlineEnd: -2,
+    top: 0,
+    insetInlineEnd: 0,
     width: 0,
     height: 0,
     borderInlineEnd:
@@ -101,6 +104,9 @@ function tileColorStyle({
   };
 }
 
+// contrast-color() ignores alpha, so a see-through color needs a solid stand-in
+// before the label color is picked. White is the surface OBF boards are
+// authored against, in either color scheme.
 function flattenOntoWhite(color: string): string {
   return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
 }
@@ -138,6 +144,8 @@ function tileSx(theme: Theme) {
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
+    // The tile mixes its own press color; the theme's press overlay on top
+    // would tint it twice.
     "&::before": {
       display: "none",
     },
@@ -158,6 +166,7 @@ function tileSx(theme: Theme) {
     "& img": {
       filter: "brightness(var(--tile-brightness))",
       transition: buttonFeedbackTransition(theme, ["filter"]),
+      ...instantFeedbackOnTouch,
     },
   } as const;
 }
