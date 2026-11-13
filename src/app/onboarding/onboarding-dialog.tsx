@@ -24,6 +24,15 @@ import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { BoardMark } from "./board-mark";
 
+// The introduction and the action share one column on short landscape screens,
+// so the button lines up under the highlights.
+const shortLandscapeColumnSx = {
+  width: "100%",
+  maxWidth: "md",
+  mx: "auto",
+  px: 6,
+} as const;
+
 interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
@@ -144,11 +153,8 @@ function introductionSx(theme: Theme) {
       gridTemplateColumns: "1fr 1fr",
       alignItems: "center",
       gap: 4,
-      width: "100%",
-      maxWidth: theme.breakpoints.values.md,
-      mx: "auto",
+      ...shortLandscapeColumnSx,
       pt: 1,
-      px: 6,
       [`& .${dialogTitleClasses.root}`]: {
         fontSize: theme.typography.h5.fontSize,
       },
@@ -164,13 +170,7 @@ function actionsSx(theme: Theme) {
     px: 3,
     pt: 5,
     pb: 4,
-    [shortLandscape(theme)]: {
-      width: "100%",
-      maxWidth: theme.breakpoints.values.md,
-      mx: "auto",
-      px: 6,
-      py: 1,
-    },
+    [shortLandscape(theme)]: { ...shortLandscapeColumnSx, py: 1 },
   };
 }
 
