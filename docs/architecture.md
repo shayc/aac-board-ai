@@ -344,12 +344,12 @@ short tile keeps a small label and leaves its height to the symbol.
 
 ### Board spacing
 
-The board places its bars, and the grid pads itself, with the spacing in
-[`board-spacing.ts`](../src/features/board/board-spacing.ts), so the space
-between any two of them changes in one place. Two values exist for each side of
-the `sm` breakpoint: the page margin and the scroll clearance. The grid's
-padding is derived from them in the same file, so the grid itself knows nothing
-about the bars around it.
+The header and board share a responsive
+[page margin](../src/shared/theme/page-spacing.ts). The board also defines a
+responsive scroll clearance in
+[`board-spacing.ts`](../src/features/board/board-spacing.ts) and derives the
+grid's padding there from both values. The grid itself knows nothing about the
+bars around it.
 
 - The bars above the grid sit one page margin apart. The board keeps the scroll
   clearance above and below the grid at every size, whether a bar or the

@@ -32,18 +32,16 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
       <Toolbar
         disableGutters
         sx={(theme) => ({
+          "--page-margin": {
+            xs: theme.spacing(PAGE_MARGIN.xs),
+            sm: theme.spacing(PAGE_MARGIN.sm),
+          },
           display: "grid",
           gridTemplateColumns: "1fr minmax(0, auto) 1fr",
           alignItems: "center",
           gap: theme.spacing(2),
-          pl: {
-            xs: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "left"),
-            sm: safeAreaGutter(theme.spacing(PAGE_MARGIN.sm), "left"),
-          },
-          pr: {
-            xs: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "right"),
-            sm: safeAreaGutter(theme.spacing(PAGE_MARGIN.sm), "right"),
-          },
+          pl: safeAreaGutter("var(--page-margin)", "left"),
+          pr: safeAreaGutter("var(--page-margin)", "right"),
         })}
       >
         <Tooltip title={t(m.libraryOpen)}>
