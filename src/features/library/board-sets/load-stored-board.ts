@@ -15,15 +15,15 @@ export async function loadStoredBoard(
   const obfBoard = await readOBFBoard(key);
   signal?.throwIfAborted();
 
-  const [assetURLByPath, boardIds] = await Promise.all([
+  const [assetURLByPath, storedBoardIds] = await Promise.all([
     resolveAssetURLs(key.boardSetId, obfBoard),
     listBoardIds(key.boardSetId),
   ]);
   signal?.throwIfAborted();
 
-  return keepStoredLinks(
+  return withoutBrokenLinks(
     obfToBoard(obfBoard, assetURLByPath),
-    new Set(boardIds),
+    new Set(storedBoardIds),
   );
 }
 
@@ -60,7 +60,7 @@ function collectMediaPaths(obfBoard: OBFBoard): Set<string> {
 // A board file may link to boards it does not carry, such as one board saved
 // out of a larger set. The stored OBF keeps those links for export; a loaded
 // board offers only the links it can follow.
-function keepStoredLinks(
+function withoutBrokenLinks(
   board: Board,
   storedBoardIds: ReadonlySet<string>,
 ): Board {
