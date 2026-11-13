@@ -7,7 +7,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import type { SxProps, Theme } from "@mui/material/styles";
 import { Fragment, type ReactNode, useId } from "react";
 
-export interface SettingsRadioOption<Value extends string> {
+interface SettingsRadioOption<Value extends string> {
   value: Value;
   label: string;
 }
