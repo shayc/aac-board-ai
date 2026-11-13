@@ -2,11 +2,11 @@ import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import {
   appendPart,
-  appendText,
-  applyBackspace,
   closeLastWord,
   createTilePart,
+  deleteBackward,
   EMPTY_MESSAGE,
+  spellText,
 } from "../message/message-transforms";
 import type { Message } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
@@ -103,11 +103,11 @@ function isMessageEdit(action: BoardAction): action is MessageEdit {
 function applyEdit(current: Message, edit: MessageEdit): Message {
   switch (edit.kind) {
     case "spell":
-      return appendText(current, edit.text);
+      return spellText(current, edit.text);
     case "space":
       return closeLastWord(current);
     case "backspace":
-      return applyBackspace(current);
+      return deleteBackward(current);
     case "clear":
       return EMPTY_MESSAGE;
     default:

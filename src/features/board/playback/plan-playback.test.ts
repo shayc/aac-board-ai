@@ -68,21 +68,24 @@ describe("planPlayback", () => {
   });
 
   test.each([
-    { source: "label", part: { id: "1", label: " " } },
+    { source: "label", part: { id: "1", kind: "tile", label: " " } },
     {
       source: "vocalization",
-      part: { id: "1", label: "hello", vocalization: " \t" },
+      part: { id: "1", kind: "tile", label: "hello", vocalization: " \t" },
     },
-  ])("returns no steps for a whitespace-only $source", ({ part }) => {
-    expect(planPlayback([part])).toEqual([]);
-  });
+  ] satisfies { source: string; part: MessagePart }[])(
+    "returns no steps for a whitespace-only $source",
+    ({ part }) => {
+      expect(planPlayback([part])).toEqual([]);
+    },
+  );
 
   test("skips whitespace-only parts within and at the end of a speech run", () => {
     const steps = planPlayback([
-      { id: "1", label: "hello" },
-      { id: "2", label: " " },
-      { id: "3", label: "world" },
-      { id: "4", label: "goodbye", vocalization: " " },
+      { id: "1", kind: "tile", label: "hello" },
+      { id: "2", kind: "tile", label: " " },
+      { id: "3", kind: "tile", label: "world" },
+      { id: "4", kind: "tile", label: "goodbye", vocalization: " " },
     ]);
 
     const step = getOnlySpeechStep(steps);

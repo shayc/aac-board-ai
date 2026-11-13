@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { appendText, EMPTY_MESSAGE } from "./message-transforms";
+import { EMPTY_MESSAGE, spellText } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -52,8 +52,8 @@ describe("useMessage", () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want");
-    result.current.setCurrent(appendText(result.current.getCurrent(), "t"));
-    result.current.setCurrent(appendText(result.current.getCurrent(), "ea"));
+    result.current.setCurrent(spellText(result.current.getCurrent(), "t"));
+    result.current.setCurrent(spellText(result.current.getCurrent(), "ea"));
     await rerender();
 
     expect(result.current.parts.map((part) => part.label)).toEqual([
@@ -67,7 +67,7 @@ describe("useMessage", () => {
   test("removes one letter at a time from the open word", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.setCurrent(appendText(EMPTY_MESSAGE, "tea"));
+    result.current.setCurrent(spellText(EMPTY_MESSAGE, "tea"));
     result.current.backspace();
     await rerender();
 

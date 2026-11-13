@@ -1,9 +1,8 @@
 import { useRef, useState } from "react";
 import {
-  applyBackspace,
-  closedMessage,
-  createTextPart,
+  deleteBackward,
   EMPTY_MESSAGE,
+  textMessage,
 } from "./message-transforms";
 import type { Message, MessagePart } from "./message-types";
 
@@ -34,12 +33,11 @@ export function useMessage(): UseMessageReturn {
   }
 
   function replaceWithText(input: string) {
-    const words = input.match(/\S+/g) ?? [];
-    setCurrent(closedMessage(words.map(createTextPart)));
+    setCurrent(textMessage(input));
   }
 
   function backspace() {
-    setCurrent(applyBackspace(getCurrent()));
+    setCurrent(deleteBackward(getCurrent()));
   }
 
   function clear() {

@@ -1,13 +1,14 @@
 import { describe, expect, test } from "vitest";
 import {
   appendPart,
-  appendText,
-  applyBackspace,
   closedMessage,
   closeLastWord,
   createTextPart,
   createTilePart,
+  deleteBackward,
   EMPTY_MESSAGE,
+  spellText,
+  textMessage,
 } from "./message-transforms";
 import type { Message, MessagePart } from "./message-types";
 
@@ -44,6 +45,20 @@ describe("createTextPart", () => {
   });
 });
 
+describe("textMessage", () => {
+  test("makes a closed text part for each word", () => {
+    const message = textMessage("  How are\tyou?\n");
+
+    expect(message.isLastWordOpen).toBe(false);
+    expect(labels(message)).toEqual(["How", "are", "you?"]);
+    expect(message.parts.every((part) => part.kind === "text")).toBe(true);
+  });
+
+  test("makes an empty message from text without words", () => {
+    expect(textMessage("  ")).toEqual(EMPTY_MESSAGE);
+  });
+});
+
 describe("appendPart", () => {
   test("appends the part after the existing parts", () => {
     const part: MessagePart = { id: "2", kind: "tile", label: "there" };
@@ -63,9 +78,9 @@ describe("appendPart", () => {
   });
 });
 
-describe("appendText", () => {
+describe("spellText", () => {
   test("opens a text part when the message is empty", () => {
-    const message = appendText(EMPTY_MESSAGE, "h");
+    const message = spellText(EMPTY_MESSAGE, "h");
 
     expect(message.isLastWordOpen).toBe(true);
     expect(message.parts).toHaveLength(1);
@@ -74,7 +89,7 @@ describe("appendText", () => {
   });
 
   test("adds letters to the open word", () => {
-    const message = appendText(spelling("ca", [HELLO]), "t");
+    const message = spellText(spelling("ca", [HELLO]), "t");
 
     expect(message).toEqual(spelling("cat", [HELLO]));
   });
@@ -92,7 +107,7 @@ describe("appendText", () => {
   ] satisfies { description: string; part: MessagePart }[])(
     "opens a new word after $description",
     ({ part }) => {
-      const message = appendText(closedMessage([part]), "c");
+      const message = spellText(closedMessage([part]), "c");
 
       expect(message.isLastWordOpen).toBe(true);
       expect(message.parts[0]).toBe(part);
@@ -103,7 +118,7 @@ describe("appendText", () => {
   test("spells nothing for empty text", () => {
     const original = closedMessage([HELLO]);
 
-    expect(appendText(original, "")).toBe(original);
+    expect(spellText(original, "")).toBe(original);
   });
 });
 
@@ -117,7 +132,7 @@ describe("closeLastWord", () => {
   });
 
   test("makes the next letters start a new word", () => {
-    const message = appendText(closeLastWord(spelling("hi")), "u");
+    const message = spellText(closeLastWord(spelling("hi")), "u");
 
     expect(labels(message)).toEqual(["hi", "u"]);
   });
@@ -129,17 +144,17 @@ describe("closeLastWord", () => {
   });
 });
 
-describe("applyBackspace", () => {
+describe("deleteBackward", () => {
   const graphemes = ["😀", "é", "שָׁ", "👍🏽", "👨‍👩‍👧‍👦", "🇮🇱", "✌️", "1️⃣"];
 
   test("removes one character from the open word", () => {
-    const message = applyBackspace(spelling("world", [HELLO]));
+    const message = deleteBackward(spelling("world", [HELLO]));
 
     expect(message).toEqual(spelling("worl", [HELLO]));
   });
 
   test.each(graphemes)("removes the complete final grapheme %s", (grapheme) => {
-    const message = applyBackspace(spelling(`a${grapheme}`, [HELLO]));
+    const message = deleteBackward(spelling(`a${grapheme}`, [HELLO]));
 
     expect(message).toEqual(spelling("a", [HELLO]));
   });
@@ -147,7 +162,7 @@ describe("applyBackspace", () => {
   test.each(["w", ...graphemes])(
     "removes a text part when its only grapheme is removed (%s)",
     (label) => {
-      const message = applyBackspace(spelling(label, [HELLO]));
+      const message = deleteBackward(spelling(label, [HELLO]));
 
       expect(message).toEqual(closedMessage([HELLO]));
     },
@@ -159,13 +174,13 @@ describe("applyBackspace", () => {
   ])("removes a tile part whole $description", ({ part }) => {
     const earlier: MessagePart = { id: "0", kind: "tile", label: "say" };
 
-    const message = applyBackspace(closedMessage([earlier, part]));
+    const message = deleteBackward(closedMessage([earlier, part]));
 
     expect(message).toEqual(closedMessage([earlier]));
   });
 
   test("reopens a closed text part and removes its last character", () => {
-    const message = applyBackspace(closeLastWord(spelling("world", [HELLO])));
+    const message = deleteBackward(closeLastWord(spelling("world", [HELLO])));
 
     expect(message).toEqual(spelling("worl", [HELLO]));
   });
@@ -174,12 +189,12 @@ describe("applyBackspace", () => {
     const tile: MessagePart = { id: "2", kind: "tile", label: "there" };
     const spelled = closeLastWord(spelling("hi"));
 
-    const message = applyBackspace(appendPart(spelled, tile));
+    const message = deleteBackward(appendPart(spelled, tile));
 
     expect(message).toEqual(spelled);
   });
 
   test("returns the same message when there is nothing to remove", () => {
-    expect(applyBackspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
+    expect(deleteBackward(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
   });
 });

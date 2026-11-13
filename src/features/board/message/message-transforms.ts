@@ -24,11 +24,17 @@ export function closedMessage(parts: readonly MessagePart[]): Message {
   return { parts, isLastWordOpen: false };
 }
 
+export function textMessage(text: string): Message {
+  const words = text.match(/\S+/g) ?? [];
+
+  return closedMessage(words.map(createTextPart));
+}
+
 export function appendPart(message: Message, part: MessagePart): Message {
   return closedMessage([...message.parts, part]);
 }
 
-export function appendText(message: Message, text: string): Message {
+export function spellText(message: Message, text: string): Message {
   // A "+" action with no letters is valid and spells nothing.
   if (!text) {
     return message;
@@ -48,7 +54,7 @@ export function closeLastWord(message: Message): Message {
   return message.isLastWordOpen ? closedMessage(message.parts) : message;
 }
 
-export function applyBackspace(message: Message): Message {
+export function deleteBackward(message: Message): Message {
   const { parts } = message;
   const lastPart = parts.at(-1);
   if (!lastPart) {
