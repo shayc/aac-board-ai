@@ -338,9 +338,11 @@ action in view.
 
 Sizes inside a component follow the component, not the screen. The grid's
 viewport is a size container that decides how many rows and columns fit. Each
-tile is a size container too: its label takes 12% of the tile's shorter side,
+tile is a size container too: a label beside a symbol takes 12% of the shorter
+side of the tile's content box, the space inside its padding and border,
 between the `body2` and `h6` sizes. The shorter side decides, so a wide but
-short tile keeps a small label and leaves its height to the symbol.
+short tile keeps a small label and leaves its height to the symbol. A label
+with no symbol keeps the `h5` size on every tile.
 
 ### Board spacing
 

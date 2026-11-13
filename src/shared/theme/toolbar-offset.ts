@@ -1,16 +1,14 @@
-import type { Theme } from "@mui/material/styles";
-
-type OffsetRules = Record<string, unknown>;
+import type { CSSObject, Theme } from "@mui/material/styles";
 
 // MUI sizes a toolbar by breakpoint and orientation, so anything placed below
 // one follows the same rules instead of repeating its heights.
-export function toolbarOffset(theme: Theme, gutter: string): OffsetRules {
+export function toolbarOffset(theme: Theme, gutter: string): CSSObject {
   return heightsToOffsets(theme.mixins.toolbar, gutter);
 }
 
-function heightsToOffsets(styles: object, gutter: string): OffsetRules {
+function heightsToOffsets(styles: object, gutter: string): CSSObject {
   const entries: [string, unknown][] = Object.entries(styles);
-  const rules: OffsetRules = {};
+  const rules: CSSObject = {};
 
   for (const [key, value] of entries) {
     if (key === "minHeight" && typeof value === "number") {

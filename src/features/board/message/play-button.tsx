@@ -41,8 +41,14 @@ export function PlayButton({
         // A tint of the play color reads as "not yet" in an empty bar; MUI's
         // solid grey would be the heaviest shape on screen.
         [`&.${fabClasses.disabled}`]: {
-          color: `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.disabledOpacity})`,
-          backgroundColor: `rgba(${theme.vars.palette.primary.mainChannel} / ${theme.vars.palette.action.activatedOpacity})`,
+          color: theme.alpha(
+            theme.vars.palette.primary.main,
+            theme.vars.palette.action.disabledOpacity,
+          ),
+          backgroundColor: theme.alpha(
+            theme.vars.palette.primary.main,
+            theme.vars.palette.action.activatedOpacity,
+          ),
         },
       })}
     >
