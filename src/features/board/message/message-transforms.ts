@@ -57,9 +57,9 @@ export function applyBackspace(
   // A word typed after text sits behind a space. Emptying it keeps that space,
   // so the next letter starts a new word instead of joining the previous one.
   const previousPart = parts.at(-2);
-  const followsText =
+  const isAfterText =
     previousPart !== undefined && isTextOnlyPart(previousPart);
-  if (!label && !followsText) {
+  if (!label && !isAfterText) {
     return parts.slice(0, -1);
   }
 

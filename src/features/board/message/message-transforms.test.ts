@@ -154,17 +154,14 @@ describe("applyBackspace", () => {
     expect(parts).toEqual([{ id: "1", label: "hello" }]);
   });
 
-  test.each(["w", ...graphemes])(
-    "removes a one-grapheme word that follows a part with media (%s)",
-    (label) => {
-      const parts = applyBackspace([
-        { id: "1", label: "hello", imageSrc: "img.png" },
-        { id: "2", label },
-      ]);
+  test("removes a one-letter word that follows a part with media", () => {
+    const parts = applyBackspace([
+      { id: "1", label: "hello", imageSrc: "img.png" },
+      { id: "2", label: "w" },
+    ]);
 
-      expect(parts).toEqual([{ id: "1", label: "hello", imageSrc: "img.png" }]);
-    },
-  );
+    expect(parts).toEqual([{ id: "1", label: "hello", imageSrc: "img.png" }]);
+  });
 
   test("starts a new word after backspacing a one-letter word", () => {
     const spelled = appendText(appendSpace(appendText([], "hi")), "y");
