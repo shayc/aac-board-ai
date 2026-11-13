@@ -1,5 +1,3 @@
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
@@ -45,19 +43,11 @@ export function ScanningSettings() {
           }
           value={method}
           onChange={setScanMethod}
-        >
-          <FormControlLabel
-            value="auto"
-            control={<Radio />}
-            label={t(m.scanningMethodAuto)}
-          />
-
-          <FormControlLabel
-            value="step"
-            control={<Radio />}
-            label={t(m.scanningMethodStep)}
-          />
-        </SettingsRadioGroup>
+          options={[
+            { value: "auto", label: t(m.scanningMethodAuto) },
+            { value: "step", label: t(m.scanningMethodStep) },
+          ]}
+        />
       )}
 
       {isEnabled && method === "auto" && (

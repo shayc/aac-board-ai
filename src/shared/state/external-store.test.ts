@@ -12,12 +12,13 @@ describe("createExternalStore", () => {
     expect(listener).toHaveBeenCalledOnce();
   });
 
-  test("applies an updater to the current state", () => {
-    const store = createExternalStore({ count: 1, label: "a" });
+  test("stores a function as the state instead of calling it", () => {
+    const greet = () => "hello";
+    const store = createExternalStore<() => string>(() => "initial");
 
-    store.setState((current) => ({ ...current, count: current.count + 1 }));
+    store.setState(greet);
 
-    expect(store.getSnapshot()).toEqual({ count: 2, label: "a" });
+    expect(store.getSnapshot()).toBe(greet);
   });
 
   test("patches the given fields and keeps the rest", () => {
