@@ -24,6 +24,8 @@ import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { BoardMark } from "./board-mark";
 
+const INTRODUCTION_MAX_WIDTH = 320;
+
 interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
@@ -88,7 +90,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           <DialogTitle
             variant="h4"
             sx={{
-              maxWidth: 320,
+              maxWidth: INTRODUCTION_MAX_WIDTH,
               mx: "auto",
               py: 0,
               fontWeight: "fontWeightBold",
@@ -107,8 +109,10 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
               display: "flex",
               flexDirection: "column",
               gap: 2,
+              maxWidth: { xs: INTRODUCTION_MAX_WIDTH, sm: "none" },
+              mx: "auto",
               mt: 4,
-              pl: 2,
+              pl: { sm: 2 },
             }}
           >
             {highlights.map(({ id, Icon, title, description }) => (
