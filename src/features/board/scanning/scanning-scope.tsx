@@ -39,7 +39,7 @@ function scopeSx(theme: Theme) {
       outlineOffset: 2,
     },
     // Two outlined controls would leave it unclear which one a switch selects.
-    [`&:has(${SCAN_HIGHLIGHTED_ITEM_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHTED_ITEM_SELECTOR})`]:
+    [`&:has(${SCAN_HIGHLIGHTED_ITEM_SELECTOR}) :is(.${buttonBaseClasses.focusVisible}, :focus-visible):not(${SCAN_HIGHLIGHTED_ITEM_SELECTOR})`]:
       {
         outline: "none",
       },
