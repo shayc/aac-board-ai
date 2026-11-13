@@ -92,7 +92,7 @@
   "speechPreviewSample": "こんにちは、これが私の声です！",
   "messageImages": "画像を表示",
   "messageHighlight": "読み上げ中にハイライト",
-  "messageClearAfterSpeaking": "読み上げ後にクリア",
+  "messageClearAfterSpeaking": "読み上げ後に消去",
   "tileSaturation": "色の濃さ",
   "tileBrightness": "明るさ",
   "tileBorders": "枠線を表示",

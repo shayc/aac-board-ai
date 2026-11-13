@@ -436,7 +436,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "Play message" }).click();
       await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toContain("hello");
+        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
       });
       await expect.element(messageItems).toHaveLength(1);
 
@@ -534,7 +534,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "Play message" }).click();
       await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toContain("hello");
+        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
       });
       await screen.getByRole("button", { name: "world" }).click();
 
