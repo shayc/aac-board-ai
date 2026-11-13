@@ -9,18 +9,12 @@ export interface GridPosition {
 
 export function buildGrid<Item extends { id: string }>(
   items: readonly Item[],
-  rows: number,
-  columns: number,
   order: GridOrder,
 ): (Item | undefined)[][] {
   const itemsById = new Map(items.map((item) => [item.id, item]));
 
-  return Array.from({ length: rows }, (_, rowIndex) =>
-    Array.from({ length: columns }, (_, columnIndex) => {
-      const id = order[rowIndex]?.[columnIndex];
-
-      return id ? itemsById.get(id) : undefined;
-    }),
+  return order.map((ids) =>
+    ids.map((id) => (id ? itemsById.get(id) : undefined)),
   );
 }
 
@@ -29,7 +23,14 @@ export function gridArrangementKey(grid: GridCells): string {
 }
 
 export function findFirstOccupiedPosition(grid: GridCells): GridPosition {
-  return listOccupiedPositions(grid)[0] ?? { row: 0, column: 0 };
+  for (const [row, cells] of grid.entries()) {
+    const column = cells.findIndex(Boolean);
+    if (column !== -1) {
+      return { row, column };
+    }
+  }
+
+  return { row: 0, column: 0 };
 }
 
 export function listOccupiedPositions(grid: GridCells): GridPosition[] {

@@ -71,13 +71,8 @@ async function measureTracks(
         <Grid
           aria-label="Board"
           items={items}
-          rows={isColumns ? 1 : tracks}
-          columns={isColumns ? tracks : 1}
-          order={rowMajorOrder(
-            items,
-            isColumns ? 1 : tracks,
-            isColumns ? tracks : 1,
-          )}
+
+          order={rowMajorOrder(items, isColumns ? tracks : 1)}
           renderItem={(item, props) => (
             <button
               {...props}
@@ -159,8 +154,7 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={[
             ["1", "2"],
             ["3", "4"],
@@ -182,8 +176,7 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={[]}
-          rows={2}
-          columns={2}
+
           order={[
             [null, null],
             [null, null],
@@ -215,8 +208,7 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -248,8 +240,7 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -280,8 +271,7 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -300,9 +290,8 @@ describe("Grid", () => {
         <Grid
           aria-label="Core words"
           items={items}
-          rows={1}
-          columns={1}
-          order={rowMajorOrder(items, 1, 1)}
+
+          order={rowMajorOrder(items, 1)}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
       );
@@ -324,9 +313,8 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={1}
-          order={rowMajorOrder(items, 2, 1)}
+
+          order={rowMajorOrder(items, 1)}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
           rowProps={{ "data-testid": "grid-row" }}
         />,

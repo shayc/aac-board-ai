@@ -10,6 +10,7 @@ import {
 import { buildGrid, type GridOrder } from "./grid-model";
 import { useGridFocus } from "./use-grid-focus";
 
+/** The grid moves focus to the element that carries these, so every item must render one. */
 export interface GridItemProps {
   tabIndex: number;
 }
@@ -19,8 +20,6 @@ type GridRowDataAttributes = Record<`data-${string}`, string>;
 interface GridProps<Item extends { id: string }> {
   "aria-label": string;
   items: readonly Item[];
-  rows: number;
-  columns: number;
   order: GridOrder;
   rowProps?: GridRowDataAttributes;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
@@ -29,14 +28,14 @@ interface GridProps<Item extends { id: string }> {
 export function Grid<Item extends { id: string }>({
   "aria-label": ariaLabel,
   items,
-  rows,
-  columns,
   order,
   rowProps,
   renderItem,
 }: GridProps<Item>) {
-  const grid = buildGrid(items, rows, columns, order);
+  const grid = buildGrid(items, order);
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
+  const rows = grid.length;
+  const columns = grid[0]?.length ?? 0;
 
   return (
     <Box sx={createGridViewportSx}>

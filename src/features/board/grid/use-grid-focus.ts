@@ -49,6 +49,7 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
   const tabStopPosition = rememberedCell
     ? rememberedPosition
     : findFirstOccupiedPosition(grid);
+
   const restoreLostFocus = useEffectEvent(() => {
     if (document.activeElement !== document.body) {
       return;
@@ -88,10 +89,14 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
   };
 }
 
+interface TargetedGridKeyEvent extends GridKeyEvent {
+  target: EventTarget | null;
+}
+
 function findKeyTargetElement(
   root: HTMLElement | null,
   grid: GridCells,
-  event: GridKeyEvent & { target: EventTarget | null },
+  event: TargetedGridKeyEvent,
 ): HTMLElement | null {
   const from = findGridPosition(event.target);
   if (!root || !from) {

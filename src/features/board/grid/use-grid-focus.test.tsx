@@ -61,9 +61,8 @@ describe("useGridFocus", () => {
       const screen = await render(
         <Grid
           aria-label="Board"
-          rows={1}
-          columns={3}
-          order={rowMajorOrder(items, 1, 3)}
+
+          order={rowMajorOrder(items, 3)}
           items={items}
           renderItem={renderButton}
         />,
@@ -90,8 +89,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -117,9 +115,8 @@ describe("useGridFocus", () => {
           <Grid
             aria-label="Board"
             items={oldItems}
-            rows={2}
-            columns={2}
-            order={rowMajorOrder(oldItems, 2, 2)}
+
+            order={rowMajorOrder(oldItems, 2)}
             renderItem={renderButton}
           />
         </div>,
@@ -134,9 +131,8 @@ describe("useGridFocus", () => {
           <Grid
             aria-label="Board"
             items={newItems}
-            rows={2}
-            columns={2}
-            order={rowMajorOrder(newItems, 2, 2)}
+
+            order={rowMajorOrder(newItems, 2)}
             renderItem={renderButton}
           />
         </div>,
@@ -157,9 +153,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(items, 2, 2)}
+
+          order={rowMajorOrder(items, 2)}
           renderItem={renderButton}
         />,
       );
@@ -172,9 +167,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Renamed board"
           items={items}
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(items, 2, 2)}
+
+          order={rowMajorOrder(items, 2)}
           renderItem={renderButton}
         />,
       );
@@ -190,9 +184,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={makeItems(1, 2, 3, 4)}
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2, 2)}
+
+          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2)}
           renderItem={renderButton}
         />,
       );
@@ -205,9 +198,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={makeItems(1, 2, 3, 4)}
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2, 2)}
+
+          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2)}
           renderItem={renderButton}
         />,
       );
@@ -220,9 +212,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={makeItems(1, 2, 3, 4)}
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2, 2)}
+
+          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2)}
           renderItem={renderButton}
         />,
       );
@@ -236,9 +227,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={makeItems(5, 6, 7, 8)}
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(makeItems(5, 6, 7, 8), 2, 2)}
+
+          order={rowMajorOrder(makeItems(5, 6, 7, 8), 2)}
           renderItem={renderButton}
         />,
       );
@@ -255,11 +245,9 @@ describe("useGridFocus", () => {
           <Grid
             aria-label="Board"
             items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
-            rows={2}
-            columns={6}
+
             order={rowMajorOrder(
               makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
-              2,
               6,
             )}
             renderItem={renderButton}
@@ -274,11 +262,9 @@ describe("useGridFocus", () => {
           <Grid
             aria-label="Board"
             items={makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)}
-            rows={2}
-            columns={6}
+
             order={rowMajorOrder(
               makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),
-              2,
               6,
             )}
             renderItem={renderButton}
@@ -305,9 +291,8 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
-          rows={3}
-          columns={3}
-          order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3, 3)}
+
+          order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3)}
           renderItem={renderButton}
         />,
       );
@@ -335,8 +320,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -362,8 +346,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={3}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -383,9 +366,8 @@ describe("useGridFocus", () => {
       const screen = await render(
         <Grid
           aria-label="Board"
-          rows={1}
-          columns={2}
-          order={rowMajorOrder(items, 1, 2)}
+
+          order={rowMajorOrder(items, 2)}
           items={items}
           renderItem={renderButton}
         />,
@@ -406,9 +388,8 @@ describe("useGridFocus", () => {
         <div role="presentation" onKeyDown={handleOuterKeyDown}>
           <Grid
             aria-label="Board"
-            rows={1}
-            columns={2}
-            order={rowMajorOrder(items, 1, 2)}
+
+            order={rowMajorOrder(items, 2)}
             items={items}
             renderItem={renderButton}
           />
@@ -430,9 +411,8 @@ describe("useGridFocus", () => {
           <Grid
             aria-label="Board"
             items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
-            rows={3}
-            columns={3}
-            order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3, 3)}
+
+            order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3)}
             renderItem={renderButton}
           />,
         );
@@ -458,8 +438,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={1}
-          columns={3}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -482,8 +461,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={1}
-          columns={3}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -509,8 +487,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -536,8 +513,7 @@ describe("useGridFocus", () => {
         <Grid
           aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={renderButton}
         />,
@@ -557,9 +533,8 @@ describe("useGridFocus", () => {
       const screen = await render(
         <Grid
           aria-label="Board"
-          rows={2}
-          columns={2}
-          order={rowMajorOrder(items, 2, 2)}
+
+          order={rowMajorOrder(items, 2)}
           items={items}
           renderItem={renderButton}
         />,
@@ -587,9 +562,8 @@ describe("useGridFocus", () => {
       const screen = await render(
         <Grid
           aria-label="Board"
-          rows={1}
-          columns={3}
-          order={rowMajorOrder(items, 1, 3)}
+
+          order={rowMajorOrder(items, 3)}
           items={items}
           renderItem={renderButton}
         />,
@@ -610,9 +584,8 @@ describe("useGridFocus", () => {
         <div role="presentation" onKeyDown={handleOuterKeyDown}>
           <Grid
             aria-label="Board"
-            rows={1}
-            columns={3}
-            order={rowMajorOrder(items, 1, 3)}
+
+            order={rowMajorOrder(items, 3)}
             items={items}
             renderItem={renderButton}
           />
@@ -636,9 +609,8 @@ describe("useGridFocus", () => {
         <div dir="rtl">
           <Grid
             aria-label="Board"
-            rows={1}
-            columns={2}
-            order={rowMajorOrder(items, 1, 2)}
+
+            order={rowMajorOrder(items, 2)}
             items={items}
             renderItem={renderButton}
           />
@@ -660,9 +632,8 @@ describe("useGridFocus", () => {
         <div dir="rtl">
           <Grid
             aria-label="Board"
-            rows={1}
-            columns={2}
-            order={rowMajorOrder(items, 1, 2)}
+
+            order={rowMajorOrder(items, 2)}
             items={items}
             renderItem={renderButton}
           />
@@ -690,8 +661,7 @@ describe("useGridFocus", () => {
           <Grid
             aria-label="Board"
             items={items}
-            rows={2}
-            columns={2}
+
             order={order}
             renderItem={renderButton}
           />
@@ -715,9 +685,8 @@ describe("useGridFocus", () => {
         <div dir="rtl">
           <Grid
             aria-label="Board"
-            rows={1}
-            columns={3}
-            order={rowMajorOrder(items, 1, 3)}
+
+            order={rowMajorOrder(items, 3)}
             items={items}
             renderItem={renderButton}
           />
@@ -739,9 +708,8 @@ describe("useGridFocus", () => {
         <div dir="rtl">
           <Grid
             aria-label="Board"
-            rows={1}
-            columns={3}
-            order={rowMajorOrder(items, 1, 3)}
+
+            order={rowMajorOrder(items, 3)}
             items={items}
             renderItem={renderButton}
           />
@@ -763,9 +731,8 @@ describe("useGridFocus", () => {
         <div dir="rtl">
           <Grid
             aria-label="Board"
-            rows={2}
-            columns={2}
-            order={rowMajorOrder(items, 2, 2)}
+
+            order={rowMajorOrder(items, 2)}
             items={items}
             renderItem={renderButton}
           />
@@ -787,9 +754,8 @@ describe("useGridFocus", () => {
         <div dir="rtl">
           <Grid
             aria-label="Board"
-            rows={2}
-            columns={2}
-            order={rowMajorOrder(items, 2, 2)}
+
+            order={rowMajorOrder(items, 2)}
             items={items}
             renderItem={renderButton}
           />

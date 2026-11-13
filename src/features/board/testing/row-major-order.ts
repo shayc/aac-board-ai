@@ -2,9 +2,10 @@ import type { GridOrder } from "../grid/grid-model";
 
 export function rowMajorOrder(
   items: readonly { id: string }[],
-  rows: number,
   columns: number,
 ): GridOrder {
+  const rows = Math.ceil(items.length / columns);
+
   return Array.from({ length: rows }, (_, row) =>
     Array.from(
       { length: columns },
