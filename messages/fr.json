@@ -92,6 +92,7 @@
   "speechPreviewSample": "Bonjour, voici ma voix !",
   "messageImages": "Afficher les images",
   "messageHighlight": "Surligner pendant la lecture vocale",
+  "messageAutoClear": "Commencer un nouveau message après la lecture",
   "tileSaturation": "Intensité des couleurs",
   "tileBrightness": "Luminosité",
   "tileBorders": "Afficher les bordures",

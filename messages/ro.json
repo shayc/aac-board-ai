@@ -92,6 +92,7 @@
   "speechPreviewSample": "Bună, aceasta este vocea mea!",
   "messageImages": "Afișează imaginile",
   "messageHighlight": "Evidențiază în timpul vorbirii",
+  "messageAutoClear": "Începe un mesaj nou după vorbire",
   "tileSaturation": "Intensitatea culorii",
   "tileBrightness": "Luminozitate",
   "tileBorders": "Afișează marginile",

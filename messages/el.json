@@ -92,6 +92,7 @@
   "speechPreviewSample": "Γεια, αυτή είναι η φωνή μου!",
   "messageImages": "Εμφάνιση εικόνων",
   "messageHighlight": "Επισήμανση κατά την ομιλία",
+  "messageAutoClear": "Νέο μήνυμα μετά την ομιλία",
   "tileSaturation": "Ένταση χρώματος",
   "tileBrightness": "Φωτεινότητα",
   "tileBorders": "Εμφάνιση περιγράμματος",

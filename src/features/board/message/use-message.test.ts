@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { setMessageAutoClearEnabled } from "./message-preferences-store";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -59,5 +60,38 @@ describe("useMessage", () => {
       "want",
       "wate",
     ]);
+  });
+
+  test("adds to an empty message once the current one is spoken", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    message.markSpoken(message.getParts());
+
+    expect(message.getPartsToAddTo()).toEqual([]);
+    expect(message.getParts()).toHaveLength(3);
+  });
+
+  test("adds to the spoken message once it is edited", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    message.markSpoken(message.getParts());
+    message.backspace();
+
+    expect(message.getPartsToAddTo()).toBe(message.getParts());
+  });
+
+  test("adds to the spoken message when auto-clear is off", async () => {
+    setMessageAutoClearEnabled(false);
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    message.markSpoken(message.getParts());
+
+    expect(message.getPartsToAddTo()).toBe(message.getParts());
   });
 });

@@ -229,7 +229,9 @@ coordinates message updates, navigation, and playback:
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
    finishes uninterrupted. The played message stays visible during playback and
-   is preserved if playback is interrupted.
+   is preserved if playback is interrupted. Once a message plays to its end, the
+   next tile or spelled letter starts a new message unless the message was
+   edited first. A message setting turns this off.
 3. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
    and publishes progress for highlighting.

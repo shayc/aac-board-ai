@@ -92,6 +92,7 @@
   "speechPreviewSample": "Hej, det här är min röst!",
   "messageImages": "Visa bilder",
   "messageHighlight": "Markera under tal",
+  "messageAutoClear": "Börja ett nytt meddelande efter uppläsning",
   "tileSaturation": "Färgintensitet",
   "tileBrightness": "Ljusstyrka",
   "tileBorders": "Visa kantlinjer",

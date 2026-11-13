@@ -92,6 +92,7 @@
   "speechPreviewSample": "హాయ్, ఇది నా వాయిస్!",
   "messageImages": "చిత్రాలను చూపించు",
   "messageHighlight": "మాట్లాడుతున్నప్పుడు హైలైట్ చేయి",
+  "messageAutoClear": "మాట్లాడిన తర్వాత కొత్త సందేశం ప్రారంభించు",
   "tileSaturation": "రంగు తీవ్రత",
   "tileBrightness": "ప్రకాశం",
   "tileBorders": "సరిహద్దులను చూపించు",

@@ -12,6 +12,10 @@ import { planPlayback } from "./plan-playback";
 const MESSAGE_OWNER = "board-message";
 const TILE_OWNER = "board-tile";
 
+interface UseBoardPlaybackOptions {
+  onMessageComplete?: (parts: readonly MessagePart[]) => void;
+}
+
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
   /** Resolves to whether the message played to its end. */
@@ -20,7 +24,9 @@ export interface UseBoardPlaybackReturn {
   stop: () => void;
 }
 
-export function useBoardPlayback(): UseBoardPlaybackReturn {
+export function useBoardPlayback({
+  onMessageComplete,
+}: UseBoardPlaybackOptions = {}): UseBoardPlaybackReturn {
   const playback = usePlayback();
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
@@ -41,11 +47,16 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     return outcome === "completed";
   }
 
-  function playMessage(parts: readonly MessagePart[]) {
-    return playAndReportFailure({
+  async function playMessage(parts: readonly MessagePart[]) {
+    const hasCompleted = await playAndReportFailure({
       owner: MESSAGE_OWNER,
       steps: planPlayback(parts),
     });
+    if (hasCompleted) {
+      onMessageComplete?.(parts);
+    }
+
+    return hasCompleted;
   }
 
   async function playPart(part: MessagePart) {

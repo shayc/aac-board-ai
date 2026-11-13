@@ -92,6 +92,7 @@
   "speechPreviewSample": "¡Hola, esta es mi voz!",
   "messageImages": "Mostrar imágenes",
   "messageHighlight": "Resaltar al hablar",
+  "messageAutoClear": "Empezar un mensaje nuevo después de hablar",
   "tileSaturation": "Intensidad de color",
   "tileBrightness": "Brillo",
   "tileBorders": "Mostrar bordes",

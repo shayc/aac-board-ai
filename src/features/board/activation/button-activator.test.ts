@@ -15,6 +15,7 @@ function setup(initialParts: readonly MessagePart[] = []) {
   let currentParts = initialParts;
   const message = {
     getParts: () => currentParts,
+    getPartsToAddTo: () => currentParts,
     setParts: vi.fn<ActivationOptions["message"]["setParts"]>((parts) => {
       currentParts = parts;
     }),

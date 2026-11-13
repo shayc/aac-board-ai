@@ -92,6 +92,7 @@
   "speechPreviewSample": "Hei, tämä on minun ääneni!",
   "messageImages": "Näytä kuvat",
   "messageHighlight": "Korosta puhuttaessa",
+  "messageAutoClear": "Aloita uusi viesti puhumisen jälkeen",
   "tileSaturation": "Värien voimakkuus",
   "tileBrightness": "Kirkkaus",
   "tileBorders": "Näytä reunat",

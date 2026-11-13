@@ -12,7 +12,7 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "getParts" | "setParts">;
+  message: Pick<UseMessageReturn, "getParts" | "getPartsToAddTo" | "setParts">;
   playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
@@ -48,7 +48,7 @@ export function createButtonActivator({
       soundSrc: button.soundSrc,
     });
 
-    message.setParts([...message.getParts(), part]);
+    message.setParts([...message.getPartsToAddTo(), part]);
     void playback.playPart(part);
   }
 
@@ -59,14 +59,15 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      commitEdits(message.getParts(), actions);
+      commitEdits(getPartsToEdit(actions), actions);
 
       return;
     }
 
+    const actionsBeforePlay = actions.slice(0, playIndex);
     const partsToPlay = commitEdits(
-      message.getParts(),
-      actions.slice(0, playIndex),
+      getPartsToEdit(actionsBeforePlay),
+      actionsBeforePlay,
     );
     const actionsAfterPlay = actions.slice(playIndex + 1);
 
@@ -77,6 +78,16 @@ export function createButtonActivator({
         commitEdits(message.getParts(), actionsAfterPlay);
       }
     });
+  }
+
+  // Spelling after a spoken message starts a new one, as a tile does, while
+  // other edits such as backspace change the spoken message.
+  function getPartsToEdit(actions: readonly BoardAction[]) {
+    const firstEdit = actions.find(isMessageEdit);
+
+    return firstEdit?.kind === "spell"
+      ? message.getPartsToAddTo()
+      : message.getParts();
   }
 
   function commitEdits(

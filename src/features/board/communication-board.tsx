@@ -35,12 +35,18 @@ export function CommunicationBoard({
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
-  const playback = useBoardPlayback();
+  const playback = useBoardPlayback({
+    onMessageComplete: message.markSpoken,
+  });
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
 
   const activateButton = createButtonActivator({
-    message: { getParts: message.getParts, setParts: message.setParts },
+    message: {
+      getParts: message.getParts,
+      getPartsToAddTo: message.getPartsToAddTo,
+      setParts: message.setParts,
+    },
     playback: {
       playMessage: playback.playMessage,
       playPart: playback.playPart,

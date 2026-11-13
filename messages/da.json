@@ -92,6 +92,7 @@
   "speechPreviewSample": "Hej, det er min stemme!",
   "messageImages": "Vis billeder",
   "messageHighlight": "Fremhæv under tale",
+  "messageAutoClear": "Start en ny besked efter oplæsning",
   "tileSaturation": "Farveintensitet",
   "tileBrightness": "Lysstyrke",
   "tileBorders": "Vis kanter",
