@@ -3,7 +3,8 @@ import { GRID_PADDING } from "../board-spacing";
 
 // Container-query thresholds require literal lengths for the theme's spacing unit.
 const GRID_SPACING_UNIT_PX = 8;
-const GRID_GAP = "var(--grid-gap)";
+const GRID_GAP_PX = spacingUnitsToPx(1);
+const GRID_GAP = formatPx(GRID_GAP_PX);
 
 type Breakpoint = "xs" | "sm";
 
@@ -59,62 +60,48 @@ export const gridRowSx = {
   scrollSnapAlign: "start none",
 } as const;
 
-export function createGridViewportSx(theme: Theme, gap: number) {
-  const gapPx = spacingUnitsToPx(gap);
-
+export function createGridViewportSx(theme: Theme) {
   return {
     containerType: "size",
     height: "100%",
     overflow: "auto",
     scrollSnapType: "both proximity",
-    [theme.breakpoints.down("sm")]: createScrollPadding("xs", gapPx),
-    [theme.breakpoints.up("sm")]: createScrollPadding("sm", gapPx),
+    [theme.breakpoints.down("sm")]: createScrollPadding("xs"),
+    [theme.breakpoints.up("sm")]: createScrollPadding("sm"),
   };
 }
 
 // Padding wider than the hint makes keyboard focus scroll the whole tile into view.
-function createScrollPadding(breakpoint: Breakpoint, gapPx: number) {
+function createScrollPadding(breakpoint: Breakpoint) {
   return {
     scrollPaddingInline: formatPx(
-      scrollingInsetPx(AXES.inline, breakpoint, gapPx) / 2,
+      scrollingInsetPx(AXES.inline, breakpoint) / 2,
     ),
-    scrollPaddingBlock: formatPx(
-      scrollingInsetPx(AXES.block, breakpoint, gapPx) / 2,
-    ),
+    scrollPaddingBlock: formatPx(scrollingInsetPx(AXES.block, breakpoint) / 2),
   };
 }
 
-interface GridLayoutOptions {
+interface GridDimensions {
   rows: number;
   columns: number;
-  gap: number;
 }
 
 export function createGridContentSx(
   theme: Theme,
-  { rows, columns, gap }: GridLayoutOptions,
+  { rows, columns }: GridDimensions,
 ) {
-  const gapPx = spacingUnitsToPx(gap);
-
   function createBreakpointRules(breakpoint: Breakpoint) {
     return {
       ...createAxisRules({
         axis: AXES.inline,
         breakpoint,
         trackCount: columns,
-        gapPx,
       }),
-      ...createAxisRules({
-        axis: AXES.block,
-        breakpoint,
-        trackCount: rows,
-        gapPx,
-      }),
+      ...createAxisRules({ axis: AXES.block, breakpoint, trackCount: rows }),
     };
   }
 
   return {
-    "--grid-gap": formatPx(gapPx),
     gap: GRID_GAP,
     [theme.breakpoints.down("sm")]: createBreakpointRules("xs"),
     [theme.breakpoints.up("sm")]: createBreakpointRules("sm"),
@@ -125,15 +112,14 @@ interface AxisLayout {
   axis: GridAxis;
   breakpoint: Breakpoint;
   trackCount: number;
-  gapPx: number;
 }
 
 type AxisRules = Record<string, string | Record<string, string>>;
 
 function createAxisRules(layout: AxisLayout): AxisRules {
-  const { axis, breakpoint, trackCount, gapPx } = layout;
+  const { axis, breakpoint, trackCount } = layout;
   const paddingPx = axis.paddingPx[breakpoint];
-  const gapsAndPaddingPx = (trackCount - 1) * gapPx + 2 * paddingPx;
+  const gapsAndPaddingPx = (trackCount - 1) * GRID_GAP_PX + 2 * paddingPx;
 
   const rules: AxisRules = {
     [axis.paddingProperty]: formatPx(paddingPx),
@@ -156,16 +142,16 @@ function createAxisRules(layout: AxisLayout): AxisRules {
 }
 
 function createTrackFit(
-  { axis, breakpoint, trackCount, gapPx }: AxisLayout,
+  { axis, breakpoint, trackCount }: AxisLayout,
   visibleTracks: number,
 ) {
   // A fitting axis is inset by its padding on both sides. A scrolling axis has
   // padding on one side and a gap plus the next track's hint on the other.
   const isScrollable = visibleTracks < trackCount;
   const insetPx = isScrollable
-    ? scrollingInsetPx(axis, breakpoint, gapPx)
+    ? scrollingInsetPx(axis, breakpoint)
     : 2 * axis.paddingPx[breakpoint];
-  const gapsAndInsetPx = (visibleTracks - 1) * gapPx + insetPx;
+  const gapsAndInsetPx = (visibleTracks - 1) * GRID_GAP_PX + insetPx;
   const fittedCellSize = `calc((${axis.viewportSize} - ${formatPx(gapsAndInsetPx)}) / ${visibleTracks})`;
 
   return {
@@ -176,12 +162,10 @@ function createTrackFit(
   };
 }
 
-function scrollingInsetPx(
-  axis: GridAxis,
-  breakpoint: Breakpoint,
-  gapPx: number,
-): number {
-  return axis.paddingPx[breakpoint] + gapPx + OVERFLOW_HINT_PX[breakpoint];
+function scrollingInsetPx(axis: GridAxis, breakpoint: Breakpoint): number {
+  return (
+    axis.paddingPx[breakpoint] + GRID_GAP_PX + OVERFLOW_HINT_PX[breakpoint]
+  );
 }
 
 function spacingUnitsToPx(units: number): number {

@@ -17,12 +17,11 @@ export interface GridItemProps {
 type GridRowDataAttributes = Record<`data-${string}`, string>;
 
 interface GridProps<Item extends { id: string }> {
-  "aria-label"?: string;
+  "aria-label": string;
   items: readonly Item[];
   rows: number;
   columns: number;
-  order?: GridOrder;
-  gap?: number;
+  order: GridOrder;
   rowProps?: GridRowDataAttributes;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
@@ -33,7 +32,6 @@ export function Grid<Item extends { id: string }>({
   rows,
   columns,
   order,
-  gap = 1,
   rowProps,
   renderItem,
 }: GridProps<Item>) {
@@ -41,14 +39,14 @@ export function Grid<Item extends { id: string }>({
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
 
   return (
-    <Box sx={(theme) => createGridViewportSx(theme, gap)}>
+    <Box sx={createGridViewportSx}>
       <Stack
         {...rootProps}
         ref={rootRef}
         role="grid"
         aria-label={ariaLabel}
         direction="column"
-        sx={(theme) => createGridContentSx(theme, { rows, columns, gap })}
+        sx={(theme) => createGridContentSx(theme, { rows, columns })}
       >
         {grid.map((row, rowIndex) => (
           <GridRow

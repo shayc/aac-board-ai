@@ -2,6 +2,7 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { type Locator, userEvent } from "vitest/browser";
 import { getCellPosition } from "../testing/get-cell-position";
+import { rowMajorOrder } from "../testing/row-major-order";
 import { Grid, type GridItemProps } from "./grid";
 
 interface TestItem {
@@ -58,7 +59,14 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
-        <Grid rows={1} columns={3} items={items} renderItem={renderButton} />,
+        <Grid
+          aria-label="Board"
+          rows={1}
+          columns={3}
+          order={rowMajorOrder(items, 1, 3)}
+          items={items}
+          renderItem={renderButton}
+        />,
       );
 
       const item1Button = screen.getByRole("button", { name: "Item 1" });
@@ -80,6 +88,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={2}
           columns={2}
@@ -106,9 +115,11 @@ describe("useGridFocus", () => {
         <div>
           <button>Outside</button>
           <Grid
+            aria-label="Board"
             items={oldItems}
             rows={2}
             columns={2}
+            order={rowMajorOrder(oldItems, 2, 2)}
             renderItem={renderButton}
           />
         </div>,
@@ -121,9 +132,11 @@ describe("useGridFocus", () => {
         <div>
           <button>Outside</button>
           <Grid
+            aria-label="Board"
             items={newItems}
             rows={2}
             columns={2}
+            order={rowMajorOrder(newItems, 2, 2)}
             renderItem={renderButton}
           />
         </div>,
@@ -146,6 +159,7 @@ describe("useGridFocus", () => {
           items={items}
           rows={2}
           columns={2}
+          order={rowMajorOrder(items, 2, 2)}
           renderItem={renderButton}
         />,
       );
@@ -160,6 +174,7 @@ describe("useGridFocus", () => {
           items={items}
           rows={2}
           columns={2}
+          order={rowMajorOrder(items, 2, 2)}
           renderItem={renderButton}
         />,
       );
@@ -173,9 +188,11 @@ describe("useGridFocus", () => {
     test("leaves focus outside the grid when it re-renders with equal items in a new array", async () => {
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={makeItems(1, 2, 3, 4)}
           rows={2}
           columns={2}
+          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2, 2)}
           renderItem={renderButton}
         />,
       );
@@ -186,9 +203,11 @@ describe("useGridFocus", () => {
 
       await screen.rerender(
         <Grid
+          aria-label="Board"
           items={makeItems(1, 2, 3, 4)}
           rows={2}
           columns={2}
+          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2, 2)}
           renderItem={renderButton}
         />,
       );
@@ -199,9 +218,11 @@ describe("useGridFocus", () => {
     test("returns lost focus to the remembered cell when the grid changes", async () => {
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={makeItems(1, 2, 3, 4)}
           rows={2}
           columns={2}
+          order={rowMajorOrder(makeItems(1, 2, 3, 4), 2, 2)}
           renderItem={renderButton}
         />,
       );
@@ -213,9 +234,11 @@ describe("useGridFocus", () => {
 
       await screen.rerender(
         <Grid
+          aria-label="Board"
           items={makeItems(5, 6, 7, 8)}
           rows={2}
           columns={2}
+          order={rowMajorOrder(makeItems(5, 6, 7, 8), 2, 2)}
           renderItem={renderButton}
         />,
       );
@@ -230,9 +253,15 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div style={{ width: 375, height: 400 }}>
           <Grid
+            aria-label="Board"
             items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
             rows={2}
             columns={6}
+            order={rowMajorOrder(
+              makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+              2,
+              6,
+            )}
             renderItem={renderButton}
           />
         </div>,
@@ -243,9 +272,15 @@ describe("useGridFocus", () => {
       await screen.rerender(
         <div style={{ width: 375, height: 400 }}>
           <Grid
+            aria-label="Board"
             items={makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)}
             rows={2}
             columns={6}
+            order={rowMajorOrder(
+              makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24),
+              2,
+              6,
+            )}
             renderItem={renderButton}
           />
         </div>,
@@ -268,9 +303,11 @@ describe("useGridFocus", () => {
     ])("moves focus to the adjacent cell on $key", async ({ key, target }) => {
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
           rows={3}
           columns={3}
+          order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3, 3)}
           renderItem={renderButton}
         />,
       );
@@ -296,6 +333,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={2}
           columns={2}
@@ -322,6 +360,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={2}
           columns={3}
@@ -342,7 +381,14 @@ describe("useGridFocus", () => {
       const items = makeItems(1);
 
       const screen = await render(
-        <Grid rows={1} columns={2} items={items} renderItem={renderButton} />,
+        <Grid
+          aria-label="Board"
+          rows={1}
+          columns={2}
+          order={rowMajorOrder(items, 1, 2)}
+          items={items}
+          renderItem={renderButton}
+        />,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -358,7 +404,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div role="presentation" onKeyDown={handleOuterKeyDown}>
-          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={1}
+            columns={2}
+            order={rowMajorOrder(items, 1, 2)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -375,9 +428,11 @@ describe("useGridFocus", () => {
       async (modifier) => {
         const screen = await render(
           <Grid
+            aria-label="Board"
             items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
             rows={3}
             columns={3}
+            order={rowMajorOrder(makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9), 3, 3)}
             renderItem={renderButton}
           />,
         );
@@ -401,6 +456,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={1}
           columns={3}
@@ -424,6 +480,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={1}
           columns={3}
@@ -450,6 +507,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={2}
           columns={2}
@@ -476,6 +534,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
           rows={2}
           columns={2}
@@ -496,7 +555,14 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3, 4);
 
       const screen = await render(
-        <Grid rows={2} columns={2} items={items} renderItem={renderButton} />,
+        <Grid
+          aria-label="Board"
+          rows={2}
+          columns={2}
+          order={rowMajorOrder(items, 2, 2)}
+          items={items}
+          renderItem={renderButton}
+        />,
       );
 
       const item1 = screen.getByRole("button", {
@@ -519,7 +585,14 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
-        <Grid rows={1} columns={3} items={items} renderItem={renderButton} />,
+        <Grid
+          aria-label="Board"
+          rows={1}
+          columns={3}
+          order={rowMajorOrder(items, 1, 3)}
+          items={items}
+          renderItem={renderButton}
+        />,
       );
 
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
@@ -535,7 +608,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div role="presentation" onKeyDown={handleOuterKeyDown}>
-          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={1}
+            columns={3}
+            order={rowMajorOrder(items, 1, 3)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -554,7 +634,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={1}
+            columns={2}
+            order={rowMajorOrder(items, 1, 2)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -571,7 +658,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={1}
+            columns={2}
+            order={rowMajorOrder(items, 1, 2)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -594,6 +688,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
+            aria-label="Board"
             items={items}
             rows={2}
             columns={2}
@@ -618,7 +713,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={1}
+            columns={3}
+            order={rowMajorOrder(items, 1, 3)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -635,7 +737,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={1}
+            columns={3}
+            order={rowMajorOrder(items, 1, 3)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -652,7 +761,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={2}
+            columns={2}
+            order={rowMajorOrder(items, 2, 2)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 
@@ -669,7 +785,14 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />
+          <Grid
+            aria-label="Board"
+            rows={2}
+            columns={2}
+            order={rowMajorOrder(items, 2, 2)}
+            items={items}
+            renderItem={renderButton}
+          />
         </div>,
       );
 

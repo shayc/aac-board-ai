@@ -18,7 +18,7 @@ const frenchTranslations = new Map([["Hello", "Bonjour"]]);
 const mockBoard: Board = {
   id: "board-1",
   name: "My Board",
-  grid: { columns: 2, rows: 1 },
+  grid: { rows: 1, columns: 2, order: [["hello", "more"]] },
   buttons: [
     {
       id: "btn-1",
