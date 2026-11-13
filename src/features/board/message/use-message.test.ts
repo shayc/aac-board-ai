@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { spellText } from "./message-transforms";
+import { spell } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -67,7 +67,7 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want");
-    message.setState(spellText(message.getState(), "s"));
+    message.setState(spell(message.getState(), "s"));
 
     expect(message.getState().parts.map((part) => part.label)).toEqual([
       "I",

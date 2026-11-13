@@ -2,7 +2,7 @@ import type { BoardButton } from "@features/library";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import { EMPTY_MESSAGE } from "../message/message-transforms";
-import type { MessagePart, MessageState } from "../message/message-types";
+import type { Message, MessagePart } from "../message/message-types";
 import { createButtonActivator } from "./button-activator";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
@@ -13,7 +13,7 @@ const PLAY_THEN_CLEAR: BoardButton["actions"] = [
 ];
 
 function setup(initialParts: readonly MessagePart[] = []) {
-  let currentState: MessageState = { parts: initialParts, isWordOpen: false };
+  let currentState: Message = { parts: initialParts, isWordOpen: false };
   const message = {
     getState: () => currentState,
     setState: vi.fn<ActivationOptions["message"]["setState"]>((state) => {
@@ -216,7 +216,7 @@ describe("createButtonActivator", () => {
     ]);
   });
 
-  test("ends the word being spelled when space follows play", async () => {
+  test("closes the word being spelled when space follows play", async () => {
     const { activateButton, message, playback } = setup();
     const settlePlayback = holdMessagePlayback(playback);
 

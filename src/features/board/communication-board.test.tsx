@@ -306,7 +306,7 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems.nth(2)).toHaveTextContent("the");
     });
 
-    test("reopens a word ended with space when Backspace removes a letter", async () => {
+    test("reopens a word closed by space when Backspace removes a letter", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = screen
         .getByRole("list", { name: "Message" })

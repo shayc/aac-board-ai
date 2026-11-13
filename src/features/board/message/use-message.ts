@@ -4,13 +4,13 @@ import {
   createTextPart,
   EMPTY_MESSAGE,
 } from "./message-transforms";
-import type { MessagePart, MessageState } from "./message-types";
+import type { Message, MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
   text: string;
-  getState: () => MessageState;
-  setState: (state: MessageState) => void;
+  getState: () => Message;
+  setState: (state: Message) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
   clear: () => void;
@@ -25,7 +25,7 @@ export function useMessage(): UseMessageReturn {
     return stateRef.current;
   }
 
-  function setState(next: MessageState) {
+  function setState(next: Message) {
     stateRef.current = next;
     setRenderedState(next);
   }

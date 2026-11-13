@@ -1,14 +1,14 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import {
-  appendPart,
+  appendTilePart,
   applyBackspace,
+  closeWord,
   createTilePart,
   EMPTY_MESSAGE,
-  finishWord,
-  spellText,
+  spell,
 } from "../message/message-transforms";
-import type { MessageState } from "../message/message-types";
+import type { Message } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
@@ -50,7 +50,7 @@ export function createButtonActivator({
       soundSrc: button.soundSrc,
     });
 
-    message.setState(appendPart(message.getState(), part));
+    message.setState(appendTilePart(message.getState(), part));
     void playback.playPart(part);
   }
 
@@ -66,7 +66,7 @@ export function createButtonActivator({
       return;
     }
 
-    const stateToPlay = commitEdits(
+    const messageToPlay = commitEdits(
       message.getState(),
       actions.slice(0, playIndex),
     );
@@ -74,23 +74,23 @@ export function createButtonActivator({
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(stateToPlay.parts).then((hasCompleted) => {
+    void playback.playMessage(messageToPlay.parts).then((hasCompleted) => {
       if (hasCompleted) {
         commitEdits(message.getState(), actionsAfterPlay);
       }
     });
   }
 
-  function commitEdits(state: MessageState, actions: readonly BoardAction[]) {
+  function commitEdits(current: Message, actions: readonly BoardAction[]) {
     const edits = actions.filter(isMessageEdit);
     if (edits.length === 0) {
-      return state;
+      return current;
     }
 
-    const editedState = edits.reduce(applyEdit, state);
-    message.setState(editedState);
+    const edited = edits.reduce(applyEdit, current);
+    message.setState(edited);
 
-    return editedState;
+    return edited;
   }
 
   return activateButton;
@@ -102,14 +102,14 @@ function isMessageEdit(action: BoardAction): action is MessageEdit {
   return action.kind !== "home" && action.kind !== "play";
 }
 
-function applyEdit(state: MessageState, edit: MessageEdit): MessageState {
+function applyEdit(message: Message, edit: MessageEdit): Message {
   switch (edit.kind) {
     case "spell":
-      return spellText(state, edit.text);
+      return spell(message, edit.text);
     case "space":
-      return finishWord(state);
+      return closeWord(message);
     case "backspace":
-      return applyBackspace(state);
+      return applyBackspace(message);
     case "clear":
       return EMPTY_MESSAGE;
     default:

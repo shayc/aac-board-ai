@@ -1,12 +1,7 @@
 import { randomId } from "@shared/utils/random-id";
-import type {
-  MessagePart,
-  MessageState,
-  TextPart,
-  TilePart,
-} from "./message-types";
+import type { Message, TextPart, TilePart } from "./message-types";
 
-export const EMPTY_MESSAGE: MessageState = { parts: [], isWordOpen: false };
+export const EMPTY_MESSAGE: Message = { parts: [], isWordOpen: false };
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
@@ -22,28 +17,25 @@ export function createTextPart(label: string): TextPart {
   return { kind: "text", id: randomId(), label };
 }
 
-export function appendPart(
-  state: MessageState,
-  part: MessagePart,
-): MessageState {
-  return { parts: [...state.parts, part], isWordOpen: false };
+export function appendTilePart(message: Message, part: TilePart): Message {
+  return { parts: [...message.parts, part], isWordOpen: false };
 }
 
-export function spellText(state: MessageState, text: string): MessageState {
+export function spell(message: Message, text: string): Message {
   if (!text) {
-    return state;
+    return message;
   }
 
-  const lastPart = state.parts.at(-1);
-  if (!state.isWordOpen || lastPart?.kind !== "text") {
+  const lastPart = message.parts.at(-1);
+  if (!message.isWordOpen || lastPart?.kind !== "text") {
     return {
-      parts: [...state.parts, createTextPart(text)],
+      parts: [...message.parts, createTextPart(text)],
       isWordOpen: true,
     };
   }
 
   return {
-    parts: state.parts.with(-1, {
+    parts: message.parts.with(-1, {
       ...lastPart,
       label: `${lastPart.label}${text}`,
     }),
@@ -51,39 +43,39 @@ export function spellText(state: MessageState, text: string): MessageState {
   };
 }
 
-export function finishWord(state: MessageState): MessageState {
-  if (!state.isWordOpen) {
-    return state;
+export function closeWord(message: Message): Message {
+  if (!message.isWordOpen) {
+    return message;
   }
 
-  return { ...state, isWordOpen: false };
+  return { ...message, isWordOpen: false };
 }
 
-export function applyBackspace(state: MessageState): MessageState {
-  const lastPart = state.parts.at(-1);
+export function applyBackspace(message: Message): Message {
+  const lastPart = message.parts.at(-1);
   if (!lastPart) {
-    return state;
+    return message;
   }
 
   if (lastPart.kind === "tile") {
-    return removeLastPart(state);
+    return removeLastPart(message);
   }
 
   const label = removeLastGrapheme(lastPart.label);
   if (!label) {
-    return removeLastPart(state);
+    return removeLastPart(message);
   }
 
   // The space after a word has no symbol of its own in the message bar, so
-  // backspace shortens a finished word and reopens it in the same press.
+  // backspace shortens a closed word and reopens it in the same press.
   return {
-    parts: state.parts.with(-1, { ...lastPart, label }),
+    parts: message.parts.with(-1, { ...lastPart, label }),
     isWordOpen: true,
   };
 }
 
-function removeLastPart(state: MessageState): MessageState {
-  return { parts: state.parts.slice(0, -1), isWordOpen: false };
+function removeLastPart(message: Message): Message {
+  return { parts: message.parts.slice(0, -1), isWordOpen: false };
 }
 
 function removeLastGrapheme(text: string): string {
