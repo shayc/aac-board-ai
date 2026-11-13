@@ -1,6 +1,11 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 
+const DB_NAME = "boards-db";
+const DB_VERSION = 1;
+
+export const MAX_ID_LENGTH = 255;
+
 export interface BoardSetRecord {
   readonly id: string;
   readonly name: string;
@@ -30,8 +35,6 @@ export interface AssetRecord {
   readonly blob: Blob;
 }
 
-export const MAX_ID_LENGTH = 255;
-
 interface BoardsDBSchema extends DBSchema {
   boardSets: {
     key: string;
@@ -50,31 +53,6 @@ interface BoardsDBSchema extends DBSchema {
 
 type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 
-const DB_NAME = "boards-db";
-const DB_VERSION = 1;
-
-/** Empty when the path names no file; no asset is stored under an empty path. */
-export function normalizeAssetPath(rawPath: string): string {
-  return rawPath
-    .replaceAll("\\", "/")
-    .replace(/^\/+/, "")
-    .replace(/\/{2,}/g, "/");
-}
-
-export function validateId(id: string, fieldName: string): void {
-  if (!id || id.length > MAX_ID_LENGTH) {
-    throw new Error(
-      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
-    );
-  }
-}
-
-// Board and asset keys are [boardSetId, id or path]. Arrays sort after strings
-// in IDB, so [boardSetId, []] is an upper bound for one set's keys.
-export function boardSetRange(boardSetId: string): IDBKeyRange {
-  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
-}
-
 let connection: Promise<BoardsDB> | null = null;
 
 export function getBoardsDB(): Promise<BoardsDB> {
@@ -84,6 +62,31 @@ export function getBoardsDB(): Promise<BoardsDB> {
   });
 
   return connection;
+}
+
+function openConnection(): Promise<BoardsDB> {
+  return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1) {
+        const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
+        boardSets.createIndex("byImportedAt", "importedAt");
+
+        db.createObjectStore("boards", { keyPath: ["boardSetId", "id"] });
+        db.createObjectStore("assets", { keyPath: ["boardSetId", "path"] });
+      }
+    },
+    blocked(currentVersion, blockedVersion) {
+      console.warn(
+        `boards-db upgrade to v${blockedVersion} blocked by a tab holding v${currentVersion}`,
+      );
+    },
+    blocking() {
+      void closeBoardsDB();
+    },
+    terminated() {
+      connection = null;
+    },
+  });
 }
 
 export async function closeBoardsDB(): Promise<void> {
@@ -123,27 +126,24 @@ export async function runTransaction(
   }
 }
 
-function openConnection(): Promise<BoardsDB> {
-  return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion) {
-      if (oldVersion < 1) {
-        const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
-        boardSets.createIndex("byImportedAt", "importedAt");
+// Board and asset keys are [boardSetId, id or path]. Arrays sort after strings
+// in IDB, so [boardSetId, []] is an upper bound for one set's keys.
+export function boardSetRange(boardSetId: string): IDBKeyRange {
+  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
+}
 
-        db.createObjectStore("boards", { keyPath: ["boardSetId", "id"] });
-        db.createObjectStore("assets", { keyPath: ["boardSetId", "path"] });
-      }
-    },
-    blocked(currentVersion, blockedVersion) {
-      console.warn(
-        `boards-db upgrade to v${blockedVersion} blocked by a tab holding v${currentVersion}`,
-      );
-    },
-    blocking() {
-      void closeBoardsDB();
-    },
-    terminated() {
-      connection = null;
-    },
-  });
+export function validateId(id: string, fieldName: string): void {
+  if (!id || id.length > MAX_ID_LENGTH) {
+    throw new Error(
+      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
+    );
+  }
+}
+
+/** Empty when the path names no file; no asset is stored under an empty path. */
+export function normalizeAssetPath(rawPath: string): string {
+  return rawPath
+    .replaceAll("\\", "/")
+    .replace(/^\/+/, "")
+    .replace(/\/{2,}/g, "/");
 }
