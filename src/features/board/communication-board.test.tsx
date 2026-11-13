@@ -288,7 +288,7 @@ describe("CommunicationBoard", () => {
       });
     });
 
-    test("spells a new word after a word tile and ends it with space", async () => {
+    test("spells a new word after a word tile and closes it with space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = screen
         .getByRole("list", { name: "Message" })
