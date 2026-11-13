@@ -1,4 +1,4 @@
-import { useLanguage } from "@shared/language/use-language";
+import { useTheme } from "@mui/material/styles";
 
 export const flipForRTL = {
   "&:dir(rtl)": { transform: "scaleX(-1)" },
@@ -10,7 +10,7 @@ export const flipForLTR = {
 } as const;
 
 export function useEndSide() {
-  const { direction } = useLanguage();
+  const { direction } = useTheme();
 
   return direction === "rtl" ? "left" : "right";
 }

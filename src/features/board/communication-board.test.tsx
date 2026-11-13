@@ -1,3 +1,4 @@
+import { setStoredLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
@@ -210,6 +211,50 @@ describe("CommunicationBoard", () => {
           .toBeVisible();
       },
     );
+  });
+
+  describe("language", () => {
+    test("marks tiles and message parts with the board's language", async () => {
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: "es",
+      });
+
+      const tile = screen.getByRole("button", { name: "hello" });
+      await tile.click();
+
+      await expect.element(tile).toHaveAttribute("lang", "es");
+      await expect
+        .element(screen.getByRole("listitem"))
+        .toHaveAttribute("lang", "es");
+    });
+
+    test("leaves tiles on the document's language when the board declares none", async () => {
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: undefined,
+      });
+
+      await expect
+        .element(screen.getByRole("button", { name: "hello" }))
+        .not.toHaveAttribute("lang");
+    });
+
+    test("lays the board out in the communication language's direction when the UI has no text for it", async () => {
+      setStoredLanguage("ur");
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      const first = screen.getByRole("button", { name: "hello" }).element();
+      const second = screen.getByRole("button", { name: "world" }).element();
+
+      expect(document.documentElement).toHaveAttribute("dir", "ltr");
+      expect(screen.getByRole("grid").element().matches(":dir(rtl)")).toBe(
+        true,
+      );
+      expect(first.getBoundingClientRect().left).toBeGreaterThan(
+        second.getBoundingClientRect().left,
+      );
+    });
   });
 
   describe("layout", () => {

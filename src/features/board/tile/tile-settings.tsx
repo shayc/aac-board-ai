@@ -39,12 +39,16 @@ export function TileSettings() {
         label={t(m.tileLabelPlacement)}
         value={labelPlacement}
         onChange={setTileLabelPlacement}
+        options={[
+          { value: "top", label: t(m.tileLabelTop) },
+          { value: "bottom", label: t(m.tileLabelBottom) },
+          { value: "hidden", label: t(m.tileLabelHidden) },
+        ]}
+        renderOption={({ value, label }) => (
+          <LabelPlacementOption label={label} placement={value} />
+        )}
         optionsSx={{ flexWrap: "nowrap", gap: 1, mt: 0.5 }}
-      >
-        <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />
-        <LabelPlacementOption label={t(m.tileLabelBottom)} placement="bottom" />
-        <LabelPlacementOption label={t(m.tileLabelHidden)} placement="hidden" />
-      </SettingsRadioGroup>
+      />
 
       <SettingsSwitch
         label={t(m.tileBorders)}

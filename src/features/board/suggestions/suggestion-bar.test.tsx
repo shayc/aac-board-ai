@@ -9,6 +9,7 @@ function makeProps(
   return {
     status: { kind: "idle" },
     phrases: [],
+    language: "en",
     onEnable: vi.fn(),
     onPhraseSelect: vi.fn(),
     ...overrides,
@@ -31,6 +32,15 @@ describe("SuggestionBar", () => {
 
     expect(props.onPhraseSelect).toHaveBeenCalledWith("Goodbye");
     expect(props.onPhraseSelect).toHaveBeenCalledTimes(2);
+  });
+
+  test("marks each phrase with the language it is written in", async () => {
+    const props = makeProps({ phrases: ["Hola"], language: "es" });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+
+    await expect
+      .element(screen.getByRole("button", { name: "Hola" }))
+      .toHaveAttribute("lang", "es");
   });
 
   test("groups the phrase chips under a name", async () => {
