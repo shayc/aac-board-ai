@@ -61,13 +61,15 @@ export function applyBackspace(message: Message): Message {
     return removeLastPart(message);
   }
 
+  if (!message.isWordOpen) {
+    return { ...message, isWordOpen: true };
+  }
+
   const label = removeLastGrapheme(lastPart.label);
   if (!label) {
     return removeLastPart(message);
   }
 
-  // The space after a word has no symbol of its own in the message bar, so
-  // backspace shortens a closed word and reopens it in the same press.
   return {
     parts: message.parts.with(-1, { ...lastPart, label }),
     isWordOpen: true,

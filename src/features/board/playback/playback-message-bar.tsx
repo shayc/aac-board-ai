@@ -8,6 +8,7 @@ import {
 
 interface PlaybackMessageBarProps {
   parts: readonly MessagePart[];
+  isWordOpen: boolean;
   playback: Pick<
     UseBoardPlaybackReturn,
     "isMessagePlaying" | "playMessage" | "stop"
@@ -16,6 +17,7 @@ interface PlaybackMessageBarProps {
 
 export function PlaybackMessageBar({
   parts,
+  isWordOpen,
   playback,
 }: PlaybackMessageBarProps) {
   const activePartId = useActiveMessagePartId();
@@ -24,6 +26,7 @@ export function PlaybackMessageBar({
   return (
     <MessageBar
       parts={parts}
+      isWordOpen={isWordOpen}
       activePartId={isHighlightingEnabled ? activePartId : null}
       areImagesVisible={areImagesVisible}
       isPlaying={playback.isMessagePlaying}

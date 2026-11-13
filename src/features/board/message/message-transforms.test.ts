@@ -181,10 +181,18 @@ describe("applyBackspace", () => {
     expect(labelsOf(message)).toEqual(["hi", "o"]);
   });
 
-  test("reopens a closed word so the next letter continues it", () => {
+  test("reopens a closed word without removing a letter", () => {
+    const closed = closeWord(spell(EMPTY_MESSAGE, "hi"));
+
+    const message = spell(applyBackspace(closed), "t");
+
+    expect(labelsOf(message)).toEqual(["hit"]);
+  });
+
+  test("removes a letter from a closed word on the second press", () => {
     const closed = closeWord(spell(EMPTY_MESSAGE, "hit"));
 
-    const message = spell(applyBackspace(closed), "m");
+    const message = spell(applyBackspace(applyBackspace(closed)), "m");
 
     expect(labelsOf(message)).toEqual(["him"]);
   });

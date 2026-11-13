@@ -21,6 +21,7 @@ function createProps(
 ): MessageBarProps {
   return {
     parts: [],
+    isWordOpen: false,
     activePartId: null,
     areImagesVisible: true,
     isPlaying: false,
@@ -67,6 +68,29 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("want")).toBeVisible();
     await expect.element(screen.getByText("water")).toBeVisible();
   });
+
+  test.each([
+    { isWordOpen: true, caret: '""' },
+    { isWordOpen: false, caret: "none" },
+  ])(
+    "marks the last word with a caret only while it is open ($isWordOpen)",
+    async ({ isWordOpen, caret }) => {
+      const parts: MessagePart[] = [
+        { kind: "text", id: "a", label: "I" },
+        { kind: "text", id: "b", label: "want" },
+      ];
+
+      const screen = await renderWithProviders(
+        <MessageBar {...createProps({ parts, isWordOpen })} />,
+      );
+      const items = screen.getByRole("listitem").elements();
+      const carets = items.map(
+        (item) => getComputedStyle(item, "::after").content,
+      );
+
+      expect(carets).toEqual(["none", caret]);
+    },
+  );
 
   test("exposes the message as a named list of its parts", async () => {
     const parts: MessagePart[] = [

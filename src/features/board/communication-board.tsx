@@ -90,7 +90,11 @@ export function CommunicationBoard({
         }}
       >
         <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
-          <PlaybackMessageBar parts={message.parts} playback={playback} />
+          <PlaybackMessageBar
+            parts={message.parts}
+            isWordOpen={message.isWordOpen}
+            playback={playback}
+          />
 
           {isActionRowVisible && (
             <Stack

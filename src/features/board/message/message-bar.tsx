@@ -13,6 +13,7 @@ const LIGHT_SCHEME_CLASS = "light";
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
+  isWordOpen: boolean;
   activePartId: string | null;
   areImagesVisible: boolean;
   isPlaying: boolean;
@@ -22,6 +23,7 @@ export interface MessageBarProps {
 
 export function MessageBar({
   parts,
+  isWordOpen,
   activePartId,
   areImagesVisible,
   isPlaying,
@@ -30,6 +32,7 @@ export function MessageBar({
 }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
   useEffect(() => {
     const container = scrollContainerRef.current;
@@ -77,6 +80,7 @@ export function MessageBar({
             label={part.label}
             imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
             isActive={part.id === activePartId}
+            isOpen={part.id === openPartId}
             isImageVisible={areImagesVisible}
           />
         ))}
@@ -125,6 +129,7 @@ interface MessagePartItemProps {
   label: string;
   imageSrc?: string;
   isActive: boolean;
+  isOpen: boolean;
   isImageVisible: boolean;
 }
 
@@ -132,6 +137,7 @@ function MessagePartItem({
   label,
   imageSrc,
   isActive,
+  isOpen,
   isImageVisible,
 }: MessagePartItemProps) {
   return (
@@ -146,6 +152,16 @@ function MessagePartItem({
           ? `2px solid ${theme.vars.palette.primary.main}`
           : "none",
         outlineOffset: -2,
+        // A caret marks the word that spelling still extends, so a space or
+        // a backspace that only closes or reopens it has a visible result.
+        ...(isOpen && {
+          "&::after": {
+            content: '""',
+            width: "2px",
+            marginInlineStart: "2px",
+            bgcolor: "currentColor",
+          },
+        }),
       })}
     >
       <AACSymbol

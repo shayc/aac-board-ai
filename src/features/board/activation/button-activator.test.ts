@@ -117,6 +117,7 @@ describe("createButtonActivator", () => {
       label: "",
       actions: [
         { kind: "backspace" },
+        { kind: "backspace" },
         { kind: "spell", text: "d" },
         { kind: "space" },
         { kind: "spell", text: "s" },

@@ -8,6 +8,7 @@ import type { Message, MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
+  isWordOpen: boolean;
   text: string;
   getState: () => Message;
   setState: (state: Message) => void;
@@ -48,6 +49,7 @@ export function useMessage(): UseMessageReturn {
 
   return {
     parts: state.parts,
+    isWordOpen: state.isWordOpen,
     text,
     getState,
     setState,

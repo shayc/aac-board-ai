@@ -306,7 +306,7 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems.nth(2)).toHaveTextContent("the");
     });
 
-    test("reopens a word closed by space when Backspace removes a letter", async () => {
+    test("reopens a word closed by space when Backspace undoes the space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = screen
         .getByRole("list", { name: "Message" })
@@ -320,8 +320,26 @@ describe("CommunicationBoard", () => {
 
       await expect.element(messageItems).toHaveLength(1);
       await expect
-        .element(messageItems.getByText("cc", { exact: true }))
+        .element(messageItems.getByText("cac", { exact: true }))
         .toBeVisible();
+    });
+
+    test("leaves the message empty when space is pressed first", async () => {
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+
+      await screen.getByRole("button", { name: "space" }).click();
+
+      await expect
+        .element(
+          screen.getByRole("list", { name: "Message" }).getByRole("listitem"),
+        )
+        .toHaveLength(0);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeDisabled();
+      await expect
+        .element(screen.getByRole("button", { name: "Backspace" }))
+        .toBeDisabled();
     });
 
     test("removes letters from the word being spelled, then whole words", async () => {
