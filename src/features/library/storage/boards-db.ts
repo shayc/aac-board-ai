@@ -1,11 +1,16 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 
+const DB_NAME = "boards-db";
+const DB_VERSION = 1;
+
+export const MAX_ID_LENGTH = 255;
+
 export interface BoardSetRecord {
   readonly id: string;
   readonly name: string;
   readonly rootBoardId: string;
-  readonly updatedAt: number;
+  readonly importedAt: number;
   readonly boardCount: number;
   readonly author?: string;
   readonly description?: string;
@@ -24,61 +29,29 @@ export interface BoardRecord {
   readonly obf: OBFBoard;
 }
 
-interface AssetRecord {
+export interface AssetRecord {
   readonly boardSetId: string;
   readonly path: string;
   readonly blob: Blob;
-}
-
-export const MAX_ID_LENGTH = 255;
-
-export class InvalidIdError extends Error {
-  constructor(fieldName: string) {
-    super(`Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`);
-    this.name = "InvalidIdError";
-  }
 }
 
 interface BoardsDBSchema extends DBSchema {
   boardSets: {
     key: string;
     value: BoardSetRecord;
-    indexes: { byUpdatedAt: number };
+    indexes: { byImportedAt: number };
   };
   boards: {
     key: [string, string];
     value: BoardRecord;
-    indexes: { byBoardSetId: string };
   };
   assets: {
     key: [string, string];
     value: AssetRecord;
-    indexes: { byBoardSetId: string };
   };
 }
 
 type BoardsDB = IDBPDatabase<BoardsDBSchema>;
-
-const DB_NAME = "boards-db";
-const DB_VERSION = 1;
-
-export function normalizeAssetPath(rawPath: string): string {
-  const path = rawPath
-    .replaceAll("\\", "/")
-    .replace(/^\/+/, "")
-    .replace(/\/{2,}/g, "/");
-  if (!path) {
-    throw new Error("Path cannot be empty");
-  }
-
-  return path;
-}
-
-export function validateId(id: string, fieldName: string): void {
-  if (!id || id.length > MAX_ID_LENGTH) {
-    throw new InvalidIdError(fieldName);
-  }
-}
 
 let connection: Promise<BoardsDB> | null = null;
 
@@ -89,6 +62,31 @@ export function getBoardsDB(): Promise<BoardsDB> {
   });
 
   return connection;
+}
+
+function openConnection(): Promise<BoardsDB> {
+  return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1) {
+        const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
+        boardSets.createIndex("byImportedAt", "importedAt");
+
+        db.createObjectStore("boards", { keyPath: ["boardSetId", "id"] });
+        db.createObjectStore("assets", { keyPath: ["boardSetId", "path"] });
+      }
+    },
+    blocked(currentVersion, blockedVersion) {
+      console.warn(
+        `boards-db upgrade to v${blockedVersion} blocked by a tab holding v${currentVersion}`,
+      );
+    },
+    blocking() {
+      void closeBoardsDB();
+    },
+    terminated() {
+      connection = null;
+    },
+  });
 }
 
 export async function closeBoardsDB(): Promise<void> {
@@ -128,34 +126,24 @@ export async function runTransaction(
   }
 }
 
-function openConnection(): Promise<BoardsDB> {
-  return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
-    upgrade(db, oldVersion) {
-      if (oldVersion < 1) {
-        const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
-        boardSets.createIndex("byUpdatedAt", "updatedAt");
+// Board and asset keys are [boardSetId, id or path]. Arrays sort after strings
+// in IDB, so [boardSetId, []] is an upper bound for one set's keys.
+export function boardSetRange(boardSetId: string): IDBKeyRange {
+  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
+}
 
-        const boards = db.createObjectStore("boards", {
-          keyPath: ["boardSetId", "id"],
-        });
-        boards.createIndex("byBoardSetId", "boardSetId");
+export function validateId(id: string, fieldName: string): void {
+  if (!id || id.length > MAX_ID_LENGTH) {
+    throw new Error(
+      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
+    );
+  }
+}
 
-        const assets = db.createObjectStore("assets", {
-          keyPath: ["boardSetId", "path"],
-        });
-        assets.createIndex("byBoardSetId", "boardSetId");
-      }
-    },
-    blocked(currentVersion, blockedVersion) {
-      console.warn(
-        `boards-db upgrade to v${blockedVersion} blocked by a tab holding v${currentVersion}`,
-      );
-    },
-    blocking() {
-      void closeBoardsDB();
-    },
-    terminated() {
-      connection = null;
-    },
-  });
+/** Empty when the path names no file; no asset is stored under an empty path. */
+export function normalizeAssetPath(rawPath: string): string {
+  return rawPath
+    .replaceAll("\\", "/")
+    .replace(/^\/+/, "")
+    .replace(/\/{2,}/g, "/");
 }

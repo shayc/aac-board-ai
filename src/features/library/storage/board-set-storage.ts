@@ -4,7 +4,9 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import type { StringTranslations } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import {
+  type AssetRecord,
   type BoardRecord,
+  boardSetRange,
   type BoardSetRecord,
   getBoardsDB,
   normalizeAssetPath,
@@ -45,14 +47,12 @@ export async function getBoardSetRecord(
 
 export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   const db = await getBoardsDB();
-  const boardSets = await db.getAllFromIndex("boardSets", "byUpdatedAt");
+  const boardSets = await db.getAllFromIndex("boardSets", "byImportedAt");
 
   return boardSets.reverse();
 }
 
 export async function removeBoardSet(boardSetId: string): Promise<void> {
-  validateId(boardSetId, "boardSetId");
-
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
   const keyRange = boardSetRange(boardSetId);
@@ -63,12 +63,6 @@ export async function removeBoardSet(boardSetId: string): Promise<void> {
     tx.objectStore("boardSets").delete(boardSetId),
     tx.done,
   ]);
-}
-
-// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
-// for this set's board IDs and asset paths.
-function boardSetRange(boardSetId: string): IDBKeyRange {
-  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
 export interface BoardSetTranslations {
@@ -124,9 +118,10 @@ function withTranslations(
 }
 
 export async function insertBoardSet(input: BoardSetInput): Promise<void> {
-  const { id, boards, assets } = input;
   const rootBoard = validateBoardSetInput(input);
-  const record = buildBoardSetRecord(input, rootBoard);
+  const boardSetRecord = buildBoardSetRecord(input, rootBoard);
+  const boardRecords = buildBoardRecords(input);
+  const assetRecords = buildAssetRecords(input);
 
   const db = await getBoardsDB();
   const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
@@ -135,29 +130,20 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
   const assetStore = tx.objectStore("assets");
 
   await runTransaction(tx, async () => {
-    const existing = await boardSetStore.get(id);
+    const existing = await boardSetStore.get(input.id);
     if (existing) {
-      throw new BoardSetAlreadyExistsError(id);
+      throw new BoardSetAlreadyExistsError(input.id);
     }
 
-    for (const obf of boards) {
-      await boardStore.put({
-        boardSetId: id,
-        id: obf.id,
-        name: nonBlankText(obf.name) ?? obf.id,
-        obf,
-      });
+    for (const boardRecord of boardRecords) {
+      await boardStore.put(boardRecord);
     }
 
-    for (const asset of assets) {
-      await assetStore.put({
-        boardSetId: id,
-        path: normalizeAssetPath(asset.path),
-        blob: asset.blob,
-      });
+    for (const assetRecord of assetRecords) {
+      await assetStore.put(assetRecord);
     }
 
-    await boardSetStore.add(record);
+    await boardSetStore.add(boardSetRecord);
   });
 
   requestPersistentStorage();
@@ -167,6 +153,7 @@ function validateBoardSetInput({
   id,
   rootBoardId,
   boards,
+  assets,
 }: BoardSetInput): OBFBoard {
   validateId(id, "boardSetId");
   validateId(rootBoardId, "rootBoardId");
@@ -180,6 +167,12 @@ function validateBoardSetInput({
     }
 
     boardIds.add(obf.id);
+  }
+
+  for (const { path } of assets) {
+    if (!normalizeAssetPath(path)) {
+      throw new Error(`Invalid asset path: ${path}`);
+    }
   }
 
   const rootBoard = boards.find((obf) => obf.id === rootBoardId);
@@ -198,7 +191,7 @@ function buildBoardSetRecord(
     id,
     name: nonBlankText(name) ?? nonBlankText(rootBoard.name) ?? id,
     rootBoardId,
-    updatedAt: Date.now(),
+    importedAt: Date.now(),
     boardCount: boards.length,
     author: rootBoard.license?.author_name,
     description: rootBoard.description_html
@@ -209,6 +202,23 @@ function buildBoardSetRecord(
     gridRows: rootBoard.grid.rows,
     gridColumns: rootBoard.grid.columns,
   };
+}
+
+function buildBoardRecords({ id, boards }: BoardSetInput): BoardRecord[] {
+  return boards.map((obf) => ({
+    boardSetId: id,
+    id: obf.id,
+    name: nonBlankText(obf.name) ?? obf.id,
+    obf,
+  }));
+}
+
+function buildAssetRecords({ id, assets }: BoardSetInput): AssetRecord[] {
+  return assets.map(({ path, blob }) => ({
+    boardSetId: id,
+    path: normalizeAssetPath(path),
+    blob,
+  }));
 }
 
 function requestPersistentStorage(): void {

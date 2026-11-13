@@ -1,5 +1,10 @@
 import type { BoardKey } from "../board-types";
-import { type BoardRecord, getBoardsDB, normalizeAssetPath } from "./boards-db";
+import {
+  type BoardRecord,
+  boardSetRange,
+  getBoardsDB,
+  normalizeAssetPath,
+} from "./boards-db";
 
 export { normalizeAssetPath } from "./boards-db";
 export type { BoardRecord } from "./boards-db";
@@ -22,11 +27,7 @@ export async function getBoardRecord({
 
 export async function listBoardIds(boardSetId: string): Promise<string[]> {
   const db = await getBoardsDB();
-  const keys = await db.getAllKeysFromIndex(
-    "boards",
-    "byBoardSetId",
-    boardSetId,
-  );
+  const keys = await db.getAllKeys("boards", boardSetRange(boardSetId));
 
   return keys.map(([, boardId]) => boardId);
 }
@@ -36,7 +37,7 @@ export async function listBoardRecords(
 ): Promise<BoardRecord[]> {
   const db = await getBoardsDB();
 
-  return db.getAllFromIndex("boards", "byBoardSetId", boardSetId);
+  return db.getAll("boards", boardSetRange(boardSetId));
 }
 
 export async function getAssetBlob(
