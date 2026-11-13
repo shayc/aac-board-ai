@@ -48,6 +48,30 @@ describe("AACSymbol", () => {
     expect(image?.getAttribute("alt")).toBe("");
   });
 
+  test.each(["bottom", "top"] as const)(
+    "gives an image without a label the full height with %s placement",
+    async (labelPlacement) => {
+      const screen = await render(
+        <div style={{ width: 120, height: 120 }}>
+          <AACSymbol
+            label=""
+            imageSrc={TEST_IMAGE_SRC}
+            labelPlacement={labelPlacement}
+          />
+        </div>,
+      );
+      const image = screen.container.querySelector("img");
+      assertDefined(image);
+
+      const bounds = screen.container.getBoundingClientRect();
+
+      expect(image.getBoundingClientRect()).toMatchObject({
+        top: bounds.top,
+        bottom: bounds.bottom,
+      });
+    },
+  );
+
   test("renders only phrasing elements so it can sit inside a button", async () => {
     const screen = await render(
       <AACSymbol label="Hello" imageSrc={TEST_IMAGE_SRC} />,
