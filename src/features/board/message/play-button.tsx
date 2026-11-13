@@ -33,10 +33,10 @@ export function PlayButton({
       sx={{
         alignSelf: "center",
         flexShrink: 0,
-        width: 80,
-        height: 80,
-        my: 2,
-        marginInlineEnd: 2,
+        width: 72,
+        height: 72,
+        my: 1,
+        marginInlineEnd: 1,
         [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
       }}
     >
