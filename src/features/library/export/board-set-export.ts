@@ -53,7 +53,11 @@ function collectAssetPaths(boards: readonly OBFBoard[]): Set<string> {
 
   for (const board of boards) {
     for (const media of [...(board.images ?? []), ...(board.sounds ?? [])]) {
-      const path = normalizeAssetPath(media.path ?? "");
+      if (!media.path) {
+        continue;
+      }
+
+      const path = normalizeAssetPath(media.path);
       if (path) {
         paths.add(path);
       }
