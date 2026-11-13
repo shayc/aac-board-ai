@@ -94,8 +94,10 @@ imported fields while adding translations saved on this device. Board links
 carry the linked board's ID, which the OBF library resolves from the archive.
 Board-set records store the set's translated names. `obfToBoard` derives the
 runtime `Board` on each read, so runtime types can evolve without rewriting
-stored records. Storage schema changes require a versioned migration in
-[`boards-db.ts`](../src/features/library/storage/boards-db.ts).
+stored records. The storage schema in
+[`boards-db.ts`](../src/features/library/storage/boards-db.ts) has no migrations
+yet: a schema change edits it in place, and a browser holding an older database
+needs its site data cleared.
 
 React Context provides theme, playback controls, and snackbar access.
 Components subscribe to external stores through `useExternalStore`, a

@@ -24,7 +24,7 @@ export interface BoardRecord {
   readonly obf: OBFBoard;
 }
 
-interface AssetRecord {
+export interface AssetRecord {
   readonly boardSetId: string;
   readonly path: string;
   readonly blob: Blob;

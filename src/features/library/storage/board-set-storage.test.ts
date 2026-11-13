@@ -220,6 +220,21 @@ describe("insertBoardSet", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
+  test("rejects assets whose paths name the same file without storing the set", async () => {
+    await expect(
+      insertBoardSet(
+        makeBoardSetInput({
+          assets: [
+            { path: "images/a.png", blob: new Blob(["first"]) },
+            { path: "images//a.png", blob: new Blob(["second"]) },
+          ],
+        }),
+      ),
+    ).rejects.toThrow("Duplicate asset path: images/a.png");
+
+    expect(await listBoardSetRecords()).toEqual([]);
+  });
+
   test("rejects empty boardSetId", async () => {
     await expect(
       insertBoardSet(

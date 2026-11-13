@@ -4,6 +4,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import type { StringTranslations } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import {
+  type AssetRecord,
   type BoardRecord,
   boardSetRange,
   type BoardSetRecord,
@@ -117,9 +118,10 @@ function withTranslations(
 }
 
 export async function insertBoardSet(input: BoardSetInput): Promise<void> {
-  const { id, boards, assets } = input;
+  const { id, boards } = input;
   const rootBoard = validateBoardSetInput(input);
   const record = buildBoardSetRecord(input, rootBoard);
+  const assetRecords = buildAssetRecords(input);
 
   const db = await getBoardsDB();
   const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
@@ -142,12 +144,8 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
       });
     }
 
-    for (const asset of assets) {
-      await assetStore.put({
-        boardSetId: id,
-        path: normalizeAssetPath(asset.path),
-        blob: asset.blob,
-      });
+    for (const assetRecord of assetRecords) {
+      await assetStore.put(assetRecord);
     }
 
     await boardSetStore.add(record);
@@ -160,7 +158,6 @@ function validateBoardSetInput({
   id,
   rootBoardId,
   boards,
-  assets,
 }: BoardSetInput): OBFBoard {
   validateId(id, "boardSetId");
   validateId(rootBoardId, "rootBoardId");
@@ -179,12 +176,6 @@ function validateBoardSetInput({
   const rootBoard = boards.find((obf) => obf.id === rootBoardId);
   if (!rootBoard) {
     throw new Error(`Root board not found: ${rootBoardId}`);
-  }
-
-  for (const { path } of assets) {
-    if (!normalizeAssetPath(path)) {
-      throw new Error(`Invalid asset path: ${path}`);
-    }
   }
 
   return rootBoard;
@@ -209,6 +200,25 @@ function buildBoardSetRecord(
     gridRows: rootBoard.grid.rows,
     gridColumns: rootBoard.grid.columns,
   };
+}
+
+function buildAssetRecords({ id, assets }: BoardSetInput): AssetRecord[] {
+  const recordsByPath = new Map<string, AssetRecord>();
+
+  for (const { path: rawPath, blob } of assets) {
+    const path = normalizeAssetPath(rawPath);
+    if (!path) {
+      throw new Error(`Invalid asset path: ${rawPath}`);
+    }
+
+    if (recordsByPath.has(path)) {
+      throw new Error(`Duplicate asset path: ${path}`);
+    }
+
+    recordsByPath.set(path, { boardSetId: id, path, blob });
+  }
+
+  return [...recordsByPath.values()];
 }
 
 function requestPersistentStorage(): void {
