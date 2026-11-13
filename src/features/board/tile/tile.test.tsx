@@ -450,4 +450,24 @@ describe("Tile", () => {
 
     expect(onActivate).toHaveBeenCalledExactlyOnceWith(button);
   });
+
+  test.each([
+    { size: "a small tile", width: 96, height: 96, fontSize: "14px" },
+    { size: "a wide, short tile", width: 460, height: 120, fontSize: "14px" },
+    { size: "a mid-sized tile", width: 224, height: 174, fontSize: "18px" },
+    { size: "a large tile", width: 460, height: 260, fontSize: "20px" },
+  ])(
+    "sizes its label to the shorter side of $size",
+    async ({ width, height, fontSize }) => {
+      const screen = await render(
+        <ThemeProvider>
+          <div style={{ width, height }}>
+            {tileElement({ label: "Sized", imageSrc: TEST_IMAGE_SRC })}
+          </div>
+        </ThemeProvider>,
+      );
+
+      await expect.element(screen.getByText("Sized")).toHaveStyle({ fontSize });
+    },
+  );
 });
