@@ -1,4 +1,4 @@
-export const PAGE_MARGIN = { xs: 2, sm: 3 } as const;
+import { PAGE_MARGIN } from "@shared/theme/page-spacing";
 
 export const SCROLL_CLEARANCE = { xs: 0.5, sm: 1 } as const;
 

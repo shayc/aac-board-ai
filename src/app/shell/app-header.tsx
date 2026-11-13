@@ -12,6 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { PAGE_MARGIN } from "@shared/theme/page-spacing";
 import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { useRouteLoaderData } from "react-router";
@@ -35,8 +36,14 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gridTemplateColumns: "1fr minmax(0, auto) 1fr",
           alignItems: "center",
           gap: theme.spacing(2),
-          pl: safeAreaGutter(theme.spacing(3), "left"),
-          pr: safeAreaGutter(theme.spacing(3), "right"),
+          pl: {
+            xs: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "left"),
+            sm: safeAreaGutter(theme.spacing(PAGE_MARGIN.sm), "left"),
+          },
+          pr: {
+            xs: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "right"),
+            sm: safeAreaGutter(theme.spacing(PAGE_MARGIN.sm), "right"),
+          },
         })}
       >
         <Tooltip title={t(m.libraryOpen)}>
