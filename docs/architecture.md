@@ -235,8 +235,9 @@ coordinates message updates, navigation, and playback:
    whole.
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
-   finishes uninterrupted. The played message stays visible during playback and
-   is preserved if playback is interrupted.
+   finishes uninterrupted and the message was not edited meanwhile. The played
+   message stays visible during playback and is preserved if playback is
+   interrupted.
 3. Once the whole message plays to its end, from the play button, the keyboard
    shortcut, or a tile that only plays it, the next tile or letter starts a new
    message. Editing the message, or replaying it without letting it finish,

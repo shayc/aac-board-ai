@@ -6,6 +6,7 @@ import {
   createTextPart,
   createTilePart,
   EMPTY_MESSAGE,
+  hasSameContent,
   markSpoken,
   spell,
 } from "./message-transforms";
@@ -205,6 +206,25 @@ describe("applyBackspace", () => {
 
   test("leaves an empty message as it is", () => {
     expect(applyBackspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
+  });
+});
+
+describe("hasSameContent", () => {
+  const message = closeWord(spell(EMPTY_MESSAGE, "hi"));
+
+  test("ignores whether the message was spoken", () => {
+    expect(hasSameContent(markSpoken(message, true), message)).toBe(true);
+  });
+
+  test.each([
+    { description: "a letter", edited: spell(message, "a") },
+    {
+      description: "a backspace that only reopens the word",
+      edited: applyBackspace(message),
+    },
+    { description: "a space", edited: closeWord(spell(message, "a")) },
+  ])("tells a message from itself after $description", ({ edited }) => {
+    expect(hasSameContent(edited, message)).toBe(false);
   });
 });
 
