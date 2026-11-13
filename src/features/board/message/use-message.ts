@@ -1,49 +1,61 @@
-import { useRef, useState } from "react";
-import { applyBackspace, createPart } from "./message-transforms";
-import type { MessagePart } from "./message-types";
+import { useMemo, useRef, useState } from "react";
+import {
+  applyBackspace,
+  createPart,
+  EMPTY_MESSAGE,
+  finishedMessage,
+  messageParts,
+} from "./message-transforms";
+import type { Message, MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
   text: string;
-  getParts: () => readonly MessagePart[];
-  setParts: (parts: readonly MessagePart[]) => void;
+  getCurrent: () => Message;
+  setCurrent: (message: Message) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
   clear: () => void;
 }
 
 export function useMessage(): UseMessageReturn {
-  const [parts, setPartsState] = useState<readonly MessagePart[]>([]);
-  const partsRef = useRef(parts);
+  const [message, setMessage] = useState(EMPTY_MESSAGE);
+  const messageRef = useRef(message);
+  // The message bar scrolls to the end whenever this array changes, so it
+  // must keep its identity across renders that leave the message alone.
+  const parts = useMemo(() => messageParts(message), [message]);
+
   const text = parts.map((part) => part.label).join(" ");
 
-  function getParts() {
-    return partsRef.current;
+  function getCurrent() {
+    return messageRef.current;
   }
 
-  function setParts(next: readonly MessagePart[]) {
-    partsRef.current = next;
-    setPartsState(next);
+  function setCurrent(next: Message) {
+    messageRef.current = next;
+    setMessage(next);
   }
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    setParts(words.map((word) => createPart({ label: word })));
+    setCurrent(
+      finishedMessage(words.map((word) => createPart({ label: word }))),
+    );
   }
 
   function backspace() {
-    setParts(applyBackspace(getParts()));
+    setCurrent(applyBackspace(getCurrent()));
   }
 
   function clear() {
-    setParts([]);
+    setCurrent(EMPTY_MESSAGE);
   }
 
   return {
     parts,
     text,
-    getParts,
-    setParts,
+    getCurrent,
+    setCurrent,
     replaceWithText,
     backspace,
     clear,

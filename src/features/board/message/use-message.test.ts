@@ -54,10 +54,8 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     message.backspace();
 
-    expect(message.getParts().map((part) => part.label)).toEqual([
-      "I",
-      "want",
-      "wate",
-    ]);
+    const labels = message.getCurrent().finishedParts.map((part) => part.label);
+
+    expect(labels).toEqual(["I", "want"]);
   });
 });

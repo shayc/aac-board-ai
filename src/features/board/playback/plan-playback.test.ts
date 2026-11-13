@@ -57,7 +57,7 @@ describe("planPlayback", () => {
     expect(steps[0]?.kind === "speech" && steps[0].text).toBe("happy");
   });
 
-  test("skips parts with no spoken text, such as inserted spaces", () => {
+  test("skips parts with no spoken text", () => {
     const steps = planPlayback([
       { id: "1", label: "hi" },
       { id: "2", label: "" },

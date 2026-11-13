@@ -1,161 +1,167 @@
 import { describe, expect, test } from "vitest";
 import {
   appendPart,
-  appendSpace,
   appendText,
   applyBackspace,
+  createPart,
+  EMPTY_MESSAGE,
+  finishedMessage,
+  finishSpelling,
+  messageParts,
 } from "./message-transforms";
-import type { MessagePart } from "./message-types";
+import type { Message, MessagePart } from "./message-types";
 
-describe("appendPart", () => {
-  test("appends a new part with a minted id", () => {
-    const parts = appendPart([], { label: "hi" });
+const HELLO: MessagePart = { id: "1", label: "hello" };
 
-    expect(parts).toHaveLength(1);
-    expect(parts[0]?.label).toBe("hi");
-    expect(parts[0]?.id).toBeTruthy();
-  });
+function spelling(label: string, finishedParts: MessagePart[] = []): Message {
+  return { finishedParts, spelledWord: { id: "spelled", label } };
+}
 
+function labels(message: Message): string[] {
+  return messageParts(message).map((part) => part.label);
+}
+
+describe("createPart", () => {
   test("mints a distinct id for each part even with identical content", () => {
-    const first = appendPart([], { label: "cat" });
-    const second = appendPart(first, { label: "cat" });
+    const first = createPart({ label: "cat" });
+    const second = createPart({ label: "cat" });
 
-    expect(second[0]?.id).not.toBe(second[1]?.id);
-  });
-
-  test("leaves the input array untouched", () => {
-    const original: MessagePart[] = [{ id: "1", label: "hi" }];
-
-    const result = appendPart(original, { label: "there" });
-
-    expect(original).toHaveLength(1);
-    expect(result).toHaveLength(2);
+    expect(first.id).toBeTruthy();
+    expect(first.id).not.toBe(second.id);
   });
 });
 
-describe("appendSpace", () => {
-  test("appends an empty-label part", () => {
-    const parts = appendSpace([{ id: "1", label: "hi" }]);
+describe("messageParts", () => {
+  test("lists the spelled word after the finished parts", () => {
+    expect(labels(spelling("wor", [HELLO]))).toEqual(["hello", "wor"]);
+  });
 
-    expect(parts).toHaveLength(2);
-    expect(parts[1]?.label).toBe("");
+  test("keeps the finished parts array when no word is being spelled", () => {
+    const parts = [HELLO];
+
+    expect(messageParts(finishedMessage(parts))).toBe(parts);
+  });
+});
+
+describe("appendPart", () => {
+  test("appends the part as a finished part", () => {
+    const part: MessagePart = { id: "2", label: "there" };
+
+    const message = appendPart(finishedMessage([HELLO]), part);
+
+    expect(message).toEqual(finishedMessage([HELLO, part]));
+  });
+
+  test("finishes the spelled word before the appended part", () => {
+    const part: MessagePart = { id: "2", label: "there" };
+
+    const message = appendPart(spelling("hi"), part);
+
+    expect(message.spelledWord).toBeNull();
+    expect(labels(message)).toEqual(["hi", "there"]);
   });
 });
 
 describe("appendText", () => {
-  test("appends text as a new part when the message is empty", () => {
-    const parts = appendText([], "h");
+  test("starts a spelled word when the message is empty", () => {
+    const message = appendText(EMPTY_MESSAGE, "h");
 
-    expect(parts).toHaveLength(1);
-    expect(parts[0]?.label).toBe("h");
-    expect(parts[0]?.id).toBeTruthy();
+    expect(message.finishedParts).toEqual([]);
+    expect(message.spelledWord?.label).toBe("h");
+    expect(message.spelledWord?.id).toBeTruthy();
   });
 
-  test("appends text to a purely text-only last part", () => {
-    const original: MessagePart[] = [{ id: "1", label: "ca" }];
+  test("adds letters to the word being spelled", () => {
+    const message = appendText(spelling("ca"), "t");
 
-    const parts = appendText(original, "t");
-
-    expect(parts).toHaveLength(1);
-    expect(parts[0]?.id).toBe("1");
-    expect(parts[0]?.label).toBe("cat");
+    expect(message.spelledWord).toEqual({ id: "spelled", label: "cat" });
   });
 
-  test("starts a new part if the last part has media", () => {
-    const original: MessagePart[] = [
-      { id: "1", label: "ca", imageSrc: "img.png" },
-    ];
+  test.each([
+    { description: "without media", part: { id: "1", label: "the" } },
+    {
+      description: "with media",
+      part: { id: "1", label: "the", imageSrc: "img.png" },
+    },
+  ])("starts a new word after a finished part $description", ({ part }) => {
+    const message = appendText(finishedMessage([part]), "c");
 
-    const parts = appendText(original, "t");
-
-    expect(parts).toHaveLength(2);
-    expect(parts[1]?.label).toBe("t");
-    expect(parts[0]?.imageSrc).toBe("img.png");
+    expect(message.finishedParts).toEqual([part]);
+    expect(message.spelledWord?.label).toBe("c");
   });
 
-  test("accumulates rapid appends into a single part", () => {
-    const afterFirst = appendText([{ id: "1", label: "" }], "h");
-    const afterSecond = appendText(afterFirst, "i");
+  test("spells nothing for empty text", () => {
+    const original = finishedMessage([HELLO]);
 
-    expect(afterSecond).toHaveLength(1);
-    expect(afterSecond[0]?.id).toBe("1");
-    expect(afterSecond[0]?.label).toBe("hi");
+    expect(appendText(original, "")).toBe(original);
+  });
+});
+
+describe("finishSpelling", () => {
+  test("turns the spelled word into a finished part", () => {
+    const message = finishSpelling(spelling("world", [HELLO]));
+
+    expect(message).toEqual(
+      finishedMessage([HELLO, { id: "spelled", label: "world" }]),
+    );
   });
 
-  test("leaves the input array untouched", () => {
-    const original: MessagePart[] = [{ id: "1", label: "ca" }];
+  test("makes the next letters start a new word", () => {
+    const message = appendText(finishSpelling(spelling("hi")), "u");
 
-    appendText(original, "t");
+    expect(labels(message)).toEqual(["hi", "u"]);
+  });
 
-    expect(original[0]?.label).toBe("ca");
+  test("adds nothing when no word is being spelled", () => {
+    expect(finishSpelling(finishedMessage([HELLO]))).toEqual(
+      finishedMessage([HELLO]),
+    );
   });
 });
 
 describe("applyBackspace", () => {
-  const graphemes = [
-    "😀",
-    "e\u0301",
-    "ש\u05C1\u05B8",
-    "👍🏽",
-    "👨‍👩‍👧‍👦",
-    "🇮🇱",
-    "✌️",
-    "1️⃣",
-  ];
+  const graphemes = ["😀", "é", "שָׁ", "👍🏽", "👨‍👩‍👧‍👦", "🇮🇱", "✌️", "1️⃣"];
 
-  test("removes a single character if the last part is text-only", () => {
-    const parts = applyBackspace([
-      { id: "1", label: "hello" },
-      { id: "2", label: "world" },
-    ]);
+  test("removes one character from the word being spelled", () => {
+    const message = applyBackspace(spelling("world", [HELLO]));
 
-    expect(parts).toEqual([
-      { id: "1", label: "hello" },
-      { id: "2", label: "worl" },
-    ]);
+    expect(message).toEqual(spelling("worl", [HELLO]));
   });
 
   test.each(graphemes)("removes the complete final grapheme %s", (grapheme) => {
-    const original: MessagePart[] = [
-      { id: "1", label: "hello" },
-      { id: "2", label: `a${grapheme}` },
-    ];
+    const message = applyBackspace(spelling(`a${grapheme}`, [HELLO]));
 
-    const parts = applyBackspace(original);
-
-    expect(parts).toEqual([
-      { id: "1", label: "hello" },
-      { id: "2", label: "a" },
-    ]);
-    expect(original[1]?.label).toBe(`a${grapheme}`);
+    expect(message).toEqual(spelling("a", [HELLO]));
   });
 
-  test.each(["w", "", ...graphemes])(
-    "removes the entire text-only part containing at most one grapheme (%s)",
+  test.each(["w", ...graphemes])(
+    "stops spelling when the word's only grapheme is removed (%s)",
     (label) => {
-      const parts = applyBackspace([
-        { id: "1", label: "hello" },
-        { id: "2", label },
-      ]);
+      const message = applyBackspace(spelling(label, [HELLO]));
 
-      expect(parts).toEqual([{ id: "1", label: "hello" }]);
+      expect(message).toEqual(finishedMessage([HELLO]));
     },
   );
 
-  test("removes the entire part if it is not text-only", () => {
-    const parts = applyBackspace([
-      { id: "1", label: "hello" },
-      { id: "2", label: "world", imageSrc: "img.png" },
-    ]);
+  test.each([
+    { description: "without media", part: { id: "2", label: "world" } },
+    {
+      description: "with media",
+      part: { id: "2", label: "world", imageSrc: "img.png" },
+    },
+  ])("removes a whole finished part $description", ({ part }) => {
+    const message = applyBackspace(finishedMessage([HELLO, part]));
 
-    expect(parts).toEqual([{ id: "1", label: "hello" }]);
+    expect(message).toEqual(finishedMessage([HELLO]));
   });
 
-  test("returns an empty array when there is only one part and it gets removed", () => {
-    expect(applyBackspace([{ id: "1", label: "h" }])).toEqual([]);
+  test("removes a spelled word whole once it is finished", () => {
+    const message = applyBackspace(finishSpelling(spelling("world", [HELLO])));
+
+    expect(message).toEqual(finishedMessage([HELLO]));
   });
 
-  test("returns an empty array when already empty", () => {
-    expect(applyBackspace([])).toEqual([]);
+  test("leaves an empty message empty", () => {
+    expect(applyBackspace(EMPTY_MESSAGE)).toEqual(EMPTY_MESSAGE);
   });
 });

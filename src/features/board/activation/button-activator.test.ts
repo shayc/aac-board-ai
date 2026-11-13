@@ -1,7 +1,12 @@
 import type { BoardButton } from "@features/library";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
-import type { MessagePart } from "../message/message-types";
+import {
+  EMPTY_MESSAGE,
+  finishedMessage,
+  messageParts,
+} from "../message/message-transforms";
+import type { Message, MessagePart } from "../message/message-types";
 import { createButtonActivator } from "./button-activator";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
@@ -12,11 +17,11 @@ const PLAY_THEN_CLEAR: BoardButton["actions"] = [
 ];
 
 function setup(initialParts: readonly MessagePart[] = []) {
-  let currentParts = initialParts;
+  let current = finishedMessage(initialParts);
   const message = {
-    getParts: () => currentParts,
-    setParts: vi.fn<ActivationOptions["message"]["setParts"]>((parts) => {
-      currentParts = parts;
+    getCurrent: () => current,
+    setCurrent: vi.fn<ActivationOptions["message"]["setCurrent"]>((next) => {
+      current = next;
     }),
   };
   const playback = {
@@ -35,6 +40,10 @@ function setup(initialParts: readonly MessagePart[] = []) {
     playback,
     navigation,
   };
+}
+
+function labels(message: Message): string[] {
+  return messageParts(message).map((part) => part.label);
 }
 
 function holdMessagePlayback(playback: ReturnType<typeof setup>["playback"]) {
@@ -59,7 +68,7 @@ describe("createButtonActivator", () => {
     });
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
-    expect(message.setParts).not.toHaveBeenCalled();
+    expect(message.setCurrent).not.toHaveBeenCalled();
     expect(playback.playMessage).not.toHaveBeenCalled();
     expect(playback.playPart).not.toHaveBeenCalled();
   });
@@ -78,12 +87,13 @@ describe("createButtonActivator", () => {
       actions: [],
     });
 
-    expect(message.setParts).toHaveBeenCalledOnce();
-    const committed = message.setParts.mock.calls[0]?.[0];
+    expect(message.setCurrent).toHaveBeenCalledOnce();
+    const committed = message.setCurrent.mock.calls[0]?.[0];
     assertDefined(committed);
-    const appended = committed.at(-1);
+    const appended = committed.finishedParts.at(-1);
     assertDefined(appended);
-    expect(committed).toHaveLength(2);
+    expect(committed.finishedParts).toHaveLength(2);
+    expect(committed.spelledWord).toBeNull();
     expect(appended).toMatchObject({
       label: "bell",
       vocalization: "ring the bell",
@@ -120,11 +130,27 @@ describe("createButtonActivator", () => {
       ],
     });
 
-    expect(message.setParts).toHaveBeenCalledOnce();
-    const committed = message.setParts.mock.calls[0]?.[0];
+    expect(message.setCurrent).toHaveBeenCalledOnce();
+    const committed = message.setCurrent.mock.calls[0]?.[0];
     assertDefined(committed);
-    expect(committed.map((part) => part.label)).toEqual(["hello", "world", ""]);
+    expect(committed.spelledWord).toBeNull();
+    expect(labels(committed)).toEqual(["hello", "d"]);
     expect(playback.playMessage).not.toHaveBeenCalled();
+  });
+
+  test("spells a new word after a word tile instead of extending it", () => {
+    const { activateButton, message } = setup();
+
+    activateButton({ id: "word", label: "the", actions: [] });
+    activateButton({
+      id: "letter",
+      label: "C",
+      actions: [{ kind: "spell", text: "c" }],
+    });
+
+    const committed = message.setCurrent.mock.lastCall?.[0];
+    assertDefined(committed);
+    expect(labels(committed)).toEqual(["the", "c"]);
   });
 
   test("clear empties the message", () => {
@@ -132,7 +158,7 @@ describe("createButtonActivator", () => {
 
     activateButton({ id: "btn", label: "", actions: [{ kind: "clear" }] });
 
-    expect(message.setParts).toHaveBeenCalledWith([]);
+    expect(message.setCurrent).toHaveBeenCalledWith(EMPTY_MESSAGE);
   });
 
   test("plays a message that includes a letter spelled earlier in the same tap", () => {
@@ -148,7 +174,10 @@ describe("createButtonActivator", () => {
     assertDefined(partsToPlay);
 
     expect(partsToPlay.map((part) => part.label)).toEqual(["s"]);
-    expect(message.setParts).toHaveBeenCalledExactlyOnceWith(partsToPlay);
+    expect(message.setCurrent).toHaveBeenCalledExactlyOnceWith({
+      finishedParts: [],
+      spelledWord: partsToPlay[0],
+    });
   });
 
   test("plays the current message without committing when play is the only action", async () => {
@@ -160,7 +189,7 @@ describe("createButtonActivator", () => {
     await settlePlayback(true);
 
     expect(playback.playMessage).toHaveBeenCalledWith(parts);
-    expect(message.setParts).not.toHaveBeenCalled();
+    expect(message.setCurrent).not.toHaveBeenCalled();
   });
 
   test("holds edits after play until playback completes, then commits them", async () => {
@@ -170,11 +199,11 @@ describe("createButtonActivator", () => {
     const settlePlayback = holdMessagePlayback(playback);
 
     activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
-    expect(message.setParts).not.toHaveBeenCalled();
+    expect(message.setCurrent).not.toHaveBeenCalled();
 
     await settlePlayback(true);
 
-    expect(message.setParts).toHaveBeenCalledExactlyOnceWith([]);
+    expect(message.setCurrent).toHaveBeenCalledExactlyOnceWith(EMPTY_MESSAGE);
   });
 
   test("applies edits after play to the message as it is when playback completes", async () => {
@@ -186,17 +215,19 @@ describe("createButtonActivator", () => {
     activateButton({
       id: "btn",
       label: "",
-      actions: [{ kind: "play" }, { kind: "space" }],
+      actions: [{ kind: "play" }, { kind: "spell", text: "!" }],
     });
-    message.setParts([
-      { id: "1", label: "hi" },
-      { id: "2", label: "there" },
-    ]);
+    message.setCurrent(
+      finishedMessage([
+        { id: "1", label: "hi" },
+        { id: "2", label: "there" },
+      ]),
+    );
     await settlePlayback(true);
 
-    const committed = message.setParts.mock.lastCall?.[0];
+    const committed = message.setCurrent.mock.lastCall?.[0];
     assertDefined(committed);
-    expect(committed.map((part) => part.label)).toEqual(["hi", "there", ""]);
+    expect(labels(committed)).toEqual(["hi", "there", "!"]);
   });
 
   test("drops edits after play when playback does not complete", async () => {
@@ -208,6 +239,6 @@ describe("createButtonActivator", () => {
     activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
     await settlePlayback(false);
 
-    expect(message.setParts).not.toHaveBeenCalled();
+    expect(message.setCurrent).not.toHaveBeenCalled();
   });
 });

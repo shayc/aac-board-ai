@@ -1,67 +1,69 @@
 import { randomId } from "@shared/utils/random-id";
-import type { MessagePart, MessagePartInput } from "./message-types";
+import type { Message, MessagePart, MessagePartInput } from "./message-types";
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
 });
 
+export const EMPTY_MESSAGE: Message = { finishedParts: [], spelledWord: null };
+
 export function createPart(content: MessagePartInput): MessagePart {
   return { ...content, id: randomId(), label: content.label ?? "" };
 }
 
-export function appendPart(
-  parts: readonly MessagePart[],
-  content: MessagePartInput,
-): readonly MessagePart[] {
-  return [...parts, createPart(content)];
+export function finishedMessage(parts: readonly MessagePart[]): Message {
+  return { finishedParts: parts, spelledWord: null };
 }
 
-export function appendSpace(
-  parts: readonly MessagePart[],
-): readonly MessagePart[] {
-  return appendPart(parts, { label: "" });
+export function messageParts({
+  finishedParts,
+  spelledWord,
+}: Message): readonly MessagePart[] {
+  return spelledWord ? [...finishedParts, spelledWord] : finishedParts;
 }
 
-export function appendText(
-  parts: readonly MessagePart[],
-  text: string,
-): readonly MessagePart[] {
-  const lastPart = parts.at(-1);
-  if (!lastPart || !isTextOnlyPart(lastPart)) {
-    return appendPart(parts, { label: text });
-  }
-
-  return parts.with(-1, {
-    ...lastPart,
-    label: `${lastPart.label}${text}`,
-  });
+export function appendPart(message: Message, part: MessagePart): Message {
+  return finishedMessage([...messageParts(message), part]);
 }
 
-export function applyBackspace(
-  parts: readonly MessagePart[],
-): readonly MessagePart[] {
-  const lastPart = parts.at(-1);
-  if (!lastPart) {
-    return parts;
+export function appendText(message: Message, text: string): Message {
+  // A "+" action with no letters is valid and spells nothing.
+  if (!text) {
+    return message;
   }
 
-  if (!isTextOnlyPart(lastPart) || !lastPart.label) {
-    return parts.slice(0, -1);
+  const { spelledWord } = message;
+  const extendedWord = spelledWord
+    ? { ...spelledWord, label: `${spelledWord.label}${text}` }
+    : createPart({ label: text });
+
+  return { ...message, spelledWord: extendedWord };
+}
+
+export function finishSpelling(message: Message): Message {
+  return finishedMessage(messageParts(message));
+}
+
+export function applyBackspace({
+  finishedParts,
+  spelledWord,
+}: Message): Message {
+  if (!spelledWord) {
+    return finishedMessage(finishedParts.slice(0, -1));
   }
 
+  const label = withoutLastGrapheme(spelledWord.label);
+
+  return {
+    finishedParts,
+    spelledWord: label ? { ...spelledWord, label } : null,
+  };
+}
+
+function withoutLastGrapheme(text: string): string {
   const lastGrapheme = graphemeSegmenter
-    .segment(lastPart.label)
-    .containing(lastPart.label.length - 1);
-  if (!lastGrapheme || lastGrapheme.index === 0) {
-    return parts.slice(0, -1);
-  }
+    .segment(text)
+    .containing(text.length - 1);
 
-  return parts.with(-1, {
-    ...lastPart,
-    label: lastPart.label.slice(0, lastGrapheme.index),
-  });
-}
-
-function isTextOnlyPart(part: MessagePart): boolean {
-  return !part.imageSrc && !part.soundSrc && !part.vocalization;
+  return lastGrapheme ? text.slice(0, lastGrapheme.index) : "";
 }
