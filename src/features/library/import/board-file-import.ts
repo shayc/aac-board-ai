@@ -63,10 +63,10 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
     limits: BOARD_FILE_IMPORT_LIMITS,
   });
   const content = buildBoardSetContent(loadedBoard, file.name);
-  const baseBoardSetId = deriveBoardSetId(file.name);
+  const baseId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const id = buildBoardSetIdCandidate(baseBoardSetId, candidateNumber);
+    const id = buildBoardSetIdCandidate(baseId, candidateNumber);
 
     try {
       await createBoardSet({ ...content, id });
@@ -132,15 +132,12 @@ export function deriveBoardSetId(fileName: string): string {
   return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
 }
 
-function buildBoardSetIdCandidate(
-  baseBoardSetId: string,
-  candidateNumber: number,
-) {
+function buildBoardSetIdCandidate(baseId: string, candidateNumber: number) {
   if (candidateNumber === 1) {
-    return baseBoardSetId;
+    return baseId;
   }
 
   const suffix = `-${candidateNumber}`;
 
-  return `${baseBoardSetId.slice(0, MAX_ID_LENGTH - suffix.length)}${suffix}`;
+  return `${baseId.slice(0, MAX_ID_LENGTH - suffix.length)}${suffix}`;
 }

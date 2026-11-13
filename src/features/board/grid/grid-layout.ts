@@ -76,10 +76,10 @@ export function createGridViewportSx(theme: Theme, gap: number) {
 function createScrollPadding(breakpoint: Breakpoint, gapPx: number) {
   return {
     scrollPaddingInline: formatPx(
-      calculateScrollingInsetPx(AXES.inline, breakpoint, gapPx) / 2,
+      scrollingInsetPx(AXES.inline, breakpoint, gapPx) / 2,
     ),
     scrollPaddingBlock: formatPx(
-      calculateScrollingInsetPx(AXES.block, breakpoint, gapPx) / 2,
+      scrollingInsetPx(AXES.block, breakpoint, gapPx) / 2,
     ),
   };
 }
@@ -163,7 +163,7 @@ function createTrackFit(
   // padding on one side and a gap plus the next track's hint on the other.
   const isScrollable = visibleTracks < trackCount;
   const insetPx = isScrollable
-    ? calculateScrollingInsetPx(axis, breakpoint, gapPx)
+    ? scrollingInsetPx(axis, breakpoint, gapPx)
     : 2 * axis.paddingPx[breakpoint];
   const gapsAndInsetPx = (visibleTracks - 1) * gapPx + insetPx;
   const fittedCellSize = `calc((${axis.viewportSize} - ${formatPx(gapsAndInsetPx)}) / ${visibleTracks})`;
@@ -176,7 +176,7 @@ function createTrackFit(
   };
 }
 
-function calculateScrollingInsetPx(
+function scrollingInsetPx(
   axis: GridAxis,
   breakpoint: Breakpoint,
   gapPx: number,

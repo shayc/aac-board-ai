@@ -10,7 +10,7 @@ export function selectSuggestionPhrases(
   const phrases: string[] = [];
 
   for (const candidate of candidates) {
-    if (!candidate || hasSuggestionArtifacts(candidate)) {
+    if (!candidate || hasArtifacts(candidate)) {
       continue;
     }
 
@@ -26,7 +26,7 @@ export function selectSuggestionPhrases(
   return phrases;
 }
 
-function hasSuggestionArtifacts(phrase: string): boolean {
+function hasArtifacts(phrase: string): boolean {
   return UNDERSCORED_WORD.test(phrase) || phrase.includes('"');
 }
 
