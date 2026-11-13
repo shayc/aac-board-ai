@@ -40,9 +40,7 @@ export function gridArrangementKey(grid: GridCells): string {
   return JSON.stringify(grid.map((row) => row.map((cell) => cell?.id ?? null)));
 }
 
-export function findFirstOccupiedPosition(
-  grid: readonly (readonly unknown[])[],
-): GridPosition {
+export function findFirstOccupiedPosition(grid: GridCells): GridPosition {
   for (const [row, cells] of grid.entries()) {
     const column = cells.findIndex(Boolean);
     if (column !== -1) {

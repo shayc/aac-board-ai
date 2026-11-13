@@ -170,7 +170,8 @@ Route loaders only read; they never translate or wait on a model:
    `loadStoredBoard`. It reads the stored OBF, resolves object URLs for its
    stored assets, and maps both through `obfToBoard`. Loading leaves the OBF
    unchanged. Media paths resolve only to stored assets; otherwise the item's
-   `data` or `url` is used.
+   `data` or `url` is used. A link to a board the set does not store is left
+   out of the loaded board, so its tile is an ordinary tile.
 2. The page renders the board in the communication language through
    `useBoardInLanguage`: the source board, or the board's own translations for
    that language, from the board file or saved on this device.

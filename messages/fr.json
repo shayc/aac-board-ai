@@ -115,7 +115,7 @@
   "suggestionsEnableHelp": "Comment activer les suggestions",
   "suggestionsEnable": "Activer les suggestions",
   "suggestionsDownloading": "Téléchargement du modèle d'IA…",
-  "suggestionsUnavailable": "Suggestions indisponibles sur cet appareil",
+  "suggestionsUnavailable": "Suggestions indisponibles dans cette langue ou sur cet appareil",
   "suggestionsFailed": "Impossible d’obtenir des suggestions",
   "suggestionsLabel": "Suggestions",
   "navBack": "Retour",

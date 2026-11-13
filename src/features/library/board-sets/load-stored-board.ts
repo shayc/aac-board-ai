@@ -5,6 +5,7 @@ import { getAssetURL } from "../storage/asset-urls";
 import {
   BoardNotFoundError,
   getBoardRecord,
+  listBoardIds,
 } from "../storage/board-content-storage";
 
 export async function loadStoredBoard(
@@ -14,10 +15,16 @@ export async function loadStoredBoard(
   const obfBoard = await readOBFBoard(key);
   signal?.throwIfAborted();
 
-  const assetURLByPath = await resolveAssetURLs(key.boardSetId, obfBoard);
+  const [assetURLByPath, storedBoardIds] = await Promise.all([
+    resolveAssetURLs(key.boardSetId, obfBoard),
+    listBoardIds(key.boardSetId),
+  ]);
   signal?.throwIfAborted();
 
-  return obfToBoard(obfBoard, assetURLByPath);
+  return withoutBrokenLinks(
+    obfToBoard(obfBoard, assetURLByPath),
+    new Set(storedBoardIds),
+  );
 }
 
 async function readOBFBoard(key: BoardKey): Promise<OBFBoard> {
@@ -48,4 +55,20 @@ function collectMediaPaths(obfBoard: OBFBoard): Set<string> {
   const media = [...(obfBoard.images ?? []), ...(obfBoard.sounds ?? [])];
 
   return new Set(media.flatMap((item) => (item.path ? [item.path] : [])));
+}
+
+// Broken links are dropped here, not at import: the stored file keeps them so
+// export writes back what was imported.
+function withoutBrokenLinks(
+  board: Board,
+  storedBoardIds: ReadonlySet<string>,
+): Board {
+  return {
+    ...board,
+    buttons: board.buttons.map((button) =>
+      button.linkedBoardId && !storedBoardIds.has(button.linkedBoardId)
+        ? { ...button, linkedBoardId: undefined }
+        : button,
+    ),
+  };
 }

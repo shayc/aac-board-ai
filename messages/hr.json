@@ -115,7 +115,7 @@
   "suggestionsEnableHelp": "Kako uključiti prijedloge",
   "suggestionsEnable": "Uključi prijedloge",
   "suggestionsDownloading": "Preuzimanje AI modela…",
-  "suggestionsUnavailable": "Prijedlozi nisu dostupni na ovom uređaju",
+  "suggestionsUnavailable": "Prijedlozi nisu dostupni za ovaj jezik ili na ovom uređaju",
   "suggestionsFailed": "Nije moguće dohvatiti prijedloge",
   "suggestionsLabel": "Prijedlozi",
   "navBack": "Natrag",

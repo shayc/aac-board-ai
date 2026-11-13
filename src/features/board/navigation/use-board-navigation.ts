@@ -1,12 +1,7 @@
-import { BOARD_ROUTE_PATTERN, boardPath } from "@features/library";
+import { boardPath } from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
-import { useLocation, useMatch, useNavigate } from "react-router";
-
-interface UseBoardRouteReturn {
-  boardSetId: string | undefined;
-  boardId: string | undefined;
-  goToBoard: (targetBoardId: string) => void;
-}
+import { useLocation, useNavigate } from "react-router";
+import { useBoardRoute } from "./use-board-route";
 
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;
@@ -14,24 +9,6 @@ export interface UseBoardNavigationReturn {
   goToBoard: (targetBoardId: string) => void;
   goBack: () => void;
   goHome: () => void;
-}
-
-export function useBoardRoute(): UseBoardRouteReturn {
-  const navigate = useNavigate();
-  const match = useMatch(BOARD_ROUTE_PATTERN);
-  const { boardSetId, boardId } = match?.params ?? {};
-
-  function goToBoard(targetBoardId: string) {
-    if (!boardSetId || !targetBoardId || targetBoardId === boardId) {
-      return;
-    }
-
-    void navigate(boardPath({ boardSetId, boardId: targetBoardId }), {
-      state: { canGoBack: true },
-    });
-  }
-
-  return { boardSetId, boardId, goToBoard };
 }
 
 export function useBoardNavigation(
@@ -45,7 +22,7 @@ export function useBoardNavigation(
   const canGoHome = Boolean(rootBoardId);
 
   function goBack() {
-    if (!boardSetId || !canGoBack) {
+    if (!canGoBack) {
       return;
     }
 

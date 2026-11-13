@@ -115,7 +115,7 @@
   "suggestionsEnableHelp": "Как включить подсказки",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ…",
-  "suggestionsUnavailable": "Предложения недоступны на этом устройстве",
+  "suggestionsUnavailable": "Предложения недоступны для этого языка или на этом устройстве",
   "suggestionsFailed": "Не удалось получить предложения",
   "suggestionsLabel": "Предложения",
   "navBack": "Назад",

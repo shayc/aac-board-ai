@@ -14,7 +14,7 @@ export function BoardControlButton({
   return (
     <Button
       {...props}
-      {...focusableDisabledProps(disabled)}
+      {...focusableDisabledProps(disabled, props.className)}
       size="large"
       color="inherit"
       variant="contained"
