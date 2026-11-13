@@ -7,17 +7,21 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import List from "@mui/material/List";
+import DialogContent, {
+  dialogContentClasses,
+} from "@mui/material/DialogContent";
+import DialogTitle, { dialogTitleClasses } from "@mui/material/DialogTitle";
+import List, { listClasses } from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import ListItemText, { listItemTextClasses } from "@mui/material/ListItemText";
+import type { Theme } from "@mui/material/styles";
 import type SvgIcon from "@mui/material/SvgIcon";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { BoardMark } from "./board-mark";
 
 interface OnboardingDialogProps {
@@ -35,6 +39,7 @@ interface Highlight {
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const t = useTranslate();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isShortLandscape = useMediaQuery(shortLandscape);
 
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
@@ -72,26 +77,28 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      fullScreen={isSmallScreen}
+      fullScreen={isSmallScreen || isShortLandscape}
       fullWidth
       maxWidth="xs"
     >
-      <Box sx={{ my: "auto", pt: 6 }}>
-        <BoardMark />
+      <Box sx={introductionSx}>
+        <Box>
+          <BoardMark />
 
-        <DialogTitle
-          variant="h4"
-          sx={{
-            maxWidth: 320,
-            mx: "auto",
-            py: 0,
-            fontWeight: "fontWeightBold",
-            textAlign: "center",
-            textWrap: "balance",
-          }}
-        >
-          {t(m.onboardingTitle)}
-        </DialogTitle>
+          <DialogTitle
+            variant="h4"
+            sx={{
+              maxWidth: 320,
+              mx: "auto",
+              py: 0,
+              fontWeight: "fontWeightBold",
+              textAlign: "center",
+              textWrap: "balance",
+            }}
+          >
+            {t(m.onboardingTitle)}
+          </DialogTitle>
+        </Box>
 
         <DialogContent sx={{ flex: "none", pb: 0, overflowY: "visible" }}>
           <List
@@ -116,13 +123,55 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </DialogContent>
       </Box>
 
-      <DialogActions sx={{ px: 3, pt: 5, pb: 4 }}>
+      <DialogActions sx={actionsSx}>
         <Button fullWidth variant="contained" size="large" onClick={onClose}>
           {t(m.onboardingContinue)}
         </Button>
       </DialogActions>
     </Dialog>
   );
+}
+
+function introductionSx(theme: Theme) {
+  return {
+    minHeight: 0,
+    my: "auto",
+    pt: 6,
+    // The action stays in view while a tall introduction scrolls.
+    overflowY: "auto",
+    [shortLandscape(theme)]: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      alignItems: "center",
+      gap: 4,
+      width: "100%",
+      maxWidth: theme.breakpoints.values.md,
+      mx: "auto",
+      pt: 1,
+      px: 6,
+      [`& .${dialogTitleClasses.root}`]: {
+        fontSize: theme.typography.h5.fontSize,
+      },
+      [`& .${dialogContentClasses.root}`]: { p: 0 },
+      [`& .${listClasses.root}`]: { gap: 1, mt: 0, pl: 0 },
+      [`& .${listItemTextClasses.secondary}`]: theme.typography.body2,
+    },
+  };
+}
+
+function actionsSx(theme: Theme) {
+  return {
+    px: 3,
+    pt: 5,
+    pb: 4,
+    [shortLandscape(theme)]: {
+      width: "100%",
+      maxWidth: theme.breakpoints.values.md,
+      mx: "auto",
+      px: 6,
+      py: 1,
+    },
+  };
 }
 
 type HighlightItemProps = Omit<Highlight, "id">;

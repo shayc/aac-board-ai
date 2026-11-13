@@ -324,6 +324,24 @@ Theme colors are defined centrally in
 [`theme-colors.ts`](../src/shared/theme/theme-colors.ts). Theme mode is set before
 the first paint to avoid a flash of the wrong color scheme.
 
+### Screen sizes
+
+Layout turns on one width breakpoint, `sm`. Below it the board's back, home,
+and backspace buttons move under the grid and the spacing tightens, as
+[Board spacing](#board-spacing) describes.
+
+One height query sits beside it.
+[`shortLandscape`](../src/shared/theme/short-landscape.ts) matches a landscape
+screen shorter than the `sm` value, such as a phone on its side, which a width
+breakpoint cannot see. The welcome dialog uses it to stay full-screen with its
+action in view.
+
+Sizes inside a component follow the component, not the screen. The grid's
+viewport is a size container that decides how many rows and columns fit. Each
+tile is a size container too: its label takes 12% of the tile's shorter side,
+between the `body2` and `h6` sizes. The shorter side decides, so a wide but
+short tile keeps a small label and leaves its height to the symbol.
+
 ### Board spacing
 
 The board places its bars, and the grid pads itself, with the spacing in

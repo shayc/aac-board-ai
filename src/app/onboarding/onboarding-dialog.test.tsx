@@ -2,6 +2,7 @@ import { locales } from "@paraglide/runtime";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubRewriter } from "@shared/testing/stub-built-in-ai";
+import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { OnboardingDialog } from "./onboarding-dialog";
@@ -66,5 +67,19 @@ describe("OnboardingDialog", () => {
     await screen.getByRole("button", { name: "Continue" }).click();
 
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  test.each([
+    { screen: "a phone on its side", width: 667, height: 375 },
+    { screen: "a small phone on its side", width: 568, height: 320 },
+    { screen: "a small upright phone", width: 320, height: 568 },
+  ])("keeps Continue in view on $screen", async ({ width, height }) => {
+    await setTestViewport(width, height);
+    const screen = await renderDialog(vi.fn());
+
+    const continueButton = screen.getByRole("button", { name: "Continue" });
+    await expect.element(continueButton).toBeVisible();
+
+    await expect.element(continueButton).toBeInViewport({ ratio: 1 });
   });
 });
