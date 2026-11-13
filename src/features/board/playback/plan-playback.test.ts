@@ -66,4 +66,32 @@ describe("planPlayback", () => {
     expect(steps).toHaveLength(1);
     expect(steps[0]?.kind === "speech" && steps[0].text).toBe("hi");
   });
+
+  test.each([
+    { source: "label", part: { id: "1", label: " " } },
+    {
+      source: "vocalization",
+      part: { id: "1", label: "hello", vocalization: " \t" },
+    },
+  ])("returns no steps for a whitespace-only $source", ({ part }) => {
+    expect(planPlayback([part])).toEqual([]);
+  });
+
+  test("skips whitespace-only parts within and at the end of a speech run", () => {
+    const steps = planPlayback([
+      { id: "1", label: "hello" },
+      { id: "2", label: " " },
+      { id: "3", label: "world" },
+      { id: "4", label: "goodbye", vocalization: " " },
+    ]);
+
+    expect(steps).toHaveLength(1);
+    const step = steps[0];
+    if (step?.kind !== "speech") {
+      throw new Error("Expected a speech step");
+    }
+
+    expect(step.text).toBe("hello world");
+    expect(step.cueAt?.(6)).toBe("3");
+  });
 });

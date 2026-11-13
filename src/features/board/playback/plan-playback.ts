@@ -44,5 +44,5 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
 }
 
 function getSpokenText(part: MessagePart): string {
-  return (part.vocalization ?? part.label).toLowerCase();
+  return (part.vocalization ?? part.label).trim().toLowerCase();
 }
