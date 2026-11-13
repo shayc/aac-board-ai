@@ -70,21 +70,23 @@ export function AACSymbol({
         </Box>
       )}
 
-      <Typography
-        component="span"
-        noWrap
-        variant={isImageDisplayed ? "body2" : "h5"}
-        sx={[
-          { flexShrink: 0, lineHeight: 1.2, fontWeight: "fontWeightBold" },
-          isImageDisplayed &&
-            ((theme) => ({
-              fontSize: `var(${SYMBOL_LABEL_FONT_SIZE_PROPERTY}, ${theme.typography.body2.fontSize})`,
-            })),
-          !isLabelDisplayed && visuallyHidden,
-        ]}
-      >
-        {label}
-      </Typography>
+      {hasLabel && (
+        <Typography
+          component="span"
+          noWrap
+          variant={isImageDisplayed ? "body2" : "h5"}
+          sx={[
+            { flexShrink: 0, lineHeight: 1.2, fontWeight: "fontWeightBold" },
+            isImageDisplayed &&
+              ((theme) => ({
+                fontSize: `var(${SYMBOL_LABEL_FONT_SIZE_PROPERTY}, ${theme.typography.body2.fontSize})`,
+              })),
+            !isLabelDisplayed && visuallyHidden,
+          ]}
+        >
+          {label}
+        </Typography>
+      )}
     </Box>
   );
 }

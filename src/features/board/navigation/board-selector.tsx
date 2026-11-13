@@ -4,7 +4,7 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
-import { useBoardRoute } from "./use-board-navigation";
+import { useBoardRoute } from "./use-board-route";
 
 interface BoardOption {
   id: string;

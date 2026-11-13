@@ -1,3 +1,4 @@
+import type { PlaybackStep } from "@shared/playback/playback-types";
 import { describe, expect, test } from "vitest";
 import { createPart } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
@@ -16,11 +17,7 @@ describe("planPlayback", () => {
 
     const steps = planPlayback(parts);
 
-    expect(steps).toHaveLength(1);
-    const step = steps[0];
-    if (step?.kind !== "speech") {
-      throw new Error("Expected a speech step");
-    }
+    const step = getOnlySpeechStep(steps);
 
     expect(step.text).toBe("i want");
     expect(step.cueAt?.(2)).toBe("2");
@@ -54,7 +51,9 @@ describe("planPlayback", () => {
       { id: "1", label: "🙂", vocalization: "Happy" },
     ]);
 
-    expect(steps[0]?.kind === "speech" && steps[0].text).toBe("happy");
+    const step = getOnlySpeechStep(steps);
+
+    expect(step.text).toBe("happy");
   });
 
   test("skips parts with no spoken text, such as inserted spaces", () => {
@@ -63,7 +62,45 @@ describe("planPlayback", () => {
       { id: "2", label: "" },
     ]);
 
-    expect(steps).toHaveLength(1);
-    expect(steps[0]?.kind === "speech" && steps[0].text).toBe("hi");
+    const step = getOnlySpeechStep(steps);
+
+    expect(step.text).toBe("hi");
+  });
+
+  test.each([
+    { source: "label", part: { id: "1", label: " " } },
+    {
+      source: "vocalization",
+      part: { id: "1", label: "hello", vocalization: " \t" },
+    },
+  ])("returns no steps for a whitespace-only $source", ({ part }) => {
+    expect(planPlayback([part])).toEqual([]);
+  });
+
+  test("skips whitespace-only parts within and at the end of a speech run", () => {
+    const steps = planPlayback([
+      { id: "1", label: "hello" },
+      { id: "2", label: " " },
+      { id: "3", label: "world" },
+      { id: "4", label: "goodbye", vocalization: " " },
+    ]);
+
+    const step = getOnlySpeechStep(steps);
+
+    expect(step.text).toBe("hello world");
+    expect(step.cueAt?.(6)).toBe("3");
   });
 });
+
+type SpeechStep = Extract<PlaybackStep, { kind: "speech" }>;
+
+function getOnlySpeechStep(steps: readonly PlaybackStep[]): SpeechStep {
+  const [step] = steps;
+  if (steps.length !== 1 || step?.kind !== "speech") {
+    const kinds = steps.map(({ kind }) => kind).join(", ");
+
+    throw new Error(`Expected a single speech step, got [${kinds}]`);
+  }
+
+  return step;
+}

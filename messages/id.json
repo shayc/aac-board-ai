@@ -115,7 +115,7 @@
   "suggestionsEnableHelp": "Cara mengaktifkan saran",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI…",
-  "suggestionsUnavailable": "Saran tidak tersedia di perangkat ini",
+  "suggestionsUnavailable": "Saran tidak tersedia dalam bahasa ini atau di perangkat ini",
   "suggestionsFailed": "Tidak dapat mengambil saran",
   "suggestionsLabel": "Saran",
   "navBack": "Kembali",
