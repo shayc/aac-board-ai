@@ -1,5 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import type { Board, BoardKey } from "../board-types";
+import { collectMediaPaths } from "../obf/collect-media-paths";
 import { obfToBoard } from "../obf/obf-to-board";
 import { getAssetURL } from "../storage/asset-urls";
 import {
@@ -41,7 +42,7 @@ async function resolveAssetURLs(
   obfBoard: OBFBoard,
 ): Promise<Map<string, string>> {
   const entries = await Promise.all(
-    Array.from(collectMediaPaths(obfBoard), async (path) => {
+    Array.from(collectMediaPaths([obfBoard]), async (path) => {
       // A board missing one picture or sound is still usable; failing the
       // whole load would leave the user with no board at all.
       const url = await getAssetURL(boardSetId, path).catch(() => undefined);
@@ -51,12 +52,6 @@ async function resolveAssetURLs(
   );
 
   return new Map(entries.flat());
-}
-
-function collectMediaPaths(obfBoard: OBFBoard): Set<string> {
-  const media = [...(obfBoard.images ?? []), ...(obfBoard.sounds ?? [])];
-
-  return new Set(media.flatMap((item) => (item.path ? [item.path] : [])));
 }
 
 // Broken links are dropped here, not at import: the stored file keeps them so
