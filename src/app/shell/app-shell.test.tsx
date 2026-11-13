@@ -1,5 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { stubVoices } from "@shared/testing/stub-speech";
 import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, test } from "vitest";
@@ -120,5 +121,22 @@ describe("AppShell", () => {
     expect(openSettingsButton).toHaveAttribute("aria-label", "פתיחת ההגדרות");
     expect(document.documentElement).toHaveAttribute("lang", "he");
     expect(document.documentElement).toHaveAttribute("dir", "rtl");
+  });
+
+  test("keeps the document language on the fallback locale for a language with voices but no UI text", async () => {
+    stubVoices([{ voiceURI: "nb-1", name: "Nora", lang: "nb-NO" }]);
+    const screen = await renderAppShellPastOnboarding();
+    await screen.getByRole("button", { name: "Open settings" }).click();
+
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: /norsk/i }).click();
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Voice" }))
+      .toHaveTextContent("Nora");
+    await expect
+      .element(screen.getByRole("heading", { name: "Settings" }))
+      .toBeVisible();
+    expect(document.documentElement).toHaveAttribute("lang", "en");
   });
 });

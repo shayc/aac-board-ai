@@ -318,7 +318,9 @@ voice or translation model. Speech uses the saved voice only when it speaks
 the communication language; otherwise it picks one of that language's voices,
 or leaves the choice to the browser, without changing the saved voice.
 
-Paraglide message catalogs provide UI text. Direction-specific Emotion caches,
+Paraglide message catalogs provide UI text. The document's `lang` names the UI
+locale, so a communication language without a catalog keeps `lang` on the
+fallback locale its UI text is shown in. Direction-specific Emotion caches,
 right-to-left (RTL) styling, and logical CSS support both text directions.
 
 ### Theming
