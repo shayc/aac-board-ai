@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { setClearsAfterSpeaking } from "./message-preferences-store";
 import { spell } from "./message-transforms";
 import { useMessage } from "./use-message";
 
@@ -74,4 +75,85 @@ describe("useMessage", () => {
       "wants",
     ]);
   });
+
+  test("adds to an empty message once the current one is spoken", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    await trackSettledPlayback(message, true);
+
+    expect(message.isAwaitingNewMessage()).toBe(true);
+    expect(message.getStateToAddTo().parts).toEqual([]);
+    expect(message.getState().parts).toHaveLength(3);
+  });
+
+  test("adds to the spoken message once it is edited", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    await trackSettledPlayback(message, true);
+    message.backspace();
+
+    expect(message.getStateToAddTo()).toBe(message.getState());
+  });
+
+  test("adds to the spoken message when clearing after speaking is off", async () => {
+    setClearsAfterSpeaking(false);
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    await trackSettledPlayback(message, true);
+
+    expect(message.getStateToAddTo()).toBe(message.getState());
+  });
+
+  test("adds to the message when its playback did not complete", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    await trackSettledPlayback(message, true);
+    await trackSettledPlayback(message, false);
+
+    expect(message.getStateToAddTo()).toBe(message.getState());
+  });
+
+  test("adds to a spoken message while it is playing again", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    await trackSettledPlayback(message, true);
+    message.trackPlayback(
+      message.getState().parts,
+      Promise.withResolvers<boolean>().promise,
+    );
+
+    expect(message.getStateToAddTo()).toBe(message.getState());
+  });
+
+  test("adds to the message when it changed while playing", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    const completion = Promise.resolve(true);
+    message.trackPlayback(message.getState().parts, completion);
+    message.backspace();
+    await completion;
+
+    expect(message.getStateToAddTo()).toBe(message.getState());
+  });
 });
+
+async function trackSettledPlayback(
+  message: ReturnType<typeof useMessage>,
+  hasCompleted: boolean,
+) {
+  const completion = Promise.resolve(hasCompleted);
+  message.trackPlayback(message.getState().parts, completion);
+  await completion;
+}

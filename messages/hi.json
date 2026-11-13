@@ -92,6 +92,7 @@
   "speechPreviewSample": "नमस्ते, यह मेरी आवाज़ है!",
   "messageImages": "चित्र दिखाएं",
   "messageHighlight": "बोलते समय हाइलाइट करें",
+  "messageClearAfterSpeaking": "बोलने के बाद साफ़ करें",
   "tileSaturation": "रंग की तीव्रता",
   "tileBrightness": "चमक",
   "tileBorders": "सीमाएँ दिखाएं",

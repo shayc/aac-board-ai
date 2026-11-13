@@ -1,16 +1,18 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { failSpeech, stubSpeech } from "@shared/testing/stub-speech";
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { page } from "vitest/browser";
 import type { MessagePart } from "../message/message-types";
 import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
-function renderPlayback() {
+type PlaybackOptions = Parameters<typeof useBoardPlayback>[0];
+
+function renderPlayback(options?: PlaybackOptions) {
   return renderHook(
     () => ({
-      ...useBoardPlayback(),
+      ...useBoardPlayback(options),
       activePartId: useActiveMessagePartId(),
     }),
     { wrapper: AppProviders },
@@ -313,5 +315,31 @@ describe("useBoardPlayback", () => {
     await rerender();
 
     expect(page.getByRole("alert").elements()).toHaveLength(0);
+  });
+
+  test("reports a played message with its completion", async () => {
+    const onMessagePlayback =
+      vi.fn<NonNullable<NonNullable<PlaybackOptions>["onMessagePlayback"]>>();
+    const parts: MessagePart[] = [{ kind: "tile", id: "1", label: "hi" }];
+    const { result } = await renderPlayback({ onMessagePlayback });
+
+    await result.current.playMessage(parts);
+
+    expect(onMessagePlayback).toHaveBeenCalledOnce();
+    const [reportedParts, completion] = onMessagePlayback.mock.calls[0] ?? [];
+    expect(reportedParts).toBe(parts);
+    await expect(completion).resolves.toBe(true);
+  });
+
+  test("plays an echoed message without reporting it", async () => {
+    const onMessagePlayback = vi.fn();
+    const { result } = await renderPlayback({ onMessagePlayback });
+
+    await expect(
+      result.current.echoMessage([{ kind: "tile", id: "1", label: "hi" }]),
+    ).resolves.toBe(true);
+
+    expect(speech.spokenTexts()).toEqual(["hi"]);
+    expect(onMessagePlayback).not.toHaveBeenCalled();
   });
 });

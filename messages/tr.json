@@ -92,6 +92,7 @@
   "speechPreviewSample": "Merhaba, bu benim sesim!",
   "messageImages": "Görselleri göster",
   "messageHighlight": "Konuşurken vurgula",
+  "messageClearAfterSpeaking": "Konuştuktan sonra temizle",
   "tileSaturation": "Renk yoğunluğu",
   "tileBrightness": "Parlaklık",
   "tileBorders": "Kenarlıkları göster",

@@ -92,6 +92,7 @@
   "speechPreviewSample": "你好，这是我的声音！",
   "messageImages": "显示图片",
   "messageHighlight": "朗读时高亮显示",
+  "messageClearAfterSpeaking": "朗读后清除",
   "tileSaturation": "颜色强度",
   "tileBrightness": "亮度",
   "tileBorders": "显示边框",

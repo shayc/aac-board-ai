@@ -47,4 +47,21 @@ describe("MessageSettings", () => {
       }),
     );
   });
+
+  test("toggles clearing the message after speaking", async () => {
+    const screen = await renderMessageSettings();
+    const clearSwitch = screen.getByRole("switch", {
+      name: "Clear after speaking",
+    });
+
+    await expect.element(clearSwitch).toBeChecked();
+    await clearSwitch.click();
+
+    await expect.element(clearSwitch).not.toBeChecked();
+    await vi.waitFor(() =>
+      expect(readStoredPreferences()).toMatchObject({
+        clearsAfterSpeaking: false,
+      }),
+    );
+  });
 });

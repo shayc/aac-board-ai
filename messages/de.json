@@ -92,6 +92,7 @@
   "speechPreviewSample": "Hallo, das ist meine Stimme!",
   "messageImages": "Bilder anzeigen",
   "messageHighlight": "Beim Sprechen hervorheben",
+  "messageClearAfterSpeaking": "Nach dem Sprechen leeren",
   "tileSaturation": "Farbstärke",
   "tileBrightness": "Helligkeit",
   "tileBorders": "Rahmen anzeigen",
