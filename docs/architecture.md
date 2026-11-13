@@ -226,6 +226,10 @@ coordinates message updates, navigation, and playback:
 
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.
+   A spelling action (OBF `+a`) extends the word being spelled, starting a text
+   part if there is none; a space action (OBF `:space`) or a new tile part ends
+   the word. Backspace removes one character from a text part, reopening it if
+   the word had ended, and removes a tile part whole.
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
    finishes uninterrupted. The played message stays visible during playback and
