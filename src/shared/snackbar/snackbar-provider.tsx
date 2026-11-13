@@ -13,8 +13,8 @@ import {
   type SnackbarSeverity,
 } from "./snackbar-context";
 
-const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
-const DEFAULT_SNACKBAR_DURATION_MS = 4000;
+const DEFAULT_SEVERITY: SnackbarSeverity = "info";
+const DEFAULT_DURATION_MS = 4000;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -77,7 +77,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     showSnackbar,
   };
 
-  const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+  const severity = state.current?.severity ?? DEFAULT_SEVERITY;
   const message =
     typeof state.current?.message === "function"
       ? state.current.message(t)
@@ -119,7 +119,7 @@ function isUrgent(severity: SnackbarSeverity) {
 }
 
 function defaultDurationMs(severity: SnackbarSeverity): number | null {
-  return isUrgent(severity) ? null : DEFAULT_SNACKBAR_DURATION_MS;
+  return isUrgent(severity) ? null : DEFAULT_DURATION_MS;
 }
 
 function snackbarSx(theme: Theme) {

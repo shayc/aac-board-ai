@@ -92,7 +92,7 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
             <LabelPlacementPreview placement={placement} isSelected />
           }
           icon={<LabelPlacementPreview placement={placement} />}
-          sx={labelPlacementRadioSx}
+          sx={radioSx}
         />
       }
       label={label}
@@ -102,7 +102,7 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
   );
 }
 
-function labelPlacementRadioSx(theme: Theme) {
+function radioSx(theme: Theme) {
   return {
     p: 0.5,
     borderRadius: theme.vars.shape.borderRadius,

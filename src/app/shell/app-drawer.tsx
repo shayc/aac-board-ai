@@ -63,7 +63,7 @@ function AppDrawerContent({
   children,
   onClose,
 }: AppDrawerContentProps) {
-  const [isContentScrolled, setIsContentScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   return (
     <>
@@ -71,7 +71,7 @@ function AppDrawerContent({
         component="header"
         sx={{
           borderBottom: 1,
-          borderColor: isContentScrolled ? "divider" : "transparent",
+          borderColor: isScrolled ? "divider" : "transparent",
         }}
       >
         <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
@@ -91,9 +91,7 @@ function AppDrawerContent({
       </Toolbar>
 
       <Box
-        onScroll={(event) =>
-          setIsContentScrolled(event.currentTarget.scrollTop > 0)
-        }
+        onScroll={(event) => setIsScrolled(event.currentTarget.scrollTop > 0)}
         sx={{ flexGrow: 1, minHeight: 0, overflow: "auto" }}
       >
         {children}

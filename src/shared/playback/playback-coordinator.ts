@@ -34,7 +34,7 @@ export function createPlaybackCoordinator(
     });
   }
 
-  function interruptCurrentSession() {
+  function interrupt() {
     const session = currentSession;
     currentSession = null;
     session?.abortController.abort();
@@ -67,7 +67,7 @@ export function createPlaybackCoordinator(
   }
 
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
-    interruptCurrentSession();
+    interrupt();
 
     const session: PlaybackSession = {
       abortController: new AbortController(),
@@ -106,12 +106,12 @@ export function createPlaybackCoordinator(
   }
 
   function stop() {
-    interruptCurrentSession();
+    interrupt();
     store.setState({ status: "idle" });
   }
 
   function dispose() {
-    interruptCurrentSession();
+    interrupt();
   }
 
   return {
