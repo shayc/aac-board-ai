@@ -92,6 +92,7 @@
   "speechPreviewSample": "Ciao, questa è la mia voce!",
   "messageImages": "Mostra le immagini",
   "messageHighlight": "Evidenzia durante la lettura",
+  "messageClearAfterSpeaking": "Cancella dopo la lettura",
   "tileSaturation": "Intensità del colore",
   "tileBrightness": "Luminosità",
   "tileBorders": "Mostra i bordi",

@@ -11,16 +11,26 @@ const PLAY_THEN_CLEAR: BoardButton["actions"] = [
   { kind: "clear" },
 ];
 
-function setup(initialParts: readonly MessagePart[] = []) {
+function setup(
+  initialParts: readonly MessagePart[] = [],
+  { isSpoken = false } = {},
+) {
   let currentParts = initialParts;
+  let isCurrentSpoken = isSpoken;
   const message = {
     getParts: () => currentParts,
+    isAwaitingNewMessage: () => isCurrentSpoken,
+    getPartsToAddTo: () => (isCurrentSpoken ? [] : currentParts),
     setParts: vi.fn<ActivationOptions["message"]["setParts"]>((parts) => {
       currentParts = parts;
+      isCurrentSpoken = false;
     }),
   };
   const playback = {
     playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() =>
+      Promise.resolve(true),
+    ),
+    echoMessage: vi.fn<ActivationOptions["playback"]["echoMessage"]>(() =>
       Promise.resolve(true),
     ),
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
@@ -135,7 +145,7 @@ describe("createButtonActivator", () => {
     expect(message.setParts).toHaveBeenCalledWith([]);
   });
 
-  test("plays a message that includes a letter spelled earlier in the same tap", () => {
+  test("echoes a message that includes a letter spelled earlier in the same tap", () => {
     const { activateButton, message, playback } = setup();
 
     activateButton({
@@ -144,10 +154,11 @@ describe("createButtonActivator", () => {
       actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
     });
 
-    const partsToPlay = playback.playMessage.mock.calls[0]?.[0];
+    const partsToPlay = playback.echoMessage.mock.calls[0]?.[0];
     assertDefined(partsToPlay);
 
     expect(partsToPlay.map((part) => part.label)).toEqual(["s"]);
+    expect(playback.playMessage).not.toHaveBeenCalled();
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith(partsToPlay);
   });
 
@@ -209,5 +220,91 @@ describe("createButtonActivator", () => {
     await settlePlayback(false);
 
     expect(message.setParts).not.toHaveBeenCalled();
+  });
+
+  describe("after the message is spoken", () => {
+    const SPOKEN_PARTS: MessagePart[] = [
+      { id: "1", label: "hello" },
+      { id: "2", label: "world" },
+    ];
+
+    test.each<{ description: string; button: BoardButton; labels: string[] }>([
+      {
+        description: "a tile",
+        button: { id: "btn", label: "bell", actions: [] },
+        labels: ["bell"],
+      },
+      {
+        description: "a spelled letter",
+        button: {
+          id: "btn",
+          label: "",
+          actions: [{ kind: "spell", text: "a" }],
+        },
+        labels: ["a"],
+      },
+      {
+        description: "a letter after a space",
+        button: {
+          id: "btn",
+          label: "",
+          actions: [{ kind: "space" }, { kind: "spell", text: "a" }],
+        },
+        labels: ["a"],
+      },
+    ])("starts a new message with $description", ({ button, labels }) => {
+      const { activateButton, message } = setup(SPOKEN_PARTS, {
+        isSpoken: true,
+      });
+
+      activateButton(button);
+
+      const committed = message.setParts.mock.lastCall?.[0];
+      assertDefined(committed);
+      expect(committed.map((part) => part.label)).toEqual(labels);
+    });
+
+    test("edits the spoken message with backspace", () => {
+      const { activateButton, message } = setup(SPOKEN_PARTS, {
+        isSpoken: true,
+      });
+
+      activateButton({
+        id: "btn",
+        label: "",
+        actions: [{ kind: "backspace" }],
+      });
+
+      const committed = message.setParts.mock.lastCall?.[0];
+      assertDefined(committed);
+      expect(committed.map((part) => part.label)).toEqual(["hello", "worl"]);
+    });
+
+    test("leaves the spoken message as it is for a space", () => {
+      const { activateButton, message } = setup(SPOKEN_PARTS, {
+        isSpoken: true,
+      });
+
+      activateButton({ id: "btn", label: "", actions: [{ kind: "space" }] });
+
+      expect(message.setParts).not.toHaveBeenCalled();
+    });
+
+    test("speaks the message again for a space followed by play", () => {
+      const { activateButton, message, playback } = setup(SPOKEN_PARTS, {
+        isSpoken: true,
+      });
+
+      activateButton({
+        id: "btn",
+        label: "",
+        actions: [{ kind: "space" }, { kind: "play" }],
+      });
+
+      expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(
+        SPOKEN_PARTS,
+      );
+      expect(message.setParts).not.toHaveBeenCalled();
+    });
   });
 });

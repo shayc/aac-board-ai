@@ -92,6 +92,7 @@
   "speechPreviewSample": "Cześć, to mój głos!",
   "messageImages": "Pokaż obrazy",
   "messageHighlight": "Podświetlaj podczas mówienia",
+  "messageClearAfterSpeaking": "Czyść po mówieniu",
   "tileSaturation": "Intensywność kolorów",
   "tileBrightness": "Jasność",
   "tileBorders": "Pokaż obramowania",

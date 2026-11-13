@@ -92,6 +92,7 @@
   "speechPreviewSample": "Hoi, dit is mijn stem!",
   "messageImages": "Afbeeldingen weergeven",
   "messageHighlight": "Markeren tijdens spreken",
+  "messageClearAfterSpeaking": "Wissen na het spreken",
   "tileSaturation": "Kleurintensiteit",
   "tileBrightness": "Helderheid",
   "tileBorders": "Randen weergeven",

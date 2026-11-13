@@ -2,6 +2,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import {
+  setClearsAfterSpeaking,
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
   useMessagePreferences,
@@ -9,7 +10,8 @@ import {
 
 export function MessageSettings() {
   const t = useTranslate();
-  const { areImagesVisible, isHighlightingEnabled } = useMessagePreferences();
+  const { areImagesVisible, isHighlightingEnabled, clearsAfterSpeaking } =
+    useMessagePreferences();
 
   return (
     <>
@@ -23,6 +25,12 @@ export function MessageSettings() {
         label={t(m.messageHighlight)}
         checked={isHighlightingEnabled}
         onChange={setMessageHighlightingEnabled}
+      />
+
+      <SettingsSwitch
+        label={t(m.messageClearAfterSpeaking)}
+        checked={clearsAfterSpeaking}
+        onChange={setClearsAfterSpeaking}
       />
     </>
   );

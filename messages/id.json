@@ -92,6 +92,7 @@
   "speechPreviewSample": "Hai, ini suara saya!",
   "messageImages": "Tampilkan gambar",
   "messageHighlight": "Sorot saat berbicara",
+  "messageClearAfterSpeaking": "Hapus setelah berbicara",
   "tileSaturation": "Intensitas warna",
   "tileBrightness": "Kecerahan",
   "tileBorders": "Tampilkan batas",
