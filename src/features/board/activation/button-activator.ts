@@ -103,14 +103,14 @@ function isMessageEdit(action: BoardAction): action is MessageEdit {
   return action.kind !== "home" && action.kind !== "play";
 }
 
-function applyEdit(message: Message, edit: MessageEdit): Message {
+function applyEdit(current: Message, edit: MessageEdit): Message {
   switch (edit.kind) {
     case "spell":
-      return appendText(message, edit.text);
+      return appendText(current, edit.text);
     case "space":
-      return finishSpelling(message);
+      return finishSpelling(current);
     case "backspace":
-      return applyBackspace(message);
+      return applyBackspace(current);
     case "clear":
       return EMPTY_MESSAGE;
     default:

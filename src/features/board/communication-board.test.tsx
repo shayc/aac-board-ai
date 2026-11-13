@@ -306,6 +306,24 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems.nth(2)).toHaveTextContent("the");
     });
 
+    test("reopens a word ended with space when Backspace removes a letter", async () => {
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+      const messageItems = screen
+        .getByRole("list", { name: "Message" })
+        .getByRole("listitem");
+
+      await screen.getByRole("button", { name: "C", exact: true }).click();
+      await screen.getByRole("button", { name: "A", exact: true }).click();
+      await screen.getByRole("button", { name: "space" }).click();
+      await screen.getByRole("button", { name: "Backspace" }).click();
+      await screen.getByRole("button", { name: "C", exact: true }).click();
+
+      await expect.element(messageItems).toHaveLength(1);
+      await expect
+        .element(messageItems.getByText("cc", { exact: true }))
+        .toBeVisible();
+    });
+
     test("removes letters from the word being spelled, then whole words", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = screen

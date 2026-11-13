@@ -5,21 +5,21 @@ const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
 });
 
-export const EMPTY_MESSAGE: Message = { finishedParts: [], spelledWord: null };
+export const EMPTY_MESSAGE: Message = { finishedParts: [], openWord: null };
 
 export function createPart(content: MessagePartInput): MessagePart {
   return { ...content, id: randomId(), label: content.label ?? "" };
 }
 
 export function finishedMessage(parts: readonly MessagePart[]): Message {
-  return { finishedParts: parts, spelledWord: null };
+  return { finishedParts: parts, openWord: null };
 }
 
 export function messageParts({
   finishedParts,
-  spelledWord,
+  openWord,
 }: Message): readonly MessagePart[] {
-  return spelledWord ? [...finishedParts, spelledWord] : finishedParts;
+  return openWord ? [...finishedParts, openWord] : finishedParts;
 }
 
 export function appendPart(message: Message, part: MessagePart): Message {
@@ -32,31 +32,43 @@ export function appendText(message: Message, text: string): Message {
     return message;
   }
 
-  const { spelledWord } = message;
-  const extendedWord = spelledWord
-    ? { ...spelledWord, label: `${spelledWord.label}${text}` }
-    : createPart({ label: text });
+  const { openWord } = message;
+  const extendedWord = openWord
+    ? { ...openWord, label: `${openWord.label}${text}` }
+    : createPart({ label: text, isSpelled: true });
 
-  return { ...message, spelledWord: extendedWord };
+  return { ...message, openWord: extendedWord };
 }
 
 export function finishSpelling(message: Message): Message {
-  return message.spelledWord ? finishedMessage(messageParts(message)) : message;
+  return message.openWord ? finishedMessage(messageParts(message)) : message;
 }
 
 export function applyBackspace(message: Message): Message {
-  const { finishedParts, spelledWord } = message;
-  if (!spelledWord) {
+  const { finishedParts, openWord } = reopenLastSpelledWord(message);
+  if (!openWord) {
     return finishedParts.length > 0
       ? finishedMessage(finishedParts.slice(0, -1))
       : message;
   }
 
-  const label = withoutLastGrapheme(spelledWord.label);
+  const label = withoutLastGrapheme(openWord.label);
 
   return {
     finishedParts,
-    spelledWord: label ? { ...spelledWord, label } : null,
+    openWord: label ? { ...openWord, label } : null,
+  };
+}
+
+function reopenLastSpelledWord(message: Message): Message {
+  const lastPart = message.finishedParts.at(-1);
+  if (message.openWord || !lastPart?.isSpelled) {
+    return message;
+  }
+
+  return {
+    finishedParts: message.finishedParts.slice(0, -1),
+    openWord: lastPart,
   };
 }
 

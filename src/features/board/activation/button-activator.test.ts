@@ -93,7 +93,7 @@ describe("createButtonActivator", () => {
     const appended = committed.finishedParts.at(-1);
     assertDefined(appended);
     expect(committed.finishedParts).toHaveLength(2);
-    expect(committed.spelledWord).toBeNull();
+    expect(committed.openWord).toBeNull();
     expect(appended).toMatchObject({
       label: "bell",
       vocalization: "ring the bell",
@@ -133,7 +133,7 @@ describe("createButtonActivator", () => {
     expect(message.setCurrent).toHaveBeenCalledOnce();
     const committed = message.setCurrent.mock.calls[0]?.[0];
     assertDefined(committed);
-    expect(committed.spelledWord).toBeNull();
+    expect(committed.openWord).toBeNull();
     expect(labels(committed)).toEqual(["hello", "d"]);
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
@@ -176,7 +176,7 @@ describe("createButtonActivator", () => {
     expect(partsToPlay.map((part) => part.label)).toEqual(["s"]);
     expect(message.setCurrent).toHaveBeenCalledExactlyOnceWith({
       finishedParts: [],
-      spelledWord: partsToPlay[0],
+      openWord: partsToPlay[0],
     });
   });
 

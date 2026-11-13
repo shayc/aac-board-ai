@@ -22,6 +22,8 @@ export function useMessage(): UseMessageReturn {
   const [message, setMessage] = useState(EMPTY_MESSAGE);
   const messageRef = useRef(message);
 
+  // The message bar scrolls to the end when this array changes. The React
+  // Compiler keeps it the same array until the message is edited.
   const parts = messageParts(message);
   const text = parts.map((part) => part.label).join(" ");
 
@@ -37,7 +39,9 @@ export function useMessage(): UseMessageReturn {
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
     setCurrent(
-      finishedMessage(words.map((word) => createPart({ label: word }))),
+      finishedMessage(
+        words.map((word) => createPart({ label: word, isSpelled: true })),
+      ),
     );
   }
 

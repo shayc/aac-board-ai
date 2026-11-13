@@ -1,5 +1,7 @@
 export interface MessagePartInput {
   readonly label?: string;
+  // Backspace removes a spelled word one letter at a time, and any other part whole.
+  readonly isSpelled?: boolean;
   readonly vocalization?: string;
   readonly imageSrc?: string;
   readonly soundSrc?: string;
@@ -13,7 +15,7 @@ export interface MessagePart extends MessagePartInput {
 
 export interface Message {
   readonly finishedParts: readonly MessagePart[];
-  // Only this word takes more letters or loses them one at a time. It is
-  // shown and spoken after the finished parts.
-  readonly spelledWord: MessagePart | null;
+  // The spelled word that still takes letters. It is shown and spoken after
+  // the finished parts.
+  readonly openWord: MessagePart | null;
 }

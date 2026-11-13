@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { appendText, EMPTY_MESSAGE } from "./message-transforms";
+import { appendText, EMPTY_MESSAGE, messageParts } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -92,8 +92,8 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     message.backspace();
 
-    const labels = message.getCurrent().finishedParts.map((part) => part.label);
+    const labels = messageParts(message.getCurrent()).map((part) => part.label);
 
-    expect(labels).toEqual(["I", "want"]);
+    expect(labels).toEqual(["I", "want", "wate"]);
   });
 });

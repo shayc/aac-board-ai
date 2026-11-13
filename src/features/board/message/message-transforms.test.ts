@@ -14,7 +14,10 @@ import type { Message, MessagePart } from "./message-types";
 const HELLO: MessagePart = { id: "1", label: "hello" };
 
 function spelling(label: string, finishedParts: MessagePart[] = []): Message {
-  return { finishedParts, spelledWord: { id: "spelled", label } };
+  return {
+    finishedParts,
+    openWord: { id: "spelled", label, isSpelled: true },
+  };
 }
 
 function labels(message: Message): string[] {
@@ -57,7 +60,7 @@ describe("appendPart", () => {
 
     const message = appendPart(spelling("hi"), part);
 
-    expect(message.spelledWord).toBeNull();
+    expect(message.openWord).toBeNull();
     expect(labels(message)).toEqual(["hi", "there"]);
   });
 });
@@ -67,14 +70,16 @@ describe("appendText", () => {
     const message = appendText(EMPTY_MESSAGE, "h");
 
     expect(message.finishedParts).toEqual([]);
-    expect(message.spelledWord?.label).toBe("h");
-    expect(message.spelledWord?.id).toBeTruthy();
+    expect(message.openWord?.label).toBe("h");
+    expect(message.openWord?.id).toBeTruthy();
+    expect(message.openWord?.isSpelled).toBe(true);
   });
 
   test("adds letters to the word being spelled", () => {
     const message = appendText(spelling("ca"), "t");
 
-    expect(message.spelledWord).toEqual({ id: "spelled", label: "cat" });
+    expect(message.openWord?.label).toBe("cat");
+    expect(message.openWord?.id).toBe("spelled");
   });
 
   test.each([
@@ -87,7 +92,7 @@ describe("appendText", () => {
     const message = appendText(finishedMessage([part]), "c");
 
     expect(message.finishedParts).toEqual([part]);
-    expect(message.spelledWord?.label).toBe("c");
+    expect(message.openWord?.label).toBe("c");
   });
 
   test("spells nothing for empty text", () => {
@@ -102,7 +107,10 @@ describe("finishSpelling", () => {
     const message = finishSpelling(spelling("world", [HELLO]));
 
     expect(message).toEqual(
-      finishedMessage([HELLO, { id: "spelled", label: "world" }]),
+      finishedMessage([
+        HELLO,
+        { id: "spelled", label: "world", isSpelled: true },
+      ]),
     );
   });
 
@@ -155,10 +163,25 @@ describe("applyBackspace", () => {
     expect(message).toEqual(finishedMessage([HELLO]));
   });
 
-  test("removes a spelled word whole once it is finished", () => {
+  test("reopens a finished spelled word and removes its last character", () => {
     const message = applyBackspace(finishSpelling(spelling("world", [HELLO])));
 
+    expect(message).toEqual(spelling("worl", [HELLO]));
+  });
+
+  test("removes a finished spelled word once its only character is removed", () => {
+    const message = applyBackspace(finishSpelling(spelling("w", [HELLO])));
+
     expect(message).toEqual(finishedMessage([HELLO]));
+  });
+
+  test("leaves spelled words before the last part finished", () => {
+    const tile: MessagePart = { id: "2", label: "there" };
+    const spelled = finishSpelling(spelling("hi"));
+
+    const message = applyBackspace(appendPart(spelled, tile));
+
+    expect(message).toEqual(spelled);
   });
 
   test("returns the same message when there is nothing to remove", () => {
