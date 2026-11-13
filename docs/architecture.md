@@ -268,9 +268,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 [`scanning/`](../src/features/board/scanning/) holds all of it:
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
-  enabled buttons inside it. The message bar marks itself, and the board marks
-  its controls and each grid row; the grid itself knows nothing about scanning
-  and spreads the row props the board hands it. The
+  enabled buttons inside it. The board marks the message row, suggestions,
+  the controls below the grid when present, and each grid row. The grid
+  spreads the row props the board hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The buttons being
@@ -326,9 +326,10 @@ the first paint to avoid a flash of the wrong color scheme.
 
 ### Screen sizes
 
-Layout turns on one width breakpoint, `sm`. Below it the board's back, home,
-and backspace buttons move under the grid and the spacing tightens, as
-[Board spacing](#board-spacing) describes.
+Below `sm` the board's back, home, and backspace buttons sit under the grid
+and the spacing tightens, as [Board spacing](#board-spacing) describes. At
+`sm` and up, the controls flank the message bar. Browsers with suggestion
+support reserve a separate row below the message bar at either width.
 
 One height query sits beside it.
 [`shortLandscape`](../src/shared/theme/short-landscape.ts) matches a landscape

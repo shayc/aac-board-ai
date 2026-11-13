@@ -126,9 +126,7 @@ function measureBoardLayout(
       column.left < viewport.right && column.right > viewport.right + 0.5,
   );
   const isBarBelowGrid = backspace.top >= viewport.bottom - 0.5;
-  const barAboveBottom = isBarBelowGrid
-    ? messageBar.getBoundingClientRect().bottom
-    : backspace.bottom;
+  const barAboveBottom = messageBar.getBoundingClientRect().bottom;
   const edgeBelowTop = isBarBelowGrid ? backspace.top : window.innerHeight;
   const firstRow = rows.at(0);
   const lastRow = rows.at(-1);
@@ -141,7 +139,7 @@ function measureBoardLayout(
     backspaceEnd: window.innerWidth - backspace.right,
     barToGrid: isBarBelowGrid
       ? backspace.top - viewport.bottom
-      : viewport.top - backspace.bottom,
+      : viewport.top - barAboveBottom,
     barAboveToFirstRow: firstRow.top - barAboveBottom,
     lastRowToEdgeBelow: edgeBelowTop - lastRow.bottom,
     wholeRows: wholeRows.length,
@@ -200,18 +198,20 @@ describe("CommunicationBoard", () => {
         width: 375,
         height: 755,
         pageMargin: 16,
+        messageBarStart: 16,
         clearance: 4,
         overflowHint: 8,
         wholeRows: 5,
       },
       {
         name: "a tablet",
-        width: 1024,
+        width: 798,
         height: 703,
         pageMargin: 24,
+        messageBarStart: 192,
         clearance: 8,
         overflowHint: 16,
-        wholeRows: 4,
+        wholeRows: 5,
       },
     ];
 
@@ -221,6 +221,7 @@ describe("CommunicationBoard", () => {
         width,
         height,
         pageMargin,
+        messageBarStart,
         clearance,
         overflowHint,
         wholeRows,
@@ -230,7 +231,7 @@ describe("CommunicationBoard", () => {
         await expect.element(screen.getByRole("grid")).toBeVisible();
 
         const atStart = measureBoardLayout(screen.container);
-        expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarStart).toBeCloseTo(messageBarStart, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
@@ -437,7 +438,7 @@ describe("CommunicationBoard", () => {
         .toBeVisible();
     });
 
-    test.each([390, 1024])(
+    test.each([390, 798])(
       "edits the message with Backspace alongside board navigation at a viewport width of %i",
       async (width) => {
         await setTestViewport(width, 800);

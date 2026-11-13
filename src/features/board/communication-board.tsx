@@ -77,8 +77,6 @@ export function CommunicationBoard({
     />
   );
 
-  const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
-
   return (
     <ScanningScope>
       <Stack
@@ -91,30 +89,28 @@ export function CommunicationBoard({
         }}
       >
         <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
-          <PlaybackMessageBar parts={message.parts} playback={playback} />
+          <Stack
+            {...scanGroupProps}
+            direction="row"
+            spacing={2}
+            sx={{ alignItems: "center" }}
+          >
+            {!isSmallScreen && navigationButtons}
 
-          {isActionRowVisible && (
-            <Stack
-              {...scanGroupProps}
-              direction="row"
-              spacing={2}
-              sx={{ justifyContent: "space-between" }}
-            >
-              <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-                {!isSmallScreen && navigationButtons}
+            <PlaybackMessageBar parts={message.parts} playback={playback} />
 
-                {suggestions.isSupported && (
-                  <SuggestionBar
-                    status={suggestions.status}
-                    phrases={suggestions.phrases}
-                    onEnable={suggestions.enable}
-                    onPhraseSelect={message.replaceWithText}
-                  />
-                )}
-              </Stack>
+            {!isSmallScreen && backspaceButton}
+          </Stack>
 
-              {!isSmallScreen && backspaceButton}
-            </Stack>
+          {suggestions.isSupported && (
+            <Box {...scanGroupProps}>
+              <SuggestionBar
+                status={suggestions.status}
+                phrases={suggestions.phrases}
+                onEnable={suggestions.enable}
+                onPhraseSelect={message.replaceWithText}
+              />
+            </Box>
           )}
         </Stack>
 

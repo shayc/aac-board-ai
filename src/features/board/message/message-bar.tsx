@@ -4,7 +4,6 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
-import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
 
@@ -55,12 +54,7 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack
-      {...scanGroupProps}
-      className={LIGHT_SCHEME_CLASS}
-      direction="row"
-      sx={messageBarSx}
-    >
+    <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
       <Stack
         ref={scrollContainerRef}
         // A live region would repeat the tile's spoken feedback.
@@ -94,6 +88,8 @@ export function MessageBar({
 
 function messageBarSx(theme: Theme) {
   return {
+    flex: 1,
+    minWidth: 0,
     gap: 2,
     overflow: "hidden",
     border: 1,
