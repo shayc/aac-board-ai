@@ -4,7 +4,7 @@ import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   getAssetBlob,
   getBoardRecord,
-  hasBoardRecord,
+  listBoardIds,
   listBoardRecords,
 } from "./board-content-storage";
 import { insertBoardSet } from "./board-set-storage";
@@ -28,29 +28,29 @@ describe("getBoardRecord", () => {
   });
 });
 
-describe("hasBoardRecord", () => {
-  test("finds a board only in the set that stores it", async () => {
+describe("listBoardIds", () => {
+  test("returns only the IDs of the set's boards", async () => {
     await insertBoardSet(
       makeBoardSetInput({
         id: "set-1",
         rootBoardId: "a",
-        boards: [makeOBFBoard({ id: "a", name: "A" })],
+        boards: [
+          makeOBFBoard({ id: "a", name: "A" }),
+          makeOBFBoard({ id: "b", name: "B" }),
+        ],
       }),
     );
     await insertBoardSet(
       makeBoardSetInput({
         id: "set-2",
-        rootBoardId: "b",
-        boards: [makeOBFBoard({ id: "b", name: "B" })],
+        rootBoardId: "c",
+        boards: [makeOBFBoard({ id: "c", name: "C" })],
       }),
     );
 
-    expect(await hasBoardRecord({ boardSetId: "set-1", boardId: "a" })).toBe(
-      true,
-    );
-    expect(await hasBoardRecord({ boardSetId: "set-1", boardId: "b" })).toBe(
-      false,
-    );
+    const boardIds = await listBoardIds("set-1");
+
+    expect(boardIds.sort()).toEqual(["a", "b"]);
   });
 });
 
