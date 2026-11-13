@@ -79,10 +79,9 @@ describe("TileSettings", () => {
       await expect.element(radio).toBeChecked();
 
       const option = radio.element().parentElement;
-      const symbol = option?.querySelector("svg");
-      if (!option || !symbol) {
-        throw new Error("Label options must include a preview symbol");
-      }
+      assertDefined(option);
+      const symbol = option.querySelector("svg");
+      assertDefined(symbol);
 
       await expect.element(symbol).toBeVisible();
       await expect.element(option).toHaveStyle({ outlineStyle: "solid" });
