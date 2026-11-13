@@ -29,5 +29,9 @@ function hasSuggestionArtifacts(phrase: string): boolean {
 }
 
 function normalize(phrase: string): string {
-  return phrase.trim().toLowerCase();
+  return phrase
+    .trim()
+    .replace(/[.。]$/, "")
+    .trimEnd()
+    .toLowerCase();
 }
