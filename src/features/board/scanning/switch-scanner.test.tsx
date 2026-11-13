@@ -308,14 +308,14 @@ describe("switch scanning", () => {
 
       await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["Backspace"]);
+      const messagePart = screen
+        .getByRole("list", { name: "Message" })
+        .getByRole("listitem");
+      await expect.element(messagePart).toHaveTextContent("yes");
 
       await pressSwitch();
 
-      await expect
-        .element(
-          screen.getByRole("list", { name: "Message" }).getByRole("listitem"),
-        )
-        .not.toBeInTheDocument();
+      await expect.element(messagePart).not.toBeInTheDocument();
     });
 
     test("counts a held switch as one press", async () => {

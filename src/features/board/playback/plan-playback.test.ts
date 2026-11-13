@@ -9,10 +9,10 @@ describe("planPlayback", () => {
     expect(planPlayback([])).toEqual([]);
   });
 
-  test("merges a run of text parts into a single speech step", () => {
+  test("merges a run of tile and text parts into a single speech step", () => {
     const parts: MessagePart[] = [
       { kind: "tile", id: "1", label: "I" },
-      { kind: "tile", id: "2", label: "want" },
+      { kind: "text", id: "2", label: "Want" },
     ];
 
     const steps = planPlayback(parts);
@@ -56,7 +56,7 @@ describe("planPlayback", () => {
     expect(step.text).toBe("happy");
   });
 
-  test("skips parts with no spoken text, such as inserted spaces", () => {
+  test("skips parts with no spoken text", () => {
     const steps = planPlayback([
       { kind: "tile", id: "1", label: "hi" },
       { kind: "tile", id: "2", label: "" },

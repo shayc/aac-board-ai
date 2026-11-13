@@ -52,11 +52,11 @@ function waitForAnimationFrame(): Promise<void> {
 }
 
 describe("MessageBar", () => {
-  test("renders a label for each message part", async () => {
+  test("renders a label for each tile and text part", async () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "a", label: "I" },
+      { kind: "tile", id: "a", label: "I", imageSrc: TEST_IMAGE_SRC },
       { kind: "tile", id: "b", label: "want" },
-      { kind: "tile", id: "c", label: "water" },
+      { kind: "text", id: "c", label: "water" },
     ];
 
     const screen = await renderWithProviders(
