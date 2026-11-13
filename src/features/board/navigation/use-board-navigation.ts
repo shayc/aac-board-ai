@@ -22,7 +22,7 @@ export function useBoardNavigation(
   const canGoHome = Boolean(rootBoardId);
 
   function goBack() {
-    if (!boardSetId || !canGoBack) {
+    if (!canGoBack) {
       return;
     }
 
