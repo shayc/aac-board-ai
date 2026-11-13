@@ -5,6 +5,7 @@ import type { StringTranslations } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import {
   type BoardRecord,
+  boardSetRange,
   type BoardSetRecord,
   getBoardsDB,
   normalizeAssetPath,
@@ -45,14 +46,12 @@ export async function getBoardSetRecord(
 
 export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   const db = await getBoardsDB();
-  const boardSets = await db.getAllFromIndex("boardSets", "byUpdatedAt");
+  const boardSets = await db.getAllFromIndex("boardSets", "byImportedAt");
 
   return boardSets.reverse();
 }
 
 export async function removeBoardSet(boardSetId: string): Promise<void> {
-  validateId(boardSetId, "boardSetId");
-
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
   const keyRange = boardSetRange(boardSetId);
@@ -63,12 +62,6 @@ export async function removeBoardSet(boardSetId: string): Promise<void> {
     tx.objectStore("boardSets").delete(boardSetId),
     tx.done,
   ]);
-}
-
-// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
-// for this set's board IDs and asset paths.
-function boardSetRange(boardSetId: string): IDBKeyRange {
-  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
 export interface BoardSetTranslations {
@@ -167,6 +160,7 @@ function validateBoardSetInput({
   id,
   rootBoardId,
   boards,
+  assets,
 }: BoardSetInput): OBFBoard {
   validateId(id, "boardSetId");
   validateId(rootBoardId, "rootBoardId");
@@ -187,6 +181,12 @@ function validateBoardSetInput({
     throw new Error(`Root board not found: ${rootBoardId}`);
   }
 
+  for (const { path } of assets) {
+    if (!normalizeAssetPath(path)) {
+      throw new Error(`Invalid asset path: ${path}`);
+    }
+  }
+
   return rootBoard;
 }
 
@@ -198,7 +198,7 @@ function buildBoardSetRecord(
     id,
     name: nonBlankText(name) ?? nonBlankText(rootBoard.name) ?? id,
     rootBoardId,
-    updatedAt: Date.now(),
+    importedAt: Date.now(),
     boardCount: boards.length,
     author: rootBoard.license?.author_name,
     description: rootBoard.description_html

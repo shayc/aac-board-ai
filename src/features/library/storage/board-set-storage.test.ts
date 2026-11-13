@@ -16,7 +16,7 @@ import {
   removeBoardSet,
   saveBoardSetTranslations,
 } from "./board-set-storage";
-import { closeBoardsDB, InvalidIdError } from "./boards-db";
+import { closeBoardsDB } from "./boards-db";
 
 beforeEach(async () => {
   await resetBoardsDB();
@@ -208,7 +208,19 @@ describe("insertBoardSet", () => {
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
-  test("rejects empty boardSetId with a typed InvalidIdError", async () => {
+  test("rejects an asset whose path names no file without storing the set", async () => {
+    await expect(
+      insertBoardSet(
+        makeBoardSetInput({
+          assets: [{ path: "/", blob: new Blob(["x"]) }],
+        }),
+      ),
+    ).rejects.toThrow("Invalid asset path");
+
+    expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("rejects empty boardSetId", async () => {
     await expect(
       insertBoardSet(
         makeBoardSetInput({
@@ -217,7 +229,7 @@ describe("insertBoardSet", () => {
           rootBoardId: "root-1",
         }),
       ),
-    ).rejects.toBeInstanceOf(InvalidIdError);
+    ).rejects.toThrow("Invalid boardSetId");
   });
 
   test("rejects boardSetId longer than 255 characters", async () => {
@@ -274,7 +286,7 @@ describe("listBoardSetRecords", () => {
     expect(sets).toEqual([]);
   });
 
-  test("returns sets sorted by updatedAt descending", async () => {
+  test("returns the most recently imported sets first", async () => {
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
@@ -346,10 +358,6 @@ describe("removeBoardSet", () => {
     const asset = await getAssetBlob("set-1-2", "img1.png");
     assertDefined(asset);
     expect(await asset.text()).toBe("survivor");
-  });
-
-  test("rejects empty boardSetId", async () => {
-    await expect(removeBoardSet("")).rejects.toThrow("Invalid boardSetId");
   });
 });
 

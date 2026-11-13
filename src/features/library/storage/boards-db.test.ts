@@ -26,7 +26,7 @@ describe("getBoardsDB", () => {
       id: "set-1",
       name: "Persisted",
       rootBoardId: "root-1",
-      updatedAt: 1,
+      importedAt: 1,
       boardCount: 0,
     });
     expect((await second.get("boardSets", "set-1"))?.name).toBe("Persisted");
@@ -35,9 +35,9 @@ describe("getBoardsDB", () => {
 
 describe("normalizeAssetPath", () => {
   test.each(["", "/", "////", "\\"])(
-    "rejects a path that normalizes to empty: %j",
+    "returns an empty path when %j names no file",
     (rawPath) => {
-      expect(() => normalizeAssetPath(rawPath)).toThrow("Path cannot be empty");
+      expect(normalizeAssetPath(rawPath)).toBe("");
     },
   );
 });
