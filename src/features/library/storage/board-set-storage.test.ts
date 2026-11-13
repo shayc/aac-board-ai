@@ -374,6 +374,18 @@ describe("removeBoardSet", () => {
     assertDefined(asset);
     expect(await asset.text()).toBe("survivor");
   });
+
+  test.each(["missing", ""])(
+    "leaves stored sets alone when no set has the ID %j",
+    async (boardSetId) => {
+      await insertBoardSet(makeBoardSetInput());
+
+      await removeBoardSet(boardSetId);
+
+      const sets = await listBoardSetRecords();
+      expect(sets.map((set) => set.id)).toEqual(["set-1"]);
+    },
+  );
 });
 
 describe("saveBoardSetTranslations", () => {

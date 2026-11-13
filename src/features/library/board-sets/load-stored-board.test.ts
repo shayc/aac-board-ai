@@ -101,6 +101,29 @@ describe("loadStoredBoard", () => {
     expect(getImageURL(board)).toBe("https://example.com/test.png");
   });
 
+  test("falls back to the media url when its path names no file", async () => {
+    await insertBoardSet({
+      id: SET_ID,
+      rootBoardId: BOARD_ID,
+      boards: [
+        {
+          format: "open-board-0.1",
+          id: BOARD_ID,
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+          buttons: [{ id: "btn-1", label: "test", image_id: "img-1" }],
+          images: [
+            { id: "img-1", path: "/", url: "https://example.com/test.png" },
+          ],
+        },
+      ],
+      assets: [],
+    });
+
+    const board = await loadStoredBoard(BOARD_KEY);
+
+    expect(getImageURL(board)).toBe("https://example.com/test.png");
+  });
+
   test("keeps asset URLs usable after another board loads", async () => {
     await seedTestBoard();
 

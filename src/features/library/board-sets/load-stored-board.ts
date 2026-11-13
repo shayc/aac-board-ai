@@ -35,7 +35,7 @@ async function resolveAssetURLs(
 ): Promise<Map<string, string>> {
   const entries = await Promise.all(
     Array.from(collectMediaPaths(obfBoard), async (path) => {
-      const url = await getAssetURL(boardSetId, path).catch(() => undefined);
+      const url = await getAssetURL(boardSetId, path);
 
       return url ? [[path, url] as const] : [];
     }),
