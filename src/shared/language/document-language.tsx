@@ -1,13 +1,15 @@
 import { useLayoutEffect } from "react";
+import { useUILocale } from "./language-store";
 import { useLanguage } from "./use-language";
 
 export function DocumentLanguage() {
-  const { language, direction } = useLanguage();
+  const { direction } = useLanguage();
+  const uiLocale = useUILocale();
 
   useLayoutEffect(() => {
     document.documentElement.dir = direction;
-    document.documentElement.lang = language;
-  }, [direction, language]);
+    document.documentElement.lang = uiLocale;
+  }, [direction, uiLocale]);
 
   return null;
 }

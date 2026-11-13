@@ -115,7 +115,7 @@
   "suggestionsEnableHelp": "So aktivieren Sie Vorschläge",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen…",
-  "suggestionsUnavailable": "Vorschläge auf diesem Gerät nicht verfügbar",
+  "suggestionsUnavailable": "Vorschläge sind für diese Sprache oder auf diesem Gerät nicht verfügbar",
   "suggestionsFailed": "Vorschläge konnten nicht abgerufen werden",
   "suggestionsLabel": "Vorschläge",
   "navBack": "Zurück",

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { resetBoardsDB } from "../testing";
-import { closeBoardsDB, getBoardsDB, normalizeAssetPath } from "./boards-db";
+import { closeBoardsDB, getBoardsDB } from "./boards-db";
 
 beforeEach(async () => {
   await resetBoardsDB();
@@ -26,18 +26,9 @@ describe("getBoardsDB", () => {
       id: "set-1",
       name: "Persisted",
       rootBoardId: "root-1",
-      updatedAt: 1,
+      importedAt: 1,
       boardCount: 0,
     });
     expect((await second.get("boardSets", "set-1"))?.name).toBe("Persisted");
   });
-});
-
-describe("normalizeAssetPath", () => {
-  test.each(["", "/", "////", "\\"])(
-    "rejects a path that normalizes to empty: %j",
-    (rawPath) => {
-      expect(() => normalizeAssetPath(rawPath)).toThrow("Path cannot be empty");
-    },
-  );
 });

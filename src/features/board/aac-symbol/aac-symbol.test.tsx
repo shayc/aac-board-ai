@@ -24,7 +24,7 @@ async function renderSymbol(
 }
 
 describe("AACSymbol", () => {
-  test("renders nothing without an image or label", async () => {
+  test("renders no content without an image or label", async () => {
     const screen = await render(<AACSymbol label="" />);
 
     expect(screen.container.textContent).toBe("");
@@ -38,7 +38,7 @@ describe("AACSymbol", () => {
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
-  test("renders the image as decorative so the label names the symbol", async () => {
+  test("renders the image as decorative even without a label", async () => {
     const screen = await render(
       <AACSymbol label="" imageSrc={TEST_IMAGE_SRC} />,
     );
@@ -47,6 +47,30 @@ describe("AACSymbol", () => {
     expect(image?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
     expect(image?.getAttribute("alt")).toBe("");
   });
+
+  test.each(["bottom", "top"] as const)(
+    "gives an image without a label the full height with %s placement",
+    async (labelPlacement) => {
+      const screen = await render(
+        <div style={{ width: 120, height: 120 }}>
+          <AACSymbol
+            label=""
+            imageSrc={TEST_IMAGE_SRC}
+            labelPlacement={labelPlacement}
+          />
+        </div>,
+      );
+      const image = screen.container.querySelector("img");
+      assertDefined(image);
+
+      const bounds = screen.container.getBoundingClientRect();
+
+      expect(image.getBoundingClientRect()).toMatchObject({
+        top: bounds.top,
+        bottom: bounds.bottom,
+      });
+    },
+  );
 
   test("renders only phrasing elements so it can sit inside a button", async () => {
     const screen = await render(

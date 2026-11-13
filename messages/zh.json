@@ -115,7 +115,7 @@
   "suggestionsEnableHelp": "如何启用建议",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型…",
-  "suggestionsUnavailable": "此设备不支持建议功能",
+  "suggestionsUnavailable": "此语言或设备不支持建议功能",
   "suggestionsFailed": "无法获取建议",
   "suggestionsLabel": "建议",
   "navBack": "返回",

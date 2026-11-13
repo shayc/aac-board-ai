@@ -76,13 +76,14 @@ describe("BoardSelector", () => {
     });
   });
 
-  test("navigates and closes the popup when a board is clicked", async () => {
+  test("navigates, enables Back, and closes the popup when a board is clicked", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").click();
     await screen.getByRole("option", { name: "Animals" }).click();
 
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
+    expect(router.state.location.state).toEqual({ canGoBack: true });
     await expect
       .element(screen.getByRole("option", { name: "Animals" }))
       .not.toBeInTheDocument();

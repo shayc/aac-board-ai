@@ -27,7 +27,6 @@ export function useMessageSuggestions(
   messageText: string,
 ): UseMessageSuggestionsReturn {
   const text = messageText.trim();
-  const hasText = text !== "";
 
   const { customInstructions } = useSuggestionPreferences();
   const debouncedCustomInstructions = useDebouncedValue(
@@ -51,6 +50,7 @@ export function useMessageSuggestions(
   });
   const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
+  const hasText = text !== "";
   const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
   const phrases = selectSuggestionPhrases(
     text,

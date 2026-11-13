@@ -101,6 +101,29 @@ describe("loadStoredBoard", () => {
     expect(getImageURL(board)).toBe("https://example.com/test.png");
   });
 
+  test("falls back to the media url when its path names no file", async () => {
+    await insertBoardSet({
+      id: SET_ID,
+      rootBoardId: BOARD_ID,
+      boards: [
+        {
+          format: "open-board-0.1",
+          id: BOARD_ID,
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+          buttons: [{ id: "btn-1", label: "test", image_id: "img-1" }],
+          images: [
+            { id: "img-1", path: "/", url: "https://example.com/test.png" },
+          ],
+        },
+      ],
+      assets: [],
+    });
+
+    const board = await loadStoredBoard(BOARD_KEY);
+
+    expect(getImageURL(board)).toBe("https://example.com/test.png");
+  });
+
   test("keeps asset URLs usable after another board loads", async () => {
     await seedTestBoard();
 
@@ -129,6 +152,81 @@ describe("loadStoredBoard", () => {
     const board = await loadStoredBoard(BOARD_KEY);
 
     expect(await isObjectURLAlive(getImageURL(board))).toBe(true);
+  });
+
+  test("keeps links to stored boards and drops links to boards the set lacks", async () => {
+    await insertBoardSet({
+      id: SET_ID,
+      rootBoardId: BOARD_ID,
+      boards: [
+        {
+          format: "open-board-0.1",
+          id: BOARD_ID,
+          grid: { rows: 1, columns: 3, order: [["stored", "absent", "plain"]] },
+          buttons: [
+            {
+              id: "stored",
+              label: "animals",
+              load_board: { id: OTHER_BOARD_ID },
+            },
+            { id: "absent", label: "food", load_board: { id: "not-in-set" } },
+            { id: "plain", label: "hello" },
+          ],
+        },
+        {
+          format: "open-board-0.1",
+          id: OTHER_BOARD_ID,
+          grid: { rows: 1, columns: 1, order: [[null]] },
+          buttons: [],
+        },
+      ],
+      assets: [],
+    });
+
+    const board = await loadStoredBoard(BOARD_KEY);
+
+    expect(
+      board.buttons.map(({ label, linkedBoardId }) => [label, linkedBoardId]),
+    ).toEqual([
+      ["animals", OTHER_BOARD_ID],
+      ["food", undefined],
+      ["hello", undefined],
+    ]);
+  });
+
+  test("drops a link to a board that only another set stores", async () => {
+    await insertBoardSet({
+      id: SET_ID,
+      rootBoardId: BOARD_ID,
+      boards: [
+        {
+          format: "open-board-0.1",
+          id: BOARD_ID,
+          grid: { rows: 1, columns: 1, order: [["elsewhere"]] },
+          buttons: [
+            { id: "elsewhere", label: "food", load_board: { id: "food" } },
+          ],
+        },
+      ],
+      assets: [],
+    });
+    await insertBoardSet({
+      id: "another-set",
+      rootBoardId: "food",
+      boards: [
+        {
+          format: "open-board-0.1",
+          id: "food",
+          grid: { rows: 1, columns: 1, order: [[null]] },
+          buttons: [],
+        },
+      ],
+      assets: [],
+    });
+
+    const board = await loadStoredBoard(BOARD_KEY);
+
+    expect(board.buttons[0]?.linkedBoardId).toBeUndefined();
   });
 
   test("an aborted load does not disturb a loaded board", async () => {

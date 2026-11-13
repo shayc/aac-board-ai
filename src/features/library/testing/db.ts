@@ -4,7 +4,11 @@ import {
   type BoardSetInput,
   insertBoardSet,
 } from "../storage/board-set-storage";
-import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
+import {
+  boardSetRange,
+  closeBoardsDB,
+  getBoardsDB,
+} from "../storage/boards-db";
 import { makeOBFBoard } from "./fixtures";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
@@ -44,9 +48,10 @@ export async function countStoredBoardContent(boardSetId: string): Promise<{
 }> {
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets"], "readonly");
+  const keyRange = boardSetRange(boardSetId);
   const [boardCount, assetCount] = await Promise.all([
-    tx.objectStore("boards").index("byBoardSetId").count(boardSetId),
-    tx.objectStore("assets").index("byBoardSetId").count(boardSetId),
+    tx.objectStore("boards").count(keyRange),
+    tx.objectStore("assets").count(keyRange),
     tx.done,
   ]);
 

@@ -1,11 +1,12 @@
 import { saveFile } from "@shared/utils/save-file";
 import { createOBZ, type OBFBoard } from "@shayc/open-board-format";
+import { collectMediaPaths } from "../obf/collect-media-paths";
 import {
   getAssetBlob,
   listBoardRecords,
-  normalizeAssetPath,
 } from "../storage/board-content-storage";
 import type { BoardSetRecord } from "../storage/board-set-storage";
+import { normalizeAssetPath } from "../storage/normalize-asset-path";
 
 export async function exportBoardSet(
   boardSet: Pick<BoardSetRecord, "id" | "name" | "rootBoardId">,
@@ -36,9 +37,14 @@ async function loadStoredAssets(
   boardSetId: string,
   boards: readonly OBFBoard[],
 ): Promise<Map<string, Uint8Array>> {
+  const assetPaths = new Set(
+    Array.from(collectMediaPaths(boards), normalizeAssetPath).filter(
+      (path) => path !== "",
+    ),
+  );
   const assets = new Map<string, Uint8Array>();
 
-  for (const path of collectAssetPaths(boards)) {
+  for (const path of assetPaths) {
     const blob = await getAssetBlob(boardSetId, path);
     if (blob) {
       assets.set(path, await blob.bytes());
@@ -46,20 +52,6 @@ async function loadStoredAssets(
   }
 
   return assets;
-}
-
-function collectAssetPaths(boards: readonly OBFBoard[]): Set<string> {
-  const paths = new Set<string>();
-
-  for (const board of boards) {
-    for (const media of [...(board.images ?? []), ...(board.sounds ?? [])]) {
-      if (media.path) {
-        paths.add(normalizeAssetPath(media.path));
-      }
-    }
-  }
-
-  return paths;
 }
 
 /**

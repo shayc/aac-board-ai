@@ -1,5 +1,5 @@
 import { getAssetBlob } from "./board-content-storage";
-import { normalizeAssetPath } from "./boards-db";
+import { normalizeAssetPath } from "./normalize-asset-path";
 
 // Immutable assets keep their URLs until set deletion so messages survive navigation.
 const urlsByBoardSetId = new Map<string, Map<string, string>>();

@@ -111,6 +111,25 @@ describe("boardSetToOBZ", () => {
     ]);
   });
 
+  test("drops a media path that names no file", async () => {
+    const image = { id: "img", path: "/", url: "https://example.com/a.png" };
+    await seedBoardSets([
+      {
+        id: "pathless",
+        rootBoardId: "root",
+        boards: [makeOBFBoard({ id: "root", images: [image] })],
+      },
+    ]);
+
+    const { rootBoard } = await extractOBZ(
+      await boardSetToOBZ({ id: "pathless", rootBoardId: "root" }),
+    );
+
+    expect(rootBoard.images).toEqual([
+      { id: "img", url: "https://example.com/a.png" },
+    ]);
+  });
+
   test("packages an asset under its normalized path and points its media there", async () => {
     const image = { id: "img", path: "/images/photo.png" };
     await seedBoardSets([

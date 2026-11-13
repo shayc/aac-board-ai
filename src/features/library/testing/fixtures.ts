@@ -44,7 +44,7 @@ export function makeBoardSetRecord(
     id: "set-1",
     name: "My Board",
     rootBoardId: "root",
-    updatedAt: 0,
+    importedAt: 0,
     boardCount: 1,
     ...overrides,
   };

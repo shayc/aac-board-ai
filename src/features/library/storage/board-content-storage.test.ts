@@ -4,6 +4,7 @@ import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   getAssetBlob,
   getBoardRecord,
+  listBoardIds,
   listBoardRecords,
 } from "./board-content-storage";
 import { insertBoardSet } from "./board-set-storage";
@@ -24,6 +25,32 @@ describe("getBoardRecord", () => {
       boardId: "nonexistent",
     });
     expect(board).toBeUndefined();
+  });
+});
+
+describe("listBoardIds", () => {
+  test("returns only the IDs of the set's boards", async () => {
+    await insertBoardSet(
+      makeBoardSetInput({
+        id: "set-1",
+        rootBoardId: "a",
+        boards: [
+          makeOBFBoard({ id: "a", name: "A" }),
+          makeOBFBoard({ id: "b", name: "B" }),
+        ],
+      }),
+    );
+    await insertBoardSet(
+      makeBoardSetInput({
+        id: "set-2",
+        rootBoardId: "c",
+        boards: [makeOBFBoard({ id: "c", name: "C" })],
+      }),
+    );
+
+    const boardIds = await listBoardIds("set-1");
+
+    expect(boardIds.sort()).toEqual(["a", "b"]);
   });
 });
 

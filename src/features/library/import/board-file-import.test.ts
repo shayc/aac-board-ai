@@ -178,7 +178,7 @@ describe("importBoardFile", () => {
 
     await importBoardFile(boardFile);
 
-    expect((await listBoardSetRecords())[0]?.name).toBe("core.obf");
+    expect((await listBoardSetRecords())[0]?.name).toBe("core");
   });
 
   test("clamps the derived boardSetId to 255 characters", async () => {

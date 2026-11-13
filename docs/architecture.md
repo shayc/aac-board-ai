@@ -94,8 +94,10 @@ imported fields while adding translations saved on this device. Board links
 carry the linked board's ID, which the OBF library resolves from the archive.
 Board-set records store the set's translated names. `obfToBoard` derives the
 runtime `Board` on each read, so runtime types can evolve without rewriting
-stored records. Storage schema changes require a versioned migration in
-[`boards-db.ts`](../src/features/library/storage/boards-db.ts).
+stored records. The storage schema in
+[`boards-db.ts`](../src/features/library/storage/boards-db.ts) has no migrations
+yet: a schema change edits it in place, and a browser holding an older database
+needs its site data cleared.
 
 React Context provides theme, playback controls, and snackbar access.
 Components subscribe to external stores through `useExternalStore`, a
@@ -168,7 +170,8 @@ Route loaders only read; they never translate or wait on a model:
    `loadStoredBoard`. It reads the stored OBF, resolves object URLs for its
    stored assets, and maps both through `obfToBoard`. Loading leaves the OBF
    unchanged. Media paths resolve only to stored assets; otherwise the item's
-   `data` or `url` is used.
+   `data` or `url` is used. A link to a board the set does not store is left
+   out of the loaded board, so its tile is an ordinary tile.
 2. The page renders the board in the communication language through
    `useBoardInLanguage`: the source board, or the board's own translations for
    that language, from the board file or saved on this device.
@@ -319,7 +322,9 @@ voice or translation model. Speech uses the saved voice only when it speaks
 the communication language; otherwise it picks one of that language's voices,
 or leaves the choice to the browser, without changing the saved voice.
 
-Paraglide message catalogs provide UI text. Direction-specific Emotion caches,
+Paraglide message catalogs provide UI text. The document's `lang` names the UI
+locale, so a communication language without a catalog keeps `lang` on the
+fallback locale its UI text is shown in. Direction-specific Emotion caches,
 right-to-left (RTL) styling, and logical CSS support both text directions.
 
 ### Theming

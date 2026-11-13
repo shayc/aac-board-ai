@@ -84,12 +84,14 @@ function buildBoardSetContent(
   loadedBoard: LoadedBoard,
   fileName: string,
 ): BoardSetContent {
+  const fileStem = stripBoardFileExtension(fileName);
+
   if (loadedBoard.format === "obf") {
     const { board } = loadedBoard;
 
     return {
       rootBoardId: board.id,
-      name: nonBlankText(board.name) ?? fileName,
+      name: nonBlankText(board.name) ?? fileStem,
       boards: [board],
       assets: [],
     };
@@ -99,7 +101,7 @@ function buildBoardSetContent(
 
   return {
     rootBoardId: rootBoard.id,
-    name: nonBlankText(rootBoard.name) ?? fileName,
+    name: nonBlankText(rootBoard.name) ?? fileStem,
     boards: [...boards.values()],
     assets: buildAssetInputs(resources),
   };
