@@ -25,8 +25,8 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
-  /** The language the board's text is in, which is the board's own when it has no translation. */
-  language: string;
+  /** The language the board's text is in, when known; it may not be the communication language. */
+  language: string | undefined;
   rootBoardId: string | undefined;
 }
 

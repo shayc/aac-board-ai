@@ -8,7 +8,7 @@ import {
 
 interface PlaybackMessageBarProps {
   parts: readonly MessagePart[];
-  language: string;
+  language: string | undefined;
   isWordOpen: boolean;
   playback: Pick<
     UseBoardPlaybackReturn,

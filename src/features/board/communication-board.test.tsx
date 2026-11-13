@@ -229,6 +229,17 @@ describe("CommunicationBoard", () => {
         .toHaveAttribute("lang", "es");
     });
 
+    test("leaves tiles on the document's language when the board declares none", async () => {
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: undefined,
+      });
+
+      await expect
+        .element(screen.getByRole("button", { name: "hello" }))
+        .not.toHaveAttribute("lang");
+    });
+
     test("lays the board out in the communication language's direction when the UI has no text for it", async () => {
       setStoredLanguage("ur");
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);

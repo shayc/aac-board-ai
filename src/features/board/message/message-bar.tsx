@@ -13,7 +13,7 @@ const LIGHT_SCHEME_CLASS = "light";
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
-  language: string;
+  language: string | undefined;
   isWordOpen: boolean;
   activePartId: string | null;
   areImagesVisible: boolean;
@@ -130,7 +130,7 @@ function scrollContainerSx(theme: Theme) {
 
 interface MessagePartItemProps {
   label: string;
-  language: string;
+  language: string | undefined;
   imageSrc?: string;
   isActive: boolean;
   isOpen: boolean;

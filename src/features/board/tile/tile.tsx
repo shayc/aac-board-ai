@@ -27,7 +27,7 @@ const folderTileSx = {
 
 interface TileProps {
   button: BoardButton;
-  language: string;
+  language: string | undefined;
   tabIndex: number;
   onActivate: (button: BoardButton) => void;
 }
