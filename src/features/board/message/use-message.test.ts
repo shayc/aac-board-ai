@@ -109,6 +109,17 @@ describe("useMessage", () => {
     expect(message.getState().isSpoken).toBe(false);
   });
 
+  test("releases a spoken message when clearing after speaking is turned off", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("I want water");
+    await trackSettledPlayback(result.current, true);
+    setClearsAfterSpeaking(false);
+    await rerender();
+
+    expect(result.current.getState().isSpoken).toBe(false);
+  });
+
   test("leaves the message unspoken when its playback did not complete", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;

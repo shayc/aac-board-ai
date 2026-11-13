@@ -26,8 +26,12 @@ export function useMessage(): UseMessageReturn {
   const stateRef = useRef(state);
   const text = state.parts.map((part) => part.label).join(" ");
 
+  // The setting is read each time the message is used, so turning it off
+  // releases a message that was already spoken.
   function getState() {
-    return stateRef.current;
+    return clearsAfterSpeaking
+      ? stateRef.current
+      : markSpoken(stateRef.current, false);
   }
 
   function setState(next: Message) {
@@ -41,14 +45,14 @@ export function useMessage(): UseMessageReturn {
     const played = setSpoken(false);
 
     void completion.then((hasCompleted) => {
-      if (hasCompleted && clearsAfterSpeaking && getState() === played) {
+      if (hasCompleted && stateRef.current === played) {
         setSpoken(true);
       }
     });
   }
 
   function setSpoken(isSpoken: boolean): Message {
-    const current = getState();
+    const current = stateRef.current;
     const next = markSpoken(current, isSpoken);
     if (next !== current) {
       setState(next);

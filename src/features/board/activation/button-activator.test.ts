@@ -285,6 +285,21 @@ describe("createButtonActivator", () => {
     expect(message.setState).not.toHaveBeenCalled();
   });
 
+  test("speaks the message for a space that changes nothing, followed by play", () => {
+    const { activateButton, playback } = setup([
+      { kind: "tile", id: "1", label: "hello" },
+    ]);
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "space" }, { kind: "play" }],
+    });
+
+    expect(playback.playMessage).toHaveBeenCalledOnce();
+    expect(playback.echoMessage).not.toHaveBeenCalled();
+  });
+
   describe("after the message is spoken", () => {
     const SPOKEN_PARTS: MessagePart[] = [
       { kind: "tile", id: "1", label: "hello" },
