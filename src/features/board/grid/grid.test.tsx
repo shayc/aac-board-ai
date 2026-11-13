@@ -4,6 +4,7 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
+import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { getCellPosition } from "../testing/get-cell-position";
@@ -16,6 +17,10 @@ const PADDING_PX = { columns: 16, rows: 12 };
 const OVERFLOW_HINT_PX = 8;
 const GAP_PX = 8;
 const MIN_CELL_SIZES_PX = { columns: 88, rows: 96 };
+
+// Expected dimensions for a viewport at or above sm.
+const SM_PADDING_PX = { columns: 24, rows: 16 };
+const SM_OVERFLOW_HINT_PX = 16;
 
 const AXES = {
   columns: {
@@ -433,6 +438,23 @@ describe("Grid", () => {
         expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
           1,
         );
+      },
+    );
+
+    test.each(["columns", "rows"] as const)(
+      "widens the padding and the hint of the %s on a screen at or above sm",
+      async (axis) => {
+        await setTestViewport(800, 600);
+
+        const layout = await measureTracks(axis, 375, 20);
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.leadingSpace).toBeCloseTo(SM_PADDING_PX[axis], 0);
+        expect(layout.trailingSpace).toBeCloseTo(
+          GAP_PX + SM_OVERFLOW_HINT_PX,
+          0,
+        );
+        expect(layout.trailingHint).toBeCloseTo(SM_OVERFLOW_HINT_PX, 0);
       },
     );
 

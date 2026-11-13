@@ -24,12 +24,21 @@ function renderButton(item: TestItem, props: GridItemProps) {
 async function press(
   item: Locator,
   key: string,
-  modifiers: { ctrlKey?: boolean; metaKey?: boolean; shiftKey?: boolean } = {},
+  modifiers: {
+    ctrlKey?: boolean;
+    metaKey?: boolean;
+    shiftKey?: boolean;
+    altKey?: boolean;
+  } = {},
 ) {
   item.element().focus();
   let sequence = `{${key}}`;
   if (modifiers.shiftKey) {
     sequence = `{Shift>}${sequence}{/Shift}`;
+  }
+
+  if (modifiers.altKey) {
+    sequence = `{Alt>}${sequence}{/Alt}`;
   }
 
   if (modifiers.metaKey) {
@@ -342,6 +351,46 @@ describe("useGridFocus", () => {
 
       await expect.element(item1).toHaveFocus();
     });
+
+    test("leaves an arrow with no cell in its direction to outer handlers", async () => {
+      const items = makeItems(1, 2);
+      const handleOuterKeyDown = vi.fn();
+
+      const screen = await render(
+        <div role="presentation" onKeyDown={handleOuterKeyDown}>
+          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
+        </div>,
+      );
+
+      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
+
+      await press(item2, "ArrowRight");
+
+      await expect.element(item2).toHaveFocus();
+      expect(handleOuterKeyDown).toHaveBeenCalledOnce();
+    });
+
+    test.each(["ctrlKey", "metaKey", "shiftKey", "altKey"] as const)(
+      "does not move focus on an arrow pressed with %s",
+      async (modifier) => {
+        const screen = await render(
+          <Grid
+            items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
+            rows={3}
+            columns={3}
+            renderItem={renderButton}
+          />,
+        );
+        const center = screen.getByRole("button", {
+          name: "Item 5",
+          exact: true,
+        });
+
+        await press(center, "ArrowRight", { [modifier]: true });
+
+        await expect.element(center).toHaveFocus();
+      },
+    );
   });
 
   describe("Home and End", () => {
