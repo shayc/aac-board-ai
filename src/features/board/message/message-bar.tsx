@@ -13,6 +13,7 @@ const LIGHT_SCHEME_CLASS = "light";
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
+  language: string;
   isWordOpen: boolean;
   activePartId: string | null;
   areImagesVisible: boolean;
@@ -23,6 +24,7 @@ export interface MessageBarProps {
 
 export function MessageBar({
   parts,
+  language,
   isWordOpen,
   activePartId,
   areImagesVisible,
@@ -78,6 +80,7 @@ export function MessageBar({
           <MessagePartItem
             key={part.id}
             label={part.label}
+            language={language}
             imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
             isActive={part.id === activePartId}
             isOpen={part.id === openPartId}
@@ -127,6 +130,7 @@ function scrollContainerSx(theme: Theme) {
 
 interface MessagePartItemProps {
   label: string;
+  language: string;
   imageSrc?: string;
   isActive: boolean;
   isOpen: boolean;
@@ -135,6 +139,7 @@ interface MessagePartItemProps {
 
 function MessagePartItem({
   label,
+  language,
   imageSrc,
   isActive,
   isOpen,
@@ -143,6 +148,7 @@ function MessagePartItem({
   return (
     <Stack
       role="listitem"
+      lang={language}
       direction="row"
       sx={(theme) => ({
         py: 0.5,

@@ -9,6 +9,7 @@ import { SuggestionStatusNotice } from "./suggestion-status-notice";
 export interface SuggestionBarProps {
   status: SuggestionStatus;
   phrases: readonly string[];
+  language: string;
   onEnable: () => void;
   onPhraseSelect: (phrase: string) => void;
 }
@@ -16,6 +17,7 @@ export interface SuggestionBarProps {
 export function SuggestionBar({
   status,
   phrases,
+  language,
   onEnable,
   onPhraseSelect,
 }: SuggestionBarProps) {
@@ -51,6 +53,7 @@ export function SuggestionBar({
         {phrases.map((phrase) => (
           <Chip
             key={phrase}
+            lang={language}
             label={phrase}
             variant="outlined"
             onClick={() => onPhraseSelect(phrase)}
