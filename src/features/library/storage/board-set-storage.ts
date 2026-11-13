@@ -9,10 +9,10 @@ import {
   boardSetRange,
   type BoardSetRecord,
   getBoardsDB,
-  normalizeAssetPath,
   runTransaction,
   validateId,
 } from "./boards-db";
+import { normalizeAssetPath } from "./normalize-asset-path";
 
 export { MAX_ID_LENGTH } from "./boards-db";
 export type { BoardSetRecord } from "./boards-db";

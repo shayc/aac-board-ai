@@ -4,9 +4,9 @@ import { collectMediaPaths } from "../obf/collect-media-paths";
 import {
   getAssetBlob,
   listBoardRecords,
-  normalizeAssetPath,
 } from "../storage/board-content-storage";
 import type { BoardSetRecord } from "../storage/board-set-storage";
+import { normalizeAssetPath } from "../storage/normalize-asset-path";
 
 export async function exportBoardSet(
   boardSet: Pick<BoardSetRecord, "id" | "name" | "rootBoardId">,
