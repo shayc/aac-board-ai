@@ -92,7 +92,7 @@
   "speechPreviewSample": "Xin chào, đây là giọng nói của tôi!",
   "messageImages": "Hiển thị hình ảnh",
   "messageHighlight": "Đánh dấu khi đọc",
-  "messageStartNewAfterSpeaking": "Bắt đầu tin nhắn mới sau khi đọc",
+  "messageClearAfterSpeaking": "Xóa sau khi đọc",
   "tileSaturation": "Cường độ màu",
   "tileBrightness": "Độ sáng",
   "tileBorders": "Hiển thị viền",

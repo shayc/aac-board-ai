@@ -92,7 +92,7 @@
   "speechPreviewSample": "Hej, det här är min röst!",
   "messageImages": "Visa bilder",
   "messageHighlight": "Markera under tal",
-  "messageStartNewAfterSpeaking": "Börja ett nytt meddelande efter tal",
+  "messageClearAfterSpeaking": "Rensa efter tal",
   "tileSaturation": "Färgintensitet",
   "tileBrightness": "Ljusstyrka",
   "tileBorders": "Visa kantlinjer",

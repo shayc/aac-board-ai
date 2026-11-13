@@ -92,7 +92,7 @@
   "speechPreviewSample": "สวัสดี นี่คือเสียงของฉัน!",
   "messageImages": "แสดงรูปภาพ",
   "messageHighlight": "ไฮไลต์ขณะพูด",
-  "messageStartNewAfterSpeaking": "เริ่มข้อความใหม่หลังจากพูด",
+  "messageClearAfterSpeaking": "ล้างหลังจากพูด",
   "tileSaturation": "ความเข้มของสี",
   "tileBrightness": "ความสว่าง",
   "tileBorders": "แสดงขอบ",

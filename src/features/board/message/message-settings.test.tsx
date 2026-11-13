@@ -48,19 +48,19 @@ describe("MessageSettings", () => {
     );
   });
 
-  test("toggles starting a new message after speaking", async () => {
+  test("toggles clearing the message after speaking", async () => {
     const screen = await renderMessageSettings();
-    const newMessageSwitch = screen.getByRole("switch", {
-      name: "Start a new message after speaking",
+    const clearSwitch = screen.getByRole("switch", {
+      name: "Clear after speaking",
     });
 
-    await expect.element(newMessageSwitch).toBeChecked();
-    await newMessageSwitch.click();
+    await expect.element(clearSwitch).toBeChecked();
+    await clearSwitch.click();
 
-    await expect.element(newMessageSwitch).not.toBeChecked();
+    await expect.element(clearSwitch).not.toBeChecked();
     await vi.waitFor(() =>
       expect(readStoredPreferences()).toMatchObject({
-        startsNewMessageAfterSpeaking: false,
+        clearsAfterSpeaking: false,
       }),
     );
   });

@@ -92,7 +92,7 @@
   "speechPreviewSample": "Привет, это мой голос!",
   "messageImages": "Показывать изображения",
   "messageHighlight": "Подсвечивать во время речи",
-  "messageStartNewAfterSpeaking": "Начинать новое сообщение после речи",
+  "messageClearAfterSpeaking": "Очищать после речи",
   "tileSaturation": "Насыщенность цвета",
   "tileBrightness": "Яркость",
   "tileBorders": "Показывать границы",

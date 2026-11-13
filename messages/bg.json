@@ -92,7 +92,7 @@
   "speechPreviewSample": "Здравей, това е моят глас!",
   "messageImages": "Показване на изображения",
   "messageHighlight": "Открояване по време на говорене",
-  "messageStartNewAfterSpeaking": "Започване на ново съобщение след говорене",
+  "messageClearAfterSpeaking": "Изчистване след говорене",
   "tileSaturation": "Интензивност на цвета",
   "tileBrightness": "Яркост",
   "tileBorders": "Показване на рамки",

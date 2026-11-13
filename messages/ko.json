@@ -92,7 +92,7 @@
   "speechPreviewSample": "안녕하세요, 제 목소리예요!",
   "messageImages": "이미지 표시",
   "messageHighlight": "말하는 동안 강조 표시",
-  "messageStartNewAfterSpeaking": "말한 후 새 메시지 시작",
+  "messageClearAfterSpeaking": "말한 후 지우기",
   "tileSaturation": "색상 강도",
   "tileBrightness": "밝기",
   "tileBorders": "테두리 표시",

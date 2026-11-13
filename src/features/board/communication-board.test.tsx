@@ -12,8 +12,8 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import {
+  setClearsAfterSpeaking,
   setMessageImagesVisible,
-  setStartsNewMessageAfterSpeaking,
 } from "./message/message-preferences-store";
 import {
   renderCommunicationBoard,
@@ -511,8 +511,24 @@ describe("CommunicationBoard", () => {
       await expect.element(getMessageItems(screen)).toHaveLength(2);
     });
 
-    test("adds to a spoken message when starting a new message is turned off", async () => {
-      setStartsNewMessageAfterSpeaking(false);
+    test("adds to a spoken message while it is playing again", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const play = screen.getByRole("button", { name: "Play message" });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await play.click();
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
+      });
+      preventSpeechEnd(speech.speak);
+      await play.click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expect.element(getMessageItems(screen)).toHaveLength(2);
+    });
+
+    test("adds to a spoken message when clearing after speaking is turned off", async () => {
+      setClearsAfterSpeaking(false);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();

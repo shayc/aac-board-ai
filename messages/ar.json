@@ -92,7 +92,7 @@
   "speechPreviewSample": "مرحبًا، هذا هو صوتي!",
   "messageImages": "إظهار الصور",
   "messageHighlight": "التمييز أثناء النطق",
-  "messageStartNewAfterSpeaking": "بدء رسالة جديدة بعد النطق",
+  "messageClearAfterSpeaking": "المسح بعد النطق",
   "tileSaturation": "شدة الألوان",
   "tileBrightness": "السطوع",
   "tileBorders": "إظهار الحدود",

@@ -92,7 +92,7 @@
   "speechPreviewSample": "Привіт, це мій голос!",
   "messageImages": "Показувати зображення",
   "messageHighlight": "Підсвічувати під час мовлення",
-  "messageStartNewAfterSpeaking": "Починати нове повідомлення після мовлення",
+  "messageClearAfterSpeaking": "Очищати після мовлення",
   "tileSaturation": "Насиченість кольору",
   "tileBrightness": "Яскравість",
   "tileBorders": "Показувати межі",

@@ -92,7 +92,7 @@
   "speechPreviewSample": "Ahoj, tohle je můj hlas!",
   "messageImages": "Zobrazit obrázky",
   "messageHighlight": "Zvýrazňovat při mluvení",
-  "messageStartNewAfterSpeaking": "Po mluvení začít novou zprávu",
+  "messageClearAfterSpeaking": "Vymazat po mluvení",
   "tileSaturation": "Intenzita barev",
   "tileBrightness": "Jas",
   "tileBorders": "Zobrazit ohraničení",

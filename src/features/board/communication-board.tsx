@@ -9,7 +9,6 @@ import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
-import type { MessagePart } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -36,20 +35,22 @@ export function CommunicationBoard({
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
-  const playback = useBoardPlayback();
+  const playback = useBoardPlayback({
+    onMessagePlayback: message.trackPlayback,
+  });
   const navigation = useBoardNavigation(rootBoardId);
-  const messagePlayback = { ...playback, playMessage: playWholeMessage };
-  const shortcuts = useBoardShortcuts({ message, playback: messagePlayback });
+  const shortcuts = useBoardShortcuts({ message, playback });
 
   const activateButton = createButtonActivator({
     message: {
       getParts: message.getParts,
+      isAwaitingNewMessage: message.isAwaitingNewMessage,
       getPartsToAddTo: message.getPartsToAddTo,
       setParts: message.setParts,
-      recordPlayback: message.recordPlayback,
     },
     playback: {
       playMessage: playback.playMessage,
+      echoMessage: playback.echoMessage,
       playPart: playback.playPart,
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
@@ -97,10 +98,7 @@ export function CommunicationBoard({
         }}
       >
         <Stack spacing={PAGE_MARGIN} sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}>
-          <PlaybackMessageBar
-            parts={message.parts}
-            playback={messagePlayback}
-          />
+          <PlaybackMessageBar parts={message.parts} playback={playback} />
 
           {isActionRowVisible && (
             <Stack
@@ -157,11 +155,4 @@ export function CommunicationBoard({
       </Stack>
     </ScanningScope>
   );
-
-  async function playWholeMessage(parts: readonly MessagePart[]) {
-    const hasCompleted = await playback.playMessage(parts);
-    message.recordPlayback(parts, hasCompleted);
-
-    return hasCompleted;
-  }
 }

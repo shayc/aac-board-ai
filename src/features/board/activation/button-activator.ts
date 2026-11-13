@@ -14,9 +14,12 @@ import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 interface ButtonActivatorOptions {
   message: Pick<
     UseMessageReturn,
-    "getParts" | "getPartsToAddTo" | "setParts" | "recordPlayback"
+    "getParts" | "isAwaitingNewMessage" | "getPartsToAddTo" | "setParts"
   >;
-  playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart">;
+  playback: Pick<
+    UseBoardPlaybackReturn,
+    "playMessage" | "echoMessage" | "playPart"
+  >;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
 
@@ -62,49 +65,58 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      commitEdits(getPartsToEdit(actions), actions);
+      commitEdits(message.getParts(), getEditsToApply(actions));
 
       return;
     }
 
-    const actionsBeforePlay = actions.slice(0, playIndex);
-    const partsToPlay = commitEdits(
-      getPartsToEdit(actionsBeforePlay),
-      actionsBeforePlay,
-    );
-    const actionsAfterPlay = actions.slice(playIndex + 1);
+    const editsBeforePlay = getEditsToApply(actions.slice(0, playIndex));
+    const partsToPlay = commitEdits(message.getParts(), editsBeforePlay);
+    const editsAfterPlay = actions.slice(playIndex + 1).filter(isMessageEdit);
+
     // A tile that spells and then plays echoes the word being typed, so only a
-    // tile that plays the message as it stands counts as speaking it.
-    const isWholeMessage = !actionsBeforePlay.some(isMessageEdit);
+    // tile that plays the message as it stands speaks it.
+    const play =
+      editsBeforePlay.length === 0
+        ? playback.playMessage
+        : playback.echoMessage;
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(partsToPlay).then((hasCompleted) => {
-      if (isWholeMessage) {
-        message.recordPlayback(partsToPlay, hasCompleted);
-      }
-
+    void play(partsToPlay).then((hasCompleted) => {
       if (hasCompleted) {
-        commitEdits(message.getParts(), actionsAfterPlay);
+        commitEdits(message.getParts(), editsAfterPlay);
       }
     });
   }
 
-  // Spelling or a space after a spoken message starts a new one, as a tile
-  // does, while backspace and clear change the spoken message.
-  function getPartsToEdit(actions: readonly BoardAction[]) {
-    const firstEdit = actions.find(isMessageEdit);
-    const isAddition =
-      firstEdit?.kind === "spell" || firstEdit?.kind === "space";
+  // A spoken message has no word for a space to end, so spaces before the next
+  // letter are skipped. That letter starts a new message, as a tile does, while
+  // backspace changes the spoken one.
+  function getEditsToApply(
+    actions: readonly BoardAction[],
+  ): readonly MessageEdit[] {
+    const edits = actions.filter(isMessageEdit);
+    if (!message.isAwaitingNewMessage()) {
+      return edits;
+    }
 
-    return isAddition ? message.getPartsToAddTo() : message.getParts();
+    const firstWordEditIndex = edits.findIndex((edit) => edit.kind !== "space");
+    if (firstWordEditIndex === -1) {
+      return [];
+    }
+
+    const wordEdits = edits.slice(firstWordEditIndex);
+
+    return wordEdits[0]?.kind === "spell"
+      ? [{ kind: "clear" }, ...wordEdits]
+      : wordEdits;
   }
 
   function commitEdits(
     parts: readonly MessagePart[],
-    actions: readonly BoardAction[],
+    edits: readonly MessageEdit[],
   ) {
-    const edits = actions.filter(isMessageEdit);
     if (edits.length === 0) {
       return parts;
     }

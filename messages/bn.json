@@ -92,7 +92,7 @@
   "speechPreviewSample": "হ্যালো, এটা আমার কণ্ঠস্বর!",
   "messageImages": "ছবি দেখান",
   "messageHighlight": "বলার সময় হাইলাইট করুন",
-  "messageStartNewAfterSpeaking": "বলার পরে নতুন বার্তা শুরু করুন",
+  "messageClearAfterSpeaking": "বলার পরে মুছুন",
   "tileSaturation": "রঙের তীব্রতা",
   "tileBrightness": "উজ্জ্বলতা",
   "tileBorders": "সীমানা দেখান",

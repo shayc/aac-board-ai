@@ -92,7 +92,7 @@
   "speechPreviewSample": "Živjo, to je moj glas!",
   "messageImages": "Prikaži slike",
   "messageHighlight": "Označi med govorom",
-  "messageStartNewAfterSpeaking": "Po govoru začni novo sporočilo",
+  "messageClearAfterSpeaking": "Počisti po govoru",
   "tileSaturation": "Intenzivnost barve",
   "tileBrightness": "Svetlost",
   "tileBorders": "Prikaži obrobe",
