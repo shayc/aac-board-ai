@@ -2,7 +2,7 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { TileSettings } from "./tile-settings";
@@ -107,16 +107,9 @@ describe("TileSettings", () => {
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await bordersSwitch.click();
-    await expect.element(bordersSwitch).toBeChecked();
 
-    await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-preferences");
-      expect(stored).not.toBeNull();
-      const preferences = JSON.parse(stored ?? "{}") as {
-        areBordersVisible: boolean;
-      };
-      expect(preferences.areBordersVisible).toBe(true);
-    });
+    await expect.element(bordersSwitch).toBeChecked();
+    expect(storedTilePreferences()).toMatchObject({ areBordersVisible: true });
   });
 
   test("persists tile saturation when color intensity is lowered", async () => {
@@ -141,14 +134,7 @@ describe("TileSettings", () => {
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "90%");
 
-    await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-preferences");
-      expect(stored).not.toBeNull();
-      const preferences = JSON.parse(stored ?? "{}") as {
-        saturation: number;
-      };
-      expect(preferences.saturation).toBe(valueNow);
-    });
+    expect(storedTilePreferences()).toMatchObject({ saturation: valueNow });
   });
 
   test("persists tile brightness when brightness is lowered", async () => {
@@ -167,14 +153,7 @@ describe("TileSettings", () => {
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "97%");
 
-    await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-preferences");
-      expect(stored).not.toBeNull();
-      const preferences = JSON.parse(stored ?? "{}") as {
-        brightness: number;
-      };
-      expect(preferences.brightness).toBe(0.97);
-    });
+    expect(storedTilePreferences()).toMatchObject({ brightness: 0.97 });
   });
 
   test.each([
@@ -220,19 +199,17 @@ describe("TileSettings", () => {
 
     await expect.element(bottomRadio).not.toBeChecked();
     await bottomRadio.click();
+
     for (const group of groups) {
       await expect
         .element(group.getByRole("radio", { name: "Bottom" }))
         .toBeChecked();
     }
 
-    await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-preferences");
-      expect(stored).not.toBeNull();
-      const preferences = JSON.parse(stored ?? "{}") as {
-        labelPlacement: string;
-      };
-      expect(preferences.labelPlacement).toBe("bottom");
-    });
+    expect(storedTilePreferences()).toMatchObject({ labelPlacement: "bottom" });
   });
 });
+
+function storedTilePreferences(): unknown {
+  return JSON.parse(localStorage.getItem("tile-preferences") ?? "null");
+}
