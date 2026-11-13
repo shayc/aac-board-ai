@@ -524,22 +524,24 @@ describe("switch scanning", () => {
       expect(getComputedStyle(yes).outlineStyle).toBe("none");
     });
 
-    test("hides the keyboard focus ring of the message while a tile is highlighted", async () => {
+    test("hides the keyboard focus ring of the message while a row is highlighted", async () => {
       setScanningEnabled(false);
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
       const message = screen.getByRole("list", { name: "Message" });
+      const messageList = message.element();
 
       await userEvent.keyboard("{Tab}{Tab}{Enter}");
       await expect.element(message.getByText("yes")).toBeVisible();
-      message.element().focus();
-      expect(getComputedStyle(message.element()).outlineStyle).toBe("solid");
+      messageList.focus();
+
+      expect(getComputedStyle(messageList).outlineStyle).toBe("solid");
 
       setScanningEnabled(true);
       await pressSwitch("Space");
       await pressSwitch("Space");
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      expect(getComputedStyle(message.element()).outlineStyle).toBe("none");
+      expect(getComputedStyle(messageList).outlineStyle).toBe("none");
     });
 
     test("keeps cycling through the rows without pausing", async () => {
