@@ -27,11 +27,7 @@ export async function getBoardRecord({
 
 export async function listBoardIds(boardSetId: string): Promise<string[]> {
   const db = await getBoardsDB();
-  const keys = await db.getAllKeysFromIndex(
-    "boards",
-    "byBoardSetId",
-    boardSetId,
-  );
+  const keys = await db.getAllKeys("boards", boardSetRange(boardSetId));
 
   return keys.map(([, boardId]) => boardId);
 }
