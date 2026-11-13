@@ -4,6 +4,7 @@ import {
   applyBackspace,
   createTextPart,
   EMPTY_MESSAGE,
+  markSpoken,
 } from "./message-transforms";
 import type { Message, MessagePart } from "./message-types";
 
@@ -12,13 +13,8 @@ export interface UseMessageReturn {
   isWordOpen: boolean;
   text: string;
   getState: () => Message;
-  isAwaitingNewMessage: () => boolean;
-  getStateToAddTo: () => Message;
   setState: (state: Message) => void;
-  trackPlayback: (
-    playedParts: readonly MessagePart[],
-    completion: Promise<boolean>,
-  ) => void;
+  trackPlayback: (completion: Promise<boolean>) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
   clear: () => void;
@@ -28,41 +24,37 @@ export function useMessage(): UseMessageReturn {
   const { clearsAfterSpeaking } = useMessagePreferences();
   const [state, setRenderedState] = useState(EMPTY_MESSAGE);
   const stateRef = useRef(state);
-  const isSpokenRef = useRef(false);
   const text = state.parts.map((part) => part.label).join(" ");
 
   function getState() {
     return stateRef.current;
   }
 
-  // A spoken message stays visible until the next addition replaces it, so
-  // listeners who missed it can still read it.
-  function isAwaitingNewMessage() {
-    return clearsAfterSpeaking && isSpokenRef.current;
-  }
-
-  function getStateToAddTo() {
-    return isAwaitingNewMessage() ? EMPTY_MESSAGE : stateRef.current;
-  }
-
   function setState(next: Message) {
     stateRef.current = next;
-    isSpokenRef.current = false;
     setRenderedState(next);
   }
 
-  // Only a playback that reaches the end of the current message counts, so a
+  // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
-  function trackPlayback(
-    playedParts: readonly MessagePart[],
-    completion: Promise<boolean>,
-  ) {
-    isSpokenRef.current = false;
+  function trackPlayback(completion: Promise<boolean>) {
+    const played = setSpoken(false);
 
     void completion.then((hasCompleted) => {
-      isSpokenRef.current =
-        hasCompleted && playedParts === stateRef.current.parts;
+      if (hasCompleted && clearsAfterSpeaking && getState() === played) {
+        setSpoken(true);
+      }
     });
+  }
+
+  function setSpoken(isSpoken: boolean): Message {
+    const current = getState();
+    const next = markSpoken(current, isSpoken);
+    if (next !== current) {
+      setState(next);
+    }
+
+    return next;
   }
 
   function replaceWithText(input: string) {
@@ -70,6 +62,7 @@ export function useMessage(): UseMessageReturn {
     setState({
       parts: words.map(createTextPart),
       isWordOpen: words.length > 0,
+      isSpoken: false,
     });
   }
 
@@ -86,8 +79,6 @@ export function useMessage(): UseMessageReturn {
     isWordOpen: state.isWordOpen,
     text,
     getState,
-    isAwaitingNewMessage,
-    getStateToAddTo,
     setState,
     trackPlayback,
     replaceWithText,

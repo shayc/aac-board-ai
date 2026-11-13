@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setClearsAfterSpeaking } from "./message-preferences-store";
-import { spell } from "./message-transforms";
+import { closeWord, spell } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -76,19 +76,18 @@ describe("useMessage", () => {
     ]);
   });
 
-  test("adds to an empty message once the current one is spoken", async () => {
+  test("marks the message spoken once it plays to its end", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(message.isAwaitingNewMessage()).toBe(true);
-    expect(message.getStateToAddTo().parts).toEqual([]);
+    expect(message.getState().isSpoken).toBe(true);
     expect(message.getState().parts).toHaveLength(3);
   });
 
-  test("adds to the spoken message once it is edited", async () => {
+  test("leaves the message unspoken once it is edited", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -96,10 +95,10 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     message.backspace();
 
-    expect(message.getStateToAddTo()).toBe(message.getState());
+    expect(message.getState().isSpoken).toBe(false);
   });
 
-  test("adds to the spoken message when clearing after speaking is off", async () => {
+  test("leaves the message unspoken when clearing after speaking is off", async () => {
     setClearsAfterSpeaking(false);
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
@@ -107,10 +106,10 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(message.getStateToAddTo()).toBe(message.getState());
+    expect(message.getState().isSpoken).toBe(false);
   });
 
-  test("adds to the message when its playback did not complete", async () => {
+  test("leaves the message unspoken when its playback did not complete", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -118,34 +117,47 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     await trackSettledPlayback(message, false);
 
-    expect(message.getStateToAddTo()).toBe(message.getState());
+    expect(message.getState().isSpoken).toBe(false);
   });
 
-  test("adds to a spoken message while it is playing again", async () => {
+  test("leaves a spoken message unspoken while it is playing again", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
-    message.trackPlayback(
-      message.getState().parts,
-      Promise.withResolvers<boolean>().promise,
-    );
+    message.trackPlayback(Promise.withResolvers<boolean>().promise);
 
-    expect(message.getStateToAddTo()).toBe(message.getState());
+    expect(message.getState().isSpoken).toBe(false);
   });
 
-  test("adds to the message when it changed while playing", async () => {
+  test("leaves the message unspoken when it changed while playing", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
     message.replaceWithText("I want water");
     const completion = Promise.resolve(true);
-    message.trackPlayback(message.getState().parts, completion);
+    message.trackPlayback(completion);
     message.backspace();
     await completion;
 
-    expect(message.getStateToAddTo()).toBe(message.getState());
+    expect(message.getState().isSpoken).toBe(false);
+  });
+
+  test("leaves the message unspoken when its last word was reopened while playing", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.setState(closeWord(spell(message.getState(), "hi")));
+    const completion = Promise.resolve(true);
+    message.trackPlayback(completion);
+    message.backspace();
+    await completion;
+
+    expect(message.getState()).toMatchObject({
+      isWordOpen: true,
+      isSpoken: false,
+    });
   });
 });
 
@@ -154,6 +166,6 @@ async function trackSettledPlayback(
   hasCompleted: boolean,
 ) {
   const completion = Promise.resolve(hasCompleted);
-  message.trackPlayback(message.getState().parts, completion);
+  message.trackPlayback(completion);
   await completion;
 }

@@ -576,6 +576,28 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems).toHaveLength(2);
     });
 
+    test("adds to a word that Backspace reopened while the message was playing", async () => {
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+      const messageItems = getMessageItems(screen);
+
+      await screen.getByRole("button", { name: "C", exact: true }).click();
+      await screen.getByRole("button", { name: "A", exact: true }).click();
+      await screen.getByRole("button", { name: "space" }).click();
+      preventSpeechEnd(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Backspace" }).click();
+      endLastUtterance(speech.speak);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeVisible();
+      await screen.getByRole("button", { name: "C", exact: true }).click();
+
+      await expect.element(messageItems).toHaveLength(1);
+      await expect
+        .element(messageItems.getByText("cac", { exact: true }))
+        .toBeVisible();
+    });
+
     test("adds to a message whose playback was stopped", async () => {
       preventSpeechEnd(speech.speak);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
@@ -899,4 +921,11 @@ function getMessageItems(
   screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
 ) {
   return screen.getByRole("list", { name: "Message" }).getByRole("listitem");
+}
+
+function endLastUtterance(speak: ReturnType<typeof stubSpeech>["speak"]) {
+  const utterance = speak.mock.lastCall?.[0];
+  assertDefined(utterance);
+
+  utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
 }

@@ -13,10 +13,7 @@ const MESSAGE_OWNER = "board-message";
 const TILE_OWNER = "board-tile";
 
 interface UseBoardPlaybackOptions {
-  onMessagePlayback?: (
-    parts: readonly MessagePart[],
-    completion: Promise<boolean>,
-  ) => void;
+  onMessagePlayback?: (completion: Promise<boolean>) => void;
 }
 
 export interface UseBoardPlaybackReturn {
@@ -54,7 +51,7 @@ export function useBoardPlayback({
 
   function playMessage(parts: readonly MessagePart[]) {
     const completion = echoMessage(parts);
-    onMessagePlayback?.(parts, completion);
+    onMessagePlayback?.(completion);
 
     return completion;
   }
