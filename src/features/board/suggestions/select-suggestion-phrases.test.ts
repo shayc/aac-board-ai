@@ -27,6 +27,18 @@ describe("selectSuggestionPhrases", () => {
     ).toEqual(["I want to eat.", "I want to eat?"]);
   });
 
+  test.each(["．", "｡", "।"])(
+    "deduplicates a trailing %s full stop",
+    (fullStop) => {
+      expect(
+        selectSuggestionPhrases("want eat", [
+          "I want to eat",
+          `I want to eat${fullStop}`,
+        ]),
+      ).toEqual(["I want to eat"]);
+    },
+  );
+
   test("ignores empty candidate slots", () => {
     expect(
       selectSuggestionPhrases("want eat", [undefined, "I want to eat."]),

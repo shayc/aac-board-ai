@@ -1,3 +1,4 @@
+import type { PlaybackStep } from "@shared/playback/playback-types";
 import { describe, expect, test } from "vitest";
 import { createPart } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
@@ -16,11 +17,7 @@ describe("planPlayback", () => {
 
     const steps = planPlayback(parts);
 
-    expect(steps).toHaveLength(1);
-    const step = steps[0];
-    if (step?.kind !== "speech") {
-      throw new Error("Expected a speech step");
-    }
+    const step = getOnlySpeechStep(steps);
 
     expect(step.text).toBe("i want");
     expect(step.cueAt?.(2)).toBe("2");
@@ -53,10 +50,8 @@ describe("planPlayback", () => {
     const steps = planPlayback([
       { id: "1", label: "🙂", vocalization: "Happy" },
     ]);
-    const step = steps[0];
-    if (step?.kind !== "speech") {
-      throw new Error("Expected a speech step");
-    }
+
+    const step = getOnlySpeechStep(steps);
 
     expect(step.text).toBe("happy");
   });
@@ -67,11 +62,7 @@ describe("planPlayback", () => {
       { id: "2", label: "" },
     ]);
 
-    expect(steps).toHaveLength(1);
-    const step = steps[0];
-    if (step?.kind !== "speech") {
-      throw new Error("Expected a speech step");
-    }
+    const step = getOnlySpeechStep(steps);
 
     expect(step.text).toBe("hi");
   });
@@ -94,13 +85,22 @@ describe("planPlayback", () => {
       { id: "4", label: "goodbye", vocalization: " " },
     ]);
 
-    expect(steps).toHaveLength(1);
-    const step = steps[0];
-    if (step?.kind !== "speech") {
-      throw new Error("Expected a speech step");
-    }
+    const step = getOnlySpeechStep(steps);
 
     expect(step.text).toBe("hello world");
     expect(step.cueAt?.(6)).toBe("3");
   });
 });
+
+type SpeechStep = Extract<PlaybackStep, { kind: "speech" }>;
+
+function getOnlySpeechStep(steps: readonly PlaybackStep[]): SpeechStep {
+  const [step] = steps;
+  if (steps.length !== 1 || step?.kind !== "speech") {
+    const kinds = steps.map(({ kind }) => kind).join(", ");
+
+    throw new Error(`Expected a single speech step, got [${kinds}]`);
+  }
+
+  return step;
+}

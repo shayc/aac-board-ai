@@ -9,7 +9,7 @@ export function focusableDisabledProps(
   className?: string,
 ) {
   if (!isDisabled) {
-    return { className };
+    return {};
   }
 
   return {

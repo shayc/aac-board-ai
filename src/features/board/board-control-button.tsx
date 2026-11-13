@@ -7,7 +7,6 @@ type BoardControlButtonProps = Omit<
 >;
 
 export function BoardControlButton({
-  className,
   disabled = false,
   onClick,
   ...props
@@ -15,7 +14,7 @@ export function BoardControlButton({
   return (
     <Button
       {...props}
-      {...focusableDisabledProps(disabled, className)}
+      {...focusableDisabledProps(disabled, props.className)}
       size="large"
       color="inherit"
       variant="contained"

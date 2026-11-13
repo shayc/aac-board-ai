@@ -26,21 +26,17 @@ interface NavTestHook {
 interface SetupOptions {
   pathname?: string;
   state?: unknown;
-  rootBoardId?: string;
+  hasRootBoard?: boolean;
 }
 
-function setup(
-  options: SetupOptions = {},
-): Promise<RenderHookResult<NavTestHook, unknown>> {
-  const {
-    pathname = DEFAULT_PATH,
-    state,
-    rootBoardId,
-  } = { rootBoardId: "root-1", ...options };
-
+function setup({
+  pathname = DEFAULT_PATH,
+  state,
+  hasRootBoard = true,
+}: SetupOptions = {}): Promise<RenderHookResult<NavTestHook, unknown>> {
   return renderHook(
     (): NavTestHook => ({
-      nav: useBoardNavigation(rootBoardId),
+      nav: useBoardNavigation(hasRootBoard ? "root-1" : undefined),
       location: useLocation(),
       navigate: useNavigate(),
     }),
@@ -97,7 +93,7 @@ describe("useBoardNavigation", () => {
     });
 
     test("is false when the root board is unknown", async () => {
-      const { result } = await setup({ rootBoardId: undefined });
+      const { result } = await setup({ hasRootBoard: false });
 
       expect(result.current.nav.canGoHome).toBe(false);
     });
@@ -222,7 +218,7 @@ describe("useBoardNavigation", () => {
     });
 
     test("does nothing when the root board is unknown", async () => {
-      const { result, act } = await setup({ rootBoardId: undefined });
+      const { result, act } = await setup({ hasRootBoard: false });
 
       await act(() => result.current.nav.goHome());
 
