@@ -1,16 +1,24 @@
 import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormLabel from "@mui/material/FormLabel";
+import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import type { SxProps, Theme } from "@mui/material/styles";
-import { type ReactNode, useId } from "react";
+import { Fragment, type ReactNode, useId } from "react";
+
+export interface SettingsRadioOption<Value extends string> {
+  value: Value;
+  label: string;
+}
 
 interface SettingsRadioGroupProps<Value extends string> {
   label: string;
   helperText?: string;
   value: Value;
   onChange: (value: Value) => void;
-  children: ReactNode;
+  options: readonly SettingsRadioOption<Value>[];
+  renderOption?: (option: SettingsRadioOption<Value>) => ReactNode;
   optionsSx?: SxProps<Theme>;
 }
 
@@ -19,11 +27,19 @@ export function SettingsRadioGroup<Value extends string>({
   helperText,
   value,
   onChange,
-  children,
+  options,
+  renderOption = renderRadioOption,
   optionsSx,
 }: SettingsRadioGroupProps<Value>) {
   const labelId = useId();
   const helperTextId = useId();
+
+  function selectOption(selectedValue: string) {
+    const selected = options.find((option) => option.value === selectedValue);
+    if (selected) {
+      onChange(selected.value);
+    }
+  }
 
   return (
     <FormControl>
@@ -35,11 +51,13 @@ export function SettingsRadioGroup<Value extends string>({
         aria-labelledby={labelId}
         aria-describedby={helperText ? helperTextId : undefined}
         value={value}
-        onChange={(event) => onChange(event.target.value as Value)}
+        onChange={(event) => selectOption(event.target.value)}
         row
         sx={optionsSx}
       >
-        {children}
+        {options.map((option) => (
+          <Fragment key={option.value}>{renderOption(option)}</Fragment>
+        ))}
       </RadioGroup>
 
       {helperText && (
@@ -49,4 +67,8 @@ export function SettingsRadioGroup<Value extends string>({
       )}
     </FormControl>
   );
+}
+
+function renderRadioOption({ value, label }: SettingsRadioOption<string>) {
+  return <FormControlLabel value={value} control={<Radio />} label={label} />;
 }
