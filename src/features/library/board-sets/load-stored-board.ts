@@ -42,7 +42,9 @@ async function resolveAssetURLs(
 ): Promise<Map<string, string>> {
   const entries = await Promise.all(
     Array.from(collectMediaPaths(obfBoard), async (path) => {
-      const url = await getAssetURL(boardSetId, path);
+      // A board missing one picture or sound is still usable; failing the
+      // whole load would leave the user with no board at all.
+      const url = await getAssetURL(boardSetId, path).catch(() => undefined);
 
       return url ? [[path, url] as const] : [];
     }),
