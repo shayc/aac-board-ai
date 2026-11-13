@@ -166,8 +166,8 @@ const themeOptions = {
           backgroundImage: "none",
           "@media screen": theme.applyStyles("dark", {
             [`&.${paperClasses.elevation}:not(.${paperClasses.elevation0})`]: {
-              boxShadow:
-                "inset 0 0 0 1px rgb(255 255 255 / 0.08), var(--Paper-shadow)",
+              outline: "1px solid rgb(255 255 255 / 0.08)",
+              outlineOffset: -1,
             },
           }),
         }),

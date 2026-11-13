@@ -36,7 +36,7 @@ function scopeSx(theme: Theme) {
     // Doubled so the highlight also wins on a control that has keyboard focus.
     [`&& ${SCAN_HIGHLIGHTED_ITEM_SELECTOR}`]: {
       outline: `4px solid ${theme.vars.palette.primary.main}`,
-      outlineOffset: 2,
+      outlineOffset: "var(--scan-outline-offset, 2px)",
     },
     // Two outlined controls would leave it unclear which one a switch selects.
     [`&:has(${SCAN_HIGHLIGHTED_ITEM_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHTED_ITEM_SELECTOR})`]:

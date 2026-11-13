@@ -41,6 +41,8 @@ export function SuggestionBar({
         role={hasPhrases ? "group" : undefined}
         aria-label={hasPhrases ? t(m.suggestionsLabel) : undefined}
         sx={{
+          // An outline outside the chips is clipped by the scroll container.
+          "--scan-outline-offset": "-4px",
           display: "flex",
           alignItems: "center",
           gap: 2,

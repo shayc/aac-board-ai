@@ -1,7 +1,9 @@
 import Dialog from "@mui/material/Dialog";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { stubProofreader } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
+import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -492,6 +494,28 @@ describe("switch scanning", () => {
 
       await expect.poll(highlightedNames).toEqual(["back", "home"]);
       expect(getComputedStyle(back).outlineStyle).toBe("solid");
+    });
+
+    test("keeps the switch highlight inside a scrolling suggestion chip", async () => {
+      const phrase = "Yes, I would like to try something different today.";
+      await setTestViewport(320, 568);
+      stubProofreader(() => ({ correctedInput: phrase, corrections: [] }));
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+      await screen.getByRole("button", { name: "yes", exact: true }).click();
+      const suggestion = screen.getByRole("button", { name: phrase });
+      await expect.element(suggestion).toBeVisible();
+
+      await pressSwitch("Space");
+      await pressSwitch("Space");
+
+      await expect.poll(highlightedNames).toEqual([phrase]);
+      const { outlineOffset, outlineStyle, outlineWidth } = getComputedStyle(
+        suggestion.element(),
+      );
+      expect(outlineStyle).toBe("solid");
+      expect(
+        parseFloat(outlineOffset) + parseFloat(outlineWidth),
+      ).toBeLessThanOrEqual(0);
     });
 
     test("keeps the first row highlighted when another board replaces its tiles", async () => {

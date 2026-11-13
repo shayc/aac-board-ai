@@ -134,7 +134,6 @@ function measureBoardLayout(
   assertDefined(lastRow);
 
   return {
-    messageBarStart: messageBar.getBoundingClientRect().left,
     firstTileStart: firstColumn.left,
     backspaceEnd: window.innerWidth - backspace.right,
     barToGrid: isBarBelowGrid
@@ -198,7 +197,6 @@ describe("CommunicationBoard", () => {
         width: 375,
         height: 755,
         pageMargin: 16,
-        messageBarStart: 16,
         clearance: 4,
         overflowHint: 8,
         wholeRows: 5,
@@ -208,7 +206,6 @@ describe("CommunicationBoard", () => {
         width: 798,
         height: 703,
         pageMargin: 24,
-        messageBarStart: 192,
         clearance: 8,
         overflowHint: 16,
         wholeRows: 5,
@@ -221,7 +218,6 @@ describe("CommunicationBoard", () => {
         width,
         height,
         pageMargin,
-        messageBarStart,
         clearance,
         overflowHint,
         wholeRows,
@@ -231,7 +227,6 @@ describe("CommunicationBoard", () => {
         await expect.element(screen.getByRole("grid")).toBeVisible();
 
         const atStart = measureBoardLayout(screen.container);
-        expect(atStart.messageBarStart).toBeCloseTo(messageBarStart, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
@@ -247,6 +242,32 @@ describe("CommunicationBoard", () => {
         expect(atEnd.topHint).toBeCloseTo(overflowHint, 0);
       },
     );
+
+    test("places Back and Home before the message bar and Backspace after it on a tablet", async () => {
+      await setTestViewport(798, 703);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const message = screen.getByRole("list", { name: "Message" }).element();
+      const bar = message.parentElement;
+      assertDefined(bar);
+
+      const back = screen.getByRole("button", { name: "Go back" }).element();
+      const home = screen.getByRole("button", { name: "Go home" }).element();
+      const backspace = screen
+        .getByRole("button", { name: "Backspace" })
+        .element();
+      const bounds = bar.getBoundingClientRect();
+
+      expect(back.getBoundingClientRect().right).toBeLessThan(bounds.left);
+      expect(home.getBoundingClientRect().right).toBeLessThan(bounds.left);
+      expect(backspace.getBoundingClientRect().left).toBeGreaterThan(
+        bounds.right,
+      );
+      for (const control of [back, home, backspace]) {
+        const { top, bottom } = control.getBoundingClientRect();
+        expect(top).toBeGreaterThanOrEqual(bounds.top);
+        expect(bottom).toBeLessThanOrEqual(bounds.bottom);
+      }
+    });
   });
 
   describe("tile activation", () => {
