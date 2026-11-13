@@ -66,7 +66,7 @@ export function createButtonActivator({
       return;
     }
 
-    const messageToPlay = commitEdits(
+    const stateToPlay = commitEdits(
       message.getState(),
       actions.slice(0, playIndex),
     );
@@ -74,7 +74,7 @@ export function createButtonActivator({
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(messageToPlay.parts).then((hasCompleted) => {
+    void playback.playMessage(stateToPlay.parts).then((hasCompleted) => {
       if (hasCompleted) {
         commitEdits(message.getState(), actionsAfterPlay);
       }

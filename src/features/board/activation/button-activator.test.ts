@@ -216,6 +216,31 @@ describe("createButtonActivator", () => {
     ]);
   });
 
+  test("ends the word being spelled when space follows play", async () => {
+    const { activateButton, message, playback } = setup();
+    const settlePlayback = holdMessagePlayback(playback);
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [
+        { kind: "spell", text: "a" },
+        { kind: "play" },
+        { kind: "space" },
+      ],
+    });
+    await settlePlayback(true);
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "spell", text: "b" }],
+    });
+
+    const committed = message.setState.mock.lastCall?.[0];
+    assertDefined(committed);
+    expect(committed.parts.map((part) => part.label)).toEqual(["a", "b"]);
+  });
+
   test("drops edits after play when playback does not complete", async () => {
     const { activateButton, message, playback } = setup([
       { kind: "text", id: "1", label: "hi" },

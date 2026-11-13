@@ -76,13 +76,13 @@ describe("spellText", () => {
     expect(labelsOf(message)).toEqual(["the", "c"]);
   });
 
-  test("starts a new word after a suggested word", () => {
-    const suggested: MessageState = {
+  test("starts a new word after a finished text part", () => {
+    const finished: MessageState = {
       parts: [createTextPart("want")],
       isWordOpen: false,
     };
 
-    const message = spellText(suggested, "s");
+    const message = spellText(finished, "s");
 
     expect(labelsOf(message)).toEqual(["want", "s"]);
   });
@@ -116,7 +116,16 @@ describe("finishWord", () => {
 });
 
 describe("applyBackspace", () => {
-  const graphemes = ["😀", "é", "שָׁ", "👍🏽", "👨‍👩‍👧‍👦", "🇮🇱", "✌️", "1️⃣"];
+  const graphemes = [
+    "😀",
+    "e\u0301",
+    "ש\u05C1\u05B8",
+    "👍🏽",
+    "👨‍👩‍👧‍👦",
+    "🇮🇱",
+    "✌️",
+    "1️⃣",
+  ];
 
   test("removes the last character of a spelled word", () => {
     const message = applyBackspace(spellText(EMPTY_MESSAGE, "world"));

@@ -8,8 +8,6 @@ export interface TilePart {
   readonly soundSrc?: string;
 }
 
-// A word that was spelled or taken from a suggestion. Unlike a tile part, it is
-// edited one character at a time.
 export interface TextPart {
   readonly kind: "text";
   readonly id: string;

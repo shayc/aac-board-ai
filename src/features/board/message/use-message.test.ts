@@ -62,7 +62,7 @@ describe("useMessage", () => {
     ]);
   });
 
-  test("treats a suggested phrase as finished words", async () => {
+  test("leaves the last suggested word open for spelling", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -71,8 +71,7 @@ describe("useMessage", () => {
 
     expect(message.getState().parts.map((part) => part.label)).toEqual([
       "I",
-      "want",
-      "s",
+      "wants",
     ]);
   });
 });

@@ -32,7 +32,10 @@ export function useMessage(): UseMessageReturn {
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    setState({ parts: words.map(createTextPart), isWordOpen: false });
+    setState({
+      parts: words.map(createTextPart),
+      isWordOpen: words.length > 0,
+    });
   }
 
   function backspace() {

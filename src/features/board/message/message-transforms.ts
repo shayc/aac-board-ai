@@ -23,27 +23,27 @@ export function createTextPart(label: string): TextPart {
 }
 
 export function appendPart(
-  message: MessageState,
+  state: MessageState,
   part: MessagePart,
 ): MessageState {
-  return { parts: [...message.parts, part], isWordOpen: false };
+  return { parts: [...state.parts, part], isWordOpen: false };
 }
 
-export function spellText(message: MessageState, text: string): MessageState {
+export function spellText(state: MessageState, text: string): MessageState {
   if (!text) {
-    return message;
+    return state;
   }
 
-  const lastPart = message.parts.at(-1);
-  if (!message.isWordOpen || lastPart?.kind !== "text") {
+  const lastPart = state.parts.at(-1);
+  if (!state.isWordOpen || lastPart?.kind !== "text") {
     return {
-      parts: [...message.parts, createTextPart(text)],
+      parts: [...state.parts, createTextPart(text)],
       isWordOpen: true,
     };
   }
 
   return {
-    parts: message.parts.with(-1, {
+    parts: state.parts.with(-1, {
       ...lastPart,
       label: `${lastPart.label}${text}`,
     }),
@@ -51,39 +51,39 @@ export function spellText(message: MessageState, text: string): MessageState {
   };
 }
 
-export function finishWord(message: MessageState): MessageState {
-  if (!message.isWordOpen) {
-    return message;
+export function finishWord(state: MessageState): MessageState {
+  if (!state.isWordOpen) {
+    return state;
   }
 
-  return { ...message, isWordOpen: false };
+  return { ...state, isWordOpen: false };
 }
 
-export function applyBackspace(message: MessageState): MessageState {
-  const lastPart = message.parts.at(-1);
+export function applyBackspace(state: MessageState): MessageState {
+  const lastPart = state.parts.at(-1);
   if (!lastPart) {
-    return message;
+    return state;
   }
 
   if (lastPart.kind === "tile") {
-    return removeLastPart(message);
+    return removeLastPart(state);
   }
 
   const label = removeLastGrapheme(lastPart.label);
   if (!label) {
-    return removeLastPart(message);
+    return removeLastPart(state);
   }
 
   // The space after a word has no symbol of its own in the message bar, so
   // backspace shortens a finished word and reopens it in the same press.
   return {
-    parts: message.parts.with(-1, { ...lastPart, label }),
+    parts: state.parts.with(-1, { ...lastPart, label }),
     isWordOpen: true,
   };
 }
 
-function removeLastPart(message: MessageState): MessageState {
-  return { parts: message.parts.slice(0, -1), isWordOpen: false };
+function removeLastPart(state: MessageState): MessageState {
+  return { parts: state.parts.slice(0, -1), isWordOpen: false };
 }
 
 function removeLastGrapheme(text: string): string {

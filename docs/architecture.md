@@ -531,7 +531,7 @@ AI availability, provisioning, and session lifecycle to
   with its label and any vocalization, image, or sound, and backspace removes it
   whole. A text part is a word that was spelled or taken from a suggestion, and
   backspace removes one character at a time. Spelling extends the last text part
-  until a space or another tile ends the word.
+  until a space or another tile ends the word; backspace reopens an ended word.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
 - **Scroll clearance** — the room kept above and below the grid, between the
