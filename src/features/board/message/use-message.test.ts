@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { appendText, EMPTY_MESSAGE, messageParts } from "./message-transforms";
+import { appendText, EMPTY_MESSAGE } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -74,17 +74,6 @@ describe("useMessage", () => {
     expect(result.current.text).toBe("te");
   });
 
-  test("keeps the parts array across renders that leave the message alone", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.setCurrent(appendText(EMPTY_MESSAGE, "t"));
-    await rerender();
-    const { parts } = result.current;
-    await rerender();
-
-    expect(result.current.parts).toBe(parts);
-  });
-
   test("exposes each edit to handlers before the next render", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
@@ -92,7 +81,7 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     message.backspace();
 
-    const labels = messageParts(message.getCurrent()).map((part) => part.label);
+    const labels = message.getCurrent().parts.map((part) => part.label);
 
     expect(labels).toEqual(["I", "want", "wate"]);
   });

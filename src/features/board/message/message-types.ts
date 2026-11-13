@@ -1,22 +1,20 @@
-export interface MessagePartInput {
+export interface TilePartContent {
   readonly label?: string;
-  // Backspace removes a spelled word one letter at a time, and any other part
-  // whole.
-  readonly isSpelled?: boolean;
   readonly vocalization?: string;
   readonly imageSrc?: string;
   readonly soundSrc?: string;
 }
 
 // Each occurrence needs its own ID, including repeated selections of the same tile.
-export interface MessagePart extends MessagePartInput {
+export interface MessagePart extends TilePartContent {
   readonly id: string;
+  // Backspace removes a text part one letter at a time, and a tile part whole.
+  readonly kind: "text" | "tile";
   readonly label: string;
 }
 
 export interface Message {
-  readonly finishedParts: readonly MessagePart[];
-  // The spelled word that still takes letters. It is shown and spoken after
-  // the finished parts.
-  readonly openWord: MessagePart | null;
+  readonly parts: readonly MessagePart[];
+  // True only while the last part is a text part that still takes letters.
+  readonly isLastWordOpen: boolean;
 }

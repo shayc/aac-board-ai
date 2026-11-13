@@ -1,29 +1,31 @@
 import { randomId } from "@shared/utils/random-id";
-import type { Message, MessagePart, MessagePartInput } from "./message-types";
+import type { Message, MessagePart, TilePartContent } from "./message-types";
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
 });
 
-export const EMPTY_MESSAGE: Message = { finishedParts: [], openWord: null };
+export const EMPTY_MESSAGE: Message = { parts: [], isLastWordOpen: false };
 
-export function createPart(content: MessagePartInput): MessagePart {
-  return { ...content, id: randomId(), label: content.label ?? "" };
+export function createTilePart(content: TilePartContent): MessagePart {
+  return {
+    ...content,
+    id: randomId(),
+    kind: "tile",
+    label: content.label ?? "",
+  };
 }
 
-export function finishedMessage(parts: readonly MessagePart[]): Message {
-  return { finishedParts: parts, openWord: null };
+export function createTextPart(label: string): MessagePart {
+  return { id: randomId(), kind: "text", label };
 }
 
-export function messageParts({
-  finishedParts,
-  openWord,
-}: Message): readonly MessagePart[] {
-  return openWord ? [...finishedParts, openWord] : finishedParts;
+export function closedMessage(parts: readonly MessagePart[]): Message {
+  return { parts, isLastWordOpen: false };
 }
 
 export function appendPart(message: Message, part: MessagePart): Message {
-  return finishedMessage([...messageParts(message), part]);
+  return closedMessage([...message.parts, part]);
 }
 
 export function appendText(message: Message, text: string): Message {
@@ -32,43 +34,36 @@ export function appendText(message: Message, text: string): Message {
     return message;
   }
 
-  const { openWord } = message;
-  const extendedWord = openWord
-    ? { ...openWord, label: `${openWord.label}${text}` }
-    : createPart({ label: text, isSpelled: true });
+  const { parts, isLastWordOpen } = message;
+  const lastPart = parts.at(-1);
+  const spelledParts =
+    isLastWordOpen && lastPart
+      ? parts.with(-1, { ...lastPart, label: `${lastPart.label}${text}` })
+      : [...parts, createTextPart(text)];
 
-  return { ...message, openWord: extendedWord };
+  return { parts: spelledParts, isLastWordOpen: true };
 }
 
-export function finishSpelling(message: Message): Message {
-  return message.openWord ? finishedMessage(messageParts(message)) : message;
+export function closeLastWord(message: Message): Message {
+  return message.isLastWordOpen ? closedMessage(message.parts) : message;
 }
 
 export function applyBackspace(message: Message): Message {
-  const { finishedParts, openWord } = reopenLastSpelledWord(message);
-  if (!openWord) {
-    return finishedParts.length > 0
-      ? finishedMessage(finishedParts.slice(0, -1))
-      : message;
-  }
-
-  const label = withoutLastGrapheme(openWord.label);
-
-  return {
-    finishedParts,
-    openWord: label ? { ...openWord, label } : null,
-  };
-}
-
-function reopenLastSpelledWord(message: Message): Message {
-  const lastPart = message.finishedParts.at(-1);
-  if (message.openWord || !lastPart?.isSpelled) {
+  const { parts } = message;
+  const lastPart = parts.at(-1);
+  if (!lastPart) {
     return message;
   }
 
+  const shortenedLabel =
+    lastPart.kind === "text" ? withoutLastGrapheme(lastPart.label) : "";
+  if (!shortenedLabel) {
+    return closedMessage(parts.slice(0, -1));
+  }
+
   return {
-    finishedParts: message.finishedParts.slice(0, -1),
-    openWord: lastPart,
+    parts: parts.with(-1, { ...lastPart, label: shortenedLabel }),
+    isLastWordOpen: true,
   };
 }
 

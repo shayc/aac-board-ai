@@ -9,6 +9,7 @@ import type { MessagePart } from "./message-types";
 
 const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   id: String(index),
+  kind: "tile",
   label: `Part ${index + 1}`,
   imageSrc: TEST_IMAGE_SRC,
 }));
@@ -53,9 +54,9 @@ function waitForAnimationFrame(): Promise<void> {
 describe("MessageBar", () => {
   test("renders a label for each message part", async () => {
     const parts: MessagePart[] = [
-      { id: "a", label: "I" },
-      { id: "b", label: "want" },
-      { id: "c", label: "water" },
+      { id: "a", kind: "tile", label: "I" },
+      { id: "b", kind: "tile", label: "want" },
+      { id: "c", kind: "tile", label: "water" },
     ];
 
     const screen = await renderWithProviders(
@@ -69,8 +70,8 @@ describe("MessageBar", () => {
 
   test("exposes the message as a named list of its parts", async () => {
     const parts: MessagePart[] = [
-      { id: "a", label: "I" },
-      { id: "b", label: "want" },
+      { id: "a", kind: "tile", label: "I" },
+      { id: "b", kind: "tile", label: "want" },
     ];
 
     const screen = await renderWithProviders(
@@ -115,7 +116,7 @@ describe("MessageBar", () => {
   });
 
   test("re-enables text selection so the composed message can be copied", async () => {
-    const parts: MessagePart[] = [{ id: "a", label: "I" }];
+    const parts: MessagePart[] = [{ id: "a", kind: "tile", label: "I" }];
 
     const screen = await renderWithProviders(
       <MessageBar {...createProps({ parts })} />,
@@ -128,8 +129,8 @@ describe("MessageBar", () => {
 
   test("shows labels without images when images are hidden", async () => {
     const parts: MessagePart[] = [
-      { id: "a", label: "I", imageSrc: TEST_IMAGE_SRC },
-      { id: "b", label: "", imageSrc: TEST_IMAGE_SRC },
+      { id: "a", kind: "tile", label: "I", imageSrc: TEST_IMAGE_SRC },
+      { id: "b", kind: "tile", label: "", imageSrc: TEST_IMAGE_SRC },
     ];
 
     const screen = await renderWithProviders(
@@ -235,7 +236,7 @@ describe("MessageBar", () => {
       const screen = await renderWithProviders(
         <MessageBar
           {...createProps({
-            parts: [{ id: "a", label: "Hello" }],
+            parts: [{ id: "a", kind: "tile", label: "Hello" }],
             isPlaying: false,
             onPlay,
           })}
@@ -262,7 +263,7 @@ describe("MessageBar", () => {
     test("keeps focus on play and ignores it once the message empties", async () => {
       const onPlay = vi.fn();
       const props = createProps({
-        parts: [{ id: "a", label: "Hello" }],
+        parts: [{ id: "a", kind: "tile", label: "Hello" }],
         onPlay,
       });
 

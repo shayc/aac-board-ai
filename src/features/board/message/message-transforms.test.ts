@@ -3,132 +3,134 @@ import {
   appendPart,
   appendText,
   applyBackspace,
-  createPart,
+  closedMessage,
+  closeLastWord,
+  createTextPart,
+  createTilePart,
   EMPTY_MESSAGE,
-  finishedMessage,
-  finishSpelling,
-  messageParts,
 } from "./message-transforms";
 import type { Message, MessagePart } from "./message-types";
 
-const HELLO: MessagePart = { id: "1", label: "hello" };
+const HELLO: MessagePart = { id: "1", kind: "tile", label: "hello" };
 
-function spelling(label: string, finishedParts: MessagePart[] = []): Message {
+function spelling(label: string, earlierParts: MessagePart[] = []): Message {
   return {
-    finishedParts,
-    openWord: { id: "spelled", label, isSpelled: true },
+    parts: [...earlierParts, { id: "spelled", kind: "text", label }],
+    isLastWordOpen: true,
   };
 }
 
 function labels(message: Message): string[] {
-  return messageParts(message).map((part) => part.label);
+  return message.parts.map((part) => part.label);
 }
 
-describe("createPart", () => {
+describe("createTilePart", () => {
   test("mints a distinct id for each part even with identical content", () => {
-    const first = createPart({ label: "cat" });
-    const second = createPart({ label: "cat" });
+    const first = createTilePart({ label: "cat" });
+    const second = createTilePart({ label: "cat" });
 
     expect(first.id).toBeTruthy();
     expect(first.id).not.toBe(second.id);
   });
+
+  test("marks the part as a tile part", () => {
+    expect(createTilePart({ label: "cat" }).kind).toBe("tile");
+  });
 });
 
-describe("messageParts", () => {
-  test("lists the open word after the finished parts", () => {
-    expect(labels(spelling("wor", [HELLO]))).toEqual(["hello", "wor"]);
-  });
-
-  test("keeps the finished parts array when there is no open word", () => {
-    const parts = [HELLO];
-
-    expect(messageParts(finishedMessage(parts))).toBe(parts);
+describe("createTextPart", () => {
+  test("marks the part as a text part", () => {
+    expect(createTextPart("cat")).toMatchObject({ kind: "text", label: "cat" });
   });
 });
 
 describe("appendPart", () => {
-  test("appends the part as a finished part", () => {
-    const part: MessagePart = { id: "2", label: "there" };
+  test("appends the part after the existing parts", () => {
+    const part: MessagePart = { id: "2", kind: "tile", label: "there" };
 
-    const message = appendPart(finishedMessage([HELLO]), part);
+    const message = appendPart(closedMessage([HELLO]), part);
 
-    expect(message).toEqual(finishedMessage([HELLO, part]));
+    expect(message).toEqual(closedMessage([HELLO, part]));
   });
 
-  test("finishes the open word before the appended part", () => {
-    const part: MessagePart = { id: "2", label: "there" };
+  test("closes the open word before the appended part", () => {
+    const part: MessagePart = { id: "2", kind: "tile", label: "there" };
 
     const message = appendPart(spelling("hi"), part);
 
-    expect(message.openWord).toBeNull();
+    expect(message.isLastWordOpen).toBe(false);
     expect(labels(message)).toEqual(["hi", "there"]);
   });
 });
 
 describe("appendText", () => {
-  test("opens a spelled word when the message is empty", () => {
+  test("opens a text part when the message is empty", () => {
     const message = appendText(EMPTY_MESSAGE, "h");
 
-    expect(message.finishedParts).toEqual([]);
-    expect(message.openWord?.label).toBe("h");
-    expect(message.openWord?.id).toBeTruthy();
-    expect(message.openWord?.isSpelled).toBe(true);
+    expect(message.isLastWordOpen).toBe(true);
+    expect(message.parts).toHaveLength(1);
+    expect(message.parts[0]).toMatchObject({ kind: "text", label: "h" });
+    expect(message.parts[0]?.id).toBeTruthy();
   });
 
   test("adds letters to the open word", () => {
-    const message = appendText(spelling("ca"), "t");
+    const message = appendText(spelling("ca", [HELLO]), "t");
 
-    expect(message.openWord?.label).toBe("cat");
-    expect(message.openWord?.id).toBe("spelled");
+    expect(message).toEqual(spelling("cat", [HELLO]));
   });
 
   test.each([
-    { description: "without media", part: { id: "1", label: "the" } },
+    { description: "a tile part without media", part: HELLO },
     {
-      description: "with media",
-      part: { id: "1", label: "the", imageSrc: "img.png" },
+      description: "a tile part with media",
+      part: { ...HELLO, imageSrc: "img.png" },
     },
-  ])("opens a new word after a finished part $description", ({ part }) => {
-    const message = appendText(finishedMessage([part]), "c");
+    {
+      description: "a closed text part",
+      part: { id: "1", kind: "text", label: "the" },
+    },
+  ] satisfies { description: string; part: MessagePart }[])(
+    "opens a new word after $description",
+    ({ part }) => {
+      const message = appendText(closedMessage([part]), "c");
 
-    expect(message.finishedParts).toEqual([part]);
-    expect(message.openWord?.label).toBe("c");
-  });
+      expect(message.isLastWordOpen).toBe(true);
+      expect(message.parts[0]).toBe(part);
+      expect(labels(message)).toEqual([part.label, "c"]);
+    },
+  );
 
   test("spells nothing for empty text", () => {
-    const original = finishedMessage([HELLO]);
+    const original = closedMessage([HELLO]);
 
     expect(appendText(original, "")).toBe(original);
   });
 });
 
-describe("finishSpelling", () => {
-  test("turns the open word into a finished part", () => {
-    const message = finishSpelling(spelling("world", [HELLO]));
+describe("closeLastWord", () => {
+  test("keeps the parts and closes the open word", () => {
+    const open = spelling("world", [HELLO]);
 
-    expect(message).toEqual(
-      finishedMessage([
-        HELLO,
-        { id: "spelled", label: "world", isSpelled: true },
-      ]),
-    );
+    const message = closeLastWord(open);
+
+    expect(message).toEqual(closedMessage(open.parts));
   });
 
   test("makes the next letters start a new word", () => {
-    const message = appendText(finishSpelling(spelling("hi")), "u");
+    const message = appendText(closeLastWord(spelling("hi")), "u");
 
     expect(labels(message)).toEqual(["hi", "u"]);
   });
 
   test("returns the same message when there is no open word", () => {
-    const original = finishedMessage([HELLO]);
+    const original = closedMessage([HELLO]);
 
-    expect(finishSpelling(original)).toBe(original);
+    expect(closeLastWord(original)).toBe(original);
   });
 });
 
 describe("applyBackspace", () => {
-  const graphemes = ["😀", "é", "שָׁ", "👍🏽", "👨‍👩‍👧‍👦", "🇮🇱", "✌️", "1️⃣"];
+  const graphemes = ["😀", "é", "שָׁ", "👍🏽", "👨‍👩‍👧‍👦", "🇮🇱", "✌️", "1️⃣"];
 
   test("removes one character from the open word", () => {
     const message = applyBackspace(spelling("world", [HELLO]));
@@ -143,41 +145,34 @@ describe("applyBackspace", () => {
   });
 
   test.each(["w", ...graphemes])(
-    "closes the open word when its only grapheme is removed (%s)",
+    "removes a text part when its only grapheme is removed (%s)",
     (label) => {
       const message = applyBackspace(spelling(label, [HELLO]));
 
-      expect(message).toEqual(finishedMessage([HELLO]));
+      expect(message).toEqual(closedMessage([HELLO]));
     },
   );
 
   test.each([
-    { description: "without media", part: { id: "2", label: "world" } },
-    {
-      description: "with media",
-      part: { id: "2", label: "world", imageSrc: "img.png" },
-    },
-  ])("removes a whole finished part $description", ({ part }) => {
-    const message = applyBackspace(finishedMessage([HELLO, part]));
+    { description: "without media", part: HELLO },
+    { description: "with media", part: { ...HELLO, imageSrc: "img.png" } },
+  ])("removes a tile part whole $description", ({ part }) => {
+    const earlier: MessagePart = { id: "0", kind: "tile", label: "say" };
 
-    expect(message).toEqual(finishedMessage([HELLO]));
+    const message = applyBackspace(closedMessage([earlier, part]));
+
+    expect(message).toEqual(closedMessage([earlier]));
   });
 
-  test("reopens a finished spelled word and removes its last character", () => {
-    const message = applyBackspace(finishSpelling(spelling("world", [HELLO])));
+  test("reopens a closed text part and removes its last character", () => {
+    const message = applyBackspace(closeLastWord(spelling("world", [HELLO])));
 
     expect(message).toEqual(spelling("worl", [HELLO]));
   });
 
-  test("removes a finished spelled word once its only character is removed", () => {
-    const message = applyBackspace(finishSpelling(spelling("w", [HELLO])));
-
-    expect(message).toEqual(finishedMessage([HELLO]));
-  });
-
-  test("leaves spelled words before the last part finished", () => {
-    const tile: MessagePart = { id: "2", label: "there" };
-    const spelled = finishSpelling(spelling("hi"));
+  test("leaves text parts before the last part untouched", () => {
+    const tile: MessagePart = { id: "2", kind: "tile", label: "there" };
+    const spelled = closeLastWord(spelling("hi"));
 
     const message = applyBackspace(appendPart(spelled, tile));
 

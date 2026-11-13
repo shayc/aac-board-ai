@@ -4,10 +4,9 @@ import {
   appendPart,
   appendText,
   applyBackspace,
-  createPart,
+  closeLastWord,
+  createTilePart,
   EMPTY_MESSAGE,
-  finishSpelling,
-  messageParts,
 } from "../message/message-transforms";
 import type { Message } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
@@ -44,7 +43,7 @@ export function createButtonActivator({
   }
 
   function composeAndPlayButton(button: BoardButton) {
-    const part = createPart({
+    const part = createTilePart({
       label: button.label,
       vocalization: button.vocalization,
       imageSrc: button.imageSrc,
@@ -72,13 +71,11 @@ export function createButtonActivator({
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback
-      .playMessage(messageParts(messageToPlay))
-      .then((hasCompleted) => {
-        if (hasCompleted) {
-          commitEdits(actionsAfterPlay);
-        }
-      });
+    void playback.playMessage(messageToPlay.parts).then((hasCompleted) => {
+      if (hasCompleted) {
+        commitEdits(actionsAfterPlay);
+      }
+    });
   }
 
   function commitEdits(actions: readonly BoardAction[]) {
@@ -108,7 +105,7 @@ function applyEdit(current: Message, edit: MessageEdit): Message {
     case "spell":
       return appendText(current, edit.text);
     case "space":
-      return finishSpelling(current);
+      return closeLastWord(current);
     case "backspace":
       return applyBackspace(current);
     case "clear":

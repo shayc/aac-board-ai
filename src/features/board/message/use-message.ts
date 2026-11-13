@@ -1,10 +1,9 @@
 import { useRef, useState } from "react";
 import {
   applyBackspace,
-  createPart,
+  closedMessage,
+  createTextPart,
   EMPTY_MESSAGE,
-  finishedMessage,
-  messageParts,
 } from "./message-transforms";
 import type { Message, MessagePart } from "./message-types";
 
@@ -22,9 +21,7 @@ export function useMessage(): UseMessageReturn {
   const [message, setMessage] = useState(EMPTY_MESSAGE);
   const messageRef = useRef(message);
 
-  // The message bar scrolls to the end when this array changes. The React
-  // Compiler keeps it the same array until the message is edited.
-  const parts = messageParts(message);
+  const { parts } = message;
   const text = parts.map((part) => part.label).join(" ");
 
   function getCurrent() {
@@ -38,11 +35,7 @@ export function useMessage(): UseMessageReturn {
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    setCurrent(
-      finishedMessage(
-        words.map((word) => createPart({ label: word, isSpelled: true })),
-      ),
-    );
+    setCurrent(closedMessage(words.map(createTextPart)));
   }
 
   function backspace() {

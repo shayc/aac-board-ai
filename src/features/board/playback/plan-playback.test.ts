@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { createPart } from "../message/message-transforms";
+import { createTilePart } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
@@ -10,8 +10,8 @@ describe("planPlayback", () => {
 
   test("merges a run of text parts into a single speech step", () => {
     const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
+      { id: "1", kind: "tile", label: "I" },
+      { id: "2", kind: "tile", label: "want" },
     ];
 
     const steps = planPlayback(parts);
@@ -27,7 +27,7 @@ describe("planPlayback", () => {
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
-    const part = createPart({ soundSrc: "bell.mp3" });
+    const part = createTilePart({ soundSrc: "bell.mp3" });
     const steps = planPlayback([part]);
 
     expect(steps).toEqual([{ kind: "audio", cue: part.id, src: "bell.mp3" }]);
@@ -35,9 +35,9 @@ describe("planPlayback", () => {
 
   test("preserves order when a sound breaks a text run", () => {
     const parts: MessagePart[] = [
-      { id: "1", label: "hello" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { id: "3", label: "world" },
+      { id: "1", kind: "tile", label: "hello" },
+      { id: "2", kind: "tile", label: "ding", soundSrc: "ding.mp3" },
+      { id: "3", kind: "tile", label: "world" },
     ];
 
     const steps = planPlayback(parts);
@@ -51,7 +51,7 @@ describe("planPlayback", () => {
 
   test("speaks the vocalization rather than the label when present", () => {
     const steps = planPlayback([
-      { id: "1", label: "🙂", vocalization: "Happy" },
+      { id: "1", kind: "tile", label: "🙂", vocalization: "Happy" },
     ]);
 
     expect(steps[0]?.kind === "speech" && steps[0].text).toBe("happy");
@@ -59,8 +59,8 @@ describe("planPlayback", () => {
 
   test("skips parts with no spoken text", () => {
     const steps = planPlayback([
-      { id: "1", label: "hi" },
-      { id: "2", label: "" },
+      { id: "1", kind: "tile", label: "hi" },
+      { id: "2", kind: "tile", label: "" },
     ]);
 
     expect(steps).toHaveLength(1);
