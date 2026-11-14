@@ -42,12 +42,17 @@ function throwDataResponse(errorData: unknown): never {
 }
 
 describe("RouteErrorBoundary", () => {
-  test("shows the custom title for a data() response with a string message", async () => {
+  test("shows the generic title for a response without an error code", async () => {
     const screen = await renderWithLoader(() =>
-      throwDataResponse("Custom title"),
+      throwDataResponse("Error: internal router message"),
     );
 
-    await expect.element(screen.getByText("Custom title")).toBeVisible();
+    await expect
+      .element(screen.getByText("Couldn't load this page"))
+      .toBeVisible();
+    await expect
+      .element(screen.getByText("Error: internal router message"))
+      .not.toBeInTheDocument();
   });
 
   test("shows a generic error with a link to the root route", async () => {

@@ -82,6 +82,7 @@ function VoiceSelect() {
   const voicesByLanguage = useVoicesByLanguage();
   const speechVoice = useSpeechVoice();
   const { language } = useLanguage();
+  const uiLocale = useUILocale();
 
   const voices = voicesByLanguage[language] ?? [];
   const selectedVoiceURI = speechVoice?.voiceURI ?? "";
@@ -90,7 +91,7 @@ function VoiceSelect() {
   );
 
   const hasMultipleLocales = voiceGroups.length > 1;
-  const languageNames = new Intl.DisplayNames([language], {
+  const languageNames = new Intl.DisplayNames([uiLocale], {
     type: "language",
   });
 
