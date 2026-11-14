@@ -172,7 +172,7 @@ describe("app flow", () => {
 
     await screen.getByRole("button", { name: "מים" }).click();
     speech.speak.mockClear();
-    await screen.getByRole("button", { name: "השמעת ההודעה" }).click();
+    await screen.getByRole("button", { name: "השמעת המסר" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["אני רוצה מים"]);
