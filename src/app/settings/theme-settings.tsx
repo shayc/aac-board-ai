@@ -57,7 +57,6 @@ export function ThemeSettings() {
         aria-labelledby={labelId}
         value={mode}
         exclusive
-        color="primary"
         fullWidth
         onChange={handleChange}
         sx={{ mt: 1 }}
