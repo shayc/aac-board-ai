@@ -47,7 +47,7 @@ describe("NavigationButtons", () => {
     const onHome = vi.fn();
     const { screen } = await renderButtons({ canGoHome: true, onHome });
 
-    await screen.getByRole("button", { name: "Go home" }).click();
+    await screen.getByRole("button", { name: "Go to main board" }).click();
 
     expect(onHome).toHaveBeenCalledOnce();
   });
@@ -55,7 +55,7 @@ describe("NavigationButtons", () => {
   test("disables unavailable navigation actions while keeping them focusable", async () => {
     const { onBack, onHome, screen } = await renderButtons();
     const back = screen.getByRole("button", { name: "Go back" });
-    const home = screen.getByRole("button", { name: "Go home" });
+    const home = screen.getByRole("button", { name: "Go to main board" });
 
     await expect.element(back).toHaveAttribute("aria-disabled", "true");
     await expect.element(home).toHaveAttribute("aria-disabled", "true");
