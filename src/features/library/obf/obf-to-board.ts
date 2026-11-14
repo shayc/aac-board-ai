@@ -13,8 +13,6 @@ import type {
   TranslationsByLocale,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
-import { parseAction } from "./parse-action";
-import { sanitizeColor } from "./sanitize-color";
 
 export function obfToBoard(
   obfBoard: OBFBoard,
@@ -87,11 +85,41 @@ function obfToBoardButton(
   };
 }
 
+// Imported colors are interpolated into CSS expressions.
+function sanitizeColor(color: string | undefined): string | undefined {
+  if (color === undefined) {
+    return undefined;
+  }
+
+  return CSS.supports("color", color) ? color : undefined;
+}
+
 function collectActions(obfButton: OBFButton): BoardAction[] {
   const rawActions =
     obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 
   return rawActions.map(parseAction).filter((action) => action !== undefined);
+}
+
+function parseAction(raw: string): BoardAction | undefined {
+  if (raw.startsWith("+")) {
+    return { kind: "spell", text: raw.slice(1).trim() };
+  }
+
+  switch (raw) {
+    case ":space":
+      return { kind: "space" };
+    case ":backspace":
+      return { kind: "backspace" };
+    case ":clear":
+      return { kind: "clear" };
+    case ":home":
+      return { kind: "home" };
+    case ":speak":
+      return { kind: "play" };
+    default:
+      return undefined;
+  }
 }
 
 function obfToBoardGrid(obfGrid: OBFGrid): BoardGrid {

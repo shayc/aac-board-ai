@@ -5,7 +5,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
-import { DirectionProvider } from "@shared/theme/direction-provider";
+import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
@@ -89,7 +89,7 @@ export function CommunicationBoard({
   const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
 
   return (
-    <DirectionProvider direction={communication.direction}>
+    <DirectionalThemeProvider direction={communication.direction}>
       <ScanningScope>
         <Stack
           {...shortcuts.rootProps}
@@ -172,6 +172,6 @@ export function CommunicationBoard({
           )}
         </Stack>
       </ScanningScope>
-    </DirectionProvider>
+    </DirectionalThemeProvider>
   );
 }

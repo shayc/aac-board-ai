@@ -176,6 +176,48 @@ describe("obfToBoard", () => {
       });
     });
 
+    test.each([
+      "#ff0000",
+      "rgb(0 0 0)",
+      "rgba(0, 0, 0, 0.5)",
+      "red",
+      "oklch(0.7 0.1 200)",
+      "transparent",
+    ])("preserves valid button color %s", (color) => {
+      const obfBoard = makeOBFBoard({
+        buttons: [
+          { id: "btn-1", background_color: color, border_color: color },
+        ],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      });
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0]).toMatchObject({
+        backgroundColor: color,
+        borderColor: color,
+      });
+    });
+
+    test.each(["", "not-a-color", "red; background: url(x)", undefined])(
+      "leaves button colors unset for %j",
+      (color) => {
+        const obfBoard = makeOBFBoard({
+          buttons: [
+            { id: "btn-1", background_color: color, border_color: color },
+          ],
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        });
+
+        const board = obfToBoard(obfBoard);
+
+        expect(board.buttons[0]).toMatchObject({
+          backgroundColor: undefined,
+          borderColor: undefined,
+        });
+      },
+    );
+
     test("drops a CSS-unsafe button color", () => {
       const obfBoard = makeOBFBoard({
         buttons: [
@@ -293,13 +335,23 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.actions).toEqual([{ kind: "play" }]);
     });
 
-    test("parses spell actions and drops unknown ones", () => {
+    test("maps built-in and spell actions in order and drops unknown actions", () => {
       const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
             label: "Spell",
-            actions: ["+ing", ":unknown", ":home"],
+            actions: [
+              ":space",
+              ":backspace",
+              "+ing",
+              ":unknown",
+              ":clear",
+              "",
+              ":home",
+              "hello",
+              ":speak",
+            ],
           },
         ],
         grid: { rows: 1, columns: 1, order: [["btn-1"]] },
@@ -308,9 +360,27 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.buttons[0]?.actions).toEqual([
+        { kind: "space" },
+        { kind: "backspace" },
         { kind: "spell", text: "ing" },
+        { kind: "clear" },
         { kind: "home" },
+        { kind: "play" },
       ]);
+    });
+
+    test.each([
+      ["+  ing  ", "ing"],
+      ["+", ""],
+    ])("converts spell action %j to text %j", (action, text) => {
+      const obfBoard = makeOBFBoard({
+        buttons: [{ id: "btn-1", actions: [action] }],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      });
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0]?.actions).toEqual([{ kind: "spell", text }]);
     });
   });
 

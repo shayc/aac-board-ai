@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import { useKeyboard } from "react-aria";
-import { findGridFocusableAt, findGridPosition } from "./grid-dom";
 import { findGridKeyTarget, type GridKeyEvent } from "./grid-key-navigation";
 import {
   findFirstOccupiedPosition,
@@ -17,6 +16,9 @@ import {
   type GridPosition,
   isSameGridPosition,
 } from "./grid-model";
+
+const GRID_CELL_SELECTOR = "[role='gridcell']";
+const GRID_FOCUSABLE_SELECTOR = "[tabindex]";
 
 interface UseGridFocusReturn {
   rootRef: RefObject<HTMLDivElement | null>;
@@ -107,4 +109,33 @@ function findKeyTargetElement(
   const target = findGridKeyTarget(grid, from, event, direction);
 
   return target && findGridFocusableAt(root, target);
+}
+
+function findGridPosition(target: EventTarget | null): GridPosition | null {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  const cell = target.closest(GRID_CELL_SELECTOR);
+  if (!cell) {
+    return null;
+  }
+
+  const row = Number.parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
+  const column =
+    Number.parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
+  if (Number.isNaN(row) || Number.isNaN(column)) {
+    return null;
+  }
+
+  return { row, column };
+}
+
+function findGridFocusableAt(
+  root: HTMLElement,
+  position: GridPosition,
+): HTMLElement | null {
+  return root.querySelector<HTMLElement>(
+    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.column + 1}'] ${GRID_FOCUSABLE_SELECTOR}`,
+  );
 }

@@ -1,12 +1,13 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
+import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
-import { PendingDot } from "./pending-dot";
 
 interface SuggestionStatusNoticeProps {
   status: SuggestionStatus;
@@ -52,6 +53,29 @@ export function SuggestionStatusNotice({
     default:
       return assertNever(status);
   }
+}
+
+interface PendingDotProps {
+  isVisible: boolean;
+}
+
+function PendingDot({ isVisible }: PendingDotProps) {
+  return (
+    <Fade
+      in={isVisible}
+      style={{ transitionDelay: isVisible ? "300ms" : "0ms" }}
+    >
+      <Box
+        sx={{
+          flexShrink: 0,
+          width: 8,
+          aspectRatio: "1",
+          borderRadius: "50%",
+          bgcolor: "warning.main",
+        }}
+      />
+    </Fade>
+  );
 }
 
 interface StatusTextProps {

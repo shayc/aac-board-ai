@@ -343,8 +343,9 @@ no language carries no `lang` and inherits the document's.
 
 Direction-specific Emotion caches, right-to-left (RTL) styling, and logical CSS
 support both text directions.
-[`DirectionProvider`](../src/shared/theme/direction-provider.tsx) applies them
-to a subtree: once for the app, from the UI locale, and once for the board.
+The app and board each use
+[`DirectionalThemeProvider`](../src/shared/theme/directional-theme-provider.tsx)
+for their own text direction.
 
 ### Theming
 
@@ -358,11 +359,9 @@ Layout turns on one width breakpoint, `sm`. Below it the board's back, home,
 and backspace buttons move under the grid and the spacing tightens, as
 [Board spacing](#board-spacing) describes.
 
-One height query sits beside it.
-[`shortLandscape`](../src/shared/theme/short-landscape.ts) matches a landscape
-screen shorter than the `sm` value, such as a phone on its side, which a width
-breakpoint cannot see. The welcome dialog uses it to stay full-screen with its
-action in view.
+The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) also checks
+the viewport height. On a landscape screen shorter than the `sm` value, such
+as a phone on its side, it stays full-screen with its action in view.
 
 Sizes inside a component follow the component, not the screen. The grid's
 viewport is a size container that decides how many rows and columns fit. Each

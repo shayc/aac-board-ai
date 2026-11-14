@@ -21,7 +21,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
-import { shortLandscape } from "@shared/theme/short-landscape";
 import { BoardMark } from "./board-mark";
 
 interface OnboardingDialogProps {
@@ -130,6 +129,15 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       </DialogActions>
     </Dialog>
   );
+}
+
+// A width breakpoint cannot see a screen that is wide but short, such as a
+// phone on its side. The `sm` value keeps the threshold on the theme's scale.
+// Portrait screens are excluded so a small upright phone keeps its own layout.
+function shortLandscape(theme: Theme): string {
+  const maxHeight = theme.breakpoints.values.sm - 0.05;
+
+  return `@media (orientation: landscape) and (max-height:${maxHeight}px)`;
 }
 
 function introductionSx(theme: Theme) {

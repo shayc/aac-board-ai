@@ -23,6 +23,23 @@ describe("planPlayback", () => {
     expect(step.cueAt?.(2)).toBe("2");
   });
 
+  test("normalizes whitespace and maps speech offsets to their message parts", () => {
+    const steps = planPlayback([
+      { kind: "text", id: "1", label: " I " },
+      { kind: "text", id: "2", label: "want   a " },
+      { kind: "text", id: "3", label: " cookie" },
+    ]);
+
+    const step = getOnlySpeechStep(steps);
+
+    expect(step.text).toBe("i want a cookie");
+    expect(step.cueAt?.(0)).toBe("1");
+    expect(step.cueAt?.(2)).toBe("2");
+    expect(step.cueAt?.(7)).toBe("2");
+    expect(step.cueAt?.(9)).toBe("3");
+    expect(step.cueAt?.(99)).toBeNull();
+  });
+
   test("emits a sound part as its own step carrying its part id", () => {
     const part = createTilePart({ label: "", soundSrc: "bell.mp3" });
     const steps = planPlayback([part]);

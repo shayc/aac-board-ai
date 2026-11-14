@@ -12,16 +12,16 @@ const rtlCache = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
-interface DirectionProviderProps {
+interface DirectionalThemeProviderProps {
   direction: "ltr" | "rtl";
   children: ReactNode;
 }
 
 /** Styles its subtree for a direction; the caller sets the matching `dir`. */
-export function DirectionProvider({
+export function DirectionalThemeProvider({
   direction,
   children,
-}: DirectionProviderProps) {
+}: DirectionalThemeProviderProps) {
   const isRTL = direction === "rtl";
 
   return (
