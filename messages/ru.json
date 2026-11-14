@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Как включить подсказки",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ…",
-  "suggestionsLanguageUnavailable": "Подсказки недоступны для этого языка ({language}).",
+  "suggestionsLanguageUnavailable": "Подсказки недоступны для этого языка.",
   "suggestionsFailed": "Не удалось получить предложения",
   "suggestionsLabel": "Предложения",
   "navBack": "Назад",

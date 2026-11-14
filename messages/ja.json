@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "提案を有効にする方法",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中…",
-  "suggestionsLanguageUnavailable": "この言語（{language}）では提案を利用できません。",
+  "suggestionsLanguageUnavailable": "この言語では提案を利用できません。",
   "suggestionsFailed": "提案を取得できませんでした",
   "suggestionsLabel": "提案",
   "navBack": "戻る",

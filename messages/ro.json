@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Cum să activezi sugestiile",
   "suggestionsEnable": "Activează sugestiile",
   "suggestionsDownloading": "Se descarcă modelul AI…",
-  "suggestionsLanguageUnavailable": "Sugestiile nu sunt disponibile în această limbă ({language}).",
+  "suggestionsLanguageUnavailable": "Sugestiile nu sunt disponibile în această limbă.",
   "suggestionsFailed": "Sugestiile nu au putut fi obținute",
   "suggestionsLabel": "Sugestii",
   "navBack": "Înapoi",

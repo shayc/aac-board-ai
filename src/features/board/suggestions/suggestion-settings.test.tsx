@@ -103,7 +103,7 @@ describe("SuggestionSettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
-  test("names the language instead of showing custom instructions when no engine supports it", async () => {
+  test("says the language is unsupported instead of showing custom instructions when no engine supports it", async () => {
     setStoredLanguage("he");
     stubProofreader().availability.mockImplementation(
       availableWithoutLanguages,
@@ -113,7 +113,7 @@ describe("SuggestionSettings", () => {
     const screen = await renderSuggestionsSettings();
 
     await expect
-      .element(screen.getByText("ההצעות אינן זמינות בשפה הזו (עברית)."))
+      .element(screen.getByText("ההצעות אינן זמינות בשפה הזו."))
       .toBeVisible();
     await expect.element(screen.getByRole("textbox")).not.toBeInTheDocument();
     await expect.element(screen.getByRole("link")).not.toBeInTheDocument();

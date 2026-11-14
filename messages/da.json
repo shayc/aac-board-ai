@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Sådan aktiverer du forslag",
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model…",
-  "suggestionsLanguageUnavailable": "Forslag er ikke tilgængelige på dette sprog ({language}).",
+  "suggestionsLanguageUnavailable": "Forslag er ikke tilgængelige på dette sprog.",
   "suggestionsFailed": "Forslag kunne ikke hentes",
   "suggestionsLabel": "Forslag",
   "navBack": "Tilbage",

@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Como ativar as sugestões",
   "suggestionsEnable": "Ativar sugestões",
   "suggestionsDownloading": "Baixando modelo de IA…",
-  "suggestionsLanguageUnavailable": "As sugestões não estão disponíveis neste idioma ({language}).",
+  "suggestionsLanguageUnavailable": "As sugestões não estão disponíveis neste idioma.",
   "suggestionsFailed": "Não foi possível obter sugestões",
   "suggestionsLabel": "Sugestões",
   "navBack": "Voltar",

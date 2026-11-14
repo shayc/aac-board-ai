@@ -4,7 +4,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
-import { useUILocale } from "@shared/language/language-store";
 import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
@@ -22,7 +21,6 @@ import {
 export function SuggestionSettings() {
   const t = useTranslate();
   const { language } = useCommunicationLanguage();
-  const uiLocale = useUILocale();
   const isSupported = areSuggestionsSupported();
   const languageSupport = useLatestAsync({
     deps: [language],
@@ -50,17 +48,12 @@ export function SuggestionSettings() {
           {t(m.suggestionsCustomInstructionsUnsupported)}
         </UnavailableNotice>
       );
-    case "language-unavailable": {
-      const languageName =
-        new Intl.DisplayNames([uiLocale], { type: "language" }).of(language) ??
-        language;
-
+    case "language-unavailable":
       return (
         <UnavailableNotice>
-          {t(m.suggestionsLanguageUnavailable, { language: languageName })}
+          {t(m.suggestionsLanguageUnavailable)}
         </UnavailableNotice>
       );
-    }
     case "device-unavailable":
       return (
         <UnavailableNotice hasEnableHelp>

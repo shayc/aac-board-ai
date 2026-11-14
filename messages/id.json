@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Cara mengaktifkan saran",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI…",
-  "suggestionsLanguageUnavailable": "Saran tidak tersedia dalam bahasa ini ({language}).",
+  "suggestionsLanguageUnavailable": "Saran tidak tersedia dalam bahasa ini.",
   "suggestionsFailed": "Tidak dapat mengambil saran",
   "suggestionsLabel": "Saran",
   "navBack": "Kembali",

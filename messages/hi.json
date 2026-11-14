@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "सुझाव कैसे चालू करें",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है…",
-  "suggestionsLanguageUnavailable": "इस भाषा ({language}) में सुझाव उपलब्ध नहीं हैं।",
+  "suggestionsLanguageUnavailable": "इस भाषा में सुझाव उपलब्ध नहीं हैं।",
   "suggestionsFailed": "सुझाव नहीं मिल सके",
   "suggestionsLabel": "सुझाव",
   "navBack": "वापस जाएँ",

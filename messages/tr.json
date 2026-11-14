@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Öneriler nasıl etkinleştirilir",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor…",
-  "suggestionsLanguageUnavailable": "Öneriler bu dilde ({language}) kullanılamıyor.",
+  "suggestionsLanguageUnavailable": "Öneriler bu dilde kullanılamıyor.",
   "suggestionsFailed": "Öneriler alınamadı",
   "suggestionsLabel": "Öneriler",
   "navBack": "Geri",

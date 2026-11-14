@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "كيفية تفعيل الاقتراحات",
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي…",
-  "suggestionsLanguageUnavailable": "الاقتراحات غير متاحة بهذه اللغة ({language}).",
+  "suggestionsLanguageUnavailable": "الاقتراحات غير متاحة بهذه اللغة.",
   "suggestionsFailed": "تعذر الحصول على اقتراحات",
   "suggestionsLabel": "الاقتراحات",
   "navBack": "رجوع",
