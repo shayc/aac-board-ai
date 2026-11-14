@@ -237,7 +237,7 @@ describe("MessageBar", () => {
       );
     });
 
-    test("shows the newest part when the message changes during playback", async () => {
+    test("keeps the newest part in view when an edit happens during playback", async () => {
       const props = createProps({
         parts: SCROLL_PARTS,
         activePartId: ACTIVE_SCROLL_PART_ID,
@@ -265,7 +265,7 @@ describe("MessageBar", () => {
       );
     });
 
-    test("follows the spoken part when an edit starts playback", async () => {
+    test("scrolls to the active part when an edit starts playback", async () => {
       const props = createProps({ parts: SCROLL_PARTS });
       const screen = await renderWithProviders(
         <ScrollableMessageBar {...props} />,

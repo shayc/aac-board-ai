@@ -38,8 +38,8 @@ export function MessageBar({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Reads the latest parts without reacting to them, so an edit during
-  // playback shows the newest part instead of jumping back to the spoken one.
-  const scrollToActivePart = useEffectEvent((partId: string) => {
+  // playback shows the newest part instead of jumping back to the active one.
+  const scrollActivePartIntoView = useEffectEvent((partId: string) => {
     const index = parts.findIndex((part) => part.id === partId);
     if (index === -1) {
       return;
@@ -59,7 +59,7 @@ export function MessageBar({
   // playback in the same render, as a spelling tile's echo does.
   useLayoutEffect(() => {
     if (activePartId !== null) {
-      scrollToActivePart(activePartId);
+      scrollActivePartIntoView(activePartId);
     }
   }, [activePartId]);
 
