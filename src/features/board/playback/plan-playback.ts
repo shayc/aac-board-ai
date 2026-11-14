@@ -1,6 +1,10 @@
 import type { PlaybackStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
-import { joinSpokenParts, type SpokenPart } from "./join-spoken-parts";
+
+interface SpokenPart {
+  id: string;
+  text: string;
+}
 
 export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
@@ -11,12 +15,7 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
       return;
     }
 
-    const joined = joinSpokenParts(spokenRun);
-    steps.push({
-      kind: "speech",
-      text: joined.text,
-      cueAt: joined.partIdAt,
-    });
+    steps.push(createSpeechStep(spokenRun));
     spokenRun = [];
   }
 
@@ -41,6 +40,35 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   flushSpeech();
 
   return steps;
+}
+
+type SpeechStep = Extract<PlaybackStep, { kind: "speech" }>;
+
+interface PartSpan {
+  id: string;
+  start: number;
+  end: number;
+}
+
+function createSpeechStep(parts: readonly SpokenPart[]): SpeechStep {
+  const chunks: string[] = [];
+  const spans: PartSpan[] = [];
+  let offset = 0;
+
+  for (const part of parts) {
+    const chunk = part.text.trim().replace(/\s+/g, " ");
+    chunks.push(chunk);
+    spans.push({ id: part.id, start: offset, end: offset + chunk.length });
+    offset += chunk.length + 1;
+  }
+
+  return {
+    kind: "speech",
+    text: chunks.join(" "),
+    cueAt: (charIndex) =>
+      spans.find((span) => charIndex >= span.start && charIndex < span.end)
+        ?.id ?? null,
+  };
 }
 
 function getSpokenText(part: MessagePart): string {
