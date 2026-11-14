@@ -8,6 +8,7 @@ import { useUILocale } from "@shared/language/language-store";
 import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
+import { assertNever } from "@shared/utils/assert-never";
 import { type ReactNode, useId } from "react";
 import {
   setSuggestionCustomInstructions,
@@ -66,9 +67,12 @@ export function SuggestionSettings() {
           {t(m.suggestionsUnsupported)}
         </UnavailableNotice>
       );
-    default:
-      // A failed probe leaves the field usable rather than hiding it.
+    case "custom-instructions":
+    // A failed probe leaves the field usable rather than hiding it.
+    case undefined:
       return <CustomInstructionsField />;
+    default:
+      return assertNever(languageSupport.value);
   }
 }
 

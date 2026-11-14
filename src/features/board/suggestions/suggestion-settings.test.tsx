@@ -143,6 +143,16 @@ describe("SuggestionSettings", () => {
       .toBeVisible();
   });
 
+  test("keeps custom instructions when the language check fails", async () => {
+    stubRewriter().availability.mockRejectedValue(new Error("Probe failed"));
+
+    const screen = await renderSuggestionsSettings();
+
+    await expect
+      .element(screen.getByRole("textbox", { name: "Custom instructions" }))
+      .toBeVisible();
+  });
+
   test("edits and persists custom instructions", async () => {
     stubRewriter();
     const screen = await renderSuggestionsSettings();
