@@ -15,7 +15,7 @@ const LIGHT_SCHEME_CLASS = "light";
 export const MESSAGE_ACTION_SIZE = 80;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
-const BAR_INSET = 1.5;
+const BAR_INSET = 1;
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -105,7 +105,11 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[400] }),
+    // A full grey 400 glares against the dark page; symbols still need a light
+    // ground.
+    ...theme.applyStyles("dark", {
+      bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
+    }),
   } as const;
 }
 

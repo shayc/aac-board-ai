@@ -55,7 +55,6 @@ export function SuggestionBar({
             key={phrase}
             lang={language}
             label={phrase}
-            variant="outlined"
             onClick={() => onPhraseSelect(phrase)}
           />
         ))}

@@ -329,17 +329,55 @@ const themeOptions = {
     MuiChip: {
       styleOverrides: {
         clickable: ({ theme }) => ({
-          ...theme.typography.body2,
-          height: 40,
+          // Chips sit beside large buttons, so they share their height and
+          // label type.
+          ...theme.typography.button,
+          height: 48,
           borderRadius: theme.vars.shape.borderRadiusFull,
+          fontSize: theme.typography.pxToRem(15),
           ...buttonFeedbackTiming(theme),
           [`& .${chipClasses.label}`]: {
-            paddingLeft: 15,
-            paddingRight: 15,
+            paddingLeft: 20,
+            paddingRight: 20,
           },
           [`& .${chipClasses.icon}`]: {
             marginLeft: 12,
           },
+          variants: [
+            {
+              props: { variant: "outlined" },
+              // The 1px outline keeps the label where filled chips place it.
+              style: {
+                [`& .${chipClasses.label}`]: {
+                  paddingLeft: 19,
+                  paddingRight: 19,
+                },
+              },
+            },
+            {
+              props: { variant: "filled", color: "default" },
+              // A quieter fill than the contained buttons keeps chips
+              // distinct from navigation.
+              style: {
+                backgroundColor: theme.alpha(theme.palette.common.black, 0.06),
+                [`&:hover, &.${chipClasses.focusVisible}`]: {
+                  backgroundColor: theme.alpha(theme.palette.common.black, 0.1),
+                },
+                ...theme.applyStyles("dark", {
+                  backgroundColor: theme.alpha(
+                    theme.palette.common.white,
+                    0.08,
+                  ),
+                  [`&:hover, &.${chipClasses.focusVisible}`]: {
+                    backgroundColor: theme.alpha(
+                      theme.palette.common.white,
+                      0.12,
+                    ),
+                  },
+                }),
+              },
+            },
+          ],
         }),
       },
     },
