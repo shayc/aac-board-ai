@@ -777,7 +777,7 @@ describe("CommunicationBoard", () => {
           .element(screen.getByRole("button", { name: "Go back" }))
           .toBeVisible();
         await expect
-          .element(screen.getByRole("button", { name: "Go home" }))
+          .element(screen.getByRole("button", { name: "Go to main board" }))
           .toBeVisible();
 
         await screen.getByRole("button", { name: "hello" }).click();
@@ -883,7 +883,7 @@ describe("CommunicationBoard", () => {
 
       await expect.element(back).not.toHaveAttribute("aria-disabled");
 
-      await screen.getByRole("button", { name: "Go home" }).click();
+      await screen.getByRole("button", { name: "Go to main board" }).click();
 
       await expect.element(back).toHaveAttribute("aria-disabled", "true");
     });

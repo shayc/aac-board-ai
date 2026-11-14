@@ -98,7 +98,7 @@ describe("SettingsDrawer", () => {
     await screen.getByRole("option", { name: "Deutsch" }).click();
 
     await expect
-      .element(screen.getByRole("slider", { name: "Geschwindigkeit" }))
+      .element(screen.getByRole("slider", { name: "Sprechgeschwindigkeit" }))
       .toHaveAttribute("aria-valuetext", "1,0×");
     await expect
       .element(screen.getByRole("slider", { name: "Lautstärke" }))

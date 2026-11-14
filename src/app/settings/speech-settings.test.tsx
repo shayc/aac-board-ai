@@ -23,7 +23,7 @@ describe("SpeechSettings", () => {
     const screen = await renderSpeechSettings();
 
     const expectedValues = [
-      { name: "Speed", text: "1.0×" },
+      { name: "Speech rate", text: "1.0×" },
       { name: "Pitch", text: "100%" },
       { name: "Volume", text: "100%" },
     ];
@@ -142,7 +142,7 @@ describe("SpeechSettings", () => {
     const screen = await renderSpeechSettings();
 
     await expect
-      .element(screen.getByRole("slider", { name: "Speed" }))
+      .element(screen.getByRole("slider", { name: "Speech rate" }))
       .toHaveAttribute("aria-valuetext", "1.0×");
     await expect
       .element(screen.getByRole("slider", { name: "Pitch" }))
@@ -152,7 +152,7 @@ describe("SpeechSettings", () => {
   test("adjusts and persists rate, pitch, and volume", async () => {
     const screen = await renderSpeechSettings();
     const adjustments = [
-      { name: "Speed", key: "{ArrowRight}", expected: 1.1 },
+      { name: "Speech rate", key: "{ArrowRight}", expected: 1.1 },
       { name: "Pitch", key: "{ArrowLeft}", expected: 0.9 },
       { name: "Volume", key: "{ArrowLeft}", expected: 0.9 },
     ];
