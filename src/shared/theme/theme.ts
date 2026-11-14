@@ -297,7 +297,15 @@ const themeOptions = {
     },
     MuiIconButton: {
       styleOverrides: {
-        root: ({ theme }) => buttonFeedbackTiming(theme),
+        root: ({ theme }) => ({
+          // MUI's hover tint is about 1.05:1 against the page, too faint to
+          // see. Icons are 60–70% opaque, so 12% of their colour lands near
+          // Material 3's 8% state layer, in either scheme or a forced one.
+          // Setting MUI's variable keeps its touch and disabled resets.
+          "--IconButton-hoverBg":
+            "color-mix(in srgb, currentColor 12%, transparent)",
+          ...buttonFeedbackTiming(theme),
+        }),
       },
     },
     MuiFab: {
