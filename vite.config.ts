@@ -21,7 +21,7 @@ const themeColorHtmlPlugin: Plugin = {
 export default defineConfig({
   plugins: [
     themeColorHtmlPlugin,
-    react({ compiler: true }),
+    react({ compiler: { panicThreshold: "all_errors" } }),
     paraglideVitePlugin({
       project: "./project.inlang",
       outputStructure: "message-modules",
