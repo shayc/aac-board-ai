@@ -34,14 +34,14 @@ export function BackspaceButton({
       {...mergeProps(pressProps, longPressProps)}
       {...focusableDisabledProps(disabled)}
       aria-label={t(m.messageBackspace)}
-      size="large"
       sx={{
         flexShrink: 0,
         // Mirrors the first word's inset from the bar's start edge.
         marginInlineEnd: 0.5,
-        // The wide glyph reads as large as play's triangle and circle together
-        // at this size, so it stays secondary to play.
-        fontSize: 32,
+        // 1.5× MUI's default 40px icon button (8px padding, 24px icon), so the
+        // icon matches play's 36px icon in proportion to the bar.
+        p: 1.5,
+        fontSize: 36,
       }}
     >
       <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
