@@ -2,7 +2,7 @@ import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { type ReactNode, useLayoutEffect, useRef } from "react";
+import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
@@ -37,9 +37,31 @@ export function MessageBar({
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Reads the latest parts without reacting to them, so an edit during
+  // playback shows the newest part instead of jumping back to the spoken one.
+  const scrollToActivePart = useEffectEvent((partId: string) => {
+    const index = parts.findIndex((part) => part.id === partId);
+    if (index === -1) {
+      return;
+    }
+
+    scrollPartIntoView(
+      scrollContainerRef.current?.children.item(index),
+      "nearest",
+    );
+  });
+
   useLayoutEffect(() => {
     scrollPartIntoView(scrollContainerRef.current?.lastElementChild, "end");
   }, [parts]);
+
+  // Declared after the newest-part scroll so it wins when an edit starts
+  // playback in the same render, as a spelling tile's echo does.
+  useLayoutEffect(() => {
+    if (activePartId !== null) {
+      scrollToActivePart(activePartId);
+    }
+  }, [activePartId]);
 
   const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
@@ -133,19 +155,8 @@ function MessagePartItem({
   isOpen,
   isImageVisible,
 }: MessagePartItemProps) {
-  const itemRef = useRef<HTMLDivElement>(null);
-
-  // Runs only when this part starts or stops playing, so an edit during
-  // playback leaves the bar on the newest part.
-  useLayoutEffect(() => {
-    if (isActive) {
-      scrollPartIntoView(itemRef.current, "nearest");
-    }
-  }, [isActive]);
-
   return (
     <Stack
-      ref={itemRef}
       role="listitem"
       lang={language}
       direction="row"

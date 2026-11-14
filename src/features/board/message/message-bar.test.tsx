@@ -265,6 +265,29 @@ describe("MessageBar", () => {
       );
     });
 
+    test("follows the spoken part when an edit starts playback", async () => {
+      const props = createProps({ parts: SCROLL_PARTS });
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
+      const scroller = getScrollContainer(screen.container);
+
+      await screen.rerender(
+        <ScrollableMessageBar
+          {...props}
+          parts={[...SCROLL_PARTS, { kind: "text", id: "newest", label: "s" }]}
+          activePartId={ACTIVE_SCROLL_PART_ID}
+        />,
+      );
+
+      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
+      assertDefined(activePart);
+      expect(activePart.getBoundingClientRect().left).toBeCloseTo(
+        scroller.getBoundingClientRect().left,
+        0,
+      );
+    });
+
     test("preserves the scroll position when playback becomes idle", async () => {
       const props = createProps({
         parts: SCROLL_PARTS,
