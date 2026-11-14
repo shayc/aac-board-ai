@@ -2,14 +2,17 @@ import { AppShell } from "@app/shell/app-shell";
 import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/library";
 import { LoadingState } from "@shared/ui/loading-state";
 import type { RouteObject } from "react-router";
-import { rootIndexAction } from "./actions/root-index-action";
-import { BoardLinkPage } from "./board-link-page";
-import { BoardPage } from "./board-page";
-import { boardLoader } from "./loaders/board-loader";
-import { boardSetIndexLoader } from "./loaders/board-set-index-loader";
-import { BOARD_SET_ROUTE_ID, boardSetLoader } from "./loaders/board-set-loader";
-import { rootIndexLoader } from "./loaders/root-index-loader";
+import { boardLoader } from "./board-set/board-loader";
+import { BoardPage } from "./board-set/board-page";
+import { boardSetIndexLoader } from "./board-set/board-set-index-loader";
+import {
+  BOARD_SET_ROUTE_ID,
+  boardSetLoader,
+} from "./board-set/board-set-loader";
 import { NotFound } from "./not-found";
+import { BoardLinkImportPage } from "./root/board-link-import-page";
+import { rootIndexAction } from "./root/root-index-action";
+import { rootIndexLoader } from "./root/root-index-loader";
 import { RouteErrorBoundary } from "./route-error-boundary";
 
 export const appRoutes: RouteObject[] = [
@@ -23,7 +26,7 @@ export const appRoutes: RouteObject[] = [
         children: [
           {
             index: true,
-            Component: BoardLinkPage,
+            Component: BoardLinkImportPage,
             loader: rootIndexLoader,
             action: rootIndexAction,
           },

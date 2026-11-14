@@ -7,20 +7,20 @@ const TILE_ROWS = [
 ];
 
 // Keep in sync with public/board.svg.
-const MARK_BACKGROUND = "#0e1014";
+const ICON_BACKGROUND = "#0e1014";
 
-const MARK_SIZE = 560;
+const VIEW_BOX_SIZE = 560;
 const GRID_OFFSET = 104;
 const TILE_SIZE = 104;
 const TILE_STRIDE = 124;
 const TILE_RADIUS = 20;
 
-export function BoardMark() {
+export function AppIcon() {
   return (
     <Box
       component="svg"
       aria-hidden
-      viewBox={`0 0 ${MARK_SIZE} ${MARK_SIZE}`}
+      viewBox={`0 0 ${VIEW_BOX_SIZE} ${VIEW_BOX_SIZE}`}
       sx={{
         display: "block",
         width: 96,
@@ -31,7 +31,7 @@ export function BoardMark() {
         boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
       }}
     >
-      <rect width="100%" height="100%" fill={MARK_BACKGROUND} />
+      <rect width="100%" height="100%" fill={ICON_BACKGROUND} />
 
       {TILE_ROWS.flatMap((row, rowIndex) =>
         row.map((fill, columnIndex) => (

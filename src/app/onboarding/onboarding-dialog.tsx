@@ -21,7 +21,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
-import { BoardMark } from "./board-mark";
+import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
   open: boolean;
@@ -82,7 +82,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     >
       <Box sx={introductionSx}>
         <Box>
-          <BoardMark />
+          <AppIcon />
 
           <DialogTitle
             variant="h4"

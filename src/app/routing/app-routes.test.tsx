@@ -19,7 +19,7 @@ import { assert, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
-import { BOARD_SET_ROUTE_ID } from "./loaders/board-set-loader";
+import { BOARD_SET_ROUTE_ID } from "./board-set/board-set-loader";
 
 const OBZ_FIXTURE_URL =
   "/src/features/library/testing/sample-boards/lots-of-stuff.obz";

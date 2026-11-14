@@ -9,9 +9,9 @@ import { useTranslate } from "@shared/language/use-translate";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
-import type { rootIndexLoader } from "./loaders/root-index-loader";
+import type { rootIndexLoader } from "./root-index-loader";
 
-export function BoardLinkPage() {
+export function BoardLinkImportPage() {
   const { boardHost } = useLoaderData<typeof rootIndexLoader>();
   const submit = useSubmit();
   const navigate = useNavigate();

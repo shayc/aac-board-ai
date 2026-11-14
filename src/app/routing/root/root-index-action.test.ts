@@ -1,8 +1,8 @@
 import { listBoardSetRecords } from "@features/library";
 import { resetBoardsDB } from "@features/library/testing";
-import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
+import { routeArgs } from "../testing/route-args";
 import { rootIndexAction } from "./root-index-action";
 
 const FIXTURE_BOARD_URL =
@@ -17,7 +17,7 @@ function callAction(
   signal?: AbortSignal,
 ): Promise<Response> {
   return rootIndexAction(
-    loaderArgs(`http://localhost/${searchParams}`, { signal }),
+    routeArgs(`http://localhost/${searchParams}`, { signal }),
   );
 }
 

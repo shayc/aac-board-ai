@@ -3,13 +3,13 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
-import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
+import { routeArgs } from "../testing/route-args";
 import { boardSetLoader } from "./board-set-loader";
 
 function callLoader(boardSetId: string | undefined) {
   return boardSetLoader(
-    loaderArgs("http://localhost/", { params: { boardSetId } }),
+    routeArgs("http://localhost/", { params: { boardSetId } }),
   );
 }
 

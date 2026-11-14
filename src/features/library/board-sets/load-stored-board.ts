@@ -3,11 +3,14 @@ import type { Board, BoardKey } from "../board-types";
 import { collectMediaPaths } from "../obf/collect-media-paths";
 import { obfToBoard } from "../obf/obf-to-board";
 import { getAssetURL } from "../storage/asset-urls";
-import {
-  BoardNotFoundError,
-  getBoardRecord,
-  listBoardIds,
-} from "../storage/board-content-storage";
+import { getBoardRecord, listBoardIds } from "../storage/board-content-storage";
+
+export class BoardNotFoundError extends Error {
+  constructor({ boardSetId, boardId }: BoardKey) {
+    super(`Board not found: ${boardSetId}/${boardId}`);
+    this.name = "BoardNotFoundError";
+  }
+}
 
 export async function loadStoredBoard(
   key: BoardKey,

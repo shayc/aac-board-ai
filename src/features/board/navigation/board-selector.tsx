@@ -2,7 +2,7 @@ import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
-import { useLanguage } from "@shared/language/use-language";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { useBoardRoute } from "./use-board-route";
 
@@ -17,7 +17,7 @@ interface BoardSelectorProps {
 
 export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
-  const { language } = useLanguage();
+  const { language } = useCommunicationLanguage();
   const { boardId, goToBoard } = useBoardRoute();
 
   const options = toBoardOptions(boards, language);

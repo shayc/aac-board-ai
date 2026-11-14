@@ -4,13 +4,6 @@ import { normalizeAssetPath } from "./normalize-asset-path";
 
 export type { BoardRecord } from "./boards-db";
 
-export class BoardNotFoundError extends Error {
-  constructor({ boardSetId, boardId }: BoardKey) {
-    super(`Board not found: ${boardSetId}/${boardId}`);
-    this.name = "BoardNotFoundError";
-  }
-}
-
 export async function getBoardRecord({
   boardSetId,
   boardId,

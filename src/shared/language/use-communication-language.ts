@@ -1,7 +1,7 @@
 import { getTextDirection } from "@paraglide/runtime";
 import { setStoredLanguage, useStoredLanguage } from "./language-store";
 
-export function useLanguage() {
+export function useCommunicationLanguage() {
   const language = useStoredLanguage();
 
   return {
