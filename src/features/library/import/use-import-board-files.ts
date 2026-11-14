@@ -7,7 +7,6 @@ import {
   importEachBoardFile,
   type ImportedBoardSet,
 } from "./board-file-import";
-import { pickFiles } from "./pick-files";
 import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
@@ -60,10 +59,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   }
 
   async function pickAndImport() {
-    const files = await pickFiles({
-      accept: BOARD_FILE_ACCEPT,
-      multiple: true,
-    });
+    const files = await pickBoardFiles();
 
     await importFiles(files);
   }
@@ -73,4 +69,22 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     importAndOpen,
     pickAndImport,
   };
+}
+
+function pickBoardFiles(): Promise<File[]> {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.multiple = true;
+    input.accept = BOARD_FILE_ACCEPT;
+
+    input.addEventListener(
+      "change",
+      () => resolve(Array.from(input.files ?? [])),
+      { once: true },
+    );
+    input.addEventListener("cancel", () => resolve([]), { once: true });
+
+    input.showPicker();
+  });
 }
