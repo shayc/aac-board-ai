@@ -9,8 +9,7 @@ import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { BOARD_CONTROL_WIDTH } from "../board-control-button";
 
 export const PLAY_BUTTON_SIZE = 80;
-
-const largeIconSx = { fontSize: 36 };
+export const PLAY_ICON_SIZE = 36;
 
 interface PlayButtonProps {
   disabled?: boolean;
@@ -67,7 +66,7 @@ export function PlayButton({
         [`&.${fabClasses.disabled}`]: disabledSx(theme),
       })}
     >
-      <Icon sx={largeIconSx} />
+      <Icon sx={{ fontSize: PLAY_ICON_SIZE }} />
     </Fab>
   );
 }
