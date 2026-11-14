@@ -2,6 +2,15 @@ import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useRewriter } from "@shayc/react-built-in-ai";
 import { type SuggestionSource, toSuggestionSource } from "./suggestion-source";
 
+// Without this framing the on-device model treats short tapped fragments as
+// instructions to itself and answers them. Listing sentence types (question,
+// request, statement) primed it to turn statements into questions, so the
+// context stays general. It is in English for every output language because it
+// instructs the model rather than reaching the user.
+const SUGGESTION_CONTEXT =
+  "The text is words an AAC user tapped to say something. Rewrite it as the one short, natural sentence they mean to say. Keep their meaning, their words where possible, and who it is about. Do not answer it or add ideas.";
+const SUGGESTION_CONTEXT_LANGUAGE = "en";
+
 interface UseRewriterSourceOptions {
   text: string;
   customInstructions: string;
@@ -16,12 +25,12 @@ export function useRewriterSource({
   tone,
 }: UseRewriterSourceOptions): SuggestionSource {
   const rewriter = useRewriter({
-    sharedContext: customInstructions,
+    sharedContext: suggestionContext(customInstructions),
     length: "shorter",
     format: "plain-text",
     tone,
     expectedInputLanguages: [language],
-    expectedContextLanguages: [language],
+    expectedContextLanguages: contextLanguages(language),
     outputLanguage: language,
   });
 
@@ -34,4 +43,16 @@ export function useRewriterSource({
   });
 
   return toSuggestionSource(rewriter, request);
+}
+
+function suggestionContext(customInstructions: string): string {
+  const instructions = customInstructions.trim();
+
+  return instructions === ""
+    ? SUGGESTION_CONTEXT
+    : `${SUGGESTION_CONTEXT}\n${instructions}`;
+}
+
+function contextLanguages(language: string): string[] {
+  return [...new Set([SUGGESTION_CONTEXT_LANGUAGE, language])];
 }

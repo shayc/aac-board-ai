@@ -246,7 +246,21 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("passes custom instructions to every fixed-tone rewriter", async () => {
+  test("gives every fixed-tone rewriter the built-in context without custom instructions", async () => {
+    const { create } = stubRewriter();
+
+    await renderMessageSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(create).toHaveBeenCalledTimes(2);
+    });
+
+    for (const [options] of create.mock.calls) {
+      expect(options?.sharedContext).toMatch(/AAC user/);
+    }
+  });
+
+  test("adds custom instructions after the built-in context for every fixed-tone rewriter", async () => {
     setSuggestionCustomInstructions("Talk like a pirate");
     const { create } = stubRewriter();
 
@@ -259,17 +273,21 @@ describe("useMessageSuggestions", () => {
     expect(create.mock.calls.map(([options]) => options)).toEqual([
       expect.objectContaining({
         tone: "as-is",
-        sharedContext: "Talk like a pirate",
         length: "shorter",
         format: "plain-text",
       }),
       expect.objectContaining({
         tone: "more-casual",
-        sharedContext: "Talk like a pirate",
         length: "shorter",
         format: "plain-text",
       }),
     ]);
+
+    for (const [options] of create.mock.calls) {
+      expect(options?.sharedContext).toMatch(
+        /AAC user.*\nTalk like a pirate$/s,
+      );
+    }
   });
 
   test("provisions both engines with the message language", async () => {
@@ -307,7 +325,7 @@ describe("useMessageSuggestions", () => {
     for (const [options] of create.mock.calls) {
       expect(options).toMatchObject({
         expectedInputLanguages: ["he"],
-        expectedContextLanguages: ["he"],
+        expectedContextLanguages: ["en", "he"],
         outputLanguage: "he",
       });
     }
