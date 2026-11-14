@@ -5,31 +5,14 @@ import {
 } from "./board-file-import";
 
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
-
-type BoardURLErrorCode =
-  | "unsupported-scheme"
-  | "cross-host-redirect"
-  | "download-too-large";
-
-class BoardURLError extends Error {
-  readonly code: BoardURLErrorCode;
-
-  constructor(code: BoardURLErrorCode, message: string) {
-    super(message);
-    this.name = "BoardURLError";
-    this.code = code;
-  }
-}
+const DOWNLOAD_TOO_LARGE_MESSAGE = `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`;
 
 // The ?board= param is attacker-controlled and confirmed by its host, so only
 // http(s) may reach fetch. Schemes such as data: carry a payload with no host.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
-    throw new BoardURLError(
-      "unsupported-scheme",
-      `Unsupported board URL scheme: ${resolved.protocol}`,
-    );
+    throw new Error(`Unsupported board URL scheme: ${resolved.protocol}`);
   }
 
   return resolved;
@@ -109,7 +92,7 @@ async function downloadBoardFile(
     receivedBytes += value.byteLength;
     if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
       await reader.cancel();
-      throw downloadTooLargeError();
+      throw new Error(DOWNLOAD_TOO_LARGE_MESSAGE);
     }
 
     chunks.push(value);
@@ -128,8 +111,7 @@ function assertSameHost(requestedURL: URL, response: Response): void {
   }
 
   void response.body?.cancel();
-  throw new BoardURLError(
-    "cross-host-redirect",
+  throw new Error(
     `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
   );
 }
@@ -154,12 +136,5 @@ function assertWithinSizeCap(
   }
 
   void response.body?.cancel();
-  throw downloadTooLargeError();
-}
-
-function downloadTooLargeError(): BoardURLError {
-  return new BoardURLError(
-    "download-too-large",
-    `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
-  );
+  throw new Error(DOWNLOAD_TOO_LARGE_MESSAGE);
 }

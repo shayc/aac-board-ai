@@ -99,10 +99,9 @@ describe("importBoardFileFromURL", () => {
 
     await expect(
       importBoardFileFromURL("https://trusted.example/go?to=core.obz"),
-    ).rejects.toMatchObject({
-      name: "BoardURLError",
-      code: "cross-host-redirect",
-    });
+    ).rejects.toThrow(
+      "Board URL redirected from trusted.example to elsewhere.example",
+    );
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
@@ -124,10 +123,7 @@ describe("importBoardFileFromURL", () => {
 
     await expect(
       importBoardFileFromURL("data:application/zip;base64,UEsDBA=="),
-    ).rejects.toMatchObject({
-      name: "BoardURLError",
-      code: "unsupported-scheme",
-    });
+    ).rejects.toThrow("Unsupported board URL scheme: data:");
 
     expect(fetchSpy).not.toHaveBeenCalled();
   });
@@ -146,10 +142,9 @@ describe("importBoardFileFromURL", () => {
 
     await expect(
       importBoardFileFromURL("https://example.com/huge.obz"),
-    ).rejects.toMatchObject({
-      name: "BoardURLError",
-      code: "download-too-large",
-    });
+    ).rejects.toThrow(
+      `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
+    );
 
     expect(cancelled).toBe(true);
   });
@@ -176,10 +171,9 @@ describe("importBoardFileFromURL", () => {
 
     await expect(
       importBoardFileFromURL("https://example.com/huge.obz"),
-    ).rejects.toMatchObject({
-      name: "BoardURLError",
-      code: "download-too-large",
-    });
+    ).rejects.toThrow(
+      `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
+    );
 
     expect(pulled).toBe(false);
     expect(cancelled).toBe(true);
