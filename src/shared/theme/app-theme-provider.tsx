@@ -1,21 +1,21 @@
 import CssBaseline from "@mui/material/CssBaseline";
 import { useUIDirection } from "@shared/language/language-store";
 import type { ReactNode } from "react";
-import { DirectionProvider } from "./direction-provider";
+import { DirectionalThemeProvider } from "./directional-theme-provider";
 import { ThemeColorMeta } from "./theme-color-meta";
 
-interface ThemeProviderProps {
+interface AppThemeProviderProps {
   children: ReactNode;
 }
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function AppThemeProvider({ children }: AppThemeProviderProps) {
   const uiDirection = useUIDirection();
 
   return (
-    <DirectionProvider direction={uiDirection}>
+    <DirectionalThemeProvider direction={uiDirection}>
       <CssBaseline />
       <ThemeColorMeta />
       {children}
-    </DirectionProvider>
+    </DirectionalThemeProvider>
   );
 }

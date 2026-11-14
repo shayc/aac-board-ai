@@ -5,7 +5,7 @@ import {
 } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
-import { ThemeProvider } from "@shared/theme/theme-provider";
+import { AppThemeProvider } from "@shared/theme/app-theme-provider";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
@@ -426,9 +426,9 @@ describe("Tile", () => {
 
   test("eases its symbol with the same timing as its own colors", async () => {
     const screen = await render(
-      <ThemeProvider>
+      <AppThemeProvider>
         {tileElement({ imageSrc: TEST_IMAGE_SRC })}
-      </ThemeProvider>,
+      </AppThemeProvider>,
     );
     const tile = screen.getByRole("button", { name: "Word" });
     const symbol = tile.element().querySelector("img");
@@ -470,11 +470,11 @@ describe("Tile", () => {
     "sizes its label to the shorter side of $size",
     async ({ width, height, fontSize }) => {
       const screen = await render(
-        <ThemeProvider>
+        <AppThemeProvider>
           <div style={{ width, height }}>
             {tileElement({ label: "Sized", imageSrc: TEST_IMAGE_SRC })}
           </div>
-        </ThemeProvider>,
+        </AppThemeProvider>,
       );
 
       await expect.element(screen.getByText("Sized")).toHaveStyle({ fontSize });

@@ -343,8 +343,10 @@ no language carries no `lang` and inherits the document's.
 
 Direction-specific Emotion caches, right-to-left (RTL) styling, and logical CSS
 support both text directions.
-[`DirectionProvider`](../src/shared/theme/direction-provider.tsx) applies them
-to a subtree: once for the app, from the UI locale, and once for the board.
+[`DirectionalThemeProvider`](../src/shared/theme/directional-theme-provider.tsx)
+selects the matching theme and Emotion cache for a subtree.
+[`AppThemeProvider`](../src/shared/theme/app-theme-provider.tsx) uses the UI
+direction, and the board uses the communication direction.
 
 ### Theming
 

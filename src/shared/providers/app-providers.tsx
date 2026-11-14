@@ -2,7 +2,7 @@ import { DocumentLanguage } from "@shared/language/document-language";
 import { PlaybackProvider } from "@shared/playback/playback-provider";
 import { SnackbarProvider } from "@shared/snackbar/snackbar-provider";
 import { getSpeechParameters } from "@shared/speech/speech-store";
-import { ThemeProvider } from "@shared/theme/theme-provider";
+import { AppThemeProvider } from "@shared/theme/app-theme-provider";
 import type { ReactNode } from "react";
 
 interface AppProvidersProps {
@@ -12,10 +12,10 @@ interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <PlaybackProvider getSpeechParameters={getSpeechParameters}>
-      <ThemeProvider>
+      <AppThemeProvider>
         <DocumentLanguage />
         <SnackbarProvider>{children}</SnackbarProvider>
-      </ThemeProvider>
+      </AppThemeProvider>
     </PlaybackProvider>
   );
 }
