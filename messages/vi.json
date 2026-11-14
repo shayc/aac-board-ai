@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Cách bật gợi ý",
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống…",
-  "suggestionsUnavailable": "Gợi ý không khả dụng cho ngôn ngữ này hoặc trên thiết bị này",
+  "suggestionsLanguageUnavailable": "Gợi ý không khả dụng cho ngôn ngữ này ({language}).",
   "suggestionsFailed": "Không thể lấy gợi ý",
   "suggestionsLabel": "Gợi ý",
   "navBack": "Quay lại",

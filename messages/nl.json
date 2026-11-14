@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Suggesties inschakelen",
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden…",
-  "suggestionsUnavailable": "Suggesties niet beschikbaar in deze taal of op dit apparaat",
+  "suggestionsLanguageUnavailable": "Suggesties zijn niet beschikbaar in deze taal ({language}).",
   "suggestionsFailed": "Suggesties kunnen niet worden opgehaald",
   "suggestionsLabel": "Suggesties",
   "navBack": "Terug",

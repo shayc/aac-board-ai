@@ -7,17 +7,14 @@ import {
 } from "./derive-suggestion-status";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
-import {
-  areSuggestionsSupported,
-  SUGGESTION_ENGINES,
-} from "./suggestion-support";
+import { isEngineUsable, SUGGESTION_ENGINES } from "./suggestion-support";
 import { useProofreaderSource } from "./use-proofreader-source";
 import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
 interface UseMessageSuggestionsReturn {
-  isSupported: boolean;
+  isAvailable: boolean;
   status: SuggestionStatus;
   phrases: readonly string[];
   enable: () => void;
@@ -56,6 +53,9 @@ export function useMessageSuggestions(
     text,
     sources.map(({ candidate }) => candidate),
   );
+  const isAvailable = sources.some(({ engineStatus }) =>
+    isEngineUsable(engineStatus),
+  );
   const status = deriveSuggestionStatus({
     sources,
     downloadProgress,
@@ -70,7 +70,7 @@ export function useMessageSuggestions(
   }
 
   return {
-    isSupported: areSuggestionsSupported(),
+    isAvailable,
     status,
     phrases,
     enable,

@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Jak włączyć sugestie",
   "suggestionsEnable": "Włącz sugestie",
   "suggestionsDownloading": "Pobieranie modelu AI…",
-  "suggestionsUnavailable": "Sugestie są niedostępne w tym języku lub na tym urządzeniu",
+  "suggestionsLanguageUnavailable": "Sugestie są niedostępne w tym języku ({language}).",
   "suggestionsFailed": "Nie udało się pobrać sugestii",
   "suggestionsLabel": "Sugestie",
   "navBack": "Wstecz",

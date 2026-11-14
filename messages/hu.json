@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "A javaslatok bekapcsolása",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése…",
-  "suggestionsUnavailable": "A javaslatok ezen a nyelven vagy ezen az eszközön nem érhetők el",
+  "suggestionsLanguageUnavailable": "A javaslatok ezen a nyelven ({language}) nem érhetők el.",
   "suggestionsFailed": "Nem sikerült lekérni a javaslatokat",
   "suggestionsLabel": "Javaslatok",
   "navBack": "Vissza",

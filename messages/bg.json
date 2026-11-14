@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Как да включите предложенията",
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ…",
-  "suggestionsUnavailable": "Предложенията не са налични за този език или на това устройство",
+  "suggestionsLanguageUnavailable": "Предложенията не са налични за този език ({language}).",
   "suggestionsFailed": "Предложенията не можаха да бъдат получени",
   "suggestionsLabel": "Предложения",
   "navBack": "Назад",

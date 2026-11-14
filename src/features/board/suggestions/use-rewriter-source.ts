@@ -1,10 +1,10 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useRewriter } from "@shayc/react-built-in-ai";
 import { type SuggestionSource, toSuggestionSource } from "./suggestion-source";
+import { rewriterLanguageOptions } from "./suggestion-support";
 
 const SUGGESTION_CONTEXT =
   "The text is words an AAC user tapped to say something. Rewrite it as the one short, natural sentence they mean to say. Keep their meaning, their words where possible, and who it is about. Do not answer it or add ideas.";
-const SUGGESTION_CONTEXT_LANGUAGE = "en";
 
 interface UseRewriterSourceOptions {
   text: string;
@@ -25,9 +25,7 @@ export function useRewriterSource({
     length: "shorter",
     format: "plain-text",
     tone,
-    expectedInputLanguages: [language],
-    expectedContextLanguages: contextLanguages(language),
-    outputLanguage: language,
+    ...rewriterLanguageOptions(language),
   });
 
   const canRewrite = text !== "" && rewriter.status === "ready";
@@ -47,8 +45,4 @@ function suggestionContext(customInstructions: string): string {
   return instructions === ""
     ? SUGGESTION_CONTEXT
     : `${SUGGESTION_CONTEXT}\n${instructions}`;
-}
-
-function contextLanguages(language: string): string[] {
-  return [...new Set([SUGGESTION_CONTEXT_LANGUAGE, language])];
 }

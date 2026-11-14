@@ -1,6 +1,7 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useProofreader } from "@shayc/react-built-in-ai";
 import { type SuggestionSource, toSuggestionSource } from "./suggestion-source";
+import { proofreaderLanguageOptions } from "./suggestion-support";
 
 interface UseProofreaderSourceOptions {
   text: string;
@@ -11,9 +12,7 @@ export function useProofreaderSource({
   text,
   language,
 }: UseProofreaderSourceOptions): SuggestionSource {
-  const proofreader = useProofreader({
-    expectedInputLanguages: [language],
-  });
+  const proofreader = useProofreader(proofreaderLanguageOptions(language));
 
   const canProofread = text !== "" && proofreader.status === "ready";
   const request = useLatestAsync({
