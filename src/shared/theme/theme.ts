@@ -292,6 +292,10 @@ const themeOptions = {
             },
           ],
         }),
+        // One label size for every button; MUI's large size steps up to 15px.
+        sizeLarge: ({ theme }) => ({
+          fontSize: theme.typography.button.fontSize,
+        }),
       },
     },
     MuiIconButton: {
