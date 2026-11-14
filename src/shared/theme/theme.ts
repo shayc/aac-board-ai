@@ -1,10 +1,12 @@
 import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { red } from "@mui/material/colors";
+import { listItemButtonClasses } from "@mui/material/ListItemButton";
 import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
+  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
 import { toggleButtonClasses } from "@mui/material/ToggleButton";
@@ -59,9 +61,11 @@ const grey = {
   A700: "#5e6167",
 };
 
+const OUTLINE_OPACITY = { light: 0.5, dark: 0.42 };
+
 const outline = {
-  light: "rgba(0, 0, 0, 0.5)",
-  dark: "rgba(255, 255, 255, 0.42)",
+  light: `rgba(0, 0, 0, ${OUTLINE_OPACITY.light})`,
+  dark: `rgba(255, 255, 255, ${OUTLINE_OPACITY.dark})`,
 };
 
 const shadows = [
@@ -113,6 +117,9 @@ const themeOptions = {
         SnackbarContent: { bg: grey[900], color: grey[50] },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
+      // MUI's 38% switch track is 2.6:1 against the page; the outline's
+      // opacity matches the other control borders.
+      opacity: { switchTrack: OUTLINE_OPACITY.light },
     },
     dark: {
       palette: {
@@ -131,6 +138,7 @@ const themeOptions = {
           disabled: "rgba(255, 255, 255, 0.2)",
         },
       },
+      opacity: { switchTrack: OUTLINE_OPACITY.dark },
     },
   },
   motion: {
@@ -302,7 +310,29 @@ const themeOptions = {
     },
     MuiFab: {
       styleOverrides: {
-        root: ({ theme }) => buttonFeedbackTiming(theme),
+        root: ({ theme }) => ({
+          ...buttonFeedbackTiming(theme),
+          variants: [
+            {
+              props: { color: "default" },
+              // MUI's default grey is a bright disc on the dark page; this
+              // matches the board's other contained controls.
+              style: theme.applyStyles("dark", {
+                color: theme.vars.palette.text.primary,
+                backgroundColor: theme.vars.palette.Button.inheritContainedBg,
+                "&:hover": {
+                  backgroundColor:
+                    theme.vars.palette.Button.inheritContainedHoverBg,
+                  // Touch keeps :hover after a tap.
+                  "@media (hover: none)": {
+                    backgroundColor:
+                      theme.vars.palette.Button.inheritContainedBg,
+                  },
+                },
+              }),
+            },
+          ],
+        }),
       },
     },
     MuiOutlinedInput: {
@@ -348,6 +378,7 @@ const themeOptions = {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
           ...buttonFeedbackTiming(theme),
+          [`&.${listItemButtonClasses.selected}`]: selectedTintSx(theme),
         }),
       },
     },
@@ -399,26 +430,14 @@ const themeOptions = {
     },
     MuiToggleButton: {
       styleOverrides: {
-        root: ({ theme }) => {
-          // MUI's 8% tint is 1.1:1 against the drawer, too faint to see.
-          const selectedBackground = `color-mix(in srgb, ${theme.vars.palette.primary.main} 20%, transparent)`;
-
-          return {
-            borderColor: theme.vars.palette.outline,
-            [`&.${toggleButtonClasses.selected}`]: {
-              // Teal text on the stronger tint falls under 4.5:1.
-              color: theme.vars.palette.text.primary,
-              backgroundColor: selectedBackground,
-              "&:hover": {
-                backgroundColor: `color-mix(in srgb, ${theme.vars.palette.primary.main} 28%, transparent)`,
-                // Touch keeps :hover after a tap.
-                "@media (hover: none)": {
-                  backgroundColor: selectedBackground,
-                },
-              },
-            },
-          };
-        },
+        root: ({ theme }) => ({
+          borderColor: theme.vars.palette.outline,
+          [`&.${toggleButtonClasses.selected}`]: {
+            // Teal text on the stronger tint falls under 4.5:1.
+            color: theme.vars.palette.text.primary,
+            ...selectedTintSx(theme),
+          },
+        }),
       },
     },
     MuiTooltip: {
@@ -443,3 +462,19 @@ export const rtlTheme = createTheme({
   ...themeOptions,
   direction: "rtl",
 });
+
+// MUI's 8% tint is 1.1:1 against the drawer, too faint to see.
+function selectedTintSx(theme: Theme) {
+  const background = `color-mix(in srgb, ${theme.vars.palette.primary.main} 20%, transparent)`;
+
+  return {
+    backgroundColor: background,
+    "&:hover": {
+      backgroundColor: `color-mix(in srgb, ${theme.vars.palette.primary.main} 28%, transparent)`,
+      // Touch keeps :hover after a tap.
+      "@media (hover: none)": {
+        backgroundColor: background,
+      },
+    },
+  };
+}
