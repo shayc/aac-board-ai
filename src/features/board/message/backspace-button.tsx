@@ -59,6 +59,7 @@ export function BackspaceButton({
 
       <CircularProgress
         aria-hidden
+        color="inherit"
         variant="determinate"
         value={isHolding ? 100 : 0}
         size="auto"
