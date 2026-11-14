@@ -1,8 +1,4 @@
 import { areSuggestionsSupported } from "@features/board";
-import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import RecordVoiceOverOutlinedIcon from "@mui/icons-material/RecordVoiceOverOutlined";
-import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -16,11 +12,17 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText, { listItemTextClasses } from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
-import type SvgIcon from "@mui/material/SvgIcon";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
+import {
+  type IconComponent,
+  LockIcon,
+  SuggestionsIcon,
+  TranslateIcon,
+  VoiceIcon,
+} from "@shared/ui/icons";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -30,7 +32,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  Icon: typeof SvgIcon;
+  Icon: IconComponent;
   title: string;
   description: string;
 }
@@ -43,13 +45,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        Icon: AutoAwesomeOutlinedIcon,
+        Icon: SuggestionsIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
     : {
         id: "language",
-        Icon: TranslateOutlinedIcon,
+        Icon: TranslateIcon,
         title: t(m.onboardingLanguageTitle),
         description: t(m.onboardingLanguageDescription, {
           count: locales.length,
@@ -59,14 +61,14 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      Icon: RecordVoiceOverOutlinedIcon,
+      Icon: VoiceIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
     suggestionsOrLanguageHighlight,
     {
       id: "free-private",
-      Icon: LockOutlinedIcon,
+      Icon: LockIcon,
       title: t(m.onboardingFreePrivateTitle),
       description: t(m.onboardingFreePrivateDescription),
     },

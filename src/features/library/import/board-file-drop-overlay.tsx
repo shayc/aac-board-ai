@@ -1,10 +1,10 @@
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import Backdrop from "@mui/material/Backdrop";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { FileDropIcon } from "@shared/ui/icons";
 
 interface BoardFileDropOverlayProps {
   open: boolean;
@@ -41,7 +41,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             borderRadius: theme.vars.shape.borderRadiusLg,
           })}
         >
-          <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />
+          <FileDropIcon color="primary" sx={{ fontSize: 56 }} />
           <Typography variant="h6">{t(m.libraryDropToImport)}</Typography>
         </Paper>
       </Grow>

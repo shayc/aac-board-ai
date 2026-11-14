@@ -1,7 +1,3 @@
-import CheckIcon from "@mui/icons-material/Check";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlined";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useColorScheme } from "@mui/material/styles";
@@ -9,12 +5,18 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import {
+  CheckIcon,
+  DarkModeIcon,
+  LightModeIcon,
+  SystemModeIcon,
+} from "@shared/ui/icons";
 import { type MouseEvent, useId } from "react";
 
 const themeOptions = [
-  { value: "system", message: m.themeSystem, Icon: DesktopWindowsOutlinedIcon },
-  { value: "light", message: m.themeLight, Icon: LightModeOutlinedIcon },
-  { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
+  { value: "system", message: m.themeSystem, Icon: SystemModeIcon },
+  { value: "light", message: m.themeLight, Icon: LightModeIcon },
+  { value: "dark", message: m.themeDark, Icon: DarkModeIcon },
 ] as const;
 
 // Side by side, the icons and names overflow a phone's drawer in most

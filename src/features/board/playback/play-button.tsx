@@ -1,11 +1,10 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
 import { buttonClasses } from "@mui/material/Button";
 import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { PlayIcon, StopIcon } from "@shared/ui/icons";
 import { BoardControlButton } from "../board-control-button";
 import {
   MESSAGE_ACTION_ICON_SIZE,
@@ -30,7 +29,7 @@ export function PlayButton({
   const t = useTranslate();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
   const handleClick = isPlaying ? onStop : onPlay;
-  const Icon = isPlaying ? StopIcon : PlayArrowIcon;
+  const Icon = isPlaying ? StopIcon : PlayIcon;
 
   if (variant === "boardControl") {
     return (

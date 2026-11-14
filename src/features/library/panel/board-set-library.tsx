@@ -1,4 +1,3 @@
-import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,6 +9,7 @@ import { useCommunicationLanguage } from "@shared/language/use-communication-lan
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
+import { ImportIcon } from "@shared/ui/icons";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
 import { useMatch, useNavigate } from "react-router";
@@ -101,7 +101,7 @@ export function BoardSetLibrary() {
         <ListItem disablePadding>
           <ListItemButton onClick={() => void pickAndImport()}>
             <ListItemIcon>
-              <LibraryAddOutlinedIcon />
+              <ImportIcon />
             </ListItemIcon>
             <ListItemText primary={t(m.libraryImportBoardFiles)} />
           </ListItemButton>

@@ -3,8 +3,6 @@ import {
   type boardSetLoader,
 } from "@app/routing/board-set/board-set-loader";
 import { BoardSelector } from "@features/board";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -12,8 +10,9 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForLTR } from "@shared/theme/rtl";
+import { flipForRTL } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { LibraryIcon, SettingsIcon } from "@shared/ui/icons";
 import { useRouteLoaderData } from "react-router";
 
 interface AppHeaderProps {
@@ -55,7 +54,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
             onClick={onOpenLibrary}
             sx={{ justifySelf: "start" }}
           >
-            <ViewSidebarOutlinedIcon sx={flipForLTR} />
+            <LibraryIcon sx={flipForRTL} />
           </IconButton>
         </Tooltip>
 
@@ -71,7 +70,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
             onClick={onOpenSettings}
             sx={{ justifySelf: "end" }}
           >
-            <SettingsOutlinedIcon />
+            <SettingsIcon />
           </IconButton>
         </Tooltip>
       </Toolbar>

@@ -1,10 +1,10 @@
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { SuggestionsIcon } from "@shared/ui/icons";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
@@ -28,7 +28,7 @@ export function SuggestionStatusNotice({
     case "not-enabled":
       return (
         <Chip
-          icon={<AutoAwesomeIcon />}
+          icon={<SuggestionsIcon />}
           label={t(m.suggestionsEnable)}
           color="primary"
           variant="outlined"

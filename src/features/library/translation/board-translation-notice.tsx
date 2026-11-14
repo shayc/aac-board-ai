@@ -1,10 +1,9 @@
-import DownloadingIcon from "@mui/icons-material/Downloading";
-import TranslateIcon from "@mui/icons-material/Translate";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { DownloadingIcon, TranslateIcon } from "@shared/ui/icons";
 import {
   isSupported,
   useGlobalDownloadProgress,
