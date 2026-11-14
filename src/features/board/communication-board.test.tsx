@@ -155,7 +155,7 @@ function measureBoardLayout(
   );
   const isPlayBelowGrid = play.top >= viewport.bottom - 0.5;
   const areControlsBelowGrid = controls.top >= viewport.bottom - 0.5;
-  const barAboveBottom = areControlsBelowGrid ? bar.bottom : controls.bottom;
+  const aboveGridBottom = areControlsBelowGrid ? bar.bottom : controls.bottom;
   const edgeBelowTop = areControlsBelowGrid ? controls.top : window.innerHeight;
   const firstRow = rows.at(0);
   const lastRow = rows.at(-1);
@@ -171,7 +171,7 @@ function measureBoardLayout(
     controlsToGrid: areControlsBelowGrid
       ? controls.top - viewport.bottom
       : viewport.top - controls.bottom,
-    barAboveToFirstRow: firstRow.top - barAboveBottom,
+    barAboveToFirstRow: firstRow.top - aboveGridBottom,
     lastRowToEdgeBelow: edgeBelowTop - lastRow.bottom,
     wholeRows: wholeRows.length,
     topHint: rowAbove ? rowAbove.bottom - viewport.top : 0,

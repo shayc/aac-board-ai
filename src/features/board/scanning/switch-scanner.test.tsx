@@ -327,7 +327,7 @@ describe("switch scanning", () => {
       });
     });
 
-    test("scans backspace and play together in the message bar on wider screens", async () => {
+    test("scans backspace and play as one group on wider screens", async () => {
       await setTestViewport(TABLET_WIDTH, VIEWPORT_HEIGHT);
       await renderCommunicationBoard(TWO_ROW_BOARD);
 

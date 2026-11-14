@@ -15,7 +15,7 @@ import {
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  variant?: "prominent" | "control";
+  variant?: "messageAction" | "boardControl";
   onPlay: () => void;
   onStop: () => void;
 }
@@ -23,7 +23,7 @@ interface PlayButtonProps {
 export function PlayButton({
   disabled = false,
   isPlaying,
-  variant = "prominent",
+  variant = "messageAction",
   onPlay,
   onStop,
 }: PlayButtonProps) {
@@ -32,7 +32,7 @@ export function PlayButton({
   const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopIcon : PlayArrowIcon;
 
-  if (variant === "control") {
+  if (variant === "boardControl") {
     return (
       <BoardControlButton
         aria-label={label}

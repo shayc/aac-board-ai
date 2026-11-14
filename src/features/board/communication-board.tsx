@@ -81,7 +81,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      variant={isSmallScreen ? "control" : "prominent"}
+      variant={isSmallScreen ? "boardControl" : "messageAction"}
       onPlay={() => void playback.playMessage(message.parts)}
       onStop={playback.stop}
     />
