@@ -153,6 +153,33 @@ describe("app flow", () => {
     });
   });
 
+  test("starter board: Hebrew comes from the board file, not the translator", async () => {
+    setStoredLanguage("he");
+    const translator = stubTranslator();
+    const { screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "המשך" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "מילים ראשונות" }))
+      .toBeVisible();
+
+    await screen.getByRole("button", { name: "אני" }).click();
+    await screen.getByRole("button", { name: "רוצה" }).click();
+    await screen.getByRole("button", { name: "אוכל" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "אוכל" }))
+      .toBeVisible();
+
+    await screen.getByRole("button", { name: "מים" }).click();
+    speech.speak.mockClear();
+    await screen.getByRole("button", { name: "השמעת ההודעה" }).click();
+
+    await vi.waitFor(() => {
+      expect(speech.spokenTexts()).toEqual(["אני רוצה מים"]);
+    });
+    expect(translator.create).not.toHaveBeenCalled();
+  });
+
   test("an imported board set opens, composes across boards, and speaks", async () => {
     await importBoardFileFromURL(OBZ_FIXTURE_URL);
 
