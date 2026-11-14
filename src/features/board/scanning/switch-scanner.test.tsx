@@ -264,7 +264,7 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
     });
 
-    test("restarts at the play button once the message has content", async () => {
+    test("restarts at the message bar once the message has content", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch();
@@ -274,39 +274,15 @@ describe("switch scanning", () => {
         expect(speech.spokenTexts()).toEqual(["yes"]);
       });
 
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
+      await expect.poll(highlightedNames).toEqual(["Backspace"]);
     });
 
     test("activates a highlighted control that is the only one in its group", async () => {
-      await renderCommunicationBoard(TWO_ROW_BOARD);
-
-      await pressSwitch();
-      await pressSwitch();
-      await pressSwitch();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
-
-      await pressSwitch();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["yes", "yes"]);
-      });
-    });
-
-    test("reaches the board controls in document order", async () => {
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch();
       await pressSwitch();
       await pressSwitch();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
-
-      await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
-
-      await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
-
-      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["Backspace"]);
       const messagePart = screen
         .getByRole("list", { name: "Message" })
@@ -316,6 +292,30 @@ describe("switch scanning", () => {
       await pressSwitch();
 
       await expect.element(messagePart).not.toBeInTheDocument();
+    });
+
+    test("reaches the board controls in document order", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["Backspace"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["Play message"]);
+
+      await pressSwitch();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["yes", "yes"]);
+      });
     });
 
     test("counts a held switch as one press", async () => {

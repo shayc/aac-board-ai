@@ -1,26 +1,21 @@
+import type { ReactNode } from "react";
 import { MessageBar } from "../message/message-bar";
 import { useMessagePreferences } from "../message/message-preferences-store";
 import type { MessagePart } from "../message/message-types";
-import {
-  useActiveMessagePartId,
-  type UseBoardPlaybackReturn,
-} from "./use-board-playback";
+import { useActiveMessagePartId } from "./use-board-playback";
 
 interface PlaybackMessageBarProps {
   parts: readonly MessagePart[];
   language: string | undefined;
   isWordOpen: boolean;
-  playback: Pick<
-    UseBoardPlaybackReturn,
-    "isMessagePlaying" | "playMessage" | "stop"
-  >;
+  endAction?: ReactNode;
 }
 
 export function PlaybackMessageBar({
   parts,
   language,
   isWordOpen,
-  playback,
+  endAction,
 }: PlaybackMessageBarProps) {
   const activePartId = useActiveMessagePartId();
   const { areImagesVisible, isHighlightingEnabled } = useMessagePreferences();
@@ -32,9 +27,7 @@ export function PlaybackMessageBar({
       isWordOpen={isWordOpen}
       activePartId={isHighlightingEnabled ? activePartId : null}
       areImagesVisible={areImagesVisible}
-      isPlaying={playback.isMessagePlaying}
-      onPlay={() => void playback.playMessage(parts)}
-      onStop={playback.stop}
+      endAction={endAction}
     />
   );
 }

@@ -110,18 +110,24 @@ function measureBoardLayout(
   const grid = container.querySelector("[role='grid']");
   const scroller = grid?.parentElement;
   const messageBar = container.querySelector("[role='list']")?.parentElement;
-  const backspaceButton = container.querySelector("[aria-label='Backspace']");
+  const playButton = container.querySelector("[aria-label='Play message']");
+  const controlBar = container
+    .querySelector("[aria-label='Go to main board']")
+    ?.closest("[data-scan-group]");
   assertDefined(grid);
   assertDefined(scroller);
   assertDefined(messageBar);
-  assertDefined(backspaceButton);
+  assertDefined(playButton);
+  assertDefined(controlBar);
 
   if (isScrolledToEnd) {
     scroller.scrollTo({ top: scroller.scrollHeight, behavior: "instant" });
   }
 
   const viewport = scroller.getBoundingClientRect();
-  const backspace = backspaceButton.getBoundingClientRect();
+  const bar = messageBar.getBoundingClientRect();
+  const play = playButton.getBoundingClientRect();
+  const controls = controlBar.getBoundingClientRect();
   const rows = Array.from(grid.querySelectorAll("[role='row']"), (row) =>
     row.getBoundingClientRect(),
   );
@@ -146,23 +152,28 @@ function measureBoardLayout(
     (column) =>
       column.left < viewport.right && column.right > viewport.right + 0.5,
   );
-  const isBarBelowGrid = backspace.top >= viewport.bottom - 0.5;
-  const barAboveBottom = isBarBelowGrid
-    ? messageBar.getBoundingClientRect().bottom
-    : backspace.bottom;
-  const edgeBelowTop = isBarBelowGrid ? backspace.top : window.innerHeight;
+  const isPlayBelowGrid = play.top >= viewport.bottom - 0.5;
+  const isBarBelowGrid = controls.top >= viewport.bottom - 0.5;
+  const barAboveBottom = isBarBelowGrid ? bar.bottom : controls.bottom;
+  const edgeBelowTop = isBarBelowGrid ? controls.top : window.innerHeight;
   const firstRow = rows.at(0);
   const lastRow = rows.at(-1);
   assertDefined(firstRow);
   assertDefined(lastRow);
 
   return {
-    messageBarStart: messageBar.getBoundingClientRect().left,
+    isPlayBelowGrid,
+    // Play sits at the screen's end under the grid, or at its start beside
+    // the message bar.
+    playScreenInset: isPlayBelowGrid
+      ? window.innerWidth - play.right
+      : play.left,
+    messageBarStart: bar.left,
+    messageBarEnd: window.innerWidth - bar.right,
     firstTileStart: firstColumn.left,
-    backspaceEnd: window.innerWidth - backspace.right,
     barToGrid: isBarBelowGrid
-      ? backspace.top - viewport.bottom
-      : viewport.top - backspace.bottom,
+      ? controls.top - viewport.bottom
+      : viewport.top - controls.bottom,
     barAboveToFirstRow: firstRow.top - barAboveBottom,
     lastRowToEdgeBelow: edgeBelowTop - lastRow.bottom,
     wholeRows: wholeRows.length,
@@ -268,6 +279,8 @@ describe("CommunicationBoard", () => {
         clearance: 4,
         overflowHint: 8,
         wholeRows: 5,
+        isPlayBelowGrid: true,
+        messageBarStart: 16,
       },
       {
         name: "a tablet",
@@ -277,11 +290,14 @@ describe("CommunicationBoard", () => {
         clearance: 8,
         overflowHint: 16,
         wholeRows: 4,
+        isPlayBelowGrid: false,
+        // Past the play button and the page-margin gap beside it.
+        messageBarStart: 24 + 80 + 24,
       },
     ];
 
     test.each(LAYOUT_CASES)(
-      "spaces the bars and the grid by the page margin on $name",
+      "places play and spaces the bars and the grid by the page margin on $name",
       async ({
         width,
         height,
@@ -289,15 +305,19 @@ describe("CommunicationBoard", () => {
         clearance,
         overflowHint,
         wholeRows,
+        isPlayBelowGrid,
+        messageBarStart,
       }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
         await expect.element(screen.getByRole("grid")).toBeVisible();
 
         const atStart = measureBoardLayout(screen.container);
-        expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.isPlayBelowGrid).toBe(isPlayBelowGrid);
+        expect(atStart.playScreenInset).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarStart).toBeCloseTo(messageBarStart, 0);
+        expect(atStart.messageBarEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
-        expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
         expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
         expect(atStart.wholeRows).toBe(wholeRows);

@@ -284,9 +284,11 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 [`scanning/`](../src/features/board/scanning/) holds all of it:
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
-  enabled buttons inside it. The message bar marks itself, and the board marks
-  its controls and each grid row; the grid itself knows nothing about scanning
-  and spreads the row props the board hands it. The
+  enabled buttons inside it. The board marks the message bar (with the play
+  button beside it on wider screens), its controls, and each grid row; the grid
+  itself knows nothing about scanning and spreads the row props the board hands
+  it. On phones play sits with the controls under the grid, so scanning reaches
+  backspace first and play last. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The buttons being
@@ -355,9 +357,10 @@ the first paint to avoid a flash of the wrong color scheme.
 
 ### Screen sizes
 
-Layout turns on one width breakpoint, `sm`. Below it the board's back, home,
-and backspace buttons move under the grid and the spacing tightens, as
-[Board spacing](#board-spacing) describes.
+Layout turns on one width breakpoint, `sm`. Above it the play button sits
+beside the message bar and backspace sits at the bar's end. Below it the back,
+home, and play buttons move under the grid, backspace stays in the message bar,
+and the spacing tightens, as [Board spacing](#board-spacing) describes.
 
 The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) also checks
 the viewport height. On a landscape screen shorter than the `sm` value, such

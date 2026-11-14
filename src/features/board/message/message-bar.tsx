@@ -2,17 +2,17 @@ import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useEffect, useRef } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
 } from "../aac-symbol/aac-symbol";
-import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
-import { PlayButton } from "./play-button";
+import { PLAY_BUTTON_SIZE } from "./play-button";
 
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
+const BAR_INSET = 1.5;
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -20,9 +20,7 @@ export interface MessageBarProps {
   isWordOpen: boolean;
   activePartId: string | null;
   areImagesVisible: boolean;
-  isPlaying: boolean;
-  onPlay: () => void;
-  onStop: () => void;
+  endAction?: ReactNode;
 }
 
 export function MessageBar({
@@ -31,9 +29,7 @@ export function MessageBar({
   isWordOpen,
   activePartId,
   areImagesVisible,
-  isPlaying,
-  onPlay,
-  onStop,
+  endAction,
 }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -63,12 +59,7 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack
-      {...scanGroupProps}
-      className={LIGHT_SCHEME_CLASS}
-      direction="row"
-      sx={messageBarSx}
-    >
+    <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
       <Stack
         ref={scrollContainerRef}
         // A live region would repeat the tile's spoken feedback.
@@ -92,19 +83,16 @@ export function MessageBar({
         ))}
       </Stack>
 
-      <PlayButton
-        disabled={!isPlaying && parts.length === 0}
-        isPlaying={isPlaying}
-        onPlay={onPlay}
-        onStop={onStop}
-      />
+      {endAction}
     </Stack>
   );
 }
 
 function messageBarSx(theme: Theme) {
   return {
+    alignItems: "center",
     gap: 2,
+    px: BAR_INSET,
     overflow: "hidden",
     border: 1,
     borderColor: "transparent",
@@ -121,7 +109,11 @@ function messageBarSx(theme: Theme) {
 function scrollContainerSx(theme: Theme) {
   return {
     flexGrow: 1,
+    alignSelf: "stretch",
     alignItems: "center",
+    // Matching the play button's height keeps the bar level with it, and
+    // stops the first word added from pushing the board down.
+    minHeight: `calc(${PLAY_BUTTON_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: 2,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
