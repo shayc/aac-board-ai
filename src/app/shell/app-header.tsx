@@ -35,8 +35,16 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gridTemplateColumns: "1fr minmax(0, auto) 1fr",
           alignItems: "center",
           gap: theme.spacing(2),
-          pl: safeAreaGutter(theme.spacing(3), "left"),
-          pr: safeAreaGutter(theme.spacing(3), "right"),
+          // Matches the board's page margin, so the first and last icons line
+          // up with the message bar and tiles below.
+          pl: {
+            xs: safeAreaGutter(theme.spacing(2), "left"),
+            sm: safeAreaGutter(theme.spacing(3), "left"),
+          },
+          pr: {
+            xs: safeAreaGutter(theme.spacing(2), "right"),
+            sm: safeAreaGutter(theme.spacing(3), "right"),
+          },
         })}
       >
         <Tooltip title={t(m.libraryOpen)}>
