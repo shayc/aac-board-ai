@@ -119,6 +119,22 @@ describe("SpeechSettings", () => {
       .toHaveTextContent("Carmit");
   });
 
+  test("names voice locales in the UI locale when the language has only a voice", async () => {
+    stubVoices([
+      { voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" },
+      { voiceURI: "fa-2", name: "Farid", lang: "fa-AF" },
+    ]);
+    setStoredLanguage("fa");
+
+    const screen = await renderSpeechSettings();
+
+    await screen.getByRole("combobox", { name: "Voice" }).click();
+
+    await expect
+      .element(screen.getByText("Persian (Iran)"))
+      .toBeInTheDocument();
+  });
+
   test("formats slider values in the UI locale when the language has only a voice", async () => {
     stubVoices([{ voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" }]);
     setStoredLanguage("fa");
