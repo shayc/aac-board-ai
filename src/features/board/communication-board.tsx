@@ -160,10 +160,7 @@ export function CommunicationBoard({
               sx={(theme) => ({
                 justifyContent: "space-between",
                 px: PAGE_MARGIN,
-                pb: safeAreaGutter(
-                  theme.spacing(SCROLL_CLEARANCE.xs),
-                  "bottom",
-                ),
+                pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
               {navigationButtons}
