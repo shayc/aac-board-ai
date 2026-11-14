@@ -49,9 +49,13 @@ export function BackspaceButton({
 // action size. With the bar's inset, the disc sits on the bar's rounded end,
 // the same distance from its top, bottom and end, and both curves run
 // parallel.
+//
+// The bar stays light in dark mode, so the disc stays a dark tint of it with a
+// dark icon; on the greyer bar it needs a stronger tint, and a stronger
+// disabled icon, to read at all.
 function backspaceSx(theme: Theme) {
   const discColor = theme.alpha(theme.palette.common.black, 0.05);
-  const darkDiscColor = theme.alpha(theme.palette.common.white, 0.38);
+  const darkDiscColor = theme.alpha(theme.palette.common.black, 0.12);
 
   const discSelector = `&, &:hover, &.${iconButtonClasses.disabled}`;
 
@@ -67,6 +71,9 @@ function backspaceSx(theme: Theme) {
     "&::before": { inset: theme.spacing(DISC_INSET) },
     ...theme.applyStyles("dark", {
       [discSelector]: { backgroundColor: darkDiscColor },
+      [`&.${iconButtonClasses.disabled}`]: {
+        color: theme.vars.palette.text.disabled,
+      },
     }),
   } as const;
 }

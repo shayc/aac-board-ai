@@ -11,20 +11,6 @@ import {
 } from "../aac-symbol/aac-symbol";
 import { useTilePreferences } from "./tile-preferences-store";
 
-const folderTileSx = {
-  "&::after": {
-    content: '""',
-    position: "absolute",
-    top: -2,
-    insetInlineEnd: -2,
-    width: 0,
-    height: 0,
-    borderInlineEnd:
-      "32px solid color-mix(in srgb, currentColor 75%, transparent)",
-    borderBottom: "32px solid transparent",
-  },
-} as const;
-
 interface TileProps {
   button: BoardButton;
   language: string | undefined;
@@ -97,9 +83,9 @@ function tileColorStyle({
   return {
     "--tile-background-color":
       backgroundColor &&
-      desaturate(flattenOntoWhite(backgroundColor), saturation),
+      scaleChroma(flattenOntoWhite(backgroundColor), saturation),
     "--tile-border-color":
-      visibleBorderColor && desaturate(visibleBorderColor, saturation),
+      visibleBorderColor && scaleChroma(visibleBorderColor, saturation),
     "--tile-brightness": brightness,
   };
 }
@@ -112,14 +98,12 @@ function channelOntoWhite(channel: "r" | "g" | "b"): string {
   return `calc(${channel} * alpha + 255 * (1 - alpha))`;
 }
 
-function desaturate(color: string, saturation: number): string {
-  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
+function scaleChroma(color: string, factor: number): string {
+  return `oklch(from ${color} l calc(c * ${factor}) h)`;
 }
 
 function tileSx(theme: Theme) {
-  const background = dim(
-    `var(--tile-background-color, ${theme.vars.palette.background.paper})`,
-  );
+  const background = tileBackground(theme);
   const borderColor = dim("var(--tile-border-color, transparent)");
   // The shorter side decides, so a wide but short tile keeps its label small
   // and leaves the height to the symbol.
@@ -163,6 +147,35 @@ function tileSx(theme: Theme) {
       transition: buttonFeedbackTransition(theme, ["filter"]),
     },
   } as const;
+}
+
+// The fold mixes toward the tile's text color, so it darkens light tiles and
+// lightens dark ones; 60% keeps 3:1 even on saturated mid-tones. Boosting the
+// chroma restores some of the hue the mix greys out.
+function folderTileSx(theme: Theme) {
+  const foldColor = scaleChroma(
+    mixWithTextColor(tileBackground(theme), "60%"),
+    1.5,
+  );
+
+  return {
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: -2,
+      insetInlineEnd: -2,
+      width: 0,
+      height: 0,
+      borderInlineEnd: `32px solid ${foldColor}`,
+      borderBottom: "32px solid transparent",
+    },
+  } as const;
+}
+
+function tileBackground(theme: Theme): string {
+  return dim(
+    `var(--tile-background-color, ${theme.vars.palette.background.paper})`,
+  );
 }
 
 // Match the symbol's CSS brightness filter.
