@@ -7,6 +7,7 @@ import {
   type Shadows,
   type ThemeOptions,
 } from "@mui/material/styles";
+import { toggleButtonClasses } from "@mui/material/ToggleButton";
 import {
   buttonFeedbackTiming,
   buttonFeedbackTransition,
@@ -393,6 +394,23 @@ const themeOptions = {
         },
         markActive: ({ theme }) => ({
           backgroundColor: theme.vars.palette.background.default,
+        }),
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          gap: theme.spacing(1),
+          borderColor: theme.vars.palette.outline,
+          [`&.${toggleButtonClasses.selected}`]: {
+            // Teal text on the stronger tint below falls under 4.5:1.
+            color: theme.vars.palette.text.primary,
+            // MUI's 8% tint is 1.1:1 against the drawer, too faint to see.
+            backgroundColor: `color-mix(in srgb, ${theme.vars.palette.primary.main} 20%, transparent)`,
+            "&:hover": {
+              backgroundColor: `color-mix(in srgb, ${theme.vars.palette.primary.main} 28%, transparent)`,
+            },
+          },
         }),
       },
     },

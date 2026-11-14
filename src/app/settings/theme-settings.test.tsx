@@ -42,6 +42,18 @@ describe("ThemeSettings", () => {
         .toHaveAttribute("aria-pressed", "true");
     }
 
+    await expect
+      .element(firstDarkButton.getByTestId("CheckIcon"))
+      .toBeInTheDocument();
+    await expect
+      .element(
+        themeGroups
+          .first()
+          .getByRole("button", { name: "System" })
+          .getByTestId("CheckIcon"),
+      )
+      .not.toBeInTheDocument();
+
     await firstDarkButton.click();
 
     await expect
