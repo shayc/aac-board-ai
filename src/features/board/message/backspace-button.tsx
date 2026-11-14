@@ -39,8 +39,9 @@ export function BackspaceButton({
         flexShrink: 0,
         // Mirrors the first word's inset from the bar's start edge.
         marginInlineEnd: 0.5,
-        // Matches the play button's icon, in proportion to the bar.
-        fontSize: 36,
+        // The wide glyph reads as large as play's triangle and circle together
+        // at this size, so it stays secondary to play.
+        fontSize: 32,
       }}
     >
       <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
