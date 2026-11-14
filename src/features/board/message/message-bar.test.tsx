@@ -67,6 +67,28 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("water")).toBeVisible();
   });
 
+  test("keeps its height when the first part is added", async () => {
+    const props = createProps();
+    const screen = await renderWithProviders(<MessageBar {...props} />);
+    const bar = screen
+      .getByRole("list", { name: "Message" })
+      .element().parentElement;
+    assertDefined(bar);
+    const emptyHeight = bar.getBoundingClientRect().height;
+
+    await screen.rerender(
+      <MessageBar
+        {...props}
+        parts={[
+          { kind: "tile", id: "a", label: "want", imageSrc: TEST_IMAGE_SRC },
+        ]}
+      />,
+    );
+    await expect.element(screen.getByText("want")).toBeVisible();
+
+    expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
+  });
+
   test.each([
     { isWordOpen: true, caret: '""' },
     { isWordOpen: false, caret: "none" },

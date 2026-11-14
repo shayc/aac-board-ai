@@ -35,39 +35,23 @@ export function BackspaceButton({
       {...mergeProps(pressProps, longPressProps)}
       {...focusableDisabledProps(disabled)}
       aria-label={t(m.messageBackspace)}
-      sx={(theme) => {
-        const { activatedOpacity, hoverOpacity, disabledOpacity } =
-          theme.vars.palette.action;
-        const tint = theme.alpha(
-          theme.vars.palette.primary.main,
-          activatedOpacity,
-        );
-
-        return {
-          flexShrink: 0,
-          width: SIZE,
-          height: SIZE,
-          // With the bar's inset, this centers the circle on the bar's
-          // rounded end so both curves run parallel.
-          marginInlineEnd: 1,
-          color: "primary.main",
-          backgroundColor: tint,
-          [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-          "&:hover": {
-            backgroundColor: theme.alpha(
-              theme.vars.palette.primary.main,
-              `${activatedOpacity} + ${hoverOpacity}`,
-            ),
-          },
-          // Matches the play button's empty-bar tint.
-          [`&.${fabClasses.disabled}`]: {
-            color: theme.alpha(
-              theme.vars.palette.primary.main,
-              disabledOpacity,
-            ),
-            backgroundColor: tint,
-          },
-        };
+      sx={{
+        flexShrink: 0,
+        width: SIZE,
+        height: SIZE,
+        // With the bar's inset, this centers the circle on the bar's rounded
+        // end so both curves run parallel.
+        marginInlineEnd: 1,
+        // Neutral like the board's other controls, so it doesn't read as part
+        // of the message.
+        color: "action.active",
+        backgroundColor: "action.selected",
+        [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
+        "&:hover": { backgroundColor: "action.focus" },
+        [`&.${fabClasses.disabled}`]: {
+          color: "action.disabled",
+          backgroundColor: "action.selected",
+        },
       }}
     >
       <BackspaceOutlinedIcon sx={flipForRTL} />
