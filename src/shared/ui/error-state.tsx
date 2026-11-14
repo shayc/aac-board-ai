@@ -33,7 +33,9 @@ export function ErrorState({
           sx={{
             width: 64,
             height: 64,
-            color: "error.main",
+            // The title says what went wrong; a red icon alarms more than
+            // these states warrant.
+            color: "text.secondary",
             "& svg": { fontSize: 64 },
           }}
         >
