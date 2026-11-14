@@ -153,9 +153,9 @@ function measureBoardLayout(
       column.left < viewport.right && column.right > viewport.right + 0.5,
   );
   const isPlayBelowGrid = play.top >= viewport.bottom - 0.5;
-  const isBarBelowGrid = controls.top >= viewport.bottom - 0.5;
-  const barAboveBottom = isBarBelowGrid ? bar.bottom : controls.bottom;
-  const edgeBelowTop = isBarBelowGrid ? controls.top : window.innerHeight;
+  const areControlsBelowGrid = controls.top >= viewport.bottom - 0.5;
+  const barAboveBottom = areControlsBelowGrid ? bar.bottom : controls.bottom;
+  const edgeBelowTop = areControlsBelowGrid ? controls.top : window.innerHeight;
   const firstRow = rows.at(0);
   const lastRow = rows.at(-1);
   assertDefined(firstRow);
@@ -167,7 +167,7 @@ function measureBoardLayout(
     messageBarStart: bar.left,
     messageBarEnd: window.innerWidth - bar.right,
     firstTileStart: firstColumn.left,
-    barToGrid: isBarBelowGrid
+    controlsToGrid: areControlsBelowGrid
       ? controls.top - viewport.bottom
       : viewport.top - controls.bottom,
     barAboveToFirstRow: firstRow.top - barAboveBottom,
@@ -314,7 +314,7 @@ describe("CommunicationBoard", () => {
         expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.messageBarEnd).toBeCloseTo(messageBarEnd, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
-        expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
+        expect(atStart.controlsToGrid).toBeCloseTo(clearance, 0);
         expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
         expect(atStart.wholeRows).toBe(wholeRows);
         expect(atStart.bottomHint).toBeCloseTo(overflowHint, 0);

@@ -11,10 +11,10 @@ import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
-import { PlayButton } from "./message/play-button";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
+import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
@@ -81,7 +81,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      isCompact={isSmallScreen}
+      variant={isSmallScreen ? "control" : "prominent"}
       onPlay={() => void playback.playMessage(message.parts)}
       onStop={playback.stop}
     />

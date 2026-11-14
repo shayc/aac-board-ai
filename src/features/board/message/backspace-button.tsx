@@ -5,7 +5,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeProps, useLongPress, usePress } from "react-aria";
-import { PLAY_BUTTON_SIZE, PLAY_ICON_SIZE } from "./play-button";
+import { MESSAGE_ACTION_ICON_SIZE, MESSAGE_ACTION_SIZE } from "./message-bar";
 
 const LONG_PRESS_THRESHOLD_MS = 600;
 
@@ -37,11 +37,11 @@ export function BackspaceButton({
       aria-label={t(m.messageBackspace)}
       sx={{
         flexShrink: 0,
-        // Play's footprint and icon, so with the bar's inset the circle sits
-        // on the bar's rounded end and both curves run parallel.
-        width: PLAY_BUTTON_SIZE,
-        height: PLAY_BUTTON_SIZE,
-        fontSize: PLAY_ICON_SIZE,
+        // With the bar's inset, the circle sits on the bar's rounded end and
+        // both curves run parallel.
+        width: MESSAGE_ACTION_SIZE,
+        height: MESSAGE_ACTION_SIZE,
+        fontSize: MESSAGE_ACTION_ICON_SIZE,
       }}
     >
       <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />

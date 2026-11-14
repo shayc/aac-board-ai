@@ -1,21 +1,22 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import Button, { buttonClasses } from "@mui/material/Button";
+import { buttonClasses } from "@mui/material/Button";
 import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
-import { BOARD_CONTROL_WIDTH } from "../board-control-button";
-
-export const PLAY_BUTTON_SIZE = 80;
-export const PLAY_ICON_SIZE = 36;
+import { BoardControlButton } from "../board-control-button";
+import {
+  MESSAGE_ACTION_ICON_SIZE,
+  MESSAGE_ACTION_SIZE,
+} from "../message/message-bar";
 
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  /** Matches the board's back and home buttons instead of standing out. */
-  isCompact?: boolean;
+  /** `control` matches the board's back and home buttons instead of standing out. */
+  variant?: "prominent" | "control";
   onPlay: () => void;
   onStop: () => void;
 }
@@ -23,32 +24,28 @@ interface PlayButtonProps {
 export function PlayButton({
   disabled = false,
   isPlaying,
-  isCompact = false,
+  variant = "prominent",
   onPlay,
   onStop,
 }: PlayButtonProps) {
   const t = useTranslate();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
-  const toggle = isPlaying ? onStop : onPlay;
-  const handleClick = disabled ? undefined : toggle;
+  const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopIcon : PlayArrowIcon;
 
-  if (isCompact) {
+  if (variant === "control") {
     return (
-      <Button
-        {...focusableDisabledProps(disabled)}
+      <BoardControlButton
         aria-label={label}
-        size="large"
+        disabled={disabled}
         color={isPlaying ? "inherit" : "primary"}
-        variant="contained"
         onClick={handleClick}
         sx={(theme) => ({
-          width: BOARD_CONTROL_WIDTH,
           [`&.${buttonClasses.disabled}`]: disabledSx(theme),
         })}
       >
         <Icon />
-      </Button>
+      </BoardControlButton>
     );
   }
 
@@ -57,16 +54,16 @@ export function PlayButton({
       {...focusableDisabledProps(disabled)}
       aria-label={label}
       color={isPlaying ? "default" : "primary"}
-      onClick={handleClick}
+      onClick={disabled ? undefined : handleClick}
       sx={(theme) => ({
         flexShrink: 0,
-        width: PLAY_BUTTON_SIZE,
-        height: PLAY_BUTTON_SIZE,
+        width: MESSAGE_ACTION_SIZE,
+        height: MESSAGE_ACTION_SIZE,
         [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
         [`&.${fabClasses.disabled}`]: disabledSx(theme),
       })}
     >
-      <Icon sx={{ fontSize: PLAY_ICON_SIZE }} />
+      <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
     </Fab>
   );
 }
