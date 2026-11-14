@@ -4,14 +4,14 @@ import {
   RouterContextProvider,
 } from "react-router";
 
-interface LoaderArgsOptions {
+interface RouteArgsOptions {
   params?: Params;
   signal?: AbortSignal;
 }
 
-export function loaderArgs(
+export function routeArgs(
   url: string,
-  { params = {}, signal }: LoaderArgsOptions = {},
+  { params = {}, signal }: RouteArgsOptions = {},
 ): LoaderFunctionArgs {
   const request = new Request(url, { signal });
 

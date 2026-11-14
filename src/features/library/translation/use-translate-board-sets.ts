@@ -1,4 +1,4 @@
-import { useLanguage } from "@shared/language/use-language";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useEffect, useEffectEvent } from "react";
 import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { boardSetIdFromPath } from "../board-paths";
@@ -14,7 +14,7 @@ import {
 } from "./translate-board-sets";
 
 export function useTranslateBoardSets(): void {
-  const { language } = useLanguage();
+  const { language } = useCommunicationLanguage();
   const { boardSets, isLoading } = useBoardSets();
   const { revalidate } = useRevalidator();
   const { pathname } = useLocation();

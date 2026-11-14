@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
-import { useLanguage } from "@shared/language/use-language";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
 import {
@@ -81,7 +81,7 @@ function VoiceSelect() {
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const speechVoice = useSpeechVoice();
-  const { language } = useLanguage();
+  const { language } = useCommunicationLanguage();
   const uiLocale = useUILocale();
 
   const voices = voicesByLanguage[language] ?? [];

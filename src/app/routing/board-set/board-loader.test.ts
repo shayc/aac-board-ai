@@ -4,8 +4,8 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
-import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
+import { routeArgs } from "../testing/route-args";
 import { boardLoader } from "./board-loader";
 
 function callLoader(
@@ -13,7 +13,7 @@ function callLoader(
   boardId: string | undefined,
 ): Promise<Board> {
   return boardLoader(
-    loaderArgs("http://localhost/", { params: { boardSetId, boardId } }),
+    routeArgs("http://localhost/", { params: { boardSetId, boardId } }),
   );
 }
 

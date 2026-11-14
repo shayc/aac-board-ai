@@ -1,7 +1,7 @@
 import {
   BOARD_SET_ROUTE_ID,
   type boardSetLoader,
-} from "@app/routing/loaders/board-set-loader";
+} from "@app/routing/board-set/board-set-loader";
 import { BoardSelector } from "@features/board";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";

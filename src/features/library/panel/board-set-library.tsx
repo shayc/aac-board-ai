@@ -6,7 +6,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
-import { useLanguage } from "@shared/language/use-language";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
@@ -30,7 +30,7 @@ export function BoardSetLibrary() {
     path: `/${BOARD_SET_SEGMENT}`,
     end: false,
   })?.params.boardSetId;
-  const { language } = useLanguage();
+  const { language } = useCommunicationLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();

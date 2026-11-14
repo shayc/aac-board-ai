@@ -4,7 +4,6 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
-import { loaderArgs } from "@shared/testing/loader-args";
 import {
   assert,
   beforeEach,
@@ -15,6 +14,7 @@ import {
   vi,
 } from "vitest";
 import { routeErrorCodes } from "../route-error";
+import { routeArgs } from "../testing/route-args";
 import { rootIndexLoader } from "./root-index-loader";
 
 const DEFAULT_BOARD_PATH = "/first-words.obz";
@@ -25,7 +25,7 @@ const localizedImportFailure = {
 
 function callLoader(searchParams = "", signal?: AbortSignal) {
   return rootIndexLoader(
-    loaderArgs(`http://localhost/${searchParams}`, { signal }),
+    routeArgs(`http://localhost/${searchParams}`, { signal }),
   );
 }
 

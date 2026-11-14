@@ -1,11 +1,11 @@
 import { resetBoardsDB, seedBoardSets } from "@features/library/testing";
-import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
+import { routeArgs } from "../testing/route-args";
 import { boardSetIndexLoader } from "./board-set-index-loader";
 
 function callLoader(boardSetId: string): Promise<Response> {
   return boardSetIndexLoader(
-    loaderArgs("http://localhost/", { params: { boardSetId } }),
+    routeArgs("http://localhost/", { params: { boardSetId } }),
   );
 }
 

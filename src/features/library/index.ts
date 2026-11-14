@@ -6,7 +6,10 @@ export {
   rootBoardPath,
 } from "./board-paths";
 export { listBoardSummaries } from "./board-sets/list-board-summaries";
-export { loadStoredBoard } from "./board-sets/load-stored-board";
+export {
+  BoardNotFoundError,
+  loadStoredBoard,
+} from "./board-sets/load-stored-board";
 export { starterBoardSet } from "./catalog/board-set-catalog";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {
@@ -16,7 +19,6 @@ export {
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
 export { BoardSetLibrary } from "./panel/board-set-library";
-export { BoardNotFoundError } from "./storage/board-content-storage";
 export {
   getBoardSetRecord,
   listBoardSetRecords,
