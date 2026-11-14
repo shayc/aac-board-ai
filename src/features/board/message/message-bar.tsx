@@ -154,8 +154,6 @@ function MessagePartItem({
       lang={language}
       direction="row"
       sx={(theme) => ({
-        // The message is what a partner reads, so its symbols outsize the
-        // default.
         [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
         py: 0.5,
         px: 1,
