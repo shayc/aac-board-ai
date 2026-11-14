@@ -7,7 +7,7 @@ import {
   stubProofreader,
   stubRewriter,
 } from "@shared/testing/stub-built-in-ai";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { assert, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { setSuggestionCustomInstructions } from "./suggestion-preferences-store";
@@ -246,11 +246,10 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("passes custom instructions to every fixed-tone rewriter", async () => {
-    setSuggestionCustomInstructions("Talk like a pirate");
+  test("gives every fixed-tone rewriter the built-in context", async () => {
     const { create } = stubRewriter();
 
-    await renderMessageSuggestions("ahoy");
+    await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(create).toHaveBeenCalledTimes(2);
@@ -259,17 +258,47 @@ describe("useMessageSuggestions", () => {
     expect(create.mock.calls.map(([options]) => options)).toEqual([
       expect.objectContaining({
         tone: "as-is",
-        sharedContext: "Talk like a pirate",
         length: "shorter",
         format: "plain-text",
       }),
       expect.objectContaining({
         tone: "more-casual",
-        sharedContext: "Talk like a pirate",
         length: "shorter",
         format: "plain-text",
       }),
     ]);
+
+    const [builtInContext, casualContext] = create.mock.calls.map(
+      ([options]) => options?.sharedContext,
+    );
+    assert(typeof builtInContext === "string");
+    expect(builtInContext.length).toBeGreaterThan(0);
+    expect(casualContext).toBe(builtInContext);
+  });
+
+  test("appends trimmed custom instructions to the built-in context", async () => {
+    const { create } = stubRewriter();
+
+    await renderMessageSuggestions("ahoy");
+
+    await vi.waitFor(() => {
+      expect(create).toHaveBeenCalledTimes(2);
+    });
+
+    const builtInContext = create.mock.calls.at(0)?.at(0)?.sharedContext;
+    assert(typeof builtInContext === "string");
+
+    setSuggestionCustomInstructions("  Talk like a pirate\n");
+
+    await vi.waitFor(() => {
+      expect(create).toHaveBeenCalledTimes(4);
+    });
+
+    for (const [options] of create.mock.calls.slice(2)) {
+      expect(options?.sharedContext).toBe(
+        `${builtInContext}\nTalk like a pirate`,
+      );
+    }
   });
 
   test("provisions both engines with the message language", async () => {
@@ -307,7 +336,7 @@ describe("useMessageSuggestions", () => {
     for (const [options] of create.mock.calls) {
       expect(options).toMatchObject({
         expectedInputLanguages: ["he"],
-        expectedContextLanguages: ["he"],
+        expectedContextLanguages: ["en", "he"],
         outputLanguage: "he",
       });
     }
