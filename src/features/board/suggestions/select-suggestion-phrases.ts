@@ -1,6 +1,8 @@
 const UNDERSCORED_WORD = /\b[A-Za-z]+_[A-Za-z]+\b/;
 // Latin, CJK (ideographic, fullwidth, halfwidth), and Devanagari/Bengali danda.
 const FINAL_FULL_STOP = /[.。．｡।]$/;
+// The engines use these interchangeably with "'".
+const TYPOGRAPHIC_APOSTROPHES = /[‘’ʼ]/g;
 
 export function selectSuggestionPhrases(
   text: string,
@@ -31,5 +33,10 @@ function hasArtifacts(phrase: string): boolean {
 }
 
 function normalize(phrase: string): string {
-  return phrase.trim().replace(FINAL_FULL_STOP, "").trimEnd().toLowerCase();
+  return phrase
+    .trim()
+    .replace(FINAL_FULL_STOP, "")
+    .trimEnd()
+    .replace(TYPOGRAPHIC_APOSTROPHES, "'")
+    .toLowerCase();
 }
