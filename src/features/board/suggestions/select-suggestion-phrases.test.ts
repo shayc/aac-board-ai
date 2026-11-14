@@ -27,6 +27,16 @@ describe("selectSuggestionPhrases", () => {
     ).toEqual(["I want to eat.", "I want to eat?"]);
   });
 
+  test("deduplicates phrases that differ only by apostrophe style", () => {
+    expect(
+      selectSuggestionPhrases("I no you go", [
+        "I know you're going.",
+        "I know you’re going.",
+        "I know youʼre going.",
+      ]),
+    ).toEqual(["I know you're going."]);
+  });
+
   test.each(["．", "｡", "।"])(
     "deduplicates a trailing %s full stop",
     (fullStop) => {
