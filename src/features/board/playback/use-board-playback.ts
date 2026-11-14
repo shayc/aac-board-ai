@@ -18,10 +18,10 @@ interface UseBoardPlaybackOptions {
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /** Resolves to whether the message played to its end. */
-  playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   /** Plays the message without reporting it as spoken, for tiles that play each word as it is spelled. */
   echoMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
+  /** Resolves to whether the message played to its end. */
+  playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   playPart: (part: MessagePart) => Promise<void>;
   stop: () => void;
 }
@@ -49,18 +49,18 @@ export function useBoardPlayback({
     return outcome === "completed";
   }
 
-  function playMessage(parts: readonly MessagePart[]) {
-    const completion = echoMessage(parts);
-    onMessagePlayback?.(completion);
-
-    return completion;
-  }
-
   function echoMessage(parts: readonly MessagePart[]) {
     return playAndReportFailure({
       owner: MESSAGE_OWNER,
       steps: planPlayback(parts),
     });
+  }
+
+  function playMessage(parts: readonly MessagePart[]) {
+    const completion = echoMessage(parts);
+    onMessagePlayback?.(completion);
+
+    return completion;
   }
 
   async function playPart(part: MessagePart) {
@@ -72,8 +72,8 @@ export function useBoardPlayback({
 
   return {
     isMessagePlaying,
-    playMessage,
     echoMessage,
+    playMessage,
     playPart,
     stop: playback.stop,
   };

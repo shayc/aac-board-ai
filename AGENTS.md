@@ -61,6 +61,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - Keep a guard (or a test's `assertDefined`) directly under the value it tests. Put a blank line before a `return` or `continue` that follows other statements, between an accumulator and the loop that fills it, and between a test's act and assert steps.
 - Separate sibling JSX elements that each span several lines with a blank line.
 - In a component or hook, call hooks first, then derive values; a value that feeds a later hook stays with that hook. A hook's return type and returned object list members in the order they are defined.
+- In a component or hook, declare an inner function above the inner functions that call it. The React Compiler can skip a body that calls a function declared further down, and nothing fails: lint, tests and build stay green while the hook loses its memoization.
 - Use early returns and guard clauses; keep the happy path at the left margin.
 - Extract dense conditionals and nested ternaries into named locals or helper functions.
 - Extract complex conditional JSX and nested mapping loops into sub-components.
