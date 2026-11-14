@@ -163,11 +163,7 @@ function measureBoardLayout(
 
   return {
     isPlayBelowGrid,
-    // Play sits at the screen's end under the grid, or at its start beside
-    // the message bar.
-    playScreenInset: isPlayBelowGrid
-      ? window.innerWidth - play.right
-      : play.left,
+    playEnd: window.innerWidth - play.right,
     messageBarStart: bar.left,
     messageBarEnd: window.innerWidth - bar.right,
     firstTileStart: firstColumn.left,
@@ -280,7 +276,7 @@ describe("CommunicationBoard", () => {
         overflowHint: 8,
         wholeRows: 5,
         isPlayBelowGrid: true,
-        messageBarStart: 16,
+        messageBarEnd: 16,
       },
       {
         name: "a tablet",
@@ -291,8 +287,8 @@ describe("CommunicationBoard", () => {
         overflowHint: 16,
         wholeRows: 4,
         isPlayBelowGrid: false,
-        // Past the play button and the page-margin gap beside it.
-        messageBarStart: 24 + 80 + 24,
+        // Before the play button and the page-margin gap beside it.
+        messageBarEnd: 24 + 80 + 24,
       },
     ];
 
@@ -306,7 +302,7 @@ describe("CommunicationBoard", () => {
         overflowHint,
         wholeRows,
         isPlayBelowGrid,
-        messageBarStart,
+        messageBarEnd,
       }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
@@ -314,9 +310,9 @@ describe("CommunicationBoard", () => {
 
         const atStart = measureBoardLayout(screen.container);
         expect(atStart.isPlayBelowGrid).toBe(isPlayBelowGrid);
-        expect(atStart.playScreenInset).toBeCloseTo(pageMargin, 0);
-        expect(atStart.messageBarStart).toBeCloseTo(messageBarStart, 0);
-        expect(atStart.messageBarEnd).toBeCloseTo(pageMargin, 0);
+        expect(atStart.playEnd).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarEnd).toBeCloseTo(messageBarEnd, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
         expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);

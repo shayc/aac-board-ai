@@ -122,8 +122,6 @@ export function CommunicationBoard({
               spacing={PAGE_MARGIN}
               sx={{ alignItems: "center" }}
             >
-              {!isSmallScreen && playButton}
-
               <Box sx={{ flex: 1, minWidth: 0 }}>
                 <PlaybackMessageBar
                   parts={message.parts}
@@ -132,6 +130,8 @@ export function CommunicationBoard({
                   endAction={backspaceButton}
                 />
               </Box>
+
+              {!isSmallScreen && playButton}
             </Stack>
 
             {isActionRowVisible && (
