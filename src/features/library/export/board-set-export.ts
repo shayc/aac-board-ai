@@ -1,4 +1,3 @@
-import { saveFile } from "@shared/utils/save-file";
 import { createOBZ, type OBFBoard } from "@shayc/open-board-format";
 import { collectMediaPaths } from "../obf/collect-media-paths";
 import {
@@ -31,6 +30,18 @@ export async function boardSetToOBZ({
   const boards = records.map((record) => withPackagedMedia(record.obf, assets));
 
   return createOBZ(boards, rootBoardId, assets);
+}
+
+function saveFile(file: Blob, fileName: string): void {
+  const url = URL.createObjectURL(file);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = fileName;
+
+  link.click();
+  // The browser resolves the blob URL during the click, so the download
+  // survives the revoke.
+  URL.revokeObjectURL(url);
 }
 
 async function loadStoredAssets(
