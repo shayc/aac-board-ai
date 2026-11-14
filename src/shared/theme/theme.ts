@@ -5,6 +5,7 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
+  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
 import {
@@ -75,6 +76,15 @@ function softShadow(elevation: number) {
   const ambient = `0 ${2 * elevation}px ${4 * elevation}px -${1.5 * elevation}px rgb(16 24 40 / ${ambientAlpha})`;
 
   return `${ring}, ${key}, ${ambient}`;
+}
+
+// Shadows vanish on the dark page, so menus and dialogs lift with a lighter
+// surface (1.4:1 against it) and a hairline instead.
+function raisedSurface(theme: Theme) {
+  return theme.applyStyles("dark", {
+    backgroundColor: "#33373f",
+    boxShadow: "inset 0 0 0 1px rgb(255 255 255 / 0.08)",
+  });
 }
 
 // Sticky touch hover must preserve focused, error, and disabled outlines.
@@ -218,6 +228,7 @@ const themeOptions = {
     MuiDialog: {
       styleOverrides: {
         paper: ({ theme }) => ({
+          ...raisedSurface(theme),
           variants: [
             {
               props: { fullScreen: false },
@@ -236,6 +247,11 @@ const themeOptions = {
             },
           ],
         }),
+      },
+    },
+    MuiPopover: {
+      styleOverrides: {
+        paper: ({ theme }) => raisedSurface(theme),
       },
     },
     MuiDialogActions: {
@@ -367,6 +383,7 @@ const themeOptions = {
         },
       },
       styleOverrides: {
+        paper: ({ theme }) => raisedSurface(theme),
         option: ({ theme }) => ({
           marginInline: 4,
           borderRadius: theme.vars.shape.borderRadiusSm,
