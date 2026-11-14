@@ -5,7 +5,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 
-const iconSx = { fontSize: 32 };
+const iconSx = { fontSize: 36 };
 
 interface PlayButtonProps {
   disabled?: boolean;
@@ -33,10 +33,10 @@ export function PlayButton({
       sx={(theme) => ({
         alignSelf: "center",
         flexShrink: 0,
-        width: 72,
-        height: 72,
-        my: 1,
-        marginInlineEnd: 1,
+        width: 80,
+        height: 80,
+        my: 1.5,
+        marginInlineEnd: 1.5,
         [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
         // A tint of the play color reads as "not yet" in an empty bar; MUI's
         // solid grey would be the heaviest shape on screen.

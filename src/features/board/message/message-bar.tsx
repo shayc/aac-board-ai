@@ -3,7 +3,10 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useRef } from "react";
-import { AACSymbol } from "../aac-symbol/aac-symbol";
+import {
+  AACSymbol,
+  SYMBOL_IMAGE_SIZE_PROPERTY,
+} from "../aac-symbol/aac-symbol";
 import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
@@ -151,6 +154,7 @@ function MessagePartItem({
       lang={language}
       direction="row"
       sx={(theme) => ({
+        [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
         py: 0.5,
         px: 1,
         borderRadius: theme.vars.shape.borderRadius,

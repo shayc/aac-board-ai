@@ -6,6 +6,8 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 // label with it.
 export const SYMBOL_LABEL_FONT_SIZE_PROPERTY = "--symbol-label-font-size";
 
+export const SYMBOL_IMAGE_SIZE_PROPERTY = "--symbol-image-size";
+
 export type SymbolLabelPlacement = "top" | "bottom";
 
 interface AACSymbolProps {
@@ -47,7 +49,7 @@ export function AACSymbol({
           sx={{
             position: "relative",
             flexGrow: 1,
-            height: "54px",
+            height: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, 54px)`,
             // Let the image shrink so the label keeps its full line.
             minHeight: 0,
             aspectRatio: "1 / 1",
