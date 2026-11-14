@@ -12,7 +12,6 @@ import type { MessagePart } from "./message-types";
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
-// The action at the bar's end, and play beside the bar on wider screens.
 export const MESSAGE_ACTION_SIZE = 80;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
@@ -115,9 +114,7 @@ function scrollContainerSx(theme: Theme) {
     flexGrow: 1,
     alignSelf: "stretch",
     alignItems: "center",
-    // The end action plus the bar's inset above and below, so the action fits
-    // within the bar's height. A fixed height also stops the first word added
-    // from pushing the board down.
+    // A fixed height stops the first word added from pushing the board down.
     minHeight: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: 2,
     overflow: "auto",

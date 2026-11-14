@@ -12,6 +12,7 @@ import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
 import {
   setClearsAfterSpeaking,
   setMessageImagesVisible,
@@ -287,8 +288,7 @@ describe("CommunicationBoard", () => {
         overflowHint: 16,
         wholeRows: 4,
         isPlayBelowGrid: false,
-        // Before the play button and the page-margin gap beside it.
-        messageBarEnd: 24 + 80 + 24,
+        messageBarEnd: 24 + MESSAGE_ACTION_SIZE + 24,
       },
     ];
 

@@ -15,7 +15,6 @@ import {
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  /** `control` matches the board's back and home buttons instead of standing out. */
   variant?: "prominent" | "control";
   onPlay: () => void;
   onStop: () => void;
