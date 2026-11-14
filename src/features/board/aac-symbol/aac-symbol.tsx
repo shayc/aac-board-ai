@@ -6,7 +6,6 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 // label with it.
 export const SYMBOL_LABEL_FONT_SIZE_PROPERTY = "--symbol-label-font-size";
 
-// A container sets this to show the symbol larger or smaller than the default.
 export const SYMBOL_IMAGE_SIZE_PROPERTY = "--symbol-image-size";
 
 export type SymbolLabelPlacement = "top" | "bottom";
