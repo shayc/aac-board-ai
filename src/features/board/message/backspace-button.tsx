@@ -1,5 +1,5 @@
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
-import Fab, { fabClasses } from "@mui/material/Fab";
+import IconButton, { iconButtonClasses } from "@mui/material/IconButton";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
@@ -7,7 +7,6 @@ import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
 const LONG_PRESS_THRESHOLD_MS = 600;
-const SIZE = 64;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
@@ -31,30 +30,28 @@ export function BackspaceButton({
   });
 
   return (
-    <Fab
+    <IconButton
       {...mergeProps(pressProps, longPressProps)}
       {...focusableDisabledProps(disabled)}
       aria-label={t(m.messageBackspace)}
+      size="large"
       sx={{
         flexShrink: 0,
-        width: SIZE,
-        height: SIZE,
         // With the bar's inset, this centers the circle on the bar's rounded
         // end so both curves run parallel.
-        marginInlineEnd: 1,
+        marginInlineEnd: 1.75,
         // Neutral like the board's other controls, so it doesn't read as part
         // of the message.
         color: "action.active",
         backgroundColor: "action.selected",
-        [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
         "&:hover": { backgroundColor: "action.focus" },
-        [`&.${fabClasses.disabled}`]: {
+        [`&.${iconButtonClasses.disabled}`]: {
           color: "action.disabled",
           backgroundColor: "action.selected",
         },
       }}
     >
-      <BackspaceOutlinedIcon sx={flipForRTL} />
-    </Fab>
+      <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
+    </IconButton>
   );
 }
