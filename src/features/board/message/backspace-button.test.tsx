@@ -22,8 +22,14 @@ function createHandlers() {
   };
 }
 
-// React Aria needs nonzero mouse pressure to start its long-press timer.
 function longPress(element: Element) {
+  pressDown(element);
+  vi.advanceTimersByTime(700);
+  element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+}
+
+// React Aria needs nonzero mouse pressure to start its long-press timer.
+function pressDown(element: Element) {
   element.dispatchEvent(
     new PointerEvent("pointerdown", {
       bubbles: true,
@@ -32,8 +38,19 @@ function longPress(element: Element) {
       pressure: 0.5,
     }),
   );
-  vi.advanceTimersByTime(700);
-  element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+}
+
+// Clearing the message disables backspace while the pointer is still down.
+function ClearableBackspace() {
+  const [isCleared, setIsCleared] = useState(false);
+
+  return (
+    <BackspaceButton
+      disabled={isCleared}
+      onPress={() => {}}
+      onLongPress={() => setIsCleared(true)}
+    />
+  );
 }
 
 // The disc is translucent, so the icon and ring are measured against the bar
@@ -79,19 +96,6 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
     icon: contrastRatio(paint(barColor, discColor, iconColor), disc),
     ring: contrastRatio(paint(barColor, discColor, ringColor), disc),
   };
-}
-
-// Clearing the message disables backspace while the pointer is still down.
-function ClearableBackspace() {
-  const [isCleared, setIsCleared] = useState(false);
-
-  return (
-    <BackspaceButton
-      disabled={isCleared}
-      onPress={() => {}}
-      onLongPress={() => setIsCleared(true)}
-    />
-  );
 }
 
 function ColorModeSwitch({ mode }: { mode: ColorMode }) {
@@ -146,14 +150,7 @@ describe("BackspaceButton", () => {
     const ring = button.querySelector<HTMLElement>("[role=progressbar]");
     assertDefined(ring);
 
-    button.dispatchEvent(
-      new PointerEvent("pointerdown", {
-        bubbles: true,
-        button: 0,
-        pointerType: "mouse",
-        pressure: 0.5,
-      }),
-    );
+    pressDown(button);
 
     await expect.element(ring).toHaveAttribute("aria-valuenow", "100");
 
@@ -162,7 +159,7 @@ describe("BackspaceButton", () => {
     await expect.element(ring).toHaveAttribute("aria-valuenow", "0");
   });
 
-  test("empties the ring on release after a hold clears the message", async () => {
+  test("empties the ring when a hold clears the message", async () => {
     const screen = await renderWithProviders(<ClearableBackspace />);
     const button = screen.getByRole("button", { name: "Backspace" }).element();
     const ring = button.querySelector<HTMLElement>("[role=progressbar]");

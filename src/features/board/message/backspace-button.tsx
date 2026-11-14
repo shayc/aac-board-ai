@@ -18,12 +18,6 @@ const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 const ICON_SIZE = 28;
 const DISC_INSET = 1;
 
-const ringFillSx = {
-  [`& .${circularProgressClasses.circle}`]: {
-    transition: `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`,
-  },
-} as const;
-
 interface BackspaceButtonProps {
   disabled?: boolean;
   onPress: () => void;
@@ -63,7 +57,7 @@ export function BackspaceButton({
         variant="determinate"
         value={isHolding ? 100 : 0}
         size="auto"
-        sx={[ringSx, isHolding && ringFillSx]}
+        sx={(theme) => ringSx(theme, isHolding)}
       />
     </IconButton>
   );
@@ -102,14 +96,19 @@ function backspaceSx(theme: Theme) {
   } as const;
 }
 
-// The ring traces the disc's edge. It fills by CSS transition, so a tap
-// released within the delay never shows it, and it completes exactly when the
-// long press clears the message.
-function ringSx(theme: Theme) {
+// The ring traces the disc's edge: its "auto" size lets the insets stretch it
+// to the disc. It fills by CSS transition, so a tap released within the delay
+// never shows it, and it completes exactly when the long press clears the
+// message. Emptying is instant.
+function ringSx(theme: Theme, isHolding: boolean) {
+  const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
+
   return {
     position: "absolute",
     inset: theme.spacing(DISC_INSET),
     pointerEvents: "none",
-    [`& .${circularProgressClasses.circle}`]: { transition: "none" },
+    [`& .${circularProgressClasses.circle}`]: {
+      transition: isHolding ? fillTransition : "none",
+    },
   } as const;
 }
