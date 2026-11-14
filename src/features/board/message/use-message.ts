@@ -4,6 +4,7 @@ import {
   applyBackspace,
   createTextPart,
   EMPTY_MESSAGE,
+  hasSameContent,
   markSpoken,
 } from "./message-transforms";
 import type { Message, MessagePart } from "./message-types";
@@ -45,7 +46,7 @@ export function useMessage(): UseMessageReturn {
     const played = setSpoken(false);
 
     void completion.then((hasCompleted) => {
-      if (hasCompleted && stateRef.current === played) {
+      if (hasCompleted && hasSameContent(stateRef.current, played)) {
         setSpoken(true);
       }
     });
