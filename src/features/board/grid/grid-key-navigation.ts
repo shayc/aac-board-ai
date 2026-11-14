@@ -1,13 +1,14 @@
 import {
-  findGridPosition,
-  type GridFocusTarget,
-  listGridFocusTargets,
-} from "./grid-dom";
-import { type GridPosition, isSameGridPosition } from "./grid-model";
+  type GridCells,
+  type GridPosition,
+  isSameGridPosition,
+  listOccupiedPositions,
+} from "./grid-model";
 
-interface GridKeyEvent {
+export type GridDirection = "ltr" | "rtl";
+
+export interface GridKeyEvent {
   key: string;
-  target: EventTarget | null;
   ctrlKey: boolean;
   metaKey: boolean;
   shiftKey: boolean;
@@ -20,45 +21,40 @@ interface GridStep {
 }
 
 export function findGridKeyTarget(
+  grid: GridCells,
+  from: GridPosition,
   event: GridKeyEvent,
-  root: HTMLElement,
-): GridFocusTarget | null {
-  const from = findGridPosition(event.target);
-  if (!from) {
-    return null;
-  }
-
+  direction: GridDirection,
+): GridPosition | null {
   if (event.key === "Home" || event.key === "End") {
-    return findEdgeTarget(event, root, from);
+    return findEdgeTarget(grid, from, event);
   }
 
   if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
     return null;
   }
 
-  const direction = root.matches(":dir(rtl)") ? "rtl" : "ltr";
   const step = resolveArrowStep(event.key, direction);
 
-  return step ? findArrowTarget(root, from, step) : null;
+  return step ? findArrowTarget(grid, from, step) : null;
 }
 
 function findEdgeTarget(
-  event: GridKeyEvent,
-  root: HTMLElement,
+  grid: GridCells,
   from: GridPosition,
-): GridFocusTarget | null {
+  event: GridKeyEvent,
+): GridPosition | null {
   if (event.shiftKey || event.altKey) {
     return null;
   }
 
   const spansWholeGrid = event.ctrlKey || event.metaKey;
-  const candidates = listGridFocusTargets(
-    root,
-    spansWholeGrid ? undefined : from.row,
+  const candidates = listOccupiedPositions(grid).filter(
+    (position) => spansWholeGrid || position.row === from.row,
   );
   const goesToFirst = event.key === "Home";
   const target = goesToFirst ? candidates[0] : candidates.at(-1);
-  if (!target || isSameGridPosition(target.position, from)) {
+  if (!target || isSameGridPosition(target, from)) {
     return null;
   }
 
@@ -67,7 +63,7 @@ function findEdgeTarget(
 
 function resolveArrowStep(
   key: string,
-  direction: "ltr" | "rtl",
+  direction: GridDirection,
 ): GridStep | null {
   const isRTL = direction === "rtl";
 
@@ -86,20 +82,19 @@ function resolveArrowStep(
 }
 
 function findArrowTarget(
-  root: HTMLElement,
+  grid: GridCells,
   from: GridPosition,
   step: GridStep,
-): GridFocusTarget | null {
+): GridPosition | null {
   const movesVertically = step.row !== 0;
   const stepDirection = movesVertically ? step.row : step.column;
   let best: {
-    target: GridFocusTarget;
+    position: GridPosition;
     primaryDistance: number;
     crossDistance: number;
   } | null = null;
 
-  for (const target of listGridFocusTargets(root)) {
-    const { position } = target;
+  for (const position of listOccupiedPositions(grid)) {
     const primaryDelta = movesVertically
       ? position.row - from.row
       : position.column - from.column;
@@ -119,9 +114,9 @@ function findArrowTarget(
       (crossDistance === best.crossDistance &&
         primaryDistance < best.primaryDistance)
     ) {
-      best = { target, primaryDistance, crossDistance };
+      best = { position, primaryDistance, crossDistance };
     }
   }
 
-  return best?.target ?? null;
+  return best?.position ?? null;
 }

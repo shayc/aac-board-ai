@@ -4,9 +4,11 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
+import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { getCellPosition } from "../testing/get-cell-position";
+import { rowMajorOrder } from "../testing/row-major-order";
 import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
@@ -16,6 +18,10 @@ const PADDING_PX = { columns: 16, rows: 12 };
 const OVERFLOW_HINT_PX = 8;
 const GAP_PX = 8;
 const MIN_CELL_SIZES_PX = { columns: 88, rows: 96 };
+
+// Expected dimensions for a viewport at or above sm.
+const SM_PADDING_PX = { columns: 24, rows: 16 };
+const SM_OVERFLOW_HINT_PX = 16;
 
 const AXES = {
   columns: {
@@ -63,9 +69,10 @@ async function measureTracks(
         }
       >
         <Grid
+          aria-label="Board"
           items={items}
-          rows={isColumns ? 1 : tracks}
-          columns={isColumns ? tracks : 1}
+
+          order={rowMajorOrder(items, isColumns ? tracks : 1)}
           renderItem={(item, props) => (
             <button
               {...props}
@@ -136,62 +143,8 @@ function scrollTrackToStart(grid: Element, axis: Axis, index: number) {
 }
 
 describe("Grid", () => {
-  describe("default grid construction (order not provided)", () => {
-    test("renders items in row-major order when order is not provided", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-        { id: "3", label: "Item 3" },
-        { id: "4", label: "Item 4" },
-      ];
-
-      const screen = await render(
-        <Grid
-          items={items}
-          rows={2}
-          columns={2}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
-      const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-      const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
-
-      expect(getCellPosition(item1)).toEqual({ row: 0, column: 0 });
-      expect(getCellPosition(item2)).toEqual({ row: 0, column: 1 });
-      expect(getCellPosition(item3)).toEqual({ row: 1, column: 0 });
-      expect(getCellPosition(item4)).toEqual({ row: 1, column: 1 });
-    });
-
-    test("renders only provided items when fewer than grid capacity", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-      ];
-
-      const screen = await render(
-        <Grid
-          items={items}
-          rows={2}
-          columns={2}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      await expect
-        .element(screen.getByRole("button", { name: "Item 1" }))
-        .toBeVisible();
-      await expect
-        .element(screen.getByRole("button", { name: "Item 2" }))
-        .toBeVisible();
-
-      const allButtons = screen.getByRole("button").all();
-      expect(allButtons).toHaveLength(2);
-    });
-
-    test("limits rendered items to grid capacity", async () => {
+  describe("placement", () => {
+    test("leaves out items the order does not name", async () => {
       const items = Array.from({ length: 10 }, (_, i) => ({
         id: String(i + 1),
         label: `Item ${i + 1}`,
@@ -199,9 +152,13 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
+          order={[
+            ["1", "2"],
+            ["3", "4"],
+          ]}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
       );
@@ -217,9 +174,13 @@ describe("Grid", () => {
     test("renders no items when items is empty", async () => {
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={[]}
-          rows={2}
-          columns={2}
+
+          order={[
+            [null, null],
+            [null, null],
+          ]}
           renderItem={(item: { id: string; label: string }, props) => (
             <button {...props}>{item.label}</button>
           )}
@@ -229,10 +190,8 @@ describe("Grid", () => {
       const buttons = screen.getByRole("button").query();
       expect(buttons).toBeNull();
     });
-  });
 
-  describe("ordered grid construction (order provided)", () => {
-    test("renders items according to order matrix", async () => {
+    test("places items by the order matrix", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },
@@ -247,9 +206,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -279,9 +238,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -310,9 +269,9 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
-          rows={2}
-          columns={2}
+
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -331,8 +290,8 @@ describe("Grid", () => {
         <Grid
           aria-label="Core words"
           items={items}
-          rows={1}
-          columns={1}
+
+          order={rowMajorOrder(items, 1)}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
       );
@@ -352,9 +311,10 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
+          aria-label="Board"
           items={items}
-          rows={2}
-          columns={1}
+
+          order={rowMajorOrder(items, 1)}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
           rowProps={{ "data-testid": "grid-row" }}
         />,
@@ -433,6 +393,23 @@ describe("Grid", () => {
         expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
           1,
         );
+      },
+    );
+
+    test.each(["columns", "rows"] as const)(
+      "widens the padding and the hint of the %s on a screen at or above sm",
+      async (axis) => {
+        await setTestViewport(800, 600);
+
+        const layout = await measureTracks(axis, 375, 20);
+
+        expect(layout.visibleCellCount).toBe(3);
+        expect(layout.leadingSpace).toBeCloseTo(SM_PADDING_PX[axis], 0);
+        expect(layout.trailingSpace).toBeCloseTo(
+          GAP_PX + SM_OVERFLOW_HINT_PX,
+          0,
+        );
+        expect(layout.trailingHint).toBeCloseTo(SM_OVERFLOW_HINT_PX, 0);
       },
     );
 

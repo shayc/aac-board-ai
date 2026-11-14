@@ -146,8 +146,6 @@ export function CommunicationBoard({
             <Grid<BoardButton>
               aria-label={board.name || t(m.boardGridLabel)}
               items={board.buttons}
-              rows={board.grid.rows}
-              columns={board.grid.columns}
               order={board.grid.order}
               rowProps={scanGroupProps}
               renderItem={renderTile}

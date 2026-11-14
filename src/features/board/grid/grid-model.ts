@@ -9,30 +9,12 @@ export interface GridPosition {
 
 export function buildGrid<Item extends { id: string }>(
   items: readonly Item[],
-  rows: number,
-  columns: number,
-  order?: GridOrder,
+  order: GridOrder,
 ): (Item | undefined)[][] {
-  if (order?.length) {
-    const itemsById = new Map(items.map((item) => [item.id, item]));
+  const itemsById = new Map(items.map((item) => [item.id, item]));
 
-    return Array.from({ length: rows }, (_, rowIndex) => {
-      const orderRow = order[rowIndex] ?? [];
-
-      return Array.from({ length: columns }, (_, columnIndex) => {
-        const id = orderRow[columnIndex];
-
-        return id ? itemsById.get(id) : undefined;
-      });
-    });
-  }
-
-  return Array.from({ length: rows }, (_, rowIndex) =>
-    Array.from({ length: columns }, (_, columnIndex) => {
-      const index = rowIndex * columns + columnIndex;
-
-      return items[index];
-    }),
+  return order.map((ids) =>
+    ids.map((id) => (id ? itemsById.get(id) : undefined)),
   );
 }
 
@@ -49,6 +31,20 @@ export function findFirstOccupiedPosition(grid: GridCells): GridPosition {
   }
 
   return { row: 0, column: 0 };
+}
+
+export function listOccupiedPositions(grid: GridCells): GridPosition[] {
+  const positions: GridPosition[] = [];
+
+  for (const [row, cells] of grid.entries()) {
+    for (const [column, cell] of cells.entries()) {
+      if (cell) {
+        positions.push({ row, column });
+      }
+    }
+  }
+
+  return positions;
 }
 
 export function isSameGridPosition(

@@ -15,7 +15,7 @@ export interface Board {
 export interface BoardGrid {
   readonly rows: number;
   readonly columns: number;
-  readonly order?: readonly (readonly (string | null)[])[];
+  readonly order: readonly (readonly (string | null)[])[];
 }
 
 export interface BoardButton {
