@@ -3,7 +3,10 @@ import {
   getLikelyRegionCode,
   getRegionCode,
 } from "@shared/language/locale";
-import type { VoicesByLanguage } from "./speech-store";
+
+export type VoicesByLanguage = Partial<
+  Record<string, readonly SpeechSynthesisVoice[]>
+>;
 
 export function resolveVoice(
   voicesByLanguage: VoicesByLanguage,
