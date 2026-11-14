@@ -6,6 +6,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { BOARD_CONTROL_WIDTH } from "../board-control-button";
 
 export const PLAY_BUTTON_SIZE = 80;
 
@@ -43,7 +44,7 @@ export function PlayButton({
         variant="contained"
         onClick={handleClick}
         sx={(theme) => ({
-          width: 72,
+          width: BOARD_CONTROL_WIDTH,
           [`&.${buttonClasses.disabled}`]: disabledSx(theme),
         })}
       >
@@ -59,7 +60,6 @@ export function PlayButton({
       color={isPlaying ? "default" : "primary"}
       onClick={handleClick}
       sx={(theme) => ({
-        alignSelf: "center",
         flexShrink: 0,
         width: PLAY_BUTTON_SIZE,
         height: PLAY_BUTTON_SIZE,

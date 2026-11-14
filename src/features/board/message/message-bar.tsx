@@ -111,8 +111,9 @@ function scrollContainerSx(theme: Theme) {
     flexGrow: 1,
     alignSelf: "stretch",
     alignItems: "center",
-    // Matching the play button's height keeps the bar level with it, and
-    // stops the first word added from pushing the board down.
+    // The play button plus the bar's inset above and below, so play fits
+    // within the bar's height beside it. A fixed height also stops the first
+    // word added from pushing the board down.
     minHeight: `calc(${PLAY_BUTTON_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: 2,
     overflow: "auto",

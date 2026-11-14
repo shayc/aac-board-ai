@@ -135,12 +135,7 @@ export function CommunicationBoard({
             </Stack>
 
             {isActionRowVisible && (
-              <Stack
-                {...scanGroupProps}
-                direction="row"
-                spacing={2}
-                sx={{ minWidth: 0 }}
-              >
+              <Stack {...scanGroupProps} direction="row" spacing={2}>
                 {!isSmallScreen && navigationButtons}
 
                 {suggestions.isAvailable && (

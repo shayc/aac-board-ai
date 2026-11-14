@@ -1,6 +1,8 @@
 import Button, { type ButtonProps } from "@mui/material/Button";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 
+export const BOARD_CONTROL_WIDTH = 72;
+
 type BoardControlButtonProps = Omit<
   ButtonProps,
   "size" | "color" | "variant" | "sx"
@@ -19,7 +21,7 @@ export function BoardControlButton({
       color="inherit"
       variant="contained"
       onClick={disabled ? undefined : onClick}
-      sx={{ width: 72 }}
+      sx={{ width: BOARD_CONTROL_WIDTH }}
     />
   );
 }
