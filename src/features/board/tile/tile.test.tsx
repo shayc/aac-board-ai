@@ -4,6 +4,14 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
+import {
+  contrastRatio,
+  paint,
+  relativeLuminance,
+  type Rgb,
+  WCAG_NON_TEXT_CONTRAST,
+  WCAG_TEXT_CONTRAST,
+} from "@shared/testing/contrast";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { ThemeProvider } from "@shared/theme/theme-provider";
 import type { ReactNode } from "react";
@@ -17,11 +25,6 @@ import {
   setTileSaturation,
   TILE_BRIGHTNESS,
 } from "./tile-preferences-store";
-
-type Rgb = readonly [red: number, green: number, blue: number];
-
-const WCAG_TEXT_CONTRAST = 4.5;
-const WCAG_NON_TEXT_CONTRAST = 3;
 
 const cssVariableTheme = createTheme({
   cssVariables: { colorSchemeSelector: "class" },
@@ -47,48 +50,6 @@ function tileElement(overrides: Partial<BoardButton>) {
       tabIndex={0}
       onActivate={vi.fn()}
     />
-  );
-}
-
-function paint(...cssColors: string[]): Rgb {
-  const context = new OffscreenCanvas(1, 1).getContext("2d");
-  assertDefined(context);
-
-  for (const cssColor of cssColors) {
-    context.fillStyle = cssColor;
-    context.fillRect(0, 0, 1, 1);
-  }
-
-  const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data;
-  assertDefined(red);
-  assertDefined(green);
-  assertDefined(blue);
-  expect(alpha, `painting ${cssColors.join(", ")} must end opaque`).toBe(255);
-
-  return [red, green, blue];
-}
-
-function linearizeChannel(channel: number): number {
-  const value = channel / 255;
-
-  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-}
-
-function relativeLuminance([red, green, blue]: Rgb): number {
-  return (
-    0.2126 * linearizeChannel(red) +
-    0.7152 * linearizeChannel(green) +
-    0.0722 * linearizeChannel(blue)
-  );
-}
-
-function contrastRatio(first: Rgb, second: Rgb): number {
-  const firstLuminance = relativeLuminance(first) + 0.05;
-  const secondLuminance = relativeLuminance(second) + 0.05;
-
-  return (
-    Math.max(firstLuminance, secondLuminance) /
-    Math.min(firstLuminance, secondLuminance)
   );
 }
 
@@ -217,18 +178,41 @@ describe("Tile", () => {
     );
   });
 
-  test.each([true, false])(
-    "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
-    async (areBordersVisible) => {
+  // A saturated mid-tone is the hardest case for a fold mixed toward black;
+  // a dark tile's fold mixes toward white instead.
+  test.each([
+    {
+      description: "mid-tone",
+      backgroundColor: "#3f51b5",
+      areBordersVisible: true,
+    },
+    {
+      description: "mid-tone",
+      backgroundColor: "#3f51b5",
+      areBordersVisible: false,
+    },
+    {
+      description: "dark",
+      backgroundColor: "#1e2127",
+      areBordersVisible: true,
+    },
+    {
+      description: "dark",
+      backgroundColor: "#1e2127",
+      areBordersVisible: false,
+    },
+  ])(
+    "marks folder tiles with a corner that stands out from a $description tile (borders visible: $areBordersVisible)",
+    async ({ backgroundColor, areBordersVisible }) => {
       setTileBordersVisible(areBordersVisible);
       const screen = await renderInTheme(
         <>
           {tileElement({
             label: "Folder",
-            backgroundColor: "#3f51b5",
+            backgroundColor,
             linkedBoardId: "folder",
           })}
-          {tileElement({ label: "Word", backgroundColor: "#3f51b5" })}
+          {tileElement({ label: "Word", backgroundColor })}
         </>,
       );
       const folder = screen.getByRole("button", { name: "Folder" });

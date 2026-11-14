@@ -1,8 +1,17 @@
+import { useColorScheme } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
+import {
+  contrastRatio,
+  paint,
+  WCAG_TEXT_CONTRAST,
+} from "@shared/testing/contrast";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
+import { MessageBar } from "./message-bar";
+
+type ColorMode = "light" | "dark";
 
 function createHandlers() {
   return {
@@ -23,6 +32,55 @@ function longPress(element: Element) {
   );
   vi.advanceTimersByTime(700);
   element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+}
+
+// The disc is translucent, so the icon is measured against the bar it sits on.
+async function measureIconContrast(mode: ColorMode, disabled: boolean) {
+  const screen = await renderWithProviders(
+    <>
+      <ColorModeSwitch mode={mode} />
+      <MessageBar
+        parts={[]}
+        language="en"
+        isWordOpen={false}
+        activePartId={null}
+        areImagesVisible
+        endAction={
+          <BackspaceButton {...createHandlers()} disabled={disabled} />
+        }
+      />
+    </>,
+  );
+  await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
+  await expect.poll(() => document.documentElement.className).toBe(mode);
+
+  const button = screen.getByRole("button", { name: "Backspace" }).element();
+  // Switching modes animates the disc; measure where it settles.
+  await Promise.all(
+    button.getAnimations({ subtree: true }).map(({ finished }) => finished),
+  );
+
+  const bar = button.parentElement;
+  assertDefined(bar);
+  const barColor = getComputedStyle(bar).backgroundColor;
+  const { backgroundColor: discColor, color: iconColor } =
+    getComputedStyle(button);
+  await screen.unmount();
+
+  return contrastRatio(
+    paint(barColor, discColor, iconColor),
+    paint(barColor, discColor),
+  );
+}
+
+function ColorModeSwitch({ mode }: { mode: ColorMode }) {
+  const { setMode } = useColorScheme();
+
+  return (
+    <button type="button" onClick={() => setMode(mode)}>
+      Use {mode} mode
+    </button>
+  );
 }
 
 describe("BackspaceButton", () => {
@@ -98,4 +156,24 @@ describe("BackspaceButton", () => {
       expect(getComputedStyle(icon).transform).toBe(transform);
     },
   );
+});
+
+describe("BackspaceButton colors", () => {
+  test.each(["light", "dark"] as const)(
+    "draws the icon in %s mode with text-level contrast",
+    async (mode) => {
+      const contrast = await measureIconContrast(mode, false);
+
+      expect(contrast).toBeGreaterThan(WCAG_TEXT_CONTRAST);
+    },
+  );
+
+  // Disabled controls are exempt from contrast minimums, but an empty message
+  // must still show where backspace is, and the dark bar is greyer.
+  test("keeps the disabled icon in dark mode at least as visible as in light mode", async () => {
+    const light = await measureIconContrast("light", true);
+    const dark = await measureIconContrast("dark", true);
+
+    expect(dark).toBeGreaterThanOrEqual(light);
+  });
 });
