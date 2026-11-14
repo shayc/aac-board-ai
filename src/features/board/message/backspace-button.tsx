@@ -1,16 +1,28 @@
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
+import CircularProgress, {
+  circularProgressClasses,
+} from "@mui/material/CircularProgress";
 import IconButton, { iconButtonClasses } from "@mui/material/IconButton";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 import { MESSAGE_ACTION_SIZE } from "./message-bar";
 
-const LONG_PRESS_THRESHOLD_MS = 600;
+const RING_DELAY_MS = 300;
+const RING_FILL_MS = 300;
+const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 const ICON_SIZE = 28;
 const DISC_INSET = 1;
+
+const ringFillSx = {
+  [`& .${circularProgressClasses.circle}`]: {
+    transition: `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`,
+  },
+} as const;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
@@ -24,6 +36,7 @@ export function BackspaceButton({
   onLongPress,
 }: BackspaceButtonProps) {
   const t = useTranslate();
+  const [isHolding, setIsHolding] = useState(false);
   const { pressProps } = usePress({ isDisabled: disabled, onPress });
 
   const { longPressProps } = useLongPress({
@@ -31,6 +44,8 @@ export function BackspaceButton({
     isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
+    onLongPressStart: () => setIsHolding(true),
+    onLongPressEnd: () => setIsHolding(false),
   });
 
   return (
@@ -41,6 +56,14 @@ export function BackspaceButton({
       sx={backspaceSx}
     >
       <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
+
+      <CircularProgress
+        aria-hidden
+        variant="determinate"
+        value={isHolding ? 100 : 0}
+        size="auto"
+        sx={[ringSx, isHolding && ringFillSx]}
+      />
     </IconButton>
   );
 }
@@ -75,5 +98,17 @@ function backspaceSx(theme: Theme) {
         color: theme.vars.palette.text.disabled,
       },
     }),
+  } as const;
+}
+
+// The ring traces the disc's edge. It fills by CSS transition, so a tap
+// released within the delay never shows it, and it completes exactly when the
+// long press clears the message.
+function ringSx(theme: Theme) {
+  return {
+    position: "absolute",
+    inset: theme.spacing(DISC_INSET),
+    pointerEvents: "none",
+    [`& .${circularProgressClasses.circle}`]: { transition: "none" },
   } as const;
 }

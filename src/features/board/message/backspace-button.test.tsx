@@ -117,6 +117,30 @@ describe("BackspaceButton", () => {
     expect(handlers.onPress).not.toHaveBeenCalled();
   });
 
+  test("fills the ring while held and empties it on release", async () => {
+    const screen = await renderWithProviders(
+      <BackspaceButton {...createHandlers()} />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" }).element();
+    const ring = button.querySelector<HTMLElement>("[role=progressbar]");
+    assertDefined(ring);
+
+    button.dispatchEvent(
+      new PointerEvent("pointerdown", {
+        bubbles: true,
+        button: 0,
+        pointerType: "mouse",
+        pressure: 0.5,
+      }),
+    );
+
+    await expect.element(ring).toHaveAttribute("aria-valuenow", "100");
+
+    button.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+
+    await expect.element(ring).toHaveAttribute("aria-valuenow", "0");
+  });
+
   test("stays focusable and ignores presses while disabled", async () => {
     const handlers = createHandlers();
 
