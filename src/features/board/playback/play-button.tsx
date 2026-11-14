@@ -15,7 +15,7 @@ import {
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  variant?: "messageAction" | "boardControl";
+  variant?: "prominent" | "boardControl";
   onPlay: () => void;
   onStop: () => void;
 }
@@ -23,7 +23,7 @@ interface PlayButtonProps {
 export function PlayButton({
   disabled = false,
   isPlaying,
-  variant = "messageAction",
+  variant = "prominent",
   onPlay,
   onStop,
 }: PlayButtonProps) {
