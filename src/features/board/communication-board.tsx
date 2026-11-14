@@ -63,6 +63,7 @@ export function CommunicationBoard({
     <NavigationButtons
       canGoBack={navigation.canGoBack}
       canGoHome={navigation.canGoHome}
+      isBackVisible={false}
       onBack={navigation.goBack}
       onHome={navigation.goHome}
     />

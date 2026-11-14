@@ -9,6 +9,7 @@ interface RenderOptions {
   canGoBack?: boolean;
   canGoHome?: boolean;
   direction?: "ltr" | "rtl";
+  isBackVisible?: boolean;
   onBack?: () => void;
   onHome?: () => void;
 }
@@ -23,6 +24,7 @@ async function renderButtons(options: RenderOptions = {}) {
         <NavigationButtons
           canGoBack={options.canGoBack ?? false}
           canGoHome={options.canGoHome ?? false}
+          isBackVisible={options.isBackVisible}
           onBack={onBack}
           onHome={onHome}
         />
@@ -50,6 +52,17 @@ describe("NavigationButtons", () => {
     await screen.getByRole("button", { name: "Go to main board" }).click();
 
     expect(onHome).toHaveBeenCalledOnce();
+  });
+
+  test("leaves only the home button when back is hidden", async () => {
+    const { screen } = await renderButtons({ isBackVisible: false });
+
+    await expect
+      .element(screen.getByRole("button", { name: "Go back" }))
+      .not.toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("button", { name: "Go to main board" }))
+      .toBeVisible();
   });
 
   test("disables unavailable navigation actions while keeping them focusable", async () => {

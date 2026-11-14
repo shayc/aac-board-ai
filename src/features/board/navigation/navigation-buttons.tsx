@@ -9,6 +9,7 @@ import { BoardControlButton } from "../board-control-button";
 interface NavigationButtonsProps {
   canGoBack: boolean;
   canGoHome: boolean;
+  isBackVisible?: boolean;
   onBack: () => void;
   onHome: () => void;
 }
@@ -16,6 +17,7 @@ interface NavigationButtonsProps {
 export function NavigationButtons({
   canGoBack,
   canGoHome,
+  isBackVisible = true,
   onBack,
   onHome,
 }: NavigationButtonsProps) {
@@ -23,13 +25,15 @@ export function NavigationButtons({
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
-      <BoardControlButton
-        aria-label={t(m.navBack)}
-        disabled={!canGoBack}
-        onClick={onBack}
-      >
-        <ArrowBackOutlinedIcon sx={flipForRTL} />
-      </BoardControlButton>
+      {isBackVisible && (
+        <BoardControlButton
+          aria-label={t(m.navBack)}
+          disabled={!canGoBack}
+          onClick={onBack}
+        >
+          <ArrowBackOutlinedIcon sx={flipForRTL} />
+        </BoardControlButton>
+      )}
 
       <BoardControlButton
         aria-label={t(m.navHome)}

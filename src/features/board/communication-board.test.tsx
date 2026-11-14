@@ -1,4 +1,6 @@
+import { obfToBoard } from "@features/library/testing";
 import { setStoredLanguage } from "@shared/language/language-store";
+import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
@@ -10,8 +12,12 @@ import {
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
+import { createMemoryRouter, type InitialEntry } from "react-router";
+import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
+import { CommunicationBoard } from "./communication-board";
 import {
   setClearsAfterSpeaking,
   setMessageImagesVisible,
@@ -775,7 +781,7 @@ describe("CommunicationBoard", () => {
           .toHaveAttribute("aria-disabled", "true");
         await expect
           .element(screen.getByRole("button", { name: "Go back" }))
-          .toBeVisible();
+          .not.toBeInTheDocument();
         await expect
           .element(screen.getByRole("button", { name: "Go to main board" }))
           .toBeVisible();
@@ -825,20 +831,20 @@ describe("CommunicationBoard", () => {
         ],
         sounds: [{ id: "recording", url: "/folder.mp3" }],
       };
-      const screen = await renderCommunicationBoard(
+      const { router, screen } = await renderBoardNavigation(
         board,
         ["/sets/set-1/boards/test-board"],
         "test-board",
       );
-      const back = screen.getByRole("button", { name: "Go back" });
 
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
       await screen.getByRole("button", { name: "hello" }).click();
       speech.speak.mockClear();
 
       await screen.getByRole("button", { name: "Folder" }).click();
 
-      await expect.element(back).not.toHaveAttribute("aria-disabled");
+      expect(router.state.location.pathname).toBe(
+        "/sets/set-1/boards/child-board",
+      );
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
         .toBeEnabled();
@@ -846,30 +852,25 @@ describe("CommunicationBoard", () => {
       expect(audio.play).not.toHaveBeenCalled();
     });
 
-    test("keeps keyboard focus on Go back when it reaches the first board", async () => {
-      const screen = await renderCommunicationBoard(
+    test("keeps keyboard focus on Home when it reaches the root board", async () => {
+      const { router, screen } = await renderBoardNavigation(
         TWO_BUTTON_BOARD,
-        [
-          "/sets/set-1/boards/test-board",
-          {
-            pathname: "/sets/set-1/boards/test-board",
-            state: { canGoBack: true },
-          },
-        ],
+        ["/sets/set-1/boards/child-board"],
         "test-board",
       );
-      const back = screen.getByRole("button", { name: "Go back" });
+      const home = screen.getByRole("button", { name: "Go to main board" });
 
-      await expect.element(back).not.toHaveAttribute("aria-disabled");
-      back.element().focus();
+      home.element().focus();
       await userEvent.keyboard("{Enter}");
 
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
-      await expect.element(back).toHaveFocus();
+      expect(router.state.location.pathname).toBe(
+        "/sets/set-1/boards/test-board",
+      );
+      await expect.element(home).toHaveFocus();
     });
 
     test("resets navigation history when Home is clicked from Home", async () => {
-      const screen = await renderCommunicationBoard(
+      const { router, screen } = await renderBoardNavigation(
         TWO_BUTTON_BOARD,
         [
           {
@@ -879,13 +880,13 @@ describe("CommunicationBoard", () => {
         ],
         "test-board",
       );
-      const back = screen.getByRole("button", { name: "Go back" });
-
-      await expect.element(back).not.toHaveAttribute("aria-disabled");
 
       await screen.getByRole("button", { name: "Go to main board" }).click();
 
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
+      expect(router.state.location.pathname).toBe(
+        "/sets/set-1/boards/test-board",
+      );
+      expect(router.state.location.state).toEqual({ canGoBack: false });
     });
   });
 
@@ -1018,4 +1019,35 @@ function endLastUtterance(speak: ReturnType<typeof stubSpeech>["speak"]) {
   assertDefined(utterance);
 
   utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
+}
+
+async function renderBoardNavigation(
+  obfBoard: OBFBoard,
+  initialEntries: InitialEntry[],
+  rootBoardId: string,
+) {
+  const router = createMemoryRouter(
+    [
+      {
+        path: "/sets/:boardSetId/boards/:boardId",
+        element: (
+          <div style={{ height: "100vh" }}>
+            <CommunicationBoard
+              board={obfToBoard(obfBoard)}
+              language={obfBoard.locale}
+              rootBoardId={rootBoardId}
+            />
+          </div>
+        ),
+      },
+    ],
+    { initialEntries },
+  );
+  const screen = await render(
+    <AppProviders>
+      <RouterProvider router={router} />
+    </AppProviders>,
+  );
+
+  return { router, screen };
 }

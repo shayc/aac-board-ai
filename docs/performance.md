@@ -21,7 +21,7 @@ Perf x-ray: 1 over, 1 watch, 6 ok
   over   JS shipped (gzip)         431 kB  budget 420 kB
   watch  open linked board         588 ms  budget 600 ms  (2 of 5 samples over)
   ok     word tap                 30.8 ms  budget 100 ms
-  ok     back                      154 ms  budget 300 ms
+  ok     home                      154 ms  budget 300 ms
   …
 ```
 
@@ -99,7 +99,7 @@ npm run perf -- --base main --verbose
 | Journey           | What happens                                                                                                      | Timings                                                                        |
 | ----------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | `startup`         | Empty storage → onboarding → tap Continue → First Words grid. Then a new page once the app is installed.          | `firstLaunch.toOnboarding`, `firstLaunch.continueToGrid`, `returnVisit.toGrid` |
-| `tileInteraction` | Download Quick Core 60 from the library. On it: tap I, want, to, open the linked “eat” board, tap drink, go back. | `importBoardSet`, `wordTap`, `openBoardToGrid`, `backToGrid`                   |
+| `tileInteraction` | Download Quick Core 60 from the library. On it: tap I, want, to, open the linked “eat” board, tap drink, go home. | `importBoardSet`, `wordTap`, `openBoardToGrid`, `homeToGrid`                   |
 
 Every journey asserts what the user would see, so a broken journey fails the
 run instead of reporting fast numbers. The journeys live in

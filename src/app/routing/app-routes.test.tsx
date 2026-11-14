@@ -454,7 +454,7 @@ describe("app flow", () => {
     expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSetData);
   });
 
-  test("choosing a board in the header's board list opens it and enables Back", async () => {
+  test("choosing a board in the header's board list opens it and Home returns to the root board", async () => {
     await seedTwoBoardSet();
 
     const { screen } = await renderApp("/sets/food/boards/home");
@@ -470,7 +470,11 @@ describe("app flow", () => {
       .element(screen.getByRole("combobox", { name: "Board" }))
       .toHaveValue("Fruit");
 
-    await screen.getByRole("button", { name: "Go back" }).click();
+    await expect
+      .element(screen.getByRole("button", { name: "Go back" }))
+      .not.toBeInTheDocument();
+
+    await screen.getByRole("button", { name: "Go to main board" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Home" }))
