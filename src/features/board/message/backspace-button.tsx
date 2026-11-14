@@ -49,8 +49,10 @@ export function BackspaceButton({
 // action size. With the bar's inset, the disc sits on the bar's rounded end,
 // the same distance from its top, bottom and end, and both curves run
 // parallel.
-// In dark mode the disc matches the board's contained buttons, which are dark
-// with a light icon even though the bar itself stays light.
+//
+// In dark mode the disc matches the board's contained buttons. The bar is
+// scoped to the light scheme, so their dark values are spelled out rather
+// than read from palette tokens.
 function backspaceSx(theme: Theme) {
   const discColor = theme.alpha(theme.palette.common.black, 0.05);
   const darkDiscColor = theme.vars.palette.grey[800];

@@ -83,9 +83,9 @@ function tileColorStyle({
   return {
     "--tile-background-color":
       backgroundColor &&
-      desaturate(flattenOntoWhite(backgroundColor), saturation),
+      scaleChroma(flattenOntoWhite(backgroundColor), saturation),
     "--tile-border-color":
-      visibleBorderColor && desaturate(visibleBorderColor, saturation),
+      visibleBorderColor && scaleChroma(visibleBorderColor, saturation),
     "--tile-brightness": brightness,
   };
 }
@@ -98,8 +98,8 @@ function channelOntoWhite(channel: "r" | "g" | "b"): string {
   return `calc(${channel} * alpha + 255 * (1 - alpha))`;
 }
 
-function desaturate(color: string, saturation: number): string {
-  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
+function scaleChroma(color: string, factor: number): string {
+  return `oklch(from ${color} l calc(c * ${factor}) h)`;
 }
 
 function tileSx(theme: Theme) {
@@ -153,7 +153,10 @@ function tileSx(theme: Theme) {
 // lightens dark ones; 60% keeps 3:1 even on saturated mid-tones. Boosting the
 // chroma restores some of the hue the mix greys out.
 function folderTileSx(theme: Theme) {
-  const foldColor = `oklch(from ${mixWithTextColor(tileBackground(theme), "60%")} l calc(c * 1.5) h)`;
+  const foldColor = scaleChroma(
+    mixWithTextColor(tileBackground(theme), "60%"),
+    1.5,
+  );
 
   return {
     "&::after": {
