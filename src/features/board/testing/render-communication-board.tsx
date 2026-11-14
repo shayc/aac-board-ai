@@ -27,7 +27,7 @@ export function communicationBoardTree(
         <div style={{ height: "100vh" }}>
           <CommunicationBoard
             board={obfToBoard(obfBoard)}
-            language={obfBoard.locale}
+            contentLanguage={obfBoard.locale}
             rootBoardId={rootBoardId}
           />
         </div>

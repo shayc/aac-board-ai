@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import { useLanguage } from "@shared/language/use-language";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionProvider } from "@shared/theme/direction-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
@@ -25,18 +25,18 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
-  /** The language the board's text is in, when known; it may not be the communication language. */
-  language: string | undefined;
+  contentLanguage: string | undefined;
   rootBoardId: string | undefined;
 }
 
 export function CommunicationBoard({
   board,
-  language,
+  contentLanguage,
   rootBoardId,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-  const communication = useLanguage();
+  const { language: communicationLanguage, direction: communicationDirection } =
+    useCommunicationLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
@@ -80,7 +80,7 @@ export function CommunicationBoard({
     <Tile
       key={`${board.id}/${button.id}`}
       button={button}
-      language={language}
+      language={contentLanguage}
       onActivate={activateButton}
       {...gridItemProps}
     />
@@ -89,11 +89,11 @@ export function CommunicationBoard({
   const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
 
   return (
-    <DirectionProvider direction={communication.direction}>
+    <DirectionProvider direction={communicationDirection}>
       <ScanningScope>
         <Stack
           {...shortcuts.rootProps}
-          dir={communication.direction}
+          dir={communicationDirection}
           direction="column"
           sx={{
             height: "100%",
@@ -107,7 +107,7 @@ export function CommunicationBoard({
           >
             <PlaybackMessageBar
               parts={message.parts}
-              language={language}
+              language={contentLanguage}
               isWordOpen={message.isWordOpen}
               playback={playback}
             />
@@ -130,7 +130,7 @@ export function CommunicationBoard({
                     <SuggestionBar
                       status={suggestions.status}
                       phrases={suggestions.phrases}
-                      language={communication.language}
+                      language={communicationLanguage}
                       onEnable={suggestions.enable}
                       onPhraseSelect={message.replaceWithText}
                     />
