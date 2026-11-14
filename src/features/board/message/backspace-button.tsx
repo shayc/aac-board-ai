@@ -96,10 +96,8 @@ function backspaceSx(theme: Theme) {
   } as const;
 }
 
-// The ring traces the disc's edge: its "auto" size lets the insets stretch it
-// to the disc. It fills by CSS transition, so a tap released within the delay
-// never shows it, and it completes exactly when the long press clears the
-// message. Emptying is instant.
+// The "auto" size lets the insets stretch the ring to the disc's edge. The fill
+// waits out the delay so a quick tap never shows it.
 function ringSx(theme: Theme, isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
 
