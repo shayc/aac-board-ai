@@ -67,6 +67,12 @@ export function markSpoken(message: Message, isSpoken: boolean): Message {
   return { ...message, isSpoken };
 }
 
+// Every edit replaces the parts or changes whether the last word is open, so
+// two messages that share both differ at most in whether they were spoken.
+export function hasSameContent(first: Message, second: Message): boolean {
+  return first.parts === second.parts && first.isWordOpen === second.isWordOpen;
+}
+
 export function applyBackspace(message: Message): Message {
   const lastPart = message.parts.at(-1);
   if (!lastPart) {

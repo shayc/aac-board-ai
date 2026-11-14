@@ -1,8 +1,11 @@
 import type { BoardButton } from "@features/library";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
+import { renderHook } from "vitest-browser-react";
+import { setClearsAfterSpeaking } from "../message/message-preferences-store";
 import { EMPTY_MESSAGE } from "../message/message-transforms";
 import type { Message, MessagePart } from "../message/message-types";
+import { useMessage } from "../message/use-message";
 import { createButtonActivator } from "./button-activator";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
@@ -21,12 +24,16 @@ function setup(
     isWordOpen: false,
     isSpoken,
   };
-  const message = {
+
+  return setupWithMessage({
     getState: () => currentState,
     setState: vi.fn<ActivationOptions["message"]["setState"]>((state) => {
       currentState = state;
     }),
-  };
+  });
+}
+
+function setupWithMessage<T extends ActivationOptions["message"]>(message: T) {
   const playback = {
     playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() =>
       Promise.resolve(true),
@@ -199,34 +206,40 @@ describe("createButtonActivator", () => {
     expect(message.setState).toHaveBeenCalledExactlyOnceWith(EMPTY_MESSAGE);
   });
 
-  test("applies edits after play to the message as it is when playback completes", async () => {
+  test("drops edits after play when the message was edited during playback", async () => {
     const { activateButton, message, playback } = setup([
       { kind: "text", id: "1", label: "hi" },
+    ]);
+    const settlePlayback = holdMessagePlayback(playback);
+
+    activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "spell", text: "a" }],
+    });
+    await settlePlayback(true);
+
+    const committed = message.setState.mock.lastCall?.[0];
+    assertDefined(committed);
+    expect(committed.parts.map((part) => part.label)).toEqual(["hi", "a"]);
+  });
+
+  test("keeps the message spoken when an edit after play changes nothing", async () => {
+    const { activateButton, message, playback } = setup([
+      { kind: "tile", id: "1", label: "hi" },
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 
     activateButton({
       id: "btn",
       label: "",
-      actions: [{ kind: "play" }, { kind: "spell", text: "!" }],
+      actions: [{ kind: "play" }, { kind: "space" }],
     });
-    message.setState({
-      parts: [
-        { kind: "text", id: "1", label: "hi" },
-        { kind: "text", id: "2", label: "there" },
-      ],
-      isWordOpen: false,
-      isSpoken: false,
-    });
+    message.setState({ ...message.getState(), isSpoken: true });
     await settlePlayback(true);
 
-    const committed = message.setState.mock.lastCall?.[0];
-    assertDefined(committed);
-    expect(committed.parts.map((part) => part.label)).toEqual([
-      "hi",
-      "there",
-      "!",
-    ]);
+    expect(message.getState().isSpoken).toBe(true);
   });
 
   test("applies edits after play to the message it has just spoken", async () => {
@@ -382,6 +395,29 @@ describe("createButtonActivator", () => {
       expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(
         SPOKEN_PARTS,
       );
+      expect(message.setState).not.toHaveBeenCalled();
+    });
+  });
+
+  // The hook hands out a fresh copy of a spoken message while clearing after
+  // speaking is off, which a hand-rolled message cannot stand in for.
+  describe("with the message hook", () => {
+    test("replays a spoken message without committing when clearing after speaking is off", async () => {
+      setClearsAfterSpeaking(false);
+      const { result } = await renderHook(() => useMessage());
+      const { getState, trackPlayback, replaceWithText } = result.current;
+      const { activateButton, message, playback } = setupWithMessage({
+        getState,
+        setState: vi.fn(result.current.setState),
+      });
+      replaceWithText("hi");
+      const spoken = Promise.resolve(true);
+      trackPlayback(spoken);
+      await spoken;
+
+      activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
+
+      expect(playback.playMessage).toHaveBeenCalledOnce();
       expect(message.setState).not.toHaveBeenCalled();
     });
   });

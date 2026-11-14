@@ -6,6 +6,7 @@ import {
   closeWord,
   createTilePart,
   EMPTY_MESSAGE,
+  hasSameContent,
   markSpoken,
   spell,
 } from "../message/message-transforms";
@@ -85,17 +86,19 @@ export function createButtonActivator({
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays. They
     // belong to the message just spoken, so they change it instead of starting
-    // a new one.
+    // a new one, and they are dropped if it was edited while it played: a
+    // ":clear" must not take letters typed during the speech with it.
     void play(messageToPlay.parts).then((hasCompleted) => {
-      if (hasCompleted && editsAfterPlay.length > 0) {
-        commitEdits(markSpoken(message.getState(), false), editsAfterPlay);
+      const current = message.getState();
+      if (hasCompleted && hasSameContent(current, messageToPlay)) {
+        commitEdits(markSpoken(current, false), editsAfterPlay);
       }
     });
   }
 
   function commitEdits(from: Message, edits: readonly MessageEdit[]): Message {
     const edited = edits.reduce(applyEdit, from);
-    if (edited !== message.getState()) {
+    if (edited !== from) {
       message.setState(edited);
     }
 

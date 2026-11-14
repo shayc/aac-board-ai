@@ -514,6 +514,20 @@ describe("CommunicationBoard", () => {
         .toBeEnabled();
     });
 
+    test("keeps a message that was edited while a speak-then-clear tile spoke", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await screen.getByRole("button", { name: "Backspace" }).click();
+      endLastUtterance(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hi", "h"]);
+      });
+    });
+
     test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {
       preventSpeechEnd(speech.speak);
       const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
