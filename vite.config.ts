@@ -21,8 +21,6 @@ const themeColorHtmlPlugin: Plugin = {
 export default defineConfig({
   plugins: [
     themeColorHtmlPlugin,
-    // A component or hook the compiler skips loses its memoization without
-    // failing lint or tests, so any skip fails the transform instead.
     react({ compiler: { panicThreshold: "all_errors" } }),
     paraglideVitePlugin({
       project: "./project.inlang",
