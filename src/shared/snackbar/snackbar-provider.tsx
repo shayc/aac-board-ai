@@ -1,10 +1,9 @@
 import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import type { Theme } from "@mui/material/styles";
+import type { CSSObject, Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { toolbarOffset } from "@shared/theme/toolbar-offset";
 import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -132,6 +131,27 @@ function snackbarSx(theme: Theme) {
       left: safeAreaGutter(theme.spacing(1), "left"),
     },
   };
+}
+
+// MUI sizes a toolbar by breakpoint and orientation, so anything placed below
+// one follows the same rules instead of repeating its heights.
+function toolbarOffset(theme: Theme, gutter: string): CSSObject {
+  return heightsToOffsets(theme.mixins.toolbar, gutter);
+}
+
+function heightsToOffsets(styles: object, gutter: string): CSSObject {
+  const entries: [string, unknown][] = Object.entries(styles);
+  const rules: CSSObject = {};
+
+  for (const [key, value] of entries) {
+    if (key === "minHeight" && typeof value === "number") {
+      rules.top = `calc(${value}px + ${gutter})`;
+    } else if (typeof value === "object" && value !== null) {
+      rules[key] = heightsToOffsets(value, gutter);
+    }
+  }
+
+  return rules;
 }
 
 function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
