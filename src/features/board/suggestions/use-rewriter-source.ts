@@ -19,8 +19,9 @@ export function useRewriterSource({
   language,
   tone,
 }: UseRewriterSourceOptions): SuggestionSource {
+  const sharedContext = suggestionContext(customInstructions);
   const rewriter = useRewriter({
-    sharedContext: suggestionContext(customInstructions),
+    sharedContext,
     length: "shorter",
     format: "plain-text",
     tone,
@@ -31,7 +32,7 @@ export function useRewriterSource({
 
   const canRewrite = text !== "" && rewriter.status === "ready";
   const request = useLatestAsync({
-    deps: [text, customInstructions, language],
+    deps: [text, sharedContext, language],
     run: canRewrite
       ? (signal) => rewriter.rewrite(text, { signal })
       : undefined,
