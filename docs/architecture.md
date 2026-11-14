@@ -425,7 +425,7 @@ library's public entry point, and the library imports no feature.
 | Feature                               | Owns                                                                             |
 | ------------------------------------- | -------------------------------------------------------------------------------- |
 | [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning |
-| [`library`](../src/features/library/) | Stored board sets                                                                | [library/board-sets/](../src/features/library/board-sets/) | Maintain the reactive library, create and delete board sets, and read stored boards as runtime types. |
+| [`library`](../src/features/library/) | Stored board sets                                                                |
 
 Test files may also import the library's
 [`testing`](../src/features/library/testing/index.ts) entry.
