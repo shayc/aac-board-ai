@@ -99,7 +99,7 @@ function SettingsSection({ title, children }: SettingsSectionProps) {
         id={headingId}
         component="h3"
         variant="subtitle2"
-        sx={{ mb: 1.5, color: "text.secondary" }}
+        sx={{ mb: 1.5, fontWeight: "fontWeightBold" }}
       >
         {title}
       </Typography>
