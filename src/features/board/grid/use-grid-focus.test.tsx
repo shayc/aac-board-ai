@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { type Locator, userEvent } from "vitest/browser";
-import { getCellPosition } from "../testing/get-cell-position";
+import { getCellIndices } from "../testing/get-cell-indices";
 import { rowMajorOrder } from "../testing/row-major-order";
 import { Grid, type GridItemProps } from "./grid";
 
@@ -98,8 +98,8 @@ describe("useGridFocus", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      expect(getCellPosition(item2)).toEqual({ row: 0, column: 1 });
-      expect(getCellPosition(item1)).toEqual({ row: 1, column: 0 });
+      expect(getCellIndices(item2)).toEqual({ row: "1", column: "2" });
+      expect(getCellIndices(item1)).toEqual({ row: "2", column: "1" });
 
       await expect.element(item2).toHaveAttribute("tabindex", "0");
       await expect.element(item1).toHaveAttribute("tabindex", "-1");

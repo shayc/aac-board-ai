@@ -7,7 +7,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { getCellPosition } from "../testing/get-cell-position";
+import { getCellIndices } from "../testing/get-cell-indices";
 import { rowMajorOrder } from "../testing/row-major-order";
 import { Grid } from "./grid";
 
@@ -219,10 +219,10 @@ describe("Grid", () => {
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
       const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
 
-      expect(getCellPosition(item4)).toEqual({ row: 0, column: 0 });
-      expect(getCellPosition(item3)).toEqual({ row: 0, column: 1 });
-      expect(getCellPosition(item2)).toEqual({ row: 1, column: 0 });
-      expect(getCellPosition(item1)).toEqual({ row: 1, column: 1 });
+      expect(getCellIndices(item4)).toEqual({ row: "1", column: "1" });
+      expect(getCellIndices(item3)).toEqual({ row: "1", column: "2" });
+      expect(getCellIndices(item2)).toEqual({ row: "2", column: "1" });
+      expect(getCellIndices(item1)).toEqual({ row: "2", column: "2" });
     });
 
     test("treats nulls in order matrix as empty cells", async () => {
@@ -249,8 +249,8 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      expect(getCellPosition(item1)).toEqual({ row: 0, column: 0 });
-      expect(getCellPosition(item2)).toEqual({ row: 1, column: 1 });
+      expect(getCellIndices(item1)).toEqual({ row: "1", column: "1" });
+      expect(getCellIndices(item2)).toEqual({ row: "2", column: "2" });
 
       const allButtons = screen.getByRole("button").all();
       expect(allButtons).toHaveLength(2);
