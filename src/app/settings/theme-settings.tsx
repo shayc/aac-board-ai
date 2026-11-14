@@ -1,3 +1,4 @@
+import CheckIcon from "@mui/icons-material/Check";
 import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
 import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlined";
 import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
@@ -6,7 +7,6 @@ import FormLabel from "@mui/material/FormLabel";
 import { useColorScheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { type MouseEvent, useId } from "react";
@@ -16,6 +16,18 @@ const themeOptions = [
   { value: "light", message: m.themeLight, Icon: LightModeOutlinedIcon },
   { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
 ] as const;
+
+// Side by side, the icons and names overflow a phone's drawer in most
+// languages, so each option stacks them in an equal share of the width.
+const optionSx = {
+  flex: "1 1 0",
+  flexDirection: "column",
+  gap: 0.5,
+  minWidth: 0,
+  px: 0.5,
+  lineHeight: 1.2,
+  hyphens: "auto",
+} as const;
 
 type ThemeMode = (typeof themeOptions)[number]["value"];
 
@@ -45,22 +57,17 @@ export function ThemeSettings() {
         aria-labelledby={labelId}
         value={mode}
         exclusive
-        color="primary"
         fullWidth
         onChange={handleChange}
         sx={{ mt: 1 }}
       >
-        {themeOptions.map(({ value, message, Icon }) => {
-          const label = t(message);
-
-          return (
-            <Tooltip key={value} title={label}>
-              <ToggleButton aria-label={label} value={value}>
-                <Icon />
-              </ToggleButton>
-            </Tooltip>
-          );
-        })}
+        {themeOptions.map(({ value, message, Icon }) => (
+          <ToggleButton key={value} value={value} sx={optionSx}>
+            {/* The checkmark shows the selection without relying on color. */}
+            {mode === value ? <CheckIcon /> : <Icon />}
+            {t(message)}
+          </ToggleButton>
+        ))}
       </ToggleButtonGroup>
     </FormControl>
   );
