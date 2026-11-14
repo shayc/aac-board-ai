@@ -1,8 +1,11 @@
 import Alert from "@mui/material/Alert";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
+import { useId } from "react";
 import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
@@ -15,6 +18,7 @@ import {
 export function SuggestionSettings() {
   const t = useTranslate();
   const { customInstructions } = useSuggestionPreferences();
+  const inputId = useId();
 
   if (!areCustomInstructionsSupported()) {
     const unsupportedMessage = areSuggestionsSupported()
@@ -35,17 +39,24 @@ export function SuggestionSettings() {
   }
 
   return (
-    <TextField
-      label={t(m.suggestionsCustomInstructions)}
-      placeholder={t(m.suggestionsCustomInstructionsPlaceholder)}
-      helperText={t(m.suggestionsCustomInstructionsHelper)}
-      value={customInstructions}
-      onChange={(event) => setSuggestionCustomInstructions(event.target.value)}
-      variant="outlined"
-      fullWidth
-      multiline
-      rows={4}
-      slotProps={{ inputLabel: { shrink: true } }}
-    />
+    <Stack spacing={1}>
+      <Typography component="label" htmlFor={inputId}>
+        {t(m.suggestionsCustomInstructions)}
+      </Typography>
+
+      <TextField
+        id={inputId}
+        placeholder={t(m.suggestionsCustomInstructionsPlaceholder)}
+        helperText={t(m.suggestionsCustomInstructionsHelper)}
+        value={customInstructions}
+        onChange={(event) =>
+          setSuggestionCustomInstructions(event.target.value)
+        }
+        variant="outlined"
+        fullWidth
+        multiline
+        rows={4}
+      />
+    </Stack>
   );
 }
