@@ -73,6 +73,9 @@ export function AACSymbol({
       {hasLabel && (
         <Typography
           component="span"
+          // A board keeps its own text when it has no translation, so a label
+          // can run against the layout's direction.
+          dir="auto"
           noWrap
           variant={isImageDisplayed ? "body2" : "h5"}
           sx={[

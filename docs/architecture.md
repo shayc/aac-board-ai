@@ -339,7 +339,10 @@ a catalog still gets a right-to-left board under a left-to-right app shell.
 Tiles and message parts carry the `lang` of the language the board is shown in,
 and suggestions carry the communication language, so assistive technology
 pronounces them correctly whatever the UI locale is. A board whose file declares
-no language carries no `lang` and inherits the document's.
+no language carries no `lang` and inherits the document's. Each symbol label
+takes its direction from its own text (`dir="auto"`), because a board without a
+translation keeps its text while the board is laid out for the communication
+language.
 
 Direction-specific Emotion caches, right-to-left (RTL) styling, and logical CSS
 support both text directions.

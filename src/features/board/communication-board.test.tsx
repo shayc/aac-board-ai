@@ -172,6 +172,21 @@ function measureBoardLayout(
   };
 }
 
+function measureCharacterLefts(element: Element) {
+  const text = document
+    .createTreeWalker(element, NodeFilter.SHOW_TEXT)
+    .nextNode();
+  assertDefined(text);
+
+  return Array.from(text.textContent ?? "", (_, index) => {
+    const range = document.createRange();
+    range.setStart(text, index);
+    range.setEnd(text, index + 1);
+
+    return range.getBoundingClientRect().left;
+  });
+}
+
 describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -254,6 +269,23 @@ describe("CommunicationBoard", () => {
       expect(first.getBoundingClientRect().left).toBeGreaterThan(
         second.getBoundingClientRect().left,
       );
+    });
+
+    test("reads a left-to-right label left to right on a right-to-left board", async () => {
+      setStoredLanguage("ur");
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        buttons: [{ id: "btn-1", label: "What?" }, { id: "btn-2" }],
+      });
+
+      const tile = screen.getByRole("button", { name: "What?" });
+      await tile.click();
+
+      for (const labelled of [tile, screen.getByRole("listitem")]) {
+        const lefts = measureCharacterLefts(labelled.element());
+
+        expect(lefts).toEqual(lefts.toSorted((a, b) => a - b));
+      }
     });
   });
 

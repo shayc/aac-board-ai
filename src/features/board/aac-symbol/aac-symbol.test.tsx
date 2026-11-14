@@ -99,6 +99,27 @@ describe("AACSymbol", () => {
     expect(tight.image.bottom).toBeLessThanOrEqual(tight.label.top);
   });
 
+  test("cuts a label that is too long at its end, whichever way the layout runs", async () => {
+    const screen = await render(
+      <div dir="rtl" style={{ width: 120, height: 120 }}>
+        <AACSymbol label="A label too long to fit the tile" />
+      </div>,
+    );
+    const label = screen
+      .getByText("A label too long to fit the tile")
+      .element();
+    assertDefined(label.firstChild);
+
+    const firstLetter = document.createRange();
+    firstLetter.setStart(label.firstChild, 0);
+    firstLetter.setEnd(label.firstChild, 1);
+
+    expect(firstLetter.getBoundingClientRect().left).toBeCloseTo(
+      label.getBoundingClientRect().left,
+      0,
+    );
+  });
+
   test("keeps a hidden label in the DOM without taking space from the image", async () => {
     const visible = await renderSymbol();
     const hidden = await renderSymbol({ isLabelVisible: false });
