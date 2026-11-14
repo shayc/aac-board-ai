@@ -245,6 +245,36 @@ describe("MessageBar", () => {
       );
     });
 
+    test("shows the newest part when the message changes during playback", async () => {
+      const props = createProps({
+        parts: SCROLL_PARTS,
+        activePartId: ACTIVE_SCROLL_PART_ID,
+      });
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
+      const scroller = getScrollContainer(screen.container);
+      await waitForAnimationFrame();
+
+      await screen.rerender(
+        <ScrollableMessageBar
+          {...props}
+          parts={[
+            ...SCROLL_PARTS,
+            { kind: "text", id: "newest", label: "newest" },
+          ]}
+        />,
+      );
+      await waitForAnimationFrame();
+
+      const lastPart = scroller.lastElementChild;
+      assertDefined(lastPart);
+      expect(lastPart.getBoundingClientRect().right).toBeCloseTo(
+        scroller.getBoundingClientRect().right,
+        0,
+      );
+    });
+
     test("preserves the scroll position when playback becomes idle", async () => {
       const props = createProps({
         parts: SCROLL_PARTS,
