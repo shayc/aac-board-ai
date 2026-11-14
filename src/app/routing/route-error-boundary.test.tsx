@@ -42,7 +42,7 @@ function throwDataResponse(errorData: unknown): never {
 }
 
 describe("RouteErrorBoundary", () => {
-  test("shows a generic error for a response the app did not code", async () => {
+  test("shows the generic title for a response without an error code", async () => {
     const screen = await renderWithLoader(() =>
       throwDataResponse("Error: internal router message"),
     );
