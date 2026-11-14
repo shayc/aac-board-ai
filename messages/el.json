@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Πώς να ενεργοποιήσετε τις προτάσεις",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI…",
-  "suggestionsUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες για αυτήν τη γλώσσα ή σε αυτήν τη συσκευή",
+  "suggestionsLanguageUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες για αυτήν τη γλώσσα ({language}).",
   "suggestionsFailed": "Δεν ήταν δυνατή η λήψη προτάσεων",
   "suggestionsLabel": "Προτάσεις",
   "navBack": "Πίσω",

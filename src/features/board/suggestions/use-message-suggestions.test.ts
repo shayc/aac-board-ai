@@ -58,23 +58,36 @@ describe("useMessageSuggestions", () => {
     setStoredLanguage(DEFAULT_LANGUAGE);
   });
 
-  test("reports unsupported and stays empty when no Built-in AI is available", async () => {
+  test("reports unavailable and stays empty when no Built-in AI is available", async () => {
     const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.isSupported).toBe(false);
+      expect(result.current.isAvailable).toBe(false);
     });
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("stays supported when only the proofreader is available", async () => {
+  test("stays available when only the proofreader is available", async () => {
     stubProofreader();
 
     const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.isSupported).toBe(true);
+      expect(result.current.isAvailable).toBe(true);
     });
+  });
+
+  test("reports unavailable when no engine supports the language", async () => {
+    setStoredLanguage("he");
+    stubProofreader().availability.mockResolvedValue("unavailable");
+    stubRewriter().availability.mockResolvedValue("unavailable");
+
+    const { result } = await renderMessageSuggestions("שלום");
+
+    await vi.waitFor(() => {
+      expect(result.current.isAvailable).toBe(false);
+    });
+    expect(result.current.status).toEqual({ kind: "idle" });
   });
 
   test("surfaces a proofread correction and deduped rewrites as suggestions", async () => {

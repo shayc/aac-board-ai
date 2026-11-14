@@ -48,8 +48,6 @@ export function SuggestionStatusNotice({
     }
     case "failed":
       return <StatusText>{t(m.suggestionsFailed)}</StatusText>;
-    case "unavailable":
-      return <StatusText>{t(m.suggestionsUnavailable)}</StatusText>;
     default:
       return assertNever(status);
   }

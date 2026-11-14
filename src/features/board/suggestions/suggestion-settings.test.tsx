@@ -1,4 +1,8 @@
 import readme from "/README.md?raw";
+import {
+  DEFAULT_LANGUAGE,
+  setStoredLanguage,
+} from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
@@ -6,7 +10,7 @@ import {
   stubRewriter,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SuggestionSettings } from "./suggestion-settings";
 
@@ -18,7 +22,17 @@ function renderSuggestionsSettings() {
   );
 }
 
+function availableWithoutLanguages(options?: Record<string, unknown>) {
+  return Promise.resolve<Availability>(
+    options?.expectedInputLanguages === undefined ? "available" : "unavailable",
+  );
+}
+
 describe("SuggestionSettings", () => {
+  beforeEach(() => {
+    setStoredLanguage(DEFAULT_LANGUAGE);
+  });
+
   test("shows an unsupported message instead of controls when no suggestion engine is supported", async () => {
     const screen = await renderSuggestionsSettings();
 
@@ -87,6 +101,46 @@ describe("SuggestionSettings", () => {
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("names the language instead of showing custom instructions when no engine supports it", async () => {
+    setStoredLanguage("he");
+    stubProofreader().availability.mockImplementation(
+      availableWithoutLanguages,
+    );
+    stubRewriter().availability.mockImplementation(availableWithoutLanguages);
+
+    const screen = await renderSuggestionsSettings();
+
+    await expect
+      .element(screen.getByText("ההצעות אינן זמינות בשפה הזו (עברית)."))
+      .toBeVisible();
+    await expect.element(screen.getByRole("textbox")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("link")).not.toBeInTheDocument();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("points to the setup help when the device cannot run any engine", async () => {
+    stubProofreader().availability.mockResolvedValue("unavailable");
+    stubRewriter().availability.mockResolvedValue("unavailable");
+
+    const screen = await renderSuggestionsSettings();
+
+    await expect
+      .element(
+        screen.getByText("Suggestions are unavailable in this browser.", {
+          exact: false,
+        }),
+      )
+      .toBeVisible();
+    await expect
+      .element(
+        screen.getByRole("link", {
+          name: "How to enable suggestions (opens in new tab)",
+        }),
+      )
+      .toBeVisible();
   });
 
   test("edits and persists custom instructions", async () => {

@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Ehdotusten ottaminen käyttöön",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia…",
-  "suggestionsUnavailable": "Ehdotukset eivät ole käytettävissä tällä kielellä tai tällä laitteella",
+  "suggestionsLanguageUnavailable": "Ehdotukset eivät ole käytettävissä tällä kielellä ({language}).",
   "suggestionsFailed": "Ehdotuksia ei voitu hakea",
   "suggestionsLabel": "Ehdotukset",
   "navBack": "Takaisin",

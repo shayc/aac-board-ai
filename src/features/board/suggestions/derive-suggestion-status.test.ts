@@ -102,21 +102,13 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("returns unavailable only when there is text, no engine can run on the device, and nothing was suggested", () => {
-    const allEnginesDown = makeInput({
+  test("returns idle when every engine is unavailable for the language", () => {
+    const input = makeInput({
       sources: makeSources("unavailable", "unavailable"),
       hasText: true,
     });
 
-    expect(deriveSuggestionStatus(allEnginesDown)).toEqual({
-      kind: "unavailable",
-    });
-    expect(
-      deriveSuggestionStatus({ ...allEnginesDown, hasText: false }),
-    ).toEqual({ kind: "idle" });
-    expect(
-      deriveSuggestionStatus({ ...allEnginesDown, phraseCount: 1 }),
-    ).toEqual({ kind: "idle" });
+    expect(deriveSuggestionStatus(input)).toEqual({ kind: "idle" });
   });
 
   test("returns failed when every engine's request fails", () => {

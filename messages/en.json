@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "How to enable suggestions",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model…",
-  "suggestionsUnavailable": "Suggestions unavailable for this language or device",
+  "suggestionsLanguageUnavailable": "Suggestions are unavailable in this language ({language}).",
   "suggestionsFailed": "Couldn't get suggestions",
   "suggestionsLabel": "Suggestions",
   "navBack": "Go back",

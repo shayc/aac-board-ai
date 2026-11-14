@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Як увімкнути пропозиції",
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ…",
-  "suggestionsUnavailable": "Пропозиції недоступні для цієї мови або на цьому пристрої",
+  "suggestionsLanguageUnavailable": "Пропозиції недоступні для цієї мови ({language}).",
   "suggestionsFailed": "Не вдалося отримати пропозиції",
   "suggestionsLabel": "Пропозиції",
   "navBack": "Назад",

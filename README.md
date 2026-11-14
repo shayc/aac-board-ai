@@ -58,7 +58,7 @@ chrome://flags/#rewriter-api
 
 Open `edge://flags`, search for `Proofreader API` and `Rewriter API`, and enable both flags.
 
-Restart your browser to apply the changes. AI features need enough free disk space and memory to run on-device models. See the API documentation for current requirements:
+Restart your browser to apply the changes. AI features need enough free disk space and memory to run on-device models, and suggestions appear only for languages those models support. See the API documentation for current requirements:
 
 - **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) · [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api) · [Translator](https://developer.chrome.com/docs/ai/translator-api)
 - **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api) · [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis) · [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)

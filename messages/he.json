@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "איך מפעילים הצעות?",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI…",
-  "suggestionsUnavailable": "ההצעות אינן זמינות בשפה הזו או במכשיר הזה",
+  "suggestionsLanguageUnavailable": "ההצעות אינן זמינות בשפה הזו ({language}).",
   "suggestionsFailed": "לא ניתן לקבל הצעות",
   "suggestionsLabel": "הצעות",
   "navBack": "חזרה",

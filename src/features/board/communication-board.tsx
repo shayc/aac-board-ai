@@ -86,7 +86,7 @@ export function CommunicationBoard({
     />
   );
 
-  const isActionRowVisible = !isSmallScreen || suggestions.isSupported;
+  const isActionRowVisible = !isSmallScreen || suggestions.isAvailable;
 
   return (
     <DirectionalThemeProvider direction={communication.direction}>
@@ -126,7 +126,7 @@ export function CommunicationBoard({
                 >
                   {!isSmallScreen && navigationButtons}
 
-                  {suggestions.isSupported && (
+                  {suggestions.isAvailable && (
                     <SuggestionBar
                       status={suggestions.status}
                       phrases={suggestions.phrases}

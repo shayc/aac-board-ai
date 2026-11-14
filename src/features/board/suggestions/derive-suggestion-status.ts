@@ -1,13 +1,13 @@
 import type { Status } from "@shayc/react-built-in-ai";
 import type { SuggestionSource } from "./suggestion-source";
+import { isEngineUsable } from "./suggestion-support";
 
 export type SuggestionStatus =
   | { kind: "idle" }
   | { kind: "not-enabled" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
-  | { kind: "failed" }
-  | { kind: "unavailable" };
+  | { kind: "failed" };
 
 export interface SuggestionStatusInput {
   sources: readonly Pick<
@@ -25,17 +25,15 @@ export function deriveSuggestionStatus({
   hasText,
   phraseCount,
 }: SuggestionStatusInput): SuggestionStatus {
-  const supportedSources = sources.filter(
-    ({ engineStatus }) => engineStatus !== "unsupported",
+  const usableSources = sources.filter(({ engineStatus }) =>
+    isEngineUsable(engineStatus),
   );
-  if (supportedSources.length === 0) {
+  if (usableSources.length === 0) {
     return { kind: "idle" };
   }
 
   // Engines in error require an explicit prepare() retry.
-  if (
-    supportedSources.some(({ engineStatus }) => needsEnabling(engineStatus))
-  ) {
+  if (usableSources.some(({ engineStatus }) => needsEnabling(engineStatus))) {
     return { kind: "not-enabled" };
   }
 
@@ -45,20 +43,15 @@ export function deriveSuggestionStatus({
     return { kind: "downloading", percent: percent === 0 ? null : percent };
   }
 
-  if (supportedSources.some(({ isRequestPending }) => isRequestPending)) {
+  if (usableSources.some(({ isRequestPending }) => isRequestPending)) {
     return { kind: "pending" };
   }
 
-  const hasWorkingSource = supportedSources.some(
-    ({ engineStatus, hasRequestFailed }) =>
-      engineStatus !== "unavailable" && !hasRequestFailed,
+  const hasWorkingSource = usableSources.some(
+    ({ hasRequestFailed }) => !hasRequestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingSource) {
-    const isEveryEngineUnavailable = supportedSources.every(
-      ({ engineStatus }) => engineStatus === "unavailable",
-    );
-
-    return { kind: isEveryEngineUnavailable ? "unavailable" : "failed" };
+    return { kind: "failed" };
   }
 
   return { kind: "idle" };

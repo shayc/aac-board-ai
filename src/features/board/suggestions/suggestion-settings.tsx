@@ -3,40 +3,109 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useLatestAsync } from "@shared/hooks/use-latest-async";
+import { useUILocale } from "@shared/language/language-store";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
-import { useId } from "react";
+import { type ReactNode, useId } from "react";
 import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
 import {
-  areCustomInstructionsSupported,
   areSuggestionsSupported,
+  checkSuggestionLanguageSupport,
 } from "./suggestion-support";
 
 export function SuggestionSettings() {
   const t = useTranslate();
-  const { customInstructions } = useSuggestionPreferences();
-  const inputId = useId();
+  const { language } = useCommunicationLanguage();
+  const uiLocale = useUILocale();
+  const isSupported = areSuggestionsSupported();
+  const languageSupport = useLatestAsync({
+    deps: [language],
+    run: isSupported
+      ? () => checkSuggestionLanguageSupport(language)
+      : undefined,
+  });
 
-  if (!areCustomInstructionsSupported()) {
-    const unsupportedMessage = areSuggestionsSupported()
-      ? m.suggestionsCustomInstructionsUnsupported
-      : m.suggestionsUnsupported;
-
+  if (!isSupported) {
     return (
-      <Alert role="note" severity="info" variant="outlined">
-        {t(unsupportedMessage)}{" "}
-        <ExternalLink
-          href="https://github.com/shayc/aac-board-ai#enable-ai-suggestions"
-          sx={{ whiteSpace: "normal" }}
-        >
-          {t(m.suggestionsEnableHelp)}
-        </ExternalLink>
-      </Alert>
+      <UnavailableNotice hasEnableHelp>
+        {t(m.suggestionsUnsupported)}
+      </UnavailableNotice>
     );
   }
+
+  if (languageSupport.isPending) {
+    return null;
+  }
+
+  switch (languageSupport.value) {
+    case "suggestions-only":
+      return (
+        <UnavailableNotice hasEnableHelp>
+          {t(m.suggestionsCustomInstructionsUnsupported)}
+        </UnavailableNotice>
+      );
+    case "language-unavailable": {
+      const languageName =
+        new Intl.DisplayNames([uiLocale], { type: "language" }).of(language) ??
+        language;
+
+      return (
+        <UnavailableNotice>
+          {t(m.suggestionsLanguageUnavailable, { language: languageName })}
+        </UnavailableNotice>
+      );
+    }
+    case "device-unavailable":
+      return (
+        <UnavailableNotice hasEnableHelp>
+          {t(m.suggestionsUnsupported)}
+        </UnavailableNotice>
+      );
+    default:
+      // A failed probe leaves the field usable rather than hiding it.
+      return <CustomInstructionsField />;
+  }
+}
+
+interface UnavailableNoticeProps {
+  hasEnableHelp?: boolean;
+  children: ReactNode;
+}
+
+function UnavailableNotice({
+  hasEnableHelp = false,
+  children,
+}: UnavailableNoticeProps) {
+  const t = useTranslate();
+
+  return (
+    <Alert role="note" severity="info" variant="outlined">
+      {children}
+
+      {hasEnableHelp && (
+        <>
+          {" "}
+          <ExternalLink
+            href="https://github.com/shayc/aac-board-ai#enable-ai-suggestions"
+            sx={{ whiteSpace: "normal" }}
+          >
+            {t(m.suggestionsEnableHelp)}
+          </ExternalLink>
+        </>
+      )}
+    </Alert>
+  );
+}
+
+function CustomInstructionsField() {
+  const t = useTranslate();
+  const { customInstructions } = useSuggestionPreferences();
+  const inputId = useId();
 
   return (
     <Stack spacing={1}>

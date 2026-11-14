@@ -94,18 +94,6 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("shows that suggestions are unavailable for the language or device", async () => {
-    const screen = await renderWithProviders(
-      <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
-    );
-
-    await expect
-      .element(
-        screen.getByText("Suggestions unavailable for this language or device"),
-      )
-      .toBeVisible();
-  });
-
   test("shows that suggestions failed with no accessibility violations", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
