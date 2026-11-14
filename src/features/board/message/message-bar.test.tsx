@@ -2,7 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
@@ -25,9 +25,6 @@ function createProps(
     isWordOpen: false,
     activePartId: null,
     areImagesVisible: true,
-    isPlaying: false,
-    onPlay: vi.fn(),
-    onStop: vi.fn(),
     ...overrides,
   };
 }
@@ -68,6 +65,28 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("I")).toBeVisible();
     await expect.element(screen.getByText("want")).toBeVisible();
     await expect.element(screen.getByText("water")).toBeVisible();
+  });
+
+  test("keeps its height when the first part is added", async () => {
+    const props = createProps();
+    const screen = await renderWithProviders(<MessageBar {...props} />);
+    const bar = screen
+      .getByRole("list", { name: "Message" })
+      .element().parentElement;
+    assertDefined(bar);
+    const emptyHeight = bar.getBoundingClientRect().height;
+
+    await screen.rerender(
+      <MessageBar
+        {...props}
+        parts={[
+          { kind: "tile", id: "a", label: "want", imageSrc: TEST_IMAGE_SRC },
+        ]}
+      />,
+    );
+    await expect.element(screen.getByText("want")).toBeVisible();
+
+    expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
   });
 
   test.each([
@@ -211,7 +230,6 @@ describe("MessageBar", () => {
       await screen.rerender(
         <ScrollableMessageBar
           {...props}
-          isPlaying
           activePartId={ACTIVE_SCROLL_PART_ID}
         />,
       );
@@ -231,7 +249,6 @@ describe("MessageBar", () => {
       const props = createProps({
         parts: SCROLL_PARTS,
         activePartId: ACTIVE_SCROLL_PART_ID,
-        isPlaying: true,
       });
       const screen = await renderWithProviders(
         <ScrollableMessageBar {...props} />,
@@ -242,69 +259,11 @@ describe("MessageBar", () => {
 
       scroller.scrollLeft = 0;
       await screen.rerender(
-        <ScrollableMessageBar
-          {...props}
-          activePartId={null}
-          isPlaying={false}
-        />,
+        <ScrollableMessageBar {...props} activePartId={null} />,
       );
       await waitForAnimationFrame();
 
       expect(scroller.scrollLeft).toBe(0);
-    });
-  });
-
-  describe("controls", () => {
-    test("delegates play to onPlay while idle", async () => {
-      const onPlay = vi.fn();
-
-      const screen = await renderWithProviders(
-        <MessageBar
-          {...createProps({
-            parts: [{ kind: "tile", id: "a", label: "Hello" }],
-            isPlaying: false,
-            onPlay,
-          })}
-        />,
-      );
-
-      await screen.getByRole("button", { name: "Play message" }).click();
-
-      expect(onPlay).toHaveBeenCalledTimes(1);
-    });
-
-    test("delegates stop to onStop while playing", async () => {
-      const onStop = vi.fn();
-
-      const screen = await renderWithProviders(
-        <MessageBar {...createProps({ isPlaying: true, onStop })} />,
-      );
-
-      await screen.getByRole("button", { name: "Stop message" }).click();
-
-      expect(onStop).toHaveBeenCalledTimes(1);
-    });
-
-    test("keeps focus on play and ignores it once the message empties", async () => {
-      const onPlay = vi.fn();
-      const props = createProps({
-        parts: [{ kind: "tile", id: "a", label: "Hello" }],
-        onPlay,
-      });
-
-      const screen = await renderWithProviders(<MessageBar {...props} />);
-      const play = screen.getByRole("button", { name: "Play message" });
-      play.element().focus();
-      await expect.element(play).toHaveFocus();
-
-      await screen.rerender(<MessageBar {...props} parts={[]} />);
-
-      await expect.element(play).toHaveAttribute("aria-disabled", "true");
-      await expect.element(play).toHaveFocus();
-
-      await userEvent.keyboard("{Enter}");
-
-      expect(onPlay).not.toHaveBeenCalled();
     });
   });
 });

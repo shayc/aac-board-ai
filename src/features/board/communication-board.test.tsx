@@ -12,6 +12,7 @@ import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
 import {
   setClearsAfterSpeaking,
   setMessageImagesVisible,
@@ -110,18 +111,24 @@ function measureBoardLayout(
   const grid = container.querySelector("[role='grid']");
   const scroller = grid?.parentElement;
   const messageBar = container.querySelector("[role='list']")?.parentElement;
-  const backspaceButton = container.querySelector("[aria-label='Backspace']");
+  const playButton = container.querySelector("[aria-label='Play message']");
+  const controlBar = container
+    .querySelector("[aria-label='Go to main board']")
+    ?.closest("[data-scan-group]");
   assertDefined(grid);
   assertDefined(scroller);
   assertDefined(messageBar);
-  assertDefined(backspaceButton);
+  assertDefined(playButton);
+  assertDefined(controlBar);
 
   if (isScrolledToEnd) {
     scroller.scrollTo({ top: scroller.scrollHeight, behavior: "instant" });
   }
 
   const viewport = scroller.getBoundingClientRect();
-  const backspace = backspaceButton.getBoundingClientRect();
+  const bar = messageBar.getBoundingClientRect();
+  const play = playButton.getBoundingClientRect();
+  const controls = controlBar.getBoundingClientRect();
   const rows = Array.from(grid.querySelectorAll("[role='row']"), (row) =>
     row.getBoundingClientRect(),
   );
@@ -146,24 +153,25 @@ function measureBoardLayout(
     (column) =>
       column.left < viewport.right && column.right > viewport.right + 0.5,
   );
-  const isBarBelowGrid = backspace.top >= viewport.bottom - 0.5;
-  const barAboveBottom = isBarBelowGrid
-    ? messageBar.getBoundingClientRect().bottom
-    : backspace.bottom;
-  const edgeBelowTop = isBarBelowGrid ? backspace.top : window.innerHeight;
+  const isPlayBelowGrid = play.top >= viewport.bottom - 0.5;
+  const areControlsBelowGrid = controls.top >= viewport.bottom - 0.5;
+  const edgeAboveBottom = areControlsBelowGrid ? bar.bottom : controls.bottom;
+  const edgeBelowTop = areControlsBelowGrid ? controls.top : window.innerHeight;
   const firstRow = rows.at(0);
   const lastRow = rows.at(-1);
   assertDefined(firstRow);
   assertDefined(lastRow);
 
   return {
-    messageBarStart: messageBar.getBoundingClientRect().left,
+    isPlayBelowGrid,
+    playEnd: window.innerWidth - play.right,
+    messageBarStart: bar.left,
+    messageBarEnd: window.innerWidth - bar.right,
     firstTileStart: firstColumn.left,
-    backspaceEnd: window.innerWidth - backspace.right,
-    barToGrid: isBarBelowGrid
-      ? backspace.top - viewport.bottom
-      : viewport.top - backspace.bottom,
-    barAboveToFirstRow: firstRow.top - barAboveBottom,
+    controlsToGrid: areControlsBelowGrid
+      ? controls.top - viewport.bottom
+      : viewport.top - controls.bottom,
+    edgeAboveToFirstRow: firstRow.top - edgeAboveBottom,
     lastRowToEdgeBelow: edgeBelowTop - lastRow.bottom,
     wholeRows: wholeRows.length,
     topHint: rowAbove ? rowAbove.bottom - viewport.top : 0,
@@ -268,6 +276,8 @@ describe("CommunicationBoard", () => {
         clearance: 4,
         overflowHint: 8,
         wholeRows: 5,
+        isPlayBelowGrid: true,
+        messageBarEnd: 16,
       },
       {
         name: "a tablet",
@@ -277,11 +287,13 @@ describe("CommunicationBoard", () => {
         clearance: 8,
         overflowHint: 16,
         wholeRows: 4,
+        isPlayBelowGrid: false,
+        messageBarEnd: 24 + MESSAGE_ACTION_SIZE + 24,
       },
     ];
 
     test.each(LAYOUT_CASES)(
-      "spaces the bars and the grid by the page margin on $name",
+      "places play and spaces the bars and the grid by the page margin on $name",
       async ({
         width,
         height,
@@ -289,17 +301,21 @@ describe("CommunicationBoard", () => {
         clearance,
         overflowHint,
         wholeRows,
+        isPlayBelowGrid,
+        messageBarEnd,
       }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
         await expect.element(screen.getByRole("grid")).toBeVisible();
 
         const atStart = measureBoardLayout(screen.container);
+        expect(atStart.isPlayBelowGrid).toBe(isPlayBelowGrid);
+        expect(atStart.playEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarEnd).toBeCloseTo(messageBarEnd, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
-        expect(atStart.backspaceEnd).toBeCloseTo(pageMargin, 0);
-        expect(atStart.barToGrid).toBeCloseTo(clearance, 0);
-        expect(atStart.barAboveToFirstRow).toBeCloseTo(pageMargin, 0);
+        expect(atStart.controlsToGrid).toBeCloseTo(clearance, 0);
+        expect(atStart.edgeAboveToFirstRow).toBeCloseTo(pageMargin, 0);
         expect(atStart.wholeRows).toBe(wholeRows);
         expect(atStart.bottomHint).toBeCloseTo(overflowHint, 0);
         expect(atStart.sideHint).toBeCloseTo(overflowHint, 0);

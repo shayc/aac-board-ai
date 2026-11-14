@@ -2,6 +2,7 @@ import Dialog from "@mui/material/Dialog";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech } from "@shared/testing/stub-speech";
+import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -19,6 +20,11 @@ import {
 import { ScanningScope } from "./scanning-scope";
 
 const SCAN_INTERVAL_MS = 1000;
+// Play sits under the grid below the sm breakpoint and after the message bar
+// above it, which changes the scan order.
+const PHONE_WIDTH = 375;
+const TABLET_WIDTH = 1024;
+const VIEWPORT_HEIGHT = 800;
 
 const TWO_ROW_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -264,7 +270,8 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
     });
 
-    test("restarts at the play button once the message has content", async () => {
+    test("restarts at the message bar once the message has content", async () => {
+      await setTestViewport(PHONE_WIDTH, VIEWPORT_HEIGHT);
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch();
@@ -274,39 +281,16 @@ describe("switch scanning", () => {
         expect(speech.spokenTexts()).toEqual(["yes"]);
       });
 
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
+      await expect.poll(highlightedNames).toEqual(["Backspace"]);
     });
 
     test("activates a highlighted control that is the only one in its group", async () => {
-      await renderCommunicationBoard(TWO_ROW_BOARD);
-
-      await pressSwitch();
-      await pressSwitch();
-      await pressSwitch();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
-
-      await pressSwitch();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["yes", "yes"]);
-      });
-    });
-
-    test("reaches the board controls in document order", async () => {
+      await setTestViewport(PHONE_WIDTH, VIEWPORT_HEIGHT);
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch();
       await pressSwitch();
       await pressSwitch();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
-
-      await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
-
-      await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
-
-      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["Backspace"]);
       const messagePart = screen
         .getByRole("list", { name: "Message" })
@@ -316,6 +300,55 @@ describe("switch scanning", () => {
       await pressSwitch();
 
       await expect.element(messagePart).not.toBeInTheDocument();
+    });
+
+    test("reaches the board controls in document order", async () => {
+      await setTestViewport(PHONE_WIDTH, VIEWPORT_HEIGHT);
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["Backspace"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["Play message"]);
+
+      await pressSwitch();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["yes", "yes"]);
+      });
+    });
+
+    test("scans backspace and play as one group on wider screens", async () => {
+      await setTestViewport(TABLET_WIDTH, VIEWPORT_HEIGHT);
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await pressSwitch();
+      await expect
+        .poll(highlightedNames)
+        .toEqual(["Backspace", "Play message"]);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["Backspace"]);
+
+      await advanceScanInterval();
+      await expect.poll(highlightedNames).toEqual(["Play message"]);
+
+      await pressSwitch();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["yes", "yes"]);
+      });
     });
 
     test("counts a held switch as one press", async () => {

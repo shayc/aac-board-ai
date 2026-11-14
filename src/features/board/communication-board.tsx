@@ -14,6 +14,7 @@ import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
+import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
@@ -76,6 +77,16 @@ export function CommunicationBoard({
     />
   );
 
+  const playButton = (
+    <PlayButton
+      disabled={!playback.isMessagePlaying && !hasMessage}
+      isPlaying={playback.isMessagePlaying}
+      variant={isSmallScreen ? "boardControl" : "prominent"}
+      onPlay={() => void playback.playMessage(message.parts)}
+      onStop={playback.stop}
+    />
+  );
+
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
     <Tile
       key={`${board.id}/${button.id}`}
@@ -105,39 +116,37 @@ export function CommunicationBoard({
             spacing={PAGE_MARGIN}
             sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}
           >
-            <PlaybackMessageBar
-              parts={message.parts}
-              language={language}
-              isWordOpen={message.isWordOpen}
-              playback={playback}
-            />
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={PAGE_MARGIN}
+              sx={{ alignItems: "center" }}
+            >
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <PlaybackMessageBar
+                  parts={message.parts}
+                  language={language}
+                  isWordOpen={message.isWordOpen}
+                  endAction={backspaceButton}
+                />
+              </Box>
+
+              {!isSmallScreen && playButton}
+            </Stack>
 
             {isActionRowVisible && (
-              <Stack
-                {...scanGroupProps}
-                direction="row"
-                spacing={2}
-                sx={{ justifyContent: "space-between" }}
-              >
-                <Stack
-                  direction="row"
-                  spacing={2}
-                  sx={{ flex: 1, minWidth: 0 }}
-                >
-                  {!isSmallScreen && navigationButtons}
+              <Stack {...scanGroupProps} direction="row" spacing={2}>
+                {!isSmallScreen && navigationButtons}
 
-                  {suggestions.isAvailable && (
-                    <SuggestionBar
-                      status={suggestions.status}
-                      phrases={suggestions.phrases}
-                      language={communication.language}
-                      onEnable={suggestions.enable}
-                      onPhraseSelect={message.replaceWithText}
-                    />
-                  )}
-                </Stack>
-
-                {!isSmallScreen && backspaceButton}
+                {suggestions.isAvailable && (
+                  <SuggestionBar
+                    status={suggestions.status}
+                    phrases={suggestions.phrases}
+                    language={communication.language}
+                    onEnable={suggestions.enable}
+                    onPhraseSelect={message.replaceWithText}
+                  />
+                )}
               </Stack>
             )}
           </Stack>
@@ -164,7 +173,7 @@ export function CommunicationBoard({
               })}
             >
               {navigationButtons}
-              {backspaceButton}
+              {playButton}
             </Stack>
           )}
         </Stack>

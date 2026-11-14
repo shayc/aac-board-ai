@@ -1,9 +1,11 @@
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
+import IconButton from "@mui/material/IconButton";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
+import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeProps, useLongPress, usePress } from "react-aria";
-import { BoardControlButton } from "../board-control-button";
+import { MESSAGE_ACTION_ICON_SIZE, MESSAGE_ACTION_SIZE } from "./message-bar";
 
 const LONG_PRESS_THRESHOLD_MS = 600;
 
@@ -29,12 +31,20 @@ export function BackspaceButton({
   });
 
   return (
-    <BoardControlButton
+    <IconButton
       {...mergeProps(pressProps, longPressProps)}
+      {...focusableDisabledProps(disabled)}
       aria-label={t(m.messageBackspace)}
-      disabled={disabled}
+      sx={{
+        flexShrink: 0,
+        // With the bar's inset, the circle sits on the bar's rounded end and
+        // both curves run parallel.
+        width: MESSAGE_ACTION_SIZE,
+        height: MESSAGE_ACTION_SIZE,
+        fontSize: MESSAGE_ACTION_ICON_SIZE,
+      }}
     >
-      <BackspaceOutlinedIcon sx={flipForRTL} />
-    </BoardControlButton>
+      <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
+    </IconButton>
   );
 }
