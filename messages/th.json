@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "วิธีเปิดใช้คำแนะนำ",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI…",
-  "suggestionsLanguageUnavailable": "ไม่สามารถใช้คำแนะนำในภาษานี้ ({language}) ได้",
+  "suggestionsLanguageUnavailable": "ไม่สามารถใช้คำแนะนำในภาษานี้ได้",
   "suggestionsFailed": "ไม่สามารถรับคำแนะนำได้",
   "suggestionsLabel": "คำแนะนำ",
   "navBack": "กลับ",

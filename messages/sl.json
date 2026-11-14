@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Kako omogočiti predloge",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI…",
-  "suggestionsLanguageUnavailable": "Predlogi v tem jeziku ({language}) niso na voljo.",
+  "suggestionsLanguageUnavailable": "Predlogi v tem jeziku niso na voljo.",
   "suggestionsFailed": "Predlogov ni bilo mogoče pridobiti",
   "suggestionsLabel": "Predlogi",
   "navBack": "Nazaj",

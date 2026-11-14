@@ -116,7 +116,7 @@
   "suggestionsEnableHelp": "Jak zapnout návrhy",
   "suggestionsEnable": "Zapnout návrhy",
   "suggestionsDownloading": "Stahování modelu AI…",
-  "suggestionsLanguageUnavailable": "Návrhy nejsou pro tento jazyk ({language}) k dispozici.",
+  "suggestionsLanguageUnavailable": "Návrhy nejsou pro tento jazyk k dispozici.",
   "suggestionsFailed": "Návrhy se nepodařilo získat",
   "suggestionsLabel": "Návrhy",
   "navBack": "Zpět",
