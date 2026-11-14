@@ -36,7 +36,6 @@ export function MessageBar({
 }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
   // Reads the latest parts without reacting to them, so an edit during
   // playback shows the newest part instead of jumping back to the spoken one.
@@ -61,6 +60,8 @@ export function MessageBar({
       scrollToActivePart(activePartId);
     }
   }, [activePartId]);
+
+  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
   return (
     <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
