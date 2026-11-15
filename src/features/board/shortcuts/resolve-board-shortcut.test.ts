@@ -57,7 +57,7 @@ describe("resolveBoardShortcut", () => {
     ).toBe("undo");
   });
 
-  test("⌘/Ctrl with the Z position does not undo on a Latin layout that moves Z", () => {
+  test("⌘/Ctrl+Z goes by the letter on a Latin layout that moves Z", () => {
     expect(
       resolveBoardShortcut(
         keyEvent({ key: "y", code: "KeyZ", ctrlKey: true }),

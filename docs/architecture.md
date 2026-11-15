@@ -295,10 +295,10 @@ head-pointer and eye-gaze users rest on targets to select them. Each control's
 `aria-keyshortcuts` lists the keys that activate it, and the backspace hint
 names the clear shortcut for screen readers.
 
-Undo steps back through the last 100 changes to the message, including a clear
-and a suggestion that replaced it, and opens a spoken message it brings back
-for more. There is no redo, and nothing in the interface names undo yet. On a
-keyboard layout without Latin letters the Z key's position counts.
+Undo steps back through a bounded history of changes to the message, including
+a clear and a suggestion that replaced it, and opens a spoken message it brings
+back for more. There is no redo, and nothing in the interface names undo yet.
+On a keyboard layout without Latin letters the Z key's position counts.
 
 ### Switch scanning
 
