@@ -5,6 +5,12 @@ interface Counter {
   count: number;
 }
 
+function dispatchStorageFromAnotherTab(key: string | null) {
+  window.dispatchEvent(
+    new StorageEvent("storage", { key, storageArea: localStorage }),
+  );
+}
+
 function parseCounter(raw: unknown): Counter {
   const parsed = (raw ?? {}) as Partial<Counter>;
 
@@ -54,5 +60,34 @@ describe("createPersistedStore", () => {
     reloadPersistedStores();
 
     expect(store.getSnapshot()).toEqual({ count: 0 });
+  });
+
+  test("reloads when another tab writes its key", () => {
+    const store = createPersistedStore("counter", parseCounter);
+
+    localStorage.setItem("counter", JSON.stringify({ count: 4 }));
+    dispatchStorageFromAnotherTab("counter");
+
+    expect(store.getSnapshot()).toEqual({ count: 4 });
+  });
+
+  test("reloads to its parsed default when another tab clears storage", () => {
+    const store = createPersistedStore("counter", parseCounter);
+
+    store.setState({ count: 9 });
+    localStorage.clear();
+    dispatchStorageFromAnotherTab(null);
+
+    expect(store.getSnapshot()).toEqual({ count: 0 });
+  });
+
+  test("ignores another tab's write to a different key", () => {
+    const store = createPersistedStore("counter", parseCounter);
+
+    store.setState({ count: 9 });
+    localStorage.setItem("counter", JSON.stringify({ count: 4 }));
+    dispatchStorageFromAnotherTab("other");
+
+    expect(store.getSnapshot()).toEqual({ count: 9 });
   });
 });

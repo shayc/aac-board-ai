@@ -22,10 +22,12 @@ class BoardURLError extends Error {
 }
 
 // The ?board= param is attacker-controlled and confirmed by its host, so only
-// http(s) may reach fetch. Schemes such as data: carry a payload with no host.
+// URLs with a host may reach fetch; schemes such as data: carry a payload with
+// none. The Content Security Policy allows https: and the app's own origin, so
+// rejecting anything else here fails before the confirmation, not after it.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
-  if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
+  if (!isFetchableBoardURL(resolved)) {
     throw new BoardURLError(
       "unsupported-scheme",
       `Unsupported board URL scheme: ${resolved.protocol}`,
@@ -33,6 +35,10 @@ export function parseBoardURL(url: string): URL {
   }
 
   return resolved;
+}
+
+function isFetchableBoardURL(url: URL): boolean {
+  return url.protocol === "https:" || url.origin === window.location.origin;
 }
 
 export function deriveBoardSetIdFromURL(url: string): string {

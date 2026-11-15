@@ -113,18 +113,19 @@ describe("importBoardFileFromURL", () => {
     );
 
     const result = await importBoardFileFromURL(
-      "http://trusted.example/core.obz",
+      "https://trusted.example/core.obz",
     );
 
     expect(result.id).toBe("core");
   });
 
-  test("rejects a non-http(s) URL before fetching", async () => {
+  test.each([
+    "data:application/zip;base64,UEsDBA==",
+    "http://trusted.example/core.obz",
+  ])("rejects %s before fetching", async (url) => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-    await expect(
-      importBoardFileFromURL("data:application/zip;base64,UEsDBA=="),
-    ).rejects.toMatchObject({
+    await expect(importBoardFileFromURL(url)).rejects.toMatchObject({
       name: "BoardURLError",
       code: "unsupported-scheme",
     });
