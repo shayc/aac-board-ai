@@ -7,9 +7,11 @@ import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
   type BoardSetInput,
   type BoardSetRecord,
+  type BoardSetTranslations,
   insertBoardSet,
   listBoardSetRecords,
   removeBoardSet,
+  saveBoardSetTranslations,
 } from "../storage/board-set-storage";
 
 export interface BoardSetsSnapshot {
@@ -40,7 +42,7 @@ export async function refreshBoardSets(): Promise<void> {
   }
 }
 
-export async function syncBoardSets(): Promise<void> {
+async function syncBoardSets(): Promise<void> {
   await refreshBoardSets();
   boardSetsSyncChannel.postMessage(undefined);
 }
@@ -62,5 +64,14 @@ export async function createBoardSet(input: BoardSetInput): Promise<void> {
 
 export async function deleteBoardSet(boardSetId: string): Promise<void> {
   await removeBoardSet(boardSetId);
+  await syncBoardSets();
+}
+
+export async function addBoardSetTranslations(
+  boardSetId: string,
+  language: string,
+  translations: BoardSetTranslations,
+): Promise<void> {
+  await saveBoardSetTranslations(boardSetId, language, translations);
   await syncBoardSets();
 }

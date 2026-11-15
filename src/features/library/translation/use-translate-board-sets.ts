@@ -2,7 +2,7 @@ import { useCommunicationLanguage } from "@shared/language/use-communication-lan
 import { useEffect, useEffectEvent } from "react";
 import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { boardSetIdFromPath } from "../board-paths";
-import { syncBoardSets, useBoardSets } from "../board-sets/board-sets-store";
+import { useBoardSets } from "../board-sets/board-sets-store";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import {
   queueBoardTranslationPass,
@@ -22,7 +22,7 @@ export function useTranslateBoardSets(): void {
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  const refreshTranslatedBoardSet = useEffectEvent((boardSetId: string) => {
+  const revalidateIfRouted = useEffectEvent((boardSetId: string) => {
     const routedBoardSetIds = [pathname, pendingPathname].map(
       (path) => path && boardSetIdFromPath(path),
     );
@@ -31,8 +31,6 @@ export function useTranslateBoardSets(): void {
     if (routedBoardSetIds.includes(boardSetId)) {
       void revalidate();
     }
-
-    void syncBoardSets();
   });
 
   const translate = useEffectEvent((options: TranslationPassOptions) =>
@@ -41,7 +39,7 @@ export function useTranslateBoardSets(): void {
       language,
       {
         ...options,
-        onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
+        onTranslated: (boardSetId) => revalidateIfRouted(boardSetId),
       },
     ),
   );
