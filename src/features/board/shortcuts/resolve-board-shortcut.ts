@@ -1,8 +1,4 @@
-type BoardShortcutAction =
-  | { kind: "backspace" }
-  | { kind: "clear" }
-  | { kind: "play" }
-  | { kind: "stop" };
+type BoardShortcutAction = "backspace" | "clear" | "play" | "stop";
 
 /**
  * `aria-keyshortcuts` values for the controls whose action a shortcut runs.
@@ -27,22 +23,22 @@ export function resolveBoardShortcut(
 ): BoardShortcutAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
-      return isMessagePlaying ? null : { kind: "play" };
+      return isMessagePlaying ? null : "play";
     }
 
     if (event.key === "Backspace") {
-      return { kind: "clear" };
+      return "clear";
     }
 
     return null;
   }
 
   if (event.key === "Escape") {
-    return isMessagePlaying ? { kind: "stop" } : null;
+    return isMessagePlaying ? "stop" : null;
   }
 
   if (event.key === "Backspace") {
-    return { kind: "backspace" };
+    return "backspace";
   }
 
   return null;

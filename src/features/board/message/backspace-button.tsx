@@ -11,7 +11,8 @@ import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
-import type { BoardShortcutLabels } from "../shortcuts/shortcut-labels";
+import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
+import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
 import { MESSAGE_ACTION_SIZE } from "./message-bar";
 
 const RING_DELAY_MS = 300;
@@ -22,7 +23,7 @@ const DISC_INSET = 1;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
-  shortcutLabels: Pick<BoardShortcutLabels, "backspace" | "clear">;
+  shortcutLabels: Pick<BoardShortcutLabels, "clear" | "spokenClear">;
   onPress: () => void;
   onLongPress: () => void;
 }
@@ -39,7 +40,7 @@ export function BackspaceButton({
 
   const { longPressProps } = useLongPress({
     accessibilityDescription: t(m.messageBackspaceLongPressHint, {
-      shortcut: shortcutLabels.clear.spokenKeys,
+      shortcut: shortcutLabels.spokenClear,
     }),
     isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,
@@ -49,15 +50,12 @@ export function BackspaceButton({
   });
 
   return (
-    <ShortcutTooltip
-      action={t(m.messageClear)}
-      keys={shortcutLabels.clear.keys}
-    >
+    <ShortcutTooltip action={t(m.messageClear)} keys={shortcutLabels.clear}>
       <IconButton
         {...mergeProps(pressProps, longPressProps)}
         {...focusableDisabledProps(disabled)}
         aria-label={t(m.messageBackspace)}
-        aria-keyshortcuts={shortcutLabels.backspace.ariaKeyShortcuts}
+        aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
         sx={backspaceSx}
       >
         <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />

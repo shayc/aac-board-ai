@@ -3,10 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { PlayButton } from "./play-button";
 
-const SHORTCUT_LABELS = {
-  play: { ariaKeyShortcuts: "Meta+Enter Control+Enter", keys: "⌘↩" },
-  stop: { ariaKeyShortcuts: "Escape", keys: "Esc" },
-};
+const SHORTCUT_LABELS = { play: "⌘↩", stop: "Esc" };
 
 function createHandlers() {
   return {

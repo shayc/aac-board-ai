@@ -13,10 +13,7 @@ import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
 import { MessageBar } from "./message-bar";
 
-const SHORTCUT_LABELS = {
-  backspace: { ariaKeyShortcuts: "Backspace" },
-  clear: { keys: "⌘⌫", spokenKeys: "Command+Delete" },
-};
+const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 
 type ColorMode = "light" | "dark";
 

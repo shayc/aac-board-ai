@@ -12,7 +12,8 @@ import {
   MESSAGE_ACTION_ICON_SIZE,
   MESSAGE_ACTION_SIZE,
 } from "../message/message-bar";
-import type { BoardShortcutLabels } from "../shortcuts/shortcut-labels";
+import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
+import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
 
 interface PlayButtonProps {
   disabled?: boolean;
@@ -33,16 +34,18 @@ export function PlayButton({
 }: PlayButtonProps) {
   const t = useTranslate();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
-  const shortcutLabel = isPlaying ? shortcutLabels.stop : shortcutLabels.play;
+  const shortcut = isPlaying ? "stop" : "play";
+  const shortcutKeys = shortcutLabels[shortcut];
+  const ariaKeyShortcuts = BOARD_SHORTCUT_ARIA_KEYS[shortcut];
   const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopIcon : PlayArrowIcon;
 
   if (variant === "boardControl") {
     return (
-      <ShortcutTooltip action={label} keys={shortcutLabel.keys}>
+      <ShortcutTooltip action={label} keys={shortcutKeys}>
         <BoardControlButton
           aria-label={label}
-          aria-keyshortcuts={shortcutLabel.ariaKeyShortcuts}
+          aria-keyshortcuts={ariaKeyShortcuts}
           disabled={disabled}
           color={isPlaying ? "inherit" : "primary"}
           onClick={handleClick}
@@ -57,11 +60,11 @@ export function PlayButton({
   }
 
   return (
-    <ShortcutTooltip action={label} keys={shortcutLabel.keys}>
+    <ShortcutTooltip action={label} keys={shortcutKeys}>
       <Fab
         {...focusableDisabledProps(disabled)}
         aria-label={label}
-        aria-keyshortcuts={shortcutLabel.ariaKeyShortcuts}
+        aria-keyshortcuts={ariaKeyShortcuts}
         color={isPlaying ? "default" : "primary"}
         onClick={disabled ? undefined : handleClick}
         sx={(theme) => ({
