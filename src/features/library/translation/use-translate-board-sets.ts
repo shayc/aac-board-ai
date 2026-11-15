@@ -1,6 +1,6 @@
 import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import { useEffect, useEffectEvent } from "react";
-import { useLocation, useNavigation, useRevalidator } from "react-router";
+import { useLocation } from "react-router";
 import { boardSetIdFromPath } from "../board-paths";
 import { useBoardSets } from "../board-sets/board-sets-store";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -13,24 +13,23 @@ import {
   type TranslationPassOptions,
 } from "./translate-board-sets";
 
-export function useTranslateBoardSets(): void {
+interface UseTranslateBoardSetsOptions {
+  /** Called after a set's translations are saved, so whatever shows it can reload. */
+  onBoardSetTranslated: (boardSetId: string) => void;
+}
+
+export function useTranslateBoardSets({
+  onBoardSetTranslated,
+}: UseTranslateBoardSetsOptions): void {
   const { language } = useCommunicationLanguage();
   const { boardSets, isLoading } = useBoardSets();
-  const { revalidate } = useRevalidator();
   const { pathname } = useLocation();
-  const pendingPathname = useNavigation().location?.pathname;
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  const revalidateIfRouted = useEffectEvent((boardSetId: string) => {
-    const routedBoardSetIds = [pathname, pendingPathname].map(
-      (path) => path && boardSetIdFromPath(path),
-    );
-
-    // Unrelated revalidation could restart an in-flight ?board= import.
-    if (routedBoardSetIds.includes(boardSetId)) {
-      void revalidate();
-    }
+  // Read the latest callback when a pass finishes, not the one it started with.
+  const reportTranslated = useEffectEvent((boardSetId: string) => {
+    onBoardSetTranslated(boardSetId);
   });
 
   const translate = useEffectEvent((options: TranslationPassOptions) =>
@@ -39,7 +38,7 @@ export function useTranslateBoardSets(): void {
       language,
       {
         ...options,
-        onTranslated: (boardSetId) => revalidateIfRouted(boardSetId),
+        onTranslated: (boardSetId) => reportTranslated(boardSetId),
       },
     ),
   );

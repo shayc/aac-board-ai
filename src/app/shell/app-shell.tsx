@@ -1,6 +1,7 @@
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
+import { useRevalidateBoardSet } from "@app/routing/use-revalidate-board-set";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
@@ -18,9 +19,10 @@ export function AppShell() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
+  const revalidateBoardSet = useRevalidateBoardSet();
 
   useImportBoardFilesOnLaunch();
-  useTranslateBoardSets();
+  useTranslateBoardSets({ onBoardSetTranslated: revalidateBoardSet });
 
   return (
     <Box
