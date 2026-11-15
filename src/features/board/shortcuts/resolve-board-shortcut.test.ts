@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
+  BOARD_SHORTCUT_ARIA_KEYS,
   type BoardKeyEvent,
   resolveBoardShortcut,
 } from "./resolve-board-shortcut";
@@ -75,4 +76,31 @@ describe("resolveBoardShortcut", () => {
       expect(resolveBoardShortcut(key({ key: named }), false)).toBeNull();
     }
   });
+
+  test.each(Object.entries(BOARD_SHORTCUT_ARIA_KEYS))(
+    "every combination aria-keyshortcuts names for %s runs that action",
+    (kind, ariaKeyShortcuts) => {
+      const isMessagePlaying = kind === "stop";
+
+      const actions = ariaKeyShortcuts
+        .split(" ")
+        .map((combination) =>
+          resolveBoardShortcut(parseCombination(combination), isMessagePlaying),
+        );
+
+      for (const action of actions) {
+        expect(action).toEqual({ kind });
+      }
+    },
+  );
 });
+
+function parseCombination(combination: string): BoardKeyEvent {
+  const keys = combination.split("+");
+
+  return key({
+    key: keys.at(-1),
+    metaKey: keys.includes("Meta"),
+    ctrlKey: keys.includes("Control"),
+  });
+}

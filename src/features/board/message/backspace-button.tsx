@@ -8,8 +8,10 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
+import type { BoardShortcutLabels } from "../shortcuts/shortcut-labels";
 import { MESSAGE_ACTION_SIZE } from "./message-bar";
 
 const RING_DELAY_MS = 300;
@@ -20,12 +22,14 @@ const DISC_INSET = 1;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
+  shortcutLabels: Pick<BoardShortcutLabels, "backspace" | "clear">;
   onPress: () => void;
   onLongPress: () => void;
 }
 
 export function BackspaceButton({
   disabled = false,
+  shortcutLabels,
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
@@ -34,7 +38,9 @@ export function BackspaceButton({
   const { pressProps } = usePress({ isDisabled: disabled, onPress });
 
   const { longPressProps } = useLongPress({
-    accessibilityDescription: t(m.messageBackspaceLongPressHint),
+    accessibilityDescription: t(m.messageBackspaceLongPressHint, {
+      shortcut: shortcutLabels.clear.spokenKeys,
+    }),
     isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
@@ -43,23 +49,29 @@ export function BackspaceButton({
   });
 
   return (
-    <IconButton
-      {...mergeProps(pressProps, longPressProps)}
-      {...focusableDisabledProps(disabled)}
-      aria-label={t(m.messageBackspace)}
-      sx={backspaceSx}
+    <ShortcutTooltip
+      action={t(m.messageClear)}
+      keys={shortcutLabels.clear.keys}
     >
-      <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
+      <IconButton
+        {...mergeProps(pressProps, longPressProps)}
+        {...focusableDisabledProps(disabled)}
+        aria-label={t(m.messageBackspace)}
+        aria-keyshortcuts={shortcutLabels.backspace.ariaKeyShortcuts}
+        sx={backspaceSx}
+      >
+        <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
 
-      <CircularProgress
-        aria-hidden
-        color="inherit"
-        variant="determinate"
-        value={isHolding ? 100 : 0}
-        size="auto"
-        sx={(theme) => ringSx(theme, isHolding)}
-      />
-    </IconButton>
+        <CircularProgress
+          aria-hidden
+          color="inherit"
+          variant="determinate"
+          value={isHolding ? 100 : 0}
+          size="auto"
+          sx={(theme) => ringSx(theme, isHolding)}
+        />
+      </IconButton>
+    </ShortcutTooltip>
   );
 }
 

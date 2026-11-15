@@ -4,6 +4,17 @@ type BoardShortcutAction =
   | { kind: "play" }
   | { kind: "stop" };
 
+/**
+ * `aria-keyshortcuts` values for the controls whose action a shortcut runs.
+ * Clearing has none: the attribute names keys that activate an element, and
+ * the backspace button clears only on a long press.
+ */
+export const BOARD_SHORTCUT_ARIA_KEYS = {
+  backspace: "Backspace",
+  play: "Meta+Enter Control+Enter",
+  stop: "Escape",
+} as const;
+
 export interface BoardKeyEvent {
   key: string;
   metaKey: boolean;
