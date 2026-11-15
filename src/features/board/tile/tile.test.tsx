@@ -206,14 +206,14 @@ describe("Tile", () => {
     async ({ backgroundColor, areBordersVisible }) => {
       setTileBordersVisible(areBordersVisible);
       const screen = await renderInTheme(
-        <>
+        <Unhoverable>
           {tileElement({
             label: "Folder",
             backgroundColor,
             linkedBoardId: "folder",
           })}
           {tileElement({ label: "Word", backgroundColor })}
-        </>,
+        </Unhoverable>,
       );
       const folder = screen.getByRole("button", { name: "Folder" });
       const corner = styleOf(folder, "::after");
