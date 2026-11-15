@@ -1,5 +1,5 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
-import { addBoardSetTranslations } from "../board-sets/board-sets-store";
+import { saveBoardSetTranslations } from "../board-sets/board-sets-store";
 import type { Board, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
@@ -89,7 +89,7 @@ async function translateBoardSet(
     translationsBySourceLanguage.get(getSourceLanguage(source))?.get(text) ??
     text;
 
-  await addBoardSetTranslations(boardSet.id, language, {
+  await saveBoardSetTranslations(boardSet.id, language, {
     name: nameInLanguage ?? findTranslation(boardSet, boardSet.name),
     translationsByBoardId: new Map(
       boardsMissingLanguage.map((board) => [

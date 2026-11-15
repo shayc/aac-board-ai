@@ -13,8 +13,8 @@ import {
   getBoardSetRecord,
   insertBoardSet,
   listBoardSetRecords,
+  putBoardSetTranslations,
   removeBoardSet,
-  saveBoardSetTranslations,
 } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
 
@@ -388,7 +388,7 @@ describe("removeBoardSet", () => {
   );
 });
 
-describe("saveBoardSetTranslations", () => {
+describe("putBoardSetTranslations", () => {
   test("adds the language to the set name and each board, keeping other languages", async () => {
     await insertBoardSet(
       makeBoardSetInput({
@@ -402,7 +402,7 @@ describe("saveBoardSetTranslations", () => {
       }),
     );
 
-    await saveBoardSetTranslations("set-1", "es", {
+    await putBoardSetTranslations("set-1", "es", {
       name: "Conjunto",
       translationsByBoardId: new Map([["home", new Map([["Home", "Inicio"]])]]),
     });
@@ -429,7 +429,7 @@ describe("saveBoardSetTranslations", () => {
     const uncloneable = (() => "noop") as unknown as string;
 
     await expect(
-      saveBoardSetTranslations("set-1", "es", {
+      putBoardSetTranslations("set-1", "es", {
         name: "Conjunto",
         translationsByBoardId: new Map([
           ["a", new Map([["Test Board", "Tablero"]])],
@@ -447,7 +447,7 @@ describe("saveBoardSetTranslations", () => {
     await insertBoardSet(makeBoardSetInput());
     await removeBoardSet("set-1");
 
-    await saveBoardSetTranslations("set-1", "es", {
+    await putBoardSetTranslations("set-1", "es", {
       name: "Conjunto",
       translationsByBoardId: new Map([
         ["root-1", new Map([["Test Board", "x"]])],

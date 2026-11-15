@@ -10,8 +10,8 @@ import {
   type BoardSetTranslations,
   insertBoardSet,
   listBoardSetRecords,
+  putBoardSetTranslations,
   removeBoardSet,
-  saveBoardSetTranslations,
 } from "../storage/board-set-storage";
 
 export interface BoardSetsSnapshot {
@@ -67,11 +67,11 @@ export async function deleteBoardSet(boardSetId: string): Promise<void> {
   await syncBoardSets();
 }
 
-export async function addBoardSetTranslations(
+export async function saveBoardSetTranslations(
   boardSetId: string,
   language: string,
   translations: BoardSetTranslations,
 ): Promise<void> {
-  await saveBoardSetTranslations(boardSetId, language, translations);
+  await putBoardSetTranslations(boardSetId, language, translations);
   await syncBoardSets();
 }
