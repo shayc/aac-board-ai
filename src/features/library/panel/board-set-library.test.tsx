@@ -1,9 +1,20 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { extractOBZ } from "@shayc/open-board-format";
+// Brings in the Playwright provider's typing for the CDP session.
+import type {} from "@vitest/browser-playwright";
 import { MemoryRouter } from "react-router";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  onTestFinished,
+  test,
+  vi,
+} from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
+import { cdp } from "vitest/browser";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { starterBoardSet } from "../catalog/board-set-catalog";
 import { cancelBoardSetDownload } from "../catalog/board-set-downloads";
@@ -42,6 +53,16 @@ function stubStreamingDownload(headers?: HeadersInit) {
       stream.enqueue(typeof bytes === "number" ? new Uint8Array(bytes) : bytes),
     finish: () => stream.close(),
   };
+}
+
+async function emulateReducedMotion() {
+  const session = cdp();
+  await session.send("Emulation.setEmulatedMedia", {
+    features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+  });
+  onTestFinished(async () => {
+    await session.send("Emulation.setEmulatedMedia", { features: [] });
+  });
 }
 
 function recordUnavailableButtons() {
@@ -199,6 +220,40 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .not.toBeInTheDocument();
+    });
+
+    test("fades the menu icon in after a download finishes", async () => {
+      const screen = await renderBoardSetLibrary();
+
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+
+      const menuButton = screen.getByRole("button", {
+        name: "More options for First Words",
+      });
+      await expect
+        .element(menuButton.getByTestId("MoreVertIcon"))
+        .toHaveStyle({ opacity: "1" });
+    });
+
+    test("shows the menu icon without the download ring when motion is reduced", async () => {
+      await emulateReducedMotion();
+      const screen = await renderBoardSetLibrary();
+
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+
+      const menuButton = screen.getByRole("button", {
+        name: "More options for First Words",
+      });
+      const menuIcon = menuButton.getByTestId("MoreVertIcon");
+      await expect.element(menuIcon).toBeVisible();
+      await expect.element(menuIcon).toHaveStyle({ opacity: "1" });
+      await expect
+        .element(menuButton.getByRole("progressbar", { includeHidden: true }))
+        .not.toBeVisible();
     });
 
     test("keeps a downloaded board set in its place in the list", async () => {

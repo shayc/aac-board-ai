@@ -1,4 +1,5 @@
 import { deriveBoardSetIdFromURL } from "../import/import-from-url";
+import type { BoardSetDownloadPhase } from "./board-set-downloads";
 
 export interface CatalogBoardSet {
   readonly id: string;
@@ -29,10 +30,16 @@ const boardSetCatalog: readonly CatalogBoardSet[] = [
   catalogBoardSet({ name: "Quick Core 60", fileName: "quick-core-60.obz" }),
 ];
 
+// A set stays downloadable until its download settles, even once its import is
+// stored, so the download control hands over to the stored entry in one step.
 export function listDownloadableBoardSets(
   storedBoardSets: readonly { id: string }[],
+  downloadPhases: ReadonlyMap<string, BoardSetDownloadPhase>,
 ): CatalogBoardSet[] {
   const storedIds = new Set(storedBoardSets.map((boardSet) => boardSet.id));
 
-  return boardSetCatalog.filter((boardSet) => !storedIds.has(boardSet.id));
+  return boardSetCatalog.filter(
+    (boardSet) =>
+      !storedIds.has(boardSet.id) || downloadPhases.has(boardSet.url),
+  );
 }

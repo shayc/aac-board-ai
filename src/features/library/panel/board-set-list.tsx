@@ -7,6 +7,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { useId, useState } from "react";
 import { rootBoardPath } from "../board-paths";
 import type { CatalogBoardSet } from "../catalog/board-set-catalog";
+import { useLastCompletedDownload } from "../catalog/board-set-downloads";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { BoardSetListItem } from "./board-set-list-item";
 import { BoardSetMenu } from "./board-set-menu";
@@ -41,7 +42,14 @@ export function BoardSetList({
     element: HTMLElement;
     boardSet: BoardSetRecord;
   } | null>(null);
+  const lastCompletedDownload = useLastCompletedDownload();
+  // Downloads that finished while the library was closed don't take focus.
+  const [completedDownloadAtMount] = useState(lastCompletedDownload);
 
+  const freshlyDownloadedBoardSetId =
+    lastCompletedDownload === completedDownloadAtMount
+      ? undefined
+      : lastCompletedDownload?.boardSetId;
   const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
 
@@ -73,11 +81,11 @@ export function BoardSetList({
     return (
       <BoardSetListItem
         key={boardSet.id}
-        boardSetId={boardSet.id}
         menuId={menuId}
         name={boardSet.name}
         to={rootBoardPath(boardSet)}
         isActive={boardSet.id === activeBoardSetId}
+        isFreshlyDownloaded={boardSet.id === freshlyDownloadedBoardSetId}
         isMenuOpen={boardSet.id === openMenuBoardSetId}
         onMenuOpen={(element) => setMenuAnchor({ element, boardSet })}
       />
@@ -120,11 +128,17 @@ function toSortedEntries(
   locale: string,
 ): BoardSetEntry[] {
   const collator = new Intl.Collator(locale, { numeric: true });
+  const downloadableIds = new Set(
+    downloadableBoardSets.map((boardSet) => boardSet.id),
+  );
   const entries: BoardSetEntry[] = [
-    ...boardSets.map((boardSet) => ({
-      kind: "open" as const,
-      boardSet,
-    })),
+    // A stored set still finishing its download shows as the download.
+    ...boardSets
+      .filter((boardSet) => !downloadableIds.has(boardSet.id))
+      .map((boardSet) => ({
+        kind: "open" as const,
+        boardSet,
+      })),
     ...downloadableBoardSets.map((boardSet) => ({
       kind: "download" as const,
       boardSet,

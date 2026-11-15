@@ -9,40 +9,35 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router";
-import { useIsBoardSetDownloading } from "../catalog/board-set-downloads";
 import { DownloadProgressRing } from "./download-progress-ring";
 
 const fadeIn = keyframes({ from: { opacity: 0 } });
 const fadeOut = keyframes({ to: { opacity: 0 } });
 
 interface BoardSetListItemProps {
-  boardSetId: string;
   menuId: string;
   name: string;
   to: string;
   isActive: boolean;
+  isFreshlyDownloaded: boolean;
   isMenuOpen: boolean;
   onMenuOpen: (element: HTMLElement) => void;
 }
 
 export function BoardSetListItem({
-  boardSetId,
   menuId,
   name,
   to,
   isActive,
+  isFreshlyDownloaded,
   isMenuOpen,
   onMenuOpen,
 }: BoardSetListItemProps) {
   const t = useTranslate();
   const endSide = useEndSide();
   const linkRef = useRef<HTMLAnchorElement>(null);
-  const isDownloading = useIsBoardSetDownloading(boardSetId);
-  // A download is still finishing when its stored entry first appears, and the
-  // entry stays freshly downloaded after the download settles.
-  const [isFreshlyDownloaded] = useState(isDownloading);
 
   useEffect(() => {
     if (isFreshlyDownloaded) {
@@ -68,7 +63,13 @@ export function BoardSetListItem({
         </Tooltip>
       }
       disablePadding
-      sx={secondaryActionRevealSx}
+      sx={[
+        secondaryActionRevealSx,
+        // The menu icon's own crossfade replaces the hover reveal's fade.
+        isFreshlyDownloaded && {
+          [`& .${listItemClasses.secondaryAction}`]: { transition: "none" },
+        },
+      ]}
     >
       <ListItemButton
         ref={linkRef}
@@ -91,7 +92,12 @@ export function BoardSetListItem({
 function DownloadedMenuIcon() {
   return (
     <Box sx={downloadedMenuIconSx}>
-      <Box sx={(theme) => crossfadeSx(theme, fadeOut, "forwards")}>
+      <Box
+        sx={(theme) => ({
+          ...crossfadeSx(theme, fadeOut, "forwards"),
+          "@media (prefers-reduced-motion: reduce)": { display: "none" },
+        })}
+      >
         <DownloadProgressRing variant="determinate" value={100} />
       </Box>
 
@@ -104,9 +110,6 @@ function downloadedMenuIconSx() {
   return {
     display: "grid",
     "& > *": { gridArea: "1 / 1", display: "flex" },
-    "@media (prefers-reduced-motion: reduce)": {
-      "& > :first-of-type": { display: "none" },
-    },
   };
 }
 

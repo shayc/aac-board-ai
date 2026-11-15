@@ -16,6 +16,7 @@ import { useMatch, useNavigate } from "react-router";
 import { BOARD_SET_SEGMENT } from "../board-paths";
 import { deleteBoardSet, useBoardSets } from "../board-sets/board-sets-store";
 import { listDownloadableBoardSets } from "../catalog/board-set-catalog";
+import { useBoardSetDownloadPhases } from "../catalog/board-set-downloads";
 import { exportBoardSet } from "../export/board-set-export";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -32,6 +33,7 @@ export function BoardSetLibrary() {
   })?.params.boardSetId;
   const { language } = useCommunicationLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
+  const downloadPhases = useBoardSetDownloadPhases();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -42,7 +44,10 @@ export function BoardSetLibrary() {
   const boardSets = storedBoardSets.map((boardSet) =>
     boardSetInLanguage(boardSet, language),
   );
-  const downloadableBoardSets = listDownloadableBoardSets(boardSets);
+  const downloadableBoardSets = listDownloadableBoardSets(
+    boardSets,
+    downloadPhases,
+  );
 
   async function handleDelete() {
     if (!deleteTarget) {

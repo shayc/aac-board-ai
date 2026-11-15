@@ -4,7 +4,6 @@ import {
 } from "@shared/stores/external-store";
 import type { ImportedBoardSet } from "../import/board-file-import";
 import {
-  deriveBoardSetIdFromURL,
   type DownloadProgress,
   importBoardFileFromURL,
 } from "../import/import-from-url";
@@ -14,26 +13,49 @@ export type BoardSetDownloadPhase =
   | ({ kind: "downloading" } & DownloadProgress)
   | { kind: "importing" };
 
+export interface CompletedDownload {
+  boardSetId: string;
+}
+
+interface DownloadsState {
+  phases: ReadonlyMap<string, BoardSetDownloadPhase>;
+  // A new object per completion, so a list can tell completions it has seen
+  // from ones that happen while it is open.
+  lastCompletion: CompletedDownload | undefined;
+}
+
 interface PendingDownload {
   promise: Promise<ImportedBoardSet | undefined>;
   controller: AbortController;
 }
 
 const pendingDownloadsByURL = new Map<string, PendingDownload>();
-const downloadPhasesStore = createExternalStore<
-  ReadonlyMap<string, BoardSetDownloadPhase>
->(new Map());
+const downloadsStore = createExternalStore<DownloadsState>({
+  phases: new Map(),
+  lastCompletion: undefined,
+});
 
-function setDownloadPhase(url: string, phase?: BoardSetDownloadPhase) {
-  const phases = new Map(downloadPhasesStore.getSnapshot());
+function setDownloadPhase(url: string, phase: BoardSetDownloadPhase) {
+  const state = downloadsStore.getSnapshot();
+  const phases = new Map(state.phases);
+  phases.set(url, phase);
 
-  if (phase) {
-    phases.set(url, phase);
-  } else {
-    phases.delete(url);
-  }
+  downloadsStore.setState({ ...state, phases });
+}
 
-  downloadPhasesStore.setState(phases);
+// Clears the phase and records the completion in one update, so the stored
+// entry never renders without knowing it was just downloaded.
+function settleDownload(url: string, completion?: CompletedDownload) {
+  pendingDownloadsByURL.delete(url);
+
+  const state = downloadsStore.getSnapshot();
+  const phases = new Map(state.phases);
+  phases.delete(url);
+
+  downloadsStore.setState({
+    phases,
+    lastCompletion: completion ?? state.lastCompletion,
+  });
 }
 
 function visibleProgressStep({
@@ -48,7 +70,7 @@ function visibleProgressStep({
 }
 
 function publishProgress(url: string, progress: DownloadProgress) {
-  const phase = downloadPhasesStore.getSnapshot().get(url);
+  const phase = downloadsStore.getSnapshot().phases.get(url);
   const isUnchanged =
     phase?.kind === "downloading" &&
     phase.total === progress.total &&
@@ -65,20 +87,21 @@ async function runDownload(
   signal: AbortSignal,
 ): Promise<ImportedBoardSet | undefined> {
   try {
-    return await importBoardFileFromURL(url, {
+    const importedBoardSet = await importBoardFileFromURL(url, {
       signal,
       onProgress: (progress) => publishProgress(url, progress),
       onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
     });
+    settleDownload(url, { boardSetId: importedBoardSet.id });
+
+    return importedBoardSet;
   } catch (error) {
+    settleDownload(url);
     if (signal.aborted) {
       return undefined;
     }
 
     throw error;
-  } finally {
-    pendingDownloadsByURL.delete(url);
-    setDownloadPhase(url);
   }
 }
 
@@ -100,7 +123,7 @@ export function downloadBoardSet(
 
 export function cancelBoardSetDownload(url: string) {
   // Once local importing starts, its atomic write is left to finish.
-  if (downloadPhasesStore.getSnapshot().get(url)?.kind === "importing") {
+  if (downloadsStore.getSnapshot().phases.get(url)?.kind === "importing") {
     return;
   }
 
@@ -110,11 +133,16 @@ export function cancelBoardSetDownload(url: string) {
 export function useBoardSetDownloadPhase(
   url: string,
 ): BoardSetDownloadPhase | undefined {
-  return useExternalStore(downloadPhasesStore, (phases) => phases.get(url));
+  return useExternalStore(downloadsStore, (state) => state.phases.get(url));
 }
 
-export function useIsBoardSetDownloading(boardSetId: string): boolean {
-  return useExternalStore(downloadPhasesStore, (phases) =>
-    phases.keys().some((url) => deriveBoardSetIdFromURL(url) === boardSetId),
-  );
+export function useBoardSetDownloadPhases(): ReadonlyMap<
+  string,
+  BoardSetDownloadPhase
+> {
+  return useExternalStore(downloadsStore, (state) => state.phases);
+}
+
+export function useLastCompletedDownload(): CompletedDownload | undefined {
+  return useExternalStore(downloadsStore, (state) => state.lastCompletion);
 }
