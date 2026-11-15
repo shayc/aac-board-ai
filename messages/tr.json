@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Otomatik pano çevirisi bu tarayıcıda kullanılamıyor.",
   "loading": "Yükleniyor…",
   "close": "Kapat",
   "opensInNewTab": "(yeni sekmede açılır)",

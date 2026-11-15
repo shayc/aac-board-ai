@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸ್ವಯಂಚಾಲಿತ ಬೋರ್ಡ್ ಅನುವಾದ ಲಭ್ಯವಿಲ್ಲ.",
   "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "close": "ಮುಚ್ಚಿ",
   "opensInNewTab": "(ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",

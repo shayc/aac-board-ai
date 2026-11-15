@@ -465,7 +465,9 @@ drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
 language settings render the library's
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-instead of checking Translator support or translation progress themselves.
+instead of checking translation progress themselves. Without the Translator
+API the notice stays hidden: a set the browser cannot translate simply shows in
+its own language, which the user can already see and cannot change.
 Reusable field controls live in `shared/ui/` so features do not depend on the
 app layer.
 

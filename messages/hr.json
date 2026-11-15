@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Automatski prijevod ploče nije dostupan u ovom pregledniku.",
   "loading": "Učitavanje…",
   "close": "Zatvori",
   "opensInNewTab": "(otvara se u novoj kartici)",

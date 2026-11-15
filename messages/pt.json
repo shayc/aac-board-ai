@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "A tradução automática de pranchas não está disponível neste navegador.",
   "loading": "Carregando…",
   "close": "Fechar",
   "opensInNewTab": "(abre em uma nova aba)",
