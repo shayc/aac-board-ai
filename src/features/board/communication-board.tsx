@@ -47,7 +47,7 @@ export function CommunicationBoard({
     onMessagePlayback: message.trackPlayback,
   });
   const navigation = useBoardNavigation(rootBoardId);
-  const shortcutProps = useBoardShortcuts({ message, playback });
+  const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
   const activateButton = createButtonActivator({
@@ -110,7 +110,7 @@ export function CommunicationBoard({
     <DirectionalThemeProvider direction={communication.direction}>
       <ScanningScope>
         <Stack
-          {...shortcutProps}
+          {...shortcuts.rootProps}
           dir={communication.direction}
           direction="column"
           sx={{

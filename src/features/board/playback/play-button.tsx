@@ -34,10 +34,9 @@ export function PlayButton({
 }: PlayButtonProps) {
   const t = useTranslate();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
-  const shortcutKeys = isPlaying ? shortcutLabels.stop : shortcutLabels.play;
-  const ariaKeyShortcuts = isPlaying
-    ? BOARD_SHORTCUT_ARIA_KEYS.stop
-    : BOARD_SHORTCUT_ARIA_KEYS.play;
+  const shortcut = isPlaying ? "stop" : "play";
+  const shortcutKeys = shortcutLabels[shortcut];
+  const ariaKeyShortcuts = BOARD_SHORTCUT_ARIA_KEYS[shortcut];
   const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopIcon : PlayArrowIcon;
 

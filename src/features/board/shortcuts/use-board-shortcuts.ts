@@ -13,10 +13,14 @@ interface UseBoardShortcutsOptions {
   >;
 }
 
+interface UseBoardShortcutsReturn {
+  rootProps: DOMAttributes<HTMLElement>;
+}
+
 export function useBoardShortcuts({
   message,
   playback,
-}: UseBoardShortcutsOptions): DOMAttributes<HTMLElement> {
+}: UseBoardShortcutsOptions): UseBoardShortcutsReturn {
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
       const action = resolveBoardShortcut(event, playback.isMessagePlaying);
@@ -47,5 +51,5 @@ export function useBoardShortcuts({
     },
   });
 
-  return keyboardProps;
+  return { rootProps: keyboardProps };
 }

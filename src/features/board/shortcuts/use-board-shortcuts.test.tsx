@@ -47,7 +47,7 @@ describe("board keyboard shortcuts", () => {
     });
   });
 
-  test("⌘+Enter speaks the message", async () => {
+  test("⌘+Enter plays the message", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
