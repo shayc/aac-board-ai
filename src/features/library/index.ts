@@ -3,6 +3,7 @@ export {
   BOARD_SEGMENT,
   BOARD_SET_SEGMENT,
   boardPath,
+  boardSetIdFromPath,
   rootBoardPath,
 } from "./board-paths";
 export { listBoardSummaries } from "./board-sets/list-board-summaries";
