@@ -14,9 +14,9 @@ import { useImportBoardFiles } from "./use-import-board-files";
 const OBF_FIXTURE = "lots-of-stuff.obf";
 
 function ImportTrigger({ files }: { files: File[] }) {
-  const { importFiles } = useImportBoardFiles();
+  const { importAndOpen } = useImportBoardFiles();
 
-  return <button onClick={() => void importFiles(files)}>import</button>;
+  return <button onClick={() => void importAndOpen(files)}>import</button>;
 }
 
 function renderImport(files: File[]) {
@@ -57,7 +57,7 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board sets imported");
   });
 
-  test("imports only the board files when other files are included", async () => {
+  test("names a skipped file that isn't a board file while importing the rest", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
     const boardFile = await loadFixtureFile(OBF_FIXTURE);
     const screen = await renderImport([pdf, boardFile]);
@@ -65,13 +65,26 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("status"))
-      .toHaveTextContent("Board set imported");
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('"manual.pdf" isn\'t a board file');
+    expect(await listBoardSetRecords()).toHaveLength(1);
+  });
+
+  test("names the file when the only file isn't a board file", async () => {
+    const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
+    const screen = await renderImport([pdf]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('"manual.pdf" isn\'t a board file');
   });
 
   test("reports an error when no file is a board file", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
-    const screen = await renderImport([pdf]);
+    const folder = new File([], "Boards");
+    const screen = await renderImport([pdf, folder]);
 
     await screen.getByRole("button", { name: "import" }).click();
 

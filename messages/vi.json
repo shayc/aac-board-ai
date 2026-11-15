@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Không thể nhập các tệp bảng",
   "libraryImportOnlyBoardFiles": "Chỉ có thể nhập tệp bảng",
   "libraryImportTooLargeBoardFile": "Tệp bảng \"{fileName}\" quá lớn để nhập",
+  "libraryImportNotBoardFile": "\"{fileName}\" không phải là tệp bảng",
   "libraryImportTooLargeBoardFiles": "Các tệp bảng quá lớn để nhập",
   "libraryImportPartiallyFailedBoardFiles": "Không thể nhập một số tệp bảng ({failed} / {total})",
   "libraryDropToImport": "Thả tệp bảng để nhập",

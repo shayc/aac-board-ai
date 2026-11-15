@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων",
   "libraryImportOnlyBoardFiles": "Μπορούν να εισαχθούν μόνο αρχεία πινάκων",
   "libraryImportTooLargeBoardFile": "Το αρχείο πίνακα «{fileName}» είναι πολύ μεγάλο για εισαγωγή",
+  "libraryImportNotBoardFile": "Το «{fileName}» δεν είναι αρχείο πίνακα",
   "libraryImportTooLargeBoardFiles": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή",
   "libraryImportPartiallyFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
   "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",

@@ -12,7 +12,10 @@ import {
   type BoardSetInput,
   MAX_ID_LENGTH,
 } from "../storage/board-set-storage";
-import { stripBoardFileExtension } from "./board-file-formats";
+import {
+  hasBoardFileExtension,
+  stripBoardFileExtension,
+} from "./board-file-formats";
 
 export interface ImportedBoardSet {
   id: string;
@@ -31,6 +34,13 @@ export interface BoardFilesImportOutcome {
 
 type BoardSetContent = Omit<BoardSetInput, "id">;
 
+export class NotBoardFileError extends Error {
+  constructor(fileName: string) {
+    super(`Not a board file: ${fileName}`);
+    this.name = "NotBoardFileError";
+  }
+}
+
 /**
  * Checked against archive metadata before each entry is decompressed.
  * Allows observed board sets up to ~70 MB while bounding allocation.
@@ -48,6 +58,14 @@ export async function importEachBoardFile(
   const failures: BoardFileImportFailure[] = [];
 
   for (const file of files) {
+    if (!hasBoardFileExtension(file)) {
+      failures.push({
+        fileName: file.name,
+        error: new NotBoardFileError(file.name),
+      });
+      continue;
+    }
+
     try {
       importedBoardSets.push(await importBoardFile(file));
     } catch (error) {

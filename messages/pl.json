@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Nie udało się zaimportować plików tablic",
   "libraryImportOnlyBoardFiles": "Można importować tylko pliki tablic",
   "libraryImportTooLargeBoardFile": "Plik tablicy „{fileName}” jest zbyt duży, aby go zaimportować",
+  "libraryImportNotBoardFile": "„{fileName}” nie jest plikiem tablicy",
   "libraryImportTooLargeBoardFiles": "Pliki tablic są zbyt duże, aby je zaimportować",
   "libraryImportPartiallyFailedBoardFiles": "Nie udało się zaimportować niektórych plików tablic ({failed} z {total})",
   "libraryDropToImport": "Upuść pliki tablic, aby zaimportować",

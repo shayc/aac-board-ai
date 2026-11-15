@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Soubory tabulek se nepodařilo importovat",
   "libraryImportOnlyBoardFiles": "Importovat lze pouze soubory tabulek",
   "libraryImportTooLargeBoardFile": "Soubor tabulky „{fileName}“ je příliš velký na import",
+  "libraryImportNotBoardFile": "„{fileName}“ není soubor tabulky",
   "libraryImportTooLargeBoardFiles": "Soubory tabulek jsou příliš velké na import",
   "libraryImportPartiallyFailedBoardFiles": "Některé soubory tabulek se nepodařilo importovat ({failed} z {total})",
   "libraryDropToImport": "Přetáhněte sem soubory tabulek pro import",

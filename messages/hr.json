@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Datoteke ploča nije moguće uvesti",
   "libraryImportOnlyBoardFiles": "Mogu se uvesti samo datoteke ploča",
   "libraryImportTooLargeBoardFile": "Datoteka ploče „{fileName}” je prevelika za uvoz",
+  "libraryImportNotBoardFile": "„{fileName}” nije datoteka ploče",
   "libraryImportTooLargeBoardFiles": "Datoteke ploča su prevelike za uvoz",
   "libraryImportPartiallyFailedBoardFiles": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
   "libraryDropToImport": "Ispustite datoteke ploča za uvoz",

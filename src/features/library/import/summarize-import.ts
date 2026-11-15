@@ -1,7 +1,10 @@
 import { m } from "@paraglide/messages.js";
 import type { SnackbarOptions } from "@shared/snackbar/snackbar-context";
 import { OBFError } from "@shayc/open-board-format";
-import type { BoardFilesImportOutcome } from "./board-file-import";
+import {
+  type BoardFilesImportOutcome,
+  NotBoardFileError,
+} from "./board-file-import";
 
 export function summarizeImport({
   importedBoardSets,
@@ -19,9 +22,7 @@ export function summarizeImport({
   const onlyFailure = failures.length === 1 ? failures[0] : undefined;
   if (onlyFailure) {
     const { fileName, error } = onlyFailure;
-    const fileFailureMessage = isArchiveTooLarge(error)
-      ? m.libraryImportTooLargeBoardFile
-      : m.libraryImportFailedBoardFile;
+    const fileFailureMessage = singleFileFailureMessage(error);
 
     return {
       message: (t) => t(fileFailureMessage, { fileName }),
@@ -42,14 +43,32 @@ export function summarizeImport({
     };
   }
 
-  const failureMessage = failures.every(({ error }) => isArchiveTooLarge(error))
-    ? m.libraryImportTooLargeBoardFiles
-    : m.libraryImportFailedBoardFiles;
+  const failureMessage = allFilesFailureMessage(failures);
 
   return {
     message: (t) => t(failureMessage),
     severity: "error",
   };
+}
+
+function singleFileFailureMessage(error: unknown) {
+  if (error instanceof NotBoardFileError) {
+    return m.libraryImportNotBoardFile;
+  }
+
+  return isArchiveTooLarge(error)
+    ? m.libraryImportTooLargeBoardFile
+    : m.libraryImportFailedBoardFile;
+}
+
+function allFilesFailureMessage(failures: BoardFilesImportOutcome["failures"]) {
+  if (failures.every(({ error }) => error instanceof NotBoardFileError)) {
+    return m.libraryImportOnlyBoardFiles;
+  }
+
+  return failures.every(({ error }) => isArchiveTooLarge(error))
+    ? m.libraryImportTooLargeBoardFiles
+    : m.libraryImportFailedBoardFiles;
 }
 
 function isArchiveTooLarge(error: unknown): boolean {

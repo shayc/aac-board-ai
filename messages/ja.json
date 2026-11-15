@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "ボードファイルをインポートできませんでした",
   "libraryImportOnlyBoardFiles": "インポートできるのはボードファイルのみです",
   "libraryImportTooLargeBoardFile": "ボードファイル「{fileName}」が大きすぎてインポートできません",
+  "libraryImportNotBoardFile": "「{fileName}」はボードファイルではありません",
   "libraryImportTooLargeBoardFiles": "ボードファイルが大きすぎてインポートできません",
   "libraryImportPartiallyFailedBoardFiles": "一部のボードファイルをインポートできませんでした（{failed} / {total}）",
   "libraryDropToImport": "ボードファイルをドロップしてインポート",

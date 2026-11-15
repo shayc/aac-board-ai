@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "A táblafájlok importálása nem sikerült",
   "libraryImportOnlyBoardFiles": "Csak táblafájlok importálhatók",
   "libraryImportTooLargeBoardFile": "A(z) „{fileName}” táblafájl túl nagy az importáláshoz",
+  "libraryImportNotBoardFile": "A(z) „{fileName}” nem táblafájl",
   "libraryImportTooLargeBoardFiles": "A táblafájlok túl nagyok az importáláshoz",
   "libraryImportPartiallyFailedBoardFiles": "Néhány táblafájl importálása nem sikerült ({failed} / {total})",
   "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",

@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Не удалось импортировать файлы досок",
   "libraryImportOnlyBoardFiles": "Импортировать можно только файлы досок",
   "libraryImportTooLargeBoardFile": "Файл доски «{fileName}» слишком большой для импорта",
+  "libraryImportNotBoardFile": "«{fileName}» не является файлом доски",
   "libraryImportTooLargeBoardFiles": "Файлы досок слишком большие для импорта",
   "libraryImportPartiallyFailedBoardFiles": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
   "libraryDropToImport": "Перетащите файлы досок для импорта",

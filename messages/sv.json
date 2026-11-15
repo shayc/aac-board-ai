@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Det gick inte att importera tavelfilerna",
   "libraryImportOnlyBoardFiles": "Endast tavelfiler kan importeras",
   "libraryImportTooLargeBoardFile": "Tavelfilen ”{fileName}” är för stor för att importeras",
+  "libraryImportNotBoardFile": "”{fileName}” är inte en tavelfil",
   "libraryImportTooLargeBoardFiles": "Tavelfilerna är för stora för att importeras",
   "libraryImportPartiallyFailedBoardFiles": "Det gick inte att importera vissa tavelfiler ({failed} av {total})",
   "libraryDropToImport": "Släpp tavelfiler för att importera",

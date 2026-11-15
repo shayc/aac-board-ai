@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
   "libraryImportOnlyBoardFiles": "นำเข้าได้เฉพาะไฟล์บอร์ดเท่านั้น",
   "libraryImportTooLargeBoardFile": "ไฟล์บอร์ด \"{fileName}\" มีขนาดใหญ่เกินไปที่จะนำเข้า",
+  "libraryImportNotBoardFile": "\"{fileName}\" ไม่ใช่ไฟล์บอร์ด",
   "libraryImportTooLargeBoardFiles": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
   "libraryImportPartiallyFailedBoardFiles": "นำเข้าไฟล์บอร์ดบางไฟล์ไม่สำเร็จ ({failed} จาก {total})",
   "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",

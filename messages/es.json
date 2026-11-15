@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "No se pudieron importar los archivos de tableros",
   "libraryImportOnlyBoardFiles": "Solo se pueden importar archivos de tableros",
   "libraryImportTooLargeBoardFile": "El archivo de tablero \"{fileName}\" es demasiado grande para importarlo",
+  "libraryImportNotBoardFile": "\"{fileName}\" no es un archivo de tablero",
   "libraryImportTooLargeBoardFiles": "Los archivos de tableros son demasiado grandes para importarlos",
   "libraryImportPartiallyFailedBoardFiles": "No se pudieron importar algunos archivos de tableros ({failed} de {total})",
   "libraryDropToImport": "Suelta archivos de tableros para importar",

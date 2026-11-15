@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Impossible d'importer les fichiers de tableaux",
   "libraryImportOnlyBoardFiles": "Seuls les fichiers de tableaux peuvent être importés",
   "libraryImportTooLargeBoardFile": "Le fichier de tableau « {fileName} » est trop volumineux pour être importé",
+  "libraryImportNotBoardFile": "« {fileName} » n'est pas un fichier de tableau",
   "libraryImportTooLargeBoardFiles": "Les fichiers de tableaux sont trop volumineux pour être importés",
   "libraryImportPartiallyFailedBoardFiles": "Impossible d'importer certains fichiers de tableaux ({failed} sur {total})",
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",

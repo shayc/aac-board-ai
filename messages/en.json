@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Couldn't import board files",
   "libraryImportOnlyBoardFiles": "Only board files can be imported",
   "libraryImportTooLargeBoardFile": "Board file \"{fileName}\" is too large to import",
+  "libraryImportNotBoardFile": "\"{fileName}\" isn't a board file",
   "libraryImportTooLargeBoardFiles": "Board files are too large to import",
   "libraryImportPartiallyFailedBoardFiles": "Couldn't import some board files ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",

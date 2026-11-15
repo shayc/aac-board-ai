@@ -139,7 +139,7 @@ describe("useBoardFileDrop", () => {
     expect(isDefaultAllowed).toBe(true);
   });
 
-  test("reports an error when no dropped file is a board file", async () => {
+  test("names a dropped file that isn't a board file", async () => {
     const { zone, screen } = await renderDropZone();
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
 
@@ -147,7 +147,7 @@ describe("useBoardFileDrop", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Only board files can be imported");
+      .toHaveTextContent('"manual.pdf" isn\'t a board file');
   });
 
   test("imports a dropped board file and opens it", async () => {

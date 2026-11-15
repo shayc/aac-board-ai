@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Kan bordbestanden niet importeren",
   "libraryImportOnlyBoardFiles": "Alleen bordbestanden kunnen worden geïmporteerd",
   "libraryImportTooLargeBoardFile": "Het bordbestand \"{fileName}\" is te groot om te importeren",
+  "libraryImportNotBoardFile": "\"{fileName}\" is geen bordbestand",
   "libraryImportTooLargeBoardFiles": "De bordbestanden zijn te groot om te importeren",
   "libraryImportPartiallyFailedBoardFiles": "Kan sommige bordbestanden niet importeren ({failed} van {total})",
   "libraryDropToImport": "Zet bordbestanden neer om te importeren",

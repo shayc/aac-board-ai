@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Не вдалося імпортувати файли дошок",
   "libraryImportOnlyBoardFiles": "Імпортувати можна лише файли дошок",
   "libraryImportTooLargeBoardFile": "Файл дошки «{fileName}» занадто великий для імпортування",
+  "libraryImportNotBoardFile": "«{fileName}» не є файлом дошки",
   "libraryImportTooLargeBoardFiles": "Файли дошок занадто великі для імпортування",
   "libraryImportPartiallyFailedBoardFiles": "Не вдалося імпортувати деякі файли дошок ({failed} з {total})",
   "libraryDropToImport": "Перетягніть файли дошок для імпорту",

@@ -48,7 +48,18 @@ export function deriveBoardSetIdFromURL(url: string): string {
 }
 
 function deriveFileName(url: URL): string {
-  return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
+  const lastSegment = url.pathname.split("/").filter(Boolean).at(-1);
+
+  return lastSegment ? decodePathSegment(lastSegment) : "board.obz";
+}
+
+// A malformed escape such as "%E0" is kept as typed rather than failing the import.
+function decodePathSegment(segment: string): string {
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
 }
 
 export interface DownloadProgress {

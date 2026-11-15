@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं",
   "libraryImportOnlyBoardFiles": "केवल बोर्ड फ़ाइलें आयात की जा सकती हैं",
   "libraryImportTooLargeBoardFile": "बोर्ड फ़ाइल \"{fileName}\" आयात करने के लिए बहुत बड़ी है",
+  "libraryImportNotBoardFile": "\"{fileName}\" बोर्ड फ़ाइल नहीं है",
   "libraryImportTooLargeBoardFiles": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं",
   "libraryImportPartiallyFailedBoardFiles": "कुछ बोर्ड फ़ाइलें आयात नहीं की जा सकीं ({total} में से {failed})",
   "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",

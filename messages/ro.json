@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Fișierele de table nu au putut fi importate",
   "libraryImportOnlyBoardFiles": "Se pot importa doar fișiere de table",
   "libraryImportTooLargeBoardFile": "Fișierul de tablă „{fileName}” este prea mare pentru a fi importat",
+  "libraryImportNotBoardFile": "„{fileName}” nu este un fișier de tablă",
   "libraryImportTooLargeBoardFiles": "Fișierele de table sunt prea mari pentru a fi importate",
   "libraryImportPartiallyFailedBoardFiles": "Unele fișiere de table nu au putut fi importate ({failed} din {total})",
   "libraryDropToImport": "Plasează fișierele de table pentru a le importa",

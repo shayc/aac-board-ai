@@ -1,4 +1,4 @@
-export const BOARD_FILE_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
+const BOARD_FILE_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
   "application/zip": [".obz", ".zip"],
   "application/json": [".obf", ".json"],
 };
@@ -12,6 +12,13 @@ export const BOARD_FILE_ACCEPT = [
   ...Object.keys(BOARD_FILE_EXTENSIONS_BY_MIME_TYPE),
   "application/octet-stream",
 ].join(",");
+
+// The OS offers the installed app for these files, so claim only the
+// board-specific extensions rather than every .zip and .json file.
+export const BOARD_FILE_HANDLER_ACCEPT: Record<string, string[]> = {
+  "application/zip": [".obz"],
+  "application/json": [".obf"],
+};
 
 export function hasBoardFileExtension(file: File): boolean {
   return findBoardFileExtension(file.name) !== undefined;

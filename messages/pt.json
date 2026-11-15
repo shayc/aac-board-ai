@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Não foi possível importar os arquivos de pranchas",
   "libraryImportOnlyBoardFiles": "Só é possível importar arquivos de pranchas",
   "libraryImportTooLargeBoardFile": "O arquivo de prancha \"{fileName}\" é grande demais para importar",
+  "libraryImportNotBoardFile": "\"{fileName}\" não é um arquivo de prancha",
   "libraryImportTooLargeBoardFiles": "Os arquivos de pranchas são grandes demais para importar",
   "libraryImportPartiallyFailedBoardFiles": "Não foi possível importar alguns arquivos de pranchas ({failed} de {total})",
   "libraryDropToImport": "Solte arquivos de pranchas para importar",

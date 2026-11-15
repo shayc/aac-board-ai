@@ -36,6 +36,7 @@
   "libraryImportFailedBoardFiles": "Taulutiedostojen tuonti epäonnistui",
   "libraryImportOnlyBoardFiles": "Vain taulutiedostoja voi tuoda",
   "libraryImportTooLargeBoardFile": "Taulutiedosto ”{fileName}” on liian suuri tuotavaksi",
+  "libraryImportNotBoardFile": "”{fileName}” ei ole taulutiedosto",
   "libraryImportTooLargeBoardFiles": "Taulutiedostot ovat liian suuria tuotaviksi",
   "libraryImportPartiallyFailedBoardFiles": "Joidenkin taulutiedostojen tuonti epäonnistui ({failed} / {total})",
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
