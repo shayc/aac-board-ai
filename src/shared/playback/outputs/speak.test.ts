@@ -1,7 +1,7 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
-import { assertDefined } from "@shared/testing/assert-defined";
 import {
   failUtterance,
+  lastUtterance,
   preventSpeechEnd,
   stubSpeech,
 } from "@shared/testing/stub-speech";
@@ -71,8 +71,7 @@ describe("speak", () => {
       volume: 0.25,
     });
 
-    const utterance = speech.speak.mock.calls[0]?.[0];
-    assertDefined(utterance);
+    const utterance = lastUtterance(speech.speak);
     expect(utterance.lang).toBe("he");
     expect(utterance.voice).toBe(voice);
     expect(utterance.rate).toBe(1.5);
@@ -113,9 +112,7 @@ describe("speak", () => {
       preventSpeechEnd(speech.speak);
       const playback = speak("hello", parameters);
 
-      const utterance = speech.speak.mock.lastCall?.[0];
-      assertDefined(utterance);
-      failUtterance(utterance);
+      failUtterance(lastUtterance(speech.speak));
 
       await expect(playback).rejects.toThrow("Speech failed: synthesis-failed");
     });

@@ -1,7 +1,7 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
-import { assertDefined } from "@shared/testing/assert-defined";
 import { stubAudio } from "@shared/testing/stub-audio";
 import {
+  lastUtterance,
   preventSpeechEnd,
   reachUtteranceBoundary,
   stubSpeech,
@@ -207,9 +207,7 @@ describe("PlaybackProvider", () => {
     await expect.element(screen.getByText("Active cue: 1")).toBeInTheDocument();
     const commitsWhilePlaying = { ...commits };
 
-    const utterance = speech.speak.mock.lastCall?.[0];
-    assertDefined(utterance);
-    reachUtteranceBoundary(utterance, 6);
+    reachUtteranceBoundary(lastUtterance(speech.speak), 6);
     await expect.element(screen.getByText("Active cue: 2")).toBeInTheDocument();
 
     expect(commitsWhilePlaying.controls).toBe(1);

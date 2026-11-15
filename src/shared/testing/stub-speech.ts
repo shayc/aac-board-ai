@@ -1,4 +1,5 @@
 import { type MockInstance, vi } from "vitest";
+import { assertDefined } from "./assert-defined";
 
 export function stubSpeech(): {
   speak: MockInstance<SpeechSynthesis["speak"]>;
@@ -31,6 +32,15 @@ export function failSpeech(
   speak.mockImplementation((utterance) => {
     queueMicrotask(() => failUtterance(utterance));
   });
+}
+
+export function lastUtterance(
+  speak: MockInstance<SpeechSynthesis["speak"]>,
+): SpeechSynthesisUtterance {
+  const utterance = speak.mock.lastCall?.[0];
+  assertDefined(utterance);
+
+  return utterance;
 }
 
 export function endUtterance(utterance: SpeechSynthesisUtterance): void {
