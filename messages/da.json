@@ -122,7 +122,7 @@
   "navBack": "Tilbage",
   "navHome": "Gå til hovedtavlen",
   "messageBackspace": "Slet",
-  "messageBackspaceLongPressHint": "Hold nede, eller tryk på {clearShortcut}, for at rydde beskeden. Tryk på {undoShortcut} for at fortryde.",
+  "messageBackspaceLongPressHint": "Hold nede, eller tryk på {shortcut}, for at rydde beskeden.",
   "messageClear": "Ryd besked",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

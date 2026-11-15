@@ -12,6 +12,7 @@ function keyEvent(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
     metaKey: false,
     ctrlKey: false,
     shiftKey: false,
+    altKey: false,
     ...overrides,
   };
 }
@@ -75,6 +76,15 @@ describe("resolveBoardShortcut", () => {
     expect(
       resolveBoardShortcut(
         keyEvent({ key: "Z", metaKey: true, shiftKey: true }),
+        false,
+      ),
+    ).toBeNull();
+  });
+
+  test("a letter typed with AltGr on the Z key is not claimed", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "ż", code: "KeyZ", ctrlKey: true, altKey: true }),
         false,
       ),
     ).toBeNull();

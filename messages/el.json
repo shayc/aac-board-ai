@@ -122,7 +122,7 @@
   "navBack": "Πίσω",
   "navHome": "Μετάβαση στον κύριο πίνακα",
   "messageBackspace": "Διαγραφή",
-  "messageBackspaceLongPressHint": "Κρατήστε πατημένο ή πατήστε {clearShortcut} για εκκαθάριση του μηνύματος. Πατήστε {undoShortcut} για αναίρεση.",
+  "messageBackspaceLongPressHint": "Κρατήστε πατημένο ή πατήστε {shortcut} για εκκαθάριση του μηνύματος.",
   "messageClear": "Εκκαθάριση μηνύματος",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

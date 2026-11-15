@@ -122,7 +122,7 @@
   "navBack": "వెనుకకు",
   "navHome": "ప్రధాన బోర్డుకు వెళ్లు",
   "messageBackspace": "తుడిచివేయి",
-  "messageBackspaceLongPressHint": "సందేశాన్ని క్లియర్ చేయడానికి నొక్కి ఉంచండి, లేదా {clearShortcut} నొక్కండి. చర్యరద్దు చేయడానికి {undoShortcut} నొక్కండి.",
+  "messageBackspaceLongPressHint": "సందేశాన్ని క్లియర్ చేయడానికి నొక్కి ఉంచండి, లేదా {shortcut} నొక్కండి.",
   "messageClear": "సందేశాన్ని క్లియర్ చేయి",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

@@ -267,12 +267,10 @@ describe("rewriteAs", () => {
     expect(rewriteAs(message, "hello")).not.toBe(message);
   });
 
-  test("reopens a closed word and a spoken message", () => {
+  test("reopens a closed word", () => {
     const closed = closeWord(rewriteAs(EMPTY_MESSAGE, "hello"));
-    const spoken = markSpoken(rewriteAs(EMPTY_MESSAGE, "hello"), true);
 
     expect(rewriteAs(closed, "hello").isWordOpen).toBe(true);
-    expect(rewriteAs(spoken, "hello").isSpoken).toBe(false);
   });
 });
 

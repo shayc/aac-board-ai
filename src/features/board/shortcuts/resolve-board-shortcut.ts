@@ -17,6 +17,7 @@ export interface BoardKeyEvent {
   metaKey: boolean;
   ctrlKey: boolean;
   shiftKey: boolean;
+  altKey: boolean;
 }
 
 export function resolveBoardShortcut(
@@ -32,8 +33,9 @@ export function resolveBoardShortcut(
       return "clear";
     }
 
-    // With Shift the keys mean redo, which the board does not have.
-    if (isZKey(event) && !event.shiftKey) {
+    // With Shift the keys mean redo, which the board does not have. Windows
+    // reports AltGr, which types a letter, as Ctrl with Alt.
+    if (isZKey(event) && !event.shiftKey && !event.altKey) {
       return "undo";
     }
 

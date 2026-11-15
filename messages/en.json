@@ -122,7 +122,7 @@
   "navBack": "Go back",
   "navHome": "Go to main board",
   "messageBackspace": "Backspace",
-  "messageBackspaceLongPressHint": "Hold, or press {clearShortcut}, to clear the message. Press {undoShortcut} to undo.",
+  "messageBackspaceLongPressHint": "Hold, or press {shortcut}, to clear the message.",
   "messageClear": "Clear message",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

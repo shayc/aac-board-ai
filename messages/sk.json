@@ -122,7 +122,7 @@
   "navBack": "Späť",
   "navHome": "Prejsť na hlavnú tabuľku",
   "messageBackspace": "Vymazať",
-  "messageBackspaceLongPressHint": "Správu vymažete podržaním alebo stlačením {clearShortcut}. Stlačením {undoShortcut} akciu vrátite späť.",
+  "messageBackspaceLongPressHint": "Správu vymažete podržaním alebo stlačením {shortcut}.",
   "messageClear": "Vymazať správu",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

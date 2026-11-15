@@ -122,7 +122,7 @@
   "navBack": "Voltar",
   "navHome": "Ir para a prancha principal",
   "messageBackspace": "Apagar",
-  "messageBackspaceLongPressHint": "Pressione e segure, ou pressione {clearShortcut}, para limpar a mensagem. Pressione {undoShortcut} para desfazer.",
+  "messageBackspaceLongPressHint": "Pressione e segure, ou pressione {shortcut}, para limpar a mensagem.",
   "messageClear": "Limpar mensagem",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

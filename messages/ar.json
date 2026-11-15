@@ -122,7 +122,7 @@
   "navBack": "رجوع",
   "navHome": "الانتقال إلى اللوحة الرئيسية",
   "messageBackspace": "مسح",
-  "messageBackspaceLongPressHint": "اضغط مع الاستمرار، أو اضغط {clearShortcut}، لمسح الرسالة. اضغط {undoShortcut} للتراجع.",
+  "messageBackspaceLongPressHint": "اضغط مع الاستمرار، أو اضغط {shortcut}، لمسح الرسالة.",
   "messageClear": "مسح الرسالة",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

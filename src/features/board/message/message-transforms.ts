@@ -127,7 +127,6 @@ function messageToAddTo(message: Message): Message {
 
 function isSpelledAs(message: Message, words: readonly string[]): boolean {
   return (
-    !message.isSpoken &&
     message.isWordOpen === words.length > 0 &&
     message.parts.length === words.length &&
     message.parts.every(

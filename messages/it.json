@@ -122,7 +122,7 @@
   "navBack": "Indietro",
   "navHome": "Vai alla tabella principale",
   "messageBackspace": "Cancella",
-  "messageBackspaceLongPressHint": "Tieni premuto o premi {clearShortcut} per cancellare il messaggio. Premi {undoShortcut} per annullare.",
+  "messageBackspaceLongPressHint": "Tieni premuto o premi {shortcut} per cancellare il messaggio.",
   "messageClear": "Cancella messaggio",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

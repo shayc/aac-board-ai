@@ -122,7 +122,7 @@
   "navBack": "返回",
   "navHome": "返回主沟通板",
   "messageBackspace": "删除",
-  "messageBackspaceLongPressHint": "按住或按 {clearShortcut} 可清空消息。按 {undoShortcut} 可撤销。",
+  "messageBackspaceLongPressHint": "按住或按 {shortcut} 可清空消息。",
   "messageClear": "清空消息",
   "shortcutTooltip": "{action}（{shortcut}）",
   "keyControl": "Ctrl",

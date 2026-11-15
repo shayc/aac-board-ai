@@ -122,7 +122,7 @@
   "navBack": "חזרה",
   "navHome": "ללוח הראשי",
   "messageBackspace": "מחיקה לאחור",
-  "messageBackspaceLongPressHint": "לחצו לחיצה ארוכה, או הקישו {clearShortcut}, כדי לנקות את המסר. הקישו {undoShortcut} כדי לבטל את הפעולה.",
+  "messageBackspaceLongPressHint": "לחצו לחיצה ארוכה, או הקישו {shortcut}, כדי לנקות את המסר.",
   "messageClear": "ניקוי המסר",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

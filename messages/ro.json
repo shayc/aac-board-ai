@@ -122,7 +122,7 @@
   "navBack": "Înapoi",
   "navHome": "Mergi la tabla principală",
   "messageBackspace": "Șterge",
-  "messageBackspaceLongPressHint": "Ține apăsat sau apasă {clearShortcut} pentru a șterge mesajul. Apasă {undoShortcut} pentru a anula.",
+  "messageBackspaceLongPressHint": "Ține apăsat sau apasă {shortcut} pentru a șterge mesajul.",
   "messageClear": "Șterge mesajul",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

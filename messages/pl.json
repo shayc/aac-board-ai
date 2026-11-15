@@ -122,7 +122,7 @@
   "navBack": "Wstecz",
   "navHome": "Przejdź do głównej tablicy",
   "messageBackspace": "Usuń",
-  "messageBackspaceLongPressHint": "Naciśnij i przytrzymaj albo naciśnij {clearShortcut}, aby wyczyścić wiadomość. Naciśnij {undoShortcut}, aby cofnąć.",
+  "messageBackspaceLongPressHint": "Naciśnij i przytrzymaj albo naciśnij {shortcut}, aby wyczyścić wiadomość.",
   "messageClear": "Wyczyść wiadomość",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

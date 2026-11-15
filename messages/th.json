@@ -122,7 +122,7 @@
   "navBack": "กลับ",
   "navHome": "ไปที่บอร์ดหลัก",
   "messageBackspace": "ลบ",
-  "messageBackspaceLongPressHint": "กดค้าง หรือกด {clearShortcut} เพื่อล้างข้อความ กด {undoShortcut} เพื่อเลิกทำ",
+  "messageBackspaceLongPressHint": "กดค้าง หรือกด {shortcut} เพื่อล้างข้อความ",
   "messageClear": "ล้างข้อความ",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

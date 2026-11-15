@@ -13,11 +13,7 @@ import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
 import { MessageBar } from "./message-bar";
 
-const SHORTCUT_LABELS = {
-  clear: "⌘⌫",
-  spokenClear: "Command+Delete",
-  spokenUndo: "Command+Z",
-};
+const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 
 type ColorMode = "light" | "dark";
 
@@ -291,7 +287,7 @@ describe("BackspaceButton shortcut hints", () => {
     await expect
       .element(button)
       .toHaveAccessibleDescription(
-        "Hold, or press Command+Delete, to clear the message. Press Command+Z to undo.",
+        "Hold, or press Command+Delete, to clear the message.",
       );
     await expect
       .element(button)

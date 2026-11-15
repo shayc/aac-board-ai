@@ -122,7 +122,7 @@
   "navBack": "ಹಿಂದಕ್ಕೆ",
   "navHome": "ಮುಖ್ಯ ಬೋರ್ಡ್‌ಗೆ ಹೋಗಿ",
   "messageBackspace": "ಅಳಿಸು",
-  "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ, ಅಥವಾ {clearShortcut} ಒತ್ತಿರಿ. ರದ್ದುಗೊಳಿಸಲು {undoShortcut} ಒತ್ತಿರಿ.",
+  "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ, ಅಥವಾ {shortcut} ಒತ್ತಿರಿ.",
   "messageClear": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಿ",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

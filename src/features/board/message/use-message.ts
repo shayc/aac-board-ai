@@ -112,7 +112,9 @@ export function useMessage(): UseMessageReturn {
   }
 
   function replaceWithText(input: string) {
-    const current = stateRef.current;
+    // Choosing a suggestion is an edit, so it opens a spoken message for more
+    // even when it repeats the message.
+    const current = setSpoken(false);
     const rewritten = rewriteAs(current, input);
     if (rewritten !== current) {
       commitChange(rewritten);

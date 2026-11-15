@@ -296,8 +296,7 @@ is no redo. On a keyboard layout without Latin letters the Z key's position
 counts. Backspace, play and stop name these shortcuts in a tooltip on
 keyboard focus only, since head-pointer and eye-gaze users rest on targets to
 select them. Each control's `aria-keyshortcuts` lists the keys that activate
-it, and the backspace hint names the clear and undo shortcuts for screen
-readers.
+it, and the backspace hint names the clear shortcut for screen readers.
 
 ### Switch scanning
 

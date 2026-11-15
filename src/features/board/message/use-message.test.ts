@@ -266,6 +266,33 @@ describe("useMessage", () => {
       expect(result.current.parts).toHaveLength(0);
     });
 
+    test("does not count a suggestion that repeats a spoken message", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("I want");
+      await trackSettledPlayback(result.current, true);
+      result.current.replaceWithText("I want");
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.parts).toHaveLength(0);
+    });
+
+    test("keeps the last 100 changes", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      for (let change = 0; change < 101; change++) {
+        result.current.apply([{ kind: "spell", text: "a" }]);
+      }
+
+      for (let step = 0; step < 101; step++) {
+        result.current.undo();
+      }
+      await rerender();
+
+      expect(result.current.text).toBe("a");
+    });
+
     test("opens a spoken message it brings back for more", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;

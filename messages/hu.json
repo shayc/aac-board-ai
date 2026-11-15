@@ -122,7 +122,7 @@
   "navBack": "Vissza",
   "navHome": "Ugrás a főtáblára",
   "messageBackspace": "Törlés",
-  "messageBackspaceLongPressHint": "Az üzenet törléséhez tartsd lenyomva, vagy nyomd le ezt: {clearShortcut}. A visszavonáshoz nyomd le ezt: {undoShortcut}.",
+  "messageBackspaceLongPressHint": "Az üzenet törléséhez tartsd lenyomva, vagy nyomd le ezt: {shortcut}.",
   "messageClear": "Üzenet törlése",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

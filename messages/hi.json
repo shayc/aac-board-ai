@@ -122,7 +122,7 @@
   "navBack": "वापस जाएँ",
   "navHome": "मुख्य बोर्ड पर जाएँ",
   "messageBackspace": "मिटाएं",
-  "messageBackspaceLongPressHint": "संदेश साफ़ करने के लिए दबाकर रखें, या {clearShortcut} दबाएँ। पूर्ववत करने के लिए {undoShortcut} दबाएँ।",
+  "messageBackspaceLongPressHint": "संदेश साफ़ करने के लिए दबाकर रखें, या {shortcut} दबाएँ।",
   "messageClear": "संदेश साफ़ करें",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

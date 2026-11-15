@@ -122,7 +122,7 @@
   "navBack": "பின்செல்",
   "navHome": "முதன்மைப் பலகைக்குச் செல்",
   "messageBackspace": "அழி",
-  "messageBackspaceLongPressHint": "செய்தியை அழிக்க அழுத்திப் பிடிக்கவும், அல்லது {clearShortcut} அழுத்தவும். செயல்தவிர்க்க {undoShortcut} அழுத்தவும்.",
+  "messageBackspaceLongPressHint": "செய்தியை அழிக்க அழுத்திப் பிடிக்கவும், அல்லது {shortcut} அழுத்தவும்.",
   "messageClear": "செய்தியை அழி",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
