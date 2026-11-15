@@ -18,13 +18,13 @@ export function useBoardSetDownload({
   url,
 }: {
   name: string;
-  url: string;
+  url: string | undefined;
 }): UseBoardSetDownloadReturn {
   const { showSnackbar } = useSnackbar();
   const phase = useBoardSetDownloadPhase(url);
 
   async function download() {
-    if (phase) {
+    if (url === undefined || phase) {
       return;
     }
 
@@ -47,7 +47,9 @@ export function useBoardSetDownload({
   }
 
   function cancel() {
-    cancelBoardSetDownload(url);
+    if (url !== undefined) {
+      cancelBoardSetDownload(url);
+    }
   }
 
   return { phase, download, cancel };

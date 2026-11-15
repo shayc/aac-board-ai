@@ -13,59 +13,26 @@ export type BoardSetDownloadPhase =
   | ({ kind: "downloading" } & DownloadProgress)
   | { kind: "importing" };
 
-export interface CompletedDownload {
-  boardSetId: string;
-}
-
-interface DownloadsState {
-  phases: ReadonlyMap<string, BoardSetDownloadPhase>;
-  // Changes only when a download starts or settles, so the library can follow
-  // which sets are downloading without re-rendering on every progress step.
-  downloadingURLs: ReadonlySet<string>;
-  // A new object per completion, so a list can tell completions it has seen
-  // from ones that happen while it is open.
-  lastCompletion: CompletedDownload | undefined;
-}
-
 interface PendingDownload {
   promise: Promise<ImportedBoardSet | undefined>;
   controller: AbortController;
 }
 
 const pendingDownloadsByURL = new Map<string, PendingDownload>();
-const downloadsStore = createExternalStore<DownloadsState>({
-  phases: new Map(),
-  downloadingURLs: new Set(),
-  lastCompletion: undefined,
-});
+const downloadPhasesStore = createExternalStore<
+  ReadonlyMap<string, BoardSetDownloadPhase>
+>(new Map());
 
-function setDownloadPhase(url: string, phase: BoardSetDownloadPhase) {
-  const state = downloadsStore.getSnapshot();
-  const phases = new Map(state.phases);
-  phases.set(url, phase);
-  const downloadingURLs = state.downloadingURLs.has(url)
-    ? state.downloadingURLs
-    : new Set(state.downloadingURLs).add(url);
+function setDownloadPhase(url: string, phase?: BoardSetDownloadPhase) {
+  const phases = new Map(downloadPhasesStore.getSnapshot());
 
-  downloadsStore.setState({ ...state, phases, downloadingURLs });
-}
+  if (phase) {
+    phases.set(url, phase);
+  } else {
+    phases.delete(url);
+  }
 
-// Clears the phase and records the completion in one update, so the stored
-// entry never renders without knowing it was just downloaded.
-function settleDownload(url: string, completion?: CompletedDownload) {
-  pendingDownloadsByURL.delete(url);
-
-  const state = downloadsStore.getSnapshot();
-  const phases = new Map(state.phases);
-  phases.delete(url);
-  const downloadingURLs = new Set(state.downloadingURLs);
-  downloadingURLs.delete(url);
-
-  downloadsStore.setState({
-    phases,
-    downloadingURLs,
-    lastCompletion: completion ?? state.lastCompletion,
-  });
+  downloadPhasesStore.setState(phases);
 }
 
 function visibleProgressStep({
@@ -80,7 +47,7 @@ function visibleProgressStep({
 }
 
 function publishProgress(url: string, progress: DownloadProgress) {
-  const phase = downloadsStore.getSnapshot().phases.get(url);
+  const phase = downloadPhasesStore.getSnapshot().get(url);
   const isUnchanged =
     phase?.kind === "downloading" &&
     phase.total === progress.total &&
@@ -97,21 +64,20 @@ async function runDownload(
   signal: AbortSignal,
 ): Promise<ImportedBoardSet | undefined> {
   try {
-    const importedBoardSet = await importBoardFileFromURL(url, {
+    return await importBoardFileFromURL(url, {
       signal,
       onProgress: (progress) => publishProgress(url, progress),
       onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
     });
-    settleDownload(url, { boardSetId: importedBoardSet.id });
-
-    return importedBoardSet;
   } catch (error) {
-    settleDownload(url);
     if (signal.aborted) {
       return undefined;
     }
 
     throw error;
+  } finally {
+    pendingDownloadsByURL.delete(url);
+    setDownloadPhase(url);
   }
 }
 
@@ -133,7 +99,7 @@ export function downloadBoardSet(
 
 export function cancelBoardSetDownload(url: string) {
   // Once local importing starts, its atomic write is left to finish.
-  if (downloadsStore.getSnapshot().phases.get(url)?.kind === "importing") {
+  if (downloadPhasesStore.getSnapshot().get(url)?.kind === "importing") {
     return;
   }
 
@@ -141,15 +107,9 @@ export function cancelBoardSetDownload(url: string) {
 }
 
 export function useBoardSetDownloadPhase(
-  url: string,
+  url: string | undefined,
 ): BoardSetDownloadPhase | undefined {
-  return useExternalStore(downloadsStore, (state) => state.phases.get(url));
-}
-
-export function useDownloadingBoardSetURLs(): ReadonlySet<string> {
-  return useExternalStore(downloadsStore, (state) => state.downloadingURLs);
-}
-
-export function useLastCompletedDownload(): CompletedDownload | undefined {
-  return useExternalStore(downloadsStore, (state) => state.lastCompletion);
+  return useExternalStore(downloadPhasesStore, (phases) =>
+    url === undefined ? undefined : phases.get(url),
+  );
 }

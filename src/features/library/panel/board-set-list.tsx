@@ -6,20 +6,20 @@ import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useId, useState } from "react";
 import { rootBoardPath } from "../board-paths";
-import type { CatalogBoardSet } from "../catalog/board-set-catalog";
-import { useLastCompletedDownload } from "../catalog/board-set-downloads";
+import { boardSetCatalog } from "../catalog/board-set-catalog";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { BoardSetListItem } from "./board-set-list-item";
 import { BoardSetMenu } from "./board-set-menu";
-import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
-type BoardSetEntry =
-  | { kind: "open"; boardSet: BoardSetRecord }
-  | { kind: "download"; boardSet: CatalogBoardSet };
+interface BoardSetEntry {
+  id: string;
+  name: string;
+  storedBoardSet: BoardSetRecord | undefined;
+  downloadURL: string | undefined;
+}
 
 interface BoardSetListProps {
   boardSets: readonly BoardSetRecord[];
-  downloadableBoardSets: readonly CatalogBoardSet[];
   activeBoardSetId?: string;
   onShowInfo: (boardSet: BoardSetRecord) => void;
   onExport: (boardSet: BoardSetRecord) => void;
@@ -28,7 +28,6 @@ interface BoardSetListProps {
 
 export function BoardSetList({
   boardSets,
-  downloadableBoardSets,
   activeBoardSetId,
   onShowInfo,
   onExport,
@@ -42,15 +41,8 @@ export function BoardSetList({
     element: HTMLElement;
     boardSet: BoardSetRecord;
   } | null>(null);
-  const lastCompletedDownload = useLastCompletedDownload();
-  // Downloads that finished while the library was closed don't take focus.
-  const [completedDownloadAtMount] = useState(lastCompletedDownload);
 
-  const freshlyDownloadedBoardSetId =
-    lastCompletedDownload === completedDownloadAtMount
-      ? undefined
-      : lastCompletedDownload?.boardSetId;
-  const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
+  const entries = toSortedEntries(boardSets, uiLocale);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
 
   function handleMenuClose() {
@@ -65,29 +57,26 @@ export function BoardSetList({
     handleMenuClose();
   }
 
-  function renderEntry(entry: BoardSetEntry) {
-    const { kind, boardSet } = entry;
-
-    if (kind === "download") {
-      return (
-        <DownloadableBoardSetListItem
-          key={boardSet.id}
-          name={boardSet.name}
-          url={boardSet.url}
-        />
-      );
-    }
-
+  function renderEntry({
+    id,
+    name,
+    storedBoardSet,
+    downloadURL,
+  }: BoardSetEntry) {
     return (
       <BoardSetListItem
-        key={boardSet.id}
+        key={id}
         menuId={menuId}
-        name={boardSet.name}
-        to={rootBoardPath(boardSet)}
-        isActive={boardSet.id === activeBoardSetId}
-        isFreshlyDownloaded={boardSet.id === freshlyDownloadedBoardSetId}
-        isMenuOpen={boardSet.id === openMenuBoardSetId}
-        onMenuOpen={(element) => setMenuAnchor({ element, boardSet })}
+        name={name}
+        to={storedBoardSet && rootBoardPath(storedBoardSet)}
+        downloadURL={downloadURL}
+        isActive={id === activeBoardSetId}
+        isMenuOpen={id === openMenuBoardSetId}
+        onMenuOpen={(element) => {
+          if (storedBoardSet) {
+            setMenuAnchor({ element, boardSet: storedBoardSet });
+          }
+        }}
       />
     );
   }
@@ -122,26 +111,39 @@ export function BoardSetList({
   );
 }
 
+// Catalog sets keep one entry whether or not they are stored, so a finished
+// download changes its row in place instead of replacing it.
 function toSortedEntries(
   boardSets: readonly BoardSetRecord[],
-  downloadableBoardSets: readonly CatalogBoardSet[],
   locale: string,
 ): BoardSetEntry[] {
   const collator = new Intl.Collator(locale, { numeric: true });
+  const storedBoardSetsById = new Map(
+    boardSets.map((boardSet) => [boardSet.id, boardSet]),
+  );
+  const catalogIds = new Set(boardSetCatalog.map(({ id }) => id));
   const entries: BoardSetEntry[] = [
-    ...boardSets.map((boardSet) => ({
-      kind: "open" as const,
-      boardSet,
-    })),
-    ...downloadableBoardSets.map((boardSet) => ({
-      kind: "download" as const,
-      boardSet,
-    })),
+    ...boardSetCatalog.map(({ id, name, url }) => {
+      const storedBoardSet = storedBoardSetsById.get(id);
+
+      return {
+        id,
+        name: storedBoardSet?.name ?? name,
+        storedBoardSet,
+        downloadURL: url,
+      };
+    }),
+    ...boardSets
+      .filter(({ id }) => !catalogIds.has(id))
+      .map((storedBoardSet) => ({
+        id: storedBoardSet.id,
+        name: storedBoardSet.name,
+        storedBoardSet,
+        downloadURL: undefined,
+      })),
   ];
 
   return entries.toSorted(
-    (a, b) =>
-      collator.compare(a.boardSet.name, b.boardSet.name) ||
-      collator.compare(a.boardSet.id, b.boardSet.id),
+    (a, b) => collator.compare(a.name, b.name) || collator.compare(a.id, b.id),
   );
 }

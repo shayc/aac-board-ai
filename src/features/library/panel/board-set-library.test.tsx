@@ -55,10 +55,10 @@ function stubStreamingDownload(headers?: HeadersInit) {
   };
 }
 
-async function emulateReducedMotion() {
+async function emulateMotionPreference(value: string) {
   const session = cdp();
   await session.send("Emulation.setEmulatedMedia", {
-    features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+    features: [{ name: "prefers-reduced-motion", value }],
   });
   onTestFinished(async () => {
     await session.send("Emulation.setEmulatedMedia", { features: [] });
@@ -222,39 +222,30 @@ describe("BoardSetLibrary", () => {
         .not.toBeInTheDocument();
     });
 
-    test("fades the menu icon in after a download finishes", async () => {
-      const screen = await renderBoardSetLibrary();
+    test.for(["no-preference", "reduce"])(
+      "turns the download button into the menu button with motion preference %s",
+      async (motionPreference) => {
+        await emulateMotionPreference(motionPreference);
+        const screen = await renderBoardSetLibrary();
+        const downloadButton = screen.getByRole("button", {
+          name: "Download First Words",
+        });
+        const buttonElement = downloadButton.element();
 
-      await screen
-        .getByRole("button", { name: "Download First Words" })
-        .click();
+        await downloadButton.click();
 
-      const menuButton = screen.getByRole("button", {
-        name: "More options for First Words",
-      });
-      await expect
-        .element(menuButton.getByTestId("MoreVertIcon"))
-        .toHaveStyle({ opacity: "1" });
-    });
-
-    test("shows the menu icon without the download ring when motion is reduced", async () => {
-      await emulateReducedMotion();
-      const screen = await renderBoardSetLibrary();
-
-      await screen
-        .getByRole("button", { name: "Download First Words" })
-        .click();
-
-      const menuButton = screen.getByRole("button", {
-        name: "More options for First Words",
-      });
-      const menuIcon = menuButton.getByTestId("MoreVertIcon");
-      await expect.element(menuIcon).toBeVisible();
-      await expect.element(menuIcon).toHaveStyle({ opacity: "1" });
-      await expect
-        .element(menuButton.getByRole("progressbar", { includeHidden: true }))
-        .not.toBeVisible();
-    });
+        const menuButton = screen.getByRole("button", {
+          name: "More options for First Words",
+        });
+        await expect
+          .element(menuButton.getByTestId("MoreVertIcon"))
+          .toHaveStyle({ opacity: "1" });
+        await expect
+          .element(menuButton.getByRole("progressbar", { includeHidden: true }))
+          .not.toBeInTheDocument();
+        expect(menuButton.element()).toBe(buttonElement);
+      },
+    );
 
     test("keeps a downloaded board set in its place in the list", async () => {
       await seedBoardSets([
