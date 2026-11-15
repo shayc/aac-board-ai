@@ -11,14 +11,13 @@ import {
   loadTestImageBlob,
   makeOBFBoard,
   resetBoardsDB,
+  SAMPLE_OBZ_FILE,
   seedBoardSets,
 } from "../testing";
 import { boardSetToOBZ } from "./board-set-export";
 
 async function importFixtureSet() {
-  const { id } = await importBoardFile(
-    await loadFixtureFile("lots-of-stuff.obz"),
-  );
+  const { id } = await importBoardFile(await loadFixtureFile(SAMPLE_OBZ_FILE));
   const boardSet = await getBoardSetRecord(id);
   if (!boardSet) {
     throw new Error("Fixture set was not imported");

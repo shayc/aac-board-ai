@@ -2,6 +2,7 @@ import { importBoardFileFromURL, listBoardSetRecords } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
   SAMPLE_OBZ_URL,
   seedBoardSets,
 } from "@features/library/testing";
@@ -94,7 +95,7 @@ function seedAnimalsSet() {
 function seedExistingLotsOfStuffSet() {
   return seedBoardSets([
     {
-      id: "lots-of-stuff",
+      id: SAMPLE_BOARD_SET_ID,
       rootBoardId: "root-1",
       boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
     },
@@ -240,7 +241,7 @@ describe("app flow", () => {
       .toBeVisible();
 
     expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
-      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
+      new Set([SAMPLE_BOARD_SET_ID, `${SAMPLE_BOARD_SET_ID}-2`]),
     );
   });
 
@@ -264,7 +265,7 @@ describe("app flow", () => {
       .element(screen.getByRole("link", { name: "[es] Zoo" }))
       .toBeVisible();
     expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
-      new Set(["zoo", "lots-of-stuff"]),
+      new Set(["zoo", SAMPLE_BOARD_SET_ID]),
     );
   });
 
@@ -299,7 +300,7 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
     expect((await listBoardSetRecords()).map((set) => set.id)).toEqual([
-      "lots-of-stuff",
+      SAMPLE_BOARD_SET_ID,
     ]);
     expect(
       fetchSpy.mock.calls.filter(

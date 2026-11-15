@@ -9,6 +9,7 @@ import {
   makeCorruptBoardFile,
   makeOversizedOBZ,
   resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
   SAMPLE_OBF_FILE,
 } from "../testing";
 import { useImportBoardFiles } from "./use-import-board-files";
@@ -219,10 +220,11 @@ describe("useImportBoardFiles", () => {
 
     await screen.getByRole("button", { name: "pick" }).click();
 
-    await expect
-      .element(screen.getByTestId("path"))
-      .toHaveTextContent(
-        rootBoardPath({ id: "lots-of-stuff", rootBoardId: "lots_of_stuff" }),
-      );
+    await expect.element(screen.getByTestId("path")).toHaveTextContent(
+      rootBoardPath({
+        id: SAMPLE_BOARD_SET_ID,
+        rootBoardId: "lots_of_stuff",
+      }),
+    );
   });
 });

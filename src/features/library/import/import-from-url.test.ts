@@ -3,6 +3,7 @@ import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
   loadFixtureFile,
   resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
   SAMPLE_OBZ_FILE,
   SAMPLE_OBZ_URL,
 } from "../testing";
@@ -29,7 +30,7 @@ describe("importBoardFileFromURL", () => {
   test("imports a board from a URL and derives the boardSetId from the filename", async () => {
     const result = await importBoardFileFromURL(SAMPLE_OBZ_URL);
 
-    expect(result.id).toBe("lots-of-stuff");
+    expect(result.id).toBe(SAMPLE_BOARD_SET_ID);
     expect(result.rootBoardId).toBeTruthy();
   });
 
