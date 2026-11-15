@@ -43,7 +43,7 @@
 ## Testing Instructions
 
 - **Structure:** Colocate tests as `*.test.ts(x)`.
-- **Runner:** `npm test` runs Vitest browser mode via Playwright in real Chromium and WebKit. WebKit runs test files one at a time in a persistent context, because Playwright's WebKit rejects Blobs written to IndexedDB in its default ephemeral context.
+- **Runner:** `npm test` runs Vitest browser mode via Playwright in real Chromium and WebKit.
 - **Utilities:** Use `vitest-browser-react` for components and interactions.
 - **Determinism:** No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
 - **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use the browser's real web APIs except for the allowed stubs below.

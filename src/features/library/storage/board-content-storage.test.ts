@@ -93,7 +93,10 @@ describe("getAssetBlob", () => {
     await insertBoardSet(
       makeBoardSetInput({
         assets: [
-          { path: "images\\photo.png", blob: new Blob(["data"]) },
+          {
+            path: "images\\photo.png",
+            blob: new Blob(["data"], { type: "image/png" }),
+          },
           { path: "/leading.png", blob: new Blob(["a"]) },
           { path: "double//slash.png", blob: new Blob(["b"]) },
         ],
@@ -104,6 +107,7 @@ describe("getAssetBlob", () => {
     expect(retrieved).toBeInstanceOf(Blob);
     assertDefined(retrieved);
     expect(await retrieved.text()).toBe("data");
+    expect(retrieved.type).toBe("image/png");
 
     expect(await getAssetBlob("set-1", "leading.png")).toBeInstanceOf(Blob);
     expect(await getAssetBlob("set-1", "double/slash.png")).toBeInstanceOf(

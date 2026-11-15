@@ -121,7 +121,8 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
   const rootBoard = validateBoardSetInput(input);
   const boardSetRecord = buildBoardSetRecord(input, rootBoard);
   const boardRecords = buildBoardRecords(input);
-  const assetRecords = buildAssetRecords(input);
+  // Read before the transaction opens: it would commit during the await.
+  const assetRecords = await buildAssetRecords(input);
 
   const db = await getBoardsDB();
   const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
@@ -213,12 +214,18 @@ function buildBoardRecords({ id, boards }: BoardSetInput): BoardRecord[] {
   }));
 }
 
-function buildAssetRecords({ id, assets }: BoardSetInput): AssetRecord[] {
-  return assets.map(({ path, blob }) => ({
-    boardSetId: id,
-    path: normalizeAssetPath(path),
-    blob,
-  }));
+function buildAssetRecords({
+  id,
+  assets,
+}: BoardSetInput): Promise<AssetRecord[]> {
+  return Promise.all(
+    assets.map(async ({ path, blob }) => ({
+      boardSetId: id,
+      path: normalizeAssetPath(path),
+      bytes: await blob.arrayBuffer(),
+      type: blob.type,
+    })),
+  );
 }
 
 function requestPersistentStorage(): void {
