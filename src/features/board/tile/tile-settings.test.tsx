@@ -2,9 +2,11 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { tabToNextControl } from "@shared/testing/tab-to-next-control";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
+import { setTileLabelPlacement } from "./tile-preferences-store";
 import { TileSettings } from "./tile-settings";
 
 describe("TileSettings", () => {
@@ -63,6 +65,37 @@ describe("TileSettings", () => {
       .element(screen.getByRole("slider", { name: "Color intensity" }))
       .toHaveAttribute("aria-valuetext", "100%");
   });
+
+  test.each([
+    { placement: "top", name: "Top" },
+    { placement: "bottom", name: "Bottom" },
+    { placement: "hidden", name: "Hidden" },
+  ] as const)(
+    "shows one focus outline around the $name label option while keeping its preview visible",
+    async ({ placement, name }) => {
+      setTileLabelPlacement(placement);
+      const screen = await render(
+        <AppProviders>
+          <TileSettings />
+        </AppProviders>,
+      );
+
+      await tabToNextControl();
+
+      const radio = screen.getByRole("radio", { name });
+      await expect.element(radio).toHaveFocus();
+      const option = radio.element().parentElement;
+      assertDefined(option);
+      const symbol = option.querySelector("svg");
+      assertDefined(symbol);
+
+      await expect.element(symbol).toBeVisible();
+      await expect.element(option).toHaveStyle({ outlineStyle: "solid" });
+      await expect
+        .element(symbol)
+        .toHaveStyle({ outlineStyle: "none", boxShadow: "none" });
+    },
+  );
 
   test("persists tile border visibility when toggled", async () => {
     const screen = await render(

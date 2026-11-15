@@ -401,11 +401,16 @@ describe("Grid", () => {
         await expect
           .poll(() => measureLayout(grid, axis).leadingHint)
           .toBeGreaterThan(0);
-        const layout = measureLayout(grid, axis);
-        expect(layout.visibleCellCount).toBe(3);
-        expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
-          1,
-        );
+        await expect
+          .poll(() => measureLayout(grid, axis).visibleCellCount)
+          .toBe(3);
+        await expect
+          .poll(() => {
+            const layout = measureLayout(grid, axis);
+
+            return Math.abs(layout.leadingHint - layout.trailingHint);
+          })
+          .toBeLessThan(1);
       },
     );
 

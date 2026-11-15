@@ -1,3 +1,4 @@
+import { rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
@@ -15,6 +16,10 @@ import {
 // A profile reused between runs serves modules its HTTP cache kept from the
 // previous run, and carries over that run's stored board sets.
 const WEBKIT_PROFILE_DIR = join(tmpdir(), `vitest-webkit-${process.pid}`);
+
+process.once("exit", () => {
+  rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
+});
 
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",

@@ -78,7 +78,9 @@ describe("BoardSetInfoDialog", () => {
 
     await userEvent.dblClick(description);
 
-    expect(getSelection()?.toString().trim()).not.toBe("");
+    const selectedText = getSelection()?.toString().trim() ?? "";
+    expect(selectedText).not.toBe("");
+    expect(description.element().textContent).toContain(selectedText);
   });
 
   test("stays sized to its content on small screens", async () => {

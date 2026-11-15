@@ -1,4 +1,5 @@
 import { assertDefined } from "@shared/testing/assert-defined";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { describe, expect, test } from "vitest";
@@ -123,6 +124,19 @@ describe("MessageBar", () => {
     await expect
       .element(message.getByRole("listitem").first())
       .toHaveTextContent("I");
+  });
+
+  test("lets the keyboard reach a message longer than the bar", async () => {
+    const screen = await renderWithProviders(
+      <ScrollableMessageBar {...createProps({ parts: SCROLL_PARTS })} />,
+    );
+    const message = screen.getByRole("list", { name: "Message" });
+    expect(message.element().scrollLeft).toBeGreaterThan(0);
+
+    await userEvent.tab();
+
+    await expect.element(message).toHaveFocus();
+    await expectNoA11yViolations(screen.container);
   });
 
   test("keeps an empty message out of the tab order", async () => {

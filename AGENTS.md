@@ -47,7 +47,7 @@
 - **Determinism:** No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
 - **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use the browser's real web APIs except for the allowed stubs below.
   - _Allowed stubs (closed list):_ network (`fetch`, WebSocket), non-determinism (`Date.now`, `Math.random`), device output (`speechSynthesis`, `HTMLAudioElement.play`), and browser capabilities unavailable in the test runtime (only at the platform boundary).
-- **Cross-browser:** Assert behavior both engines share, not one engine's internals. Move focus to a button or radio with `tabToNextControl()` from `@shared/testing/tab-to-next-control`; Safari on macOS skips them on a plain Tab.
+- **Cross-browser:** Assert behavior both engines share, not one engine's internals. Safari on macOS skips native buttons, radios and checkboxes without a `tabindex` on a plain Tab (MUI buttons set one); reach those with `tabToNextControl()` from `@shared/testing/tab-to-next-control`.
 - **Scope:**
   - **Interactive:** Prove a behavior (interaction → observable result).
   - **Presentational:** Render-only assertions for accessibility, content, and visibility.
