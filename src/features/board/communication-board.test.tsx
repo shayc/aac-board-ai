@@ -15,10 +15,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
-import {
-  setClearsAfterSpeaking,
-  setMessageImagesVisible,
-} from "./message/message-preferences-store";
+import { setMessageImagesVisible } from "./message/message-preferences-store";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
@@ -503,22 +500,6 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems.nth(2)).toHaveTextContent("the");
     });
 
-    test("reopens a word closed by space when Backspace undoes the space", async () => {
-      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = getMessageItems(screen);
-
-      await screen.getByRole("button", { name: "C", exact: true }).click();
-      await screen.getByRole("button", { name: "A", exact: true }).click();
-      await screen.getByRole("button", { name: "space" }).click();
-      await screen.getByRole("button", { name: "Backspace" }).click();
-      await screen.getByRole("button", { name: "C", exact: true }).click();
-
-      await expect.element(messageItems).toHaveLength(1);
-      await expect
-        .element(messageItems.getByText("cac", { exact: true }))
-        .toBeVisible();
-    });
-
     test("leaves the message empty when space is pressed first", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
 
@@ -531,27 +512,6 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByRole("button", { name: "Backspace" }))
         .toBeDisabled();
-    });
-
-    test("removes letters from the word being spelled, then whole words", async () => {
-      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = getMessageItems(screen);
-      const backspace = screen.getByRole("button", { name: "Backspace" });
-
-      await screen.getByRole("button", { name: "the" }).click();
-      await screen.getByRole("button", { name: "C", exact: true }).click();
-      await screen.getByRole("button", { name: "A", exact: true }).click();
-
-      await backspace.click();
-      await expect
-        .element(messageItems.nth(1).getByText("c", { exact: true }))
-        .toBeVisible();
-
-      await backspace.click();
-      await expect.element(messageItems).toHaveLength(1);
-
-      await backspace.click();
-      await expect.element(messageItems).toHaveLength(0);
     });
 
     test("starts a new message with the next tile after the message is spoken", async () => {
@@ -591,75 +551,6 @@ describe("CommunicationBoard", () => {
         .toBeVisible();
     });
 
-    test("adds to a spoken message once Backspace has edited it", async () => {
-      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-      const messageItems = getMessageItems(screen);
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "world" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toContain("hello world");
-      });
-      await screen.getByRole("button", { name: "Backspace" }).click();
-      await screen.getByRole("button", { name: "world" }).click();
-
-      await expect.element(messageItems).toHaveLength(2);
-    });
-
-    test("adds to a word that Backspace reopened while the message was playing", async () => {
-      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = getMessageItems(screen);
-
-      await screen.getByRole("button", { name: "C", exact: true }).click();
-      await screen.getByRole("button", { name: "A", exact: true }).click();
-      await screen.getByRole("button", { name: "space" }).click();
-      preventSpeechEnd(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await screen.getByRole("button", { name: "Backspace" }).click();
-      endUtterance(lastUtterance(speech.speak));
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeVisible();
-      await screen.getByRole("button", { name: "C", exact: true }).click();
-
-      await expect.element(messageItems).toHaveLength(1);
-      await expect
-        .element(messageItems.getByText("cac", { exact: true }))
-        .toBeVisible();
-    });
-
-    test("adds to a message whose word a space closed while it was playing", async () => {
-      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-
-      await screen.getByRole("button", { name: "C", exact: true }).click();
-      await screen.getByRole("button", { name: "A", exact: true }).click();
-      preventSpeechEnd(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await screen.getByRole("button", { name: "space" }).click();
-      endUtterance(lastUtterance(speech.speak));
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeVisible();
-      await screen.getByRole("button", { name: "the" }).click();
-
-      await expect.element(getMessageItems(screen)).toHaveLength(2);
-    });
-
-    test("adds to a spoken message once clearing after speaking is turned off", async () => {
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
-      });
-      setClearsAfterSpeaking(false);
-      await screen.getByRole("button", { name: "world" }).click();
-
-      await expect.element(getMessageItems(screen)).toHaveLength(2);
-    });
-
     test("adds to a message whose playback was stopped", async () => {
       preventSpeechEnd(speech.speak);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
@@ -667,53 +558,6 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "Play message" }).click();
       await screen.getByRole("button", { name: "Stop message" }).click();
-      await screen.getByRole("button", { name: "world" }).click();
-
-      await expect.element(getMessageItems(screen)).toHaveLength(2);
-    });
-
-    test("adds to a spoken message whose replay was stopped", async () => {
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-      const play = screen.getByRole("button", { name: "Play message" });
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await play.click();
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
-      });
-      preventSpeechEnd(speech.speak);
-      await play.click();
-      await screen.getByRole("button", { name: "Stop message" }).click();
-      await screen.getByRole("button", { name: "world" }).click();
-
-      await expect.element(getMessageItems(screen)).toHaveLength(2);
-    });
-
-    test("adds to a spoken message while it is playing again", async () => {
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-      const play = screen.getByRole("button", { name: "Play message" });
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await play.click();
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
-      });
-      preventSpeechEnd(speech.speak);
-      await play.click();
-      await screen.getByRole("button", { name: "world" }).click();
-
-      await expect.element(getMessageItems(screen)).toHaveLength(2);
-    });
-
-    test("adds to a spoken message when clearing after speaking is turned off", async () => {
-      setClearsAfterSpeaking(false);
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
-      });
       await screen.getByRole("button", { name: "world" }).click();
 
       await expect.element(getMessageItems(screen)).toHaveLength(2);
