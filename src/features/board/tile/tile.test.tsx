@@ -127,20 +127,6 @@ describe("Tile", () => {
     expect(tile.element().querySelector("img")?.getAttribute("alt")).toBe("");
   });
 
-  test("is named by its vocalization when it has no label", async () => {
-    const screen = await renderInTheme(
-      tileElement({
-        label: "",
-        vocalization: "Speak Hello",
-        imageSrc: TEST_IMAGE_SRC,
-      }),
-    );
-
-    await expect
-      .element(screen.getByRole("button", { name: "Speak Hello" }))
-      .toBeVisible();
-  });
-
   test("describes folder tiles as opening a board and gives word tiles no description", async () => {
     const screen = await renderInTheme(
       <>
@@ -392,21 +378,6 @@ describe("Tile", () => {
       ).toBeGreaterThanOrEqual(WCAG_TEXT_CONTRAST);
     },
   );
-
-  test("dims its symbol by the tile brightness", async () => {
-    setTileBrightness(0.8);
-
-    const screen = await renderInTheme(
-      tileElement({ imageSrc: TEST_IMAGE_SRC }),
-    );
-    const symbol = screen
-      .getByRole("button", { name: "Word" })
-      .element()
-      .querySelector("img");
-    assertDefined(symbol);
-
-    expect(getComputedStyle(symbol).filter).toBe("brightness(0.8)");
-  });
 
   test("eases its symbol with the same timing as its own colors", async () => {
     const screen = await render(

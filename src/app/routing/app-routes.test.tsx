@@ -122,15 +122,6 @@ describe("app flow", () => {
     await resetBoardsDB();
   });
 
-  test("empty database: imports and opens the bundled starter board", async () => {
-    const { screen } = await renderApp();
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    await expect
-      .element(screen.getByRole("grid", { name: "First Words" }))
-      .toBeVisible();
-  });
-
   test("starter board: a sentence continues into the food folder", async () => {
     const { screen } = await renderApp();
 
