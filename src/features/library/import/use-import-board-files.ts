@@ -8,7 +8,7 @@ import {
   importEachBoardFile,
   type ImportedBoardSet,
 } from "./board-file-import";
-import { summarizeImport, summarizeSkippedImport } from "./summarize-import";
+import { summarizeImport, summarizeSkippedFiles } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   importAndOpen: (
@@ -41,7 +41,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         ...files.map(({ name }) => name),
         ...readFailures.map(({ fileName }) => fileName),
       ];
-      showSnackbar(summarizeSkippedImport(skippedFileNames));
+      showSnackbar(summarizeSkippedFiles(skippedFileNames));
 
       return [];
     }

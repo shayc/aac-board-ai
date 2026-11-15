@@ -31,9 +31,9 @@ function PickTrigger() {
   );
 }
 
-// The native file chooser can't open in the test runtime, so stand in for the
+// The native file picker can't open in the test runtime, so stand in for the
 // user choosing these files.
-function stubFileChooser(...files: File[]) {
+function stubFilePicker(...files: File[]) {
   vi.spyOn(HTMLInputElement.prototype, "showPicker").mockImplementation(
     function (this: HTMLInputElement) {
       const dataTransfer = new DataTransfer();
@@ -208,8 +208,8 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board files are too large to import");
   });
 
-  test("opens the board set picked from the file chooser", async () => {
-    stubFileChooser(await loadFixtureFile(OBF_FIXTURE));
+  test("opens the board set picked from the file picker", async () => {
+    stubFilePicker(await loadFixtureFile(OBF_FIXTURE));
     const screen = await render(
       <MemoryRouter>
         <AppProviders>

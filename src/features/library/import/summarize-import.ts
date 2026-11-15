@@ -56,7 +56,7 @@ function isArchiveTooLarge(error: unknown): boolean {
   return error instanceof OBFError && error.info.code === "archive-too-large";
 }
 
-export function summarizeSkippedImport(
+export function summarizeSkippedFiles(
   fileNames: readonly string[],
 ): SnackbarOptions {
   const onlyFileName = fileNames.length === 1 ? fileNames[0] : undefined;
