@@ -35,7 +35,7 @@ async function setup(
 ) {
   const { result, rerender } = await renderHook(() => useMessage());
   const message = result.current;
-  message.edit(seed);
+  message.apply(seed);
   if (isSpoken) {
     const spoken = Promise.resolve(true);
     message.trackPlayback(spoken);

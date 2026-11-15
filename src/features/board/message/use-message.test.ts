@@ -153,7 +153,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.edit([{ kind: "spell", text: "hi" }, { kind: "space" }]);
+    message.apply([{ kind: "spell", text: "hi" }, { kind: "space" }]);
     const completion = Promise.resolve(true);
     message.trackPlayback(completion);
     message.backspace();
@@ -168,8 +168,8 @@ describe("useMessage", () => {
 
     message.replaceWithText("hi");
 
-    expect(message.edit([{ kind: "space" }]).hasChanged).toBe(true);
-    expect(message.edit([{ kind: "space" }]).hasChanged).toBe(false);
+    expect(message.apply([{ kind: "space" }]).hasChanged).toBe(true);
+    expect(message.apply([{ kind: "space" }]).hasChanged).toBe(false);
   });
 
   // A no-op edit, such as a tile that only plays, must not save a released
@@ -181,20 +181,20 @@ describe("useMessage", () => {
     await trackSettledPlayback(result.current, true);
     setClearsAfterSpeaking(false);
     await rerender();
-    result.current.edit([]);
+    result.current.apply([]);
     setClearsAfterSpeaking(true);
     await rerender();
 
     expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
   });
 
-  describe("editIfUnchanged", () => {
+  describe("applyIfUnchanged", () => {
     test("edits the message it was given", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
-      const { edited } = message.edit([{ kind: "spell", text: "hi" }]);
+      const { edited } = message.apply([{ kind: "spell", text: "hi" }]);
 
-      message.editIfUnchanged(edited, [{ kind: "clear" }]);
+      message.applyIfUnchanged(edited, [{ kind: "clear" }]);
 
       expect(labelsAfterSpelling(message)).toEqual(["a"]);
     });
@@ -202,10 +202,10 @@ describe("useMessage", () => {
     test("continues a message that was spoken since", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
-      const { edited } = message.edit([{ kind: "spell", text: "hi" }]);
+      const { edited } = message.apply([{ kind: "spell", text: "hi" }]);
       await trackSettledPlayback(message, true);
 
-      message.editIfUnchanged(edited, [{ kind: "spell", text: "!" }]);
+      message.applyIfUnchanged(edited, [{ kind: "spell", text: "!" }]);
 
       expect(labelsAfterSpelling(message)).toEqual(["hi!a"]);
     });
@@ -213,10 +213,10 @@ describe("useMessage", () => {
     test("drops the edits when the message changed since", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
-      const { edited } = message.edit([{ kind: "spell", text: "hi" }]);
+      const { edited } = message.apply([{ kind: "spell", text: "hi" }]);
       message.backspace();
 
-      message.editIfUnchanged(edited, [{ kind: "clear" }]);
+      message.applyIfUnchanged(edited, [{ kind: "clear" }]);
 
       expect(labelsAfterSpelling(message)).toEqual(["ha"]);
     });
@@ -224,7 +224,7 @@ describe("useMessage", () => {
 });
 
 function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
-  const { edited } = message.edit([{ kind: "spell", text: "a" }]);
+  const { edited } = message.apply([{ kind: "spell", text: "a" }]);
 
   return edited.parts.map((part) => part.label);
 }

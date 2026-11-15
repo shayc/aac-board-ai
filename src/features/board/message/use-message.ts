@@ -18,8 +18,8 @@ export interface UseMessageReturn {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
   text: string;
-  edit: (changes: readonly MessageEdit[]) => MessageEditOutcome;
-  editIfUnchanged: (since: Message, changes: readonly MessageEdit[]) => void;
+  apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
+  applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
   trackPlayback: (completion: Promise<boolean>) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
@@ -45,8 +45,8 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
-  function commitChanges(from: Message, changes: readonly MessageEdit[]) {
-    const edited = applyEdits(from, changes);
+  function commitEdits(from: Message, edits: readonly MessageEdit[]) {
+    const edited = applyEdits(from, edits);
     if (edited !== from) {
       commit(edited);
     }
@@ -54,9 +54,9 @@ export function useMessage(): UseMessageReturn {
     return edited;
   }
 
-  function edit(changes: readonly MessageEdit[]): MessageEditOutcome {
+  function apply(edits: readonly MessageEdit[]): MessageEditOutcome {
     const current = readMessage();
-    const edited = commitChanges(current, changes);
+    const edited = commitEdits(current, edits);
 
     return { edited, hasChanged: edited !== current };
   }
@@ -64,13 +64,13 @@ export function useMessage(): UseMessageReturn {
   // Edits made against an earlier message belong to it: they apply to it even
   // once it is spoken, instead of starting a new message, and are dropped if
   // its content changed since.
-  function editIfUnchanged(since: Message, changes: readonly MessageEdit[]) {
+  function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = stateRef.current;
     if (!hasSameContent(current, since)) {
       return;
     }
 
-    commitChanges(markSpoken(current, false), changes);
+    commitEdits(markSpoken(current, false), edits);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
@@ -105,19 +105,19 @@ export function useMessage(): UseMessageReturn {
   }
 
   function backspace() {
-    edit([{ kind: "backspace" }]);
+    apply([{ kind: "backspace" }]);
   }
 
   function clear() {
-    edit([{ kind: "clear" }]);
+    apply([{ kind: "clear" }]);
   }
 
   return {
     parts: state.parts,
     isWordOpen: state.isWordOpen,
     text,
-    edit,
-    editIfUnchanged,
+    apply,
+    applyIfUnchanged,
     trackPlayback,
     replaceWithText,
     backspace,

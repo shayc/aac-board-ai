@@ -24,7 +24,7 @@ const IS_MESSAGE_EDIT: {
 };
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "edit" | "editIfUnchanged">;
+  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged">;
   playback: Pick<
     UseBoardPlaybackReturn,
     "playMessage" | "echoMessage" | "playPart"
@@ -63,7 +63,7 @@ export function createButtonActivator({
       soundSrc: button.soundSrc,
     });
 
-    message.edit([{ kind: "tile", part }]);
+    message.apply([{ kind: "tile", part }]);
     void playback.playPart(part);
   }
 
@@ -74,13 +74,14 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      message.edit(actions.filter(isMessageEdit));
+      message.apply(actions.filter(isMessageEdit));
 
       return;
     }
 
     const editsBeforePlay = actions.slice(0, playIndex).filter(isMessageEdit);
-    const { edited: messageToPlay, hasChanged } = message.edit(editsBeforePlay);
+    const { edited: messageToPlay, hasChanged } =
+      message.apply(editsBeforePlay);
     const editsAfterPlay = actions.slice(playIndex + 1).filter(isMessageEdit);
 
     // A tile that spells and then plays echoes the word being typed, so only a
@@ -93,7 +94,7 @@ export function createButtonActivator({
     // take letters typed during the speech with it.
     void play(messageToPlay.parts).then((hasCompleted) => {
       if (hasCompleted) {
-        message.editIfUnchanged(messageToPlay, editsAfterPlay);
+        message.applyIfUnchanged(messageToPlay, editsAfterPlay);
       }
     });
   }
