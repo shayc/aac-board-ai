@@ -35,6 +35,7 @@ export function parseBoardURL(url: string): URL {
   return resolved;
 }
 
+// Matches the CSP connect-src ('self' https:) in netlify.toml.
 function isAllowedBoardURL(url: URL): boolean {
   return (
     url.protocol === "https:" ||
