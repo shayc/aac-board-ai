@@ -69,7 +69,7 @@ export function summarizeSkippedFiles(
   }
 
   return {
-    message: (t) => t(m.libraryImportOnlyBoardFiles),
+    message: (t) => t(m.libraryImportNotBoardFiles),
     severity: "error",
   };
 }

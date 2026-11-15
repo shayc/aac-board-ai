@@ -109,7 +109,7 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent('"manual.pdf" isn\'t a board file');
   });
 
-  test("reports an error when no file is a board file", async () => {
+  test("reports an error when several files aren't board files", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
     const folder = new File([], "Boards");
     const screen = await renderImport([pdf, folder]);

@@ -7,9 +7,9 @@ export function useImportBoardFilesOnLaunch(): void {
 
   const importLaunchedFiles = useEffectEvent(
     async (handles: readonly FileSystemFileHandle[]) => {
-      const launchedFiles = await Promise.all(handles.map(readLaunchedFile));
-      const files = launchedFiles.filter((entry) => entry instanceof File);
-      const readFailures = launchedFiles.filter(
+      const readResults = await Promise.all(handles.map(readLaunchedFile));
+      const files = readResults.filter((entry) => entry instanceof File);
+      const readFailures = readResults.filter(
         (entry): entry is BoardFileImportFailure => !(entry instanceof File),
       );
 
