@@ -37,8 +37,6 @@ export function createPersistedStore<T>(
     store.setState(next);
   }
 
-  // A reload never writes back what it read: two tabs on different app
-  // versions could each rewrite the other's value in its own shape, forever.
   function reload() {
     store.setState(load());
   }
