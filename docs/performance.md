@@ -224,7 +224,5 @@ scorecard and its report with Node's built-in test runner.
 - In a comparison, other load on the machine cancels out between the builds but widens the
   confidence intervals, so small changes go unflagged. A machine that sleeps
   mid-run stalls the browser and fails the journey.
-- The lab says whether a timing changed or went over, not why. To find out,
-  trace the journey; see [Find out why](#find-out-why).
 - Not covered: WebKit/Safari, built-in AI, real speech, memory, imports from a
   file or a link, CI.

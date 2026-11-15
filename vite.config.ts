@@ -134,7 +134,6 @@ export default defineConfig({
         ...coverageConfigDefaults.exclude,
         "src/paraglide/**",
         "**/testing/**",
-        "**/test-utils.*",
       ],
       // Raise these floors with meaningful gains, keeping them about two
       // percentage points below measured coverage.

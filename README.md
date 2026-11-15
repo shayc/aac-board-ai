@@ -99,7 +99,7 @@ Three short files show how a selected tile becomes part of a spoken message:
 2. [`communication-board.tsx`](src/features/board/communication-board.tsx): the board screen. It wires message, suggestions, playback and navigation together, and its imports are a table of contents for `features/board/`.
 3. [`button-activator.ts`](src/features/board/activation/button-activator.ts): what activating a tile does. It opens a linked board, adds to the message and plays it, or runs the tile's actions.
 
-[`board-page.tsx`](src/app/routing/board-page.tsx) is where a stored board reaches that screen. The [glossary](docs/architecture.md#glossary) settles what board, board set, tile, symbol and message mean.
+[`board-page.tsx`](src/app/routing/board-set/board-page.tsx) is where a stored board reaches that screen. The [glossary](docs/architecture.md#glossary) settles what board, board set, tile, symbol and message mean.
 
 ## Contributing
 
