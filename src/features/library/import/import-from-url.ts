@@ -22,9 +22,10 @@ class BoardURLError extends Error {
 }
 
 // The ?board= param is attacker-controlled and confirmed by its host, so only
-// URLs with a host may reach fetch; schemes such as data: carry a payload with
-// none. The Content Security Policy allows https: and the app's own origin, so
-// rejecting anything else here fails before the confirmation, not after it.
+// URLs with a host may reach fetch; schemes such as data: and blob: carry a
+// payload with none. The Content Security Policy allows https: and the app's
+// own origin, so rejecting anything else here fails before the confirmation,
+// not after it.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
   if (!isFetchableBoardURL(resolved)) {
@@ -38,7 +39,10 @@ export function parseBoardURL(url: string): URL {
 }
 
 function isFetchableBoardURL(url: URL): boolean {
-  return url.protocol === "https:" || url.origin === window.location.origin;
+  return (
+    url.protocol === "https:" ||
+    (url.protocol === "http:" && url.origin === window.location.origin)
+  );
 }
 
 export function deriveBoardSetIdFromURL(url: string): string {

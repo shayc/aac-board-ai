@@ -121,6 +121,7 @@ describe("importBoardFileFromURL", () => {
 
   test.each([
     "data:application/zip;base64,UEsDBA==",
+    `blob:${window.location.origin}/00000000-0000-0000-0000-000000000000`,
     "http://trusted.example/core.obz",
   ])("rejects %s before fetching", async (url) => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
