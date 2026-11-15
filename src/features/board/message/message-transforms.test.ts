@@ -9,6 +9,7 @@ import {
   EMPTY_MESSAGE,
   hasSameContent,
   markSpoken,
+  rewriteAs,
   spell,
 } from "./message-transforms";
 import type { Message, TilePart } from "./message-types";
@@ -239,6 +240,39 @@ describe("applyEdits", () => {
     const message = closeWord(spell(EMPTY_MESSAGE, "hi"));
 
     expect(applyEdits(message, [{ kind: "space" }])).toBe(message);
+  });
+});
+
+describe("rewriteAs", () => {
+  test("replaces the message with the text's words, leaving the last open", () => {
+    const message = rewriteAs(
+      appendTilePart(EMPTY_MESSAGE, HELLO_TILE),
+      "hello  world",
+    );
+
+    expect(labelsOf(message)).toEqual(["hello", "world"]);
+    expect(message.isWordOpen).toBe(true);
+  });
+
+  test("returns the message itself when it already spells the text", () => {
+    const message = rewriteAs(EMPTY_MESSAGE, "hello world");
+
+    expect(rewriteAs(message, "hello world")).toBe(message);
+    expect(rewriteAs(EMPTY_MESSAGE, "")).toBe(EMPTY_MESSAGE);
+  });
+
+  test("replaces tiles that read the same as the text", () => {
+    const message = appendTilePart(EMPTY_MESSAGE, HELLO_TILE);
+
+    expect(rewriteAs(message, "hello")).not.toBe(message);
+  });
+
+  test("reopens a closed word and a spoken message", () => {
+    const closed = closeWord(rewriteAs(EMPTY_MESSAGE, "hello"));
+    const spoken = markSpoken(rewriteAs(EMPTY_MESSAGE, "hello"), true);
+
+    expect(rewriteAs(closed, "hello").isWordOpen).toBe(true);
+    expect(rewriteAs(spoken, "hello").isSpoken).toBe(false);
   });
 });
 

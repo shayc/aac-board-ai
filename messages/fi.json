@@ -122,7 +122,7 @@
   "navBack": "Takaisin",
   "navHome": "Siirry päätauluun",
   "messageBackspace": "Poista",
-  "messageBackspaceLongPressHint": "Tyhjennä viesti pitämällä painettuna tai painamalla {shortcut}.",
+  "messageBackspaceLongPressHint": "Tyhjennä viesti pitämällä painettuna tai painamalla {clearShortcut}. Kumoa painamalla {undoShortcut}.",
   "messageClear": "Tyhjennä viesti",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

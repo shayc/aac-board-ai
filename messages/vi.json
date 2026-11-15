@@ -122,7 +122,7 @@
   "navBack": "Quay lại",
   "navHome": "Đến bảng chính",
   "messageBackspace": "Xóa",
-  "messageBackspaceLongPressHint": "Nhấn giữ hoặc nhấn {shortcut} để xóa tin nhắn.",
+  "messageBackspaceLongPressHint": "Nhấn giữ hoặc nhấn {clearShortcut} để xóa tin nhắn. Nhấn {undoShortcut} để hoàn tác.",
   "messageClear": "Xóa tin nhắn",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

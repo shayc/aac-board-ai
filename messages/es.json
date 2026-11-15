@@ -122,7 +122,7 @@
   "navBack": "Volver",
   "navHome": "Ir al tablero principal",
   "messageBackspace": "Borrar",
-  "messageBackspaceLongPressHint": "Mantén pulsado o pulsa {shortcut} para borrar el mensaje.",
+  "messageBackspaceLongPressHint": "Mantén pulsado o pulsa {clearShortcut} para borrar el mensaje. Pulsa {undoShortcut} para deshacer.",
   "messageClear": "Borrar mensaje",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

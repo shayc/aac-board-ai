@@ -122,7 +122,7 @@
   "navBack": "Tillbaka",
   "navHome": "Till huvudtavlan",
   "messageBackspace": "Radera",
-  "messageBackspaceLongPressHint": "Håll inne, eller tryck på {shortcut}, för att rensa meddelandet.",
+  "messageBackspaceLongPressHint": "Håll inne, eller tryck på {clearShortcut}, för att rensa meddelandet. Tryck på {undoShortcut} för att ångra.",
   "messageClear": "Rensa meddelande",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

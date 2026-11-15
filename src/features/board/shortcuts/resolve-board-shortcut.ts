@@ -13,6 +13,7 @@ export const BOARD_SHORTCUT_ARIA_KEYS = {
 
 export interface BoardKeyEvent {
   key: string;
+  code: string;
   metaKey: boolean;
   ctrlKey: boolean;
   shiftKey: boolean;
@@ -32,7 +33,7 @@ export function resolveBoardShortcut(
     }
 
     // With Shift the keys mean redo, which the board does not have.
-    if (event.key.toLowerCase() === "z" && !event.shiftKey) {
+    if (isZKey(event) && !event.shiftKey) {
       return "undo";
     }
 
@@ -48,4 +49,15 @@ export function resolveBoardShortcut(
   }
 
   return null;
+}
+
+// A layout without Latin letters, such as Hebrew or Arabic, produces its own
+// letter for the key, so its position stands in. A Latin layout that moves Z,
+// such as German, keeps its own letter.
+function isZKey(event: BoardKeyEvent): boolean {
+  const isLatinLetter = /^[a-z]$/i.test(event.key);
+
+  return isLatinLetter
+    ? event.key.toLowerCase() === "z"
+    : event.code === "KeyZ";
 }

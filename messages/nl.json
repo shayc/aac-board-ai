@@ -122,7 +122,7 @@
   "navBack": "Terug",
   "navHome": "Naar het hoofdbord",
   "messageBackspace": "Wissen",
-  "messageBackspaceLongPressHint": "Houd ingedrukt of druk op {shortcut} om het bericht te wissen.",
+  "messageBackspaceLongPressHint": "Houd ingedrukt of druk op {clearShortcut} om het bericht te wissen. Druk op {undoShortcut} om ongedaan te maken.",
   "messageClear": "Bericht wissen",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

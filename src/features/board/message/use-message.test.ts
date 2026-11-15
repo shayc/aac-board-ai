@@ -243,13 +243,39 @@ describe("useMessage", () => {
     test("does not count an edit that changes nothing", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.replaceWithText("hi");
+      result.current.replaceWithText("h");
+      result.current.backspace();
       result.current.clear();
-      result.current.clear();
+      result.current.replaceWithText("");
       result.current.undo();
       await rerender();
 
-      expect(result.current.text).toBe("hi");
+      expect(result.current.text).toBe("h");
+    });
+
+    test("does not count a suggestion that repeats the message", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("I want");
+      result.current.clear();
+      result.current.replaceWithText("I want");
+      result.current.replaceWithText("I want");
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.parts).toHaveLength(0);
+    });
+
+    test("opens a spoken message it brings back for more", async () => {
+      const { result } = await renderHook(() => useMessage());
+      const message = result.current;
+
+      message.replaceWithText("hi");
+      await trackSettledPlayback(message, true);
+      message.clear();
+      message.undo();
+
+      expect(labelsAfterSpelling(message)).toEqual(["hia"]);
     });
 
     test("leaves the message as it is with nothing to undo", async () => {

@@ -122,7 +122,7 @@
   "navBack": "Kembali",
   "navHome": "Ke papan utama",
   "messageBackspace": "Hapus",
-  "messageBackspaceLongPressHint": "Tekan dan tahan, atau tekan {shortcut}, untuk menghapus pesan.",
+  "messageBackspaceLongPressHint": "Tekan dan tahan, atau tekan {clearShortcut}, untuk menghapus pesan. Tekan {undoShortcut} untuk mengurungkan.",
   "messageClear": "Hapus pesan",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

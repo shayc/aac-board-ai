@@ -122,7 +122,7 @@
   "navBack": "ফিরে যান",
   "navHome": "মূল বোর্ডে যান",
   "messageBackspace": "মুছুন",
-  "messageBackspaceLongPressHint": "বার্তা মুছতে চেপে ধরে রাখুন, অথবা {shortcut} চাপুন।",
+  "messageBackspaceLongPressHint": "বার্তা মুছতে চেপে ধরে রাখুন, অথবা {clearShortcut} চাপুন। পূর্বাবস্থায় ফেরাতে {undoShortcut} চাপুন।",
   "messageClear": "বার্তা মুছুন",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

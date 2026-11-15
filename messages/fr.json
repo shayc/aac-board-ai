@@ -122,7 +122,7 @@
   "navBack": "Retour",
   "navHome": "Aller au tableau principal",
   "messageBackspace": "Effacer",
-  "messageBackspaceLongPressHint": "Maintenez appuyé ou appuyez sur {shortcut} pour effacer le message.",
+  "messageBackspaceLongPressHint": "Maintenez appuyé ou appuyez sur {clearShortcut} pour effacer le message. Appuyez sur {undoShortcut} pour annuler.",
   "messageClear": "Effacer le message",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

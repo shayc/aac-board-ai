@@ -122,7 +122,7 @@
   "navBack": "Назад",
   "navHome": "На головну дошку",
   "messageBackspace": "Стерти",
-  "messageBackspaceLongPressHint": "Натисніть і утримуйте або натисніть {shortcut}, щоб очистити повідомлення.",
+  "messageBackspaceLongPressHint": "Натисніть і утримуйте або натисніть {clearShortcut}, щоб очистити повідомлення. Натисніть {undoShortcut}, щоб скасувати.",
   "messageClear": "Очистити повідомлення",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

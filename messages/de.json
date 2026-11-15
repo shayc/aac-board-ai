@@ -122,7 +122,7 @@
   "navBack": "Zurück",
   "navHome": "Zur Haupttafel",
   "messageBackspace": "Löschen",
-  "messageBackspaceLongPressHint": "Gedrückt halten oder {shortcut} drücken, um die Nachricht zu löschen.",
+  "messageBackspaceLongPressHint": "Gedrückt halten oder {clearShortcut} drücken, um die Nachricht zu löschen. {undoShortcut} drücken, um dies rückgängig zu machen.",
   "messageClear": "Nachricht löschen",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Strg",

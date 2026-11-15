@@ -23,7 +23,10 @@ const DISC_INSET = 1;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
-  shortcutLabels: Pick<BoardShortcutLabels, "clear" | "spokenClear">;
+  shortcutLabels: Pick<
+    BoardShortcutLabels,
+    "clear" | "spokenClear" | "spokenUndo"
+  >;
   onPress: () => void;
   onLongPress: () => void;
 }
@@ -40,7 +43,8 @@ export function BackspaceButton({
 
   const { longPressProps } = useLongPress({
     accessibilityDescription: t(m.messageBackspaceLongPressHint, {
-      shortcut: shortcutLabels.spokenClear,
+      clearShortcut: shortcutLabels.spokenClear,
+      undoShortcut: shortcutLabels.spokenUndo,
     }),
     isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,

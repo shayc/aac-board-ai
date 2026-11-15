@@ -122,7 +122,7 @@
   "navBack": "Назад",
   "navHome": "Към главната дъска",
   "messageBackspace": "Изтриване",
-  "messageBackspaceLongPressHint": "Задръжте или натиснете {shortcut}, за да изчистите съобщението.",
+  "messageBackspaceLongPressHint": "Задръжте или натиснете {clearShortcut}, за да изчистите съобщението. Натиснете {undoShortcut}, за да отмените.",
   "messageClear": "Изчистване на съобщението",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

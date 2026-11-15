@@ -2,10 +2,10 @@ import { useRef, useState } from "react";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
-  createTextPart,
   EMPTY_MESSAGE,
   hasSameContent,
   markSpoken,
+  rewriteAs,
 } from "./message-transforms";
 import type { Message, MessageEdit, MessagePart } from "./message-types";
 
@@ -112,12 +112,11 @@ export function useMessage(): UseMessageReturn {
   }
 
   function replaceWithText(input: string) {
-    const words = input.match(/\S+/g) ?? [];
-    commitChange({
-      parts: words.map(createTextPart),
-      isWordOpen: words.length > 0,
-      isSpoken: false,
-    });
+    const current = stateRef.current;
+    const rewritten = rewriteAs(current, input);
+    if (rewritten !== current) {
+      commitChange(rewritten);
+    }
   }
 
   function backspace() {
@@ -130,9 +129,13 @@ export function useMessage(): UseMessageReturn {
 
   function undo() {
     const previous = undoStackRef.current.pop();
-    if (previous) {
-      commit(previous);
+    if (!previous) {
+      return;
     }
+
+    // Like any edit, undoing opens a spoken message for more, so the next
+    // tile adds to the message brought back instead of replacing it.
+    commit(markSpoken(previous, false));
   }
 
   return {

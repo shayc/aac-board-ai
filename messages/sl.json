@@ -122,7 +122,7 @@
   "navBack": "Nazaj",
   "navHome": "Pojdi na glavno tablo",
   "messageBackspace": "Briši",
-  "messageBackspaceLongPressHint": "Pridržite ali pritisnite {shortcut} za izbris sporočila.",
+  "messageBackspaceLongPressHint": "Pridržite ali pritisnite {clearShortcut} za izbris sporočila. Pritisnite {undoShortcut} za razveljavitev.",
   "messageClear": "Izbriši sporočilo",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

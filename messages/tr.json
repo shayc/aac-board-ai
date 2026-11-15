@@ -122,7 +122,7 @@
   "navBack": "Geri",
   "navHome": "Ana panoya git",
   "messageBackspace": "Geri sil",
-  "messageBackspaceLongPressHint": "Mesajı temizlemek için basılı tutun veya {shortcut} tuşlarına basın.",
+  "messageBackspaceLongPressHint": "Mesajı temizlemek için basılı tutun veya {clearShortcut} tuşlarına basın. Geri almak için {undoShortcut} tuşlarına basın.",
   "messageClear": "Mesajı temizle",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",

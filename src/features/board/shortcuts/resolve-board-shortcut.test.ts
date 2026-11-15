@@ -8,6 +8,7 @@ import {
 function keyEvent(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
   return {
     key: "",
+    code: "",
     metaKey: false,
     ctrlKey: false,
     shiftKey: false,
@@ -43,6 +44,30 @@ describe("resolveBoardShortcut", () => {
     ).toBe("undo");
     expect(
       resolveBoardShortcut(keyEvent({ key: "Z", ctrlKey: true }), false),
+    ).toBe("undo");
+  });
+
+  test("⌘/Ctrl with the Z key undoes on a layout without Latin letters", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "ז", code: "KeyZ", ctrlKey: true }),
+        false,
+      ),
+    ).toBe("undo");
+  });
+
+  test("⌘/Ctrl with the Z position does not undo on a Latin layout that moves Z", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "y", code: "KeyZ", ctrlKey: true }),
+        false,
+      ),
+    ).toBeNull();
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "z", code: "KeyY", ctrlKey: true }),
+        false,
+      ),
     ).toBe("undo");
   });
 
