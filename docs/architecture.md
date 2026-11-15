@@ -225,10 +225,10 @@ The hook hands each pass to the
 which owns the queue, the abort on a language change, and the board translation
 status published while a pass is translating a set. The
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-shows that status, a model download first and the translation after it, in one
-alert. Without the Translator API the notice stays hidden: a set the browser
-cannot translate shows in its own language, which the user can already see and
-cannot change.
+shows that status in one alert: a model download first, then the translation.
+Without the Translator API the notice stays hidden: a set the browser cannot
+translate shows in its own language, which the user can already see and cannot
+change.
 
 ### Activate a tile
 
@@ -301,9 +301,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 [`scanning/`](../src/features/board/scanning/) holds all of it:
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
-  enabled buttons inside it. The board marks the message bar, its controls, and
-  each grid row; the grid itself knows nothing about scanning and spreads the
-  row props the board hands it. The
+  enabled, visible buttons inside it. The board marks the message bar, its
+  controls, and each grid row; the grid itself knows nothing about scanning and
+  spreads the row props the board hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The buttons being
