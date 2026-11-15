@@ -48,8 +48,22 @@ async function measureTracks(
   {
     itemSize,
     scrollToTrack,
-    focusTrack,
-  }: { itemSize?: number; scrollToTrack?: number; focusTrack?: number } = {},
+  }: { itemSize?: number; scrollToTrack?: number } = {},
+) {
+  const grid = await renderTracks(axis, containerSize, tracks, itemSize);
+
+  if (scrollToTrack !== undefined) {
+    scrollTrackToStart(grid, axis, scrollToTrack);
+  }
+
+  return measureLayout(grid, axis);
+}
+
+async function renderTracks(
+  axis: Axis,
+  containerSize: number,
+  tracks: number,
+  itemSize?: number,
 ) {
   const isColumns = axis === "columns";
   const items = Array.from({ length: tracks }, (_, index) => ({
@@ -70,7 +84,6 @@ async function measureTracks(
         <Grid
           aria-label="Board"
           items={items}
-
           order={rowMajorOrder(items, isColumns ? tracks : 1)}
           renderItem={(item, props) => (
             <button
@@ -85,19 +98,12 @@ async function measureTracks(
     </MUIThemeProvider>,
   );
 
-  const grid = screen.getByRole("grid").element();
+  return screen.getByRole("grid").element();
+}
+
+function measureLayout(grid: Element, axis: Axis) {
   const scroller = grid.parentElement;
   assertDefined(scroller);
-
-  if (scrollToTrack !== undefined) {
-    scrollTrackToStart(grid, axis, scrollToTrack);
-  }
-
-  if (focusTrack !== undefined) {
-    const item = grid.querySelectorAll("button").item(focusTrack);
-    assertDefined(item);
-    item.focus();
-  }
 
   const { start, end, size, scrollSize, clientSize } = AXES[axis];
   const viewport = scroller.getBoundingClientRect();
@@ -385,10 +391,18 @@ describe("Grid", () => {
     test.each(["columns", "rows"] as const)(
       "scrolls the hinted track of the %s into view when its item takes focus",
       async (axis) => {
-        const layout = await measureTracks(axis, 375, 20, { focusTrack: 3 });
+        const grid = await renderTracks(axis, 375, 20);
+        const item = grid.querySelectorAll("button").item(3);
+        assertDefined(item);
 
+        item.focus();
+
+        // WebKit scrolls a focused item into view after focus() returns.
+        await expect
+          .poll(() => measureLayout(grid, axis).leadingHint)
+          .toBeGreaterThan(0);
+        const layout = measureLayout(grid, axis);
         expect(layout.visibleCellCount).toBe(3);
-        expect(layout.leadingHint).toBeGreaterThan(0);
         expect(Math.abs(layout.leadingHint - layout.trailingHint)).toBeLessThan(
           1,
         );

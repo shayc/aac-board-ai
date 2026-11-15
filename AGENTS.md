@@ -15,16 +15,17 @@
 - Format: `npm run format`
 - Check formatting: `npm run format:check`
 - Test: `npm test`
-- Test with coverage: `npm run test:coverage`
+- Test with coverage: `npm run test:coverage` (Chromium only; V8 coverage does not run in WebKit)
 - PWA offline test: `npm run test:pwa`
 - Performance x-ray: `npm run perf` — a budget scorecard in about a minute; run it after changing startup, the grid, tiles, the message bar or imports, and read `perf-results/xray.json` for the rows (see [docs/performance.md](docs/performance.md))
 - Performance comparison with a git ref: `npm run perf -- --base main`
 - Performance lab unit tests (Node's test runner, no browser): `npm run test:perf`
 - Test one file: `npm test -- <file-or-pattern>`
+- Test one browser: `npm test -- --browser chromium` (or `webkit`)
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
-- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → build → PWA offline test (CI enforces coverage floors; `npm test` runs the same suite without them).
+- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → WebKit tests → build → PWA offline test (CI enforces coverage floors on Chromium; `npm test` runs the same suite in both browsers without them).
 - Pre-commit: `lint-staged` runs Oxlint `--fix` + Oxfmt on staged files.
 
 ## Project Structure
@@ -41,11 +42,12 @@
 ## Testing Instructions
 
 - **Structure:** Colocate tests as `*.test.ts(x)`.
-- **Runner:** `npm test` runs Vitest browser mode via Playwright (real Chromium).
+- **Runner:** `npm test` runs Vitest browser mode via Playwright in real Chromium and WebKit. WebKit runs test files one at a time in a persistent context, because it stores Blobs in IndexedDB only there.
 - **Utilities:** Use `vitest-browser-react` for components and interactions.
 - **Determinism:** No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
-- **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use Chromium's real web APIs except for the allowed stubs below.
+- **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use the browser's real web APIs except for the allowed stubs below.
   - _Allowed stubs (closed list):_ network (`fetch`, WebSocket), non-determinism (`Date.now`, `Math.random`), device output (`speechSynthesis`, `HTMLAudioElement.play`), and browser capabilities unavailable in the test runtime (only at the platform boundary).
+- **Cross-browser:** Assert behavior both engines share, not one engine's internals. Move focus to a button or radio with `tabToNextControl()` from `@shared/testing/tab-to-next-control`; Safari on macOS skips them on a plain Tab.
 - **Scope:**
   - **Interactive:** Prove a behavior (interaction → observable result).
   - **Presentational:** Render-only assertions for accessibility, content, and visibility.

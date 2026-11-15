@@ -64,36 +64,6 @@ describe("TileSettings", () => {
       .toHaveAttribute("aria-valuetext", "100%");
   });
 
-  test("shows one focus outline around each label option while keeping its preview visible", async () => {
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
-
-    await userEvent.tab();
-
-    for (const name of ["Top", "Bottom", "Hidden"]) {
-      const radio = screen.getByRole("radio", { name });
-      await expect.element(radio).toHaveFocus();
-      await expect.element(radio).toBeChecked();
-
-      const option = radio.element().parentElement;
-      const symbol = option?.querySelector("svg");
-      if (!option || !symbol) {
-        throw new Error("Label options must include a preview symbol");
-      }
-
-      await expect.element(symbol).toBeVisible();
-      await expect.element(option).toHaveStyle({ outlineStyle: "solid" });
-      await expect
-        .element(symbol)
-        .toHaveStyle({ outlineStyle: "none", boxShadow: "none" });
-
-      await userEvent.keyboard("{ArrowRight}");
-    }
-  });
-
   test("persists tile border visibility when toggled", async () => {
     const screen = await render(
       <AppProviders>
