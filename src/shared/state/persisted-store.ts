@@ -36,7 +36,6 @@ export function createPersistedStore<T>(
     store.setState(load());
   }
 
-  // Another tab's write fires `storage` here; a null key means it cleared storage.
   function handleStorage(event: StorageEvent) {
     if (event.storageArea !== localStorage) {
       return;
