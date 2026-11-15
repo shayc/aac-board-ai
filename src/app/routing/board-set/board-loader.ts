@@ -1,5 +1,8 @@
-import { BoardNotFoundError, loadStoredBoard } from "@features/library";
-import type { Board } from "@features/library";
+import {
+  type Board,
+  BoardNotFoundError,
+  loadStoredBoard,
+} from "@features/library";
 import type { LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 

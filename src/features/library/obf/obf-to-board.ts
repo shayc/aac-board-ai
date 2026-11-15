@@ -65,8 +65,8 @@ function resolveMediaSrc(
 
 function obfToBoardButton(
   obfButton: OBFButton,
-  imageSrcById: Map<string, string>,
-  soundSrcById: Map<string, string>,
+  imageSrcById: ReadonlyMap<string, string>,
+  soundSrcById: ReadonlyMap<string, string>,
 ): BoardButton {
   return {
     id: obfButton.id,

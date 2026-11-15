@@ -14,8 +14,7 @@ import {
 } from "./boards-db";
 import { normalizeAssetPath } from "./normalize-asset-path";
 
-export { MAX_ID_LENGTH } from "./boards-db";
-export type { BoardSetRecord } from "./boards-db";
+export { type BoardSetRecord, MAX_ID_LENGTH } from "./boards-db";
 
 export class BoardSetAlreadyExistsError extends Error {
   constructor(boardSetId: string) {
