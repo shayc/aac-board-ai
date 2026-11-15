@@ -3,11 +3,13 @@ import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { rootBoardPath } from "../board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
+import {
+  loadFixtureFile,
+  resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
+  SAMPLE_OBF_FILE,
+} from "../testing";
 import { useImportBoardFilesOnLaunch } from "./use-import-board-files-on-launch";
-
-const OBF_FIXTURE = "lots-of-stuff.obf";
-const IMPORTED_SET_ID = "lots-of-stuff";
 
 function LaunchHarness() {
   useImportBoardFilesOnLaunch();
@@ -74,18 +76,18 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     launchQueue.launch(
       fileHandle(new File([""], "notes.txt")),
-      fileHandle(await loadFixtureFile(OBF_FIXTURE)),
+      fileHandle(await loadFixtureFile(SAMPLE_OBF_FILE)),
     );
 
     await vi.waitFor(async () => {
       const boardSets = await listBoardSetRecords();
       expect(boardSets).toHaveLength(1);
-      expect(boardSets[0]?.id).toBe(IMPORTED_SET_ID);
+      expect(boardSets[0]?.id).toBe(SAMPLE_BOARD_SET_ID);
     });
 
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
-        id: IMPORTED_SET_ID,
+        id: SAMPLE_BOARD_SET_ID,
         rootBoardId: "lots_of_stuff",
       }),
     );
@@ -112,7 +114,7 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     launchQueue.launch(
       inaccessibleFileHandle("board.obz"),
-      fileHandle(await loadFixtureFile(OBF_FIXTURE)),
+      fileHandle(await loadFixtureFile(SAMPLE_OBF_FILE)),
     );
 
     await expect

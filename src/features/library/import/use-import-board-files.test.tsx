@@ -9,10 +9,9 @@ import {
   makeCorruptBoardFile,
   makeOversizedOBZ,
   resetBoardsDB,
+  SAMPLE_OBF_FILE,
 } from "../testing";
 import { useImportBoardFiles } from "./use-import-board-files";
-
-const OBF_FIXTURE = "lots-of-stuff.obf";
 
 function ImportTrigger({ files }: { files: File[] }) {
   const { importAndOpen } = useImportBoardFiles();
@@ -64,7 +63,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("shows the imported message for a fresh import", async () => {
-    const file = await loadFixtureFile(OBF_FIXTURE);
+    const file = await loadFixtureFile(SAMPLE_OBF_FILE);
     const screen = await renderImport([file]);
 
     await screen.getByRole("button", { name: "import" }).click();
@@ -75,8 +74,8 @@ describe("useImportBoardFiles", () => {
   });
 
   test("shows the plural imported message for multiple files", async () => {
-    const firstFile = await loadFixtureFile(OBF_FIXTURE);
-    const secondFile = await loadFixtureFile(OBF_FIXTURE);
+    const firstFile = await loadFixtureFile(SAMPLE_OBF_FILE);
+    const secondFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const screen = await renderImport([firstFile, secondFile]);
 
     await screen.getByRole("button", { name: "import" }).click();
@@ -88,7 +87,7 @@ describe("useImportBoardFiles", () => {
 
   test("imports only the board files when other files are included", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
-    const boardFile = await loadFixtureFile(OBF_FIXTURE);
+    const boardFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const screen = await renderImport([pdf, boardFile]);
 
     await screen.getByRole("button", { name: "import" }).click();
@@ -132,7 +131,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("names the failed file while keeping the board sets that imported", async () => {
-    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const screen = await renderImport([goodFile, corruptFile]);
 
@@ -146,7 +145,7 @@ describe("useImportBoardFiles", () => {
 
   test("leaves skipped files out of the failures it reports", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
-    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const screen = await renderImport([pdf, goodFile, corruptFile]);
 
@@ -158,7 +157,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("reports how many files failed when several fail alongside imports", async () => {
-    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const screen = await renderImport([
       goodFile,
       makeCorruptBoardFile("first.obf"),
@@ -209,7 +208,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("opens the board set picked from the file picker", async () => {
-    stubFilePicker(await loadFixtureFile(OBF_FIXTURE));
+    stubFilePicker(await loadFixtureFile(SAMPLE_OBF_FILE));
     const screen = await render(
       <MemoryRouter>
         <AppProviders>

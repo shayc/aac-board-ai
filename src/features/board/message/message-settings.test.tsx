@@ -1,13 +1,10 @@
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { describe, expect, test, vi } from "vitest";
 import { MessageSettings } from "./message-settings";
 
 async function renderMessageSettings() {
   return renderWithProviders(<MessageSettings />);
-}
-
-function readStoredPreferences(): unknown {
-  return JSON.parse(localStorage.getItem("message-preferences") ?? "null");
 }
 
 describe("MessageSettings", () => {
@@ -26,7 +23,9 @@ describe("MessageSettings", () => {
 
       await expect.element(toggle).not.toBeChecked();
       await vi.waitFor(() =>
-        expect(readStoredPreferences()).toMatchObject({ [preference]: false }),
+        expect(readStoredPreferences("message-preferences")).toMatchObject({
+          [preference]: false,
+        }),
       );
     },
   );

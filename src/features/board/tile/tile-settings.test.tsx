@@ -2,6 +2,7 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
 import { TileSettings } from "./tile-settings";
@@ -92,7 +93,9 @@ describe("TileSettings", () => {
     await bordersSwitch.click();
 
     await expect.element(bordersSwitch).toBeChecked();
-    expect(storedTilePreferences()).toMatchObject({ areBordersVisible: true });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      areBordersVisible: true,
+    });
   });
 
   test("persists tile saturation when color intensity is lowered", async () => {
@@ -113,7 +116,9 @@ describe("TileSettings", () => {
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "90%");
 
-    expect(storedTilePreferences()).toMatchObject({ saturation: valueNow });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      saturation: valueNow,
+    });
   });
 
   test("persists tile brightness when brightness is lowered", async () => {
@@ -128,7 +133,9 @@ describe("TileSettings", () => {
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "97%");
 
-    expect(storedTilePreferences()).toMatchObject({ brightness: 0.97 });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      brightness: 0.97,
+    });
   });
 
   test.each([
@@ -177,10 +184,8 @@ describe("TileSettings", () => {
         .toBeChecked();
     }
 
-    expect(storedTilePreferences()).toMatchObject({ labelPlacement: "bottom" });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      labelPlacement: "bottom",
+    });
   });
 });
-
-function storedTilePreferences(): unknown {
-  return JSON.parse(localStorage.getItem("tile-preferences") ?? "null");
-}

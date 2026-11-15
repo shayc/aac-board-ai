@@ -8,9 +8,7 @@ export function stubSpeech(): {
   const speak = vi
     .spyOn(speechSynthesis, "speak")
     .mockImplementation((utterance) => {
-      queueMicrotask(() => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      });
+      queueMicrotask(() => endUtterance(utterance));
     });
   const cancel = vi.spyOn(speechSynthesis, "cancel").mockReturnValue(undefined);
 
@@ -31,15 +29,30 @@ export function failSpeech(
   speak: MockInstance<SpeechSynthesis["speak"]>,
 ): void {
   speak.mockImplementation((utterance) => {
-    queueMicrotask(() => {
-      utterance.dispatchEvent(
-        new SpeechSynthesisErrorEvent("error", {
-          utterance,
-          error: "synthesis-failed",
-        }),
-      );
-    });
+    queueMicrotask(() => failUtterance(utterance));
   });
+}
+
+export function endUtterance(utterance: SpeechSynthesisUtterance): void {
+  utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
+}
+
+export function failUtterance(utterance: SpeechSynthesisUtterance): void {
+  utterance.dispatchEvent(
+    new SpeechSynthesisErrorEvent("error", {
+      utterance,
+      error: "synthesis-failed",
+    }),
+  );
+}
+
+export function reachUtteranceBoundary(
+  utterance: SpeechSynthesisUtterance,
+  charIndex: number,
+): void {
+  utterance.dispatchEvent(
+    new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
+  );
 }
 
 interface StubVoice {

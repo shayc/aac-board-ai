@@ -1,16 +1,9 @@
 import { listBoardSetRecords } from "@features/library";
-import { resetBoardsDB } from "@features/library/testing";
+import { resetBoardsDB, SAMPLE_OBZ_URL } from "@features/library/testing";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { routeErrorCodes } from "../route-error";
+import { localizedImportFailure } from "../testing/localized-import-failure";
 import { routeArgs } from "../testing/route-args";
 import { rootIndexAction } from "./root-index-action";
-
-const FIXTURE_BOARD_URL =
-  "/src/features/library/testing/sample-boards/lots-of-stuff.obz";
-const localizedImportFailure = {
-  data: { code: routeErrorCodes.boardURLImportFailed },
-  init: { status: 400 },
-};
 
 function callAction(
   searchParams = "",
@@ -28,7 +21,7 @@ describe("rootIndexAction", () => {
 
   test("imports the confirmed URL from ?board and redirects to its board route", async () => {
     const response = await callAction(
-      `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
+      `?board=${encodeURIComponent(SAMPLE_OBZ_URL)}`,
     );
 
     expect(response.status).toBe(302);
@@ -68,7 +61,7 @@ describe("rootIndexAction", () => {
 
     await expect(
       callAction(
-        `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
+        `?board=${encodeURIComponent(SAMPLE_OBZ_URL)}`,
         controller.signal,
       ),
     ).rejects.toBe(controller.signal.reason);

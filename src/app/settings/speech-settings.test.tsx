@@ -2,6 +2,7 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { setSpeechVoiceURI } from "@shared/speech/speech-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -93,9 +94,9 @@ describe("SpeechSettings", () => {
 
     await expect.element(voiceSelect).toHaveTextContent("Alex");
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("speech-preferences");
-      expect(stored).not.toBeNull();
-      expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: "us-2" });
+      expect(readStoredPreferences("speech-preferences")).toMatchObject({
+        voiceURI: "us-2",
+      });
     });
   });
 
@@ -162,9 +163,7 @@ describe("SpeechSettings", () => {
     }
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("speech-preferences");
-      expect(stored).not.toBeNull();
-      expect(JSON.parse(stored ?? "{}")).toMatchObject({
+      expect(readStoredPreferences("speech-preferences")).toMatchObject({
         rate: 1.1,
         pitch: 0.9,
         volume: 0.9,

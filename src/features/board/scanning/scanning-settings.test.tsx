@@ -1,15 +1,12 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { ScanningSettings } from "./scanning-settings";
 
 async function renderScanningSettings() {
   return renderWithProviders(<ScanningSettings />);
-}
-
-function readStoredPreferences(): unknown {
-  return JSON.parse(localStorage.getItem("scanning-preferences") ?? "null");
 }
 
 describe("ScanningSettings", () => {
@@ -43,7 +40,9 @@ describe("ScanningSettings", () => {
         "Press Space or Enter to start scanning and to select. Scanning pauses after two passes.",
       );
     await vi.waitFor(() =>
-      expect(readStoredPreferences()).toMatchObject({ isEnabled: true }),
+      expect(readStoredPreferences("scanning-preferences")).toMatchObject({
+        isEnabled: true,
+      }),
     );
 
     await expectNoA11yViolations(screen.container);
@@ -68,7 +67,9 @@ describe("ScanningSettings", () => {
       .element(screen.getByRole("slider", { name: "Scan interval" }))
       .not.toBeInTheDocument();
     await vi.waitFor(() =>
-      expect(readStoredPreferences()).toMatchObject({ method: "step" }),
+      expect(readStoredPreferences("scanning-preferences")).toMatchObject({
+        method: "step",
+      }),
     );
   });
 
@@ -92,7 +93,9 @@ describe("ScanningSettings", () => {
       .element(intervalSlider)
       .toHaveAttribute("aria-valuenow", "1300");
     await vi.waitFor(() =>
-      expect(readStoredPreferences()).toMatchObject({ intervalMs: 1300 }),
+      expect(readStoredPreferences("scanning-preferences")).toMatchObject({
+        intervalMs: 1300,
+      }),
     );
   });
 });

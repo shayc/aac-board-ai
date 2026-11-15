@@ -354,9 +354,7 @@ describe("CommunicationBoard", () => {
 
     test("spells a new word after a word tile and closes it with space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = screen
-        .getByRole("list", { name: "Message" })
-        .getByRole("listitem");
+      const messageItems = getMessageItems(screen);
 
       await screen.getByRole("button", { name: "the" }).click();
       await screen.getByRole("button", { name: "C", exact: true }).click();
@@ -372,9 +370,7 @@ describe("CommunicationBoard", () => {
 
     test("reopens a word closed by space when Backspace undoes the space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = screen
-        .getByRole("list", { name: "Message" })
-        .getByRole("listitem");
+      const messageItems = getMessageItems(screen);
 
       await screen.getByRole("button", { name: "C", exact: true }).click();
       await screen.getByRole("button", { name: "A", exact: true }).click();
@@ -393,11 +389,7 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "space" }).click();
 
-      await expect
-        .element(
-          screen.getByRole("list", { name: "Message" }).getByRole("listitem"),
-        )
-        .toHaveLength(0);
+      await expect.element(getMessageItems(screen)).toHaveLength(0);
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
         .toBeDisabled();
@@ -408,9 +400,7 @@ describe("CommunicationBoard", () => {
 
     test("removes letters from the word being spelled, then whole words", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = screen
-        .getByRole("list", { name: "Message" })
-        .getByRole("listitem");
+      const messageItems = getMessageItems(screen);
       const backspace = screen.getByRole("button", { name: "Backspace" });
 
       await screen.getByRole("button", { name: "the" }).click();
