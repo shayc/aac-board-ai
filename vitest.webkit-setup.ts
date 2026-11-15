@@ -1,14 +1,10 @@
 import { rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
+
+export const WEBKIT_PROFILE_DIR = "node_modules/.cache/vitest-webkit-profile";
 
 // A profile reused between runs serves modules its HTTP cache kept from the
-// previous run, and carries over that run's stored board sets.
-export const WEBKIT_PROFILE_DIR = join(
-  tmpdir(),
-  `vitest-webkit-${process.pid}`,
-);
-
-export function teardown() {
+// previous run, and carries over that run's stored board sets. Clearing it
+// before the browser launches avoids racing WebKit's shutdown for the files.
+export function setup() {
   rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
 }
