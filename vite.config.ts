@@ -1,6 +1,3 @@
-import { rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
@@ -12,14 +9,7 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
-
-// A profile reused between runs serves modules its HTTP cache kept from the
-// previous run, and carries over that run's stored board sets.
-const WEBKIT_PROFILE_DIR = join(tmpdir(), `vitest-webkit-${process.pid}`);
-
-process.once("exit", () => {
-  rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
-});
+import { WEBKIT_PROFILE_DIR } from "./webkit-profile.ts";
 
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
@@ -141,9 +131,11 @@ export default defineConfig({
         { browser: "chromium" },
         {
           browser: "webkit",
-          // WebKit stores Blobs in IndexedDB only in a persistent context,
-          // and one context cannot be shared by test files running in parallel.
+          // Playwright's WebKit rejects Blobs written to IndexedDB in its
+          // default ephemeral context, and Vitest cannot share a persistent
+          // context between test files running in parallel.
           provider: playwright({ persistentContext: WEBKIT_PROFILE_DIR }),
+          globalSetup: ["./webkit-profile.ts"],
           fileParallelism: false,
         },
       ],
