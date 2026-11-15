@@ -43,11 +43,11 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
-  const vocabularyButtons = boardVocabulary(board);
-  const suggestions = useMessageSuggestions(
-    message.text,
-    vocabularyButtons.map((button) => button.label.trim()),
-  );
+  const vocabulary = boardVocabulary(board);
+  const suggestions = useMessageSuggestions(message.text, {
+    vocabulary: [...vocabulary.keys()],
+    isWordOpen: message.isWordOpen,
+  });
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -71,9 +71,7 @@ export function CommunicationBoard({
 
   const hasMessage = message.parts.length > 0;
   const nextWordButtons = suggestions.nextWords
-    .map((word) =>
-      vocabularyButtons.find((button) => button.label.trim() === word),
-    )
+    .map((word) => vocabulary.get(word))
     .filter((button) => button !== undefined);
 
   const navigationButtons = (

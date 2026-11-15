@@ -13,7 +13,11 @@ import { useProofreaderSource } from "./use-proofreader-source";
 import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
-const DOWNLOAD_ENGINES = [...SUGGESTION_ENGINES, "LanguageModel"] as const;
+
+interface NextWordContext {
+  vocabulary: readonly string[];
+  isWordOpen: boolean;
+}
 
 interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
@@ -25,7 +29,7 @@ interface UseMessageSuggestionsReturn {
 
 export function useMessageSuggestions(
   messageText: string,
-  vocabulary: readonly string[],
+  { vocabulary, isWordOpen }: NextWordContext,
 ): UseMessageSuggestionsReturn {
   const text = messageText.trim();
 
@@ -49,8 +53,13 @@ export function useMessageSuggestions(
     language,
     tone: "more-casual",
   });
-  const nextWordSource = useNextWordSource({ text, vocabulary, language });
-  const downloadProgress = useGlobalDownloadProgress(DOWNLOAD_ENGINES);
+  const nextWordSource = useNextWordSource({
+    text,
+    vocabulary,
+    isWordOpen,
+    language,
+  });
+  const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
   const hasText = text !== "";
   const sources = [proofreaderSource, rewriterSource, casualRewriterSource];

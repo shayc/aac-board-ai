@@ -28,7 +28,7 @@ export function SuggestionBar({
   onNextWordSelect,
 }: SuggestionBarProps) {
   const t = useTranslate();
-  const hasPhrases = phrases.length + nextWordButtons.length > 0;
+  const hasSuggestions = phrases.length + nextWordButtons.length > 0;
 
   return (
     <Stack
@@ -45,8 +45,8 @@ export function SuggestionBar({
 
       <Box
         // A live region would interrupt the tile's spoken feedback.
-        role={hasPhrases ? "group" : undefined}
-        aria-label={hasPhrases ? t(m.suggestionsLabel) : undefined}
+        role={hasSuggestions ? "group" : undefined}
+        aria-label={hasSuggestions ? t(m.suggestionsLabel) : undefined}
         sx={{
           display: "flex",
           alignItems: "center",

@@ -1,24 +1,30 @@
 import type { Board, BoardButton } from "@features/library";
 
-/** The board's word tiles in reading order, one per label. Action tiles have no word to predict. */
-export function boardVocabulary(board: Board): BoardButton[] {
+/**
+ * The board's word tiles in reading order, keyed by label. Folder and action
+ * tiles say nothing when tapped, so they are never a next word.
+ */
+export function boardVocabulary(
+  board: Board,
+): ReadonlyMap<string, BoardButton> {
   const buttonsById = new Map(
     board.buttons.map((button) => [button.id, button]),
   );
-  const orderedButtons = board.grid.order
-    .flat()
-    .map((id) => (id === null ? undefined : buttonsById.get(id)))
-    .filter((button) => button !== undefined);
-  const seenLabels = new Set<string>();
+  const vocabulary = new Map<string, BoardButton>();
 
-  return orderedButtons.filter((button) => {
-    const label = button.label.trim();
-    if (label === "" || button.actions.length > 0 || seenLabels.has(label)) {
-      return false;
+  for (const id of board.grid.order.flat()) {
+    const button = id === null ? undefined : buttonsById.get(id);
+    const label = button?.label.trim();
+    if (!button || !label || !isWordTile(button) || vocabulary.has(label)) {
+      continue;
     }
 
-    seenLabels.add(label);
+    vocabulary.set(label, button);
+  }
 
-    return true;
-  });
+  return vocabulary;
+}
+
+function isWordTile(button: BoardButton): boolean {
+  return button.linkedBoardId === undefined && button.actions.length === 0;
 }

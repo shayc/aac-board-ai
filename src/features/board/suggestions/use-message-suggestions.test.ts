@@ -13,13 +13,15 @@ import { userEvent } from "vitest/browser";
 import { setSuggestionCustomInstructions } from "./suggestion-preferences-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
 
+const NO_NEXT_WORDS = { vocabulary: [], isWordOpen: false };
+
 const ENGINE_STUBS = {
   Proofreader: stubProofreader,
   Rewriter: stubRewriter,
 };
 
 function renderMessageSuggestions(text: string) {
-  return renderHook(() => useMessageSuggestions(text, []));
+  return renderHook(() => useMessageSuggestions(text, NO_NEXT_WORDS));
 }
 
 function stubRewritesByTone(
@@ -388,7 +390,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text, []),
+        useMessageSuggestions(text, NO_NEXT_WORDS),
       { initialProps: { text: "old" } },
     );
 
@@ -420,7 +422,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text, []),
+        useMessageSuggestions(text, NO_NEXT_WORDS),
       { initialProps: { text: "old" } },
     );
 

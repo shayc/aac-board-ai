@@ -4,8 +4,13 @@ import {
   isSupported,
   type Status,
 } from "@shayc/react-built-in-ai";
+import { nextWordLanguageOptions } from "./next-word-prompt";
 
-export const SUGGESTION_ENGINES = ["Proofreader", "Rewriter"] as const;
+export const SUGGESTION_ENGINES = [
+  "Proofreader",
+  "Rewriter",
+  "LanguageModel",
+] as const;
 
 const SUGGESTION_CONTEXT_LANGUAGE = "en";
 
@@ -47,14 +52,19 @@ export function rewriterLanguageOptions(
 export async function checkSuggestionLanguageSupport(
   language: string,
 ): Promise<SuggestionLanguageSupport> {
-  const [isProofreaderAvailable, isRewriterAvailable] = await Promise.all([
+  const [
+    isProofreaderAvailable,
+    isRewriterAvailable,
+    isLanguageModelAvailable,
+  ] = await Promise.all([
     isEngineAvailable("Proofreader", proofreaderLanguageOptions(language)),
     isEngineAvailable("Rewriter", rewriterLanguageOptions(language)),
+    isEngineAvailable("LanguageModel", nextWordLanguageOptions(language)),
   ]);
   if (isRewriterAvailable) {
     return "custom-instructions";
   }
-  if (isProofreaderAvailable) {
+  if (isProofreaderAvailable || isLanguageModelAvailable) {
     return "suggestions-only";
   }
 

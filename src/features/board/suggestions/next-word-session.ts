@@ -7,6 +7,8 @@ import {
   parseNextWords,
 } from "./next-word-prompt";
 
+const MAX_REMEMBERED_PREDICTIONS = 200;
+
 interface NextWordRequest {
   text: string;
   vocabulary: readonly string[];
@@ -18,8 +20,6 @@ interface BoardSession {
   key: string;
   session: Promise<LanguageModel>;
 }
-
-const MAX_REMEMBERED_PREDICTIONS = 200;
 
 // One prefilled session for the board in view; each request clones it so
 // predictions never see one another.
@@ -45,7 +45,10 @@ export async function predictNextWords({
 
   const base = await getBoardSession(sessionKey, vocabulary, language);
   const words = await promptNextWords(base, text, vocabulary, signal);
-  rememberPrediction(predictionKey, words);
+  // An empty answer is worth retrying on the next request.
+  if (words.length > 0) {
+    rememberPrediction(predictionKey, words);
+  }
 
   return words;
 }
