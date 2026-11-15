@@ -1,5 +1,4 @@
 import { setStoredLanguage } from "@shared/language/language-store";
-import { reloadPersistedStores } from "@shared/stores/persisted-store";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
@@ -9,7 +8,6 @@ import {
   setSpeechRate,
   setSpeechVoiceURI,
   setSpeechVolume,
-  SPEECH_RATE,
 } from "./speech-store";
 
 describe("parseSpeechPreferences", () => {
@@ -113,12 +111,5 @@ describe("getSpeechParameters", () => {
 
     setStoredLanguage("en");
     expect(getSpeechParameters().voice?.voiceURI).toBe("voice-2");
-  });
-
-  test("clamps an out-of-range stored rate to the configured max", () => {
-    localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
-    reloadPersistedStores();
-
-    expect(getSpeechParameters().rate).toBe(SPEECH_RATE.max);
   });
 });

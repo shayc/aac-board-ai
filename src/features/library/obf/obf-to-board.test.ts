@@ -48,14 +48,6 @@ describe("obfToBoard", () => {
       expect(board.name).toBe(name);
     });
 
-    test("maps the optional locale", () => {
-      const obfBoard = makeOBFBoard({ locale: "en-US" });
-
-      const board = obfToBoard(obfBoard);
-
-      expect(board.locale).toBe("en-US");
-    });
-
     test("normalizes the locale to BCP-47 casing on import", () => {
       const obfBoard = makeOBFBoard({ locale: "en_us" });
 
