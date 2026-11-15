@@ -46,10 +46,6 @@ function getScrollContainer(container: Element): HTMLElement {
   return scroller;
 }
 
-function waitForAnimationFrame(): Promise<void> {
-  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
-}
-
 describe("MessageBar", () => {
   test("renders a label for each tile and text part", async () => {
     const parts: MessagePart[] = [
@@ -135,7 +131,6 @@ describe("MessageBar", () => {
       <ScrollableMessageBar {...createProps({ parts: SCROLL_PARTS })} />,
     );
     const message = screen.getByRole("list", { name: "Message" });
-    await waitForAnimationFrame();
 
     const scrollLeftAtEnd = message.element().scrollLeft;
     expect(scrollLeftAtEnd).toBeGreaterThan(0);
@@ -198,7 +193,6 @@ describe("MessageBar", () => {
       await screen.rerender(
         <ScrollableMessageBar {...props} parts={SCROLL_PARTS} />,
       );
-      await waitForAnimationFrame();
 
       const lastPart = scroller.lastElementChild;
       assertDefined(lastPart);
@@ -216,7 +210,6 @@ describe("MessageBar", () => {
         <ScrollableMessageBar {...props} />,
       );
       const scroller = getScrollContainer(screen.container);
-      await waitForAnimationFrame();
 
       const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
       assertDefined(activePart);
@@ -233,7 +226,6 @@ describe("MessageBar", () => {
           activePartId={ACTIVE_SCROLL_PART_ID}
         />,
       );
-      await waitForAnimationFrame();
 
       expect(scroller.scrollLeft).toBeLessThan(initialScrollLeft);
       expect(activePart.getBoundingClientRect().left).toBeCloseTo(
@@ -242,6 +234,57 @@ describe("MessageBar", () => {
       );
       expect(activePart.getBoundingClientRect().right).toBeLessThanOrEqual(
         scroller.getBoundingClientRect().right,
+      );
+    });
+
+    test("keeps the newest part in view when an edit happens during playback", async () => {
+      const props = createProps({
+        parts: SCROLL_PARTS,
+        activePartId: ACTIVE_SCROLL_PART_ID,
+      });
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
+      const scroller = getScrollContainer(screen.container);
+
+      await screen.rerender(
+        <ScrollableMessageBar
+          {...props}
+          parts={[
+            ...SCROLL_PARTS,
+            { kind: "text", id: "newest", label: "newest" },
+          ]}
+        />,
+      );
+
+      const lastPart = scroller.lastElementChild;
+      assertDefined(lastPart);
+      expect(lastPart.getBoundingClientRect().right).toBeCloseTo(
+        scroller.getBoundingClientRect().right,
+        0,
+      );
+    });
+
+    test("scrolls to the active part when an edit starts playback", async () => {
+      const props = createProps({ parts: SCROLL_PARTS });
+      const screen = await renderWithProviders(
+        <ScrollableMessageBar {...props} />,
+      );
+      const scroller = getScrollContainer(screen.container);
+
+      await screen.rerender(
+        <ScrollableMessageBar
+          {...props}
+          parts={[...SCROLL_PARTS, { kind: "text", id: "newest", label: "s" }]}
+          activePartId={ACTIVE_SCROLL_PART_ID}
+        />,
+      );
+
+      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
+      assertDefined(activePart);
+      expect(activePart.getBoundingClientRect().left).toBeCloseTo(
+        scroller.getBoundingClientRect().left,
+        0,
       );
     });
 
@@ -254,14 +297,12 @@ describe("MessageBar", () => {
         <ScrollableMessageBar {...props} />,
       );
       const scroller = getScrollContainer(screen.container);
-      await waitForAnimationFrame();
       expect(scroller.scrollLeft).toBeGreaterThan(0);
 
       scroller.scrollLeft = 0;
       await screen.rerender(
         <ScrollableMessageBar {...props} activePartId={null} />,
       );
-      await waitForAnimationFrame();
 
       expect(scroller.scrollLeft).toBe(0);
     });

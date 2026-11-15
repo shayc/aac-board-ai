@@ -2,7 +2,7 @@ import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { type ReactNode, useEffect, useRef } from "react";
+import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
@@ -36,30 +36,34 @@ export function MessageBar({
 }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) {
-      return;
-    }
-
-    return scheduleScrollIntoView(container.lastElementChild, "end");
-  }, [parts]);
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container || activePartId === null) {
-      return;
-    }
-
-    const index = parts.findIndex((part) => part.id === activePartId);
+  // Reads the latest parts without reacting to them, so an edit during
+  // playback shows the newest part instead of jumping back to the active one.
+  const scrollActivePartIntoView = useEffectEvent((partId: string) => {
+    const index = parts.findIndex((part) => part.id === partId);
     if (index === -1) {
       return;
     }
 
-    return scheduleScrollIntoView(container.children.item(index), "nearest");
-  }, [activePartId, parts]);
+    scrollPartIntoView(
+      scrollContainerRef.current?.children.item(index),
+      "nearest",
+    );
+  });
+
+  useLayoutEffect(() => {
+    scrollPartIntoView(scrollContainerRef.current?.lastElementChild, "end");
+  }, [parts]);
+
+  // Declared after the newest-part scroll so it wins when an edit starts
+  // playback in the same render, as a spelling tile's echo does.
+  useLayoutEffect(() => {
+    if (activePartId !== null) {
+      scrollActivePartIntoView(activePartId);
+    }
+  }, [activePartId]);
+
+  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
   return (
     <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
@@ -91,16 +95,25 @@ export function MessageBar({
   );
 }
 
+function scrollPartIntoView(
+  element: Element | null | undefined,
+  inline: ScrollLogicalPosition,
+) {
+  element?.scrollIntoView({ block: "nearest", inline, behavior: "instant" });
+}
+
 function messageBarSx(theme: Theme) {
   return {
     alignItems: "center",
     gap: 2,
     px: BAR_INSET,
     overflow: "hidden",
+    color: "text.primary",
+    // Forced-colors mode paints this border, outlining the bar where its
+    // shadow and fill are removed.
     border: 1,
     borderColor: "transparent",
     borderRadius: theme.vars.shape.borderRadiusFull,
-    color: "text.primary",
     bgcolor: "background.paper",
     colorScheme: "light",
     userSelect: "text",
@@ -179,19 +192,4 @@ function MessagePartItem({
       />
     </Stack>
   );
-}
-
-function scheduleScrollIntoView(
-  element: Element | null,
-  inline: ScrollLogicalPosition,
-): () => void {
-  if (!element) {
-    return () => undefined;
-  }
-
-  const frameId = requestAnimationFrame(() => {
-    element.scrollIntoView({ block: "nearest", inline, behavior: "instant" });
-  });
-
-  return () => cancelAnimationFrame(frameId);
 }
