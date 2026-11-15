@@ -207,19 +207,25 @@ being navigated to, revalidates the routes (board and board list), so
 everything on screen updates without a reload. Other sets are not revalidated:
 that would re-run a `?board=` link import still in flight. A set the
 translator fails on, for example because a model download needs a user
-gesture, stays in its source language until the next run. A storage or other
+gesture, stays in its source language until the next run. When the browser
+reports one of the set's language pairs as unavailable, or has no Translator API,
+the pass reports the set as one that will stay untranslated. A storage or other
 error ends the pass and is reported, and passes queued behind it still run.
 
 The hook hands each pass to the
 [board translation coordinator](../src/features/library/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status published while a pass is translating a set. The status is set when a
-set's model download starts or, with no download, once its translation models
-are open, and cleared when the pass ends or the language changes. A pass aborted
-by a language change never touches the status again. The
+status. The status turns to translating when a set's model download starts or,
+with no download, once its translation models are open. When the pass ends, it
+becomes incomplete if the pass reported a set that will stay untranslated, and
+idle otherwise; a language change resets it to idle. A pass aborted by a
+language change never touches the status again. The
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 shows a model download first and the translation after it. The status is already
-set when the download ends, so one alert carries both states.
+set when the download ends, so one alert carries both states. After the pass, an
+incomplete status tells the user that some boards will stay in their original
+language. Sets whose files already carry the language never raise it, so the
+notice stays hidden in browsers without translation unless a board is affected.
 
 ### Activate a tile
 
@@ -465,7 +471,7 @@ drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
 language settings render the library's
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-instead of checking Translator support or translation progress themselves.
+instead of checking translation progress or outcome themselves.
 Reusable field controls live in `shared/ui/` so features do not depend on the
 app layer.
 

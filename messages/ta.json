@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "இந்த உலாவியில் தானியங்கி பலகை மொழிபெயர்ப்பு கிடைக்கவில்லை.",
+  "languageBoardsUntranslated": "சில பலகைகள் அவற்றின் மூல மொழியிலேயே இருக்கும்.",
   "loading": "ஏற்றப்படுகிறது…",
   "close": "மூடு",
   "opensInNewTab": "(புதிய தாவலில் திறக்கும்)",

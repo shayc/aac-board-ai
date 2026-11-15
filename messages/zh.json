@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "此浏览器不支持自动翻译沟通板。",
+  "languageBoardsUntranslated": "部分沟通板将保持原始语言。",
   "loading": "正在加载……",
   "close": "关闭",
   "opensInNewTab": "(在新标签页中打开)",

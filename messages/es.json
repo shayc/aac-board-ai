@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "La traducción automática de tableros no está disponible en este navegador.",
+  "languageBoardsUntranslated": "Algunos tableros se quedarán en su idioma original.",
   "loading": "Cargando…",
   "close": "Cerrar",
   "opensInNewTab": "(se abre en una pestaña nueva)",

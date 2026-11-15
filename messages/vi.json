@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Tính năng tự động dịch bảng không khả dụng trên trình duyệt này.",
+  "languageBoardsUntranslated": "Một số bảng sẽ giữ nguyên ngôn ngữ gốc.",
   "loading": "Đang tải…",
   "close": "Đóng",
   "opensInNewTab": "(mở trong tab mới)",

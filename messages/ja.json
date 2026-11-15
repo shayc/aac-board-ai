@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "このブラウザではボードの自動翻訳を利用できません。",
+  "languageBoardsUntranslated": "一部のボードは元の言語のままになります。",
   "loading": "読み込んでいます…",
   "close": "閉じる",
   "opensInNewTab": "(新しいタブで開きます)",

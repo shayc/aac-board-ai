@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "เบราว์เซอร์นี้ไม่รองรับการแปลบอร์ดอัตโนมัติ",
+  "languageBoardsUntranslated": "บางบอร์ดจะยังคงเป็นภาษาต้นฉบับ",
   "loading": "กำลังโหลด…",
   "close": "ปิด",
   "opensInNewTab": "(เปิดในแท็บใหม่)",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Az automatikus táblafordítás nem érhető el ebben a böngészőben.",
+  "languageBoardsUntranslated": "Néhány tábla az eredeti nyelvén marad.",
   "loading": "Betöltés…",
   "close": "Bezárás",
   "opensInNewTab": "(új lapon nyílik meg)",

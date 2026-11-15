@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Автоматический перевод доски недоступен в этом браузере.",
+  "languageBoardsUntranslated": "Некоторые доски останутся на исходном языке.",
   "loading": "Загрузка…",
   "close": "Закрыть",
   "opensInNewTab": "(открывается в новой вкладке)",

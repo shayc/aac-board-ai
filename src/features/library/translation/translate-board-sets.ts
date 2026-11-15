@@ -1,4 +1,8 @@
-import { createTranslator } from "@shayc/react-built-in-ai";
+import {
+  checkAvailability,
+  createTranslator,
+  isSupported,
+} from "@shayc/react-built-in-ai";
 import type { Board, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
@@ -17,6 +21,9 @@ export interface TranslationPassOptions {
   onTranslating: () => void;
 }
 
+/** `incomplete`: some sets will stay untranslated, since the browser cannot translate them. */
+export type TranslationPassOutcome = "complete" | "incomplete";
+
 interface TranslateBoardSetsOptions extends TranslationPassOptions {
   onTranslated: (boardSetId: string) => void;
 }
@@ -28,24 +35,32 @@ export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
   { signal, onTranslating, onTranslated }: TranslateBoardSetsOptions,
-): Promise<void> {
+): Promise<TranslationPassOutcome> {
+  let passOutcome: TranslationPassOutcome = "complete";
+
   for (const boardSet of boardSets) {
     if (signal.aborted) {
-      return;
+      return passOutcome;
     }
 
     if (isBoardSetInLanguage(boardSet, language)) {
       continue;
     }
 
-    const isTranslated = await translateBoardSet(boardSet, language, {
+    const outcome = await translateBoardSet(boardSet, language, {
       signal,
       onTranslating,
     });
-    if (isTranslated) {
+    if (outcome === "translated") {
       onTranslated(boardSet.id);
     }
+
+    if (outcome === "unavailable") {
+      passOutcome = "incomplete";
+    }
   }
+
+  return passOutcome;
 }
 
 // The name and all board translations commit atomically, making it a completion marker.
@@ -57,11 +72,14 @@ function isBoardSetInLanguage(
   return boardSet.translatedNames?.[language] !== undefined;
 }
 
+/** A failed set can still translate on a later run; an unavailable one cannot. */
+type BoardSetTranslationOutcome = "translated" | "failed" | "unavailable";
+
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
   { signal, onTranslating }: TranslationPassOptions,
-): Promise<boolean> {
+): Promise<BoardSetTranslationOutcome> {
   const boards = await listBoards(boardSet.id);
   const nameInLanguage = findNameInLanguage(boardSet, boards, language);
   const boardsMissingLanguage = boards.filter(
@@ -83,8 +101,17 @@ async function translateBoardSet(
     language,
     { signal, onTranslating },
   ).catch(() => undefined);
-  if (!translationsBySourceLanguage || signal.aborted) {
-    return false;
+  if (signal.aborted) {
+    return "failed";
+  }
+
+  if (!translationsBySourceLanguage) {
+    const isUnavailable = await isAnyTranslationUnavailable(
+      stringsBySourceLanguage.keys(),
+      language,
+    );
+
+    return isUnavailable ? "unavailable" : "failed";
   }
 
   const findTranslation = (source: { locale?: string }, text: string) =>
@@ -101,7 +128,7 @@ async function translateBoardSet(
     ),
   });
 
-  return true;
+  return "translated";
 }
 
 async function listBoards(boardSetId: string): Promise<Board[]> {
@@ -164,6 +191,26 @@ function addStrings(
   }
 
   stringsBySourceLanguage.set(sourceLanguage, collected);
+}
+
+// A pair the browser cannot even assess is as final as one it refuses.
+async function isAnyTranslationUnavailable(
+  sourceLanguages: Iterable<string>,
+  targetLanguage: string,
+): Promise<boolean> {
+  if (!isSupported("Translator")) {
+    return true;
+  }
+
+  const availabilities = await Promise.all(
+    Array.from(sourceLanguages, (sourceLanguage) =>
+      checkAvailability("Translator", { sourceLanguage, targetLanguage }).catch(
+        () => "unavailable" as const,
+      ),
+    ),
+  );
+
+  return availabilities.includes("unavailable");
 }
 
 async function translateBySourceLanguage(

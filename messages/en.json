@@ -80,7 +80,7 @@
   "themeLight": "Light",
   "themeDark": "Dark",
   "languageLabel": "Language",
-  "languageTranslationUnavailable": "Automatic board translation is unavailable in this browser.",
+  "languageBoardsUntranslated": "Some boards will stay in their original language.",
   "languageDownloading": "Downloading translation model…",
   "modelDownloadProgress": "{progress}% complete",
   "languageTranslating": "Translating boards…",

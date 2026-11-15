@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Automatisk översättning av tavlor är inte tillgänglig i den här webbläsaren.",
+  "languageBoardsUntranslated": "Vissa tavlor förblir på sitt originalspråk.",
   "loading": "Laddar…",
   "close": "Stäng",
   "opensInNewTab": "(öppnas i en ny flik)",

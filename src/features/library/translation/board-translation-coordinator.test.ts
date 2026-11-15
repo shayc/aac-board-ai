@@ -3,19 +3,22 @@ import { renderHook } from "vitest-browser-react";
 import {
   queueBoardTranslationPass,
   stopBoardTranslation,
-  useIsTranslatingBoards,
+  useBoardTranslationStatus,
 } from "./board-translation-coordinator";
-import type { TranslationPassOptions } from "./translate-board-sets";
+import type {
+  TranslationPassOptions,
+  TranslationPassOutcome,
+} from "./translate-board-sets";
 
 interface HeldPass {
-  pass: (options: TranslationPassOptions) => Promise<void>;
+  pass: (options: TranslationPassOptions) => Promise<TranslationPassOutcome>;
   options: () => TranslationPassOptions;
   hasStarted: () => boolean;
-  finish: () => void;
+  finish: (outcome?: TranslationPassOutcome) => void;
 }
 
 function holdPass(): HeldPass {
-  const { promise, resolve } = Promise.withResolvers<void>();
+  const { promise, resolve } = Promise.withResolvers<TranslationPassOutcome>();
   let started: TranslationPassOptions | undefined;
 
   return {
@@ -32,7 +35,7 @@ function holdPass(): HeldPass {
       return started;
     },
     hasStarted: () => started !== undefined,
-    finish: resolve,
+    finish: (outcome = "complete") => resolve(outcome),
   };
 }
 
@@ -48,16 +51,41 @@ describe("board translation coordinator", () => {
   afterEach(stopBoardTranslation);
 
   test("reports translating from a pass's first progress until it ends", async () => {
-    const { result } = await renderHook(() => useIsTranslatingBoards());
+    const { result } = await renderHook(() => useBoardTranslationStatus());
     const first = await startPass("es");
 
-    expect(result.current).toBe(false);
+    expect(result.current).toBe("idle");
 
     first.options().onTranslating();
-    await expect.poll(() => result.current).toBe(true);
+    await expect.poll(() => result.current).toBe("translating");
 
     first.finish();
-    await expect.poll(() => result.current).toBe(false);
+    await expect.poll(() => result.current).toBe("idle");
+  });
+
+  test("reports incomplete after a pass that left sets unavailable until a pass leaves none", async () => {
+    const { result } = await renderHook(() => useBoardTranslationStatus());
+    const first = await startPass("es");
+    first.options().onTranslating();
+    await expect.poll(() => result.current).toBe("translating");
+
+    first.finish("incomplete");
+    await expect.poll(() => result.current).toBe("incomplete");
+
+    const second = await startPass("es");
+    second.finish();
+    await expect.poll(() => result.current).toBe("idle");
+  });
+
+  test("clears an incomplete status when the language changes", async () => {
+    const { result } = await renderHook(() => useBoardTranslationStatus());
+    const first = await startPass("es");
+    first.finish("incomplete");
+    await expect.poll(() => result.current).toBe("incomplete");
+
+    await startPass("fr");
+
+    await expect.poll(() => result.current).toBe("idle");
   });
 
   test("queues a pass for the same language behind the one in progress without aborting it", async () => {
@@ -76,20 +104,20 @@ describe("board translation coordinator", () => {
   });
 
   test("aborts the pass in progress and clears the status when the language changes", async () => {
-    const { result } = await renderHook(() => useIsTranslatingBoards());
+    const { result } = await renderHook(() => useBoardTranslationStatus());
     const first = await startPass("es");
     first.options().onTranslating();
-    await expect.poll(() => result.current).toBe(true);
+    await expect.poll(() => result.current).toBe("translating");
 
     const second = await startPass("fr");
 
     expect(first.options().signal.aborted).toBe(true);
     expect(second.options().signal.aborted).toBe(false);
-    await expect.poll(() => result.current).toBe(false);
+    await expect.poll(() => result.current).toBe("idle");
   });
 
   test("ignores status changes from a run the language change replaced", async () => {
-    const { result } = await renderHook(() => useIsTranslatingBoards());
+    const { result } = await renderHook(() => useBoardTranslationStatus());
     const replaced = await startPass("es");
     const queuedBehindReplaced = holdPass();
     queueBoardTranslationPass("es", queuedBehindReplaced.pass);
@@ -97,15 +125,15 @@ describe("board translation coordinator", () => {
     const current = await startPass("fr");
 
     replaced.options().onTranslating();
-    expect(result.current).toBe(false);
+    expect(result.current).toBe("idle");
 
     current.options().onTranslating();
-    await expect.poll(() => result.current).toBe(true);
+    await expect.poll(() => result.current).toBe("translating");
 
     replaced.finish();
     await expect.poll(queuedBehindReplaced.hasStarted).toBe(true);
 
-    expect(result.current).toBe(true);
+    expect(result.current).toBe("translating");
   });
 
   test("reports a failed pass and still runs the pass queued behind it", async () => {
@@ -127,14 +155,14 @@ describe("board translation coordinator", () => {
   });
 
   test("aborts the pass in progress and clears the status when stopped", async () => {
-    const { result } = await renderHook(() => useIsTranslatingBoards());
+    const { result } = await renderHook(() => useBoardTranslationStatus());
     const first = await startPass("es");
     first.options().onTranslating();
-    await expect.poll(() => result.current).toBe(true);
+    await expect.poll(() => result.current).toBe("translating");
 
     stopBoardTranslation();
 
     expect(first.options().signal.aborted).toBe(true);
-    await expect.poll(() => result.current).toBe(false);
+    await expect.poll(() => result.current).toBe("idle");
   });
 });

@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "الترجمة التلقائية للوحة غير متاحة في هذا المتصفح.",
+  "languageBoardsUntranslated": "ستبقى بعض اللوحات بلغتها الأصلية.",
   "loading": "جارٍ التحميل…",
   "close": "إغلاق",
   "opensInNewTab": "(يفتح في علامة تبويب جديدة)",

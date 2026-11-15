@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Automatisk oversættelse af tavler er ikke tilgængelig i denne browser.",
+  "languageBoardsUntranslated": "Nogle tavler forbliver på deres originalsprog.",
   "loading": "Indlæser…",
   "close": "Luk",
   "opensInNewTab": "(åbner i nyt faneblad)",

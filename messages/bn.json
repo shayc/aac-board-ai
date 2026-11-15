@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "এই ব্রাউজারে স্বয়ংক্রিয় বোর্ড অনুবাদ উপলভ্য নয়।",
+  "languageBoardsUntranslated": "কিছু বোর্ড তাদের মূল ভাষায় থাকবে।",
   "loading": "লোড হচ্ছে…",
   "close": "বন্ধ করুন",
   "opensInNewTab": "(নতুন ট্যাবে খোলে)",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "इस ब्राउज़र में बोर्ड का स्वचालित अनुवाद उपलब्ध नहीं है।",
+  "languageBoardsUntranslated": "कुछ बोर्ड अपनी मूल भाषा में ही रहेंगे।",
   "loading": "लोड हो रहा है…",
   "close": "बंद करें",
   "opensInNewTab": "(नए टैब में खुलता है)",

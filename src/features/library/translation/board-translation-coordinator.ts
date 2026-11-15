@@ -2,9 +2,17 @@ import {
   createExternalStore,
   useExternalStore,
 } from "@shared/state/external-store";
-import type { TranslationPassOptions } from "./translate-board-sets";
+import type {
+  TranslationPassOptions,
+  TranslationPassOutcome,
+} from "./translate-board-sets";
 
-type TranslationPass = (options: TranslationPassOptions) => Promise<void>;
+type TranslationPass = (
+  options: TranslationPassOptions,
+) => Promise<TranslationPassOutcome>;
+
+/** `incomplete`: the last pass left sets the browser cannot translate. */
+export type BoardTranslationStatus = "idle" | "translating" | "incomplete";
 
 interface TranslationRun {
   readonly language: string;
@@ -12,7 +20,7 @@ interface TranslationRun {
   queue: Promise<void>;
 }
 
-const isTranslatingStore = createExternalStore(false);
+const statusStore = createExternalStore<BoardTranslationStatus>("idle");
 let currentRun: TranslationRun | undefined;
 
 /**
@@ -28,15 +36,15 @@ export function queueBoardTranslationPass(
 
   run.queue = run.queue.then(async () => {
     try {
-      await pass({
+      const outcome = await pass({
         signal: run.abortController.signal,
-        onTranslating: () => setIsTranslating(run, true),
+        onTranslating: () => setStatus(run, "translating"),
       });
+      setStatus(run, outcome === "incomplete" ? "incomplete" : "idle");
     } catch (error) {
+      setStatus(run, "idle");
       // A failed pass must not stall the passes queued behind it.
       reportError(error);
-    } finally {
-      setIsTranslating(run, false);
     }
   });
 }
@@ -45,11 +53,11 @@ export function stopBoardTranslation(): void {
   const run = currentRun;
   currentRun = undefined;
   run?.abortController.abort();
-  isTranslatingStore.setState(false);
+  statusStore.setState("idle");
 }
 
-export function useIsTranslatingBoards(): boolean {
-  return useExternalStore(isTranslatingStore);
+export function useBoardTranslationStatus(): BoardTranslationStatus {
+  return useExternalStore(statusStore);
 }
 
 function startRun(language: string): TranslationRun {
@@ -65,8 +73,8 @@ function startRun(language: string): TranslationRun {
 }
 
 // Superseded runs can still settle after the new language's run starts.
-function setIsTranslating(run: TranslationRun, isTranslating: boolean) {
+function setStatus(run: TranslationRun, status: BoardTranslationStatus) {
   if (currentRun === run) {
-    isTranslatingStore.setState(isTranslating);
+    statusStore.setState(status);
   }
 }

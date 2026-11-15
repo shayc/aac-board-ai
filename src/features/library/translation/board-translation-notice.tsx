@@ -5,25 +5,14 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import {
-  isSupported,
-  useGlobalDownloadProgress,
-} from "@shayc/react-built-in-ai";
+import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
-import { useIsTranslatingBoards } from "./board-translation-coordinator";
+import { useBoardTranslationStatus } from "./board-translation-coordinator";
 
 export function BoardTranslationNotice() {
   const t = useTranslate();
   const progress = useGlobalDownloadProgress("Translator");
-  const isTranslating = useIsTranslatingBoards();
-
-  if (!isSupported("Translator")) {
-    return (
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {t(m.languageTranslationUnavailable)}
-      </Typography>
-    );
-  }
+  const status = useBoardTranslationStatus();
 
   // Reuse the live region so assistive technology announces the phase change.
   if (progress !== null) {
@@ -38,7 +27,7 @@ export function BoardTranslationNotice() {
     );
   }
 
-  if (isTranslating) {
+  if (status === "translating") {
     return (
       <TranslationStatusAlert
         icon={<TranslateIcon fontSize="inherit" />}
@@ -47,11 +36,15 @@ export function BoardTranslationNotice() {
     );
   }
 
+  if (status === "incomplete") {
+    return <TranslationStatusAlert title={t(m.languageBoardsUntranslated)} />;
+  }
+
   return null;
 }
 
 interface TranslationStatusAlertProps {
-  icon: ReactNode;
+  icon?: ReactNode;
   title: string;
   description?: string;
 }

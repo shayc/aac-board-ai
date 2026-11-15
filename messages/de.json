@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Die automatische Tafelübersetzung ist in diesem Browser nicht verfügbar.",
+  "languageBoardsUntranslated": "Einige Tafeln bleiben in ihrer Originalsprache.",
   "loading": "Wird geladen…",
   "close": "Schließen",
   "opensInNewTab": "(öffnet in neuem Tab)",

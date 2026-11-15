@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Η αυτόματη μετάφραση πινάκων δεν είναι διαθέσιμη σε αυτό το πρόγραμμα περιήγησης.",
+  "languageBoardsUntranslated": "Ορισμένοι πίνακες θα παραμείνουν στην αρχική τους γλώσσα.",
   "loading": "Φόρτωση…",
   "close": "Κλείσιμο",
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",

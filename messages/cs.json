@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Automatický překlad tabulky není v tomto prohlížeči dostupný.",
+  "languageBoardsUntranslated": "Některé tabulky zůstanou v původním jazyce.",
   "loading": "Načítání…",
   "close": "Zavřít",
   "opensInNewTab": "(otevře se na nové kartě)",
