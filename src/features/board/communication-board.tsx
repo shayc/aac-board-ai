@@ -19,6 +19,7 @@ import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
+import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
@@ -46,7 +47,8 @@ export function CommunicationBoard({
     onMessagePlayback: message.trackPlayback,
   });
   const navigation = useBoardNavigation(rootBoardId);
-  const shortcuts = useBoardShortcuts({ message, playback });
+  const shortcutProps = useBoardShortcuts({ message, playback });
+  const shortcutLabels = useBoardShortcutLabels();
 
   const activateButton = createButtonActivator({
     message: {
@@ -75,7 +77,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
-      shortcutLabels={shortcuts.labels}
+      shortcutLabels={shortcutLabels}
       onPress={message.backspace}
       onLongPress={message.clear}
     />
@@ -86,7 +88,7 @@ export function CommunicationBoard({
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
       variant={isSmallScreen ? "boardControl" : "prominent"}
-      shortcutLabels={shortcuts.labels}
+      shortcutLabels={shortcutLabels}
       onPlay={() => void playback.playMessage(message.parts)}
       onStop={playback.stop}
     />
@@ -108,7 +110,7 @@ export function CommunicationBoard({
     <DirectionalThemeProvider direction={communication.direction}>
       <ScanningScope>
         <Stack
-          {...shortcuts.rootProps}
+          {...shortcutProps}
           dir={communication.direction}
           direction="column"
           sx={{
