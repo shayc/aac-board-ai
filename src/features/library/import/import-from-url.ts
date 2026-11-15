@@ -25,7 +25,7 @@ class BoardURLError extends Error {
 // http(s) may reach fetch. Schemes such as data: carry a payload with no host.
 export function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
-  if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
+  if (!isAllowedBoardURL(resolved)) {
     throw new BoardURLError(
       "unsupported-scheme",
       `Unsupported board URL scheme: ${resolved.protocol}`,
@@ -33,6 +33,14 @@ export function parseBoardURL(url: string): URL {
   }
 
   return resolved;
+}
+
+// Matches the CSP connect-src ('self' https:) in netlify.toml.
+function isAllowedBoardURL(url: URL): boolean {
+  return (
+    url.protocol === "https:" ||
+    (url.protocol === "http:" && url.origin === window.location.origin)
+  );
 }
 
 export function deriveBoardSetIdFromURL(url: string): string {

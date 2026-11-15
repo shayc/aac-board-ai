@@ -47,10 +47,18 @@ describe("rootIndexLoader", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("throws a localized 400 for a non-http(s) board URL before asking", async () => {
+  test("throws a localized 400 for a hostless board URL before asking", async () => {
     await expect(
       callLoader(
         `?board=${encodeURIComponent("data:application/zip;base64,UEsDBA==")}`,
+      ),
+    ).rejects.toMatchObject(localizedImportFailure);
+  });
+
+  test("throws a localized 400 for an http: board URL on another host before asking", async () => {
+    await expect(
+      callLoader(
+        `?board=${encodeURIComponent("http://boards.example/core.obz")}`,
       ),
     ).rejects.toMatchObject(localizedImportFailure);
   });

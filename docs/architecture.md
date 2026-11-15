@@ -113,8 +113,9 @@ each speech step, so every utterance uses the language, voice, rate, pitch, and
 volume current at that moment.
 
 The board-set library broadcasts changes so other tabs can refresh their lists.
-Preferences managed by `createPersistedStore` do not synchronize across tabs. MUI
-persists and synchronizes theme mode separately.
+Preferences managed by `createPersistedStore` reload when another tab writes
+their key, through the window `storage` event. MUI persists and synchronizes
+theme mode separately.
 
 Stores are module singletons that start working when first imported, so they
 need no provider and their loading starts before React renders. The cost is that
@@ -133,6 +134,9 @@ At `/`, a board URL supplied through `?board=` takes precedence: the app names
 the link's host and imports only after the user confirms, because `/` opens the
 newest board set and a link alone must not change it. URL downloads reject
 redirects to another host, so the named host is the one that serves the file.
+Links must use `https:` unless they point at the app's own origin, because the
+Content Security Policy allows no other connections; an `http:` link fails
+before the confirmation instead of after it.
 Otherwise, the app opens the newest stored board set, or imports the bundled
 starter board set if the library is empty.
 

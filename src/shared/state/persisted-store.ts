@@ -32,8 +32,23 @@ export function createPersistedStore<T>(
     }
   }
 
+  function reload() {
+    store.setState(load());
+  }
+
+  function handleStorage(event: StorageEvent) {
+    if (event.storageArea !== localStorage) {
+      return;
+    }
+
+    if (event.key === storageKey || event.key === null) {
+      reload();
+    }
+  }
+
   store.subscribe(persist);
-  reloaders.add(() => store.setState(load()));
+  reloaders.add(reload);
+  window.addEventListener("storage", handleStorage);
 
   return store;
 }
