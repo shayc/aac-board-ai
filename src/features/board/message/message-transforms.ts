@@ -126,8 +126,10 @@ function messageToAddTo(message: Message): Message {
 }
 
 function isSpelledAs(message: Message, words: readonly string[]): boolean {
+  const isWordOpen = words.length > 0;
+
   return (
-    message.isWordOpen === words.length > 0 &&
+    message.isWordOpen === isWordOpen &&
     message.parts.length === words.length &&
     message.parts.every(
       (part, index) => part.kind === "text" && part.label === words[index],
