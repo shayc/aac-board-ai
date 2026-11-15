@@ -21,6 +21,7 @@ import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
+import { boardVocabulary } from "./suggestions/board-vocabulary";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
@@ -42,7 +43,11 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
-  const suggestions = useMessageSuggestions(message.text);
+  const vocabularyButtons = boardVocabulary(board);
+  const suggestions = useMessageSuggestions(
+    message.text,
+    vocabularyButtons.map((button) => button.label.trim()),
+  );
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -65,6 +70,11 @@ export function CommunicationBoard({
   });
 
   const hasMessage = message.parts.length > 0;
+  const nextWordButtons = suggestions.nextWords
+    .map((word) =>
+      vocabularyButtons.find((button) => button.label.trim() === word),
+    )
+    .filter((button) => button !== undefined);
 
   const navigationButtons = (
     <NavigationButtons
@@ -149,11 +159,14 @@ export function CommunicationBoard({
                   <SuggestionBar
                     status={suggestions.status}
                     phrases={suggestions.phrases}
+                    nextWordButtons={nextWordButtons}
                     language={communication.language}
                     onEnable={suggestions.enable}
                     onPhraseSelect={(phrase) =>
                       message.replaceWithText(phrase, communication.language)
                     }
+
+                    onNextWordSelect={activateButton}
                   />
                 )}
               </Stack>

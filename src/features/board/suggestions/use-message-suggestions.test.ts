@@ -19,7 +19,7 @@ const ENGINE_STUBS = {
 };
 
 function renderMessageSuggestions(text: string) {
-  return renderHook(() => useMessageSuggestions(text));
+  return renderHook(() => useMessageSuggestions(text, []));
 }
 
 function stubRewritesByTone(
@@ -388,7 +388,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text),
+        useMessageSuggestions(text, []),
       { initialProps: { text: "old" } },
     );
 
@@ -420,7 +420,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text),
+        useMessageSuggestions(text, []),
       { initialProps: { text: "old" } },
     );
 

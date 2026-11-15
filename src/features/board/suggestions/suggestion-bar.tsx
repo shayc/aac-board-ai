@@ -1,3 +1,5 @@
+import type { BoardButton } from "@features/library";
+import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
@@ -9,20 +11,24 @@ import { SuggestionStatusNotice } from "./suggestion-status-notice";
 export interface SuggestionBarProps {
   status: SuggestionStatus;
   phrases: readonly string[];
+  nextWordButtons: readonly BoardButton[];
   language: string;
   onEnable: () => void;
   onPhraseSelect: (phrase: string) => void;
+  onNextWordSelect: (button: BoardButton) => void;
 }
 
 export function SuggestionBar({
   status,
   phrases,
+  nextWordButtons,
   language,
   onEnable,
   onPhraseSelect,
+  onNextWordSelect,
 }: SuggestionBarProps) {
   const t = useTranslate();
-  const hasPhrases = phrases.length > 0;
+  const hasPhrases = phrases.length + nextWordButtons.length > 0;
 
   return (
     <Stack
@@ -50,6 +56,30 @@ export function SuggestionBar({
           overflowX: "auto",
         }}
       >
+        {nextWordButtons.map((button) => (
+          <Chip
+            key={`word/${button.id}`}
+            lang={language}
+            avatar={
+              button.imageSrc ? (
+                <Avatar
+                  alt=""
+                  src={button.imageSrc}
+                  // Symbols are drawn for light tiles and vanish on a dark chip.
+                  sx={{
+                    p: 0.25,
+                    bgcolor: "common.white",
+                    "& .MuiAvatar-img": { objectFit: "contain" },
+                  }}
+                />
+              ) : undefined
+            }
+            label={button.label}
+            variant="outlined"
+            onClick={() => onNextWordSelect(button)}
+          />
+        ))}
+
         {phrases.map((phrase) => (
           <Chip
             key={phrase}

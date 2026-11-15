@@ -9,9 +9,11 @@ function makeProps(
   return {
     status: { kind: "idle" },
     phrases: [],
+    nextWordButtons: [],
     language: "en",
     onEnable: vi.fn(),
     onPhraseSelect: vi.fn(),
+    onNextWordSelect: vi.fn(),
     ...overrides,
   };
 }
@@ -51,6 +53,21 @@ describe("SuggestionBar", () => {
 
     expect(props.onPhraseSelect).toHaveBeenCalledWith("Goodbye");
     expect(props.onPhraseSelect).toHaveBeenCalledTimes(2);
+  });
+
+  test("offers predicted next words as chips that select their tiles", async () => {
+    const button = { id: "b1", label: "eat", actions: [] };
+    const props = makeProps({ nextWordButtons: [button] });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+
+    await expectNoA11yViolations(screen.container);
+
+    await screen
+      .getByRole("group", { name: "Suggestions" })
+      .getByRole("button", { name: "eat" })
+      .click();
+
+    expect(props.onNextWordSelect).toHaveBeenCalledExactlyOnceWith(button);
   });
 
   test("marks each phrase with the language it is written in", async () => {
