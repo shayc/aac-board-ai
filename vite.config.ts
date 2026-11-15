@@ -4,7 +4,7 @@ import { playwright } from "@vitest/browser-playwright";
 import type { Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
-import { BOARD_FILE_HANDLER_EXTENSIONS_BY_MIME_TYPE } from "./src/features/library/import/board-file-formats.ts";
+import { BOARD_FILE_HANDLER_ACCEPT } from "./src/features/library/import/board-file-formats.ts";
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -51,9 +51,7 @@ export default defineConfig({
           "A free communication board for people who cannot rely on speech. Tap symbols to build a message and hear it spoken aloud, with optional on-device AI suggestions.",
         start_url: "/",
         display: "standalone",
-        file_handlers: [
-          { action: "/", accept: BOARD_FILE_HANDLER_EXTENSIONS_BY_MIME_TYPE },
-        ],
+        file_handlers: [{ action: "/", accept: BOARD_FILE_HANDLER_ACCEPT }],
         theme_color: BACKGROUND_DARK,
         background_color: BACKGROUND_DARK,
         icons: [
