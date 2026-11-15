@@ -113,8 +113,10 @@ volume current at that moment.
 
 The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` reload when another tab writes
-their key, through the window `storage` event. MUI persists and synchronizes
-theme mode separately.
+their key, through the window `storage` event. A reload does not write the value
+back: only a change made in a tab writes, so tabs running different app versions
+cannot keep rewriting each other's value. MUI persists and synchronizes theme
+mode separately.
 
 Stores are module singletons that start working when first imported, so they
 need no provider and their loading starts before React renders. The cost is that
