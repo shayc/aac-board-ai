@@ -21,23 +21,49 @@ describe("next word prompt", () => {
     expect(nextWordPrompt("I want")).toBe('Sentence: "I want ___"');
   });
 
-  test("constrains answers to the board's words except the word just tapped", () => {
+  test("constrains answers to the message completed with a board word, except the word just tapped", () => {
     expect(nextWordConstraint(VOCABULARY, "I want to")).toMatchObject({
       properties: {
-        words: { items: { enum: ["I", "want", "eat", "more"] }, minItems: 3 },
+        sentences: {
+          items: {
+            enum: [
+              "I want to I",
+              "I want to want",
+              "I want to eat",
+              "I want to more",
+            ],
+          },
+        },
       },
     });
   });
 
-  test("asks for fewer words when the board has fewer than three", () => {
-    expect(nextWordConstraint(["yes", "no"], "I")).toMatchObject({
-      properties: { words: { minItems: 2, maxItems: 2 } },
+  test("lets the model answer with one to three sentences", () => {
+    expect(nextWordConstraint(VOCABULARY, "I")).toMatchObject({
+      properties: { sentences: { minItems: 1, maxItems: 3 } },
     });
   });
 
-  test("keeps the first three distinct board words of the response", () => {
-    const response = '{"words":["eat","eat","fly","more","to"]}';
+  test("asks for no more sentences than the board has words", () => {
+    expect(nextWordConstraint(["yes", "no"], "I")).toMatchObject({
+      properties: { sentences: { maxItems: 2 } },
+    });
+  });
 
-    expect(parseNextWords(response, VOCABULARY)).toEqual(["eat", "more", "to"]);
+  test("keeps the first three distinct board words that complete the message", () => {
+    const response =
+      '{"sentences":["I want eat","I want eat","I want fly","I want more","I want to","I want I"]}';
+
+    expect(parseNextWords(response, VOCABULARY, "I want")).toEqual([
+      "eat",
+      "more",
+      "to",
+    ]);
+  });
+
+  test("drops sentences that don't continue the message", () => {
+    const response = '{"sentences":["you want eat","I want more"]}';
+
+    expect(parseNextWords(response, VOCABULARY, "I want")).toEqual(["more"]);
   });
 });

@@ -19,7 +19,7 @@ function renderNextWordSource(board: string, text: string, isWordOpen = false) {
 
 describe("useNextWordSource", () => {
   test("predicts the next words from the board's vocabulary", async () => {
-    stubLanguageModel(() => '{"words":["to","more","eat"]}');
+    stubLanguageModel(() => modelAnswer("I want", ["to", "more", "eat"]));
 
     const { result } = await renderNextWordSource("predicts", "I want");
 
@@ -29,7 +29,7 @@ describe("useNextWordSource", () => {
   });
 
   test("predicts nothing while a word is still being spelled", async () => {
-    const languageModel = stubLanguageModel(() => '{"words":["to"]}');
+    const languageModel = stubLanguageModel(() => modelAnswer("I wa", ["to"]));
 
     const { result } = await renderNextWordSource("spelling", "I wa", true);
 
@@ -41,8 +41,8 @@ describe("useNextWordSource", () => {
   });
 
   test("reuses the answer for a sentence it has already predicted", async () => {
-    const languageModel = stubLanguageModel(
-      () => '{"words":["eat","to","more"]}',
+    const languageModel = stubLanguageModel(() =>
+      modelAnswer("I want more", ["eat", "to", "more"]),
     );
 
     const first = await renderNextWordSource("reuses", "I want more");
@@ -51,7 +51,9 @@ describe("useNextWordSource", () => {
     });
     await first.unmount();
 
-    languageModel.prompt.mockReturnValue('{"words":["I","want","to"]}');
+    languageModel.prompt.mockReturnValue(
+      modelAnswer("I want more", ["I", "want", "to"]),
+    );
     const second = await renderNextWordSource("reuses", "I want more");
 
     await vi.waitFor(() => {
@@ -61,7 +63,9 @@ describe("useNextWordSource", () => {
   });
 
   test("asks again when the model had no board words to offer", async () => {
-    const languageModel = stubLanguageModel(() => '{"words":["fly"]}');
+    const languageModel = stubLanguageModel(() =>
+      modelAnswer("I eat", ["fly"]),
+    );
 
     const first = await renderNextWordSource("retries", "I eat");
     await vi.waitFor(() => {
@@ -69,7 +73,7 @@ describe("useNextWordSource", () => {
     });
     await first.unmount();
 
-    languageModel.prompt.mockReturnValue('{"words":["more"]}');
+    languageModel.prompt.mockReturnValue(modelAnswer("I eat", ["more"]));
     const second = await renderNextWordSource("retries", "I eat");
 
     await vi.waitFor(() => {
@@ -77,3 +81,7 @@ describe("useNextWordSource", () => {
     });
   });
 });
+
+function modelAnswer(text: string, words: readonly string[]): string {
+  return JSON.stringify({ sentences: words.map((word) => `${text} ${word}`) });
+}

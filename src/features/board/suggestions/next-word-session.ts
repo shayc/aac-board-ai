@@ -97,7 +97,7 @@ async function promptNextWords(
       signal,
     });
 
-    return parseNextWords(response, vocabulary);
+    return parseNextWords(response, vocabulary, text);
   } finally {
     session.destroy();
   }
