@@ -27,6 +27,6 @@
     "oxlint.config.ts",
     "project.inlang/paraglide.config.ts",
     "vite.config.ts",
-    "webkit-profile.ts"
+    "vitest.webkit-setup.ts"
   ]
 }

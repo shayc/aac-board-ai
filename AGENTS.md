@@ -21,11 +21,12 @@
 - Performance comparison with a git ref: `npm run perf -- --base main`
 - Performance lab unit tests (Node's test runner, no browser): `npm run test:perf`
 - Test one file: `npm test -- <file-or-pattern>`
-- Test one browser: `npm test -- --browser chromium` (or `webkit`)
+- Test in WebKit only: `npm run test:webkit`
+- Test in Chromium only: `npm test -- --browser chromium`
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
-- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → WebKit tests → build → PWA offline test (CI enforces coverage floors on Chromium; `npm test` runs the same suite in both browsers without them).
+- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → test:webkit → build → PWA offline test (CI enforces coverage floors on Chromium; `npm test` runs the same suite in both browsers without them).
 - Pre-commit: `lint-staged` runs Oxlint `--fix` + Oxfmt on staged files.
 
 ## Project Structure

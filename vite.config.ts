@@ -9,7 +9,7 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
-import { WEBKIT_PROFILE_DIR } from "./webkit-profile.ts";
+import { WEBKIT_PROFILE_DIR } from "./vitest.webkit-setup.ts";
 
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
@@ -135,7 +135,7 @@ export default defineConfig({
           // default ephemeral context, and Vitest cannot share a persistent
           // context between test files running in parallel.
           provider: playwright({ persistentContext: WEBKIT_PROFILE_DIR }),
-          globalSetup: ["./webkit-profile.ts"],
+          globalSetup: ["./vitest.webkit-setup.ts"],
           fileParallelism: false,
         },
       ],

@@ -9,8 +9,6 @@ export const WEBKIT_PROFILE_DIR = join(
   `vitest-webkit-${process.pid}`,
 );
 
-export default function setupWebKitProfile() {
-  return function removeWebKitProfile() {
-    rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
-  };
+export function teardown() {
+  rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
 }

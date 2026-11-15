@@ -41,7 +41,7 @@ const AXES = {
 
 type Axis = keyof typeof AXES;
 
-async function measureTracks(
+async function renderAndMeasureTracks(
   axis: Axis,
   containerSize: number,
   tracks: number,
@@ -50,7 +50,7 @@ async function measureTracks(
     scrollToTrack,
   }: { itemSize?: number; scrollToTrack?: number } = {},
 ) {
-  const grid = await renderTracks(axis, containerSize, tracks, itemSize);
+  const grid = await renderTracks(axis, containerSize, tracks, { itemSize });
 
   if (scrollToTrack !== undefined) {
     scrollTrackToStart(grid, axis, scrollToTrack);
@@ -63,7 +63,7 @@ async function renderTracks(
   axis: Axis,
   containerSize: number,
   tracks: number,
-  itemSize?: number,
+  { itemSize }: { itemSize?: number } = {},
 ) {
   const isColumns = axis === "columns";
   const items = Array.from({ length: tracks }, (_, index) => ({
@@ -346,7 +346,11 @@ describe("Grid", () => {
     test.each(FIT_CASES)(
       "fits $visible whole $axis into $containerSize px for a $tracks-track board",
       async ({ axis, containerSize, tracks, visible }) => {
-        const layout = await measureTracks(axis, containerSize, tracks);
+        const layout = await renderAndMeasureTracks(
+          axis,
+          containerSize,
+          tracks,
+        );
 
         expect(layout.visibleCellCount).toBe(visible);
         expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZES_PX[axis]);
@@ -363,7 +367,7 @@ describe("Grid", () => {
     test.each(["columns", "rows"] as const)(
       "shows the same hint of the %s on both sides of a track scrolled to the start",
       async (axis) => {
-        const layout = await measureTracks(axis, 375, 20, {
+        const layout = await renderAndMeasureTracks(axis, 375, 20, {
           scrollToTrack: 5,
         });
 
@@ -378,7 +382,7 @@ describe("Grid", () => {
     test.each(["columns", "rows"] as const)(
       "shows a hint of the %s on the leading side only at the end of the scroll",
       async (axis) => {
-        const layout = await measureTracks(axis, 375, 20, {
+        const layout = await renderAndMeasureTracks(axis, 375, 20, {
           scrollToTrack: 19,
         });
 
@@ -419,7 +423,7 @@ describe("Grid", () => {
       async (axis) => {
         await setTestViewport(800, 600);
 
-        const layout = await measureTracks(axis, 375, 20);
+        const layout = await renderAndMeasureTracks(axis, 375, 20);
 
         expect(layout.visibleCellCount).toBe(3);
         expect(layout.leadingSpace).toBeCloseTo(SM_PADDING_PX[axis], 0);
@@ -434,7 +438,9 @@ describe("Grid", () => {
     test.each(["columns", "rows"] as const)(
       "keeps %s at the fitted size when an item is larger than its cell",
       async (axis) => {
-        const layout = await measureTracks(axis, 375, 20, { itemSize: 150 });
+        const layout = await renderAndMeasureTracks(axis, 375, 20, {
+          itemSize: 150,
+        });
 
         expect(layout.visibleCellCount).toBe(3);
         expect(layout.trailingHint).toBeCloseTo(OVERFLOW_HINT_PX, 0);
@@ -444,7 +450,7 @@ describe("Grid", () => {
     test.each(["columns", "rows"] as const)(
       "keeps %s at the minimum cell size in a container smaller than one cell",
       async (axis) => {
-        const layout = await measureTracks(axis, 80, 1);
+        const layout = await renderAndMeasureTracks(axis, 80, 1);
 
         expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZES_PX[axis]);
         expect(layout.overflows).toBe(true);

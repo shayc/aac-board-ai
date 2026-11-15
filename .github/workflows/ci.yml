@@ -47,7 +47,7 @@ jobs:
         run: npm run test:coverage
 
       - name: Run tests in WebKit
-        run: npm test -- --browser webkit
+        run: npm run test:webkit
 
       - name: Build project
         run: npm run build
