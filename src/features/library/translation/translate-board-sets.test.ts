@@ -1,5 +1,7 @@
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
+import { renderHook } from "vitest-browser-react";
+import { useBoardSets } from "../board-sets/board-sets-store";
 import { getBoardRecord } from "../storage/board-content-storage";
 import {
   getBoardSetRecord,
@@ -81,6 +83,18 @@ describe("translateBoardSets", () => {
       sourceLanguage: "en",
       targetLanguage: "es",
     });
+  });
+
+  test("refreshes the board-set library with the translated name", async () => {
+    await seedFoodSet();
+    stubTranslator((input) => `[es] ${input}`);
+    const { result, rerender } = await renderHook(() => useBoardSets());
+
+    await runTranslation("es");
+    await rerender();
+
+    const [boardSet] = result.current.boardSets;
+    expect(boardSet?.translatedNames).toEqual({ es: "[es] Food" });
   });
 
   test("translates each board from its own language", async () => {

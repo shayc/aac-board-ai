@@ -70,7 +70,7 @@ export interface BoardSetTranslations {
   readonly translationsByBoardId: ReadonlyMap<string, StringTranslations>;
 }
 
-export async function saveBoardSetTranslations(
+export async function putBoardSetTranslations(
   boardSetId: string,
   language: string,
   { name, translationsByBoardId }: BoardSetTranslations,
