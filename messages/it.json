@@ -130,7 +130,7 @@
   "keyEnter": "Invio",
   "keyEscape": "Esc",
   "keyCommand": "Comando",
-  "keyMacDelete": "Elimina",
+  "keyAppleDelete": "Elimina",
   "messagePlay": "Riproduci messaggio",
   "messageStop": "Interrompi messaggio",
   "playbackFailed": "Impossibile riprodurre il suono",

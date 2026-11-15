@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Kommando",
-  "keyMacDelete": "Slet",
+  "keyAppleDelete": "Slet",
   "messagePlay": "Afspil besked",
   "messageStop": "Stop besked",
   "playbackFailed": "Lyden kunne ikke afspilles",

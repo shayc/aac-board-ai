@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Command",
-  "keyMacDelete": "Delete",
+  "keyAppleDelete": "Delete",
   "messagePlay": "Bericht afspelen",
   "messageStop": "Bericht stoppen",
   "playbackFailed": "Geluid kan niet worden afgespeeld",

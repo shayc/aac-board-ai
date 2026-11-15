@@ -10,7 +10,7 @@ import { flipForRTL } from "@shared/theme/rtl";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
-import { useBoardKeyShortcuts } from "../shortcuts/key-shortcuts";
+import { useBoardShortcutLabels } from "../shortcuts/shortcut-labels";
 import { ShortcutTooltip } from "../shortcuts/shortcut-tooltip";
 import { MESSAGE_ACTION_SIZE } from "./message-bar";
 
@@ -32,13 +32,13 @@ export function BackspaceButton({
   onLongPress,
 }: BackspaceButtonProps) {
   const t = useTranslate();
-  const shortcuts = useBoardKeyShortcuts();
+  const shortcutLabels = useBoardShortcutLabels();
   const [isHolding, setIsHolding] = useState(false);
   const { pressProps } = usePress({ isDisabled: disabled, onPress });
 
   const { longPressProps } = useLongPress({
     accessibilityDescription: t(m.messageBackspaceLongPressHint, {
-      shortcut: shortcuts.clear.spokenLabel,
+      shortcut: shortcutLabels.clear.spokenKeys,
     }),
     isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,
@@ -50,13 +50,13 @@ export function BackspaceButton({
   return (
     <ShortcutTooltip
       action={t(m.messageClear)}
-      shortcut={shortcuts.clear.label}
+      keys={shortcutLabels.clear.keys}
     >
       <IconButton
         {...mergeProps(pressProps, longPressProps)}
         {...focusableDisabledProps(disabled)}
         aria-label={t(m.messageBackspace)}
-        aria-keyshortcuts={shortcuts.backspace.ariaKeyShortcuts}
+        aria-keyshortcuts={shortcutLabels.backspace.ariaKeyShortcuts}
         sx={backspaceSx}
       >
         <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />

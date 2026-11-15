@@ -10,7 +10,7 @@ const POP_DIRECTIONAL_ISOLATE = "\u2069";
 
 interface ShortcutTooltipProps {
   action: string;
-  shortcut: string;
+  keys: string;
   children: ReactElement;
 }
 
@@ -21,17 +21,17 @@ interface ShortcutTooltipProps {
  */
 export function ShortcutTooltip({
   action,
-  shortcut,
+  keys,
   children,
 }: ShortcutTooltipProps) {
   const t = useTranslate();
-  const isolatedShortcut = `${LEFT_TO_RIGHT_ISOLATE}${shortcut}${POP_DIRECTIONAL_ISOLATE}`;
+  const isolatedKeys = `${LEFT_TO_RIGHT_ISOLATE}${keys}${POP_DIRECTIONAL_ISOLATE}`;
 
   return (
     <Tooltip
       // A string title keeps the control's own name; an element title would
       // make MUI label the control by the tooltip while it is open.
-      title={t(m.shortcutTooltip, { action, shortcut: isolatedShortcut })}
+      title={t(m.shortcutTooltip, { action, shortcut: isolatedKeys })}
       placement="top"
       disableHoverListener
       disableTouchListener

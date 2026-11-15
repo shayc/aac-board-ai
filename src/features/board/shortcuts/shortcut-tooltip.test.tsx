@@ -11,7 +11,7 @@ describe("ShortcutTooltip", () => {
 
   test("keeps key symbols in order in a right-to-left interface", async () => {
     const screen = await renderWithProviders(
-      <ShortcutTooltip action="ניקוי המסר" shortcut="⌘⌫">
+      <ShortcutTooltip action="ניקוי המסר" keys="⌘⌫">
         <button type="button">Backspace</button>
       </ShortcutTooltip>,
     );

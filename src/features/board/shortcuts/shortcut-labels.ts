@@ -1,26 +1,26 @@
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 
-export interface KeyShortcut {
+interface ShortcutLabel {
   /** The `aria-keyshortcuts` value, naming every combination that works. */
   ariaKeyShortcuts: string;
   /** The keys as the platform's menus print them. */
-  label: string;
+  keys: string;
 }
 
-export interface ClearShortcut {
-  label: string;
+interface SpokenShortcutLabel {
+  keys: string;
   /** The keys in words, for the hint a screen reader reads aloud. */
-  spokenLabel: string;
+  spokenKeys: string;
 }
 
 // aria-keyshortcuts names the keys that activate an element, so clearing,
-// which the backspace button only does on a long press, gets labels alone.
-export interface BoardKeyShortcuts {
-  backspace: Pick<KeyShortcut, "ariaKeyShortcuts">;
-  clear: ClearShortcut;
-  play: KeyShortcut;
-  stop: KeyShortcut;
+// which the backspace button only does on a long press, gets no value.
+export interface BoardShortcutLabels {
+  backspace: Pick<ShortcutLabel, "ariaKeyShortcuts">;
+  clear: SpokenShortcutLabel;
+  play: ShortcutLabel;
+  stop: ShortcutLabel;
 }
 
 type NavigatorWithUserAgentData = Navigator & {
@@ -28,7 +28,7 @@ type NavigatorWithUserAgentData = Navigator & {
 };
 
 /** Labels for the keys that `resolveBoardShortcut` accepts. */
-export function useBoardKeyShortcuts(): BoardKeyShortcuts {
+export function useBoardShortcutLabels(): BoardShortcutLabels {
   const t = useTranslate();
   const isApple = isApplePlatform(currentPlatform());
 
@@ -36,19 +36,19 @@ export function useBoardKeyShortcuts(): BoardKeyShortcuts {
   const clearKeys = `${control}+${t(m.keyBackspace)}`;
   const clear = isApple
     ? {
-        label: "⌘⌫",
-        spokenLabel: `${t(m.keyCommand)}+${t(m.keyMacDelete)}`,
+        keys: "⌘⌫",
+        spokenKeys: `${t(m.keyCommand)}+${t(m.keyAppleDelete)}`,
       }
-    : { label: clearKeys, spokenLabel: clearKeys };
+    : { keys: clearKeys, spokenKeys: clearKeys };
 
   return {
     backspace: { ariaKeyShortcuts: "Backspace" },
     clear,
     play: {
       ariaKeyShortcuts: "Meta+Enter Control+Enter",
-      label: isApple ? "⌘↩" : `${control}+${t(m.keyEnter)}`,
+      keys: isApple ? "⌘↩" : `${control}+${t(m.keyEnter)}`,
     },
-    stop: { ariaKeyShortcuts: "Escape", label: t(m.keyEscape) },
+    stop: { ariaKeyShortcuts: "Escape", keys: t(m.keyEscape) },
   };
 }
 

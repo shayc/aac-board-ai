@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Command",
-  "keyMacDelete": "Delete",
+  "keyAppleDelete": "Delete",
   "messagePlay": "செய்தியை இயக்கு",
   "messageStop": "செய்தியை நிறுத்து",
   "playbackFailed": "ஒலியை இயக்க முடியவில்லை",

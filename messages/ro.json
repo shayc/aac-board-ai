@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Command",
-  "keyMacDelete": "Delete",
+  "keyAppleDelete": "Delete",
   "messagePlay": "Redă mesajul",
   "messageStop": "Oprește mesajul",
   "playbackFailed": "Sunetul nu a putut fi redat",

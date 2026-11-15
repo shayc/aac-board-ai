@@ -130,7 +130,7 @@
   "keyEnter": "Eingabe",
   "keyEscape": "Esc",
   "keyCommand": "Befehlstaste",
-  "keyMacDelete": "Rückschritttaste",
+  "keyAppleDelete": "Rückschritttaste",
   "messagePlay": "Nachricht abspielen",
   "messageStop": "Nachricht stoppen",
   "playbackFailed": "Ton konnte nicht abgespielt werden",

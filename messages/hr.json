@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Command",
-  "keyMacDelete": "Delete",
+  "keyAppleDelete": "Delete",
   "messagePlay": "Reproduciraj poruku",
   "messageStop": "Zaustavi poruku",
   "playbackFailed": "Nije moguće reproducirati zvuk",

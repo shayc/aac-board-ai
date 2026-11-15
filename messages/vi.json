@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Command",
-  "keyMacDelete": "Delete",
+  "keyAppleDelete": "Delete",
   "messagePlay": "Phát tin nhắn",
   "messageStop": "Dừng tin nhắn",
   "playbackFailed": "Không thể phát âm thanh",

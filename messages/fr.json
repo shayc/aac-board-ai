@@ -130,7 +130,7 @@
   "keyEnter": "Entrée",
   "keyEscape": "Échap",
   "keyCommand": "Commande",
-  "keyMacDelete": "Supprimer",
+  "keyAppleDelete": "Supprimer",
   "messagePlay": "Lire le message",
   "messageStop": "Arrêter le message",
   "playbackFailed": "Impossible de lire le son",

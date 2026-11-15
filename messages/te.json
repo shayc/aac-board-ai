@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Command",
-  "keyMacDelete": "Delete",
+  "keyAppleDelete": "Delete",
   "messagePlay": "సందేశాన్ని ప్లే చేయి",
   "messageStop": "సందేశాన్ని ఆపు",
   "playbackFailed": "ధ్వనిని ప్లే చేయడం సాధ్యపడలేదు",

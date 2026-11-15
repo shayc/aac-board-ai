@@ -130,7 +130,7 @@
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Komento",
-  "keyMacDelete": "Poista",
+  "keyAppleDelete": "Poista",
   "messagePlay": "Toista viesti",
   "messageStop": "Pysäytä viesti",
   "playbackFailed": "Ääntä ei voitu toistaa",
