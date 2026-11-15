@@ -23,7 +23,6 @@ const builtInAIRestriction: ImportPattern = {
     "Built-in AI is optional — only the board's suggestions and the library's translation may use it, so nothing else comes to depend on a model.",
 };
 
-// Packages only their owning folder may import.
 const ownedPackageRestrictions = [indexedDBRestriction, builtInAIRestriction];
 
 const boardBoundary: ImportPattern = {
