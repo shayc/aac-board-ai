@@ -288,8 +288,10 @@ these rules:
 
 While focus is anywhere in the board, [shortcuts](../src/features/board/shortcuts/)
 work without moving to a control: Backspace removes the last word, Ctrl or Cmd
-with Backspace clears the message, Ctrl or Cmd with Enter speaks it, and Escape
-stops speech. Backspace, play and stop name these shortcuts in a tooltip on
+with Backspace clears the message, Ctrl or Cmd with Z undoes the last change to
+the message, Ctrl or Cmd with Enter speaks it, and Escape stops speech. Undo
+steps back through every change, including a clear and a suggestion that
+replaced the message; there is no redo. Backspace, play and stop name these shortcuts in a tooltip on
 keyboard focus only, since head-pointer and eye-gaze users rest on targets to
 select them. Each control's `aria-keyshortcuts` lists the keys that activate
 it, and the backspace hint names the clear shortcut for screen readers.

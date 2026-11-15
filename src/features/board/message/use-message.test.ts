@@ -188,6 +188,80 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
   });
 
+  describe("undo", () => {
+    test("restores a cleared message", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("I want water");
+      result.current.clear();
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("I want water");
+    });
+
+    test("steps back through one change at a time", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("hi");
+      result.current.backspace();
+      result.current.backspace();
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("h");
+
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("hi");
+    });
+
+    test("restores a message that a suggestion replaced", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("I want");
+      result.current.replaceWithText("I want water please");
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("I want");
+    });
+
+    test("does not count playing the message as a change", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("hi");
+      result.current.backspace();
+      await trackSettledPlayback(result.current, true);
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("hi");
+    });
+
+    test("does not count an edit that changes nothing", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("hi");
+      result.current.clear();
+      result.current.clear();
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("hi");
+    });
+
+    test("leaves the message as it is with nothing to undo", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.parts).toHaveLength(0);
+    });
+  });
+
   describe("applyIfUnchanged", () => {
     test("edits the message it was given", async () => {
       const { result } = await renderHook(() => useMessage());

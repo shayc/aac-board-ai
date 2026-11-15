@@ -1,4 +1,4 @@
-type BoardShortcutAction = "backspace" | "clear" | "play" | "stop";
+type BoardShortcutAction = "backspace" | "clear" | "undo" | "play" | "stop";
 
 /**
  * `aria-keyshortcuts` values for the controls whose action a shortcut runs.
@@ -15,6 +15,7 @@ export interface BoardKeyEvent {
   key: string;
   metaKey: boolean;
   ctrlKey: boolean;
+  shiftKey: boolean;
 }
 
 export function resolveBoardShortcut(
@@ -28,6 +29,11 @@ export function resolveBoardShortcut(
 
     if (event.key === "Backspace") {
       return "clear";
+    }
+
+    // With Shift the keys mean redo, which the board does not have.
+    if (event.key.toLowerCase() === "z" && !event.shiftKey) {
+      return "undo";
     }
 
     return null;

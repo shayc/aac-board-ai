@@ -6,7 +6,13 @@ import {
 } from "./resolve-board-shortcut";
 
 function keyEvent(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
-  return { key: "", metaKey: false, ctrlKey: false, ...overrides };
+  return {
+    key: "",
+    metaKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    ...overrides,
+  };
 }
 
 describe("resolveBoardShortcut", () => {
@@ -29,6 +35,24 @@ describe("resolveBoardShortcut", () => {
         false,
       ),
     ).toBe("clear");
+  });
+
+  test("⌘/Ctrl+Z undoes, in either letter case", () => {
+    expect(
+      resolveBoardShortcut(keyEvent({ key: "z", metaKey: true }), false),
+    ).toBe("undo");
+    expect(
+      resolveBoardShortcut(keyEvent({ key: "Z", ctrlKey: true }), false),
+    ).toBe("undo");
+  });
+
+  test("⌘/Ctrl+Shift+Z, the redo keys, are not claimed", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "Z", metaKey: true, shiftKey: true }),
+        false,
+      ),
+    ).toBeNull();
   });
 
   test("⌘/Ctrl+Enter plays only while idle", () => {

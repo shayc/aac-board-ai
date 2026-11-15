@@ -9,6 +9,8 @@ import {
 } from "./message-transforms";
 import type { Message, MessageEdit, MessagePart } from "./message-types";
 
+const UNDO_LIMIT = 100;
+
 export interface MessageEditOutcome {
   edited: Message;
   hasChanged: boolean;
@@ -24,12 +26,14 @@ export interface UseMessageReturn {
   replaceWithText: (input: string) => void;
   backspace: () => void;
   clear: () => void;
+  undo: () => void;
 }
 
 export function useMessage(): UseMessageReturn {
   const { clearsAfterSpeaking } = useMessagePreferences();
   const [state, setRenderedState] = useState(EMPTY_MESSAGE);
   const stateRef = useRef(state);
+  const undoStackRef = useRef<Message[]>([]);
   const text = state.parts.map((part) => part.label).join(" ");
 
   // The setting is read each time the message is edited, so turning it off
@@ -45,10 +49,22 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
+  // Only changes to the content are steps to undo; marking the message spoken
+  // goes through `commit` and is not.
+  function commitChange(next: Message) {
+    const undoStack = undoStackRef.current;
+    undoStack.push(stateRef.current);
+    if (undoStack.length > UNDO_LIMIT) {
+      undoStack.shift();
+    }
+
+    commit(next);
+  }
+
   function commitEdits(from: Message, edits: readonly MessageEdit[]) {
     const edited = applyEdits(from, edits);
     if (edited !== from) {
-      commit(edited);
+      commitChange(edited);
     }
 
     return edited;
@@ -97,7 +113,7 @@ export function useMessage(): UseMessageReturn {
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    commit({
+    commitChange({
       parts: words.map(createTextPart),
       isWordOpen: words.length > 0,
       isSpoken: false,
@@ -112,6 +128,13 @@ export function useMessage(): UseMessageReturn {
     apply([{ kind: "clear" }]);
   }
 
+  function undo() {
+    const previous = undoStackRef.current.pop();
+    if (previous) {
+      commit(previous);
+    }
+  }
+
   return {
     parts: state.parts,
     isWordOpen: state.isWordOpen,
@@ -122,5 +145,6 @@ export function useMessage(): UseMessageReturn {
     replaceWithText,
     backspace,
     clear,
+    undo,
   };
 }

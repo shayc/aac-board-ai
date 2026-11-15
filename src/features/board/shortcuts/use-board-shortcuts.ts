@@ -6,7 +6,7 @@ import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 import { resolveBoardShortcut } from "./resolve-board-shortcut";
 
 interface UseBoardShortcutsOptions {
-  message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;
+  message: Pick<UseMessageReturn, "parts" | "backspace" | "clear" | "undo">;
   playback: Pick<
     UseBoardPlaybackReturn,
     "playMessage" | "stop" | "isMessagePlaying"
@@ -38,6 +38,9 @@ export function useBoardShortcuts({
           break;
         case "clear":
           message.clear();
+          break;
+        case "undo":
+          message.undo();
           break;
         case "play":
           void playback.playMessage(message.parts);

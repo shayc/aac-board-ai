@@ -229,6 +229,12 @@ describe("applyEdits", () => {
     expect(applyEdits(message, [{ kind: "clear" }])).toBe(EMPTY_MESSAGE);
   });
 
+  test("returns an empty message itself for a clear", () => {
+    const emptied = applyBackspace(spell(EMPTY_MESSAGE, "h"));
+
+    expect(applyEdits(emptied, [{ kind: "clear" }])).toBe(emptied);
+  });
+
   test("returns the message itself when no edit changes it", () => {
     const message = closeWord(spell(EMPTY_MESSAGE, "hi"));
 
