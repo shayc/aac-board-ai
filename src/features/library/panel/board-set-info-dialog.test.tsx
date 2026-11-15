@@ -1,7 +1,7 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { setTestViewport } from "@shared/testing/viewport";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, onTestFinished, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { makeBoardSetRecord } from "../testing";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
@@ -41,6 +41,12 @@ describe("BoardSetInfoDialog", () => {
   });
 
   test("keeps showing the board set while the dialog closes", async () => {
+    // Fake timers hold the exit transition, so the closing dialog can be inspected.
+    vi.useFakeTimers();
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
+
     const screen = await renderWithProviders(
       <BoardSetInfoDialog
         boardSet={makeBoardSetRecord({
@@ -60,6 +66,8 @@ describe("BoardSetInfoDialog", () => {
     expect(
       screen.getByText("A starter vocabulary board.").query(),
     ).not.toBeNull();
+
+    vi.runAllTimers();
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
   });
 
