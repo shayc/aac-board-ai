@@ -43,6 +43,10 @@ No accounts, backend, or tracking. Boards and settings are stored on the device.
 
 Boards can be imported, stored, and exported, but not edited or synced across devices. To use custom boards, create them in any AAC tool that exports [Open Board Format](https://www.openboardformat.org) (`.obf` or `.obz`), then import them on each device. To back up a board set or move it to another device, export it from the library.
 
+## Browser support
+
+The app supports the current versions of Chrome, Edge, Firefox, and Safari ([Baseline Newly available](https://web.dev/baseline)). AI features need a supported desktop browser.
+
 ## Enable AI suggestions
 
 To use AI suggestions on desktop, enable the following experimental flags for your browser:

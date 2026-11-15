@@ -527,6 +527,11 @@ AI availability, provisioning, and session lifecycle to
 
 ## Current limitations
 
+- **Older browsers are not supported.** The app targets the current versions of
+  Chrome, Edge, Firefox, and Safari
+  ([Baseline Newly available](https://web.dev/baseline)). Tile colors are
+  computed in CSS with relative colors and `contrast-color()`, with no fallback,
+  so a browser without them shows tiles without their colors.
 - **AI availability varies.** Support depends on browser, hardware, model
   installation, and language.
 - **Boards cannot be edited or synced.** There is no editor or cross-device
