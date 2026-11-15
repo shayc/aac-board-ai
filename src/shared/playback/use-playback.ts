@@ -1,4 +1,4 @@
-import { useExternalStore } from "@shared/state/external-store";
+import { useExternalStore } from "@shared/stores/external-store";
 import { use } from "react";
 import { PlaybackContext } from "./playback-context";
 import type { PlaybackController, PlaybackState } from "./playback-types";

@@ -1,5 +1,5 @@
 import { setStoredLanguage } from "@shared/language/language-store";
-import { reloadPersistedStores } from "@shared/state/persisted-store";
+import { reloadPersistedStores } from "@shared/stores/persisted-store";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import {

@@ -6,8 +6,8 @@ import {
   overwriteGetLocale,
   overwriteSetLocale,
 } from "@paraglide/runtime";
-import { useExternalStore } from "@shared/state/external-store";
-import { createPersistedStore } from "@shared/state/persisted-store";
+import { useExternalStore } from "@shared/stores/external-store";
+import { createPersistedStore } from "@shared/stores/persisted-store";
 import { getLanguageCode } from "./locale";
 
 const LANGUAGE_STORAGE_KEY = "language";

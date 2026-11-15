@@ -2,7 +2,7 @@ import {
   createExternalStore,
   patchState,
   useExternalStore,
-} from "@shared/state/external-store";
+} from "@shared/stores/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
   type BoardSetInput,

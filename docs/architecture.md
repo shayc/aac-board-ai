@@ -506,13 +506,13 @@ are relative to `src/features/`.
 
 Paths in this table are relative to `src/`.
 
-| Area                   | Source                                                                                                                                             | Responsibility                                            |
-| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| App composition        | [main.tsx](../src/main.tsx), [app/](../src/app/), [shared/providers/](../src/shared/providers/)                                                    | Assemble providers, shell, routing, and features.         |
-| Device output          | [shared/playback/](../src/shared/playback/)                                                                                                        | Own all Web Speech and HTML Audio output.                 |
-| Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                               | Coordinate communication language and voice selection.    |
-| Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                              | Apply theme and directional styling.                      |
-| Shared stores          | [shared/state/external-store.ts](../src/shared/state/external-store.ts), [shared/state/persisted-store.ts](../src/shared/state/persisted-store.ts) | Provide subscription and settings persistence primitives. |
+| Area                   | Source                                                                                                                                                 | Responsibility                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| App composition        | [main.tsx](../src/main.tsx), [app/](../src/app/), [shared/providers/](../src/shared/providers/)                                                        | Assemble providers, shell, routing, and features.         |
+| Device output          | [shared/playback/](../src/shared/playback/)                                                                                                            | Own all Web Speech and HTML Audio output.                 |
+| Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                                   | Coordinate communication language and voice selection.    |
+| Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                                  | Apply theme and directional styling.                      |
+| Shared stores          | [shared/stores/external-store.ts](../src/shared/stores/external-store.ts), [shared/stores/persisted-store.ts](../src/shared/stores/persisted-store.ts) | Provide subscription and settings persistence primitives. |
 
 At the repository root, [messages/](../messages/) holds UI catalogs and
 [project.inlang/](../project.inlang/) configures Paraglide, which compiles them into

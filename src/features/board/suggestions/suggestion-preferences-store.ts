@@ -1,5 +1,5 @@
-import { patchState, useExternalStore } from "@shared/state/external-store";
-import { createPersistedStore } from "@shared/state/persisted-store";
+import { patchState, useExternalStore } from "@shared/stores/external-store";
+import { createPersistedStore } from "@shared/stores/persisted-store";
 import { isRecord } from "@shared/utils/is-record";
 
 interface SuggestionPreferences {
