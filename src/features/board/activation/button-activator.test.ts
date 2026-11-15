@@ -282,7 +282,9 @@ describe("createButtonActivator", () => {
         { kind: "space" },
       ],
     });
-    await playback.echoMessage.mock.results[0]?.value;
+    const echo = playback.echoMessage.mock.results[0];
+    assertDefined(echo);
+    await echo.value;
     activateButton({
       id: "btn",
       label: "",

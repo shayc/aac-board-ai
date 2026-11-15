@@ -5,6 +5,24 @@ import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
+// Typed so that a new board action, or one listed as an edit the message
+// cannot apply, fails to compile instead of failing when a tile is pressed.
+const IS_MESSAGE_EDIT: {
+  [Kind in BoardAction["kind"]]: Extract<
+    BoardAction,
+    { kind: Kind }
+  > extends MessageEdit
+    ? true
+    : false;
+} = {
+  spell: true,
+  space: true,
+  backspace: true,
+  clear: true,
+  home: false,
+  play: false,
+};
+
 interface ButtonActivatorOptions {
   message: Pick<UseMessageReturn, "edit" | "editIfUnchanged">;
   playback: Pick<
@@ -70,7 +88,9 @@ export function createButtonActivator({
     const play = hasChanged ? playback.echoMessage : playback.playMessage;
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
-    // without interruption, keeping the message visible while it plays.
+    // without interruption, keeping the message visible while it plays, and
+    // are dropped if the message was edited meanwhile: a ":clear" must not
+    // take letters typed during the speech with it.
     void play(messageToPlay.parts).then((hasCompleted) => {
       if (hasCompleted) {
         message.editIfUnchanged(messageToPlay, editsAfterPlay);
@@ -84,5 +104,5 @@ export function createButtonActivator({
 function isMessageEdit(
   action: BoardAction,
 ): action is Extract<BoardAction, MessageEdit> {
-  return action.kind !== "home" && action.kind !== "play";
+  return IS_MESSAGE_EDIT[action.kind];
 }

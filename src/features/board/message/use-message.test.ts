@@ -168,6 +168,22 @@ describe("useMessage", () => {
     expect(message.edit([{ kind: "space" }]).hasChanged).toBe(false);
   });
 
+  // A no-op edit, such as a tile that only plays, must not save a released
+  // copy of a spoken message while clearing after speaking is off.
+  test("keeps a spoken message spoken through an edit that changes nothing", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("I want water");
+    await trackSettledPlayback(result.current, true);
+    setClearsAfterSpeaking(false);
+    await rerender();
+    result.current.edit([]);
+    setClearsAfterSpeaking(true);
+    await rerender();
+
+    expect(spellLetter(result.current)).toEqual(["a"]);
+  });
+
   describe("editIfUnchanged", () => {
     test("edits the message it was given", async () => {
       const { result } = await renderHook(() => useMessage());

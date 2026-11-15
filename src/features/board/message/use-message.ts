@@ -61,10 +61,9 @@ export function useMessage(): UseMessageReturn {
     return { edited, hasChanged: edited !== current };
   }
 
-  // Edits that wait on something, such as a ":clear" after ":speak", belong to
-  // the message as it was: they change it even once it is spoken instead of
-  // starting a new one, and they are dropped if it was edited meanwhile, so a
-  // clear never takes letters typed during the speech with it.
+  // Edits made against an earlier message belong to it: they apply to it even
+  // once it is spoken, instead of starting a new message, and are dropped if
+  // its content changed since.
   function editIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = stateRef.current;
     if (!hasSameContent(current, since)) {
