@@ -8,7 +8,7 @@ import {
 } from "../storage/board-set-storage";
 import {
   loadFixtureFile,
-  loadTestImageBlob,
+  loadTestImageAsset,
   makeOBFBoard,
   resetBoardsDB,
   SAMPLE_OBZ_FILE,
@@ -136,7 +136,7 @@ describe("boardSetToOBZ", () => {
         id: "photos",
         rootBoardId: "root",
         boards: [makeOBFBoard({ id: "root", images: [image] })],
-        assets: [{ path: "images/photo.png", blob: await loadTestImageBlob() }],
+        assets: [await loadTestImageAsset("images/photo.png")],
       },
     ]);
 

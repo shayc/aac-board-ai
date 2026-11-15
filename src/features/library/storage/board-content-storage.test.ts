@@ -1,6 +1,11 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
+import {
+  makeAssetInput,
+  makeBoardSetInput,
+  makeOBFBoard,
+  resetBoardsDB,
+} from "../testing";
 import {
   getAssetBlob,
   getBoardRecord,
@@ -93,12 +98,9 @@ describe("getAssetBlob", () => {
     await insertBoardSet(
       makeBoardSetInput({
         assets: [
-          {
-            path: "images\\photo.png",
-            blob: new Blob(["data"], { type: "image/png" }),
-          },
-          { path: "/leading.png", blob: new Blob(["a"]) },
-          { path: "double//slash.png", blob: new Blob(["b"]) },
+          makeAssetInput("images\\photo.png", "data", "image/png"),
+          makeAssetInput("/leading.png", "a"),
+          makeAssetInput("double//slash.png", "b"),
         ],
       }),
     );

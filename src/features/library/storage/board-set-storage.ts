@@ -26,7 +26,8 @@ export class BoardSetAlreadyExistsError extends Error {
 
 export interface AssetInput {
   readonly path: string;
-  readonly blob: Blob;
+  readonly bytes: Uint8Array<ArrayBuffer>;
+  readonly type: string;
 }
 
 export interface BoardSetInput {
@@ -121,8 +122,7 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
   const rootBoard = validateBoardSetInput(input);
   const boardSetRecord = buildBoardSetRecord(input, rootBoard);
   const boardRecords = buildBoardRecords(input);
-  // Read before the transaction opens: it would commit during the await.
-  const assetRecords = await buildAssetRecords(input);
+  const assetRecords = buildAssetRecords(input);
 
   const db = await getBoardsDB();
   const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
@@ -214,18 +214,23 @@ function buildBoardRecords({ id, boards }: BoardSetInput): BoardRecord[] {
   }));
 }
 
-function buildAssetRecords({
-  id,
-  assets,
-}: BoardSetInput): Promise<AssetRecord[]> {
-  return Promise.all(
-    assets.map(async ({ path, blob }) => ({
-      boardSetId: id,
-      path: normalizeAssetPath(path),
-      bytes: await blob.arrayBuffer(),
-      type: blob.type,
-    })),
-  );
+function buildAssetRecords({ id, assets }: BoardSetInput): AssetRecord[] {
+  return assets.map(({ path, bytes, type }) => ({
+    boardSetId: id,
+    path: normalizeAssetPath(path),
+    bytes: exactBuffer(bytes),
+    type,
+  }));
+}
+
+// A view can cover part of a larger buffer; only its own bytes are stored.
+function exactBuffer(bytes: Uint8Array<ArrayBuffer>): ArrayBuffer {
+  const { buffer, byteOffset, byteLength } = bytes;
+  if (byteOffset === 0 && byteLength === buffer.byteLength) {
+    return buffer;
+  }
+
+  return buffer.slice(byteOffset, byteOffset + byteLength);
 }
 
 function requestPersistentStorage(): void {

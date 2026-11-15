@@ -2,6 +2,7 @@ import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { type OBFBoard, zip } from "@shayc/open-board-format";
 import { BOARD_FILE_IMPORT_LIMITS } from "../import/board-file-import";
 import type {
+  AssetInput,
   BoardSetInput,
   BoardSetRecord,
 } from "../storage/board-set-storage";
@@ -56,10 +57,18 @@ export function makeBoardSetRecord(
   };
 }
 
-export async function loadTestImageBlob(): Promise<Blob> {
+export function makeAssetInput(
+  path: string,
+  text: string,
+  type = "",
+): AssetInput {
+  return { path, bytes: new TextEncoder().encode(text), type };
+}
+
+export async function loadTestImageAsset(path: string): Promise<AssetInput> {
   const response = await fetch(TEST_IMAGE_SRC);
 
-  return response.blob();
+  return { path, bytes: await response.bytes(), type: "image/png" };
 }
 
 export async function loadFixtureFile(name: string): Promise<File> {

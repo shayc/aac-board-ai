@@ -3,6 +3,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   countStoredBoardContent,
+  makeAssetInput,
   makeBoardSetInput,
   makeOBFBoard,
   resetBoardsDB,
@@ -133,7 +134,7 @@ describe("insertBoardSet", () => {
         name: "Original",
         rootBoardId: "a",
         boards: [makeOBFBoard({ id: "a", name: "A" })],
-        assets: [{ path: "x.png", blob: new Blob(["x"]) }],
+        assets: [makeAssetInput("x.png", "x")],
       }),
     );
 
@@ -196,7 +197,7 @@ describe("insertBoardSet", () => {
       insertBoardSet(
         makeBoardSetInput({
           boards: [uncloneableOBF],
-          assets: [{ path: "x.png", blob: new Blob(["x"]) }],
+          assets: [makeAssetInput("x.png", "x")],
         }),
       ),
     ).rejects.toThrow();
@@ -212,7 +213,7 @@ describe("insertBoardSet", () => {
     await expect(
       insertBoardSet(
         makeBoardSetInput({
-          assets: [{ path: "/", blob: new Blob(["x"]) }],
+          assets: [makeAssetInput("/", "x")],
         }),
       ),
     ).rejects.toThrow("Invalid asset path");
@@ -224,8 +225,8 @@ describe("insertBoardSet", () => {
     await insertBoardSet(
       makeBoardSetInput({
         assets: [
-          { path: "images/a.png", blob: new Blob(["first"]) },
-          { path: "images//a.png", blob: new Blob(["second"]) },
+          makeAssetInput("images/a.png", "first"),
+          makeAssetInput("images//a.png", "second"),
         ],
       }),
     );
@@ -233,6 +234,22 @@ describe("insertBoardSet", () => {
     const asset = await getAssetBlob("set-1", "images/a.png");
     assertDefined(asset);
     expect(await asset.text()).toBe("second");
+  });
+
+  test("stores only the bytes an asset views in a larger buffer", async () => {
+    const archive = new TextEncoder().encode("before|asset|after");
+
+    await insertBoardSet(
+      makeBoardSetInput({
+        assets: [
+          { path: "x.png", bytes: archive.subarray(7, 12), type: "image/png" },
+        ],
+      }),
+    );
+
+    const asset = await getAssetBlob("set-1", "x.png");
+    assertDefined(asset);
+    expect(await asset.text()).toBe("asset");
   });
 
   test.each([
@@ -316,8 +333,8 @@ describe("removeBoardSet", () => {
           makeOBFBoard({ id: "b2", name: "B2" }),
         ],
         assets: [
-          { path: "img1.png", blob: new Blob(["a"]) },
-          { path: "img2.png", blob: new Blob(["b"]) },
+          makeAssetInput("img1.png", "a"),
+          makeAssetInput("img2.png", "b"),
         ],
       }),
     );
@@ -328,7 +345,7 @@ describe("removeBoardSet", () => {
         name: "Set 2",
         rootBoardId: "b1",
         boards: [makeOBFBoard({ id: "b1", name: "Survivor" })],
-        assets: [{ path: "img1.png", blob: new Blob(["survivor"]) }],
+        assets: [makeAssetInput("img1.png", "survivor")],
       }),
     );
 

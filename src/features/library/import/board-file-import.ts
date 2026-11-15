@@ -116,14 +116,11 @@ export function buildAssetInputs(
 
       return !lowerPath.endsWith(".obf") && lowerPath !== "manifest.json";
     })
-    .map(([path, buffer]) => {
-      const mimeType = lookup(path) ?? "application/octet-stream";
-
-      return {
-        path,
-        blob: new Blob([buffer], { type: mimeType }),
-      };
-    });
+    .map(([path, bytes]) => ({
+      path,
+      bytes,
+      type: lookup(path) ?? "application/octet-stream",
+    }));
 }
 
 export function deriveBoardSetId(fileName: string): string {
