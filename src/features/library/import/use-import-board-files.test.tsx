@@ -1,7 +1,8 @@
 import { AppProviders } from "@shared/providers/app-providers";
-import { MemoryRouter } from "react-router";
-import { beforeEach, describe, expect, test } from "vitest";
+import { MemoryRouter, useLocation } from "react-router";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { rootBoardPath } from "../board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
   loadFixtureFile,
@@ -17,6 +18,34 @@ function ImportTrigger({ files }: { files: File[] }) {
   const { importAndOpen } = useImportBoardFiles();
 
   return <button onClick={() => void importAndOpen(files)}>import</button>;
+}
+
+function PickTrigger() {
+  const { pickAndImport } = useImportBoardFiles();
+
+  return (
+    <>
+      <button onClick={() => void pickAndImport()}>pick</button>
+      <div data-testid="path">{useLocation().pathname}</div>
+    </>
+  );
+}
+
+// The native file chooser can't open in the test runtime, so stand in for the
+// user choosing these files.
+function stubFileChooser(...files: File[]) {
+  vi.spyOn(HTMLInputElement.prototype, "showPicker").mockImplementation(
+    function (this: HTMLInputElement) {
+      const dataTransfer = new DataTransfer();
+
+      for (const file of files) {
+        dataTransfer.items.add(file);
+      }
+
+      this.files = dataTransfer.files;
+      this.dispatchEvent(new Event("change"));
+    },
+  );
 }
 
 function renderImport(files: File[]) {
@@ -57,7 +86,7 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board sets imported");
   });
 
-  test("names a skipped file that isn't a board file while importing the rest", async () => {
+  test("imports only the board files when other files are included", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
     const boardFile = await loadFixtureFile(OBF_FIXTURE);
     const screen = await renderImport([pdf, boardFile]);
@@ -65,9 +94,8 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('"manual.pdf" isn\'t a board file');
-    expect(await listBoardSetRecords()).toHaveLength(1);
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("Board set imported");
   });
 
   test("names the file when the only file isn't a board file", async () => {
@@ -114,6 +142,19 @@ describe("useImportBoardFiles", () => {
       .element(screen.getByRole("alert"))
       .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
     expect(await listBoardSetRecords()).toHaveLength(1);
+  });
+
+  test("leaves skipped files out of the failures it reports", async () => {
+    const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const corruptFile = makeCorruptBoardFile("corrupt.obf");
+    const screen = await renderImport([pdf, goodFile, corruptFile]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
   });
 
   test("reports how many files failed when several fail alongside imports", async () => {
@@ -165,5 +206,24 @@ describe("useImportBoardFiles", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Board files are too large to import");
+  });
+
+  test("opens the board set picked from the file chooser", async () => {
+    stubFileChooser(await loadFixtureFile(OBF_FIXTURE));
+    const screen = await render(
+      <MemoryRouter>
+        <AppProviders>
+          <PickTrigger />
+        </AppProviders>
+      </MemoryRouter>,
+    );
+
+    await screen.getByRole("button", { name: "pick" }).click();
+
+    await expect
+      .element(screen.getByTestId("path"))
+      .toHaveTextContent(
+        rootBoardPath({ id: "lots-of-stuff", rootBoardId: "lots_of_stuff" }),
+      );
   });
 });

@@ -20,8 +20,8 @@ export const BOARD_FILE_HANDLER_ACCEPT: Record<string, string[]> = {
   "application/json": [".obf"],
 };
 
-export function hasBoardFileExtension(file: File): boolean {
-  return findBoardFileExtension(file.name) !== undefined;
+export function hasBoardFileExtension(fileName: string): boolean {
+  return findBoardFileExtension(fileName) !== undefined;
 }
 
 export function stripBoardFileExtension(fileName: string): string {

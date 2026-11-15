@@ -124,6 +124,17 @@ describe("useImportBoardFilesOnLaunch", () => {
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
+  test("names an unreadable launched file that isn't a board file", async () => {
+    const launchQueue = stubLaunchQueue();
+    const screen = await renderLaunchHandler();
+
+    launchQueue.launch(inaccessibleFileHandle("notes.txt"));
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('"notes.txt" isn\'t a board file');
+  });
+
   test("reports a file that can no longer be opened", async () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();

@@ -8,7 +8,7 @@ import {
   importEachBoardFile,
   type ImportedBoardSet,
 } from "./board-file-import";
-import { summarizeImport } from "./summarize-import";
+import { summarizeImport, summarizeSkippedImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   importAndOpen: (
@@ -30,19 +30,32 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
       return [];
     }
 
-    const boardFileCount = files.filter(hasBoardFileExtension).length;
-    if (boardFileCount > 0) {
+    const boardFiles = files.filter(({ name }) => hasBoardFileExtension(name));
+    const boardReadFailures = readFailures.filter(({ fileName }) =>
+      hasBoardFileExtension(fileName),
+    );
+    if (boardFiles.length === 0 && boardReadFailures.length === 0) {
+      const skippedFileNames = [
+        ...files.map(({ name }) => name),
+        ...readFailures.map(({ fileName }) => fileName),
+      ];
+      showSnackbar(summarizeSkippedImport(skippedFileNames));
+
+      return [];
+    }
+
+    if (boardFiles.length > 0) {
       showSnackbar({
         message: (t) =>
-          t(m.libraryImportingBoardFiles, { count: boardFileCount }),
+          t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
       });
     }
 
-    const outcome = await importEachBoardFile(files);
+    const outcome = await importEachBoardFile(boardFiles);
     showSnackbar(
       summarizeImport({
         importedBoardSets: outcome.importedBoardSets,
-        failures: [...readFailures, ...outcome.failures],
+        failures: [...boardReadFailures, ...outcome.failures],
       }),
     );
 
@@ -89,7 +102,6 @@ function pickBoardFiles(): Promise<File[]> {
     );
     input.addEventListener("cancel", () => resolve([]), { once: true });
 
-    // Unlike showPicker(), click() never throws when a picker is already open.
-    input.click();
+    input.showPicker();
   });
 }
