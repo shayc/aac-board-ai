@@ -7,9 +7,9 @@ describe("hasBoardFileExtension", () => {
     expect(hasBoardFileExtension("set.obz")).toBe(true);
   });
 
-  test("accepts .zip and .json files for untyped obz/obf exports", () => {
-    expect(hasBoardFileExtension("archive.zip")).toBe(true);
-    expect(hasBoardFileExtension("board.json")).toBe(true);
+  test("rejects generic .zip and .json files", () => {
+    expect(hasBoardFileExtension("archive.zip")).toBe(false);
+    expect(hasBoardFileExtension("board.json")).toBe(false);
   });
 
   test("matches case-insensitively", () => {
