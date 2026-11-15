@@ -1,16 +1,11 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { ScanningSettings } from "./scanning-settings";
 
 async function renderScanningSettings() {
-  return render(
-    <AppProviders>
-      <ScanningSettings />
-    </AppProviders>,
-  );
+  return renderWithProviders(<ScanningSettings />);
 }
 
 function readStoredPreferences(): unknown {

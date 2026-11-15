@@ -2,11 +2,10 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { setTestViewport } from "@shared/testing/viewport";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
@@ -34,11 +33,7 @@ function ShowButtons({
 }
 
 function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
-  return render(
-    <AppProviders>
-      <ShowButtons snackbars={snackbars} />
-    </AppProviders>,
-  );
+  return renderWithProviders(<ShowButtons snackbars={snackbars} />);
 }
 
 describe("SnackbarProvider", () => {
@@ -122,8 +117,8 @@ describe("SnackbarProvider", () => {
     "keeps a persistent error below the app bar and clear of controls along the bottom on $screen",
     async ({ width, height }) => {
       await setTestViewport(width, height);
-      const screen = await render(
-        <AppProviders>
+      const screen = await renderWithProviders(
+        <>
           <AppBar position="static">
             <Toolbar />
           </AppBar>
@@ -132,7 +127,7 @@ describe("SnackbarProvider", () => {
               "show-error": { message: "failed", severity: "error" },
             }}
           />
-        </AppProviders>,
+        </>,
       );
 
       await screen.getByRole("button", { name: "show-error" }).click();

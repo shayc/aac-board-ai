@@ -1,7 +1,6 @@
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
@@ -28,12 +27,10 @@ function DropHarness() {
 }
 
 async function renderDropZone() {
-  const screen = await render(
-    <AppProviders>
-      <MemoryRouter>
-        <DropHarness />
-      </MemoryRouter>
-    </AppProviders>,
+  const screen = await renderWithProviders(
+    <MemoryRouter>
+      <DropHarness />
+    </MemoryRouter>,
   );
 
   return { screen, zone: screen.getByTestId("zone").element() };

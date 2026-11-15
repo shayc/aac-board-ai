@@ -1,9 +1,8 @@
 import { assertDefined } from "@shared/testing/assert-defined";
-import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import type { Board } from "../board-types";
 import { insertBoardSet } from "../storage/board-set-storage";
-import { loadTestImageBlob, resetBoardsDB } from "../testing";
+import { loadTestImageBlob, makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardNotFoundError, loadStoredBoard } from "./load-stored-board";
 
 const SET_ID = "loader-test-set";
@@ -15,14 +14,13 @@ const BOARD_KEY = { boardSetId: SET_ID, boardId: BOARD_ID };
 async function seedTestBoard(): Promise<void> {
   const pngBlob = await loadTestImageBlob();
 
-  const obfBoard: OBFBoard = {
-    format: "open-board-0.1",
+  const obfBoard = makeOBFBoard({
     id: BOARD_ID,
     name: "Test Board",
     grid: { rows: 1, columns: 1, order: [["btn-1"]] },
     buttons: [{ id: "btn-1", label: "test", image_id: "img-1" }],
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
-  };
+  });
 
   await insertBoardSet({
     id: SET_ID,
@@ -78,8 +76,7 @@ describe("loadStoredBoard", () => {
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
-        {
-          format: "open-board-0.1",
+        makeOBFBoard({
           id: BOARD_ID,
           grid: { rows: 1, columns: 1, order: [["btn-1"]] },
           buttons: [{ id: "btn-1", label: "test", image_id: "img-1" }],
@@ -90,7 +87,7 @@ describe("loadStoredBoard", () => {
               url: "https://example.com/test.png",
             },
           ],
-        },
+        }),
       ],
       assets: [],
     });
@@ -105,15 +102,14 @@ describe("loadStoredBoard", () => {
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
-        {
-          format: "open-board-0.1",
+        makeOBFBoard({
           id: BOARD_ID,
           grid: { rows: 1, columns: 1, order: [["btn-1"]] },
           buttons: [{ id: "btn-1", label: "test", image_id: "img-1" }],
           images: [
             { id: "img-1", path: "/", url: "https://example.com/test.png" },
           ],
-        },
+        }),
       ],
       assets: [],
     });
@@ -158,8 +154,7 @@ describe("loadStoredBoard", () => {
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
-        {
-          format: "open-board-0.1",
+        makeOBFBoard({
           id: BOARD_ID,
           grid: { rows: 1, columns: 3, order: [["stored", "absent", "plain"]] },
           buttons: [
@@ -171,13 +166,8 @@ describe("loadStoredBoard", () => {
             { id: "absent", label: "food", load_board: { id: "not-in-set" } },
             { id: "plain", label: "hello" },
           ],
-        },
-        {
-          format: "open-board-0.1",
-          id: OTHER_BOARD_ID,
-          grid: { rows: 1, columns: 1, order: [[null]] },
-          buttons: [],
-        },
+        }),
+        makeOBFBoard({ id: OTHER_BOARD_ID }),
       ],
       assets: [],
     });
@@ -198,28 +188,20 @@ describe("loadStoredBoard", () => {
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
-        {
-          format: "open-board-0.1",
+        makeOBFBoard({
           id: BOARD_ID,
           grid: { rows: 1, columns: 1, order: [["elsewhere"]] },
           buttons: [
             { id: "elsewhere", label: "food", load_board: { id: "food" } },
           ],
-        },
+        }),
       ],
       assets: [],
     });
     await insertBoardSet({
       id: "another-set",
       rootBoardId: "food",
-      boards: [
-        {
-          format: "open-board-0.1",
-          id: "food",
-          grid: { rows: 1, columns: 1, order: [[null]] },
-          buttons: [],
-        },
-      ],
+      boards: [makeOBFBoard({ id: "food" })],
       assets: [],
     });
 

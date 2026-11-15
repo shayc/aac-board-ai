@@ -1,19 +1,14 @@
 import { setStoredLanguage } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
 import { setSpeechVoiceURI } from "@shared/speech/speech-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { SpeechSettings } from "./speech-settings";
 
 function renderSpeechSettings() {
-  return render(
-    <AppProviders>
-      <SpeechSettings />
-    </AppProviders>,
-  );
+  return renderWithProviders(<SpeechSettings />);
 }
 
 describe("SpeechSettings", () => {

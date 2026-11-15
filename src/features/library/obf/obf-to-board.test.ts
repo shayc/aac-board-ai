@@ -121,9 +121,10 @@ describe("obfToBoard", () => {
     ])(
       "normalizes $description button labels to empty strings and vocalizations to undefined",
       ({ text }) => {
-        const obfBoard = makeOBFBoard({
-          buttons: [{ id: "btn-1", label: text, vocalization: text }],
-          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        const obfBoard = boardWithButton({
+          id: "btn-1",
+          label: text,
+          vocalization: text,
         });
 
         const board = obfToBoard(obfBoard);
@@ -134,11 +135,10 @@ describe("obfToBoard", () => {
     );
 
     test("preserves nonblank button text verbatim", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", label: " Hi ", vocalization: "\tHello there\n" },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: " Hi ",
+        vocalization: "\tHello there\n",
       });
 
       const board = obfToBoard(obfBoard);
@@ -148,21 +148,12 @@ describe("obfToBoard", () => {
     });
 
     test("maps button visual fields + vocalization", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Hi",
-            vocalization: "Hello there",
-            background_color: "rgb(1, 2, 3)",
-            border_color: "rgba(4, 5, 6, 0.5)",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Hi",
+        vocalization: "Hello there",
+        background_color: "rgb(1, 2, 3)",
+        border_color: "rgba(4, 5, 6, 0.5)",
       });
 
       const board = obfToBoard(obfBoard);
@@ -184,11 +175,10 @@ describe("obfToBoard", () => {
       "oklch(0.7 0.1 200)",
       "transparent",
     ])("preserves valid button color %s", (color) => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", background_color: color, border_color: color },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        background_color: color,
+        border_color: color,
       });
 
       const board = obfToBoard(obfBoard);
@@ -202,11 +192,10 @@ describe("obfToBoard", () => {
     test.each(["", "not-a-color", "red; background: url(x)", undefined])(
       "leaves button colors unset for %j",
       (color) => {
-        const obfBoard = makeOBFBoard({
-          buttons: [
-            { id: "btn-1", background_color: color, border_color: color },
-          ],
-          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        const obfBoard = boardWithButton({
+          id: "btn-1",
+          background_color: color,
+          border_color: color,
         });
 
         const board = obfToBoard(obfBoard);
@@ -219,21 +208,12 @@ describe("obfToBoard", () => {
     );
 
     test("drops a CSS-unsafe button color", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "hi",
-            background_color:
-              "x); } a { background-image: url(https://evil.example) }",
-            border_color: "rgb(0, 0, 0)",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "hi",
+        background_color:
+          "x); } a { background-image: url(https://evil.example) }",
+        border_color: "rgb(0, 0, 0)",
       });
 
       const board = obfToBoard(obfBoard);
@@ -243,24 +223,15 @@ describe("obfToBoard", () => {
     });
 
     test("maps a load_board id to the runtime navigation target", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Go",
-            load_board: {
-              id: "child-1",
-              name: "Child",
-              url: "https://example.com/child.obf",
-              data_url: "https://example.com/child.obf?download=1",
-              path: "boards/child.obf",
-            },
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Go",
+        load_board: {
+          id: "child-1",
+          name: "Child",
+          url: "https://example.com/child.obf",
+          data_url: "https://example.com/child.obf?download=1",
+          path: "boards/child.obf",
         },
       });
 
@@ -270,15 +241,10 @@ describe("obfToBoard", () => {
     });
 
     test("ignores a load_board without a resolved id", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Go",
-            load_board: { path: "boards/child.obf" },
-          },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Go",
+        load_board: { path: "boards/child.obf" },
       });
 
       const board = obfToBoard(obfBoard);
@@ -287,20 +253,11 @@ describe("obfToBoard", () => {
     });
 
     test("uses actions and ignores the action fallback when both are present", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Speak",
-            action: ":speak",
-            actions: [":space", ":clear"],
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Speak",
+        action: ":speak",
+        actions: [":space", ":clear"],
       });
 
       const board = obfToBoard(obfBoard);
@@ -312,11 +269,11 @@ describe("obfToBoard", () => {
     });
 
     test("treats an explicit empty actions array as no actions, ignoring action", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", label: "Speak", action: ":speak", actions: [] },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Speak",
+        action: ":speak",
+        actions: [],
       });
 
       const board = obfToBoard(obfBoard);
@@ -325,9 +282,10 @@ describe("obfToBoard", () => {
     });
 
     test("falls back to the single action when actions is absent", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [{ id: "btn-1", label: "Speak", action: ":speak" }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Speak",
+        action: ":speak",
       });
 
       const board = obfToBoard(obfBoard);
@@ -336,25 +294,20 @@ describe("obfToBoard", () => {
     });
 
     test("maps built-in and spell actions in order and drops unknown actions", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Spell",
-            actions: [
-              ":space",
-              ":backspace",
-              "+ing",
-              ":unknown",
-              ":clear",
-              "",
-              ":home",
-              "hello",
-              ":speak",
-            ],
-          },
+      const obfBoard = boardWithButton({
+        id: "btn-1",
+        label: "Spell",
+        actions: [
+          ":space",
+          ":backspace",
+          "+ing",
+          ":unknown",
+          ":clear",
+          "",
+          ":home",
+          "hello",
+          ":speak",
         ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
       });
 
       const board = obfToBoard(obfBoard);
@@ -373,10 +326,7 @@ describe("obfToBoard", () => {
       ["+  ing  ", "ing"],
       ["+", ""],
     ])("converts spell action %j to text %j", (action, text) => {
-      const obfBoard = makeOBFBoard({
-        buttons: [{ id: "btn-1", actions: [action] }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      });
+      const obfBoard = boardWithButton({ id: "btn-1", actions: [action] });
 
       const board = obfToBoard(obfBoard);
 
@@ -386,36 +336,31 @@ describe("obfToBoard", () => {
 
   describe("media resolution", () => {
     test("chooses imageSrc/soundSrc by data > url precedence without stored assets", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Hello",
-            image_id: "img-1",
-            sound_id: "snd-1",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = boardWithButton(
+        {
+          id: "btn-1",
+          label: "Hello",
+          image_id: "img-1",
+          sound_id: "snd-1",
         },
-        images: [
-          {
-            id: "img-1",
-            data: "data:image/png;base64,AAA",
-            path: "images/img-1.png",
-            url: "https://example.com/img-1.png",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-1",
-            path: "sounds/snd-1.mp3",
-            url: "https://example.com/snd-1.mp3",
-          },
-        ],
-      });
+        {
+          images: [
+            {
+              id: "img-1",
+              data: "data:image/png;base64,AAA",
+              path: "images/img-1.png",
+              url: "https://example.com/img-1.png",
+            },
+          ],
+          sounds: [
+            {
+              id: "snd-1",
+              path: "sounds/snd-1.mp3",
+              url: "https://example.com/snd-1.mp3",
+            },
+          ],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
@@ -424,21 +369,20 @@ describe("obfToBoard", () => {
     });
 
     test("prefers a stored asset URL for a media path over data and url", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", label: "Hello", image_id: "img-1", sound_id: "snd-1" },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-        images: [
-          {
-            id: "img-1",
-            data: "data:image/png;base64,AAA",
-            path: "images/img-1.png",
-            url: "https://example.com/img-1.png",
-          },
-        ],
-        sounds: [{ id: "snd-1", path: "sounds/snd-1.mp3" }],
-      });
+      const obfBoard = boardWithButton(
+        { id: "btn-1", label: "Hello", image_id: "img-1", sound_id: "snd-1" },
+        {
+          images: [
+            {
+              id: "img-1",
+              data: "data:image/png;base64,AAA",
+              path: "images/img-1.png",
+              url: "https://example.com/img-1.png",
+            },
+          ],
+          sounds: [{ id: "snd-1", path: "sounds/snd-1.mp3" }],
+        },
+      );
       const assetURLByPath = new Map([
         ["images/img-1.png", "blob:image"],
         ["sounds/snd-1.mp3", "blob:sound"],
@@ -451,11 +395,10 @@ describe("obfToBoard", () => {
     });
 
     test("never uses an unresolved archive path as a media source", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [{ id: "btn-1", label: "Hello", image_id: "img-1" }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-        images: [{ id: "img-1", path: "images/img-1.png" }],
-      });
+      const obfBoard = boardWithButton(
+        { id: "btn-1", label: "Hello", image_id: "img-1" },
+        { images: [{ id: "img-1", path: "images/img-1.png" }] },
+      );
 
       const board = obfToBoard(obfBoard);
 
@@ -463,33 +406,28 @@ describe("obfToBoard", () => {
     });
 
     test("falls back to url when no data/path is available", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Media",
-            image_id: "img-1",
-            sound_id: "snd-1",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = boardWithButton(
+        {
+          id: "btn-1",
+          label: "Media",
+          image_id: "img-1",
+          sound_id: "snd-1",
         },
-        images: [
-          {
-            id: "img-1",
-            url: "https://example.com/img.png",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-1",
-            url: "https://example.com/snd.mp3",
-          },
-        ],
-      });
+        {
+          images: [
+            {
+              id: "img-1",
+              url: "https://example.com/img.png",
+            },
+          ],
+          sounds: [
+            {
+              id: "snd-1",
+              url: "https://example.com/snd.mp3",
+            },
+          ],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
@@ -498,35 +436,30 @@ describe("obfToBoard", () => {
     });
 
     test("falls back to url when data is an empty string", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Media",
-            image_id: "img-1",
-            sound_id: "snd-1",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = boardWithButton(
+        {
+          id: "btn-1",
+          label: "Media",
+          image_id: "img-1",
+          sound_id: "snd-1",
         },
-        images: [
-          {
-            id: "img-1",
-            data: "",
-            url: "https://example.com/img.png",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-1",
-            data: "",
-            url: "https://example.com/snd.mp3",
-          },
-        ],
-      });
+        {
+          images: [
+            {
+              id: "img-1",
+              data: "",
+              url: "https://example.com/img.png",
+            },
+          ],
+          sounds: [
+            {
+              id: "snd-1",
+              data: "",
+              url: "https://example.com/snd.mp3",
+            },
+          ],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
@@ -535,23 +468,18 @@ describe("obfToBoard", () => {
     });
 
     test("returns undefined imageSrc/soundSrc for unknown ids", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Missing",
-            image_id: "img-does-not-exist",
-            sound_id: "snd-does-not-exist",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = boardWithButton(
+        {
+          id: "btn-1",
+          label: "Missing",
+          image_id: "img-does-not-exist",
+          sound_id: "snd-does-not-exist",
         },
-        images: [{ id: "img-1", data: "data:image/png;base64,AAA" }],
-        sounds: [{ id: "snd-1", data: "data:audio/mp3;base64,BBB" }],
-      });
+        {
+          images: [{ id: "img-1", data: "data:image/png;base64,AAA" }],
+          sounds: [{ id: "snd-1", data: "data:audio/mp3;base64,BBB" }],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
@@ -585,31 +513,26 @@ describe("obfToBoard", () => {
     });
 
     test("ignores media entries without any source (no data, path, or url)", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Button",
-            image_id: "img-empty",
-            sound_id: "snd-empty",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = boardWithButton(
+        {
+          id: "btn-1",
+          label: "Button",
+          image_id: "img-empty",
+          sound_id: "snd-empty",
         },
-        images: [
-          {
-            id: "img-empty",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-empty",
-          },
-        ],
-      });
+        {
+          images: [
+            {
+              id: "img-empty",
+            },
+          ],
+          sounds: [
+            {
+              id: "snd-empty",
+            },
+          ],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
@@ -618,3 +541,16 @@ describe("obfToBoard", () => {
     });
   });
 });
+
+type OBFButton = OBFBoard["buttons"][number];
+
+function boardWithButton(
+  button: OBFButton,
+  media: Pick<OBFBoard, "images" | "sounds"> = {},
+): OBFBoard {
+  return makeOBFBoard({
+    buttons: [button],
+    grid: { rows: 1, columns: 1, order: [[button.id]] },
+    ...media,
+  });
+}

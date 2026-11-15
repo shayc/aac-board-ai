@@ -8,7 +8,7 @@ import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
 } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
@@ -16,7 +16,6 @@ import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { assert, beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
 import { BOARD_SET_ROUTE_ID } from "./board-set/board-set-loader";
@@ -29,11 +28,7 @@ async function renderApp(initialEntry = "/") {
     initialEntries: [initialEntry],
   });
 
-  const screen = await render(
-    <AppProviders>
-      <RouterProvider router={router} />
-    </AppProviders>,
-  );
+  const screen = await renderWithProviders(<RouterProvider router={router} />);
 
   return { router, screen };
 }

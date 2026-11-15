@@ -1,14 +1,9 @@
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { MessageSettings } from "./message-settings";
 
 async function renderMessageSettings() {
-  return render(
-    <AppProviders>
-      <MessageSettings />
-    </AppProviders>,
-  );
+  return renderWithProviders(<MessageSettings />);
 }
 
 function readStoredPreferences(): unknown {
@@ -16,52 +11,23 @@ function readStoredPreferences(): unknown {
 }
 
 describe("MessageSettings", () => {
-  test("toggles images in the message bar", async () => {
-    const screen = await renderMessageSettings();
-    const imagesSwitch = screen.getByRole("switch", { name: "Show images" });
+  test.each([
+    { name: "Show images", preference: "areImagesVisible" },
+    { name: "Highlight while speaking", preference: "isHighlightingEnabled" },
+    { name: "Clear after speaking", preference: "clearsAfterSpeaking" },
+  ])(
+    "turns off $name and persists the choice",
+    async ({ name, preference }) => {
+      const screen = await renderMessageSettings();
+      const toggle = screen.getByRole("switch", { name });
 
-    await expect.element(imagesSwitch).toBeChecked();
-    await imagesSwitch.click();
+      await expect.element(toggle).toBeChecked();
+      await toggle.click();
 
-    await expect.element(imagesSwitch).not.toBeChecked();
-    await vi.waitFor(() =>
-      expect(readStoredPreferences()).toMatchObject({
-        areImagesVisible: false,
-      }),
-    );
-  });
-
-  test("toggles message highlighting during playback", async () => {
-    const screen = await renderMessageSettings();
-    const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight while speaking",
-    });
-
-    await expect.element(highlightSwitch).toBeChecked();
-    await highlightSwitch.click();
-
-    await expect.element(highlightSwitch).not.toBeChecked();
-    await vi.waitFor(() =>
-      expect(readStoredPreferences()).toMatchObject({
-        isHighlightingEnabled: false,
-      }),
-    );
-  });
-
-  test("toggles clearing the message after speaking", async () => {
-    const screen = await renderMessageSettings();
-    const clearSwitch = screen.getByRole("switch", {
-      name: "Clear after speaking",
-    });
-
-    await expect.element(clearSwitch).toBeChecked();
-    await clearSwitch.click();
-
-    await expect.element(clearSwitch).not.toBeChecked();
-    await vi.waitFor(() =>
-      expect(readStoredPreferences()).toMatchObject({
-        clearsAfterSpeaking: false,
-      }),
-    );
-  });
+      await expect.element(toggle).not.toBeChecked();
+      await vi.waitFor(() =>
+        expect(readStoredPreferences()).toMatchObject({ [preference]: false }),
+      );
+    },
+  );
 });

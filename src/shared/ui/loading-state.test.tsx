@@ -1,16 +1,11 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { LoadingState } from "./loading-state";
 
 describe("LoadingState", () => {
   test("names the progress indicator with the default loading message", async () => {
-    const screen = await render(
-      <AppProviders>
-        <LoadingState />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<LoadingState />);
 
     await expect
       .element(screen.getByRole("progressbar", { name: "Loading…" }))
@@ -26,11 +21,7 @@ describe("LoadingState", () => {
   });
 
   test("exposes the message to assistive technology once, as the indicator's name", async () => {
-    const screen = await render(
-      <AppProviders>
-        <LoadingState />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<LoadingState />);
 
     await expect
       .element(screen.getByRole("progressbar", { name: "Loading…" }))
@@ -41,10 +32,8 @@ describe("LoadingState", () => {
   });
 
   test("names the progress indicator with a custom loading message", async () => {
-    const screen = await render(
-      <AppProviders>
-        <LoadingState message="Loading board sets…" />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <LoadingState message="Loading board sets…" />,
     );
 
     await expect

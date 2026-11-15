@@ -1,16 +1,11 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { LanguageSettings } from "./language-settings";
 
 function renderLanguageSettings() {
-  return render(
-    <AppProviders>
-      <LanguageSettings />
-    </AppProviders>,
-  );
+  return renderWithProviders(<LanguageSettings />);
 }
 
 describe("LanguageSettings", () => {

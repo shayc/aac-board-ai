@@ -3,23 +3,18 @@ import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
 } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import {
   stubProofreader,
   stubRewriter,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { SuggestionSettings } from "./suggestion-settings";
 
 function renderSuggestionsSettings() {
-  return render(
-    <AppProviders>
-      <SuggestionSettings />
-    </AppProviders>,
-  );
+  return renderWithProviders(<SuggestionSettings />);
 }
 
 function availableWithoutLanguages(options?: Record<string, unknown>) {
