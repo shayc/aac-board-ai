@@ -69,18 +69,20 @@ export function getBoardsDB(): Promise<BoardsDB> {
 
 function openConnection(): Promise<BoardsDB> {
   return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      // Version 1 stored assets as Blobs, which this version cannot read, so
-      // its board sets are dropped rather than migrated.
-      for (const name of db.objectStoreNames) {
-        db.deleteObjectStore(name);
+    upgrade(db, oldVersion) {
+      if (oldVersion < 2) {
+        // Version 1 stored assets as Blobs, which this version cannot read, so
+        // its board sets are dropped rather than migrated.
+        for (const name of db.objectStoreNames) {
+          db.deleteObjectStore(name);
+        }
+
+        const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
+        boardSets.createIndex("byImportedAt", "importedAt");
+
+        db.createObjectStore("boards", { keyPath: ["boardSetId", "id"] });
+        db.createObjectStore("assets", { keyPath: ["boardSetId", "path"] });
       }
-
-      const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
-      boardSets.createIndex("byImportedAt", "importedAt");
-
-      db.createObjectStore("boards", { keyPath: ["boardSetId", "id"] });
-      db.createObjectStore("assets", { keyPath: ["boardSetId", "path"] });
     },
     blocked(currentVersion, blockedVersion) {
       console.warn(
