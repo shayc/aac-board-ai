@@ -223,7 +223,7 @@ error ends the pass and is reported, and passes queued behind it still run.
 The hook hands each pass to the
 [board translation coordinator](../src/features/library/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status. The
+status published while a pass is translating a set. The
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 shows that status, a model download first and the translation after it, in one
 alert. Without the Translator API the notice stays hidden: a set the browser
@@ -246,10 +246,11 @@ how the message changes:
    finishes uninterrupted and the message was not edited meanwhile, so a clear
    never takes letters typed during the speech with it. The played message
    stays visible during playback and is preserved if playback is interrupted.
-3. Once the whole message plays to its end, the next tile or letter starts a new
-   message. An edit, a replay that does not finish, or a tile that only echoes
-   the word it spelled leaves the message open for more. A message setting
-   turns this off.
+3. Once the whole message plays to its end, from the play button, the keyboard
+   shortcut, or a tile that only plays it, the next tile or letter starts a new
+   message. Editing the message, or replaying it without letting it finish,
+   keeps adding to it. A tile that spells and then plays echoes the word and
+   does not count. A message setting turns this off.
 4. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
    and publishes progress for highlighting.
