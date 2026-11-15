@@ -3,7 +3,6 @@ import { useLocation, useNavigation, useRevalidator } from "react-router";
 
 type RevalidateBoardSet = (boardSetId: string) => void;
 
-/** Reloads the routes when a stored board set on screen, or being navigated to, changes. */
 export function useRevalidateBoardSet(): RevalidateBoardSet {
   const { revalidate } = useRevalidator();
   const { pathname } = useLocation();

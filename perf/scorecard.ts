@@ -26,7 +26,6 @@ export interface Scorecard {
   rows: ScorecardRow[];
 }
 
-/** The working tree's samples for every timing the journeys recorded. */
 export function collectMeasurements(
   journeys: JourneyResult[],
 ): Record<string, number[]> {
