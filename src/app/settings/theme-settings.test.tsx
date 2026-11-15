@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test } from "vitest";
@@ -61,5 +62,23 @@ describe("ThemeSettings", () => {
       .toHaveAttribute("aria-pressed", "true");
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("switches every control to the new theme at once", async () => {
+    const screen = await render(
+      <AppProviders>
+        <ThemeSettings />
+        <Button variant="contained">Untouched</Button>
+      </AppProviders>,
+    );
+    const darkButton = screen.getByRole("button", { name: "Dark" });
+    const untouchedButton = screen
+      .getByRole("button", { name: "Untouched" })
+      .element();
+
+    await darkButton.click();
+
+    await expect.element(darkButton).toHaveAttribute("aria-pressed", "true");
+    expect(untouchedButton.getAnimations()).toHaveLength(0);
   });
 });

@@ -26,7 +26,13 @@ export function DirectionalThemeProvider({
 
   return (
     <CacheProvider value={isRTL ? rtlCache : ltrCache}>
-      <MUIThemeProvider theme={isRTL ? rtlTheme : ltrTheme} noSsr>
+      <MUIThemeProvider
+        theme={isRTL ? rtlTheme : ltrTheme}
+        noSsr
+        // Surfaces switch scheme at once, so controls that tween their colors
+        // would briefly show the old scheme against the new background.
+        disableTransitionOnChange
+      >
         {children}
       </MUIThemeProvider>
     </CacheProvider>
