@@ -2,7 +2,12 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
-import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
+import {
+  endUtterance,
+  failUtterance,
+  preventSpeechEnd,
+  stubSpeech,
+} from "@shared/testing/stub-speech";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -338,6 +343,114 @@ describe("CommunicationBoard", () => {
       });
     });
 
+    test("speaks a tile's actions instead of its vocalization or sound", async () => {
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hi"]);
+      });
+      expect(audio.play).not.toHaveBeenCalled();
+    });
+
+    test.each(["", " \t\n "])(
+      "speaks the label when the vocalization is blank (%j)",
+      async (vocalization) => {
+        const board: OBFBoard = {
+          ...TWO_BUTTON_BOARD,
+          buttons: [{ id: "btn-1", label: "hello", vocalization }],
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        };
+        const screen = await renderCommunicationBoard(board);
+
+        await screen
+          .getByRole("button", { name: "hello", exact: true })
+          .click();
+
+        await vi.waitFor(() => {
+          expect(speech.spokenTexts()).toEqual(["hello"]);
+        });
+      },
+    );
+  });
+
+  describe("speak-then-clear tiles", () => {
+    test("clears the message once a speak-then-clear tile finishes speaking", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+      const message = screen.getByText("hi", { exact: true });
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+      await expect.element(message).toBeVisible();
+
+      endLastUtterance(speech.speak);
+
+      await expect.element(message).not.toBeInTheDocument();
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeDisabled();
+    });
+
+    test("keeps the message when a speak-then-clear tile fails to speak", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+
+      const utterance = speech.speak.mock.calls[0]?.[0];
+      assertDefined(utterance);
+
+      failUtterance(utterance);
+
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
+      await expect
+        .element(screen.getByText("hi", { exact: true }))
+        .toBeVisible();
+      await expect
+        .element(screen.getByRole("alert"))
+        .toHaveTextContent("Couldn't play sound");
+      expect(screen.getByRole("alert").elements()).toHaveLength(1);
+    });
+
+    test("keeps a message that was edited while a speak-then-clear tile spoke", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await screen.getByRole("button", { name: "Backspace" }).click();
+      endLastUtterance(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hi", "h"]);
+      });
+    });
+
+    test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await screen.getByRole("button", { name: "Stop message" }).click();
+      speech.speak.mockClear();
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hi"]);
+      });
+    });
+  });
+
+  describe("message", () => {
     test("spells a new word after a word tile and closes it with space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = getMessageItems(screen);
@@ -405,122 +518,6 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems).toHaveLength(0);
     });
 
-    test("speaks a tile's actions instead of its vocalization or sound", async () => {
-      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-      await screen.getByRole("button", { name: "Say then clear" }).click();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hi"]);
-      });
-      expect(audio.play).not.toHaveBeenCalled();
-    });
-
-    test.each(["", " \t\n "])(
-      "speaks the label when the vocalization is blank (%j)",
-      async (vocalization) => {
-        const board: OBFBoard = {
-          ...TWO_BUTTON_BOARD,
-          buttons: [{ id: "btn-1", label: "hello", vocalization }],
-          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-        };
-        const screen = await renderCommunicationBoard(board);
-
-        await screen
-          .getByRole("button", { name: "hello", exact: true })
-          .click();
-
-        await vi.waitFor(() => {
-          expect(speech.spokenTexts()).toEqual(["hello"]);
-        });
-      },
-    );
-  });
-
-  describe("speak-then-clear tiles", () => {
-    test("clears the message once a speak-then-clear tile finishes speaking", async () => {
-      preventSpeechEnd(speech.speak);
-      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-      const message = screen.getByText("hi", { exact: true });
-
-      await screen.getByRole("button", { name: "Say then clear" }).click();
-      await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
-        .toBeVisible();
-      await expect.element(message).toBeVisible();
-
-      const utterance = speech.speak.mock.calls[0]?.[0];
-      assertDefined(utterance);
-
-      utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-
-      await expect.element(message).not.toBeInTheDocument();
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeDisabled();
-    });
-
-    test("keeps the message when a speak-then-clear tile fails to speak", async () => {
-      preventSpeechEnd(speech.speak);
-      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-      await screen.getByRole("button", { name: "Say then clear" }).click();
-      await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
-        .toBeVisible();
-
-      const utterance = speech.speak.mock.calls[0]?.[0];
-      assertDefined(utterance);
-
-      utterance.dispatchEvent(
-        new SpeechSynthesisErrorEvent("error", {
-          utterance,
-          error: "synthesis-failed",
-        }),
-      );
-
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeEnabled();
-      await expect
-        .element(screen.getByText("hi", { exact: true }))
-        .toBeVisible();
-      await expect
-        .element(screen.getByRole("alert"))
-        .toHaveTextContent("Couldn't play sound");
-      expect(screen.getByRole("alert").elements()).toHaveLength(1);
-    });
-
-    test("keeps a message that was edited while a speak-then-clear tile spoke", async () => {
-      preventSpeechEnd(speech.speak);
-      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-      await screen.getByRole("button", { name: "Say then clear" }).click();
-      await screen.getByRole("button", { name: "Backspace" }).click();
-      endLastUtterance(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hi", "h"]);
-      });
-    });
-
-    test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {
-      preventSpeechEnd(speech.speak);
-      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-      await screen.getByRole("button", { name: "Say then clear" }).click();
-      await screen.getByRole("button", { name: "Stop message" }).click();
-      speech.speak.mockClear();
-      await screen.getByRole("button", { name: "Play message" }).click();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hi"]);
-      });
-    });
-  });
-
-  describe("message", () => {
     test("enables message playback only after content is composed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const play = screen.getByRole("button", { name: "Play message" });
@@ -994,5 +991,5 @@ function endLastUtterance(speak: ReturnType<typeof stubSpeech>["speak"]) {
   const utterance = speak.mock.lastCall?.[0];
   assertDefined(utterance);
 
-  utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
+  endUtterance(utterance);
 }
