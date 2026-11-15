@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   appendTilePart,
   applyBackspace,
+  applyEdits,
   closeWord,
   createTextPart,
   createTilePart,
@@ -206,6 +207,32 @@ describe("applyBackspace", () => {
 
   test("leaves an empty message as it is", () => {
     expect(applyBackspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
+  });
+});
+
+describe("applyEdits", () => {
+  test("applies each edit in order", () => {
+    const message = applyEdits(EMPTY_MESSAGE, [
+      { kind: "tile", part: HELLO_TILE },
+      { kind: "spell", text: "wo" },
+      { kind: "backspace" },
+      { kind: "space" },
+      { kind: "spell", text: "a" },
+    ]);
+
+    expect(labelsOf(message)).toEqual(["hello", "w", "a"]);
+  });
+
+  test("empties the message for a clear", () => {
+    const message = spell(EMPTY_MESSAGE, "hi");
+
+    expect(applyEdits(message, [{ kind: "clear" }])).toBe(EMPTY_MESSAGE);
+  });
+
+  test("returns the message itself when no edit changes it", () => {
+    const message = closeWord(spell(EMPTY_MESSAGE, "hi"));
+
+    expect(applyEdits(message, [{ kind: "space" }])).toBe(message);
   });
 });
 

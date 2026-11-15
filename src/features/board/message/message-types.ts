@@ -26,3 +26,10 @@ export interface Message {
   // starts a new message. Any edit, such as a backspace, makes it false again.
   readonly isSpoken: boolean;
 }
+
+export type MessageEdit =
+  | { readonly kind: "tile"; readonly part: TilePart }
+  | { readonly kind: "spell"; readonly text: string }
+  | { readonly kind: "space" }
+  | { readonly kind: "backspace" }
+  | { readonly kind: "clear" };

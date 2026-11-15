@@ -229,7 +229,9 @@ in its own language, which the user can already see and cannot change.
 ### Activate a tile
 
 [`activateButton`](../src/features/board/activation/button-activator.ts)
-coordinates message updates, navigation, and playback:
+coordinates navigation and playback, and hands message edits to
+[`useMessage`](../src/features/board/message/use-message.ts), the one owner of
+how the message changes:
 
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.

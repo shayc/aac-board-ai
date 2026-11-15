@@ -1,20 +1,25 @@
 import { useRef, useState } from "react";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
-  applyBackspace,
+  applyEdits,
   createTextPart,
   EMPTY_MESSAGE,
   hasSameContent,
   markSpoken,
 } from "./message-transforms";
-import type { Message, MessagePart } from "./message-types";
+import type { Message, MessageEdit, MessagePart } from "./message-types";
+
+export interface MessageEditOutcome {
+  edited: Message;
+  hasChanged: boolean;
+}
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
   text: string;
-  getState: () => Message;
-  setState: (state: Message) => void;
+  apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
+  applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
   trackPlayback: (completion: Promise<boolean>) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
@@ -27,17 +32,45 @@ export function useMessage(): UseMessageReturn {
   const stateRef = useRef(state);
   const text = state.parts.map((part) => part.label).join(" ");
 
-  // The setting is read each time the message is used, so turning it off
+  // The setting is read each time the message is edited, so turning it off
   // releases a message that was already spoken.
-  function getState() {
+  function readMessage() {
     return clearsAfterSpeaking
       ? stateRef.current
       : markSpoken(stateRef.current, false);
   }
 
-  function setState(next: Message) {
+  function commit(next: Message) {
     stateRef.current = next;
     setRenderedState(next);
+  }
+
+  function commitEdits(from: Message, edits: readonly MessageEdit[]) {
+    const edited = applyEdits(from, edits);
+    if (edited !== from) {
+      commit(edited);
+    }
+
+    return edited;
+  }
+
+  function apply(edits: readonly MessageEdit[]): MessageEditOutcome {
+    const current = readMessage();
+    const edited = commitEdits(current, edits);
+
+    return { edited, hasChanged: edited !== current };
+  }
+
+  // Edits made against an earlier message belong to it: they apply to it even
+  // once it is spoken, instead of starting a new message, and are dropped if
+  // its content changed since.
+  function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
+    const current = stateRef.current;
+    if (!hasSameContent(current, since)) {
+      return;
+    }
+
+    commitEdits(markSpoken(current, false), edits);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
@@ -56,7 +89,7 @@ export function useMessage(): UseMessageReturn {
     const current = stateRef.current;
     const next = markSpoken(current, isSpoken);
     if (next !== current) {
-      setState(next);
+      commit(next);
     }
 
     return next;
@@ -64,7 +97,7 @@ export function useMessage(): UseMessageReturn {
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    setState({
+    commit({
       parts: words.map(createTextPart),
       isWordOpen: words.length > 0,
       isSpoken: false,
@@ -72,19 +105,19 @@ export function useMessage(): UseMessageReturn {
   }
 
   function backspace() {
-    setState(applyBackspace(getState()));
+    apply([{ kind: "backspace" }]);
   }
 
   function clear() {
-    setState(EMPTY_MESSAGE);
+    apply([{ kind: "clear" }]);
   }
 
   return {
     parts: state.parts,
     isWordOpen: state.isWordOpen,
     text,
-    getState,
-    setState,
+    apply,
+    applyIfUnchanged,
     trackPlayback,
     replaceWithText,
     backspace,
