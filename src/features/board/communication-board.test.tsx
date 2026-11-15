@@ -5,6 +5,7 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import {
   endUtterance,
   failUtterance,
+  lastUtterance,
   preventSpeechEnd,
   stubSpeech,
 } from "@shared/testing/stub-speech";
@@ -387,7 +388,7 @@ describe("CommunicationBoard", () => {
         .toBeVisible();
       await expect.element(message).toBeVisible();
 
-      endLastUtterance(speech.speak);
+      endUtterance(lastUtterance(speech.speak));
 
       await expect.element(message).not.toBeInTheDocument();
       await expect
@@ -404,10 +405,7 @@ describe("CommunicationBoard", () => {
         .element(screen.getByRole("button", { name: "Stop message" }))
         .toBeVisible();
 
-      const utterance = speech.speak.mock.calls[0]?.[0];
-      assertDefined(utterance);
-
-      failUtterance(utterance);
+      failUtterance(lastUtterance(speech.speak));
 
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
@@ -427,7 +425,7 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "Say then clear" }).click();
       await screen.getByRole("button", { name: "Backspace" }).click();
-      endLastUtterance(speech.speak);
+      endUtterance(lastUtterance(speech.speak));
       await screen.getByRole("button", { name: "Play message" }).click();
 
       await vi.waitFor(() => {
@@ -451,6 +449,44 @@ describe("CommunicationBoard", () => {
   });
 
   describe("message", () => {
+    test("enables message playback only after content is composed", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const play = screen.getByRole("button", { name: "Play message" });
+
+      await expect.element(play).toBeDisabled();
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect.element(play).toBeEnabled();
+    });
+
+    test("keeps keyboard focus on Backspace when it removes the last part", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const backspace = screen.getByRole("button", { name: "Backspace" });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await expect.element(backspace).not.toHaveAttribute("aria-disabled");
+      backspace.element().focus();
+      await userEvent.keyboard("{Enter}");
+
+      await expect.element(backspace).toHaveAttribute("aria-disabled", "true");
+      await expect.element(backspace).toHaveFocus();
+    });
+
+    test("speaks the composed message when play is pressed", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+      speech.speak.mockClear();
+
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello world"]);
+      });
+    });
+
     test("spells a new word after a word tile and closes it with space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = getMessageItems(screen);
@@ -518,44 +554,6 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems).toHaveLength(0);
     });
 
-    test("enables message playback only after content is composed", async () => {
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-      const play = screen.getByRole("button", { name: "Play message" });
-
-      await expect.element(play).toBeDisabled();
-
-      await screen.getByRole("button", { name: "hello" }).click();
-
-      await expect.element(play).toBeEnabled();
-    });
-
-    test("keeps keyboard focus on Backspace when it removes the last part", async () => {
-      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-      const backspace = screen.getByRole("button", { name: "Backspace" });
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await expect.element(backspace).not.toHaveAttribute("aria-disabled");
-      backspace.element().focus();
-      await userEvent.keyboard("{Enter}");
-
-      await expect.element(backspace).toHaveAttribute("aria-disabled", "true");
-      await expect.element(backspace).toHaveFocus();
-    });
-
-    test("speaks the composed message when play is pressed", async () => {
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "world" }).click();
-      speech.speak.mockClear();
-
-      await screen.getByRole("button", { name: "Play message" }).click();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["hello world"]);
-      });
-    });
-
     test("starts a new message with the next tile after the message is spoken", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const messageItems = getMessageItems(screen);
@@ -619,7 +617,7 @@ describe("CommunicationBoard", () => {
       preventSpeechEnd(speech.speak);
       await screen.getByRole("button", { name: "Play message" }).click();
       await screen.getByRole("button", { name: "Backspace" }).click();
-      endLastUtterance(speech.speak);
+      endUtterance(lastUtterance(speech.speak));
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
         .toBeVisible();
@@ -639,7 +637,7 @@ describe("CommunicationBoard", () => {
       preventSpeechEnd(speech.speak);
       await screen.getByRole("button", { name: "Play message" }).click();
       await screen.getByRole("button", { name: "space" }).click();
-      endLastUtterance(speech.speak);
+      endUtterance(lastUtterance(speech.speak));
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
         .toBeVisible();
@@ -985,11 +983,4 @@ function getMessageItems(
   screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
 ) {
   return screen.getByRole("list", { name: "Message" }).getByRole("listitem");
-}
-
-function endLastUtterance(speak: ReturnType<typeof stubSpeech>["speak"]) {
-  const utterance = speak.mock.lastCall?.[0];
-  assertDefined(utterance);
-
-  endUtterance(utterance);
 }
