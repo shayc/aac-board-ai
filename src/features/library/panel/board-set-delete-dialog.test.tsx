@@ -1,6 +1,6 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, onTestFinished, test, vi } from "vitest";
 import { makeBoardSetRecord } from "../testing";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 
@@ -29,6 +29,12 @@ describe("BoardSetDeleteDialog", () => {
   });
 
   test("keeps naming the board set while the dialog closes", async () => {
+    // Fake timers hold the exit transition, so the closing dialog can be inspected.
+    vi.useFakeTimers();
+    onTestFinished(() => {
+      vi.useRealTimers();
+    });
+
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSetRecord({ name: "Core Words" })}
@@ -37,8 +43,6 @@ describe("BoardSetDeleteDialog", () => {
       />,
     );
     await expect.element(screen.getByRole("dialog")).toBeVisible();
-    // Holds the exit transition so a slow engine cannot finish it before the check.
-    vi.useFakeTimers();
 
     await screen.rerender(
       <BoardSetDeleteDialog
@@ -51,7 +55,6 @@ describe("BoardSetDeleteDialog", () => {
     expect(screen.getByText(/Core Words/).query()).not.toBeNull();
 
     vi.runAllTimers();
-    vi.useRealTimers();
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
   });
 
