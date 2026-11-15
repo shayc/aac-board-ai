@@ -37,6 +37,8 @@ describe("BoardSetDeleteDialog", () => {
       />,
     );
     await expect.element(screen.getByRole("dialog")).toBeVisible();
+    // Holds the exit transition so a slow engine cannot finish it before the check.
+    vi.useFakeTimers();
 
     await screen.rerender(
       <BoardSetDeleteDialog
@@ -47,6 +49,9 @@ describe("BoardSetDeleteDialog", () => {
     );
 
     expect(screen.getByText(/Core Words/).query()).not.toBeNull();
+
+    vi.runAllTimers();
+    vi.useRealTimers();
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
   });
 

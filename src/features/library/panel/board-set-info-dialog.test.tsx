@@ -51,6 +51,8 @@ describe("BoardSetInfoDialog", () => {
       />,
     );
     await expect.element(screen.getByRole("dialog")).toBeVisible();
+    // Holds the exit transition so a slow engine cannot finish it before the check.
+    vi.useFakeTimers();
 
     await screen.rerender(
       <BoardSetInfoDialog boardSet={null} onClose={vi.fn()} />,
@@ -60,6 +62,9 @@ describe("BoardSetInfoDialog", () => {
     expect(
       screen.getByText("A starter vocabulary board.").query(),
     ).not.toBeNull();
+
+    vi.runAllTimers();
+    vi.useRealTimers();
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
   });
 
