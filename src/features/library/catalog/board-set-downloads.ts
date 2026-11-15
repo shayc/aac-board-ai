@@ -19,6 +19,9 @@ export interface CompletedDownload {
 
 interface DownloadsState {
   phases: ReadonlyMap<string, BoardSetDownloadPhase>;
+  // Changes only when a download starts or settles, so the library can follow
+  // which sets are downloading without re-rendering on every progress step.
+  downloadingURLs: ReadonlySet<string>;
   // A new object per completion, so a list can tell completions it has seen
   // from ones that happen while it is open.
   lastCompletion: CompletedDownload | undefined;
@@ -32,6 +35,7 @@ interface PendingDownload {
 const pendingDownloadsByURL = new Map<string, PendingDownload>();
 const downloadsStore = createExternalStore<DownloadsState>({
   phases: new Map(),
+  downloadingURLs: new Set(),
   lastCompletion: undefined,
 });
 
@@ -39,8 +43,11 @@ function setDownloadPhase(url: string, phase: BoardSetDownloadPhase) {
   const state = downloadsStore.getSnapshot();
   const phases = new Map(state.phases);
   phases.set(url, phase);
+  const downloadingURLs = state.downloadingURLs.has(url)
+    ? state.downloadingURLs
+    : new Set(state.downloadingURLs).add(url);
 
-  downloadsStore.setState({ ...state, phases });
+  downloadsStore.setState({ ...state, phases, downloadingURLs });
 }
 
 // Clears the phase and records the completion in one update, so the stored
@@ -51,9 +58,12 @@ function settleDownload(url: string, completion?: CompletedDownload) {
   const state = downloadsStore.getSnapshot();
   const phases = new Map(state.phases);
   phases.delete(url);
+  const downloadingURLs = new Set(state.downloadingURLs);
+  downloadingURLs.delete(url);
 
   downloadsStore.setState({
     phases,
+    downloadingURLs,
     lastCompletion: completion ?? state.lastCompletion,
   });
 }
@@ -136,11 +146,8 @@ export function useBoardSetDownloadPhase(
   return useExternalStore(downloadsStore, (state) => state.phases.get(url));
 }
 
-export function useBoardSetDownloadPhases(): ReadonlyMap<
-  string,
-  BoardSetDownloadPhase
-> {
-  return useExternalStore(downloadsStore, (state) => state.phases);
+export function useDownloadingBoardSetURLs(): ReadonlySet<string> {
+  return useExternalStore(downloadsStore, (state) => state.downloadingURLs);
 }
 
 export function useLastCompletedDownload(): CompletedDownload | undefined {

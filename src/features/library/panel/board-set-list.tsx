@@ -128,17 +128,11 @@ function toSortedEntries(
   locale: string,
 ): BoardSetEntry[] {
   const collator = new Intl.Collator(locale, { numeric: true });
-  const downloadableIds = new Set(
-    downloadableBoardSets.map((boardSet) => boardSet.id),
-  );
   const entries: BoardSetEntry[] = [
-    // A stored set still finishing its download shows as the download.
-    ...boardSets
-      .filter((boardSet) => !downloadableIds.has(boardSet.id))
-      .map((boardSet) => ({
-        kind: "open" as const,
-        boardSet,
-      })),
+    ...boardSets.map((boardSet) => ({
+      kind: "open" as const,
+      boardSet,
+    })),
     ...downloadableBoardSets.map((boardSet) => ({
       kind: "download" as const,
       boardSet,

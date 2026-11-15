@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { DownloadProgressRing } from "./download-progress-ring";
 
@@ -38,12 +38,15 @@ export function BoardSetListItem({
   const t = useTranslate();
   const endSide = useEndSide();
   const linkRef = useRef<HTMLAnchorElement>(null);
+  const [hasCrossfaded, setHasCrossfaded] = useState(false);
 
   useEffect(() => {
     if (isFreshlyDownloaded) {
       linkRef.current?.focus();
     }
   }, [isFreshlyDownloaded]);
+
+  const isCrossfading = isFreshlyDownloaded && !hasCrossfaded;
 
   return (
     <ListItem
@@ -58,7 +61,13 @@ export function BoardSetListItem({
             onClick={(event) => onMenuOpen(event.currentTarget)}
             sx={{ border: "none" }}
           >
-            {isFreshlyDownloaded ? <DownloadedMenuIcon /> : <MoreVertIcon />}
+            {isCrossfading ? (
+              <DownloadedMenuIcon
+                onCrossfadeEnd={() => setHasCrossfaded(true)}
+              />
+            ) : (
+              <MoreVertIcon />
+            )}
           </IconButton>
         </Tooltip>
       }
@@ -66,7 +75,7 @@ export function BoardSetListItem({
       sx={[
         secondaryActionRevealSx,
         // The menu icon's own crossfade replaces the hover reveal's fade.
-        isFreshlyDownloaded && {
+        isCrossfading && {
           [`& .${listItemClasses.secondaryAction}`]: { transition: "none" },
         },
       ]}
@@ -87,11 +96,15 @@ export function BoardSetListItem({
   );
 }
 
+interface DownloadedMenuIconProps {
+  onCrossfadeEnd: () => void;
+}
+
 // Morphs the finished download ring into the menu icon so the button reads as
 // one control changing state rather than a new one appearing.
-function DownloadedMenuIcon() {
+function DownloadedMenuIcon({ onCrossfadeEnd }: DownloadedMenuIconProps) {
   return (
-    <Box sx={downloadedMenuIconSx}>
+    <Box sx={downloadedMenuIconSx} onAnimationEnd={onCrossfadeEnd}>
       <Box
         sx={(theme) => ({
           ...crossfadeSx(theme, fadeOut, "forwards"),

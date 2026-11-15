@@ -482,6 +482,41 @@ describe("BoardSetLibrary", () => {
       expect(await listBoardSetRecords()).toHaveLength(1);
     });
 
+    test("doesn't refocus a finished download's entry when the library reopens", async () => {
+      const closedScreen = await renderBoardSetLibrary();
+      await closedScreen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      await expect
+        .element(closedScreen.getByRole("link", { name: "First Words" }))
+        .toHaveFocus();
+      await closedScreen.unmount();
+
+      const screen = await renderBoardSetLibrary();
+
+      const link = screen.getByRole("link", { name: "First Words" });
+      await expect.element(link).toBeInTheDocument();
+      await expect.element(link).not.toHaveFocus();
+    });
+
+    test("keeps focus on a downloaded entry when another board set is added", async () => {
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      const downloadedLink = screen.getByRole("link", { name: "First Words" });
+      await expect.element(downloadedLink).toHaveFocus();
+
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
+
+      await expect
+        .element(screen.getByRole("link", { name: "Animals" }))
+        .toBeInTheDocument();
+      await expect.element(downloadedLink).toHaveFocus();
+    });
+
     test("keeps describing download progress after reopening the library", async () => {
       const download = stubStreamingDownload({ "content-length": "2000000" });
 

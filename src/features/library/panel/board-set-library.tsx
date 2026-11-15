@@ -15,8 +15,8 @@ import { useState } from "react";
 import { useMatch, useNavigate } from "react-router";
 import { BOARD_SET_SEGMENT } from "../board-paths";
 import { deleteBoardSet, useBoardSets } from "../board-sets/board-sets-store";
-import { listDownloadableBoardSets } from "../catalog/board-set-catalog";
-import { useBoardSetDownloadPhases } from "../catalog/board-set-downloads";
+import { splitLibraryBoardSets } from "../catalog/board-set-catalog";
+import { useDownloadingBoardSetURLs } from "../catalog/board-set-downloads";
 import { exportBoardSet } from "../export/board-set-export";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -33,7 +33,7 @@ export function BoardSetLibrary() {
   })?.params.boardSetId;
   const { language } = useCommunicationLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
-  const downloadPhases = useBoardSetDownloadPhases();
+  const downloadingURLs = useDownloadingBoardSetURLs();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -44,9 +44,9 @@ export function BoardSetLibrary() {
   const boardSets = storedBoardSets.map((boardSet) =>
     boardSetInLanguage(boardSet, language),
   );
-  const downloadableBoardSets = listDownloadableBoardSets(
+  const { openableBoardSets, downloadableBoardSets } = splitLibraryBoardSets(
     boardSets,
-    downloadPhases,
+    downloadingURLs,
   );
 
   async function handleDelete() {
@@ -114,7 +114,7 @@ export function BoardSetLibrary() {
       </List>
 
       <BoardSetList
-        boardSets={boardSets}
+        boardSets={openableBoardSets}
         downloadableBoardSets={downloadableBoardSets}
         activeBoardSetId={activeBoardSetId}
         onShowInfo={setInfoTarget}
