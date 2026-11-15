@@ -2,10 +2,10 @@ import { useRef, useState } from "react";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
+  createTextPart,
   EMPTY_MESSAGE,
   hasSameContent,
   markSpoken,
-  rewriteAs,
 } from "./message-transforms";
 import type { Message, MessageEdit, MessagePart } from "./message-types";
 
@@ -112,13 +112,12 @@ export function useMessage(): UseMessageReturn {
   }
 
   function replaceWithText(input: string) {
-    // Choosing a suggestion is an edit, so it opens a spoken message for more
-    // even when it repeats the message.
-    const current = setSpoken(false);
-    const rewritten = rewriteAs(current, input);
-    if (rewritten !== current) {
-      commitChange(rewritten);
-    }
+    const words = input.match(/\S+/g) ?? [];
+    commitChange({
+      parts: words.map(createTextPart),
+      isWordOpen: words.length > 0,
+      isSpoken: false,
+    });
   }
 
   function backspace() {

@@ -240,42 +240,16 @@ describe("useMessage", () => {
       expect(result.current.text).toBe("hi");
     });
 
-    test("does not count an edit that changes nothing", async () => {
+    test("does not count clearing an empty message", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
       result.current.replaceWithText("h");
       result.current.backspace();
       result.current.clear();
-      result.current.replaceWithText("");
       result.current.undo();
       await rerender();
 
       expect(result.current.text).toBe("h");
-    });
-
-    test("does not count a suggestion that repeats the message", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.replaceWithText("I want");
-      result.current.clear();
-      result.current.replaceWithText("I want");
-      result.current.replaceWithText("I want");
-      result.current.undo();
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(0);
-    });
-
-    test("does not count a suggestion that repeats a spoken message", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.replaceWithText("I want");
-      await trackSettledPlayback(result.current, true);
-      result.current.replaceWithText("I want");
-      result.current.undo();
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(0);
     });
 
     test("keeps the last 100 changes", async () => {

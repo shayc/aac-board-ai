@@ -60,20 +60,6 @@ export function closeWord(message: Message): Message {
   return { ...message, isWordOpen: false };
 }
 
-// A suggestion that repeats the message word for word changes nothing.
-export function rewriteAs(message: Message, text: string): Message {
-  const words = text.match(/\S+/g) ?? [];
-  if (isSpelledAs(message, words)) {
-    return message;
-  }
-
-  return {
-    parts: words.map(createTextPart),
-    isWordOpen: words.length > 0,
-    isSpoken: false,
-  };
-}
-
 export function markSpoken(message: Message, isSpoken: boolean): Message {
   if (message.isSpoken === isSpoken) {
     return message;
@@ -123,18 +109,6 @@ export function applyEdits(
 
 function messageToAddTo(message: Message): Message {
   return message.isSpoken ? EMPTY_MESSAGE : message;
-}
-
-function isSpelledAs(message: Message, words: readonly string[]): boolean {
-  const isWordOpen = words.length > 0;
-
-  return (
-    message.isWordOpen === isWordOpen &&
-    message.parts.length === words.length &&
-    message.parts.every(
-      (part, index) => part.kind === "text" && part.label === words[index],
-    )
-  );
 }
 
 function removeLastPart(message: Message): Message {

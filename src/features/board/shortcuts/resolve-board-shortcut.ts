@@ -33,9 +33,7 @@ export function resolveBoardShortcut(
       return "clear";
     }
 
-    // With Shift the keys mean redo, which the board does not have. Windows
-    // reports AltGr, which types a letter, as Ctrl with Alt.
-    if (isZKey(event) && !event.shiftKey && !event.altKey) {
+    if (isUndoKey(event)) {
       return "undo";
     }
 
@@ -53,10 +51,16 @@ export function resolveBoardShortcut(
   return null;
 }
 
-// A layout without Latin letters, such as Hebrew or Arabic, produces its own
-// letter for the key, so its position stands in. A Latin layout that moves Z,
-// such as German, keeps its own letter.
-function isZKey(event: BoardKeyEvent): boolean {
+// Z, for an event that already holds Ctrl or Cmd. With Shift the keys mean
+// redo, which the board does not have. A layout without Latin letters, such as
+// Hebrew or Arabic, produces its own letter for the key, so its position stands
+// in; a Latin layout that moves Z, such as German, keeps its own letter. Alt
+// rules that out: Windows reports AltGr, which types a letter, as Ctrl with Alt.
+function isUndoKey(event: BoardKeyEvent): boolean {
+  if (event.shiftKey || event.altKey) {
+    return false;
+  }
+
   const isLatinLetter = /^[a-z]$/i.test(event.key);
 
   return isLatinLetter
