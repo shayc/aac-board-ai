@@ -1,18 +1,16 @@
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
   loadFixtureFile,
   makeCorruptBoardFile,
   resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
+  SAMPLE_OBF_FILE,
 } from "../testing";
 import { useBoardFileDrop } from "./use-board-file-drop";
-
-const OBF_FIXTURE = "lots-of-stuff.obf";
-const IMPORTED_SET_ID = "lots-of-stuff";
 
 function DropHarness() {
   const { isDraggingFiles, rootProps } = useBoardFileDrop();
@@ -28,12 +26,10 @@ function DropHarness() {
 }
 
 async function renderDropZone() {
-  const screen = await render(
-    <AppProviders>
-      <MemoryRouter>
-        <DropHarness />
-      </MemoryRouter>
-    </AppProviders>,
+  const screen = await renderWithProviders(
+    <MemoryRouter>
+      <DropHarness />
+    </MemoryRouter>,
   );
 
   return { screen, zone: screen.getByTestId("zone").element() };
@@ -152,19 +148,19 @@ describe("useBoardFileDrop", () => {
 
   test("imports a dropped board file and opens it", async () => {
     const { zone, screen } = await renderDropZone();
-    const boardFile = await loadFixtureFile(OBF_FIXTURE);
+    const boardFile = await loadFixtureFile(SAMPLE_OBF_FILE);
 
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile));
 
     await vi.waitFor(async () => {
       const boardSets = await listBoardSetRecords();
       expect(boardSets).toHaveLength(1);
-      expect(boardSets[0]?.id).toBe(IMPORTED_SET_ID);
+      expect(boardSets[0]?.id).toBe(SAMPLE_BOARD_SET_ID);
     });
 
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
-        id: IMPORTED_SET_ID,
+        id: SAMPLE_BOARD_SET_ID,
         rootBoardId: "lots_of_stuff",
       }),
     );
@@ -172,7 +168,7 @@ describe("useBoardFileDrop", () => {
 
   test("opens the board set that imported when another dropped file fails", async () => {
     const { zone, screen } = await renderDropZone();
-    const boardFile = await loadFixtureFile(OBF_FIXTURE);
+    const boardFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const corruptFile = makeCorruptBoardFile("corrupt.obf");
 
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile, corruptFile));
@@ -182,7 +178,7 @@ describe("useBoardFileDrop", () => {
       .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
-        id: IMPORTED_SET_ID,
+        id: SAMPLE_BOARD_SET_ID,
         rootBoardId: "lots_of_stuff",
       }),
     );

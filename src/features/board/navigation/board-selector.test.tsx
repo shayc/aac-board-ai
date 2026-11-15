@@ -8,12 +8,11 @@ import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
 } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { BoardSelector } from "./board-selector";
 
@@ -29,11 +28,7 @@ async function renderSelector(boardSetId: string, boardId: string) {
     { initialEntries: [`/sets/${boardSetId}/boards/${boardId}`] },
   );
 
-  const screen = await render(
-    <AppProviders>
-      <RouterProvider router={router} />
-    </AppProviders>,
-  );
+  const screen = await renderWithProviders(<RouterProvider router={router} />);
 
   return { router, screen };
 }

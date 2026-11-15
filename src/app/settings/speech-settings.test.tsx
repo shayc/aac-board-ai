@@ -1,26 +1,18 @@
 import { setStoredLanguage } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
 import { setSpeechVoiceURI } from "@shared/speech/speech-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { SpeechSettings } from "./speech-settings";
-
-function renderSpeechSettings() {
-  return render(
-    <AppProviders>
-      <SpeechSettings />
-    </AppProviders>,
-  );
-}
 
 describe("SpeechSettings", () => {
   test("renders the speech sliders and preview action with no accessibility violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     const expectedValues = [
       { name: "Speech rate", text: "1.0×" },
@@ -52,7 +44,7 @@ describe("SpeechSettings", () => {
       { voiceURI: "gb-1", name: "Daniel", lang: "en-GB" },
     ]);
 
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     await screen.getByRole("combobox", { name: "Voice" }).click();
 
@@ -73,7 +65,7 @@ describe("SpeechSettings", () => {
       { voiceURI: "us-2", name: "Alex", lang: "en-US" },
     ]);
 
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     await screen.getByRole("combobox", { name: "Voice" }).click();
 
@@ -90,7 +82,7 @@ describe("SpeechSettings", () => {
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
       { voiceURI: "us-2", name: "Alex", lang: "en-US" },
     ]);
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
     const voiceSelect = screen.getByRole("combobox", { name: "Voice" });
 
     await voiceSelect.click();
@@ -98,9 +90,9 @@ describe("SpeechSettings", () => {
 
     await expect.element(voiceSelect).toHaveTextContent("Alex");
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("speech-preferences");
-      expect(stored).not.toBeNull();
-      expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: "us-2" });
+      expect(readStoredPreferences("speech-preferences")).toMatchObject({
+        voiceURI: "us-2",
+      });
     });
   });
 
@@ -112,7 +104,7 @@ describe("SpeechSettings", () => {
     setSpeechVoiceURI("us-1");
     setStoredLanguage("he");
 
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     await expect
       .element(screen.getByRole("combobox", { name: "קול" }))
@@ -126,7 +118,7 @@ describe("SpeechSettings", () => {
     ]);
     setStoredLanguage("fa");
 
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     await screen.getByRole("combobox", { name: "Voice" }).click();
 
@@ -139,7 +131,7 @@ describe("SpeechSettings", () => {
     stubVoices([{ voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" }]);
     setStoredLanguage("fa");
 
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     await expect
       .element(screen.getByRole("slider", { name: "Speech rate" }))
@@ -150,7 +142,7 @@ describe("SpeechSettings", () => {
   });
 
   test("adjusts and persists rate, pitch, and volume", async () => {
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
     const adjustments = [
       { name: "Speech rate", key: "{ArrowRight}", expected: 1.1 },
       { name: "Pitch", key: "{ArrowLeft}", expected: 0.9 },
@@ -167,9 +159,7 @@ describe("SpeechSettings", () => {
     }
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("speech-preferences");
-      expect(stored).not.toBeNull();
-      expect(JSON.parse(stored ?? "{}")).toMatchObject({
+      expect(readStoredPreferences("speech-preferences")).toMatchObject({
         rate: 1.1,
         pitch: 0.9,
         volume: 0.9,
@@ -178,7 +168,7 @@ describe("SpeechSettings", () => {
   });
 
   test("keeps volume above silence at the lowest setting", async () => {
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
     const volumeSlider = screen.getByRole("slider", { name: "Volume" });
 
     volumeSlider.element().focus();
@@ -191,7 +181,7 @@ describe("SpeechSettings", () => {
   test("plays the voice preview through app playback", async () => {
     const speech = stubSpeech();
     stubVoices([]);
-    const screen = await renderSpeechSettings();
+    const screen = await renderWithProviders(<SpeechSettings />);
 
     await screen.getByRole("button", { name: "Preview voice" }).click();
 

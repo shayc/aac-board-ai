@@ -1,6 +1,11 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { stubAudio } from "@shared/testing/stub-audio";
-import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
+import {
+  preventSpeechEnd,
+  reachUtteranceBoundary,
+  stubSpeech,
+} from "@shared/testing/stub-speech";
 import { Profiler, type ProfilerOnRenderCallback, type ReactNode } from "react";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render, renderHook } from "vitest-browser-react";
@@ -178,10 +183,7 @@ describe("PlaybackProvider", () => {
   });
 
   test("rerenders each subscriber only for the playback state it reads", async () => {
-    let utterance: SpeechSynthesisUtterance | undefined;
-    speech.speak.mockImplementationOnce((spoken) => {
-      utterance = spoken;
-    });
+    preventSpeechEnd(speech.speak);
     const commits = { controls: 0, playing: 0, tracking: 0 };
     const countCommit: ProfilerOnRenderCallback = (id) => {
       commits[id as keyof typeof commits] += 1;
@@ -205,9 +207,9 @@ describe("PlaybackProvider", () => {
     await expect.element(screen.getByText("Active cue: 1")).toBeInTheDocument();
     const commitsWhilePlaying = { ...commits };
 
-    utterance?.dispatchEvent(
-      new SpeechSynthesisEvent("boundary", { utterance, charIndex: 6 }),
-    );
+    const utterance = speech.speak.mock.lastCall?.[0];
+    assertDefined(utterance);
+    reachUtteranceBoundary(utterance, 6);
     await expect.element(screen.getByText("Active cue: 2")).toBeInTheDocument();
 
     expect(commitsWhilePlaying.controls).toBe(1);

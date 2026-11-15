@@ -1,10 +1,9 @@
 import { resetBoardsDB, seedBoardSets } from "@features/library/testing";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { createMemoryRouter, Outlet } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { LibraryDrawer } from "./library-drawer";
 
@@ -19,11 +18,7 @@ describe("LibraryDrawer", () => {
       { initialEntries: ["/"] },
     );
 
-    return render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
-    );
+    return renderWithProviders(<RouterProvider router={router} />);
   }
 
   test("shows the library title with no accessibility violations", async () => {
@@ -64,10 +59,8 @@ describe("LibraryDrawer", () => {
       { initialEntries: ["/"] },
     );
 
-    const screen = await render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <RouterProvider router={router} />,
     );
 
     const link = screen.getByRole("link", { name: "Animals", exact: true });
@@ -110,10 +103,8 @@ describe("LibraryDrawer", () => {
       { initialEntries: ["/sets/food/boards/root"] },
     );
 
-    const screen = await render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <RouterProvider router={router} />,
     );
 
     await expect

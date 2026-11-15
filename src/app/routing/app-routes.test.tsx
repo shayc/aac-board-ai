@@ -2,55 +2,35 @@ import { importBoardFileFromURL, listBoardSetRecords } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
+  SAMPLE_OBZ_URL,
   seedBoardSets,
 } from "@features/library/testing";
 import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
 } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
+import { textLeft } from "@shared/testing/text-position";
 import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { assert, beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
 import { BOARD_SET_ROUTE_ID } from "./board-set/board-set-loader";
-
-const OBZ_FIXTURE_URL =
-  "/src/features/library/testing/sample-boards/lots-of-stuff.obz";
 
 async function renderApp(initialEntry = "/") {
   const router = createMemoryRouter(appRoutes, {
     initialEntries: [initialEntry],
   });
 
-  const screen = await render(
-    <AppProviders>
-      <RouterProvider router={router} />
-    </AppProviders>,
-  );
+  const screen = await renderWithProviders(<RouterProvider router={router} />);
 
   return { router, screen };
-}
-
-// DOM text order alone misses bidi rendering errors.
-function textLeft(element: Element, substring: string): number {
-  const node = element.firstChild;
-  assert(node instanceof Text);
-
-  const start = node.data.indexOf(substring);
-  assert(start !== -1);
-
-  const range = document.createRange();
-  range.setStart(node, start);
-  range.setEnd(node, start + substring.length);
-
-  return range.getBoundingClientRect().left;
 }
 
 function seedRecordedAudioSet() {
@@ -101,10 +81,21 @@ function seedTwoBoardSet() {
   ]);
 }
 
+function seedAnimalsSet() {
+  return seedBoardSets([
+    {
+      id: "animals",
+      name: "Animals",
+      rootBoardId: "home",
+      boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
+    },
+  ]);
+}
+
 function seedExistingLotsOfStuffSet() {
   return seedBoardSets([
     {
-      id: "lots-of-stuff",
+      id: SAMPLE_BOARD_SET_ID,
       rootBoardId: "root-1",
       boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
     },
@@ -172,7 +163,7 @@ describe("app flow", () => {
   });
 
   test("an imported board set opens, composes across boards, and speaks", async () => {
-    await importBoardFileFromURL(OBZ_FIXTURE_URL);
+    await importBoardFileFromURL(SAMPLE_OBZ_URL);
 
     const { screen } = await renderApp();
 
@@ -230,7 +221,7 @@ describe("app flow", () => {
     await seedExistingLotsOfStuffSet();
 
     const { screen } = await renderApp(
-      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+      `/?board=${encodeURIComponent(SAMPLE_OBZ_URL)}`,
     );
 
     await screen.getByRole("button", { name: "Import" }).click();
@@ -241,7 +232,7 @@ describe("app flow", () => {
       .toBeVisible();
 
     expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
-      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
+      new Set([SAMPLE_BOARD_SET_ID, `${SAMPLE_BOARD_SET_ID}-2`]),
     );
   });
 
@@ -251,7 +242,7 @@ describe("app flow", () => {
     stubTranslator((input) => `[es] ${input}`);
 
     const { screen } = await renderApp(
-      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+      `/?board=${encodeURIComponent(SAMPLE_OBZ_URL)}`,
     );
 
     await screen.getByRole("button", { name: "Importar" }).click();
@@ -265,7 +256,7 @@ describe("app flow", () => {
       .element(screen.getByRole("link", { name: "[es] Zoo" }))
       .toBeVisible();
     expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
-      new Set(["zoo", "lots-of-stuff"]),
+      new Set(["zoo", SAMPLE_BOARD_SET_ID]),
     );
   });
 
@@ -288,7 +279,7 @@ describe("app flow", () => {
 
   test("double-tapping Import on a ?board= link imports the board set once", async () => {
     const { screen } = await renderApp(
-      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+      `/?board=${encodeURIComponent(SAMPLE_OBZ_URL)}`,
     );
 
     const fetchSpy = vi.spyOn(globalThis, "fetch");
@@ -300,11 +291,11 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
     expect((await listBoardSetRecords()).map((set) => set.id)).toEqual([
-      "lots-of-stuff",
+      SAMPLE_BOARD_SET_ID,
     ]);
     expect(
       fetchSpy.mock.calls.filter(
-        ([url]) => url instanceof URL && url.pathname === OBZ_FIXTURE_URL,
+        ([url]) => url instanceof URL && url.pathname === SAMPLE_OBZ_URL,
       ),
     ).toHaveLength(1);
   });
@@ -338,14 +329,7 @@ describe("app flow", () => {
   });
 
   test("cancelling a ?board= link opens the existing board set without importing", async () => {
-    await seedBoardSets([
-      {
-        id: "animals",
-        rootBoardId: "home",
-        name: "Animals",
-        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
-      },
-    ]);
+    await seedAnimalsSet();
 
     const { router, screen } = await renderApp(
       `/?board=${encodeURIComponent("https://boards.example/core.obz")}`,
@@ -364,18 +348,11 @@ describe("app flow", () => {
   });
 
   test("going back after importing a ?board= link skips the import dialog", async () => {
-    await seedBoardSets([
-      {
-        id: "animals",
-        rootBoardId: "home",
-        name: "Animals",
-        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
-      },
-    ]);
+    await seedAnimalsSet();
     const { router, screen } = await renderApp("/sets/animals/boards/home");
     await screen.getByRole("button", { name: "Continue" }).click();
 
-    await router.navigate(`/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`);
+    await router.navigate(`/?board=${encodeURIComponent(SAMPLE_OBZ_URL)}`);
     await screen.getByRole("button", { name: "Import" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
@@ -533,14 +510,7 @@ describe("app flow", () => {
 
   test("the board set on screen translates without waiting for the others", async () => {
     const now = vi.spyOn(Date, "now").mockReturnValue(1);
-    await seedBoardSets([
-      {
-        id: "animals",
-        name: "Animals",
-        rootBoardId: "home",
-        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
-      },
-    ]);
+    await seedAnimalsSet();
     now.mockReturnValue(2);
     await seedBoardSets([
       {

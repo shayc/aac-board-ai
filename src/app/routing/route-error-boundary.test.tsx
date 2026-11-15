@@ -1,9 +1,8 @@
 import { setStoredLanguage } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { createMemoryRouter, data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { routeErrorCodes, routeErrorResponse } from "./route-error";
 import { RouteErrorBoundary } from "./route-error-boundary";
 
@@ -29,11 +28,11 @@ function renderWithLoader(loader: () => unknown) {
     { initialEntries: ["/"] },
   );
 
-  return render(
-    <AppProviders>
+  return renderWithProviders(
+    <>
       <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
       <RouterProvider router={router} />
-    </AppProviders>,
+    </>,
   );
 }
 

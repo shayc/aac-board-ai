@@ -70,7 +70,6 @@ async function measureTracks(
         <Grid
           aria-label="Board"
           items={items}
-
           order={rowMajorOrder(items, isColumns ? tracks : 1)}
           renderItem={(item, props) => (
             <button
@@ -153,7 +152,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={[
             ["1", "2"],
             ["3", "4"],
@@ -175,7 +173,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={[]}
-
           order={[
             [null, null],
             [null, null],
@@ -207,7 +204,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -239,7 +235,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -270,7 +265,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,

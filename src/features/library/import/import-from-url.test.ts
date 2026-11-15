@@ -1,13 +1,16 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { listBoardSetRecords } from "../storage/board-set-storage";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
+import {
+  loadFixtureFile,
+  resetBoardsDB,
+  SAMPLE_BOARD_SET_ID,
+  SAMPLE_OBZ_FILE,
+  SAMPLE_OBZ_URL,
+} from "../testing";
 import {
   importBoardFileFromURL,
   MAX_BOARD_DOWNLOAD_BYTES,
 } from "./import-from-url";
-
-const SAMPLE_BOARDS_DIR = "/src/features/library/testing/sample-boards";
-const OBZ_FIXTURE = "lots-of-stuff.obz";
 
 function redirectedResponse(body: BodyInit, finalURL: string): Response {
   const response = new Response(body);
@@ -25,20 +28,17 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("imports a board from a URL and derives the boardSetId from the filename", async () => {
-    const result = await importBoardFileFromURL(
-      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
-    );
+    const result = await importBoardFileFromURL(SAMPLE_OBZ_URL);
 
-    expect(result.id).toBe("lots-of-stuff");
+    expect(result.id).toBe(SAMPLE_BOARD_SET_ID);
     expect(result.rootBoardId).toBeTruthy();
   });
 
   test("aborts an in-flight download without importing a board set", async () => {
     const controller = new AbortController();
-    const importing = importBoardFileFromURL(
-      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
-      { signal: controller.signal },
-    );
+    const importing = importBoardFileFromURL(SAMPLE_OBZ_URL, {
+      signal: controller.signal,
+    });
 
     controller.abort();
 
@@ -47,7 +47,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("does not start importing if cancellation races with a completed download", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     const controller = new AbortController();
     vi.spyOn(globalThis, "fetch").mockImplementation(async () => {
       controller.abort();
@@ -56,7 +56,7 @@ describe("importBoardFileFromURL", () => {
     });
 
     await expect(
-      importBoardFileFromURL(`${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`, {
+      importBoardFileFromURL(SAMPLE_OBZ_URL, {
         signal: controller.signal,
       }),
     ).rejects.toBe(controller.signal.reason);
@@ -64,7 +64,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("derives the boardSetId from the last non-empty segment when the URL path ends with a slash", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
     const result = await importBoardFileFromURL("https://example.com/boards/");
@@ -73,7 +73,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("falls back to the default filename when the URL has no path segments", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
     const result = await importBoardFileFromURL("https://example.com/");
@@ -82,7 +82,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("decodes a percent-encoded filename when deriving the boardSetId", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
     const result = await importBoardFileFromURL(
@@ -93,7 +93,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("keeps a malformed percent escape as typed", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
     const result = await importBoardFileFromURL(
@@ -114,7 +114,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("rejects a download redirected to another host without importing", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       redirectedResponse(fixtureFile, "https://elsewhere.example/core.obz"),
     );
@@ -129,7 +129,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("follows a redirect that stays on the same host", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       redirectedResponse(fixtureFile, "https://trusted.example/v2/core.obz"),
     );
@@ -210,7 +210,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("reports download progress against the content length", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(fixtureFile, {
         headers: { "content-length": String(fixtureFile.size) },
@@ -218,7 +218,7 @@ describe("importBoardFileFromURL", () => {
     );
     const onProgress = vi.fn();
 
-    await importBoardFileFromURL(`${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`, {
+    await importBoardFileFromURL(SAMPLE_OBZ_URL, {
       onProgress,
     });
 
@@ -233,7 +233,7 @@ describe("importBoardFileFromURL", () => {
   });
 
   test("leaves the progress total unknown for a compressed response", async () => {
-    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(fixtureFile, {
         headers: { "content-length": "100", "content-encoding": "gzip" },
@@ -241,7 +241,7 @@ describe("importBoardFileFromURL", () => {
     );
     const onProgress = vi.fn();
 
-    await importBoardFileFromURL(`${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`, {
+    await importBoardFileFromURL(SAMPLE_OBZ_URL, {
       onProgress,
     });
 

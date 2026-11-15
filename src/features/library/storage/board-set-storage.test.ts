@@ -235,63 +235,43 @@ describe("insertBoardSet", () => {
     expect(await asset.text()).toBe("second");
   });
 
-  test("rejects empty boardSetId", async () => {
-    await expect(
-      insertBoardSet(
-        makeBoardSetInput({
-          id: "",
-          name: "Bad",
-          rootBoardId: "root-1",
-        }),
-      ),
-    ).rejects.toThrow("Invalid boardSetId");
-  });
-
-  test("rejects boardSetId longer than 255 characters", async () => {
-    await expect(
-      insertBoardSet(
-        makeBoardSetInput({
-          id: "x".repeat(256),
-          name: "Bad",
-          rootBoardId: "root-1",
-        }),
-      ),
-    ).rejects.toThrow("Invalid boardSetId");
-  });
-
-  test("rejects empty rootBoardId", async () => {
-    await expect(
-      insertBoardSet(
-        makeBoardSetInput({
-          id: "set-1",
-          name: "Bad",
-          rootBoardId: "",
-        }),
-      ),
-    ).rejects.toThrow("Invalid rootBoardId");
-  });
-
-  test("rejects empty boardId", async () => {
-    await expect(
-      insertBoardSet(
-        makeBoardSetInput({
-          boards: [makeOBFBoard({ id: "root-1" }), makeOBFBoard({ id: "" })],
-        }),
-      ),
-    ).rejects.toThrow("Invalid boardId");
-  });
-
-  test("rejects boardId longer than 255 characters", async () => {
-    await expect(
-      insertBoardSet(
-        makeBoardSetInput({
-          boards: [
-            makeOBFBoard({ id: "root-1" }),
-            makeOBFBoard({ id: "x".repeat(256) }),
-          ],
-        }),
-      ),
-    ).rejects.toThrow("Invalid boardId");
+  test.each([
+    {
+      problem: "an empty boardSetId",
+      input: { id: "" },
+      error: "Invalid boardSetId",
+    },
+    {
+      problem: "a boardSetId longer than 255 characters",
+      input: { id: "x".repeat(256) },
+      error: "Invalid boardSetId",
+    },
+    {
+      problem: "an empty rootBoardId",
+      input: { rootBoardId: "" },
+      error: "Invalid rootBoardId",
+    },
+    {
+      problem: "an empty boardId",
+      input: {
+        boards: [makeOBFBoard({ id: "root-1" }), makeOBFBoard({ id: "" })],
+      },
+      error: "Invalid boardId",
+    },
+    {
+      problem: "a boardId longer than 255 characters",
+      input: {
+        boards: [
+          makeOBFBoard({ id: "root-1" }),
+          makeOBFBoard({ id: "x".repeat(256) }),
+        ],
+      },
+      error: "Invalid boardId",
+    },
+  ])("rejects $problem", async ({ input, error }) => {
+    await expect(insertBoardSet(makeBoardSetInput(input))).rejects.toThrow(
+      error,
+    );
   });
 });
 
