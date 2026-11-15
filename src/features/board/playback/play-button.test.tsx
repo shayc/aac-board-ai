@@ -84,7 +84,9 @@ describe("PlayButton", () => {
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
-    expect(tooltip.element().textContent).toBe("Stop message (Esc)");
+    expect(tooltip.element().textContent).toBe(
+      "Stop message (\u2066Esc\u2069)",
+    );
     await expect.element(stop).toHaveAttribute("aria-keyshortcuts", "Escape");
   });
 });
