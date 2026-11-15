@@ -1,6 +1,11 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
-import { failSpeech, stubSpeech } from "@shared/testing/stub-speech";
+import {
+  endUtterance,
+  failSpeech,
+  reachUtteranceBoundary,
+  stubSpeech,
+} from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { page } from "vitest/browser";
@@ -32,15 +37,10 @@ describe("useBoardPlayback", () => {
     let fireBoundary: ((charIndex: number) => void) | undefined;
     let endSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
-      fireBoundary = (charIndex) => {
-        utterance.dispatchEvent(
-          new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
-        );
-      };
+      fireBoundary = (charIndex) =>
+        reachUtteranceBoundary(utterance, charIndex);
 
-      endSpeak = () => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      };
+      endSpeak = () => endUtterance(utterance);
     });
 
     const parts: MessagePart[] = [
@@ -80,9 +80,7 @@ describe("useBoardPlayback", () => {
     const callOrder: string[] = [];
     speech.speak.mockImplementation((utterance) => {
       callOrder.push(`speak:${utterance.text}`);
-      queueMicrotask(() => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      });
+      queueMicrotask(() => endUtterance(utterance));
     });
     audio.play.mockImplementation(function (this: HTMLAudioElement) {
       callOrder.push(`play:${this.src.split("/").pop()}`);
@@ -122,12 +120,8 @@ describe("useBoardPlayback", () => {
   test("cancels speech and clears playing and active-part state on stop", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
-      utterance.dispatchEvent(
-        new SpeechSynthesisEvent("boundary", { utterance, charIndex: 0 }),
-      );
-      resolveSpeak = () => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      };
+      reachUtteranceBoundary(utterance, 0);
+      resolveSpeak = () => endUtterance(utterance);
     });
 
     const parts: MessagePart[] = [{ kind: "tile", id: "1", label: "hi" }];
@@ -153,9 +147,7 @@ describe("useBoardPlayback", () => {
   test("does not advance to later segments after stop", async () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
-      resolveFirstSpeak = () => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      };
+      resolveFirstSpeak = () => endUtterance(utterance);
     });
 
     const parts: MessagePart[] = [
@@ -183,15 +175,10 @@ describe("useBoardPlayback", () => {
     let fireBoundary: ((charIndex: number) => void) | undefined;
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
-      fireBoundary = (charIndex) => {
-        utterance.dispatchEvent(
-          new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
-        );
-      };
+      fireBoundary = (charIndex) =>
+        reachUtteranceBoundary(utterance, charIndex);
 
-      resolveSpeak = () => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      };
+      resolveSpeak = () => endUtterance(utterance);
     });
 
     const parts: MessagePart[] = [
@@ -216,14 +203,10 @@ describe("useBoardPlayback", () => {
   test("aborts the playing message and speaks only the new one when playMessage() is called again", async () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
-      resolveFirstSpeak = () => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      };
+      resolveFirstSpeak = () => endUtterance(utterance);
     });
     speech.speak.mockImplementationOnce((utterance) => {
-      queueMicrotask(() => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      });
+      queueMicrotask(() => endUtterance(utterance));
     });
 
     const { result, rerender } = await renderPlayback();

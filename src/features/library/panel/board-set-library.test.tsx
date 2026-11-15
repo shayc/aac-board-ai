@@ -1,9 +1,9 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { extractOBZ } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { render, type RenderResult } from "vitest-browser-react";
+import type { RenderResult } from "vitest-browser-react";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { starterBoardSet } from "../catalog/board-set-catalog";
 import { cancelBoardSetDownload } from "../catalog/board-set-downloads";
@@ -13,11 +13,9 @@ import { resetBoardsDB, seedBoardSets } from "../testing";
 import { BoardSetLibrary } from "./board-set-library";
 
 function renderBoardSetLibrary() {
-  return render(
+  return renderWithProviders(
     <MemoryRouter>
-      <AppProviders>
-        <BoardSetLibrary />
-      </AppProviders>
+      <BoardSetLibrary />
     </MemoryRouter>,
   );
 }
@@ -141,7 +139,7 @@ describe("BoardSetLibrary", () => {
         .not.toBeInTheDocument();
     });
 
-    test("lists stored and downloadable board sets together in name order", async () => {
+    test("lists stored and downloadable board sets in name order with no accessibility violations", async () => {
       await seedBoardSets([
         { id: "zoo", rootBoardId: "root", name: "Zoo" },
         { id: "animals", rootBoardId: "root", name: "Animals" },
@@ -159,20 +157,6 @@ describe("BoardSetLibrary", () => {
         "Quick Core 60",
         "Zoo",
       ]);
-    });
-
-    test("lists stored and downloadable board sets with no accessibility violations", async () => {
-      await seedBoardSets([
-        { id: "animals", rootBoardId: "root", name: "Animals" },
-        { id: "core-words", rootBoardId: "root", name: "Core Words" },
-      ]);
-
-      const screen = await renderBoardSetLibrary();
-
-      await expect.element(screen.getByText("Board sets")).toBeInTheDocument();
-      await expect.element(screen.getByText("Animals")).toBeInTheDocument();
-      await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
-      await expect.element(screen.getByText("First Words")).toBeInTheDocument();
 
       await expectNoA11yViolations(document.body);
     });
@@ -223,7 +207,7 @@ describe("BoardSetLibrary", () => {
       expect(listedBoardSetNames(screen)).toEqual(namesBeforeDownload);
     });
 
-    test("describes how much of a download has arrived", async () => {
+    test("describes how much of a download has arrived with no accessibility violations", async () => {
       const download = stubStreamingDownload({ "content-length": "2000000" });
 
       const screen = await renderBoardSetLibrary();
@@ -241,6 +225,10 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(cancelButton)
         .toHaveAttribute("aria-disabled", "false");
+
+      await expectNoA11yViolations(
+        screen.getByRole("navigation", { name: "Board sets" }).element(),
+      );
 
       await cancelButton.click();
       await expect
@@ -290,34 +278,6 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("progressbar", { includeHidden: true }))
         .toHaveAttribute("aria-valuenow", "0");
-
-      await screen
-        .getByRole("button", { name: "Cancel downloading First Words" })
-        .click();
-      await expect
-        .element(screen.getByRole("button", { name: "Download First Words" }))
-        .toBeInTheDocument();
-    });
-
-    test("shows download progress with no accessibility violations", async () => {
-      const download = stubStreamingDownload({ "content-length": "2000000" });
-
-      const screen = await renderBoardSetLibrary();
-      await screen
-        .getByRole("button", { name: "Download First Words" })
-        .click();
-      download.send(500_000);
-      await expect
-        .element(
-          screen.getByRole("button", {
-            name: "Cancel downloading First Words",
-          }),
-        )
-        .toHaveAccessibleDescription("0.5 of 2 MB");
-
-      await expectNoA11yViolations(
-        screen.getByRole("navigation", { name: "Board sets" }).element(),
-      );
 
       await screen
         .getByRole("button", { name: "Cancel downloading First Words" })

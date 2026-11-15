@@ -1,6 +1,6 @@
 import Dialog from "@mui/material/Dialog";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -68,17 +68,15 @@ const OTHER_TWO_ROW_BOARD: OBFBoard = {
 
 function navigationGroupTree(canGoBack: boolean) {
   return (
-    <AppProviders>
-      <ScanningScope>
-        <div {...scanGroupProps}>
-          <button disabled={!canGoBack}>back</button>
-          <button>home</button>
-        </div>
-        <div {...scanGroupProps}>
-          <button>yes</button>
-        </div>
-      </ScanningScope>
-    </AppProviders>
+    <ScanningScope>
+      <div {...scanGroupProps}>
+        <button disabled={!canGoBack}>back</button>
+        <button>home</button>
+      </div>
+      <div {...scanGroupProps}>
+        <button>yes</button>
+      </div>
+    </ScanningScope>
   );
 }
 
@@ -517,7 +515,7 @@ describe("switch scanning", () => {
     });
 
     test("highlights a button that becomes enabled in the highlighted group", async () => {
-      const screen = await render(navigationGroupTree(false));
+      const screen = await renderWithProviders(navigationGroupTree(false));
       const back = screen.getByRole("button", { name: "back" }).element();
 
       await pressSwitch("Space");

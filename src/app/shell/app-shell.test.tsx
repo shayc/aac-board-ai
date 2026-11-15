@@ -1,10 +1,9 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { AppShell } from "./app-shell";
 
@@ -16,11 +15,7 @@ function renderAppShell() {
     },
   ]);
 
-  return render(
-    <AppProviders>
-      <RouterProvider router={router} />
-    </AppProviders>,
-  );
+  return renderWithProviders(<RouterProvider router={router} />);
 }
 
 async function renderAppShellPastOnboarding() {

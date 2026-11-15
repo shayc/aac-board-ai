@@ -1,21 +1,12 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { LanguageSettings } from "./language-settings";
-
-function renderLanguageSettings() {
-  return render(
-    <AppProviders>
-      <LanguageSettings />
-    </AppProviders>,
-  );
-}
 
 describe("LanguageSettings", () => {
   test("keeps language selection available and shows no notice without the Translator", async () => {
-    const screen = await renderLanguageSettings();
+    const screen = await renderWithProviders(<LanguageSettings />);
     const select = screen.getByRole("combobox", { name: "Language" });
 
     await expect.element(select).not.toHaveAttribute("aria-disabled");
@@ -25,7 +16,7 @@ describe("LanguageSettings", () => {
   test("renders the language selection with no accessibility violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
-    const screen = await renderLanguageSettings();
+    const screen = await renderWithProviders(<LanguageSettings />);
 
     await expect
       .element(screen.getByRole("combobox", { name: "Language" }))

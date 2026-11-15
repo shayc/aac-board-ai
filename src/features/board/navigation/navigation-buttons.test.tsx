@@ -1,7 +1,6 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { NavigationButtons } from "./navigation-buttons";
 
@@ -17,17 +16,15 @@ async function renderButtons(options: RenderOptions = {}) {
   const onBack = options.onBack ?? vi.fn();
   const onHome = options.onHome ?? vi.fn();
 
-  const screen = await render(
-    <AppProviders>
-      <div dir={options.direction ?? "ltr"}>
-        <NavigationButtons
-          canGoBack={options.canGoBack ?? false}
-          canGoHome={options.canGoHome ?? false}
-          onBack={onBack}
-          onHome={onHome}
-        />
-      </div>
-    </AppProviders>,
+  const screen = await renderWithProviders(
+    <div dir={options.direction ?? "ltr"}>
+      <NavigationButtons
+        canGoBack={options.canGoBack ?? false}
+        canGoHome={options.canGoHome ?? false}
+        onBack={onBack}
+        onHome={onHome}
+      />
+    </div>,
   );
 
   return { onBack, onHome, screen };

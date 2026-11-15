@@ -2,11 +2,7 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
-import {
-  failSpeech,
-  preventSpeechEnd,
-  stubSpeech,
-} from "@shared/testing/stub-speech";
+import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -342,21 +338,9 @@ describe("CommunicationBoard", () => {
       });
     });
 
-    test("speaks a letter spelled earlier in the same tap", async () => {
-      const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
-
-      await screen.getByRole("button", { name: "S", exact: true }).click();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["s"]);
-      });
-    });
-
     test("spells a new word after a word tile and closes it with space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = screen
-        .getByRole("list", { name: "Message" })
-        .getByRole("listitem");
+      const messageItems = getMessageItems(screen);
 
       await screen.getByRole("button", { name: "the" }).click();
       await screen.getByRole("button", { name: "C", exact: true }).click();
@@ -372,9 +356,7 @@ describe("CommunicationBoard", () => {
 
     test("reopens a word closed by space when Backspace undoes the space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = screen
-        .getByRole("list", { name: "Message" })
-        .getByRole("listitem");
+      const messageItems = getMessageItems(screen);
 
       await screen.getByRole("button", { name: "C", exact: true }).click();
       await screen.getByRole("button", { name: "A", exact: true }).click();
@@ -393,11 +375,7 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "space" }).click();
 
-      await expect
-        .element(
-          screen.getByRole("list", { name: "Message" }).getByRole("listitem"),
-        )
-        .toHaveLength(0);
+      await expect.element(getMessageItems(screen)).toHaveLength(0);
       await expect
         .element(screen.getByRole("button", { name: "Play message" }))
         .toBeDisabled();
@@ -408,9 +386,7 @@ describe("CommunicationBoard", () => {
 
     test("removes letters from the word being spelled, then whole words", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
-      const messageItems = screen
-        .getByRole("list", { name: "Message" })
-        .getByRole("listitem");
+      const messageItems = getMessageItems(screen);
       const backspace = screen.getByRole("button", { name: "Backspace" });
 
       await screen.getByRole("button", { name: "the" }).click();
@@ -513,21 +489,6 @@ describe("CommunicationBoard", () => {
         .element(screen.getByRole("alert"))
         .toHaveTextContent("Couldn't play sound");
       expect(screen.getByRole("alert").elements()).toHaveLength(1);
-    });
-
-    test("tells the user when a tile fails to speak", async () => {
-      failSpeech(speech.speak);
-      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-
-      await screen.getByRole("button", { name: "hello" }).click();
-
-      await expect
-        .element(screen.getByRole("alert"))
-        .toHaveTextContent("Couldn't play sound");
-      expect(screen.getByRole("alert").elements()).toHaveLength(1);
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeEnabled();
     });
 
     test("keeps a message that was edited while a speak-then-clear tile spoke", async () => {

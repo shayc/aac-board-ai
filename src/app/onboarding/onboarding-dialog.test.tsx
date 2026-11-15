@@ -1,18 +1,13 @@
 import { locales } from "@paraglide/runtime";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubRewriter } from "@shared/testing/stub-built-in-ai";
 import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { OnboardingDialog } from "./onboarding-dialog";
 
 function renderDialog(onClose: () => void) {
-  return render(
-    <AppProviders>
-      <OnboardingDialog open onClose={onClose} />
-    </AppProviders>,
-  );
+  return renderWithProviders(<OnboardingDialog open onClose={onClose} />);
 }
 
 describe("OnboardingDialog", () => {

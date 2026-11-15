@@ -1,21 +1,17 @@
 import { setStoredLanguage } from "@shared/language/language-store";
-import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { tabToNextControl } from "@shared/testing/tab-to-next-control";
 import { describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { setTileLabelPlacement } from "./tile-preferences-store";
 import { TileSettings } from "./tile-settings";
 
 describe("TileSettings", () => {
   test("renders the tile controls with no accessibility violations", async () => {
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<TileSettings />);
 
     const saturationSlider = screen.getByRole("slider", {
       name: "Color intensity",
@@ -55,11 +51,7 @@ describe("TileSettings", () => {
   test("formats color intensity in the UI locale when the language has no UI translation", async () => {
     setStoredLanguage("fa");
 
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<TileSettings />);
 
     await expect
       .element(screen.getByRole("slider", { name: "Color intensity" }))
@@ -74,11 +66,7 @@ describe("TileSettings", () => {
     "shows one focus outline around the $name label option while keeping its preview visible",
     async ({ placement, name }) => {
       setTileLabelPlacement(placement);
-      const screen = await render(
-        <AppProviders>
-          <TileSettings />
-        </AppProviders>,
-      );
+      const screen = await renderWithProviders(<TileSettings />);
 
       await tabToNextControl();
 
@@ -98,11 +86,7 @@ describe("TileSettings", () => {
   );
 
   test("persists tile border visibility when toggled", async () => {
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<TileSettings />);
 
     const bordersSwitch = screen.getByRole("switch", {
       name: "Show borders",
@@ -112,15 +96,13 @@ describe("TileSettings", () => {
     await bordersSwitch.click();
 
     await expect.element(bordersSwitch).toBeChecked();
-    expect(storedTilePreferences()).toMatchObject({ areBordersVisible: true });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      areBordersVisible: true,
+    });
   });
 
   test("persists tile saturation when color intensity is lowered", async () => {
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<TileSettings />);
 
     const saturationSlider = screen.getByRole("slider", {
       name: "Color intensity",
@@ -137,15 +119,13 @@ describe("TileSettings", () => {
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "90%");
 
-    expect(storedTilePreferences()).toMatchObject({ saturation: valueNow });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      saturation: valueNow,
+    });
   });
 
   test("persists tile brightness when brightness is lowered", async () => {
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<TileSettings />);
 
     const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
 
@@ -156,18 +136,16 @@ describe("TileSettings", () => {
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "97%");
 
-    expect(storedTilePreferences()).toMatchObject({ brightness: 0.97 });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      brightness: 0.97,
+    });
   });
 
   test.each([
     { name: "Brightness", lowest: "70%" },
     { name: "Color intensity", lowest: "0%" },
   ])("lowers $name to $lowest in ten steps", async ({ name, lowest }) => {
-    const screen = await render(
-      <AppProviders>
-        <TileSettings />
-      </AppProviders>,
-    );
+    const screen = await renderWithProviders(<TileSettings />);
 
     const slider = screen.getByRole("slider", { name });
 
@@ -180,11 +158,11 @@ describe("TileSettings", () => {
   });
 
   test("keeps repeated label position controls synchronized and persists the choice", async () => {
-    const screen = await render(
-      <AppProviders>
+    const screen = await renderWithProviders(
+      <>
         <TileSettings />
         <TileSettings />
-      </AppProviders>,
+      </>,
     );
 
     const groups = screen.getByRole("radiogroup", { name: "Labels" }).all();
@@ -209,10 +187,8 @@ describe("TileSettings", () => {
         .toBeChecked();
     }
 
-    expect(storedTilePreferences()).toMatchObject({ labelPlacement: "bottom" });
+    expect(readStoredPreferences("tile-preferences")).toMatchObject({
+      labelPlacement: "bottom",
+    });
   });
 });
-
-function storedTilePreferences(): unknown {
-  return JSON.parse(localStorage.getItem("tile-preferences") ?? "null");
-}

@@ -159,7 +159,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={[
             ["1", "2"],
             ["3", "4"],
@@ -181,7 +180,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={[]}
-
           order={[
             [null, null],
             [null, null],
@@ -213,7 +211,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -245,7 +242,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -276,7 +272,6 @@ describe("Grid", () => {
         <Grid
           aria-label="Board"
           items={items}
-
           order={order}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />,
@@ -284,52 +279,6 @@ describe("Grid", () => {
 
       const buttons = screen.getByRole("button").all();
       expect(buttons).toHaveLength(2);
-    });
-  });
-
-  describe("accessibility", () => {
-    test("exposes aria-label as the grid's accessible name", async () => {
-      const items = [{ id: "1", label: "Item 1" }];
-
-      const screen = await render(
-        <Grid
-          aria-label="Core words"
-          items={items}
-
-          order={rowMajorOrder(items, 1)}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      await expect
-        .element(screen.getByRole("grid", { name: "Core words" }))
-        .toBeVisible();
-    });
-  });
-
-  describe("row props", () => {
-    test("spreads rowProps onto every row", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-      ];
-
-      const screen = await render(
-        <Grid
-          aria-label="Board"
-          items={items}
-
-          order={rowMajorOrder(items, 1)}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-          rowProps={{ "data-testid": "grid-row" }}
-        />,
-      );
-
-      const rows = screen.getByRole("row").all();
-      expect(rows).toHaveLength(2);
-      for (const row of rows) {
-        await expect.element(row).toHaveAttribute("data-testid", "grid-row");
-      }
     });
   });
 

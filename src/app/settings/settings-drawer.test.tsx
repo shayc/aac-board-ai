@@ -1,12 +1,11 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import {
   stubProofreader,
   stubRewriter,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { SettingsDrawer } from "./settings-drawer";
 
 describe("SettingsDrawer", () => {
@@ -15,10 +14,8 @@ describe("SettingsDrawer", () => {
     stubRewriter();
     stubTranslator();
 
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={vi.fn()} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={vi.fn()} />,
     );
 
     await expect.element(screen.getByText("Settings")).toBeInTheDocument();
@@ -58,10 +55,8 @@ describe("SettingsDrawer", () => {
   });
 
   test("names each section group after its heading", async () => {
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={vi.fn()} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={vi.fn()} />,
     );
 
     await expect
@@ -88,10 +83,8 @@ describe("SettingsDrawer", () => {
   });
 
   test("formats setting values for the selected language", async () => {
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={vi.fn()} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={vi.fn()} />,
     );
 
     await screen.getByRole("combobox", { name: "Language" }).click();
@@ -107,10 +100,8 @@ describe("SettingsDrawer", () => {
 
   test("calls onClose when the close button is clicked", async () => {
     const onClose = vi.fn();
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={onClose} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={onClose} />,
     );
 
     await screen.getByRole("button", { name: "Close settings" }).click();
@@ -119,10 +110,8 @@ describe("SettingsDrawer", () => {
   });
 
   test("keeps the close button in view after scrolling to the end", async () => {
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={vi.fn()} />
-      </AppProviders>,
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={vi.fn()} />,
     );
 
     screen

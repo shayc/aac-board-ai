@@ -1,17 +1,16 @@
 import Button from "@mui/material/Button";
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { ThemeSettings } from "./theme-settings";
 
 describe("ThemeSettings", () => {
   test("keeps repeated theme controls synchronized with no accessibility violations", async () => {
-    const screen = await render(
-      <AppProviders>
+    const screen = await renderWithProviders(
+      <>
         <ThemeSettings />
         <ThemeSettings />
-      </AppProviders>,
+      </>,
     );
 
     const themeGroups = screen.getByRole("group", { name: "Theme" });
@@ -65,11 +64,11 @@ describe("ThemeSettings", () => {
   });
 
   test("switches every control to the new theme at once", async () => {
-    const screen = await render(
-      <AppProviders>
+    const screen = await renderWithProviders(
+      <>
         <ThemeSettings />
         <Button variant="contained">Untouched</Button>
-      </AppProviders>,
+      </>,
     );
     const darkButton = screen.getByRole("button", { name: "Dark" });
     const untouchedButton = screen

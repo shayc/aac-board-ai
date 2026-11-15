@@ -13,15 +13,11 @@ import {
   test,
   vi,
 } from "vitest";
-import { routeErrorCodes } from "../route-error";
+import { localizedImportFailure } from "../testing/localized-import-failure";
 import { routeArgs } from "../testing/route-args";
 import { rootIndexLoader } from "./root-index-loader";
 
 const DEFAULT_BOARD_PATH = "/first-words.obz";
-const localizedImportFailure = {
-  data: { code: routeErrorCodes.boardURLImportFailed },
-  init: { status: 400 },
-};
 
 function callLoader(searchParams = "", signal?: AbortSignal) {
   return rootIndexLoader(
