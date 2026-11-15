@@ -72,8 +72,7 @@ flowchart LR
 Dashed edges mark optional or platform-dependent integrations.
 
 Built-in AI runs on-device without per-request network access once a model is
-available. The app checks for AI capabilities directly rather than inferring
-support from User-Agent strings.
+available.
 
 ## Data and state ownership
 
@@ -276,9 +275,6 @@ these rules:
 - When grid content changes, focus returns to the remembered cell or first
   focusable tile only if no other control holds focus.
 
-Behavior tests and axe-core accessibility checks run in real Chromium through
-Playwright-backed Vitest.
-
 ### Switch scanning
 
 People who cannot tap or use a keyboard select with one or two switches, which
@@ -345,17 +341,18 @@ and suggestions carry the communication language, so assistive technology
 pronounces them correctly whatever the UI locale is. A board whose file declares
 no language carries no `lang` and inherits the document's.
 
-Direction-specific Emotion caches, right-to-left (RTL) styling, and logical CSS
-support both text directions.
 The app and board each use
 [`DirectionalThemeProvider`](../src/shared/theme/directional-theme-provider.tsx)
-for their own text direction.
+for their own text direction; it switches the Emotion cache and theme to match.
 
 ### Theming
 
-Theme colors are defined centrally in
-[`theme-colors.ts`](../src/shared/theme/theme-colors.ts). Theme mode is set before
-the first paint to avoid a flash of the wrong color scheme.
+The palette and component styles live in
+[`theme.ts`](../src/shared/theme/theme.ts).
+[`theme-colors.ts`](../src/shared/theme/theme-colors.ts) holds only the page
+background colors, which `index.html`, the PWA manifest, and the `theme-color`
+meta tag share with the theme. Theme mode is set before the first paint to avoid
+a flash of the wrong color scheme.
 
 ### Screen sizes
 
@@ -430,7 +427,7 @@ library's public entry point, and the library imports no feature.
 | Feature                               | Owns                                                                             |
 | ------------------------------------- | -------------------------------------------------------------------------------- |
 | [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning |
-| [`library`](../src/features/library/) | Stored board sets                                                                | [library/board-sets/](../src/features/library/board-sets/) | Maintain the reactive library, create and delete board sets, and read stored boards as runtime types. |
+| [`library`](../src/features/library/) | Stored board sets                                                                |
 
 Test files may also import the library's
 [`testing`](../src/features/library/testing/index.ts) entry.
