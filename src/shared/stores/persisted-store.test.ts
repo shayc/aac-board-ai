@@ -71,6 +71,17 @@ describe("createPersistedStore", () => {
     expect(store.getSnapshot()).toEqual({ count: 4 });
   });
 
+  test("leaves another tab's value as written when reloading it", () => {
+    const store = createPersistedStore("counter", parseCounter);
+    const valueFromNewerVersion = JSON.stringify({ count: 4, step: 2 });
+
+    localStorage.setItem("counter", valueFromNewerVersion);
+    dispatchStorageFromAnotherTab("counter");
+
+    expect(store.getSnapshot()).toEqual({ count: 4 });
+    expect(localStorage.getItem("counter")).toBe(valueFromNewerVersion);
+  });
+
   test("reloads to its parsed default when another tab clears storage", () => {
     const store = createPersistedStore("counter", parseCounter);
 
