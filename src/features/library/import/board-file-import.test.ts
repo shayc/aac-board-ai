@@ -143,11 +143,11 @@ describe("importBoardFile", () => {
   test("detects an OBZ archive by content even when its name is not .obz", async () => {
     const obzFile = await loadFixtureFile(OBZ_FIXTURE);
     const archive = await loadOBZ(obzFile);
-    const zipNamedFile = new File([obzFile], "lots-of-stuff.zip", {
+    const unnamedFile = new File([obzFile], "lots-of-stuff", {
       type: "application/zip",
     });
 
-    const importedBoardSet = await importBoardFile(zipNamedFile);
+    const importedBoardSet = await importBoardFile(unnamedFile);
 
     expect(importedBoardSet.id).toBe(IMPORTED_SET_ID);
 
@@ -219,7 +219,7 @@ describe("importBoardFile", () => {
     assertDefined(resourcePath);
 
     const obfFile = await loadFixtureFile(OBF_FIXTURE);
-    const collidingFile = new File([obfFile], "BOARD.json");
+    const collidingFile = new File([obfFile], "BOARD.obf");
     const result = await importBoardFile(collidingFile);
 
     expect(result.id).toBe("board-2");

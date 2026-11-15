@@ -1,6 +1,6 @@
 export const BOARD_FILE_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
-  "application/zip": [".obz", ".zip"],
-  "application/json": [".obf", ".json"],
+  "application/zip": [".obz"],
+  "application/json": [".obf"],
 };
 
 const BOARD_FILE_EXTENSIONS = Object.values(
@@ -13,8 +13,8 @@ export const BOARD_FILE_ACCEPT = [
   "application/octet-stream",
 ].join(",");
 
-export function hasBoardFileExtension(file: File): boolean {
-  return findBoardFileExtension(file.name) !== undefined;
+export function hasBoardFileExtension(fileName: string): boolean {
+  return findBoardFileExtension(fileName) !== undefined;
 }
 
 export function stripBoardFileExtension(fileName: string): string {

@@ -81,6 +81,28 @@ describe("importBoardFileFromURL", () => {
     expect(result.id).toBe("board");
   });
 
+  test("decodes a percent-encoded filename when deriving the boardSetId", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
+
+    const result = await importBoardFileFromURL(
+      "https://example.com/My%20Board.obz",
+    );
+
+    expect(result.id).toBe("my board");
+  });
+
+  test("keeps a malformed percent escape as typed", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
+
+    const result = await importBoardFileFromURL(
+      "https://example.com/50%E0.obz",
+    );
+
+    expect(result.id).toBe("50%e0");
+  });
+
   test("rejects with the HTTP status when the download fails", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 404 }),

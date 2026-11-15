@@ -55,3 +55,21 @@ export function summarizeImport({
 function isArchiveTooLarge(error: unknown): boolean {
   return error instanceof OBFError && error.info.code === "archive-too-large";
 }
+
+export function summarizeSkippedFiles(
+  fileNames: readonly string[],
+): SnackbarOptions {
+  const onlyFileName = fileNames.length === 1 ? fileNames[0] : undefined;
+  if (onlyFileName !== undefined) {
+    return {
+      message: (t) =>
+        t(m.libraryImportNotBoardFile, { fileName: onlyFileName }),
+      severity: "error",
+    };
+  }
+
+  return {
+    message: (t) => t(m.libraryImportNotBoardFiles),
+    severity: "error",
+  };
+}

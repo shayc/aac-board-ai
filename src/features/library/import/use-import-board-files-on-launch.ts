@@ -1,23 +1,19 @@
-import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect, useEffectEvent } from "react";
-import { summarizeImport } from "./summarize-import";
+import type { BoardFileImportFailure } from "./board-file-import";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useImportBoardFilesOnLaunch(): void {
   const { importAndOpen } = useImportBoardFiles();
-  const { showSnackbar } = useSnackbar();
 
   const importLaunchedFiles = useEffectEvent(
     async (handles: readonly FileSystemFileHandle[]) => {
-      try {
-        const files = await Promise.all(
-          handles.map((handle) => handle.getFile()),
-        );
-        await importAndOpen(files);
-      } catch (error) {
-        const failures = handles.map(({ name }) => ({ fileName: name, error }));
-        showSnackbar(summarizeImport({ importedBoardSets: [], failures }));
-      }
+      const readResults = await Promise.all(handles.map(readLaunchedFile));
+      const files = readResults.filter((entry) => entry instanceof File);
+      const readFailures = readResults.filter(
+        (entry): entry is BoardFileImportFailure => !(entry instanceof File),
+      );
+
+      await importAndOpen(files, readFailures);
     },
   );
 
@@ -31,4 +27,14 @@ export function useImportBoardFilesOnLaunch(): void {
       void importLaunchedFiles(files);
     });
   }, []);
+}
+
+async function readLaunchedFile(
+  handle: FileSystemFileHandle,
+): Promise<File | BoardFileImportFailure> {
+  try {
+    return await handle.getFile();
+  } catch (error) {
+    return { fileName: handle.name, error };
+  }
 }

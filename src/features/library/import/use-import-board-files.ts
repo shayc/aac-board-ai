@@ -4,14 +4,17 @@ import { useNavigate } from "react-router";
 import { rootBoardPath } from "../board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
 import {
+  type BoardFileImportFailure,
   importEachBoardFile,
   type ImportedBoardSet,
 } from "./board-file-import";
-import { summarizeImport } from "./summarize-import";
+import { summarizeImport, summarizeSkippedFiles } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
-  importFiles: (files: readonly File[]) => Promise<ImportedBoardSet[]>;
-  importAndOpen: (files: readonly File[]) => Promise<void>;
+  importAndOpen: (
+    files: readonly File[],
+    readFailures?: readonly BoardFileImportFailure[],
+  ) => Promise<void>;
   pickAndImport: () => Promise<void>;
 }
 
@@ -21,34 +24,51 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
   async function importFiles(
     files: readonly File[],
+    readFailures: readonly BoardFileImportFailure[],
   ): Promise<ImportedBoardSet[]> {
-    if (files.length === 0) {
+    if (files.length === 0 && readFailures.length === 0) {
       return [];
     }
 
-    const boardFiles = files.filter(hasBoardFileExtension);
-    if (boardFiles.length === 0) {
+    const boardFiles = files.filter(({ name }) => hasBoardFileExtension(name));
+    const boardReadFailures = readFailures.filter(({ fileName }) =>
+      hasBoardFileExtension(fileName),
+    );
+    // Non-board files are named only when no board file was given, so a stray
+    // file never turns a successful import into an error.
+    if (boardFiles.length === 0 && boardReadFailures.length === 0) {
+      const skippedFileNames = [
+        ...files.map(({ name }) => name),
+        ...readFailures.map(({ fileName }) => fileName),
+      ];
+      showSnackbar(summarizeSkippedFiles(skippedFileNames));
+
+      return [];
+    }
+
+    if (boardFiles.length > 0) {
       showSnackbar({
-        message: (t) => t(m.libraryImportOnlyBoardFiles),
-        severity: "error",
+        message: (t) =>
+          t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
       });
-
-      return [];
     }
-
-    showSnackbar({
-      message: (t) =>
-        t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
-    });
 
     const outcome = await importEachBoardFile(boardFiles);
-    showSnackbar(summarizeImport(outcome));
+    showSnackbar(
+      summarizeImport({
+        importedBoardSets: outcome.importedBoardSets,
+        failures: [...boardReadFailures, ...outcome.failures],
+      }),
+    );
 
     return outcome.importedBoardSets;
   }
 
-  async function importAndOpen(files: readonly File[]) {
-    const importedBoardSets = await importFiles(files);
+  async function importAndOpen(
+    files: readonly File[],
+    readFailures: readonly BoardFileImportFailure[] = [],
+  ) {
+    const importedBoardSets = await importFiles(files, readFailures);
     const onlyBoardSet =
       importedBoardSets.length === 1 ? importedBoardSets[0] : undefined;
     if (!onlyBoardSet) {
@@ -61,11 +81,10 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   async function pickAndImport() {
     const files = await pickBoardFiles();
 
-    await importFiles(files);
+    await importAndOpen(files);
   }
 
   return {
-    importFiles,
     importAndOpen,
     pickAndImport,
   };

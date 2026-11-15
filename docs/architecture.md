@@ -143,10 +143,12 @@ starter board set if the library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
 `importBoardFile`. Each imported file creates a separate board set. The three
-local-file entry points go through `useImportBoardFiles().importFiles`, which
-skips files without a board file extension and reports when none remain. It
-imports the rest one at a time, so a failing file doesn't block the others, and
-reports the outcome in one message that names the file when exactly one fails.
+local-file entry points go through `useImportBoardFiles().importAndOpen`, which
+opens the board set when exactly one imports. It skips files without a board
+file extension and names them only when no board file was given. It imports the
+rest one at a time, so a failing file, or a launched file that can't be read,
+doesn't block the others. It reports the outcome in one message that names the
+file when exactly one fails.
 
 ### Export a board set
 
