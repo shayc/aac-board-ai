@@ -9,10 +9,13 @@ import {
 
 const MAX_REMEMBERED_PREDICTIONS = 200;
 
-interface NextWordRequest {
-  text: string;
+interface NextWordBoard {
   vocabulary: readonly string[];
   language: string;
+}
+
+interface NextWordRequest extends NextWordBoard {
+  text: string;
   signal: AbortSignal;
 }
 
@@ -36,14 +39,16 @@ export async function predictNextWords({
   language,
   signal,
 }: NextWordRequest): Promise<string[]> {
-  const sessionKey = JSON.stringify([language, vocabulary]);
-  const predictionKey = JSON.stringify([sessionKey, text]);
+  const predictionKey = JSON.stringify([
+    boardSessionKey({ vocabulary, language }),
+    text,
+  ]);
   const remembered = rememberedPredictions.get(predictionKey);
   if (remembered) {
     return remembered;
   }
 
-  const base = await getBoardSession(sessionKey, vocabulary, language);
+  const base = await getBoardSession({ vocabulary, language });
   const words = await promptNextWords(base, text, vocabulary, signal);
   // An empty answer is worth retrying on the next request.
   if (words.length > 0) {
@@ -53,11 +58,20 @@ export async function predictNextWords({
   return words;
 }
 
-async function getBoardSession(
-  key: string,
-  vocabulary: readonly string[],
-  language: string,
-): Promise<LanguageModel> {
+// Prefilling the session is the slow part of a board's first prediction, so
+// the board starts it on opening, before there is a sentence to follow.
+export function prepareNextWords(board: NextWordBoard): void {
+  // A failed session is retried by the next prediction, which reports it.
+  void getBoardSession(board).catch(() => undefined);
+}
+
+function boardSessionKey({ vocabulary, language }: NextWordBoard): string {
+  return JSON.stringify([language, vocabulary]);
+}
+
+async function getBoardSession(board: NextWordBoard): Promise<LanguageModel> {
+  const { vocabulary, language } = board;
+  const key = boardSessionKey(board);
   if (boardSession?.key === key) {
     return boardSession.session;
   }

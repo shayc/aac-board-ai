@@ -2,7 +2,7 @@ import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { type Status, useLanguageModel } from "@shayc/react-built-in-ai";
 import { useEffect, useRef } from "react";
 import { nextWordLanguageOptions } from "./next-word-prompt";
-import { predictNextWords } from "./next-word-session";
+import { predictNextWords, prepareNextWords } from "./next-word-session";
 
 interface UseNextWordSourceOptions {
   text: string;
@@ -41,12 +41,15 @@ export function useNextWordSource({
     engine.reset(nextWordLanguageOptions(language));
   }, [engine, language]);
 
+  const canUseBoard = vocabulary.length > 0 && engine.status === "ready";
+  useEffect(() => {
+    if (canUseBoard) {
+      prepareNextWords({ vocabulary, language });
+    }
+  }, [canUseBoard, vocabulary, language]);
+
   // A word still being spelled is not a word to follow yet.
-  const canPredict =
-    text !== "" &&
-    !isWordOpen &&
-    vocabulary.length > 0 &&
-    engine.status === "ready";
+  const canPredict = canUseBoard && text !== "" && !isWordOpen;
   const request = useLatestAsync({
     deps: [text, language, ...vocabulary],
     run: canPredict

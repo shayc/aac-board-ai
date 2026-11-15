@@ -40,6 +40,20 @@ describe("useNextWordSource", () => {
     expect(result.current.words).toEqual([]);
   });
 
+  test("prepares the board's session before there is a sentence", async () => {
+    const languageModel = stubLanguageModel(() => modelAnswer("I", ["want"]));
+
+    await renderNextWordSource("prepares", "");
+
+    // The board's words only reach the model through its session's prefix.
+    await vi.waitFor(() => {
+      expect(JSON.stringify(languageModel.create.mock.calls)).toContain(
+        "prepares",
+      );
+    });
+    expect(languageModel.prompt).not.toHaveBeenCalled();
+  });
+
   test("reuses the answer for a sentence it has already predicted", async () => {
     const languageModel = stubLanguageModel(() =>
       modelAnswer("I want more", ["eat", "to", "more"]),
