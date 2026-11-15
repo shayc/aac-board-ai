@@ -7,7 +7,7 @@ import { resolveBoardShortcut } from "./resolve-board-shortcut";
 import {
   type BoardShortcutLabels,
   useBoardShortcutLabels,
-} from "./shortcut-labels";
+} from "./use-board-shortcut-labels";
 
 interface UseBoardShortcutsOptions {
   message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;
@@ -37,7 +37,7 @@ export function useBoardShortcuts({
 
       event.preventDefault();
 
-      switch (action.kind) {
+      switch (action) {
         case "backspace":
           message.backspace();
           break;
