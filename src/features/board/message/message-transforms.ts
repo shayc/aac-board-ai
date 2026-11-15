@@ -1,5 +1,6 @@
+import { assertNever } from "@shared/utils/assert-never";
 import { randomId } from "@shared/utils/random-id";
-import type { Message, TextPart, TilePart } from "./message-types";
+import type { Message, MessageEdit, TextPart, TilePart } from "./message-types";
 
 export const EMPTY_MESSAGE: Message = {
   parts: [],
@@ -99,6 +100,13 @@ export function applyBackspace(message: Message): Message {
   };
 }
 
+export function applyEdits(
+  message: Message,
+  edits: readonly MessageEdit[],
+): Message {
+  return edits.reduce(applyEdit, message);
+}
+
 function messageToAddTo(message: Message): Message {
   return message.isSpoken ? EMPTY_MESSAGE : message;
 }
@@ -117,4 +125,21 @@ function removeLastGrapheme(text: string): string {
     .containing(text.length - 1);
 
   return text.slice(0, lastGrapheme?.index ?? 0);
+}
+
+function applyEdit(message: Message, edit: MessageEdit): Message {
+  switch (edit.kind) {
+    case "tile":
+      return appendTilePart(message, edit.part);
+    case "spell":
+      return spell(message, edit.text);
+    case "space":
+      return closeWord(message);
+    case "backspace":
+      return applyBackspace(message);
+    case "clear":
+      return EMPTY_MESSAGE;
+    default:
+      return assertNever(edit);
+  }
 }

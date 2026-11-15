@@ -1,7 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setClearsAfterSpeaking } from "./message-preferences-store";
-import { closeWord, spell } from "./message-transforms";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -49,18 +48,14 @@ describe("useMessage", () => {
     expect(result.current.parts).toHaveLength(0);
   });
 
-  test("exposes each edit to handlers before the next render", async () => {
+  test("applies each edit to the latest message before the next render", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
     message.replaceWithText("I want water");
     message.backspace();
 
-    expect(message.getState().parts.map((part) => part.label)).toEqual([
-      "I",
-      "want",
-      "wate",
-    ]);
+    expect(spellLetter(message)).toEqual(["I", "want", "watea"]);
   });
 
   test("leaves the last suggested word open for spelling", async () => {
@@ -68,26 +63,21 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want");
-    message.setState(spell(message.getState(), "s"));
 
-    expect(message.getState().parts.map((part) => part.label)).toEqual([
-      "I",
-      "wants",
-    ]);
+    expect(spellLetter(message)).toEqual(["I", "wanta"]);
   });
 
-  test("marks the message spoken once it plays to its end", async () => {
+  test("starts a new message once the message plays to its end", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(message.getState().isSpoken).toBe(true);
-    expect(message.getState().parts).toHaveLength(3);
+    expect(spellLetter(message)).toEqual(["a"]);
   });
 
-  test("leaves the message unspoken once it is edited", async () => {
+  test("keeps adding to a spoken message once it is edited", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -95,10 +85,10 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     message.backspace();
 
-    expect(message.getState().isSpoken).toBe(false);
+    expect(spellLetter(message)).toEqual(["I", "want", "watea"]);
   });
 
-  test("leaves the message unspoken when clearing after speaking is off", async () => {
+  test("keeps adding to a played message when clearing after speaking is off", async () => {
     setClearsAfterSpeaking(false);
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
@@ -106,7 +96,7 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(message.getState().isSpoken).toBe(false);
+    expect(spellLetter(message)).toEqual(["I", "want", "watera"]);
   });
 
   test("releases a spoken message when clearing after speaking is turned off", async () => {
@@ -117,10 +107,10 @@ describe("useMessage", () => {
     setClearsAfterSpeaking(false);
     await rerender();
 
-    expect(result.current.getState().isSpoken).toBe(false);
+    expect(spellLetter(result.current)).toEqual(["I", "want", "watera"]);
   });
 
-  test("leaves the message unspoken when its playback did not complete", async () => {
+  test("keeps adding to the message when its playback did not complete", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -128,10 +118,10 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     await trackSettledPlayback(message, false);
 
-    expect(message.getState().isSpoken).toBe(false);
+    expect(spellLetter(message)).toEqual(["I", "want", "watera"]);
   });
 
-  test("leaves a spoken message unspoken while it is playing again", async () => {
+  test("keeps adding to a spoken message while it is playing again", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -139,10 +129,10 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     message.trackPlayback(Promise.withResolvers<boolean>().promise);
 
-    expect(message.getState().isSpoken).toBe(false);
+    expect(spellLetter(message)).toEqual(["I", "want", "watera"]);
   });
 
-  test("leaves the message unspoken when it changed while playing", async () => {
+  test("keeps adding to the message when it changed while playing", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -152,25 +142,72 @@ describe("useMessage", () => {
     message.backspace();
     await completion;
 
-    expect(message.getState().isSpoken).toBe(false);
+    expect(spellLetter(message)).toEqual(["I", "want", "watea"]);
   });
 
-  test("leaves the message unspoken when its last word was reopened while playing", async () => {
+  test("keeps adding to the message when its last word was reopened while playing", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.setState(closeWord(spell(message.getState(), "hi")));
+    message.edit([{ kind: "spell", text: "hi" }, { kind: "space" }]);
     const completion = Promise.resolve(true);
     message.trackPlayback(completion);
     message.backspace();
     await completion;
 
-    expect(message.getState()).toMatchObject({
-      isWordOpen: true,
-      isSpoken: false,
+    expect(spellLetter(message)).toEqual(["hia"]);
+  });
+
+  test("reports whether an edit changed the message", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("hi");
+
+    expect(message.edit([{ kind: "space" }]).hasChanged).toBe(true);
+    expect(message.edit([{ kind: "space" }]).hasChanged).toBe(false);
+  });
+
+  describe("editIfUnchanged", () => {
+    test("edits the message it was given", async () => {
+      const { result } = await renderHook(() => useMessage());
+      const message = result.current;
+      const { edited } = message.edit([{ kind: "spell", text: "hi" }]);
+
+      message.editIfUnchanged(edited, [{ kind: "clear" }]);
+
+      expect(spellLetter(message)).toEqual(["a"]);
+    });
+
+    test("continues a message that was spoken since", async () => {
+      const { result } = await renderHook(() => useMessage());
+      const message = result.current;
+      const { edited } = message.edit([{ kind: "spell", text: "hi" }]);
+      await trackSettledPlayback(message, true);
+
+      message.editIfUnchanged(edited, [{ kind: "spell", text: "!" }]);
+
+      expect(spellLetter(message)).toEqual(["hi!a"]);
+    });
+
+    test("drops the edits when the message changed since", async () => {
+      const { result } = await renderHook(() => useMessage());
+      const message = result.current;
+      const { edited } = message.edit([{ kind: "spell", text: "hi" }]);
+      message.backspace();
+
+      message.editIfUnchanged(edited, [{ kind: "clear" }]);
+
+      expect(spellLetter(message)).toEqual(["ha"]);
     });
   });
 });
+
+function spellLetter(message: ReturnType<typeof useMessage>): string[] {
+  const { edited } = message.edit([{ kind: "spell", text: "a" }]);
+
+  return edited.parts.map((part) => part.label);
+}
 
 async function trackSettledPlayback(
   message: ReturnType<typeof useMessage>,
