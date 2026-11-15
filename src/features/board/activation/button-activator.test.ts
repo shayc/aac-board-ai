@@ -21,7 +21,7 @@ const SPELL_A: BoardButton = {
   actions: [{ kind: "spell", text: "a" }],
 };
 
-function tile(label: string): MessageEdit {
+function tilePart(label: string): MessageEdit {
   return { kind: "tile", part: createTilePart({ label }) };
 }
 
@@ -239,7 +239,7 @@ describe("createButtonActivator", () => {
 
   test("keeps the message spoken when an edit after play changes nothing", async () => {
     const { activateButton, readLabels, holdMessagePlayback } = await setup([
-      tile("hi"),
+      tilePart("hi"),
     ]);
     const settlePlayback = holdMessagePlayback();
 
@@ -307,7 +307,7 @@ describe("createButtonActivator", () => {
   });
 
   test("speaks the message for a space that changes nothing, followed by play", async () => {
-    const { activateButton, playback } = await setup([tile("hello")]);
+    const { activateButton, playback } = await setup([tilePart("hello")]);
 
     activateButton({
       id: "btn",
@@ -320,7 +320,7 @@ describe("createButtonActivator", () => {
   });
 
   describe("after the message is spoken", () => {
-    const SPOKEN_TILES = [tile("hello"), tile("world")];
+    const SPOKEN_PARTS = [tilePart("hello"), tilePart("world")];
 
     test.each<{ description: string; button: BoardButton; labels: string[] }>([
       {
@@ -343,7 +343,7 @@ describe("createButtonActivator", () => {
         labels: ["a"],
       },
     ])("starts a new message with $description", async ({ button, labels }) => {
-      const { activateButton, readLabels } = await setup(SPOKEN_TILES, {
+      const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
         isSpoken: true,
       });
 
@@ -353,7 +353,7 @@ describe("createButtonActivator", () => {
     });
 
     test("edits the spoken message with backspace", async () => {
-      const { activateButton, readLabels } = await setup(SPOKEN_TILES, {
+      const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
         isSpoken: true,
       });
 
@@ -367,7 +367,7 @@ describe("createButtonActivator", () => {
     });
 
     test("leaves the spoken message as it is for a space", async () => {
-      const { activateButton, readLabels } = await setup(SPOKEN_TILES, {
+      const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
         isSpoken: true,
       });
 
@@ -379,7 +379,7 @@ describe("createButtonActivator", () => {
 
     test("speaks the message again for a space followed by play", async () => {
       const { activateButton, playback, readParts } = await setup(
-        SPOKEN_TILES,
+        SPOKEN_PARTS,
         { isSpoken: true },
       );
       const parts = await readParts();
@@ -398,7 +398,7 @@ describe("createButtonActivator", () => {
     // spoken message each time it is edited, which must not count as a change.
     test("replays a spoken message when clearing after speaking is off", async () => {
       setClearsAfterSpeaking(false);
-      const { activateButton, playback } = await setup(SPOKEN_TILES, {
+      const { activateButton, playback } = await setup(SPOKEN_PARTS, {
         isSpoken: true,
       });
 

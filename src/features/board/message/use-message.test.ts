@@ -55,7 +55,7 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     message.backspace();
 
-    expect(spellLetter(message)).toEqual(["I", "want", "watea"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
   });
 
   test("leaves the last suggested word open for spelling", async () => {
@@ -64,7 +64,7 @@ describe("useMessage", () => {
 
     message.replaceWithText("I want");
 
-    expect(spellLetter(message)).toEqual(["I", "wanta"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "wanta"]);
   });
 
   test("starts a new message once the message plays to its end", async () => {
@@ -74,7 +74,7 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(spellLetter(message)).toEqual(["a"]);
+    expect(labelsAfterSpelling(message)).toEqual(["a"]);
   });
 
   test("keeps adding to a spoken message once it is edited", async () => {
@@ -85,7 +85,7 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     message.backspace();
 
-    expect(spellLetter(message)).toEqual(["I", "want", "watea"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
   });
 
   test("keeps adding to a played message when clearing after speaking is off", async () => {
@@ -96,7 +96,7 @@ describe("useMessage", () => {
     message.replaceWithText("I want water");
     await trackSettledPlayback(message, true);
 
-    expect(spellLetter(message)).toEqual(["I", "want", "watera"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
 
   test("releases a spoken message when clearing after speaking is turned off", async () => {
@@ -107,7 +107,11 @@ describe("useMessage", () => {
     setClearsAfterSpeaking(false);
     await rerender();
 
-    expect(spellLetter(result.current)).toEqual(["I", "want", "watera"]);
+    expect(labelsAfterSpelling(result.current)).toEqual([
+      "I",
+      "want",
+      "watera",
+    ]);
   });
 
   test("keeps adding to the message when its playback did not complete", async () => {
@@ -118,7 +122,7 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     await trackSettledPlayback(message, false);
 
-    expect(spellLetter(message)).toEqual(["I", "want", "watera"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
 
   test("keeps adding to a spoken message while it is playing again", async () => {
@@ -129,7 +133,7 @@ describe("useMessage", () => {
     await trackSettledPlayback(message, true);
     message.trackPlayback(Promise.withResolvers<boolean>().promise);
 
-    expect(spellLetter(message)).toEqual(["I", "want", "watera"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
 
   test("keeps adding to the message when it changed while playing", async () => {
@@ -142,7 +146,7 @@ describe("useMessage", () => {
     message.backspace();
     await completion;
 
-    expect(spellLetter(message)).toEqual(["I", "want", "watea"]);
+    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
   });
 
   test("keeps adding to the message when its last word was reopened while playing", async () => {
@@ -155,7 +159,7 @@ describe("useMessage", () => {
     message.backspace();
     await completion;
 
-    expect(spellLetter(message)).toEqual(["hia"]);
+    expect(labelsAfterSpelling(message)).toEqual(["hia"]);
   });
 
   test("reports whether an edit changed the message", async () => {
@@ -181,7 +185,7 @@ describe("useMessage", () => {
     setClearsAfterSpeaking(true);
     await rerender();
 
-    expect(spellLetter(result.current)).toEqual(["a"]);
+    expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
   });
 
   describe("editIfUnchanged", () => {
@@ -192,7 +196,7 @@ describe("useMessage", () => {
 
       message.editIfUnchanged(edited, [{ kind: "clear" }]);
 
-      expect(spellLetter(message)).toEqual(["a"]);
+      expect(labelsAfterSpelling(message)).toEqual(["a"]);
     });
 
     test("continues a message that was spoken since", async () => {
@@ -203,7 +207,7 @@ describe("useMessage", () => {
 
       message.editIfUnchanged(edited, [{ kind: "spell", text: "!" }]);
 
-      expect(spellLetter(message)).toEqual(["hi!a"]);
+      expect(labelsAfterSpelling(message)).toEqual(["hi!a"]);
     });
 
     test("drops the edits when the message changed since", async () => {
@@ -214,12 +218,12 @@ describe("useMessage", () => {
 
       message.editIfUnchanged(edited, [{ kind: "clear" }]);
 
-      expect(spellLetter(message)).toEqual(["ha"]);
+      expect(labelsAfterSpelling(message)).toEqual(["ha"]);
     });
   });
 });
 
-function spellLetter(message: ReturnType<typeof useMessage>): string[] {
+function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
   const { edited } = message.edit([{ kind: "spell", text: "a" }]);
 
   return edited.parts.map((part) => part.label);

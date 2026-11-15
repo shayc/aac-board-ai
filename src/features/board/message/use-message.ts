@@ -18,8 +18,8 @@ export interface UseMessageReturn {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
   text: string;
-  edit: (edits: readonly MessageEdit[]) => MessageEditOutcome;
-  editIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
+  edit: (changes: readonly MessageEdit[]) => MessageEditOutcome;
+  editIfUnchanged: (since: Message, changes: readonly MessageEdit[]) => void;
   trackPlayback: (completion: Promise<boolean>) => void;
   replaceWithText: (input: string) => void;
   backspace: () => void;
@@ -34,7 +34,7 @@ export function useMessage(): UseMessageReturn {
 
   // The setting is read each time the message is edited, so turning it off
   // releases a message that was already spoken.
-  function currentMessage() {
+  function readMessage() {
     return clearsAfterSpeaking
       ? stateRef.current
       : markSpoken(stateRef.current, false);
@@ -45,8 +45,8 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
-  function commitEdits(from: Message, edits: readonly MessageEdit[]) {
-    const edited = applyEdits(from, edits);
+  function commitChanges(from: Message, changes: readonly MessageEdit[]) {
+    const edited = applyEdits(from, changes);
     if (edited !== from) {
       commit(edited);
     }
@@ -54,9 +54,9 @@ export function useMessage(): UseMessageReturn {
     return edited;
   }
 
-  function edit(edits: readonly MessageEdit[]): MessageEditOutcome {
-    const current = currentMessage();
-    const edited = commitEdits(current, edits);
+  function edit(changes: readonly MessageEdit[]): MessageEditOutcome {
+    const current = readMessage();
+    const edited = commitChanges(current, changes);
 
     return { edited, hasChanged: edited !== current };
   }
@@ -64,13 +64,13 @@ export function useMessage(): UseMessageReturn {
   // Edits made against an earlier message belong to it: they apply to it even
   // once it is spoken, instead of starting a new message, and are dropped if
   // its content changed since.
-  function editIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
+  function editIfUnchanged(since: Message, changes: readonly MessageEdit[]) {
     const current = stateRef.current;
     if (!hasSameContent(current, since)) {
       return;
     }
 
-    commitEdits(markSpoken(current, false), edits);
+    commitChanges(markSpoken(current, false), changes);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
