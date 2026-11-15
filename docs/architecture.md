@@ -223,15 +223,12 @@ error ends the pass and is reported, and passes queued behind it still run.
 The hook hands each pass to the
 [board translation coordinator](../src/features/library/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status published while a pass is translating a set. The status is set when a
-set's model download starts or, with no download, once its translation models
-are open, and cleared when the pass ends or the language changes. A pass aborted
-by a language change never touches the status again. The
+status. The
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-shows a model download first and the translation after it. The status is already
-set when the download ends, so one alert carries both states. Without the
-Translator API the notice stays hidden: a set the browser cannot translate shows
-in its own language, which the user can already see and cannot change.
+shows that status, a model download first and the translation after it, in one
+alert. Without the Translator API the notice stays hidden: a set the browser
+cannot translate shows in its own language, which the user can already see and
+cannot change.
 
 ### Activate a tile
 
@@ -242,21 +239,17 @@ how the message changes:
 
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.
-   A spelling action (OBF `+a`) extends the word being spelled, starting a text
-   part if there is none; a space action (OBF `:space`) or a new tile part closes
-   the word. Backspace removes one character from the word being spelled,
-   reopens a closed word without removing a character, and removes a tile part
-   whole.
+   The [glossary](#glossary) says how spelling, a space, and backspace change a
+   message part.
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
-   finishes uninterrupted and the message was not edited meanwhile. The played
-   message stays visible during playback and is preserved if playback is
-   interrupted.
-3. Once the whole message plays to its end, from the play button, the keyboard
-   shortcut, or a tile that only plays it, the next tile or letter starts a new
-   message. Editing the message, or replaying it without letting it finish,
-   keeps adding to it. A tile that spells and then plays echoes the word and
-   does not count. A message setting turns this off.
+   finishes uninterrupted and the message was not edited meanwhile, so a clear
+   never takes letters typed during the speech with it. The played message
+   stays visible during playback and is preserved if playback is interrupted.
+3. Once the whole message plays to its end, the next tile or letter starts a new
+   message. An edit, a replay that does not finish, or a tile that only echoes
+   the word it spelled leaves the message open for more. A message setting
+   turns this off.
 4. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
    and publishes progress for highlighting.
@@ -289,18 +282,16 @@ these rules:
   focusable tile only if no other control holds focus.
 
 While focus is anywhere in the board, [shortcuts](../src/features/board/shortcuts/)
-work without moving to a control: Backspace removes the last word, Ctrl or Cmd
-with Backspace clears the message, Ctrl or Cmd with Z undoes the last change to
-it, Ctrl or Cmd with Enter speaks it, and Escape stops speech. Backspace, play
-and stop name their shortcuts in a tooltip on keyboard focus only, since
-head-pointer and eye-gaze users rest on targets to select them. Each control's
-`aria-keyshortcuts` lists the keys that activate it, and the backspace hint
-names the clear shortcut for screen readers.
+remove the last word, clear the message, undo the last change to it, speak it,
+and stop speech without moving to a control;
+[`resolve-board-shortcut.ts`](../src/features/board/shortcuts/resolve-board-shortcut.ts)
+maps the keys. Backspace, play and stop name their shortcuts in a tooltip on
+keyboard focus only, since head-pointer and eye-gaze users rest on targets to
+select them. Each control's `aria-keyshortcuts` lists the keys that activate it,
+and the backspace hint names the clear shortcut for screen readers.
 
-Undo steps back through a bounded history of changes to the message, including
-a clear and a suggestion that replaced it, and opens a spoken message it brings
-back for more. There is no redo, and nothing in the interface names undo yet.
-On a keyboard layout without Latin letters the Z key's position counts.
+Undo steps back through a bounded history of changes to the message. There is
+no redo, and nothing in the interface names undo yet.
 
 ### Switch scanning
 
@@ -309,41 +300,29 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 [`scanning/`](../src/features/board/scanning/) holds all of it:
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
-  enabled buttons inside it. The board marks the message bar (with the play
-  button beside it on wider screens), its controls, and each grid row; the grid
-  itself knows nothing about scanning and spreads the row props the board hands
-  it. On phones play sits with the controls under the grid, so scanning reaches
-  backspace first and play last. The
+  enabled buttons inside it. The board marks the message bar, its controls, and
+  each grid row; the grid itself knows nothing about scanning and spreads the
+  row props the board hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The buttons being
   scanned therefore need no scanning code, and disabled controls and empty
   groups drop out by themselves.
 - [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the
-  pure state machine: the scan moves through groups, selecting a group moves
-  through its items, and selecting an item activates it. A group with one item
-  activates it directly. After a group's last item the whole group is
-  highlighted once more as an exit step; selecting it returns to the groups.
-  Positions hold targets rather than indexes, so the board may change between
-  steps.
-- Automatic scanning moves on a timer and either switch selects. It starts on
-  the first press, pauses after two passes over the groups, and moves on to the
-  next group after two passes over a group's items. Two-switch step scanning
-  moves with Space, selects with Enter, and keeps going around until a
-  selection.
+  pure state machine that moves through the groups and, inside a selected
+  group, its items. Positions hold targets rather than indexes, so the board
+  may change between steps. After a group's last item the whole group is
+  highlighted once more as an exit step, so a group selected by accident can
+  be left.
+- Automatic scanning moves on a timer and either switch selects. Two-switch
+  step scanning moves with Space and selects with Enter.
 - Switch keys count wherever focus is, including on a header button, and are
-  kept from the focused control. Keys typed into a text field are left alone,
-  and so are keys pressed while a dialog, drawer, or menu covers the board.
-  While scanning is on, Space and Enter therefore do not activate focused
-  controls outside dialogs.
-- A highlighted group outlines the enabled buttons it has now, so the outline
-  follows buttons that are enabled, added, or replaced, such as when a folder
-  tile opens another board into the same rows. When the highlighted group or
-  item leaves the page, the scan restarts at the first group. The scan pauses
-  while a dialog, drawer, or menu covers the board.
-- Buttons that are disabled or not visible are not scanned. While a scan
-  highlight shows, other controls hide their keyboard focus ring so only one
-  control looks selected.
+  kept from the focused control. While scanning is on, Space and Enter
+  therefore do not activate focused controls outside dialogs. Keys typed into a
+  text field are left alone, and so are keys pressed while a dialog, drawer, or
+  menu covers the board.
+- While a scan highlight shows, other controls hide their keyboard focus ring so
+  only one control looks selected.
 
 The app header, drawers, and dialogs are not scanned; they are for the person
 setting up the device.
