@@ -2,8 +2,6 @@ import type { BoardKey } from "../board-types";
 import { type BoardRecord, boardSetRange, getBoardsDB } from "./boards-db";
 import { normalizeAssetPath } from "./normalize-asset-path";
 
-export type { BoardRecord } from "./boards-db";
-
 export async function getBoardRecord({
   boardSetId,
   boardId,
