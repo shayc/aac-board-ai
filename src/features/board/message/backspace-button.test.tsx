@@ -3,9 +3,11 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import {
   contrastRatio,
   paint,
+  WCAG_NON_TEXT_CONTRAST,
   WCAG_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
@@ -20,8 +22,14 @@ function createHandlers() {
   };
 }
 
-// React Aria needs nonzero mouse pressure to start its long-press timer.
 function longPress(element: Element) {
+  pressDown(element);
+  vi.advanceTimersByTime(700);
+  element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+}
+
+// React Aria needs nonzero mouse pressure to start its long-press timer.
+function pressDown(element: Element) {
   element.dispatchEvent(
     new PointerEvent("pointerdown", {
       bubbles: true,
@@ -30,12 +38,24 @@ function longPress(element: Element) {
       pressure: 0.5,
     }),
   );
-  vi.advanceTimersByTime(700);
-  element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
 }
 
-// The disc is translucent, so the icon is measured against the bar it sits on.
-async function measureIconContrast(mode: ColorMode, disabled: boolean) {
+// Clearing the message disables backspace while the pointer is still down.
+function ClearableBackspace() {
+  const [isCleared, setIsCleared] = useState(false);
+
+  return (
+    <BackspaceButton
+      disabled={isCleared}
+      onPress={() => {}}
+      onLongPress={() => setIsCleared(true)}
+    />
+  );
+}
+
+// The disc is translucent, so the icon and ring are measured against the bar
+// it sits on.
+async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const screen = await renderWithProviders(
     <>
       <ColorModeSwitch mode={mode} />
@@ -65,12 +85,17 @@ async function measureIconContrast(mode: ColorMode, disabled: boolean) {
   const barColor = getComputedStyle(bar).backgroundColor;
   const { backgroundColor: discColor, color: iconColor } =
     getComputedStyle(button);
+  const ring = button.querySelector("circle");
+  assertDefined(ring);
+  const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  return contrastRatio(
-    paint(barColor, discColor, iconColor),
-    paint(barColor, discColor),
-  );
+  const disc = paint(barColor, discColor);
+
+  return {
+    icon: contrastRatio(paint(barColor, discColor, iconColor), disc),
+    ring: contrastRatio(paint(barColor, discColor, ringColor), disc),
+  };
 }
 
 function ColorModeSwitch({ mode }: { mode: ColorMode }) {
@@ -115,6 +140,34 @@ describe("BackspaceButton", () => {
 
     expect(handlers.onLongPress).toHaveBeenCalledTimes(1);
     expect(handlers.onPress).not.toHaveBeenCalled();
+  });
+
+  test("fills the ring while held and empties it on release", async () => {
+    const screen = await renderWithProviders(
+      <BackspaceButton {...createHandlers()} />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" }).element();
+    const ring = button.querySelector<HTMLElement>("[role=progressbar]");
+    assertDefined(ring);
+
+    pressDown(button);
+
+    await expect.element(ring).toHaveAttribute("aria-valuenow", "100");
+
+    button.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+
+    await expect.element(ring).toHaveAttribute("aria-valuenow", "0");
+  });
+
+  test("empties the ring when a hold clears the message", async () => {
+    const screen = await renderWithProviders(<ClearableBackspace />);
+    const button = screen.getByRole("button", { name: "Backspace" }).element();
+    const ring = button.querySelector<HTMLElement>("[role=progressbar]");
+    assertDefined(ring);
+
+    longPress(button);
+
+    await expect.element(ring).toHaveAttribute("aria-valuenow", "0");
   });
 
   test("stays focusable and ignores presses while disabled", async () => {
@@ -162,17 +215,27 @@ describe("BackspaceButton colors", () => {
   test.each(["light", "dark"] as const)(
     "draws the icon in %s mode with text-level contrast",
     async (mode) => {
-      const contrast = await measureIconContrast(mode, false);
+      const { icon } = await measureContrasts(mode, false);
 
-      expect(contrast).toBeGreaterThan(WCAG_TEXT_CONTRAST);
+      expect(icon).toBeGreaterThan(WCAG_TEXT_CONTRAST);
+    },
+  );
+
+  // The ring is the only cue that a hold will clear the message.
+  test.each(["light", "dark"] as const)(
+    "draws the hold ring in %s mode with non-text contrast",
+    async (mode) => {
+      const { ring } = await measureContrasts(mode, false);
+
+      expect(ring).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
     },
   );
 
   // Disabled controls are exempt from contrast minimums, but an empty message
   // must still show where backspace is, and the dark bar is greyer.
   test("keeps the disabled icon in dark mode at least as visible as in light mode", async () => {
-    const light = await measureIconContrast("light", true);
-    const dark = await measureIconContrast("dark", true);
+    const { icon: light } = await measureContrasts("light", true);
+    const { icon: dark } = await measureContrasts("dark", true);
 
     expect(dark).toBeGreaterThanOrEqual(light);
   });
