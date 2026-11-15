@@ -1,10 +1,8 @@
 import Button, { type ButtonProps } from "@mui/material/Button";
-import type { SxProps, Theme } from "@mui/material/styles";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { mergeSx } from "@shared/ui/merge-sx";
 
-type BoardControlButtonProps = Omit<ButtonProps, "size" | "variant" | "sx"> & {
-  sx?: Exclude<SxProps<Theme>, readonly unknown[]>;
-};
+type BoardControlButtonProps = Omit<ButtonProps, "size" | "variant">;
 
 export function BoardControlButton({
   color = "inherit",
@@ -21,7 +19,7 @@ export function BoardControlButton({
       color={color}
       variant="contained"
       onClick={disabled ? undefined : onClick}
-      sx={[{ width: 72 }, sx ?? false]}
+      sx={mergeSx({ width: 72 }, sx)}
     />
   );
 }
