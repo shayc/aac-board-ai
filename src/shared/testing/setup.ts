@@ -1,4 +1,4 @@
-import { reloadPersistedStores } from "@shared/state/persisted-store";
+import { reloadPersistedStores } from "@shared/stores/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
 // Keep tests independent of the browser's installed AI models.

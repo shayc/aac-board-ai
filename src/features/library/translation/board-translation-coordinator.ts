@@ -1,7 +1,7 @@
 import {
   createExternalStore,
   useExternalStore,
-} from "@shared/state/external-store";
+} from "@shared/stores/external-store";
 import type { TranslationPassOptions } from "./translate-board-sets";
 
 type TranslationPass = (options: TranslationPassOptions) => Promise<void>;

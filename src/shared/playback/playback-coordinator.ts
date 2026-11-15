@@ -1,5 +1,5 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
-import { createExternalStore } from "@shared/state/external-store";
+import { createExternalStore } from "@shared/stores/external-store";
 import { assertNever } from "@shared/utils/assert-never";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";

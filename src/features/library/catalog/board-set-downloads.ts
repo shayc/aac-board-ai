@@ -1,7 +1,7 @@
 import {
   createExternalStore,
   useExternalStore,
-} from "@shared/state/external-store";
+} from "@shared/stores/external-store";
 import type { ImportedBoardSet } from "../import/board-file-import";
 import {
   type DownloadProgress,
