@@ -49,8 +49,8 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
-  // A change to the content is a step to undo. Marking the message spoken is
-  // not one, so it goes through `commit`.
+  // Marking the message spoken is not a step to undo, so it goes through
+  // `commit`.
   function commitStep(next: Message) {
     const undoStack = undoStackRef.current;
     undoStack.push(stateRef.current);

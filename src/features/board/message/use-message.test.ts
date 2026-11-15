@@ -265,7 +265,6 @@ describe("useMessage", () => {
       }
       await rerender();
 
-      // The first change is out of reach, so its letter stays.
       expect(result.current.text).toBe("a");
     });
 
