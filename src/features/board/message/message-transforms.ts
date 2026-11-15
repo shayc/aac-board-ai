@@ -138,7 +138,7 @@ function applyEdit(message: Message, edit: MessageEdit): Message {
     case "backspace":
       return applyBackspace(message);
     case "clear":
-      return EMPTY_MESSAGE;
+      return message.parts.length > 0 ? EMPTY_MESSAGE : message;
     default:
       return assertNever(edit);
   }

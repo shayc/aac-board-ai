@@ -47,6 +47,23 @@ describe("board keyboard shortcuts", () => {
     });
   });
 
+  test("⌘+Z restores a message that ⌘+Backspace cleared", async () => {
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+    await screen.getByRole("button", { name: "hello" }).click();
+    await screen.getByRole("button", { name: "world" }).click();
+
+    screen.getByRole("button", { name: "world" }).element().focus();
+    await userEvent.keyboard("{Meta>}{Backspace}{/Meta}");
+    await userEvent.keyboard("{Meta>}z{/Meta}");
+
+    speech.speak.mockClear();
+    await screen.getByRole("button", { name: "Play message" }).click();
+
+    await vi.waitFor(() => {
+      expect(speech.spokenTexts()).toEqual(["hello world"]);
+    });
+  });
+
   test("⌘+Enter plays the message", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();

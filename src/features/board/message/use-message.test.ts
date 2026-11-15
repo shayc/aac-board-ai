@@ -188,6 +188,108 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
   });
 
+  describe("undo", () => {
+    test("restores a cleared message", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("I want water");
+      result.current.clear();
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("I want water");
+    });
+
+    test("steps back through one change at a time", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("hi");
+      result.current.backspace();
+      result.current.backspace();
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("h");
+
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("hi");
+    });
+
+    test("restores a message that a suggestion replaced", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("I want");
+      result.current.replaceWithText("I want water please");
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("I want");
+    });
+
+    test("does not count playing the message as a change", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("hi");
+      result.current.backspace();
+      await trackSettledPlayback(result.current, true);
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("hi");
+    });
+
+    test("does not count clearing an empty message", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("h");
+      result.current.backspace();
+      result.current.clear();
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.text).toBe("h");
+    });
+
+    test("keeps the last 100 changes", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      const changeCount = 101;
+      for (let change = 0; change < changeCount; change++) {
+        result.current.apply([{ kind: "spell", text: "a" }]);
+      }
+
+      for (let step = 0; step < changeCount; step++) {
+        result.current.undo();
+      }
+      await rerender();
+
+      expect(result.current.text).toBe("a");
+    });
+
+    test("opens a spoken message it brings back for more", async () => {
+      const { result } = await renderHook(() => useMessage());
+      const message = result.current;
+
+      message.replaceWithText("hi");
+      await trackSettledPlayback(message, true);
+      message.clear();
+      message.undo();
+
+      expect(labelsAfterSpelling(message)).toEqual(["hia"]);
+    });
+
+    test("leaves the message as it is with nothing to undo", async () => {
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.undo();
+      await rerender();
+
+      expect(result.current.parts).toHaveLength(0);
+    });
+  });
+
   describe("applyIfUnchanged", () => {
     test("edits the message it was given", async () => {
       const { result } = await renderHook(() => useMessage());

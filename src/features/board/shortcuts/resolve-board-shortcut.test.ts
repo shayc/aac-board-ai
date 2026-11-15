@@ -6,7 +6,15 @@ import {
 } from "./resolve-board-shortcut";
 
 function keyEvent(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
-  return { key: "", metaKey: false, ctrlKey: false, ...overrides };
+  return {
+    key: "",
+    code: "",
+    metaKey: false,
+    ctrlKey: false,
+    shiftKey: false,
+    altKey: false,
+    ...overrides,
+  };
 }
 
 describe("resolveBoardShortcut", () => {
@@ -29,6 +37,57 @@ describe("resolveBoardShortcut", () => {
         false,
       ),
     ).toBe("clear");
+  });
+
+  test("⌘/Ctrl+Z undoes, in either letter case", () => {
+    expect(
+      resolveBoardShortcut(keyEvent({ key: "z", metaKey: true }), false),
+    ).toBe("undo");
+    expect(
+      resolveBoardShortcut(keyEvent({ key: "Z", ctrlKey: true }), false),
+    ).toBe("undo");
+  });
+
+  test("⌘/Ctrl with the Z key undoes on a layout without Latin letters", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "ז", code: "KeyZ", ctrlKey: true }),
+        false,
+      ),
+    ).toBe("undo");
+  });
+
+  test("⌘/Ctrl+Z goes by the letter on a Latin layout that moves Z", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "y", code: "KeyZ", ctrlKey: true }),
+        false,
+      ),
+    ).toBeNull();
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "z", code: "KeyY", ctrlKey: true }),
+        false,
+      ),
+    ).toBe("undo");
+  });
+
+  test("⌘/Ctrl+Shift+Z, the redo keys, are not claimed", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "Z", metaKey: true, shiftKey: true }),
+        false,
+      ),
+    ).toBeNull();
+  });
+
+  test("a letter typed with AltGr on the Z key is not claimed", () => {
+    expect(
+      resolveBoardShortcut(
+        keyEvent({ key: "ż", code: "KeyZ", ctrlKey: true, altKey: true }),
+        false,
+      ),
+    ).toBeNull();
   });
 
   test("⌘/Ctrl+Enter plays only while idle", () => {

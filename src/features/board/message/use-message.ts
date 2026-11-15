@@ -9,6 +9,8 @@ import {
 } from "./message-transforms";
 import type { Message, MessageEdit, MessagePart } from "./message-types";
 
+const UNDO_LIMIT = 100;
+
 export interface MessageEditOutcome {
   edited: Message;
   hasChanged: boolean;
@@ -24,12 +26,14 @@ export interface UseMessageReturn {
   replaceWithText: (input: string) => void;
   backspace: () => void;
   clear: () => void;
+  undo: () => void;
 }
 
 export function useMessage(): UseMessageReturn {
   const { clearsAfterSpeaking } = useMessagePreferences();
   const [state, setRenderedState] = useState(EMPTY_MESSAGE);
   const stateRef = useRef(state);
+  const undoStackRef = useRef<Message[]>([]);
   const text = state.parts.map((part) => part.label).join(" ");
 
   // The setting is read each time the message is edited, so turning it off
@@ -45,10 +49,22 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
+  // Marking the message spoken is not a step to undo, so it goes through
+  // `commit`.
+  function commitStep(next: Message) {
+    const undoStack = undoStackRef.current;
+    undoStack.push(stateRef.current);
+    if (undoStack.length > UNDO_LIMIT) {
+      undoStack.shift();
+    }
+
+    commit(next);
+  }
+
   function commitEdits(from: Message, edits: readonly MessageEdit[]) {
     const edited = applyEdits(from, edits);
     if (edited !== from) {
-      commit(edited);
+      commitStep(edited);
     }
 
     return edited;
@@ -97,7 +113,7 @@ export function useMessage(): UseMessageReturn {
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    commit({
+    commitStep({
       parts: words.map(createTextPart),
       isWordOpen: words.length > 0,
       isSpoken: false,
@@ -112,6 +128,17 @@ export function useMessage(): UseMessageReturn {
     apply([{ kind: "clear" }]);
   }
 
+  function undo() {
+    const previous = undoStackRef.current.pop();
+    if (!previous) {
+      return;
+    }
+
+    // Like any edit, undoing opens a spoken message for more, so the next
+    // tile adds to the message brought back instead of replacing it.
+    commit(markSpoken(previous, false));
+  }
+
   return {
     parts: state.parts,
     isWordOpen: state.isWordOpen,
@@ -122,5 +149,6 @@ export function useMessage(): UseMessageReturn {
     replaceWithText,
     backspace,
     clear,
+    undo,
   };
 }
