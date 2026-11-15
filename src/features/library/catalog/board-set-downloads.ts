@@ -4,6 +4,7 @@ import {
 } from "@shared/stores/external-store";
 import type { ImportedBoardSet } from "../import/board-file-import";
 import {
+  deriveBoardSetIdFromURL,
   type DownloadProgress,
   importBoardFileFromURL,
 } from "../import/import-from-url";
@@ -18,10 +19,7 @@ interface PendingDownload {
   controller: AbortController;
 }
 
-type CompletedDownloadListener = (boardSetId: string) => void;
-
 const pendingDownloadsByURL = new Map<string, PendingDownload>();
-const completedDownloadListeners = new Set<CompletedDownloadListener>();
 const downloadPhasesStore = createExternalStore<
   ReadonlyMap<string, BoardSetDownloadPhase>
 >(new Map());
@@ -62,25 +60,16 @@ function publishProgress(url: string, progress: DownloadProgress) {
   setDownloadPhase(url, { kind: "downloading", ...progress });
 }
 
-function announceCompletedDownload(boardSetId: string) {
-  for (const listener of completedDownloadListeners) {
-    listener(boardSetId);
-  }
-}
-
 async function runDownload(
   url: string,
   signal: AbortSignal,
 ): Promise<ImportedBoardSet | undefined> {
   try {
-    const importedBoardSet = await importBoardFileFromURL(url, {
+    return await importBoardFileFromURL(url, {
       signal,
       onProgress: (progress) => publishProgress(url, progress),
       onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
     });
-    announceCompletedDownload(importedBoardSet.id);
-
-    return importedBoardSet;
   } catch (error) {
     if (signal.aborted) {
       return undefined;
@@ -109,16 +98,6 @@ export function downloadBoardSet(
   return promise;
 }
 
-export function subscribeCompletedDownloads(
-  listener: CompletedDownloadListener,
-): () => void {
-  completedDownloadListeners.add(listener);
-
-  return () => {
-    completedDownloadListeners.delete(listener);
-  };
-}
-
 export function cancelBoardSetDownload(url: string) {
   // Once local importing starts, its atomic write is left to finish.
   if (downloadPhasesStore.getSnapshot().get(url)?.kind === "importing") {
@@ -132,4 +111,10 @@ export function useBoardSetDownloadPhase(
   url: string,
 ): BoardSetDownloadPhase | undefined {
   return useExternalStore(downloadPhasesStore, (phases) => phases.get(url));
+}
+
+export function useIsBoardSetDownloading(boardSetId: string): boolean {
+  return useExternalStore(downloadPhasesStore, (phases) =>
+    phases.keys().some((url) => deriveBoardSetIdFromURL(url) === boardSetId),
+  );
 }

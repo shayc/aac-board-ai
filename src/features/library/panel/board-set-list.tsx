@@ -4,10 +4,9 @@ import ListSubheader from "@mui/material/ListSubheader";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
-import { useEffect, useId, useState } from "react";
+import { useId, useState } from "react";
 import { rootBoardPath } from "../board-paths";
 import type { CatalogBoardSet } from "../catalog/board-set-catalog";
-import { subscribeCompletedDownloads } from "../catalog/board-set-downloads";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { BoardSetListItem } from "./board-set-list-item";
 import { BoardSetMenu } from "./board-set-menu";
@@ -42,9 +41,6 @@ export function BoardSetList({
     element: HTMLElement;
     boardSet: BoardSetRecord;
   } | null>(null);
-  const [boardSetIdToFocus, setBoardSetIdToFocus] = useState<string>();
-
-  useEffect(() => subscribeCompletedDownloads(setBoardSetIdToFocus), []);
 
   const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
@@ -77,11 +73,11 @@ export function BoardSetList({
     return (
       <BoardSetListItem
         key={boardSet.id}
+        boardSetId={boardSet.id}
         menuId={menuId}
         name={boardSet.name}
         to={rootBoardPath(boardSet)}
         isActive={boardSet.id === activeBoardSetId}
-        isFocusRequested={boardSet.id === boardSetIdToFocus}
         isMenuOpen={boardSet.id === openMenuBoardSetId}
         onMenuOpen={(element) => setMenuAnchor({ element, boardSet })}
       />

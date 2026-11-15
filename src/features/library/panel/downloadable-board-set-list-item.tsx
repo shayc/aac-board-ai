@@ -1,9 +1,6 @@
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import Box from "@mui/material/Box";
-import CircularProgress, {
-  circularProgressClasses,
-} from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -16,8 +13,11 @@ import { useId } from "react";
 import type { BoardSetDownloadPhase } from "../catalog/board-set-downloads";
 import { useBoardSetDownload } from "../catalog/use-board-set-download";
 import type { DownloadProgress } from "../import/import-from-url";
+import {
+  DownloadProgressRing,
+  type RingProgress,
+} from "./download-progress-ring";
 
-const PROGRESS_RING_SIZE = 24;
 const BYTES_PER_MEGABYTE = 1_000_000;
 
 interface DownloadableBoardSetListItemProps {
@@ -118,17 +118,7 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
 
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress
-        aria-hidden
-        color="inherit"
-        size={PROGRESS_RING_SIZE}
-        enableTrackSlot
-        {...ringProgress(phase)}
-        sx={{
-          // Downloads can update faster than MUI's default 300ms transition.
-          [`& .${circularProgressClasses.circle}`]: { transition: "none" },
-        }}
-      />
+      <DownloadProgressRing {...ringProgress(phase)} />
 
       {!isImporting && (
         <StopRoundedIcon
@@ -150,10 +140,6 @@ function tooltipMessage(phase: BoardSetDownloadPhase | undefined) {
 
   return m.libraryCancelDownload;
 }
-
-type RingProgress =
-  | { variant: "determinate"; value: number }
-  | { variant: "indeterminate" };
 
 function ringProgress(phase: BoardSetDownloadPhase): RingProgress {
   // Wait for response headers to avoid flashing an indeterminate spinner.
