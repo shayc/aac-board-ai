@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Automaattinen taulun käännös ei ole käytettävissä tässä selaimessa.",
   "loading": "Ladataan…",
   "close": "Sulje",
   "opensInNewTab": "(avautuu uuteen välilehteen)",

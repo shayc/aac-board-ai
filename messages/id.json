@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Terjemahan papan otomatis tidak tersedia di browser ini.",
   "loading": "Memuat…",
   "close": "Tutup",
   "opensInNewTab": "(dibuka di tab baru)",

@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "ఈ బ్రౌజర్‌లో స్వయంచాలక బోర్డు అనువాదం అందుబాటులో లేదు.",
   "loading": "లోడ్ అవుతోంది…",
   "close": "మూసివేయి",
   "opensInNewTab": "(కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",

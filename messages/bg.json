@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Автоматичният превод на дъската не е наличен в този браузър.",
   "loading": "Зареждане…",
   "close": "Затваряне",
   "opensInNewTab": "(отваря се в нов раздел)",

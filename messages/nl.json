@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Automatische bordvertaling is niet beschikbaar in deze browser.",
   "loading": "Laden…",
   "close": "Sluiten",
   "opensInNewTab": "(opent in nieuw tabblad)",

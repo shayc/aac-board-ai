@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Η αυτόματη μετάφραση πινάκων δεν είναι διαθέσιμη σε αυτό το πρόγραμμα περιήγησης.",
   "loading": "Φόρτωση…",
   "close": "Κλείσιμο",
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",

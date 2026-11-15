@@ -5,10 +5,7 @@ import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import {
-  isSupported,
-  useGlobalDownloadProgress,
-} from "@shayc/react-built-in-ai";
+import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
 import { useIsTranslatingBoards } from "./board-translation-coordinator";
 
@@ -16,14 +13,6 @@ export function BoardTranslationNotice() {
   const t = useTranslate();
   const progress = useGlobalDownloadProgress("Translator");
   const isTranslating = useIsTranslatingBoards();
-
-  if (!isSupported("Translator")) {
-    return (
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {t(m.languageTranslationUnavailable)}
-      </Typography>
-    );
-  }
 
   // Reuse the live region so assistive technology announces the phase change.
   if (progress !== null) {

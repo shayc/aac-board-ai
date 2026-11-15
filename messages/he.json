@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "תרגום אוטומטי של לוחות אינו זמין בדפדפן הזה.",
   "loading": "טעינה…",
   "close": "סגירה",
   "opensInNewTab": "(נפתח בכרטיסייה חדשה)",

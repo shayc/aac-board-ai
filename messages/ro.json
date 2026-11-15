@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "languageTranslationUnavailable": "Traducerea automată a tablei nu este disponibilă în acest browser.",
   "loading": "Se încarcă…",
   "close": "Închide",
   "opensInNewTab": "(se deschide într-o filă nouă)",

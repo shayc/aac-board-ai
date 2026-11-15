@@ -219,7 +219,9 @@ are open, and cleared when the pass ends or the language changes. A pass aborted
 by a language change never touches the status again. The
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 shows a model download first and the translation after it. The status is already
-set when the download ends, so one alert carries both states.
+set when the download ends, so one alert carries both states. Without the
+Translator API the notice stays hidden: a set the browser cannot translate shows
+in its own language, which the user can already see and cannot change.
 
 ### Activate a tile
 
@@ -465,7 +467,7 @@ drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
 language settings render the library's
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-instead of checking Translator support or translation progress themselves.
+instead of checking translation progress themselves.
 Reusable field controls live in `shared/ui/` so features do not depend on the
 app layer.
 
