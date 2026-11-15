@@ -46,6 +46,12 @@ function getScrollContainer(container: Element): HTMLElement {
   return scroller;
 }
 
+function getMessageParts(scroller: HTMLElement): HTMLElement[] {
+  return Array.from(
+    scroller.querySelectorAll<HTMLElement>("[role='listitem']"),
+  );
+}
+
 describe("MessageBar", () => {
   test("renders a label for each tile and text part", async () => {
     const parts: MessagePart[] = [
@@ -194,7 +200,7 @@ describe("MessageBar", () => {
         <ScrollableMessageBar {...props} parts={SCROLL_PARTS} />,
       );
 
-      const lastPart = scroller.lastElementChild;
+      const lastPart = getMessageParts(scroller).at(-1);
       assertDefined(lastPart);
       expect(scroller.scrollWidth).toBeGreaterThan(scroller.clientWidth);
       expect(scroller.scrollLeft).toBeGreaterThan(0);
@@ -211,7 +217,7 @@ describe("MessageBar", () => {
       );
       const scroller = getScrollContainer(screen.container);
 
-      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
+      const activePart = getMessageParts(scroller)[ACTIVE_SCROLL_PART_INDEX];
       assertDefined(activePart);
 
       const initialScrollLeft = scroller.scrollLeft;
@@ -257,7 +263,7 @@ describe("MessageBar", () => {
         />,
       );
 
-      const lastPart = scroller.lastElementChild;
+      const lastPart = getMessageParts(scroller).at(-1);
       assertDefined(lastPart);
       expect(lastPart.getBoundingClientRect().right).toBeCloseTo(
         scroller.getBoundingClientRect().right,
@@ -280,7 +286,7 @@ describe("MessageBar", () => {
         />,
       );
 
-      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
+      const activePart = getMessageParts(scroller)[ACTIVE_SCROLL_PART_INDEX];
       assertDefined(activePart);
       expect(activePart.getBoundingClientRect().left).toBeCloseTo(
         scroller.getBoundingClientRect().left,

@@ -2,11 +2,18 @@ import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
+import {
+  type ReactNode,
+  useEffectEvent,
+  useLayoutEffect,
+  useRef,
+  ViewTransition,
+} from "react";
 import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
 } from "../aac-symbol/aac-symbol";
+import { messageTransitionName } from "./message-transition-name";
 import type { MessagePart } from "./message-types";
 
 // Imported symbols need a light background in both themes.
@@ -36,6 +43,7 @@ export function MessageBar({
 }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const partsRowRef = useRef<HTMLDivElement>(null);
 
   // Reads the latest parts without reacting to them, so an edit during
   // playback shows the newest part instead of jumping back to the active one.
@@ -45,14 +53,11 @@ export function MessageBar({
       return;
     }
 
-    scrollPartIntoView(
-      scrollContainerRef.current?.children.item(index),
-      "nearest",
-    );
+    scrollPartIntoView(partsRowRef.current?.children.item(index), "nearest");
   });
 
   useLayoutEffect(() => {
-    scrollPartIntoView(scrollContainerRef.current?.lastElementChild, "end");
+    scrollPartIntoView(partsRowRef.current?.lastElementChild, "end");
   }, [parts]);
 
   // Declared after the newest-part scroll so it wins when an edit starts
@@ -64,6 +69,9 @@ export function MessageBar({
   }, [activePartId]);
 
   const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
+  const transitionName = messageTransitionName(
+    parts.map((part) => part.label).join(" "),
+  );
 
   return (
     <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
@@ -77,17 +85,29 @@ export function MessageBar({
         direction="row"
         sx={scrollContainerSx}
       >
-        {parts.map((part) => (
-          <MessagePartItem
-            key={part.id}
-            label={part.label}
-            language={language}
-            imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
-            isActive={part.id === activePartId}
-            isOpen={part.id === openPartId}
-            isImageVisible={areImagesVisible}
-          />
-        ))}
+        {/* A message replaced by a suggestion starts with a new part, so the
+            row mounts afresh and pairs with the chip leaving the suggestion
+            bar; words added to the message keep the row and its symbols. */}
+        <ViewTransition
+          key={parts[0]?.id}
+          name={transitionName}
+          default="none"
+          share="auto"
+        >
+          <Stack ref={partsRowRef} direction="row" sx={partsRowSx}>
+            {parts.map((part) => (
+              <MessagePartItem
+                key={part.id}
+                label={part.label}
+                language={language}
+                imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
+                isActive={part.id === activePartId}
+                isOpen={part.id === openPartId}
+                isImageVisible={areImagesVisible}
+              />
+            ))}
+          </Stack>
+        </ViewTransition>
       </Stack>
 
       {endAction}
@@ -141,6 +161,10 @@ function scrollContainerSx(theme: Theme) {
     "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
   };
 }
+
+// The row is the morph's target, so it hugs its parts instead of filling the
+// bar.
+const partsRowSx = { flexShrink: 0, alignItems: "center" } as const;
 
 interface MessagePartItemProps {
   label: string;

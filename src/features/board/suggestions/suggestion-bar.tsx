@@ -3,6 +3,8 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { ViewTransition } from "react";
+import { messageTransitionName } from "../message/message-transition-name";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
@@ -51,12 +53,18 @@ export function SuggestionBar({
         }}
       >
         {phrases.map((phrase) => (
-          <Chip
+          <ViewTransition
             key={phrase}
-            lang={language}
-            label={phrase}
-            onClick={() => onPhraseSelect(phrase)}
-          />
+            name={messageTransitionName(phrase)}
+            default="none"
+            share="auto"
+          >
+            <Chip
+              lang={language}
+              label={phrase}
+              onClick={() => onPhraseSelect(phrase)}
+            />
+          </ViewTransition>
         ))}
       </Box>
     </Stack>

@@ -156,6 +156,16 @@ const themeOptions = {
         body: {
           userSelect: "none",
         },
+        // Suggestion chips morphing into the message are the app's only view
+        // transition; short enough not to delay the next tap.
+        "::view-transition-group(*)": {
+          animationDuration: "200ms",
+          animationTimingFunction: "cubic-bezier(0.2, 0, 0, 1)",
+        },
+        "@media (prefers-reduced-motion: reduce)": {
+          "::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*)":
+            { animation: "none" },
+        },
       },
     },
     MuiPaper: {

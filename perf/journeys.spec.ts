@@ -11,7 +11,7 @@ const CORE_BOARD = "Quick Core 60";
 const LINKED_BOARD = "Core 60 - eat";
 
 const IMPORTED_CORE_BOARD_SET = `[aria-label="More options for ${CORE_BOARD}"]`;
-const MESSAGE_PARTS = '[role="list"][aria-label="Message"] > [role="listitem"]';
+const MESSAGE_PARTS = '[role="list"][aria-label="Message"] [role="listitem"]';
 
 // A covered grid is unusable even while its tiles are rendered.
 function gridSelector(boardName: string): string {

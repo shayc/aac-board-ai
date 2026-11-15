@@ -3,6 +3,10 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
 import {
+  makeProofreadResult,
+  stubProofreader,
+} from "@shared/testing/stub-built-in-ai";
+import {
   failSpeech,
   preventSpeechEnd,
   stubSpeech,
@@ -17,6 +21,7 @@ import {
   setClearsAfterSpeaking,
   setMessageImagesVisible,
 } from "./message/message-preferences-store";
+import { messageTransitionName } from "./message/message-transition-name";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
@@ -103,6 +108,14 @@ const LARGE_GRID_BOARD: OBFBoard = {
     ),
   },
 };
+
+function viewTransitionPseudoElements(): (string | null)[] {
+  return document
+    .getAnimations()
+    .map(({ effect }) =>
+      effect instanceof KeyframeEffect ? effect.pseudoElement : null,
+    );
+}
 
 function measureBoardLayout(
   container: Element,
@@ -822,6 +835,31 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "world" }).click();
 
       await expectNoA11yViolations(screen.container);
+    });
+  });
+
+  describe("suggestions", () => {
+    test("morphs the chosen suggestion into the message it replaces", async () => {
+      stubProofreader(() => makeProofreadResult("Hello there."));
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const messageItems = screen
+        .getByRole("list", { name: "Message" })
+        .getByRole("listitem");
+      const name = messageTransitionName("Hello there.");
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "Hello there." }).click();
+
+      await expect
+        .poll(viewTransitionPseudoElements, { interval: 10 })
+        .toEqual(
+          expect.arrayContaining([
+            `::view-transition-old(${name})`,
+            `::view-transition-new(${name})`,
+          ]),
+        );
+      await expect.element(messageItems).toHaveLength(2);
+      await expect.element(messageItems.nth(1)).toHaveTextContent("there.");
     });
   });
 

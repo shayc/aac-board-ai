@@ -7,6 +7,7 @@ import { useCommunicationLanguage } from "@shared/language/use-communication-lan
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { startTransition } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -147,7 +148,11 @@ export function CommunicationBoard({
                     phrases={suggestions.phrases}
                     language={communication.language}
                     onEnable={suggestions.enable}
-                    onPhraseSelect={message.replaceWithText}
+                    onPhraseSelect={(phrase) =>
+                      // A transition lets the chosen chip morph into the
+                      // message, so the new message visibly comes from it.
+                      startTransition(() => message.replaceWithText(phrase))
+                    }
                   />
                 )}
               </Stack>
