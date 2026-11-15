@@ -3,19 +3,27 @@ import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { describe, expect, test, vi } from "vitest";
 import { MessageSettings } from "./message-settings";
 
-async function renderMessageSettings() {
-  return renderWithProviders(<MessageSettings />);
-}
-
 describe("MessageSettings", () => {
   test.each([
-    { name: "Show images", preference: "areImagesVisible" },
-    { name: "Highlight while speaking", preference: "isHighlightingEnabled" },
-    { name: "Clear after speaking", preference: "clearsAfterSpeaking" },
+    {
+      name: "Show images",
+      preference: "areImagesVisible",
+      effect: "images in the message bar",
+    },
+    {
+      name: "Highlight while speaking",
+      preference: "isHighlightingEnabled",
+      effect: "highlighting while speaking",
+    },
+    {
+      name: "Clear after speaking",
+      preference: "clearsAfterSpeaking",
+      effect: "clearing after speaking",
+    },
   ])(
-    "turns off $name and persists the choice",
+    "turns off $effect and persists the choice",
     async ({ name, preference }) => {
-      const screen = await renderMessageSettings();
+      const screen = await renderWithProviders(<MessageSettings />);
       const toggle = screen.getByRole("switch", { name });
 
       await expect.element(toggle).toBeChecked();

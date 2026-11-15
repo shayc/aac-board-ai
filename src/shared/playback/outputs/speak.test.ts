@@ -1,6 +1,10 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { assertDefined } from "@shared/testing/assert-defined";
-import { stubSpeech } from "@shared/testing/stub-speech";
+import {
+  failUtterance,
+  preventSpeechEnd,
+  stubSpeech,
+} from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
@@ -106,18 +110,12 @@ describe("speak", () => {
 
     test("rejects when speech synthesis fails", async () => {
       const speech = stubSpeech();
-      let utterance: SpeechSynthesisUtterance | undefined;
-      speech.speak.mockImplementationOnce((spoken) => {
-        utterance = spoken;
-      });
+      preventSpeechEnd(speech.speak);
       const playback = speak("hello", parameters);
 
-      utterance?.dispatchEvent(
-        new SpeechSynthesisErrorEvent("error", {
-          utterance,
-          error: "synthesis-failed",
-        }),
-      );
+      const utterance = speech.speak.mock.lastCall?.[0];
+      assertDefined(utterance);
+      failUtterance(utterance);
 
       await expect(playback).rejects.toThrow("Speech failed: synthesis-failed");
     });

@@ -1,7 +1,6 @@
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
@@ -49,11 +48,9 @@ function stubFilePicker(...files: File[]) {
 }
 
 function renderImport(files: File[]) {
-  return render(
+  return renderWithProviders(
     <MemoryRouter>
-      <AppProviders>
-        <ImportTrigger files={files} />
-      </AppProviders>
+      <ImportTrigger files={files} />
     </MemoryRouter>,
   );
 }
@@ -210,11 +207,9 @@ describe("useImportBoardFiles", () => {
 
   test("opens the board set picked from the file picker", async () => {
     stubFilePicker(await loadFixtureFile(SAMPLE_OBF_FILE));
-    const screen = await render(
+    const screen = await renderWithProviders(
       <MemoryRouter>
-        <AppProviders>
-          <PickTrigger />
-        </AppProviders>
+        <PickTrigger />
       </MemoryRouter>,
     );
 

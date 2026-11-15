@@ -147,7 +147,7 @@ describe("importBoardFile", () => {
   test("detects an OBZ archive by content even when its name is not .obz", async () => {
     const obzFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     const archive = await loadOBZ(obzFile);
-    const unnamedFile = new File([obzFile], SAMPLE_BOARD_SET_ID, {
+    const unnamedFile = new File([obzFile], "lots-of-stuff", {
       type: "application/zip",
     });
 

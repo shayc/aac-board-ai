@@ -1,21 +1,18 @@
-import { AppProviders } from "@shared/providers/app-providers";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
 import { AppDrawer } from "./app-drawer";
 
 function renderDrawer(open: boolean) {
   return (
-    <AppProviders>
-      <AppDrawer
-        title="Panel"
-        closeLabel="Close panel"
-        open={open}
-        onClose={vi.fn()}
-        anchor="left"
-      >
-        <div style={{ height: 4000 }}>Tall content</div>
-      </AppDrawer>
-    </AppProviders>
+    <AppDrawer
+      title="Panel"
+      closeLabel="Close panel"
+      open={open}
+      onClose={vi.fn()}
+      anchor="left"
+    >
+      <div style={{ height: 4000 }}>Tall content</div>
+    </AppDrawer>
   );
 }
 
@@ -30,7 +27,7 @@ function headerBorderColor(): string {
 
 describe("AppDrawer", () => {
   test("clears the scrolled divider when the drawer reopens", async () => {
-    const screen = await render(renderDrawer(true));
+    const screen = await renderWithProviders(renderDrawer(true));
     const content = screen.getByText("Tall content").element().parentElement;
     if (!content) {
       throw new Error("Drawer content is not rendered");

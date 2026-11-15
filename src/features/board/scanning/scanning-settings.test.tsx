@@ -5,13 +5,9 @@ import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { ScanningSettings } from "./scanning-settings";
 
-async function renderScanningSettings() {
-  return renderWithProviders(<ScanningSettings />);
-}
-
 describe("ScanningSettings", () => {
   test("shows only the scanning switch while scanning is off", async () => {
-    const screen = await renderScanningSettings();
+    const screen = await renderWithProviders(<ScanningSettings />);
 
     await expect
       .element(screen.getByRole("switch", { name: "Enable switch scanning" }))
@@ -25,7 +21,7 @@ describe("ScanningSettings", () => {
   });
 
   test("turns scanning on with the automatic method and its switch keys explained", async () => {
-    const screen = await renderScanningSettings();
+    const screen = await renderWithProviders(<ScanningSettings />);
 
     await screen
       .getByRole("switch", { name: "Enable switch scanning" })
@@ -49,7 +45,7 @@ describe("ScanningSettings", () => {
   });
 
   test("switches to the two-switch step method, which has no scan interval", async () => {
-    const screen = await renderScanningSettings();
+    const screen = await renderWithProviders(<ScanningSettings />);
 
     await screen
       .getByRole("switch", { name: "Enable switch scanning" })
@@ -74,7 +70,7 @@ describe("ScanningSettings", () => {
   });
 
   test("changes the scan interval in steps of a tenth of a second", async () => {
-    const screen = await renderScanningSettings();
+    const screen = await renderWithProviders(<ScanningSettings />);
 
     await screen
       .getByRole("switch", { name: "Enable switch scanning" })

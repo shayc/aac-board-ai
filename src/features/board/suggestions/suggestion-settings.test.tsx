@@ -13,10 +13,6 @@ import {
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { SuggestionSettings } from "./suggestion-settings";
 
-function renderSuggestionsSettings() {
-  return renderWithProviders(<SuggestionSettings />);
-}
-
 function availableWithoutLanguages(options?: Record<string, unknown>) {
   return Promise.resolve<Availability>(
     options?.expectedInputLanguages === undefined ? "available" : "unavailable",
@@ -29,7 +25,7 @@ describe("SuggestionSettings", () => {
   });
 
   test("shows an unsupported message instead of controls when no suggestion engine is supported", async () => {
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
 
     await expect
       .element(
@@ -62,7 +58,7 @@ describe("SuggestionSettings", () => {
   test("says only custom instructions are unavailable when the proofreader still suggests", async () => {
     stubProofreader();
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
 
     await expect
       .element(
@@ -89,7 +85,7 @@ describe("SuggestionSettings", () => {
     stubRewriter();
     stubTranslator();
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
 
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
@@ -105,7 +101,7 @@ describe("SuggestionSettings", () => {
     );
     stubRewriter().availability.mockImplementation(availableWithoutLanguages);
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
 
     await expect
       .element(screen.getByText("ההצעות אינן זמינות בשפה הזו."))
@@ -120,7 +116,7 @@ describe("SuggestionSettings", () => {
     stubProofreader().availability.mockResolvedValue("unavailable");
     stubRewriter().availability.mockResolvedValue("unavailable");
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
 
     await expect
       .element(
@@ -141,7 +137,7 @@ describe("SuggestionSettings", () => {
   test("keeps custom instructions when the language check fails", async () => {
     stubRewriter().availability.mockRejectedValue(new Error("Probe failed"));
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
 
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
@@ -150,7 +146,7 @@ describe("SuggestionSettings", () => {
 
   test("edits and persists custom instructions", async () => {
     stubRewriter();
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderWithProviders(<SuggestionSettings />);
     const instructions = screen.getByRole("textbox", {
       name: "Custom instructions",
     });

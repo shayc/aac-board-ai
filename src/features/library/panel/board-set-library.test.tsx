@@ -1,9 +1,9 @@
-import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { extractOBZ } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { render, type RenderResult } from "vitest-browser-react";
+import type { RenderResult } from "vitest-browser-react";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { starterBoardSet } from "../catalog/board-set-catalog";
 import { cancelBoardSetDownload } from "../catalog/board-set-downloads";
@@ -13,11 +13,9 @@ import { resetBoardsDB, seedBoardSets } from "../testing";
 import { BoardSetLibrary } from "./board-set-library";
 
 function renderBoardSetLibrary() {
-  return render(
+  return renderWithProviders(
     <MemoryRouter>
-      <AppProviders>
-        <BoardSetLibrary />
-      </AppProviders>
+      <BoardSetLibrary />
     </MemoryRouter>,
   );
 }
