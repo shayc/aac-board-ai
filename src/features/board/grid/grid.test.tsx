@@ -19,7 +19,6 @@ const OVERFLOW_HINT_PX = 8;
 const GAP_PX = 8;
 const MIN_CELL_SIZES_PX = { columns: 88, rows: 96 };
 
-// Expected dimensions for a viewport at or above sm.
 const SM_PADDING_PX = { columns: 24, rows: 16 };
 const SM_OVERFLOW_HINT_PX = 16;
 

@@ -13,14 +13,12 @@ export const CPU_SLOWDOWN = 4;
 const XRAY_ROUND_COUNT = 5;
 const COMPARISON_ROUND_COUNT = 10;
 
-/** `npm run perf` passes --base to the journeys as PERF_COMPARISON. */
 export const IS_COMPARISON = process.env.PERF_COMPARISON === "1";
 
 export const BUILD_NAMES: BuildName[] = IS_COMPARISON
   ? ["base", "current"]
   : ["current"];
 
-/** `npm run perf` passes --rounds to the journeys in PERF_ROUNDS. */
 export const ROUND_COUNT = parseRoundCount(
   process.env.PERF_ROUNDS,
   IS_COMPARISON,
