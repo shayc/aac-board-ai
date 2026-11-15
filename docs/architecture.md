@@ -295,8 +295,9 @@ that replaced the message, and opens a spoken message it brings back for more;
 there is no redo. On a keyboard layout without Latin letters the Z key's
 position counts. Backspace, play and stop name their shortcuts in a tooltip on
 keyboard focus only, since head-pointer and eye-gaze users rest on targets to
-select them; nothing in the interface names undo yet. Each control's `aria-keyshortcuts` lists the keys that activate
-it, and the backspace hint names the clear shortcut for screen readers.
+select them; nothing in the interface names undo yet. Each control's
+`aria-keyshortcuts` lists the keys that activate it, and the backspace hint
+names the clear shortcut for screen readers.
 
 ### Switch scanning
 
