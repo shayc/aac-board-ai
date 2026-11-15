@@ -289,15 +289,16 @@ these rules:
 While focus is anywhere in the board, [shortcuts](../src/features/board/shortcuts/)
 work without moving to a control: Backspace removes the last word, Ctrl or Cmd
 with Backspace clears the message, Ctrl or Cmd with Z undoes the last change to
-the message, Ctrl or Cmd with Enter speaks it, and Escape stops speech. Undo
-steps back through the last 100 changes, including a clear and a suggestion
-that replaced the message, and opens a spoken message it brings back for more;
-there is no redo. On a keyboard layout without Latin letters the Z key's
-position counts. Backspace, play and stop name their shortcuts in a tooltip on
-keyboard focus only, since head-pointer and eye-gaze users rest on targets to
-select them; nothing in the interface names undo yet. Each control's
+it, Ctrl or Cmd with Enter speaks it, and Escape stops speech. Backspace, play
+and stop name their shortcuts in a tooltip on keyboard focus only, since
+head-pointer and eye-gaze users rest on targets to select them. Each control's
 `aria-keyshortcuts` lists the keys that activate it, and the backspace hint
 names the clear shortcut for screen readers.
+
+Undo steps back through the last 100 changes to the message, including a clear
+and a suggestion that replaced it, and opens a spoken message it brings back
+for more. There is no redo, and nothing in the interface names undo yet. On a
+keyboard layout without Latin letters the Z key's position counts.
 
 ### Switch scanning
 

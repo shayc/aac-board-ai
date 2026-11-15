@@ -49,9 +49,9 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
-  // Only changes to the content are steps to undo; marking the message spoken
-  // goes through `commit` and is not.
-  function commitChange(next: Message) {
+  // A change to the content is a step to undo. Marking the message spoken is
+  // not one, so it goes through `commit`.
+  function commitStep(next: Message) {
     const undoStack = undoStackRef.current;
     undoStack.push(stateRef.current);
     if (undoStack.length > UNDO_LIMIT) {
@@ -64,7 +64,7 @@ export function useMessage(): UseMessageReturn {
   function commitEdits(from: Message, edits: readonly MessageEdit[]) {
     const edited = applyEdits(from, edits);
     if (edited !== from) {
-      commitChange(edited);
+      commitStep(edited);
     }
 
     return edited;
@@ -113,7 +113,7 @@ export function useMessage(): UseMessageReturn {
 
   function replaceWithText(input: string) {
     const words = input.match(/\S+/g) ?? [];
-    commitChange({
+    commitStep({
       parts: words.map(createTextPart),
       isWordOpen: words.length > 0,
       isSpoken: false,

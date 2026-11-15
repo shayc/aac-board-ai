@@ -255,15 +255,17 @@ describe("useMessage", () => {
     test("keeps the last 100 changes", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      for (let change = 0; change < 101; change++) {
+      const changeCount = 101;
+      for (let change = 0; change < changeCount; change++) {
         result.current.apply([{ kind: "spell", text: "a" }]);
       }
 
-      for (let step = 0; step < 101; step++) {
+      for (let step = 0; step < changeCount; step++) {
         result.current.undo();
       }
       await rerender();
 
+      // The first change is out of reach, so its letter stays.
       expect(result.current.text).toBe("a");
     });
 
