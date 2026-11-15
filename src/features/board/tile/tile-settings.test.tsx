@@ -3,8 +3,10 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { readStoredPreferences } from "@shared/testing/stored-preferences";
+import { tabToNextControl } from "@shared/testing/tab-to-next-control";
 import { describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
+import { setTileLabelPlacement } from "./tile-preferences-store";
 import { TileSettings } from "./tile-settings";
 
 describe("TileSettings", () => {
@@ -56,31 +58,32 @@ describe("TileSettings", () => {
       .toHaveAttribute("aria-valuetext", "100%");
   });
 
-  test("shows one focus outline around each label option while keeping its preview visible", async () => {
-    const screen = await renderWithProviders(<TileSettings />);
+  test.each([
+    { placement: "top", name: "Top" },
+    { placement: "bottom", name: "Bottom" },
+    { placement: "hidden", name: "Hidden" },
+  ] as const)(
+    "shows one focus outline around the $name label option while keeping its preview visible",
+    async ({ placement, name }) => {
+      setTileLabelPlacement(placement);
+      const screen = await renderWithProviders(<TileSettings />);
 
-    await userEvent.tab();
+      await tabToNextControl();
 
-    for (const name of ["Top", "Bottom", "Hidden"]) {
       const radio = screen.getByRole("radio", { name });
       await expect.element(radio).toHaveFocus();
-      await expect.element(radio).toBeChecked();
-
       const option = radio.element().parentElement;
-      const symbol = option?.querySelector("svg");
-      if (!option || !symbol) {
-        throw new Error("Label options must include a preview symbol");
-      }
+      assertDefined(option);
+      const symbol = option.querySelector("svg");
+      assertDefined(symbol);
 
       await expect.element(symbol).toBeVisible();
       await expect.element(option).toHaveStyle({ outlineStyle: "solid" });
       await expect
         .element(symbol)
         .toHaveStyle({ outlineStyle: "none", boxShadow: "none" });
-
-      await userEvent.keyboard("{ArrowRight}");
-    }
-  });
+    },
+  );
 
   test("persists tile border visibility when toggled", async () => {
     const screen = await renderWithProviders(<TileSettings />);

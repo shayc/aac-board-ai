@@ -2,7 +2,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 
 const DB_NAME = "boards-db";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export const MAX_ID_LENGTH = 255;
 
@@ -32,7 +32,10 @@ export interface BoardRecord {
 export interface AssetRecord {
   readonly boardSetId: string;
   readonly path: string;
-  readonly blob: Blob;
+  // Bytes rather than a Blob: WebKit refuses to store Blobs in ephemeral
+  // sessions.
+  readonly bytes: ArrayBuffer;
+  readonly type: string;
 }
 
 interface BoardsDBSchema extends DBSchema {
@@ -67,7 +70,13 @@ export function getBoardsDB(): Promise<BoardsDB> {
 function openConnection(): Promise<BoardsDB> {
   return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
-      if (oldVersion < 1) {
+      if (oldVersion < 2) {
+        // Version 1 stored assets as Blobs, which this version cannot read, so
+        // its board sets are dropped rather than migrated.
+        for (const name of db.objectStoreNames) {
+          db.deleteObjectStore(name);
+        }
+
         const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
         boardSets.createIndex("byImportedAt", "importedAt");
 

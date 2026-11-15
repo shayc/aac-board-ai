@@ -1,5 +1,6 @@
 import { importBoardFileFromURL, listBoardSetRecords } from "@features/library";
 import {
+  makeAssetInput,
   makeOBFBoard,
   resetBoardsDB,
   SAMPLE_BOARD_SET_ID,
@@ -55,7 +56,7 @@ function seedRecordedAudioSet() {
         }),
         makeOBFBoard({ id: "next", name: "Next" }),
       ],
-      assets: [{ path: soundPath, blob: new Blob(["recording"]) }],
+      assets: [makeAssetInput(soundPath, "recording")],
     },
   ]);
 }

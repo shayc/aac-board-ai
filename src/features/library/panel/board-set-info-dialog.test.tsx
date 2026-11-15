@@ -2,6 +2,7 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { setTestViewport } from "@shared/testing/viewport";
 import { describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { makeBoardSetRecord } from "../testing";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 
@@ -75,7 +76,11 @@ describe("BoardSetInfoDialog", () => {
     const description = screen.getByText(/example\.org/);
     await expect.element(description).toBeVisible();
 
-    expect(getComputedStyle(description.element()).userSelect).toBe("text");
+    await userEvent.dblClick(description);
+
+    const selectedText = getSelection()?.toString().trim() ?? "";
+    expect(selectedText).not.toBe("");
+    expect(description.element().textContent).toContain(selectedText);
   });
 
   test("stays sized to its content on small screens", async () => {

@@ -2,7 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { beforeEach, describe, expect, test } from "vitest";
 import type { Board } from "../board-types";
 import { insertBoardSet } from "../storage/board-set-storage";
-import { loadTestImageBlob, makeOBFBoard, resetBoardsDB } from "../testing";
+import { loadTestImageAsset, makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardNotFoundError, loadStoredBoard } from "./load-stored-board";
 
 const SET_ID = "loader-test-set";
@@ -12,7 +12,7 @@ const IMAGE_PATH = "images/test.png";
 const BOARD_KEY = { boardSetId: SET_ID, boardId: BOARD_ID };
 
 async function seedTestBoard(): Promise<void> {
-  const pngBlob = await loadTestImageBlob();
+  const image = await loadTestImageAsset(IMAGE_PATH);
 
   const obfBoard = makeOBFBoard({
     id: BOARD_ID,
@@ -30,7 +30,7 @@ async function seedTestBoard(): Promise<void> {
       obfBoard,
       { ...obfBoard, id: OTHER_BOARD_ID, name: "Other Board", images: [] },
     ],
-    assets: [{ path: IMAGE_PATH, blob: pngBlob }],
+    assets: [image],
   });
 }
 

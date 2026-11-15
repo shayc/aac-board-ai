@@ -297,7 +297,7 @@ describe("buildAssetInputs", () => {
 
     const assets = buildAssetInputs(resources);
 
-    expect(assets.map((asset) => asset.blob.type)).toEqual([
+    expect(assets.map((asset) => asset.type)).toEqual([
       "image/svg+xml",
       "audio/mpeg",
       "application/octet-stream",

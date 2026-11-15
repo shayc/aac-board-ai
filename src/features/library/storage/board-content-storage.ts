@@ -34,5 +34,9 @@ export async function getAssetBlob(
   const normalizedPath = normalizeAssetPath(path);
   const asset = await db.get("assets", [boardSetId, normalizedPath]);
 
-  return asset?.blob;
+  if (!asset) {
+    return undefined;
+  }
+
+  return new Blob([asset.bytes], { type: asset.type });
 }

@@ -6,7 +6,8 @@ export {
 } from "./db";
 export {
   loadFixtureFile,
-  loadTestImageBlob,
+  loadTestImageAsset,
+  makeAssetInput,
   makeBoardSetInput,
   makeBoardSetRecord,
   makeCorruptBoardFile,

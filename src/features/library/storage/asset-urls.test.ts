@@ -1,7 +1,7 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { beforeEach, describe, expect, test } from "vitest";
 import { createBoardSet, deleteBoardSet } from "../board-sets/board-sets-store";
-import { makeBoardSetInput, resetBoardsDB } from "../testing";
+import { makeAssetInput, makeBoardSetInput, resetBoardsDB } from "../testing";
 import { getAssetURL } from "./asset-urls";
 
 const SET_ID = "asset-url-set";
@@ -11,7 +11,7 @@ function seedAsset(content: string, boardSetId = SET_ID): Promise<void> {
   return createBoardSet(
     makeBoardSetInput({
       id: boardSetId,
-      assets: [{ path: ASSET_PATH, blob: new Blob([content]) }],
+      assets: [makeAssetInput(ASSET_PATH, content)],
     }),
   );
 }
