@@ -13,6 +13,11 @@ import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
 import { MessageBar } from "./message-bar";
 
+const SHORTCUT_LABELS = {
+  backspace: { ariaKeyShortcuts: "Backspace" },
+  clear: { keys: "⌘⌫", spokenKeys: "Command+Delete" },
+};
+
 type ColorMode = "light" | "dark";
 
 function createHandlers() {
@@ -46,6 +51,7 @@ function ClearableBackspace() {
 
   return (
     <BackspaceButton
+      shortcutLabels={SHORTCUT_LABELS}
       disabled={isCleared}
       onPress={() => {}}
       onLongPress={() => setIsCleared(true)}
@@ -66,7 +72,11 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
         activePartId={null}
         areImagesVisible
         endAction={
-          <BackspaceButton {...createHandlers()} disabled={disabled} />
+          <BackspaceButton
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+            disabled={disabled}
+          />
         }
       />
     </>,
@@ -121,7 +131,9 @@ describe("BackspaceButton", () => {
   test("calls onPress when clicked", async () => {
     const handlers = createHandlers();
 
-    const screen = await renderWithProviders(<BackspaceButton {...handlers} />);
+    const screen = await renderWithProviders(
+      <BackspaceButton shortcutLabels={SHORTCUT_LABELS} {...handlers} />,
+    );
 
     const button = screen.getByRole("button", { name: "Backspace" });
     await button.click();
@@ -133,7 +145,9 @@ describe("BackspaceButton", () => {
   test("calls onLongPress when long-pressed", async () => {
     const handlers = createHandlers();
 
-    const screen = await renderWithProviders(<BackspaceButton {...handlers} />);
+    const screen = await renderWithProviders(
+      <BackspaceButton shortcutLabels={SHORTCUT_LABELS} {...handlers} />,
+    );
 
     const button = screen.getByRole("button", { name: "Backspace" });
     longPress(button.element());
@@ -144,7 +158,10 @@ describe("BackspaceButton", () => {
 
   test("fills the ring while held and empties it on release", async () => {
     const screen = await renderWithProviders(
-      <BackspaceButton {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
     const button = screen.getByRole("button", { name: "Backspace" }).element();
     const ring = button.querySelector<HTMLElement>("[role=progressbar]");
@@ -174,7 +191,11 @@ describe("BackspaceButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <BackspaceButton {...handlers} disabled />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...handlers}
+        disabled
+      />,
     );
 
     const button = screen.getByRole("button", { name: "Backspace" });
@@ -197,7 +218,10 @@ describe("BackspaceButton", () => {
     async ({ direction, transform }) => {
       const screen = await renderWithProviders(
         <div dir={direction}>
-          <BackspaceButton {...createHandlers()} />
+          <BackspaceButton
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+          />
         </div>,
       );
       const icon = screen
@@ -218,20 +242,28 @@ describe("BackspaceButton shortcut hints", () => {
 
   test("shows the clear shortcut when focused from the keyboard", async () => {
     const screen = await renderWithProviders(
-      <BackspaceButton {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
 
     await userEvent.tab();
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
-    expect(tooltip.element().textContent).toMatch(/^Clear message \(.+\)$/);
+    expect(tooltip.element().textContent).toBe(
+      "Clear message (\u2066⌘⌫\u2069)",
+    );
   });
 
   test("keeps the shortcut tooltip closed on hover", async () => {
     vi.useFakeTimers();
     const screen = await renderWithProviders(
-      <BackspaceButton {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
     const button = screen.getByRole("button", { name: "Backspace" });
 
@@ -248,14 +280,17 @@ describe("BackspaceButton shortcut hints", () => {
 
   test("names the clear shortcut in the hint and its own key", async () => {
     const screen = await renderWithProviders(
-      <BackspaceButton {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
     const button = screen.getByRole("button", { name: "Backspace" });
 
     await expect
       .element(button)
       .toHaveAccessibleDescription(
-        /Hold, or press .+\+.+, to clear the message\./,
+        "Hold, or press Command+Delete, to clear the message.",
       );
     await expect
       .element(button)

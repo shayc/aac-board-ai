@@ -75,6 +75,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
+      shortcutLabels={shortcuts.labels}
       onPress={message.backspace}
       onLongPress={message.clear}
     />
@@ -85,6 +86,7 @@ export function CommunicationBoard({
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
       variant={isSmallScreen ? "boardControl" : "prominent"}
+      shortcutLabels={shortcuts.labels}
       onPlay={() => void playback.playMessage(message.parts)}
       onStop={playback.stop}
     />

@@ -15,9 +15,9 @@ interface ShortcutTooltipProps {
 }
 
 /**
- * Shows a board control's keyboard shortcut while the control has keyboard
- * focus. Head-pointer and eye-gaze users rest on targets to select them, so
- * hover would cover the board, and touch has no keys to learn.
+ * Shows a control's keyboard shortcut while the control has keyboard focus.
+ * Head-pointer and eye-gaze users rest on targets to select them, so hover
+ * would cover what they aim at, and touch has no keys to learn.
  */
 export function ShortcutTooltip({
   action,

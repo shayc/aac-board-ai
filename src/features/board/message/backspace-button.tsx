@@ -8,10 +8,10 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
-import { useBoardShortcutLabels } from "../shortcuts/shortcut-labels";
-import { ShortcutTooltip } from "../shortcuts/shortcut-tooltip";
+import type { BoardShortcutLabels } from "../shortcuts/shortcut-labels";
 import { MESSAGE_ACTION_SIZE } from "./message-bar";
 
 const RING_DELAY_MS = 300;
@@ -22,17 +22,18 @@ const DISC_INSET = 1;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
+  shortcutLabels: Pick<BoardShortcutLabels, "backspace" | "clear">;
   onPress: () => void;
   onLongPress: () => void;
 }
 
 export function BackspaceButton({
   disabled = false,
+  shortcutLabels,
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
   const t = useTranslate();
-  const shortcutLabels = useBoardShortcutLabels();
   const [isHolding, setIsHolding] = useState(false);
   const { pressProps } = usePress({ isDisabled: disabled, onPress });
 

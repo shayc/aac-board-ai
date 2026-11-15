@@ -3,6 +3,11 @@ import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { PlayButton } from "./play-button";
 
+const SHORTCUT_LABELS = {
+  play: { ariaKeyShortcuts: "Meta+Enter Control+Enter", keys: "⌘↩" },
+  stop: { ariaKeyShortcuts: "Escape", keys: "Esc" },
+};
+
 function createHandlers() {
   return {
     onPlay: vi.fn(),
@@ -15,7 +20,11 @@ describe("PlayButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <PlayButton isPlaying={false} {...handlers} />,
+      <PlayButton
+        shortcutLabels={SHORTCUT_LABELS}
+        isPlaying={false}
+        {...handlers}
+      />,
     );
 
     await screen.getByRole("button", { name: "Play message" }).click();
@@ -28,7 +37,7 @@ describe("PlayButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <PlayButton isPlaying {...handlers} />,
+      <PlayButton shortcutLabels={SHORTCUT_LABELS} isPlaying {...handlers} />,
     );
 
     await screen.getByRole("button", { name: "Stop message" }).click();
@@ -40,14 +49,23 @@ describe("PlayButton", () => {
   test("keeps focus and ignores activation once disabled", async () => {
     const handlers = createHandlers();
     const screen = await renderWithProviders(
-      <PlayButton isPlaying={false} {...handlers} />,
+      <PlayButton
+        shortcutLabels={SHORTCUT_LABELS}
+        isPlaying={false}
+        {...handlers}
+      />,
     );
     const play = screen.getByRole("button", { name: "Play message" });
     play.element().focus();
     await expect.element(play).toHaveFocus();
 
     await screen.rerender(
-      <PlayButton disabled isPlaying={false} {...handlers} />,
+      <PlayButton
+        shortcutLabels={SHORTCUT_LABELS}
+        disabled
+        isPlaying={false}
+        {...handlers}
+      />,
     );
 
     await expect.element(play).toHaveAttribute("aria-disabled", "true");
@@ -60,7 +78,11 @@ describe("PlayButton", () => {
 
   test("shows the play shortcut when focused from the keyboard", async () => {
     const screen = await renderWithProviders(
-      <PlayButton isPlaying={false} {...createHandlers()} />,
+      <PlayButton
+        shortcutLabels={SHORTCUT_LABELS}
+        isPlaying={false}
+        {...createHandlers()}
+      />,
     );
     const play = screen.getByRole("button", { name: "Play message" });
 
@@ -68,7 +90,7 @@ describe("PlayButton", () => {
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
-    expect(tooltip.element().textContent).toMatch(/^Play message \(.+\)$/);
+    expect(tooltip.element().textContent).toBe("Play message (\u2066⌘↩\u2069)");
     await expect
       .element(play)
       .toHaveAttribute("aria-keyshortcuts", "Meta+Enter Control+Enter");
@@ -76,7 +98,12 @@ describe("PlayButton", () => {
 
   test("shows the stop shortcut while playing", async () => {
     const screen = await renderWithProviders(
-      <PlayButton isPlaying variant="boardControl" {...createHandlers()} />,
+      <PlayButton
+        shortcutLabels={SHORTCUT_LABELS}
+        isPlaying
+        variant="boardControl"
+        {...createHandlers()}
+      />,
     );
     const stop = screen.getByRole("button", { name: "Stop message" });
 

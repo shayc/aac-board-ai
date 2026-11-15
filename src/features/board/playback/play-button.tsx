@@ -6,18 +6,19 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { BoardControlButton } from "../board-control-button";
 import {
   MESSAGE_ACTION_ICON_SIZE,
   MESSAGE_ACTION_SIZE,
 } from "../message/message-bar";
-import { useBoardShortcutLabels } from "../shortcuts/shortcut-labels";
-import { ShortcutTooltip } from "../shortcuts/shortcut-tooltip";
+import type { BoardShortcutLabels } from "../shortcuts/shortcut-labels";
 
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
   variant?: "prominent" | "boardControl";
+  shortcutLabels: Pick<BoardShortcutLabels, "play" | "stop">;
   onPlay: () => void;
   onStop: () => void;
 }
@@ -26,11 +27,11 @@ export function PlayButton({
   disabled = false,
   isPlaying,
   variant = "prominent",
+  shortcutLabels,
   onPlay,
   onStop,
 }: PlayButtonProps) {
   const t = useTranslate();
-  const shortcutLabels = useBoardShortcutLabels();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
   const shortcutLabel = isPlaying ? shortcutLabels.stop : shortcutLabels.play;
   const handleClick = isPlaying ? onStop : onPlay;

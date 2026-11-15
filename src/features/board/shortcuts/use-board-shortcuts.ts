@@ -4,6 +4,10 @@ import { useKeyboard } from "react-aria";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 import { resolveBoardShortcut } from "./resolve-board-shortcut";
+import {
+  type BoardShortcutLabels,
+  useBoardShortcutLabels,
+} from "./shortcut-labels";
 
 interface UseBoardShortcutsOptions {
   message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;
@@ -15,6 +19,7 @@ interface UseBoardShortcutsOptions {
 
 interface UseBoardShortcutsReturn {
   rootProps: DOMAttributes<HTMLElement>;
+  labels: BoardShortcutLabels;
 }
 
 export function useBoardShortcuts({
@@ -50,6 +55,7 @@ export function useBoardShortcuts({
       }
     },
   });
+  const labels = useBoardShortcutLabels();
 
-  return { rootProps: keyboardProps };
+  return { rootProps: keyboardProps, labels };
 }

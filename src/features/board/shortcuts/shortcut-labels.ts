@@ -1,5 +1,6 @@
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { BOARD_SHORTCUT_ARIA_KEYS } from "./resolve-board-shortcut";
 
 interface ShortcutLabel {
   /** The `aria-keyshortcuts` value, naming every combination that works. */
@@ -14,8 +15,6 @@ interface SpokenShortcutLabel {
   spokenKeys: string;
 }
 
-// aria-keyshortcuts names the keys that activate an element, so clearing,
-// which the backspace button only does on a long press, gets no value.
 export interface BoardShortcutLabels {
   backspace: Pick<ShortcutLabel, "ariaKeyShortcuts">;
   clear: SpokenShortcutLabel;
@@ -42,13 +41,16 @@ export function useBoardShortcutLabels(): BoardShortcutLabels {
     : { keys: clearKeys, spokenKeys: clearKeys };
 
   return {
-    backspace: { ariaKeyShortcuts: "Backspace" },
+    backspace: { ariaKeyShortcuts: BOARD_SHORTCUT_ARIA_KEYS.backspace },
     clear,
     play: {
-      ariaKeyShortcuts: "Meta+Enter Control+Enter",
+      ariaKeyShortcuts: BOARD_SHORTCUT_ARIA_KEYS.play,
       keys: isApple ? "⌘↩" : `${control}+${t(m.keyEnter)}`,
     },
-    stop: { ariaKeyShortcuts: "Escape", keys: t(m.keyEscape) },
+    stop: {
+      ariaKeyShortcuts: BOARD_SHORTCUT_ARIA_KEYS.stop,
+      keys: t(m.keyEscape),
+    },
   };
 }
 
