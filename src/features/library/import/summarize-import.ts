@@ -52,8 +52,10 @@ export function summarizeImport({
   };
 }
 
-// Non-board files are reported only when no board file was given, so a stray
-// file never turns a successful import into an error.
+function isArchiveTooLarge(error: unknown): boolean {
+  return error instanceof OBFError && error.info.code === "archive-too-large";
+}
+
 export function summarizeSkippedImport(
   fileNames: readonly string[],
 ): SnackbarOptions {
@@ -70,8 +72,4 @@ export function summarizeSkippedImport(
     message: (t) => t(m.libraryImportOnlyBoardFiles),
     severity: "error",
   };
-}
-
-function isArchiveTooLarge(error: unknown): boolean {
-  return error instanceof OBFError && error.info.code === "archive-too-large";
 }
