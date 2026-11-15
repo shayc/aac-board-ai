@@ -10,6 +10,8 @@ import { flipForRTL } from "@shared/theme/rtl";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
+import { useBoardKeyShortcuts } from "../shortcuts/key-shortcuts";
+import { ShortcutTooltip } from "../shortcuts/shortcut-tooltip";
 import { MESSAGE_ACTION_SIZE } from "./message-bar";
 
 const RING_DELAY_MS = 300;
@@ -30,11 +32,14 @@ export function BackspaceButton({
   onLongPress,
 }: BackspaceButtonProps) {
   const t = useTranslate();
+  const shortcuts = useBoardKeyShortcuts();
   const [isHolding, setIsHolding] = useState(false);
   const { pressProps } = usePress({ isDisabled: disabled, onPress });
 
   const { longPressProps } = useLongPress({
-    accessibilityDescription: t(m.messageBackspaceLongPressHint),
+    accessibilityDescription: t(m.messageBackspaceLongPressHint, {
+      shortcut: shortcuts.clear.spokenLabel,
+    }),
     isDisabled: disabled,
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
@@ -43,23 +48,29 @@ export function BackspaceButton({
   });
 
   return (
-    <IconButton
-      {...mergeProps(pressProps, longPressProps)}
-      {...focusableDisabledProps(disabled)}
-      aria-label={t(m.messageBackspace)}
-      sx={backspaceSx}
+    <ShortcutTooltip
+      action={t(m.messageClear)}
+      shortcut={shortcuts.clear.label}
     >
-      <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
+      <IconButton
+        {...mergeProps(pressProps, longPressProps)}
+        {...focusableDisabledProps(disabled)}
+        aria-label={t(m.messageBackspace)}
+        aria-keyshortcuts={shortcuts.backspace.ariaKeyShortcuts}
+        sx={backspaceSx}
+      >
+        <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
 
-      <CircularProgress
-        aria-hidden
-        color="inherit"
-        variant="determinate"
-        value={isHolding ? 100 : 0}
-        size="auto"
-        sx={(theme) => ringSx(theme, isHolding)}
-      />
-    </IconButton>
+        <CircularProgress
+          aria-hidden
+          color="inherit"
+          variant="determinate"
+          value={isHolding ? 100 : 0}
+          size="auto"
+          sx={(theme) => ringSx(theme, isHolding)}
+        />
+      </IconButton>
+    </ShortcutTooltip>
   );
 }
 

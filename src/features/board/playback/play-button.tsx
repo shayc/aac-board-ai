@@ -11,6 +11,8 @@ import {
   MESSAGE_ACTION_ICON_SIZE,
   MESSAGE_ACTION_SIZE,
 } from "../message/message-bar";
+import { useBoardKeyShortcuts } from "../shortcuts/key-shortcuts";
+import { ShortcutTooltip } from "../shortcuts/shortcut-tooltip";
 
 interface PlayButtonProps {
   disabled?: boolean;
@@ -28,42 +30,50 @@ export function PlayButton({
   onStop,
 }: PlayButtonProps) {
   const t = useTranslate();
+  const shortcuts = useBoardKeyShortcuts();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
+  const shortcut = isPlaying ? shortcuts.stop : shortcuts.play;
   const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopIcon : PlayArrowIcon;
 
   if (variant === "boardControl") {
     return (
-      <BoardControlButton
-        aria-label={label}
-        disabled={disabled}
-        color={isPlaying ? "inherit" : "primary"}
-        onClick={handleClick}
-        sx={(theme) => ({
-          [`&.${buttonClasses.disabled}`]: disabledSx(theme),
-        })}
-      >
-        <Icon />
-      </BoardControlButton>
+      <ShortcutTooltip action={label} shortcut={shortcut.label}>
+        <BoardControlButton
+          aria-label={label}
+          aria-keyshortcuts={shortcut.ariaKeyShortcuts}
+          disabled={disabled}
+          color={isPlaying ? "inherit" : "primary"}
+          onClick={handleClick}
+          sx={(theme) => ({
+            [`&.${buttonClasses.disabled}`]: disabledSx(theme),
+          })}
+        >
+          <Icon />
+        </BoardControlButton>
+      </ShortcutTooltip>
     );
   }
 
   return (
-    <Fab
-      {...focusableDisabledProps(disabled)}
-      aria-label={label}
-      color={isPlaying ? "default" : "primary"}
-      onClick={disabled ? undefined : handleClick}
-      sx={(theme) => ({
-        flexShrink: 0,
-        width: MESSAGE_ACTION_SIZE,
-        height: MESSAGE_ACTION_SIZE,
-        [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-        [`&.${fabClasses.disabled}`]: disabledSx(theme),
-      })}
-    >
-      <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
-    </Fab>
+    <ShortcutTooltip action={label} shortcut={shortcut.label}>
+      <Fab
+        {...focusableDisabledProps(disabled)}
+        aria-label={label}
+        aria-keyshortcuts={shortcut.ariaKeyShortcuts}
+        color={isPlaying ? "default" : "primary"}
+        onClick={disabled ? undefined : handleClick}
+        sx={(theme) => ({
+          flexShrink: 0,
+          width: MESSAGE_ACTION_SIZE,
+          height: MESSAGE_ACTION_SIZE,
+          [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
+          [`&.${fabClasses.disabled}`]: disabledSx(theme),
+        })}
+      >
+        <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
+      </Fab>
+    </ShortcutTooltip>
   );
 }
 

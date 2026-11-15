@@ -211,6 +211,58 @@ describe("BackspaceButton", () => {
   );
 });
 
+describe("BackspaceButton shortcut hints", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test("shows the clear shortcut when focused from the keyboard", async () => {
+    const screen = await renderWithProviders(
+      <BackspaceButton {...createHandlers()} />,
+    );
+
+    await userEvent.tab();
+
+    const tooltip = screen.getByRole("tooltip");
+    await expect.element(tooltip).toBeInTheDocument();
+    expect(tooltip.element().textContent).toMatch(/^Clear message \(.+\)$/);
+  });
+
+  test("keeps the shortcut tooltip closed on hover", async () => {
+    vi.useFakeTimers();
+    const screen = await renderWithProviders(
+      <BackspaceButton {...createHandlers()} />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" });
+
+    await button.hover();
+    await vi.advanceTimersByTimeAsync(1000);
+
+    expect(screen.getByRole("tooltip").query()).toBeNull();
+
+    await userEvent.tab();
+    await vi.advanceTimersByTimeAsync(1000);
+
+    await expect.element(screen.getByRole("tooltip")).toBeInTheDocument();
+  });
+
+  test("names the clear shortcut in the hint and its own key", async () => {
+    const screen = await renderWithProviders(
+      <BackspaceButton {...createHandlers()} />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" });
+
+    await expect
+      .element(button)
+      .toHaveAccessibleDescription(
+        /Hold, or press .+\+.+, to clear the message\./,
+      );
+    await expect
+      .element(button)
+      .toHaveAttribute("aria-keyshortcuts", "Backspace");
+  });
+});
+
 describe("BackspaceButton colors", () => {
   test.each(["light", "dark"] as const)(
     "draws the icon in %s mode with text-level contrast",

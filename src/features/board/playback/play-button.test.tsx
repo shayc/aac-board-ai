@@ -57,4 +57,34 @@ describe("PlayButton", () => {
 
     expect(handlers.onPlay).not.toHaveBeenCalled();
   });
+
+  test("shows the play shortcut when focused from the keyboard", async () => {
+    const screen = await renderWithProviders(
+      <PlayButton isPlaying={false} {...createHandlers()} />,
+    );
+    const play = screen.getByRole("button", { name: "Play message" });
+
+    await userEvent.tab();
+
+    const tooltip = screen.getByRole("tooltip");
+    await expect.element(tooltip).toBeInTheDocument();
+    expect(tooltip.element().textContent).toMatch(/^Play message \(.+\)$/);
+    await expect
+      .element(play)
+      .toHaveAttribute("aria-keyshortcuts", "Meta+Enter Control+Enter");
+  });
+
+  test("shows the stop shortcut while playing", async () => {
+    const screen = await renderWithProviders(
+      <PlayButton isPlaying variant="boardControl" {...createHandlers()} />,
+    );
+    const stop = screen.getByRole("button", { name: "Stop message" });
+
+    await userEvent.tab();
+
+    const tooltip = screen.getByRole("tooltip");
+    await expect.element(tooltip).toBeInTheDocument();
+    expect(tooltip.element().textContent).toBe("Stop message (Esc)");
+    await expect.element(stop).toHaveAttribute("aria-keyshortcuts", "Escape");
+  });
 });
