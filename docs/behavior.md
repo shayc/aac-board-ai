@@ -134,8 +134,8 @@ The message being composed outlives the page.
 
 **What a pass does**
 
-- **It translates each set not yet in the communication language**: the set
-  name and every board missing that language, saved in one transaction.
+- **A pass translates each set not yet in the communication language**: the
+  set name and every board missing that language, saved in one transaction.
 - **Boards are checked one by one**, because a set's language is only its root
   board's.
 - **The set name comes from the root board's own translations when the board
@@ -147,7 +147,7 @@ The message being composed outlives the page.
 
 **After each saved set**
 
-- **It syncs the library and tells the app shell**, which revalidates the
+- **The pass syncs the library and tells the app shell**, which revalidates the
   routes (board and board list) when that set is on screen or being navigated
   to, so everything on screen updates without a reload.
 - **Other sets are not revalidated**: that would re-run a `?board=` link import
