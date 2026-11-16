@@ -17,6 +17,20 @@ async function openStarterBoardSetUnderServiceWorker(page: Page) {
     .toBe(true);
 }
 
+async function expectBoardUsable(
+  page: Page,
+  boardName: string,
+  tileName: string,
+) {
+  await expect(page.getByRole("grid", { name: boardName })).toBeVisible();
+
+  const playMessageButton = page.getByRole("button", { name: "Play message" });
+  await expect(playMessageButton).toBeDisabled();
+
+  await page.getByRole("button", { name: tileName }).click();
+  await expect(playMessageButton).toBeEnabled();
+}
+
 test("a stored board opens and remains usable offline", async ({
   context,
   page,
@@ -29,17 +43,7 @@ test("a stored board opens and remains usable offline", async ({
   const offlinePage = await context.newPage();
   await offlinePage.goto("/");
 
-  await expect(
-    offlinePage.getByRole("grid", { name: "First Words" }),
-  ).toBeVisible();
-
-  const playMessageButton = offlinePage.getByRole("button", {
-    name: "Play message",
-  });
-  await expect(playMessageButton).toBeDisabled();
-
-  await offlinePage.getByRole("button", { name: "want" }).click();
-  await expect(playMessageButton).toBeEnabled();
+  await expectBoardUsable(offlinePage, "First Words", "want");
 });
 
 test("a nested board opened directly offline remains usable", async ({
@@ -48,7 +52,7 @@ test("a nested board opened directly offline remains usable", async ({
 }) => {
   await openStarterBoardSetUnderServiceWorker(page);
   await page.getByRole("button", { name: "food" }).click();
-  await expect(page.getByRole("grid", { name: "Food" })).toBeVisible();
+  await expect(page).toHaveURL(/\/boards\/food$/);
   const foodBoardURL = page.url();
 
   await page.close();
@@ -57,15 +61,7 @@ test("a nested board opened directly offline remains usable", async ({
   const offlinePage = await context.newPage();
   await offlinePage.goto(foodBoardURL);
 
-  await expect(offlinePage.getByRole("grid", { name: "Food" })).toBeVisible();
-
-  const playMessageButton = offlinePage.getByRole("button", {
-    name: "Play message",
-  });
-  await expect(playMessageButton).toBeDisabled();
-
-  await offlinePage.getByRole("button", { name: "water" }).click();
-  await expect(playMessageButton).toBeEnabled();
+  await expectBoardUsable(offlinePage, "Food", "water");
 });
 
 test("deleting the last board set offline restores the starter board set", async ({
