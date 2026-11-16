@@ -40,19 +40,11 @@ describe("expectNoA11yViolations", () => {
     );
   });
 
-  test("leaves target size out when a run is narrowed to chosen rules", async () => {
-    const screen = await render(<SmallAdjacentButtons />);
-
-    await expectNoA11yViolations(screen.container, {
-      runOnly: ["button-name"],
-    });
-  });
-
-  test("fails on a result axe could not decide and suggests its review", async () => {
+  test("fails on a result axe could not decide and names its cause", async () => {
     const screen = await render(<div role="list" aria-label="Empty" />);
 
     await expect(expectNoA11yViolations(screen.container)).rejects.toThrow(
-      /^Undecided:[\s\S]*Review: \{ rule: "aria-required-children", cause: "aria-required-children", selector: "", reason: "" \}/,
+      /^Undecided:[\s\S]*listitem \[aria-required-children\]/,
     );
   });
 

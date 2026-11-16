@@ -18,7 +18,7 @@ export const MUI_OUTLINED_INPUT_CONTRAST_REVIEW: ReviewedIncomplete = {
 /** An undecided axe result a person has checked and judged acceptable. */
 export interface ReviewedIncomplete {
   rule: string;
-  /** The check's message key, or its ID when it has none, e.g. "bgOverlap". */
+  /** The bracketed cause a failure report prints, e.g. "bgOverlap". */
   cause: string;
   /** Matches the flagged elements; axe's own targets use unstable React IDs. */
   selector: string;
@@ -45,10 +45,14 @@ export async function expectNoA11yViolations(
     endingAnimations.map((animation) => animation.finished),
   );
 
-  const { violations, incomplete } = await axe.run(
-    target,
-    withDefaultOptions(options),
-  );
+  const { violations, incomplete } = await axe.run(target, {
+    // Other result types keep one example node, which skips selector work;
+    // incomplete needs every node to match against the reviewed list.
+    resultTypes: ["violations", "incomplete"],
+    ...options,
+    rules: { ...ENABLED_BY_DEFAULT, ...options.rules },
+    elementRef: true,
+  });
 
   if (violations.length > 0) {
     assert.fail(describeResults(violations));
@@ -59,83 +63,53 @@ export async function expectNoA11yViolations(
   const unreviewed = withoutReviewedNodes(incomplete, reviewedIncomplete);
   if (unreviewed.length > 0) {
     assert.fail(
-      `Undecided: axe could not check these. Review each one, then list it in reviewedIncomplete with a stable selector.\n\n${describeResults(unreviewed, { suggestReview: true })}`,
+      `Undecided: axe could not check these. Review each one, then list it in reviewedIncomplete by rule, bracketed cause and a stable selector.\n\n${describeResults(unreviewed)}`,
     );
   }
 
-  const stale = reviewedIncomplete.filter(
-    (reviewed) => !incomplete.some((result) => isReviewed(result, reviewed)),
-  );
+  const stale = reviewedIncomplete
+    .filter(
+      (reviewed) => !incomplete.some((result) => isReviewed(result, reviewed)),
+    )
+    .map(({ rule, cause, selector }) => `${rule} [${cause}] on ${selector}`);
   if (stale.length > 0) {
     assert.fail(
-      `These reviewed results no longer occur; remove them:\n${stale.map(describeReview).join("\n")}`,
+      `These reviewed results no longer occur; remove them:\n${stale.join("\n")}`,
     );
   }
 }
 
-function withDefaultOptions(options: axe.RunOptions): axe.RunOptions {
-  // An enabled rule runs even outside runOnly, which narrows a run on purpose.
-  const rules = options.runOnly
-    ? options.rules
-    : { ...ENABLED_BY_DEFAULT, ...options.rules };
-
-  return {
-    // Other result types keep one example node, which skips selector work;
-    // incomplete needs every node to match against the reviewed list.
-    resultTypes: ["violations", "incomplete"],
-    ...options,
-    rules,
-    elementRef: true,
-  };
-}
-
-function describeResults(
-  results: axe.Result[],
-  { suggestReview = false } = {},
-) {
+function describeResults(results: axe.Result[]) {
   const report = results.map((result) =>
     [
       `${result.id} (${result.impact ?? "unknown"}): ${result.help}`,
       `  ${result.helpUrl}`,
-      ...result.nodes.map((node) =>
-        describeNode(node, { rule: result.id, suggestReview }),
-      ),
+      ...result.nodes.map(describeNode),
     ].join("\n"),
   );
 
   return report.join("\n\n");
 }
 
-function describeNode(
-  node: axe.NodeResult,
-  { rule, suggestReview }: { rule: string; suggestReview: boolean },
-) {
-  const reviews = suggestReview
-    ? causesOf(node).map(
-        (cause) =>
-          `Review: ${describeReview({ rule, cause, selector: "", reason: "" })}`,
-      )
-    : [];
-  const details = [...describeReasons(node), ...reviews].map(
-    (line) => `      ${line}`,
-  );
+function describeNode(node: axe.NodeResult) {
+  const describeCheck = (check: axe.CheckResult) =>
+    `${check.message} [${causeOf(check)}]`;
+  const required = [...node.all, ...node.none].map(describeCheck);
+  // Passing any one of these checks fixes the element, so they are alternatives.
+  const alternatives =
+    node.any.length > 1
+      ? [
+          "Fix any one of:",
+          ...node.any.map((check) => `- ${describeCheck(check)}`),
+        ]
+      : node.any.map(describeCheck);
+  const details = [...required, ...alternatives].map((line) => `      ${line}`);
 
   return [`    ${node.target.join(" ")}`, ...details].join("\n");
 }
 
-function describeReasons(node: axe.NodeResult) {
-  const required = [...node.all, ...node.none].map((check) => check.message);
-  // Passing any one of these checks fixes the element, so they are alternatives.
-  const alternatives =
-    node.any.length > 1
-      ? ["Fix any one of:", ...node.any.map((check) => `- ${check.message}`)]
-      : node.any.map((check) => check.message);
-
-  return [...required, ...alternatives];
-}
-
-function describeReview({ rule, cause, selector, reason }: ReviewedIncomplete) {
-  return `{ rule: ${JSON.stringify(rule)}, cause: ${JSON.stringify(cause)}, selector: ${JSON.stringify(selector)}, reason: ${JSON.stringify(reason)} }`;
+function causeOf(check: axe.CheckResult) {
+  return (check.data as { messageKey?: string } | null)?.messageKey ?? check.id;
 }
 
 function withoutReviewedNodes(
@@ -160,17 +134,12 @@ function matchesReview(
   node: axe.NodeResult,
   reviewed: ReviewedIncomplete,
 ) {
+  const causes = [...node.any, ...node.all, ...node.none].map(causeOf);
+
   return (
     result.id === reviewed.rule &&
-    causesOf(node).includes(reviewed.cause) &&
+    causes.includes(reviewed.cause) &&
     node.element?.matches(reviewed.selector) === true
-  );
-}
-
-function causesOf(node: axe.NodeResult) {
-  return [...node.any, ...node.all, ...node.none].map(
-    (check) =>
-      (check.data as { messageKey?: string } | null)?.messageKey ?? check.id,
   );
 }
 
