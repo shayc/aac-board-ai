@@ -101,10 +101,14 @@ export function useSpeechPreferences(): SpeechPreferences {
 }
 
 // Text in another language than the communication language, such as an
-// untranslated board, is spoken in its own.
+// untranslated board, is spoken in its own when the device has a voice for
+// it. Without one, a voice in the wrong language is still heard, where a
+// language the device cannot speak may not be.
 export function getSpeechParameters(textLanguage?: string): SpeechParameters {
-  const language = textLanguage ?? getStoredLanguage();
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
+  const hasVoiceForText =
+    textLanguage !== undefined && voicesByLanguage[textLanguage] !== undefined;
+  const language = hasVoiceForText ? textLanguage : getStoredLanguage();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();
 

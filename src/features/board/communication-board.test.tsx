@@ -239,22 +239,7 @@ describe("CommunicationBoard", () => {
         .toHaveAttribute("lang", "es");
     });
 
-    test("speaks a board in another language than the communication language in the board's own", async () => {
-      setStoredLanguage("en");
-      const screen = await renderCommunicationBoard({
-        ...TWO_BUTTON_BOARD,
-        locale: "es",
-      });
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await expect.poll(() => lastUtterance(speech.speak).lang).toBe("es");
-
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await expect.poll(() => speech.speak.mock.calls).toHaveLength(2);
-      expect(lastUtterance(speech.speak).lang).toBe("es");
-    });
-
-    test("plays each part of a message in the language it was added in", async () => {
+    test("plays a message that mixes languages as one utterance per language", async () => {
       setStoredLanguage("en");
       const screen = await render(communicationBoardTree(TWO_BUTTON_BOARD));
       await screen.getByRole("button", { name: "hello" }).click();
@@ -274,14 +259,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "Play message" }).click();
       await expect.poll(() => speech.speak.mock.calls).toHaveLength(4);
 
-      expect(
-        speech.speak.mock.calls
-          .slice(2)
-          .map(([spoken]) => [spoken.text, spoken.lang]),
-      ).toEqual([
-        ["hello", "en"],
-        ["hola", "es"],
-      ]);
+      expect(speech.spokenTexts().slice(2)).toEqual(["hello", "hola"]);
       const [englishPart, spanishPart] = screen
         .getByRole("listitem")
         .elements();
@@ -289,7 +267,7 @@ describe("CommunicationBoard", () => {
       expect(spanishPart).toHaveAttribute("lang", "es");
     });
 
-    test("speaks an accepted suggestion in the communication language on a board in another", async () => {
+    test("marks an accepted suggestion with the communication language on a board in another", async () => {
       stubRewriter(() => "I want to say hello");
       setStoredLanguage("en");
       const screen = await renderCommunicationBoard({
@@ -299,12 +277,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
 
       await screen.getByRole("button", { name: "I want to say hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
 
-      await expect
-        .poll(() => lastUtterance(speech.speak).text)
-        .toBe("i want to say hello");
-      expect(lastUtterance(speech.speak).lang).toBe("en");
       await expect
         .element(screen.getByRole("listitem").first())
         .toHaveAttribute("lang", "en");

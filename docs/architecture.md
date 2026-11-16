@@ -110,8 +110,8 @@ Device output does not read settings stores. `AppProviders` gives the playback
 coordinator a `getSpeechParameters` function, and the coordinator calls it for
 each speech step, so every utterance uses the voice, rate, pitch, and volume
 current at that moment. A step names the language its text is in when that is
-known, and speech uses that language and one of its voices; otherwise it uses
-the communication language.
+known, and speech uses that language and one of its voices when the device has
+one; otherwise it uses the communication language.
 
 The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` reload when another tab writes
@@ -347,7 +347,9 @@ spelled word, and the communication language for an accepted suggestion. Speech
 follows the part, so a board that could not be translated is spoken in its own
 language, and a message that mixes languages is spoken as one utterance per run
 of the same language. A part from a board whose file declares no language has
-none and is spoken in the communication language. Speech uses the saved voice
+none and is spoken in the communication language, and so is a part in a
+language the device has no voice for: a voice in the wrong language is still
+heard. Speech uses the saved voice
 only when it speaks the language being spoken; otherwise it picks one of that
 language's voices, or leaves the choice to the browser, without changing the
 saved voice.
