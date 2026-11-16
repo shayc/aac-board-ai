@@ -116,7 +116,7 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
   });
 
-  test("keeps adding to a played message when clearing after speaking is off", async () => {
+  test("keeps adding to a played message when clearing after playing is off", async () => {
     setMessageClearAfterPlayback(false);
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
@@ -127,7 +127,7 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
 
-  test("releases a played message when clearing after speaking is turned off", async () => {
+  test("releases a played message when clearing after playing is turned off", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want water", "en");
@@ -204,7 +204,7 @@ describe("useMessage", () => {
   });
 
   // A no-op edit, such as a tile that only plays, must not save a released
-  // copy of a played message while clearing after speaking is off.
+  // copy of a played message while clearing after playing is off.
   test("keeps a played message played through an edit that changes nothing", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
@@ -388,7 +388,7 @@ describe("useMessage", () => {
       expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
     });
 
-    test("restores a played message when clearing after speaking is off", async () => {
+    test("restores a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
       const first = await renderHook(() => useMessage());
       first.result.current.replaceWithText("I want", "en");

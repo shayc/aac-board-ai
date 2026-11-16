@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Posłuchaj głosu",
   "speechPreviewSample": "Cześć, to mój głos!",
   "messageImages": "Pokaż obrazy",
-  "messageHighlight": "Podświetlaj podczas mówienia",
-  "messageClearAfterSpeaking": "Czyść po mówieniu",
+  "messageHighlight": "Podświetlaj podczas odtwarzania",
+  "messageClearAfterPlaying": "Czyść po odtworzeniu",
   "tileSaturation": "Intensywność kolorów",
   "tileBrightness": "Jasność",
   "tileBorders": "Pokaż obramowania",
@@ -151,9 +151,9 @@
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "errorBoardURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
-  "boardLinkImportTitle": "Zaimportować plik tablicy z linku?",
-  "boardLinkImportDescription": "Ten link importuje plik tablicy z {host}. Importuj go tylko wtedy, gdy ufasz osobie, która wysłała link.",
-  "boardLinkImport": "Importuj",
-  "boardLinkCancel": "Anuluj"
+  "errorBoardFileURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
+  "boardFileURLImportTitle": "Zaimportować plik tablicy z linku?",
+  "boardFileURLImportDescription": "Ten link importuje plik tablicy z {host}. Importuj go tylko wtedy, gdy ufasz osobie, która wysłała link.",
+  "boardFileURLImportConfirm": "Importuj",
+  "boardFileURLImportCancel": "Anuluj"
 }

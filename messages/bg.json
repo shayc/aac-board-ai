@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Прослушване на гласа",
   "speechPreviewSample": "Здравей, това е моят глас!",
   "messageImages": "Показване на изображения",
-  "messageHighlight": "Открояване по време на говорене",
-  "messageClearAfterSpeaking": "Изчистване след говорене",
+  "messageHighlight": "Открояване по време на възпроизвеждане",
+  "messageClearAfterPlaying": "Изчистване след възпроизвеждане",
   "tileSaturation": "Интензивност на цвета",
   "tileBrightness": "Яркост",
   "tileBorders": "Показване на рамки",
@@ -151,9 +151,9 @@
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
-  "errorBoardURLImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
-  "boardLinkImportTitle": "Импортиране на файла с дъска от връзката?",
-  "boardLinkImportDescription": "Тази връзка импортира файл с дъска от {host}. Импортирайте го само ако имате доверие на човека, изпратил връзката.",
-  "boardLinkImport": "Импортиране",
-  "boardLinkCancel": "Отказ"
+  "errorBoardFileURLImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
+  "boardFileURLImportTitle": "Импортиране на файла с дъска от връзката?",
+  "boardFileURLImportDescription": "Тази връзка импортира файл с дъска от {host}. Импортирайте го само ако имате доверие на човека, изпратил връзката.",
+  "boardFileURLImportConfirm": "Импортиране",
+  "boardFileURLImportCancel": "Отказ"
 }

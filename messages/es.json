@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Escuchar la voz",
   "speechPreviewSample": "¡Hola, esta es mi voz!",
   "messageImages": "Mostrar imágenes",
-  "messageHighlight": "Resaltar al hablar",
-  "messageClearAfterSpeaking": "Borrar después de hablar",
+  "messageHighlight": "Resaltar al reproducir",
+  "messageClearAfterPlaying": "Borrar después de reproducir",
   "tileSaturation": "Intensidad de color",
   "tileBrightness": "Brillo",
   "tileBorders": "Mostrar bordes",
@@ -151,9 +151,9 @@
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
-  "errorBoardURLImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
-  "boardLinkImportTitle": "¿Importar el archivo de tablero desde el enlace?",
-  "boardLinkImportDescription": "Este enlace importa un archivo de tablero desde {host}. Impórtalo solo si confías en quien te envió el enlace.",
-  "boardLinkImport": "Importar",
-  "boardLinkCancel": "Cancelar"
+  "errorBoardFileURLImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
+  "boardFileURLImportTitle": "¿Importar el archivo de tablero desde el enlace?",
+  "boardFileURLImportDescription": "Este enlace importa un archivo de tablero desde {host}. Impórtalo solo si confías en quien te envió el enlace.",
+  "boardFileURLImportConfirm": "Importar",
+  "boardFileURLImportCancel": "Cancelar"
 }

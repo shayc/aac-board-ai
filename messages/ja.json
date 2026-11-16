@@ -92,8 +92,8 @@
   "speechPreviewVoice": "音声を試聴",
   "speechPreviewSample": "こんにちは、これが私の声です！",
   "messageImages": "画像を表示",
-  "messageHighlight": "読み上げ中にハイライト",
-  "messageClearAfterSpeaking": "読み上げ後に消去",
+  "messageHighlight": "再生中にハイライト",
+  "messageClearAfterPlaying": "再生後に消去",
   "tileSaturation": "色の濃さ",
   "tileBrightness": "明るさ",
   "tileBorders": "枠線を表示",
@@ -151,9 +151,9 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードセットが見つかりません",
-  "errorBoardURLImportFailed": "リンクからボードファイルをインポートできませんでした",
-  "boardLinkImportTitle": "リンクからボードファイルをインポートしますか？",
-  "boardLinkImportDescription": "このリンクは {host} からボードファイルをインポートします。リンクの送信者を信頼できる場合にのみインポートしてください。",
-  "boardLinkImport": "インポート",
-  "boardLinkCancel": "キャンセル"
+  "errorBoardFileURLImportFailed": "リンクからボードファイルをインポートできませんでした",
+  "boardFileURLImportTitle": "リンクからボードファイルをインポートしますか？",
+  "boardFileURLImportDescription": "このリンクは {host} からボードファイルをインポートします。リンクの送信者を信頼できる場合にのみインポートしてください。",
+  "boardFileURLImportConfirm": "インポート",
+  "boardFileURLImportCancel": "キャンセル"
 }

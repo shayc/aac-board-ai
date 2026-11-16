@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Hang meghallgatása",
   "speechPreviewSample": "Szia, ez az én hangom!",
   "messageImages": "Képek megjelenítése",
-  "messageHighlight": "Kiemelés beszéd közben",
-  "messageClearAfterSpeaking": "Törlés beszéd után",
+  "messageHighlight": "Kiemelés lejátszás közben",
+  "messageClearAfterPlaying": "Törlés lejátszás után",
   "tileSaturation": "Színintenzitás",
   "tileBrightness": "Fényerő",
   "tileBorders": "Szegélyek megjelenítése",
@@ -151,9 +151,9 @@
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A táblakészlet nem található",
-  "errorBoardURLImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült",
-  "boardLinkImportTitle": "Importálod a táblafájlt a hivatkozásról?",
-  "boardLinkImportDescription": "Ez a hivatkozás egy táblafájlt importál innen: {host}. Csak akkor importáld, ha megbízol abban, aki a hivatkozást küldte.",
-  "boardLinkImport": "Importálás",
-  "boardLinkCancel": "Mégse"
+  "errorBoardFileURLImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült",
+  "boardFileURLImportTitle": "Importálod a táblafájlt a hivatkozásról?",
+  "boardFileURLImportDescription": "Ez a hivatkozás egy táblafájlt importál innen: {host}. Csak akkor importáld, ha megbízol abban, aki a hivatkozást küldte.",
+  "boardFileURLImportConfirm": "Importálás",
+  "boardFileURLImportCancel": "Mégse"
 }

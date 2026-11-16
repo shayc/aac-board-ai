@@ -32,8 +32,8 @@ redirects, so the named host is the only one the app contacts.
 Links must use `https:` unless they point at the app's own origin, because the
 Content Security Policy allows no other connections; an `http:` link fails
 before the confirmation instead of after it.
-Otherwise, the app opens the newest stored board set, or imports the bundled
-starter board set if the library is empty.
+Otherwise, the app opens the newest stored board set, or imports the
+catalog's starter board set if the library is empty.
 
 ### Import board files
 
@@ -183,7 +183,7 @@ The board renders
 [`MessageSuggestions`](../src/features/board/suggestions/message-suggestions.tsx)
 under the message bar, inside an error boundary that renders nothing, so a
 failure in suggestions removes the suggestion bar and nothing else. The bar is also
-absent when the browser has no usable suggestion model for the communication
+absent when the browser has no available suggestion model for the communication
 language.
 
 1. [`useMessageSuggestions`](../src/features/board/suggestions/use-message-suggestions.ts)
@@ -205,13 +205,13 @@ language.
    downloading, or that failed to prepare, shows an enable button; pressing it
    is the user gesture a model download needs. A download shows its progress.
    A failure shows only when the message has text, no phrase came back, and
-   every usable source failed.
+   every available source failed.
 5. Selecting a phrase calls `replaceWithText` on `useMessage`, which replaces
    the message with one text part per word in the communication language. It
    is one step in the undo history, so undo brings the tapped message back.
 
 The message changes only when a phrase is selected, and selecting a phrase
-does not speak it. The phrases are a labelled group, not a live region, because
+does not play it. The phrases are a labelled group, not a live region, because
 an announcement would interrupt the spoken feedback of the tile just pressed.
 The suggestion row is a scan group, so switch users can select a phrase.
 

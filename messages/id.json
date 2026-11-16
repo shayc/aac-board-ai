@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Dengarkan suara",
   "speechPreviewSample": "Hai, ini suara saya!",
   "messageImages": "Tampilkan gambar",
-  "messageHighlight": "Sorot saat berbicara",
-  "messageClearAfterSpeaking": "Hapus setelah berbicara",
+  "messageHighlight": "Sorot saat memutar",
+  "messageClearAfterPlaying": "Hapus setelah memutar",
   "tileSaturation": "Intensitas warna",
   "tileBrightness": "Kecerahan",
   "tileBorders": "Tampilkan batas",
@@ -151,9 +151,9 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "errorBoardURLImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
-  "boardLinkImportTitle": "Impor berkas papan dari tautan?",
-  "boardLinkImportDescription": "Tautan ini mengimpor berkas papan dari {host}. Impor hanya jika kamu memercayai pengirim tautan.",
-  "boardLinkImport": "Impor",
-  "boardLinkCancel": "Batal"
+  "errorBoardFileURLImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
+  "boardFileURLImportTitle": "Impor berkas papan dari tautan?",
+  "boardFileURLImportDescription": "Tautan ini mengimpor berkas papan dari {host}. Impor hanya jika kamu memercayai pengirim tautan.",
+  "boardFileURLImportConfirm": "Impor",
+  "boardFileURLImportCancel": "Batal"
 }

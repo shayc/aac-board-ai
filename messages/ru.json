@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Прослушать голос",
   "speechPreviewSample": "Привет, это мой голос!",
   "messageImages": "Показывать изображения",
-  "messageHighlight": "Подсвечивать во время речи",
-  "messageClearAfterSpeaking": "Очищать после речи",
+  "messageHighlight": "Подсвечивать во время воспроизведения",
+  "messageClearAfterPlaying": "Очищать после воспроизведения",
   "tileSaturation": "Насыщенность цвета",
   "tileBrightness": "Яркость",
   "tileBorders": "Показывать границы",
@@ -151,9 +151,9 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
-  "errorBoardURLImportFailed": "Не удалось импортировать файл доски по ссылке",
-  "boardLinkImportTitle": "Импортировать файл доски по ссылке?",
-  "boardLinkImportDescription": "Эта ссылка импортирует файл доски с {host}. Импортируйте его, только если доверяете тому, кто прислал ссылку.",
-  "boardLinkImport": "Импортировать",
-  "boardLinkCancel": "Отмена"
+  "errorBoardFileURLImportFailed": "Не удалось импортировать файл доски по ссылке",
+  "boardFileURLImportTitle": "Импортировать файл доски по ссылке?",
+  "boardFileURLImportDescription": "Эта ссылка импортирует файл доски с {host}. Импортируйте его, только если доверяете тому, кто прислал ссылку.",
+  "boardFileURLImportConfirm": "Импортировать",
+  "boardFileURLImportCancel": "Отмена"
 }

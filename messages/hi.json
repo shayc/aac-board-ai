@@ -92,8 +92,8 @@
   "speechPreviewVoice": "आवाज़ सुनें",
   "speechPreviewSample": "नमस्ते, यह मेरी आवाज़ है!",
   "messageImages": "चित्र दिखाएं",
-  "messageHighlight": "बोलते समय हाइलाइट करें",
-  "messageClearAfterSpeaking": "बोलने के बाद साफ़ करें",
+  "messageHighlight": "चलाते समय हाइलाइट करें",
+  "messageClearAfterPlaying": "चलाने के बाद साफ़ करें",
   "tileSaturation": "रंग की तीव्रता",
   "tileBrightness": "चमक",
   "tileBorders": "सीमाएँ दिखाएं",
@@ -151,9 +151,9 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "errorBoardURLImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
-  "boardLinkImportTitle": "लिंक से बोर्ड फ़ाइल आयात करें?",
-  "boardLinkImportDescription": "यह लिंक {host} से एक बोर्ड फ़ाइल आयात करता है। इसे तभी आयात करें जब आपको लिंक भेजने वाले पर भरोसा हो।",
-  "boardLinkImport": "आयात करें",
-  "boardLinkCancel": "रद्द करें"
+  "errorBoardFileURLImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
+  "boardFileURLImportTitle": "लिंक से बोर्ड फ़ाइल आयात करें?",
+  "boardFileURLImportDescription": "यह लिंक {host} से एक बोर्ड फ़ाइल आयात करता है। इसे तभी आयात करें जब आपको लिंक भेजने वाले पर भरोसा हो।",
+  "boardFileURLImportConfirm": "आयात करें",
+  "boardFileURLImportCancel": "रद्द करें"
 }

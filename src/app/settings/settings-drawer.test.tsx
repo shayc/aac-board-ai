@@ -45,7 +45,7 @@ describe("SettingsDrawer", () => {
       screen.getByRole("heading", { name: "Board" }),
       screen.getByRole("slider", { name: "Color intensity" }),
       screen.getByRole("heading", { name: "Message" }),
-      screen.getByRole("switch", { name: "Highlight while speaking" }),
+      screen.getByRole("switch", { name: "Highlight while playing" }),
       screen.getByRole("heading", { name: "Suggestions" }),
     ];
     for (const item of drawerItems) {
@@ -90,7 +90,7 @@ describe("SettingsDrawer", () => {
       .element(
         screen
           .getByRole("group", { name: "Message" })
-          .getByRole("switch", { name: "Highlight while speaking" }),
+          .getByRole("switch", { name: "Highlight while playing" }),
       )
       .toBeInTheDocument();
   });
