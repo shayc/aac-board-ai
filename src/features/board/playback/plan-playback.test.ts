@@ -1,4 +1,4 @@
-import type { PlaybackStep } from "@shared/playback/playback-types";
+import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import { describe, expect, test } from "vitest";
 import { createTilePart } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
@@ -70,9 +70,7 @@ describe("planPlayback", () => {
       { kind: "tile", id: "1", label: " ", soundSrc: "bell.mp3" },
     ]);
 
-    expect(steps).toStrictEqual([
-      { kind: "audio", cue: "1", src: "bell.mp3", fallbackText: undefined },
-    ]);
+    expect(steps).toEqual([{ kind: "audio", cue: "1", src: "bell.mp3" }]);
   });
 
   test("preserves order when a sound breaks a text run", () => {
@@ -136,8 +134,6 @@ describe("planPlayback", () => {
     expect(step.cueAt?.(6)).toBe("3");
   });
 });
-
-type SpeechStep = Extract<PlaybackStep, { kind: "speech" }>;
 
 function getOnlySpeechStep(steps: readonly PlaybackStep[]): SpeechStep {
   const [step] = steps;

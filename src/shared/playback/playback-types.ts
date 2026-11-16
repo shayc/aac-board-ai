@@ -1,18 +1,20 @@
 export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
-export type PlaybackStep =
-  | {
-      kind: "audio";
-      src: string;
-      cue?: string;
-      /** Spoken in place of the recording when it cannot play. */
-      fallbackText?: string;
-    }
-  | {
-      kind: "speech";
-      text: string;
-      cueAt?: (charIndex: number) => string | null;
-    };
+export interface AudioStep {
+  kind: "audio";
+  src: string;
+  cue?: string;
+  /** Spoken in place of the recording when it cannot play. */
+  fallbackText?: string;
+}
+
+export interface SpeechStep {
+  kind: "speech";
+  text: string;
+  cueAt?: (charIndex: number) => string | null;
+}
+
+export type PlaybackStep = AudioStep | SpeechStep;
 
 export interface PlaybackRequest {
   owner: string;

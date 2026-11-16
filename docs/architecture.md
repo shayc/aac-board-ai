@@ -255,8 +255,8 @@ how the message changes:
    speech and recorded-audio steps. The shared coordinator plays them in order
    and publishes progress for highlighting. A recorded-audio step carries the
    tile's spoken text, and the coordinator speaks it in place of a recording
-   that cannot play, so a broken or unreachable recording never leaves a tile
-   silent.
+   that cannot play, so a broken or unreachable recording does not silence a
+   tile that has text to speak.
 
 Each new playback request interrupts the current one. These interruptions are
 expected and do not surface as user errors.

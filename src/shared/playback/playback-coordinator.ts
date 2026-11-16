@@ -4,14 +4,13 @@ import { assertNever } from "@shared/utils/assert-never";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
 import type {
+  AudioStep,
   PlaybackCoordinator,
   PlaybackOutcome,
   PlaybackRequest,
   PlaybackState,
   PlaybackStep,
 } from "./playback-types";
-
-type AudioStep = Extract<PlaybackStep, { kind: "audio" }>;
 
 interface PlaybackSession {
   abortController: AbortController;

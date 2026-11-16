@@ -1,5 +1,5 @@
 import { AppProviders } from "@shared/providers/app-providers";
-import { stubAudio } from "@shared/testing/stub-audio";
+import { failAudio, stubAudio } from "@shared/testing/stub-audio";
 import {
   endUtterance,
   failSpeech,
@@ -258,7 +258,7 @@ describe("useBoardPlayback", () => {
   });
 
   test("reports a failure when only some of the message plays", async () => {
-    audio.play.mockRejectedValue(new Error("Audio failed"));
+    failAudio(audio.play);
     const { result } = await renderPlayback();
 
     await expect(
@@ -276,7 +276,7 @@ describe("useBoardPlayback", () => {
   });
 
   test("speaks a tapped tile whose recording fails without reporting a failure", async () => {
-    audio.play.mockRejectedValue(new Error("Audio failed"));
+    failAudio(audio.play);
     const { result, rerender } = await renderPlayback();
 
     await result.current.playPart({
@@ -292,7 +292,7 @@ describe("useBoardPlayback", () => {
   });
 
   test("speaks a failing recording in its place when the message plays", async () => {
-    audio.play.mockRejectedValue(new Error("Audio failed"));
+    failAudio(audio.play);
     const { result, rerender } = await renderPlayback();
 
     await expect(
@@ -315,7 +315,7 @@ describe("useBoardPlayback", () => {
   });
 
   test("highlights the part whose failing recording is being spoken", async () => {
-    audio.play.mockRejectedValue(new Error("Audio failed"));
+    failAudio(audio.play);
     preventSpeechEnd(speech.speak);
     const { result, rerender } = await renderPlayback();
 
@@ -332,7 +332,7 @@ describe("useBoardPlayback", () => {
   });
 
   test("reports a failure when the recording and its spoken text both fail", async () => {
-    audio.play.mockRejectedValue(new Error("Audio failed"));
+    failAudio(audio.play);
     failSpeech(speech.speak);
     const { result } = await renderPlayback();
 

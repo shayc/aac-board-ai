@@ -1,4 +1,4 @@
-import type { PlaybackStep } from "@shared/playback/playback-types";
+import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
 
 interface SpokenPart {
@@ -43,8 +43,6 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
 
   return steps;
 }
-
-type SpeechStep = Extract<PlaybackStep, { kind: "speech" }>;
 
 interface PartSpan {
   id: string;

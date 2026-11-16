@@ -1,5 +1,5 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
-import { stubAudio } from "@shared/testing/stub-audio";
+import { failAudio, stubAudio } from "@shared/testing/stub-audio";
 import {
   failSpeech,
   lastUtterance,
@@ -141,9 +141,7 @@ describe("PlaybackProvider", () => {
   });
 
   test("reports a failed step after playing the remaining steps", async () => {
-    audio.play.mockImplementationOnce(() =>
-      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
-    );
+    failAudio(audio.play);
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: TestPlaybackProvider,
     });
@@ -161,9 +159,7 @@ describe("PlaybackProvider", () => {
   });
 
   test("speaks a failed recording's fallback text in its place", async () => {
-    audio.play.mockImplementationOnce(() =>
-      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
-    );
+    failAudio(audio.play);
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: TestPlaybackProvider,
     });
@@ -182,9 +178,7 @@ describe("PlaybackProvider", () => {
   });
 
   test("keeps the recording's cue active while its fallback text is spoken", async () => {
-    audio.play.mockImplementationOnce(() =>
-      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
-    );
+    failAudio(audio.play);
     preventSpeechEnd(speech.speak);
     const { result, rerender } = await renderHook(
       () => ({ playback: usePlayback(), activeCue: useActiveCue() }),
@@ -208,9 +202,7 @@ describe("PlaybackProvider", () => {
   });
 
   test("reports a failed step when the fallback text cannot be spoken either", async () => {
-    audio.play.mockImplementationOnce(() =>
-      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
-    );
+    failAudio(audio.play);
     failSpeech(speech.speak);
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: TestPlaybackProvider,
@@ -225,7 +217,12 @@ describe("PlaybackProvider", () => {
   });
 
   test("does not speak the fallback text of an interrupted recording", async () => {
-    audio.play.mockImplementationOnce(() => Promise.resolve());
+    // Browsers reject a pending play() once the element is paused.
+    const pendingPlay = Promise.withResolvers<void>();
+    audio.play.mockImplementationOnce(() => pendingPlay.promise);
+    audio.pause.mockImplementationOnce(() =>
+      pendingPlay.reject(new DOMException("Paused", "AbortError")),
+    );
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: TestPlaybackProvider,
     });
