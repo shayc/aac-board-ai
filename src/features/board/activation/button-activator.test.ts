@@ -22,11 +22,11 @@ const SPELL_A: BoardButton = {
 };
 
 function tilePart(label: string): MessageEdit {
-  return { kind: "tile", part: createTilePart({ label }) };
+  return { kind: "tile", part: createTilePart({ label, language: "en" }) };
 }
 
 function word(label: string): MessageEdit[] {
-  return [{ kind: "spell", text: label }, { kind: "space" }];
+  return [{ kind: "spell", text: label, language: "en" }, { kind: "space" }];
 }
 
 async function setup(

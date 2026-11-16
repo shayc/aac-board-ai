@@ -4,7 +4,7 @@ export interface TilePart {
   readonly label: string;
   // The language the text is in, when known. Speech and assistive technology
   // pronounce the part in it, whatever the communication language is.
-  readonly language?: string;
+  readonly language: string | undefined;
   readonly vocalization?: string;
   readonly imageSrc?: string;
   readonly soundSrc?: string;
@@ -14,7 +14,7 @@ export interface TextPart {
   readonly kind: "text";
   readonly id: string;
   readonly label: string;
-  readonly language?: string;
+  readonly language: string | undefined;
 }
 
 // Each occurrence needs its own ID, including repeated selections of the same tile.
@@ -36,7 +36,7 @@ export type MessageEdit =
   | {
       readonly kind: "spell";
       readonly text: string;
-      readonly language?: string;
+      readonly language: string | undefined;
     }
   | { readonly kind: "space" }
   | { readonly kind: "backspace" }

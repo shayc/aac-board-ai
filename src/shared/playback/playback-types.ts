@@ -1,13 +1,17 @@
 export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
+export interface SpokenFallback {
+  text: string;
+  /** The language the text is in, when known. */
+  language?: string;
+}
+
 export interface AudioStep {
   kind: "audio";
   src: string;
   cue?: string;
   /** Spoken in place of the audio when it cannot play. */
-  fallbackText?: string;
-  /** The language the fallback text is in, when known. */
-  fallbackLanguage?: string;
+  fallback?: SpokenFallback;
 }
 
 export interface SpeechStep {

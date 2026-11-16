@@ -18,7 +18,10 @@ export function createTilePart(
   return { ...content, kind: "tile", id: randomId() };
 }
 
-export function createTextPart(label: string, language?: string): TextPart {
+export function createTextPart(
+  label: string,
+  language: string | undefined,
+): TextPart {
   return { kind: "text", id: randomId(), label, language };
 }
 
@@ -33,7 +36,7 @@ export function appendTilePart(message: Message, part: TilePart): Message {
 export function spell(
   message: Message,
   text: string,
-  language?: string,
+  language: string | undefined,
 ): Message {
   if (!text) {
     return message;

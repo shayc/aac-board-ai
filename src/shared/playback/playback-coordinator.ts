@@ -81,15 +81,14 @@ export function createPlaybackCoordinator(
     try {
       await playAudio(step.src, { signal });
     } catch (error) {
-      if (!step.fallbackText) {
+      const { fallback } = step;
+      if (!fallback) {
         throw error;
       }
 
-      await speak(
-        step.fallbackText,
-        getSpeechParameters(step.fallbackLanguage),
-        { signal },
-      );
+      await speak(fallback.text, getSpeechParameters(fallback.language), {
+        signal,
+      });
     }
   }
 

@@ -4,10 +4,16 @@ import type { MessagePart } from "../message/message-types";
 interface SpokenPart {
   id: string;
   text: string;
-  language: string | undefined;
+  language: string;
 }
 
-export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
+// Text in an unknown language is spoken as the communication language. It is
+// resolved here so that it joins a run of parts known to be in that language
+// instead of breaking the utterance in two.
+export function planPlayback(
+  parts: readonly MessagePart[],
+  communicationLanguage: string,
+): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
   let spokenRun: SpokenPart[] = [];
 
@@ -23,7 +29,7 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
 
   for (const part of parts) {
     const text = getSpokenText(part);
-    const { language } = part;
+    const language = part.language ?? communicationLanguage;
 
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
@@ -31,8 +37,7 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
         kind: "audio",
         src: part.soundSrc,
         cue: part.id,
-        fallbackText: text || undefined,
-        fallbackLanguage: language,
+        fallback: text ? { text, language } : undefined,
       });
 
       continue;
@@ -64,7 +69,7 @@ interface PartSpan {
 
 function createSpeechStep(
   parts: readonly SpokenPart[],
-  language: string | undefined,
+  language: string,
 ): SpeechStep {
   const chunks: string[] = [];
   const spans: PartSpan[] = [];

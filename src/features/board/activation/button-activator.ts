@@ -8,10 +8,7 @@ import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 // Typed so that a new board action, or one listed as an edit the message
 // cannot apply, fails to compile instead of failing when a tile is pressed.
 const IS_MESSAGE_EDIT: {
-  [Kind in BoardAction["kind"]]: Extract<
-    BoardAction,
-    { kind: Kind }
-  > extends MessageEdit
+  [Kind in BoardAction["kind"]]: Kind extends MessageEdit["kind"]
     ? true
     : false;
 } = {
@@ -106,15 +103,17 @@ export function createButtonActivator({
   // Spelled letters are the board's text, so they are in the board's language.
   function toMessageEdits(actions: readonly BoardAction[]): MessageEdit[] {
     return actions
-      .filter(isMessageEdit)
-      .map((edit) => (edit.kind === "spell" ? { ...edit, language } : edit));
+      .filter(isMessageEditAction)
+      .map((action) =>
+        action.kind === "spell" ? { ...action, language } : action,
+      );
   }
 
   return activateButton;
 }
 
-function isMessageEdit(
-  action: BoardAction,
-): action is Extract<BoardAction, MessageEdit> {
+type MessageEditAction = Extract<BoardAction, { kind: MessageEdit["kind"] }>;
+
+function isMessageEditAction(action: BoardAction): action is MessageEditAction {
   return IS_MESSAGE_EDIT[action.kind];
 }

@@ -168,7 +168,7 @@ describe("PlaybackProvider", () => {
       owner: "message",
       steps: [
         { kind: "speech", text: "hello" },
-        { kind: "audio", src: "recording.mp3", fallbackText: "dog" },
+        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
         { kind: "speech", text: "world" },
       ],
     });
@@ -189,7 +189,12 @@ describe("PlaybackProvider", () => {
     const outcome = playback.play({
       owner: "message",
       steps: [
-        { kind: "audio", src: "recording.mp3", cue: "1", fallbackText: "dog" },
+        {
+          kind: "audio",
+          src: "recording.mp3",
+          cue: "1",
+          fallback: { text: "dog" },
+        },
       ],
     });
     await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
@@ -210,7 +215,9 @@ describe("PlaybackProvider", () => {
 
     const outcome = result.current.play({
       owner: "message",
-      steps: [{ kind: "audio", src: "recording.mp3", fallbackText: "dog" }],
+      steps: [
+        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
+      ],
     });
 
     await expect(outcome).resolves.toBe("failed");
@@ -229,7 +236,9 @@ describe("PlaybackProvider", () => {
 
     const outcome = result.current.play({
       owner: "tile",
-      steps: [{ kind: "audio", src: "recording.mp3", fallbackText: "dog" }],
+      steps: [
+        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
+      ],
     });
     result.current.stop();
 
@@ -283,8 +292,7 @@ describe("PlaybackProvider", () => {
         {
           kind: "audio",
           src: "recording.mp3",
-          fallbackText: "perro",
-          fallbackLanguage: "es",
+          fallback: { text: "perro", language: "es" },
         },
       ],
     });

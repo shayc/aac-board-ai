@@ -1,4 +1,5 @@
 import { m } from "@paraglide/messages.js";
+import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import type { PlaybackRequest } from "@shared/playback/playback-types";
 import {
   useActiveCue,
@@ -30,6 +31,7 @@ export function useBoardPlayback({
   onMessagePlayback,
 }: UseBoardPlaybackOptions = {}): UseBoardPlaybackReturn {
   const playback = usePlayback();
+  const { language } = useCommunicationLanguage();
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
@@ -52,7 +54,7 @@ export function useBoardPlayback({
   function echoMessage(parts: readonly MessagePart[]) {
     return playAndReportFailure({
       owner: MESSAGE_OWNER,
-      steps: planPlayback(parts),
+      steps: planPlayback(parts, language),
     });
   }
 
@@ -66,7 +68,7 @@ export function useBoardPlayback({
   async function playPart(part: MessagePart) {
     await playAndReportFailure({
       owner: TILE_OWNER,
-      steps: planPlayback([part]),
+      steps: planPlayback([part], language),
     });
   }
 

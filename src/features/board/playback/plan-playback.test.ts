@@ -6,16 +6,16 @@ import { planPlayback } from "./plan-playback";
 
 describe("planPlayback", () => {
   test("returns no steps for an empty message", () => {
-    expect(planPlayback([])).toEqual([]);
+    expect(planPlayback([], "en")).toEqual([]);
   });
 
   test("merges a run of tile and text parts into a single speech step", () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "I" },
-      { kind: "text", id: "2", label: "Want" },
+      { kind: "tile", id: "1", label: "I", language: "en" },
+      { kind: "text", id: "2", label: "Want", language: "en" },
     ];
 
-    const steps = planPlayback(parts);
+    const steps = planPlayback(parts, "en");
 
     const step = getOnlySpeechStep(steps);
 
@@ -24,29 +24,50 @@ describe("planPlayback", () => {
   });
 
   test("starts a new speech step where the language changes", () => {
-    const steps = planPlayback([
-      { kind: "tile", id: "1", label: "I", language: "en" },
-      { kind: "tile", id: "2", label: "want", language: "en" },
-      { kind: "text", id: "3", label: "מים", language: "he" },
-      { kind: "text", id: "4", label: "please" },
-    ]);
+    const steps = planPlayback(
+      [
+        { kind: "tile", id: "1", label: "I", language: "en" },
+        { kind: "tile", id: "2", label: "want", language: "en" },
+        { kind: "text", id: "3", label: "מים", language: "he" },
+        { kind: "text", id: "4", label: "please", language: "en" },
+      ],
+      "en",
+    );
 
     expect(steps).toMatchObject([
       { kind: "speech", text: "i want", language: "en" },
       { kind: "speech", text: "מים", language: "he" },
-      { kind: "speech", text: "please", language: undefined },
+      { kind: "speech", text: "please", language: "en" },
     ]);
     expect(
       steps.map((step) => step.kind === "speech" && step.cueAt?.(0)),
     ).toEqual(["1", "3", "4"]);
   });
 
-  test("normalizes whitespace and maps speech offsets to their message parts", () => {
-    const steps = planPlayback([
-      { kind: "text", id: "1", label: " I " },
-      { kind: "text", id: "2", label: "want   a " },
-      { kind: "text", id: "3", label: " cookie" },
+  test("speaks text in an unknown language in the same step as the communication language", () => {
+    const steps = planPlayback(
+      [
+        { kind: "tile", id: "1", label: "אני", language: "he" },
+        { kind: "text", id: "2", label: "רוצה", language: undefined },
+        { kind: "tile", id: "3", label: "מים", language: "he" },
+      ],
+      "he",
+    );
+
+    expect(steps).toMatchObject([
+      { kind: "speech", text: "אני רוצה מים", language: "he" },
     ]);
+  });
+
+  test("normalizes whitespace and maps speech offsets to their message parts", () => {
+    const steps = planPlayback(
+      [
+        { kind: "text", id: "1", label: " I ", language: "en" },
+        { kind: "text", id: "2", label: "want   a ", language: "en" },
+        { kind: "text", id: "3", label: " cookie", language: "en" },
+      ],
+      "en",
+    );
 
     const step = getOnlySpeechStep(steps);
 
@@ -59,62 +80,104 @@ describe("planPlayback", () => {
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
-    const part = createTilePart({ label: "", soundSrc: "bell.mp3" });
-    const steps = planPlayback([part]);
+    const part = createTilePart({
+      label: "",
+      soundSrc: "bell.mp3",
+      language: "en",
+    });
+    const steps = planPlayback([part], "en");
 
     expect(steps).toEqual([{ kind: "audio", cue: part.id, src: "bell.mp3" }]);
   });
 
   test("gives a sound part its spoken text to fall back on", () => {
-    const steps = planPlayback([
-      { kind: "tile", id: "1", label: "Dog", soundSrc: "bark.mp3" },
-      {
-        kind: "tile",
-        id: "2",
-        label: "🙂",
-        vocalization: " Very  happy ",
-        soundSrc: "laugh.mp3",
-      },
-    ]);
+    const steps = planPlayback(
+      [
+        {
+          kind: "tile",
+          id: "1",
+          label: "Dog",
+          language: "en",
+          soundSrc: "bark.mp3",
+        },
+        {
+          kind: "tile",
+          id: "2",
+          label: "🙂",
+          language: "en",
+          vocalization: " Very  happy ",
+          soundSrc: "laugh.mp3",
+        },
+      ],
+      "en",
+    );
 
     expect(steps).toEqual([
-      { kind: "audio", cue: "1", src: "bark.mp3", fallbackText: "dog" },
-      { kind: "audio", cue: "2", src: "laugh.mp3", fallbackText: "very happy" },
+      {
+        kind: "audio",
+        cue: "1",
+        src: "bark.mp3",
+        fallback: { text: "dog", language: "en" },
+      },
+      {
+        kind: "audio",
+        cue: "2",
+        src: "laugh.mp3",
+        fallback: { text: "very happy", language: "en" },
+      },
     ]);
   });
 
   test("gives a sound part's fallback text the part's language", () => {
-    const steps = planPlayback([
-      {
-        kind: "tile",
-        id: "1",
-        label: "Dog",
-        language: "en",
-        soundSrc: "bark.mp3",
-      },
-    ]);
+    const steps = planPlayback(
+      [
+        {
+          kind: "tile",
+          id: "1",
+          label: "Dog",
+          language: "en",
+          soundSrc: "bark.mp3",
+        },
+      ],
+      "en",
+    );
 
     expect(steps).toMatchObject([
-      { kind: "audio", fallbackText: "dog", fallbackLanguage: "en" },
+      { kind: "audio", fallback: { text: "dog", language: "en" } },
     ]);
   });
 
   test("gives a sound part without spoken text nothing to fall back on", () => {
-    const steps = planPlayback([
-      { kind: "tile", id: "1", label: " ", soundSrc: "bell.mp3" },
-    ]);
+    const steps = planPlayback(
+      [
+        {
+          kind: "tile",
+          id: "1",
+          label: " ",
+          language: "en",
+          soundSrc: "bell.mp3",
+        },
+      ],
+      "en",
+    );
 
     expect(steps).toEqual([{ kind: "audio", cue: "1", src: "bell.mp3" }]);
   });
 
   test("preserves order when a sound breaks a text run", () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "hello" },
-      { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { kind: "tile", id: "3", label: "world" },
+      { kind: "tile", id: "1", label: "hello", language: "en" },
+      {
+        kind: "tile",
+        id: "2",
+        label: "ding",
+        language: "en",
+        soundSrc: "ding.mp3",
+      },
+      { kind: "tile", id: "3", label: "world", language: "en" },
     ];
 
-    const steps = planPlayback(parts);
+    const steps = planPlayback(parts, "en");
 
     expect(steps.map((step) => step.kind)).toEqual([
       "speech",
@@ -124,9 +187,18 @@ describe("planPlayback", () => {
   });
 
   test("speaks the vocalization rather than the label when present", () => {
-    const steps = planPlayback([
-      { kind: "tile", id: "1", label: "🙂", vocalization: "Happy" },
-    ]);
+    const steps = planPlayback(
+      [
+        {
+          kind: "tile",
+          id: "1",
+          label: "🙂",
+          language: "en",
+          vocalization: "Happy",
+        },
+      ],
+      "en",
+    );
 
     const step = getOnlySpeechStep(steps);
 
@@ -134,10 +206,13 @@ describe("planPlayback", () => {
   });
 
   test("skips parts with no spoken text", () => {
-    const steps = planPlayback([
-      { kind: "tile", id: "1", label: "hi" },
-      { kind: "tile", id: "2", label: "" },
-    ]);
+    const steps = planPlayback(
+      [
+        { kind: "tile", id: "1", label: "hi", language: "en" },
+        { kind: "tile", id: "2", label: "", language: "en" },
+      ],
+      "en",
+    );
 
     const step = getOnlySpeechStep(steps);
 
@@ -145,22 +220,40 @@ describe("planPlayback", () => {
   });
 
   test.each([
-    { source: "label", part: { kind: "tile", id: "1", label: " " } },
+    {
+      source: "label",
+      part: { kind: "tile", id: "1", label: " ", language: "en" },
+    },
     {
       source: "vocalization",
-      part: { kind: "tile", id: "1", label: "hello", vocalization: " \t" },
+      part: {
+        kind: "tile",
+        id: "1",
+        label: "hello",
+        language: "en",
+        vocalization: " \t",
+      },
     },
   ] as const)("returns no steps for a whitespace-only $source", ({ part }) => {
-    expect(planPlayback([part])).toEqual([]);
+    expect(planPlayback([part], "en")).toEqual([]);
   });
 
   test("skips whitespace-only parts within and at the end of a speech run", () => {
-    const steps = planPlayback([
-      { kind: "tile", id: "1", label: "hello" },
-      { kind: "tile", id: "2", label: " " },
-      { kind: "tile", id: "3", label: "world" },
-      { kind: "tile", id: "4", label: "goodbye", vocalization: " " },
-    ]);
+    const steps = planPlayback(
+      [
+        { kind: "tile", id: "1", label: "hello", language: "en" },
+        { kind: "tile", id: "2", label: " ", language: "en" },
+        { kind: "tile", id: "3", label: "world", language: "en" },
+        {
+          kind: "tile",
+          id: "4",
+          label: "goodbye",
+          language: "en",
+          vocalization: " ",
+        },
+      ],
+      "en",
+    );
 
     const step = getOnlySpeechStep(steps);
 

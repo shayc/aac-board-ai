@@ -11,6 +11,7 @@ const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   kind: "tile",
   id: String(index),
   label: `Part ${index + 1}`,
+  language: "en",
   imageSrc: TEST_IMAGE_SRC,
 }));
 const ACTIVE_SCROLL_PART_INDEX = 3;
@@ -48,9 +49,15 @@ function getScrollContainer(container: Element): HTMLElement {
 describe("MessageBar", () => {
   test("renders a label for each tile and text part", async () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "a", label: "I", imageSrc: TEST_IMAGE_SRC },
-      { kind: "tile", id: "b", label: "want" },
-      { kind: "text", id: "c", label: "water" },
+      {
+        kind: "tile",
+        id: "a",
+        label: "I",
+        language: "en",
+        imageSrc: TEST_IMAGE_SRC,
+      },
+      { kind: "tile", id: "b", label: "want", language: "en" },
+      { kind: "text", id: "c", label: "water", language: "en" },
     ];
 
     const screen = await renderWithProviders(
@@ -66,7 +73,7 @@ describe("MessageBar", () => {
     const parts: MessagePart[] = [
       { kind: "tile", id: "a", label: "I", language: "en" },
       { kind: "text", id: "b", label: "agua", language: "es" },
-      { kind: "text", id: "c", label: "water" },
+      { kind: "text", id: "c", label: "water", language: undefined },
     ];
 
     const screen = await renderWithProviders(
@@ -92,7 +99,13 @@ describe("MessageBar", () => {
       <MessageBar
         {...props}
         parts={[
-          { kind: "tile", id: "a", label: "want", imageSrc: TEST_IMAGE_SRC },
+          {
+            kind: "tile",
+            id: "a",
+            label: "want",
+            language: "en",
+            imageSrc: TEST_IMAGE_SRC,
+          },
         ]}
       />,
     );
@@ -108,8 +121,8 @@ describe("MessageBar", () => {
     "marks the last word with a caret only while it is open ($isWordOpen)",
     async ({ isWordOpen, caret }) => {
       const parts: MessagePart[] = [
-        { kind: "text", id: "a", label: "I" },
-        { kind: "text", id: "b", label: "want" },
+        { kind: "text", id: "a", label: "I", language: "en" },
+        { kind: "text", id: "b", label: "want", language: "en" },
       ];
 
       const screen = await renderWithProviders(
@@ -126,8 +139,8 @@ describe("MessageBar", () => {
 
   test("exposes the message as a named list of its parts", async () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "a", label: "I" },
-      { kind: "tile", id: "b", label: "want" },
+      { kind: "tile", id: "a", label: "I", language: "en" },
+      { kind: "tile", id: "b", label: "want", language: "en" },
     ];
 
     const screen = await renderWithProviders(
@@ -164,7 +177,9 @@ describe("MessageBar", () => {
   });
 
   test("re-enables text selection so the composed message can be copied", async () => {
-    const parts: MessagePart[] = [{ kind: "tile", id: "a", label: "I" }];
+    const parts: MessagePart[] = [
+      { kind: "tile", id: "a", label: "I", language: "en" },
+    ];
 
     const screen = await renderWithProviders(
       <MessageBar {...createProps({ parts })} />,
@@ -177,8 +192,20 @@ describe("MessageBar", () => {
 
   test("shows labels without images when images are hidden", async () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "a", label: "I", imageSrc: TEST_IMAGE_SRC },
-      { kind: "tile", id: "b", label: "", imageSrc: TEST_IMAGE_SRC },
+      {
+        kind: "tile",
+        id: "a",
+        label: "I",
+        language: "en",
+        imageSrc: TEST_IMAGE_SRC,
+      },
+      {
+        kind: "tile",
+        id: "b",
+        label: "",
+        language: "en",
+        imageSrc: TEST_IMAGE_SRC,
+      },
     ];
 
     const screen = await renderWithProviders(
@@ -261,7 +288,7 @@ describe("MessageBar", () => {
           {...props}
           parts={[
             ...SCROLL_PARTS,
-            { kind: "text", id: "newest", label: "newest" },
+            { kind: "text", id: "newest", label: "newest", language: "en" },
           ]}
         />,
       );
@@ -284,7 +311,10 @@ describe("MessageBar", () => {
       await screen.rerender(
         <ScrollableMessageBar
           {...props}
-          parts={[...SCROLL_PARTS, { kind: "text", id: "newest", label: "s" }]}
+          parts={[
+            ...SCROLL_PARTS,
+            { kind: "text", id: "newest", label: "s", language: "en" },
+          ]}
           activePartId={ACTIVE_SCROLL_PART_ID}
         />,
       );

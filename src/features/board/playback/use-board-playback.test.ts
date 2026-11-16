@@ -45,8 +45,8 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "I" },
-      { kind: "tile", id: "2", label: "want" },
+      { kind: "tile", id: "1", label: "I", language: "en" },
+      { kind: "tile", id: "2", label: "want", language: "en" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -73,9 +73,15 @@ describe("useBoardPlayback", () => {
 
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
     const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "before" },
-      { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { kind: "tile", id: "3", label: "after" },
+      { kind: "tile", id: "1", label: "before", language: "en" },
+      {
+        kind: "tile",
+        id: "2",
+        label: "ding",
+        language: "en",
+        soundSrc: "ding.mp3",
+      },
+      { kind: "tile", id: "3", label: "after", language: "en" },
     ];
 
     const callOrder: string[] = [];
@@ -108,6 +114,7 @@ describe("useBoardPlayback", () => {
       kind: "tile",
       id: "1",
       label: "hi",
+      language: "en",
     });
     await rerender();
 
@@ -125,7 +132,9 @@ describe("useBoardPlayback", () => {
       resolveSpeak = () => endUtterance(utterance);
     });
 
-    const parts: MessagePart[] = [{ kind: "tile", id: "1", label: "hi" }];
+    const parts: MessagePart[] = [
+      { kind: "tile", id: "1", label: "hi", language: "en" },
+    ];
 
     const { result, rerender } = await renderPlayback();
 
@@ -152,9 +161,15 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "before" },
-      { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { kind: "tile", id: "3", label: "after" },
+      { kind: "tile", id: "1", label: "before", language: "en" },
+      {
+        kind: "tile",
+        id: "2",
+        label: "ding",
+        language: "en",
+        soundSrc: "ding.mp3",
+      },
+      { kind: "tile", id: "3", label: "after", language: "en" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -183,8 +198,8 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "I" },
-      { kind: "tile", id: "2", label: "want" },
+      { kind: "tile", id: "1", label: "I", language: "en" },
+      { kind: "tile", id: "2", label: "want", language: "en" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -213,10 +228,10 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     const firstPlay = result.current.playMessage([
-      { kind: "tile", id: "1", label: "first" },
+      { kind: "tile", id: "1", label: "first", language: "en" },
     ]);
     const secondPlay = result.current.playMessage([
-      { kind: "tile", id: "2", label: "second" },
+      { kind: "tile", id: "2", label: "second", language: "en" },
     ]);
 
     resolveFirstSpeak?.();
@@ -234,7 +249,9 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([{ kind: "tile", id: "1", label: "hi" }]),
+      result.current.playMessage([
+        { kind: "tile", id: "1", label: "hi", language: "en" },
+      ]),
     ).resolves.toBe(false);
     await rerender();
 
@@ -249,7 +266,12 @@ describe("useBoardPlayback", () => {
     failSpeech(speech.speak);
     const { result } = await renderPlayback();
 
-    await result.current.playPart({ kind: "tile", id: "1", label: "hi" });
+    await result.current.playPart({
+      kind: "tile",
+      id: "1",
+      label: "hi",
+      language: "en",
+    });
 
     await expect
       .element(page.getByRole("alert"))
@@ -263,8 +285,14 @@ describe("useBoardPlayback", () => {
 
     await expect(
       result.current.playMessage([
-        { kind: "tile", id: "1", label: "before" },
-        { kind: "tile", id: "2", label: "", soundSrc: "ding.mp3" },
+        { kind: "tile", id: "1", label: "before", language: "en" },
+        {
+          kind: "tile",
+          id: "2",
+          label: "",
+          language: "en",
+          soundSrc: "ding.mp3",
+        },
       ]),
     ).resolves.toBe(false);
 
@@ -283,6 +311,7 @@ describe("useBoardPlayback", () => {
       kind: "tile",
       id: "1",
       label: "Dog",
+      language: "en",
       soundSrc: "bark.mp3",
     });
     await rerender();
@@ -297,15 +326,16 @@ describe("useBoardPlayback", () => {
 
     await expect(
       result.current.playMessage([
-        { kind: "tile", id: "1", label: "before" },
+        { kind: "tile", id: "1", label: "before", language: "en" },
         {
           kind: "tile",
           id: "2",
           label: "🐶",
+          language: "en",
           vocalization: "Dog",
           soundSrc: "bark.mp3",
         },
-        { kind: "tile", id: "3", label: "after" },
+        { kind: "tile", id: "3", label: "after", language: "en" },
       ]),
     ).resolves.toBe(true);
     await rerender();
@@ -320,7 +350,13 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     const playPromise = result.current.playMessage([
-      { kind: "tile", id: "1", label: "Dog", soundSrc: "bark.mp3" },
+      {
+        kind: "tile",
+        id: "1",
+        label: "Dog",
+        language: "en",
+        soundSrc: "bark.mp3",
+      },
     ]);
     await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
     await rerender();
@@ -340,6 +376,7 @@ describe("useBoardPlayback", () => {
       kind: "tile",
       id: "1",
       label: "Dog",
+      language: "en",
       soundSrc: "bark.mp3",
     });
 
@@ -353,7 +390,9 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([{ kind: "tile", id: "1", label: "hi" }]),
+      result.current.playMessage([
+        { kind: "tile", id: "1", label: "hi", language: "en" },
+      ]),
     ).resolves.toBe(true);
     await rerender();
 
@@ -365,7 +404,7 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     const playPromise = result.current.playMessage([
-      { kind: "tile", id: "1", label: "hi" },
+      { kind: "tile", id: "1", label: "hi", language: "en" },
     ]);
     result.current.stop();
 
@@ -378,7 +417,9 @@ describe("useBoardPlayback", () => {
   test("reports a played message with its completion", async () => {
     const onMessagePlayback =
       vi.fn<NonNullable<NonNullable<PlaybackOptions>["onMessagePlayback"]>>();
-    const parts: MessagePart[] = [{ kind: "tile", id: "1", label: "hi" }];
+    const parts: MessagePart[] = [
+      { kind: "tile", id: "1", label: "hi", language: "en" },
+    ];
     const { result } = await renderPlayback({ onMessagePlayback });
 
     await result.current.playMessage(parts);
@@ -393,7 +434,9 @@ describe("useBoardPlayback", () => {
     const { result } = await renderPlayback({ onMessagePlayback });
 
     await expect(
-      result.current.echoMessage([{ kind: "tile", id: "1", label: "hi" }]),
+      result.current.echoMessage([
+        { kind: "tile", id: "1", label: "hi", language: "en" },
+      ]),
     ).resolves.toBe(true);
 
     expect(speech.spokenTexts()).toEqual(["hi"]);
