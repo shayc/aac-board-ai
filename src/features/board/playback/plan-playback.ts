@@ -7,12 +7,10 @@ interface SpokenPart {
   language: string;
 }
 
-// Text in an unknown language is spoken as the communication language. It is
-// resolved here so that it joins a run of parts known to be in that language
-// instead of breaking the utterance in two.
+/** Parts in an unknown language are spoken as the default language. */
 export function planPlayback(
   parts: readonly MessagePart[],
-  communicationLanguage: string,
+  defaultLanguage: string,
 ): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
   let spokenRun: SpokenPart[] = [];
@@ -29,7 +27,7 @@ export function planPlayback(
 
   for (const part of parts) {
     const text = getSpokenText(part);
-    const language = part.language ?? communicationLanguage;
+    const language = part.language ?? defaultLanguage;
 
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();

@@ -12,18 +12,13 @@ import type {
   PlaybackStep,
 } from "./playback-types";
 
-/** Text in an unknown language is spoken as the communication language. */
-export type GetSpeechParameters = (
-  textLanguage: string | undefined,
-) => SpeechParameters;
-
 interface PlaybackSession {
   abortController: AbortController;
   request: PlaybackRequest;
 }
 
 export function createPlaybackCoordinator(
-  getSpeechParameters: GetSpeechParameters,
+  getSpeechParameters: (language: string) => SpeechParameters,
 ): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
   let currentSession: PlaybackSession | null = null;

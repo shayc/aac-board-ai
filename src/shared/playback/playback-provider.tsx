@@ -1,12 +1,10 @@
+import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { type ReactNode, useEffect, useState } from "react";
 import { PlaybackContext } from "./playback-context";
-import {
-  createPlaybackCoordinator,
-  type GetSpeechParameters,
-} from "./playback-coordinator";
+import { createPlaybackCoordinator } from "./playback-coordinator";
 
 interface PlaybackProviderProps {
-  getSpeechParameters: GetSpeechParameters;
+  getSpeechParameters: (language: string) => SpeechParameters;
   children: ReactNode;
 }
 

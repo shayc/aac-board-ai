@@ -1,24 +1,10 @@
 import type { BoardAction, BoardButton } from "@features/library";
+import { assertNever } from "@shared/utils/assert-never";
 import { createTilePart } from "../message/message-transforms";
 import type { MessageEdit } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
-
-// Typed so that a new board action, or one listed as an edit the message
-// cannot apply, fails to compile instead of failing when a tile is pressed.
-const IS_MESSAGE_EDIT: {
-  [Kind in BoardAction["kind"]]: Kind extends MessageEdit["kind"]
-    ? true
-    : false;
-} = {
-  spell: true,
-  space: true,
-  backspace: true,
-  clear: true,
-  home: false,
-  play: false,
-};
 
 interface ButtonActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged">;
@@ -75,15 +61,21 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      message.apply(toMessageEdits(actions));
+      message.apply(toMessageEdits(actions, language));
 
       return;
     }
 
-    const editsBeforePlay = toMessageEdits(actions.slice(0, playIndex));
+    const editsBeforePlay = toMessageEdits(
+      actions.slice(0, playIndex),
+      language,
+    );
     const { edited: messageToPlay, hasChanged } =
       message.apply(editsBeforePlay);
-    const editsAfterPlay = toMessageEdits(actions.slice(playIndex + 1));
+    const editsAfterPlay = toMessageEdits(
+      actions.slice(playIndex + 1),
+      language,
+    );
 
     // A tile that spells and then plays echoes the word being typed, so only a
     // tile that plays the message as it stands speaks it.
@@ -100,20 +92,27 @@ export function createButtonActivator({
     });
   }
 
-  // Spelled letters are the board's text, so they are in the board's language.
-  function toMessageEdits(actions: readonly BoardAction[]): MessageEdit[] {
-    return actions
-      .filter(isMessageEditAction)
-      .map((action) =>
-        action.kind === "spell" ? { ...action, language } : action,
-      );
-  }
-
   return activateButton;
 }
 
-type MessageEditAction = Extract<BoardAction, { kind: MessageEdit["kind"] }>;
-
-function isMessageEditAction(action: BoardAction): action is MessageEditAction {
-  return IS_MESSAGE_EDIT[action.kind];
+function toMessageEdits(
+  actions: readonly BoardAction[],
+  language: string | undefined,
+): MessageEdit[] {
+  return actions.flatMap((action) => {
+    switch (action.kind) {
+      // Spelled letters are the board's text, so they are in its language.
+      case "spell":
+        return { ...action, language };
+      case "space":
+      case "backspace":
+      case "clear":
+        return action;
+      case "home":
+      case "play":
+        return [];
+      default:
+        return assertNever(action);
+    }
+  });
 }

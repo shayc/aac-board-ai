@@ -39,6 +39,7 @@ function PlaybackControls() {
         {
           kind: "speech",
           text: "hello world",
+          language: "en",
           cueAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
         },
       ],
@@ -78,7 +79,7 @@ describe("PlaybackProvider", () => {
 
     const speechResult = result.current.play({
       owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
+      steps: [{ kind: "speech", text: "hello", language: "en" }],
     });
     const audioResult = result.current.play({
       owner: "tile",
@@ -103,7 +104,7 @@ describe("PlaybackProvider", () => {
     });
     const speechResult = result.current.play({
       owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
+      steps: [{ kind: "speech", text: "hello", language: "en" }],
     });
 
     await expect(audioResult).resolves.toBe("interrupted");
@@ -122,11 +123,11 @@ describe("PlaybackProvider", () => {
 
     const interrupted = playback.play({
       owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
+      steps: [{ kind: "speech", text: "hello", language: "en" }],
     });
     const interrupting = playback.play({
       owner: "tile",
-      steps: [{ kind: "speech", text: "world" }],
+      steps: [{ kind: "speech", text: "world", language: "en" }],
     });
 
     await expect(interrupted).resolves.toBe("interrupted");
@@ -150,7 +151,7 @@ describe("PlaybackProvider", () => {
       owner: "message",
       steps: [
         { kind: "audio", src: "recording.mp3" },
-        { kind: "speech", text: "hello" },
+        { kind: "speech", text: "hello", language: "en" },
       ],
     });
 
@@ -167,9 +168,13 @@ describe("PlaybackProvider", () => {
     const outcome = result.current.play({
       owner: "message",
       steps: [
-        { kind: "speech", text: "hello" },
-        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
-        { kind: "speech", text: "world" },
+        { kind: "speech", text: "hello", language: "en" },
+        {
+          kind: "audio",
+          src: "recording.mp3",
+          fallback: { text: "dog", language: "en" },
+        },
+        { kind: "speech", text: "world", language: "en" },
       ],
     });
 
@@ -193,7 +198,7 @@ describe("PlaybackProvider", () => {
           kind: "audio",
           src: "recording.mp3",
           cue: "1",
-          fallback: { text: "dog" },
+          fallback: { text: "dog", language: "en" },
         },
       ],
     });
@@ -216,7 +221,11 @@ describe("PlaybackProvider", () => {
     const outcome = result.current.play({
       owner: "message",
       steps: [
-        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
+        {
+          kind: "audio",
+          src: "recording.mp3",
+          fallback: { text: "dog", language: "en" },
+        },
       ],
     });
 
@@ -237,7 +246,11 @@ describe("PlaybackProvider", () => {
     const outcome = result.current.play({
       owner: "tile",
       steps: [
-        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
+        {
+          kind: "audio",
+          src: "recording.mp3",
+          fallback: { text: "dog", language: "en" },
+        },
       ],
     });
     result.current.stop();
@@ -257,16 +270,15 @@ describe("PlaybackProvider", () => {
     });
     const request = {
       owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
+      steps: [{ kind: "speech", text: "hello", language: "en" }],
     } as const;
 
     await result.current.play(request);
-    currentParameters = { ...speechParameters, language: "he", rate: 1.5 };
+    currentParameters = { ...speechParameters, rate: 1.5 };
     await result.current.play(request);
 
-    const [first, second] = speech.speak.mock.calls.map(([spoken]) => spoken);
-    expect(first).toMatchObject({ lang: "en", rate: 1 });
-    expect(second).toMatchObject({ lang: "he", rate: 1.5 });
+    const rates = speech.speak.mock.calls.map(([spoken]) => spoken.rate);
+    expect(rates).toEqual([1, 1.5]);
   });
 
   test("speaks each step with the parameters for its own language", async () => {
@@ -274,9 +286,9 @@ describe("PlaybackProvider", () => {
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: ({ children }: { children: ReactNode }) => (
         <PlaybackProvider
-          getSpeechParameters={(textLanguage) => ({
+          getSpeechParameters={(language) => ({
             ...speechParameters,
-            language: textLanguage ?? "he",
+            language,
           })}
         >
           {children}
@@ -288,7 +300,7 @@ describe("PlaybackProvider", () => {
       owner: "message",
       steps: [
         { kind: "speech", text: "hello", language: "en" },
-        { kind: "speech", text: "שלום" },
+        { kind: "speech", text: "שלום", language: "he" },
         {
           kind: "audio",
           src: "recording.mp3",

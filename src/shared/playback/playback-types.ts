@@ -2,8 +2,7 @@ export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
 export interface SpokenFallback {
   text: string;
-  /** The language the text is in, when known. */
-  language?: string;
+  language: string;
 }
 
 export interface AudioStep {
@@ -17,8 +16,8 @@ export interface AudioStep {
 export interface SpeechStep {
   kind: "speech";
   text: string;
-  /** The language the text is in, when known. */
-  language?: string;
+  /** The language the text is in, which picks the voice that speaks it. */
+  language: string;
   cueAt?: (charIndex: number) => string | null;
 }
 

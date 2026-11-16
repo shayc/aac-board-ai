@@ -1,4 +1,3 @@
-import { getStoredLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import {
@@ -100,11 +99,9 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-// A voice reads text in its own language whatever the text is in, so the voice
-// follows the text: a board that is not in the communication language is
-// still pronounced correctly.
-export function getSpeechParameters(textLanguage?: string): SpeechParameters {
-  const language = textLanguage ?? getStoredLanguage();
+// A voice reads any text as its own language, so the voice follows the
+// language of the text rather than the communication language.
+export function getSpeechParameters(language: string): SpeechParameters {
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();

@@ -343,13 +343,13 @@ voice or translation model.
 
 Speech follows the text, not the setting. Each message part records the
 language its text is in: the language the board is shown in for a tile or a
-spelled word, and the communication language for a suggestion. Playback speaks
-each run of parts that share a language as one utterance in that language, so
-a board the browser could not translate is still read by a voice of its own
-language. Text in an unknown language is spoken as the communication language.
-Speech uses the saved voice only when it speaks the text's language; otherwise
-it picks one of that language's voices, or leaves the choice to the browser,
-without changing the saved voice.
+spelled word, and the communication language for a suggestion. Planning a
+playback gives every speech step a language, the communication language where
+a part's own is unknown, and speaks each run of parts that share one as a
+single utterance, so a board the browser could not translate is still read by
+a voice of its own language. Speech uses the saved voice only when it speaks
+the step's language; otherwise it picks one of that language's voices, or
+leaves the choice to the browser, without changing the saved voice.
 
 Paraglide message catalogs provide UI text. The document's `lang` and `dir`
 follow the UI locale, so a communication language without a catalog keeps both

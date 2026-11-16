@@ -113,7 +113,7 @@ function VoiceSelect() {
   function handlePreviewVoice() {
     void playback.play({
       owner: "speech-preview",
-      steps: [{ kind: "speech", text: t(m.speechPreviewSample) }],
+      steps: [{ kind: "speech", text: t(m.speechPreviewSample), language }],
     });
   }
 

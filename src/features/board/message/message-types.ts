@@ -2,8 +2,6 @@ export interface TilePart {
   readonly kind: "tile";
   readonly id: string;
   readonly label: string;
-  // The language the text is in, when known. Speech and assistive technology
-  // pronounce the part in it, whatever the communication language is.
   readonly language: string | undefined;
   readonly vocalization?: string;
   readonly imageSrc?: string;
@@ -17,7 +15,9 @@ export interface TextPart {
   readonly language: string | undefined;
 }
 
-// Each occurrence needs its own ID, including repeated selections of the same tile.
+// Each occurrence needs its own ID, including repeated selections of the same
+// tile. A part records the language its text is in, when known, because that
+// can differ from the communication language and from part to part.
 export type MessagePart = TilePart | TextPart;
 
 export interface Message {
