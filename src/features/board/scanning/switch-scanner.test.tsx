@@ -9,6 +9,7 @@ import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import {
   communicationBoardTree,
+  EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
 } from "../testing/render-communication-board";
 import { SCAN_HIGHLIGHTED_ITEM_SELECTOR, scanGroupProps } from "./scan-targets";
@@ -471,7 +472,9 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await expectNoA11yViolations(screen.container);
+      await expectNoA11yViolations(screen.container, {
+        reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+      });
     });
 
     test("moves with Space and selects with Enter", async () => {
