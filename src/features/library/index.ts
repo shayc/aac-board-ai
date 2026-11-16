@@ -25,7 +25,7 @@ export {
   listBoardSetRecords,
 } from "./storage/board-set-storage";
 export { BoardTranslationNotice } from "./translation/board-translation-notice";
-export { useBoardInLanguage } from "./translation/use-board-in-language";
+export { useBoardInLanguage } from "./board-sets/use-board-in-language";
 export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
 export type { BoardSummary } from "./board-sets/list-board-summaries";

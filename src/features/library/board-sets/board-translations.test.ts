@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import type { Board } from "../board-types";
 import {
   applyTranslations,
-  collectBoardStrings,
   findBoardInLanguage,
   findStringTranslations,
   getSourceLanguage,
@@ -124,17 +123,6 @@ describe("applyTranslations", () => {
     expect(translated.name).toBe(" Mi Tablero ");
     expect(translated.buttons[0]?.label).toBe(" Hola ");
     expect(translated.buttons[0]?.vocalization).toBe("\tHola a todos\n");
-  });
-});
-
-describe("collectBoardStrings", () => {
-  test("collects each unique nonblank name, label, and vocalization", () => {
-    const strings = collectBoardStrings(mockBoard);
-
-    expect(strings.size).toBe(3);
-    expect(strings.has("My Board")).toBe(true);
-    expect(strings.has("Hello")).toBe(true);
-    expect(strings.has("Hello there")).toBe(true);
   });
 });
 

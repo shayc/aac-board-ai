@@ -1,4 +1,3 @@
-import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateBoardSet } from "@app/routing/use-revalidate-board-set";
@@ -14,6 +13,7 @@ import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppHeader } from "./app-header";
+import { LibraryDrawer } from "./library-drawer";
 
 export function AppShell() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);

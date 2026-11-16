@@ -11,7 +11,7 @@ import {
   type ClampedNumberOptions,
   parseClampedNumber,
 } from "@shared/utils/parse-clamped-number";
-import { resolveVoice } from "./resolve-voice";
+import { resolveVoice, type VoicesByLanguage } from "./resolve-voice";
 import { getSpeechSynthesis, type SpeechParameters } from "./speech-synthesis";
 
 interface SpeechPreferences {
@@ -20,10 +20,6 @@ interface SpeechPreferences {
   pitch: number;
   volume: number;
 }
-
-export type VoicesByLanguage = Partial<
-  Record<string, readonly SpeechSynthesisVoice[]>
->;
 
 export const SPEECH_RATE: ClampedNumberOptions = {
   min: 0.1,
