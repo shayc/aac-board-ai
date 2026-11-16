@@ -66,6 +66,16 @@ describe("BoardSelector", () => {
     });
   });
 
+  test("names the list of boards in the open popup", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("combobox").click();
+
+    await expect
+      .element(screen.getByRole("listbox", { name: "Board" }))
+      .toBeVisible();
+  });
+
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
