@@ -49,7 +49,13 @@ export function AppDrawer({
     >
       <AppDrawerContent title={title} closeLabel={closeLabel} onClose={onClose}>
         {/* The drawer unmounts its content on close, so reopening retries. */}
-        <ErrorBoundary fallback={<ErrorState title={errorTitle} />}>
+        <ErrorBoundary
+          fallback={
+            <Box sx={{ height: "100%", px: 2 }}>
+              <ErrorState icon={null} title={errorTitle} />
+            </Box>
+          }
+        >
           {children}
         </ErrorBoundary>
       </AppDrawerContent>

@@ -1,3 +1,4 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
@@ -60,6 +61,15 @@ describe("AppDrawer", () => {
     await expect.element(screen.getByText("Tall content")).toBeInTheDocument();
 
     expect(headerBorderColor()).toBe(unscrolledColor);
+  });
+
+  test("has no accessibility violations when its content fails to render", async () => {
+    const screen = await renderWithProviders(
+      renderDrawer(true, <BrokenContent />),
+    );
+    await expect.element(screen.getByText("Couldn't load panel")).toBeVisible();
+
+    await expectNoA11yViolations(document.body);
   });
 
   test("keeps the drawer closable when its content fails to render", async () => {
