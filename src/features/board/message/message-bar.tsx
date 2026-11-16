@@ -130,7 +130,6 @@ function scrollContainerSx(theme: Theme) {
   return {
     flexGrow: 1,
     alignSelf: "stretch",
-    alignItems: "center",
     // A fixed height stops the first word added from pushing the board down.
     height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: 2,
@@ -166,7 +165,6 @@ function MessagePartItem({
       direction="row"
       sx={(theme) => ({
         [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
-        alignSelf: "stretch",
         py: 0.5,
         px: 1,
         borderRadius: theme.vars.shape.borderRadius,
