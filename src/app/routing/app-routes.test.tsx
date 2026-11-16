@@ -218,6 +218,35 @@ describe("app flow", () => {
     expect(await response.text()).toBe("recording");
   });
 
+  test("a message being composed comes back after a reload, recording included", async () => {
+    await seedRecordedAudioSet();
+    const first = await renderApp();
+    await first.screen.getByRole("button", { name: "Continue" }).click();
+    await first.screen.getByRole("button", { name: "hello" }).click();
+    await first.screen.unmount();
+    // Storing the set again revokes its URLs, as closing the page would.
+    await resetBoardsDB();
+    await seedRecordedAudioSet();
+
+    const { screen } = await renderApp();
+
+    await expect
+      .element(screen.getByRole("list", { name: "Message" }))
+      .toHaveTextContent("hello");
+
+    audio.play.mockClear();
+    await screen.getByRole("button", { name: "Play message" }).click();
+
+    await vi.waitFor(() => {
+      expect(audio.play).toHaveBeenCalledTimes(1);
+    });
+    const element = audio.play.mock.contexts[0];
+    assert(element instanceof HTMLAudioElement);
+    const response = await fetch(element.src);
+
+    expect(await response.text()).toBe("recording");
+  });
+
   test("?board= link that collides with an existing board set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 

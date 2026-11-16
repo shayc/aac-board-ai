@@ -1,7 +1,23 @@
-import { describe, expect, test } from "vitest";
+import { getAssetURL } from "@features/library";
+import {
+  loadTestImageAsset,
+  makeAssetInput,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/library/testing";
+import { assertDefined } from "@shared/testing/assert-defined";
+import { assert, beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { restoreMessageDraft } from "./message-draft";
 import { setMessageClearAfterPlayback } from "./message-preferences-store";
+import { createTilePart, EMPTY_MESSAGE } from "./message-transforms";
+import type { TilePart } from "./message-types";
 import { useMessage } from "./use-message";
+
+const MEDIA_BOARD_SET_ID = "media-set";
+const IMAGE_PATH = "images/hello.png";
+const SOUND_PATH = "sounds/hello.wav";
+const REMOTE_SOUND_SRC = "https://example.com/hello.mp3";
 
 describe("useMessage", () => {
   test.each([
@@ -346,6 +362,84 @@ describe("useMessage", () => {
       expect(labelsAfterSpelling(message)).toEqual(["ha"]);
     });
   });
+
+  describe("draft", () => {
+    beforeEach(resetBoardsDB);
+
+    test("restores the message when it opens again", async () => {
+      const first = await renderHook(() => useMessage());
+      first.result.current.replaceWithText("I want", "en");
+      await first.rerender();
+      const saved = first.result.current.parts;
+      await first.unmount();
+
+      const restored = await restoreMessageDraft();
+      const { result } = await renderHook(() => useMessage(restored));
+
+      expect(result.current.parts).toEqual(saved);
+    });
+
+    test("keeps no draft of a played message the next symbol replaces", async () => {
+      const { result } = await renderHook(() => useMessage());
+      result.current.replaceWithText("I want", "en");
+
+      await trackSettledPlayback(result.current, true);
+
+      expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
+    });
+
+    test("restores a played message when clearing after speaking is off", async () => {
+      setMessageClearAfterPlayback(false);
+      const first = await renderHook(() => useMessage());
+      first.result.current.replaceWithText("I want", "en");
+      await trackSettledPlayback(first.result.current, true);
+      await first.unmount();
+
+      const restored = await restoreMessageDraft();
+      const { result } = await renderHook(() => useMessage(restored));
+
+      expect(restored.hasPlayed).toBe(true);
+      expect(labelsAfterSpelling(result.current)).toEqual(["I", "wanta"]);
+    });
+
+    test("saves no draft once the message is cleared", async () => {
+      const { result } = await renderHook(() => useMessage());
+      result.current.replaceWithText("I want", "en");
+
+      result.current.clear();
+
+      expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
+    });
+
+    test("brings back stored symbols and sounds after a reload", async () => {
+      await seedMediaBoardSet();
+      const imageSrc = await requireAssetURL(IMAGE_PATH);
+      const soundSrc = await requireAssetURL(SOUND_PATH);
+      await composeAndClose({ imageSrc, soundSrc });
+      // Storing the set again revokes its URLs, as closing the page would.
+      await resetBoardsDB();
+      await seedMediaBoardSet();
+
+      const part = await renderRestoredTilePart();
+
+      assert(part.imageSrc && part.soundSrc);
+      expect(part.imageSrc).not.toBe(imageSrc);
+      expect(part.soundSrc).not.toBe(soundSrc);
+      expect(await readText(part.soundSrc)).toBe("recording");
+      expect((await fetch(part.imageSrc)).ok).toBe(true);
+    });
+
+    test("keeps media that are not stored beside stored ones", async () => {
+      await seedMediaBoardSet();
+      const imageSrc = await requireAssetURL(IMAGE_PATH);
+      await composeAndClose({ imageSrc, soundSrc: REMOTE_SOUND_SRC });
+
+      const part = await renderRestoredTilePart();
+
+      expect(part.imageSrc).toBe(imageSrc);
+      expect(part.soundSrc).toBe(REMOTE_SOUND_SRC);
+    });
+  });
 });
 
 function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
@@ -363,4 +457,53 @@ async function trackSettledPlayback(
   const completion = Promise.resolve(hasCompleted);
   message.trackPlayback(completion);
   await completion;
+}
+
+async function seedMediaBoardSet() {
+  await seedBoardSets([
+    {
+      id: MEDIA_BOARD_SET_ID,
+      rootBoardId: "home",
+      assets: [
+        await loadTestImageAsset(IMAGE_PATH),
+        makeAssetInput(SOUND_PATH, "recording"),
+      ],
+    },
+  ]);
+}
+
+async function requireAssetURL(path: string): Promise<string> {
+  const url = await getAssetURL(MEDIA_BOARD_SET_ID, path);
+  assertDefined(url);
+
+  return url;
+}
+
+async function composeAndClose(media: {
+  imageSrc?: string;
+  soundSrc?: string;
+}) {
+  const { result, unmount } = await renderHook(() => useMessage());
+  result.current.apply([
+    {
+      kind: "tile",
+      part: createTilePart({ label: "hello", language: "en", ...media }),
+    },
+  ]);
+  await unmount();
+}
+
+async function renderRestoredTilePart(): Promise<TilePart> {
+  const restored = await restoreMessageDraft();
+  const { result } = await renderHook(() => useMessage(restored));
+  const part = result.current.parts[0];
+  assert(part?.kind === "tile");
+
+  return part;
+}
+
+async function readText(url: string): Promise<string> {
+  const response = await fetch(url);
+
+  return response.text();
 }

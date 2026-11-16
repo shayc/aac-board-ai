@@ -3,6 +3,16 @@ import { normalizeAssetPath } from "./normalize-asset-path";
 
 // Immutable assets keep their URLs until set deletion so messages survive navigation.
 const urlsByBoardSetId = new Map<string, Map<string, string>>();
+const assetKeysByURL = new Map<string, AssetKey>();
+
+export interface AssetKey {
+  readonly boardSetId: string;
+  readonly path: string;
+}
+
+export function findAssetKey(url: string): AssetKey | undefined {
+  return assetKeysByURL.get(url);
+}
 
 export async function getAssetURL(
   boardSetId: string,
@@ -39,6 +49,7 @@ function ensureAssetURL(
 
   const url = URL.createObjectURL(blob);
   urlsByPath.set(normalizedPath, url);
+  assetKeysByURL.set(url, { boardSetId, path: normalizedPath });
 
   return url;
 }
@@ -51,6 +62,7 @@ export function revokeAssetURLsExcept(boardSetIds: ReadonlySet<string>): void {
 
     for (const url of urlsByPath.values()) {
       URL.revokeObjectURL(url);
+      assetKeysByURL.delete(url);
     }
 
     urlsByBoardSetId.delete(boardSetId);
