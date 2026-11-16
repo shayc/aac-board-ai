@@ -76,14 +76,13 @@ describe("getSpeechParameters", () => {
     ]);
   });
 
-  test("combines the text's language with the saved voice, rate, pitch, and volume", () => {
+  test("combines the saved voice, rate, pitch, and volume", () => {
     setSpeechVoiceURI("voice-2");
     setSpeechRate(1.5);
     setSpeechPitch(0.5);
     setSpeechVolume(0.25);
 
     expect(getSpeechParameters("en")).toMatchObject({
-      language: "en",
       voice: { voiceURI: "voice-2" },
       rate: 1.5,
       pitch: 0.5,
@@ -98,22 +97,16 @@ describe("getSpeechParameters", () => {
     expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-2");
   });
 
-  test("follows the text's language, not the communication language", () => {
+  test("follows the given language, not the communication language", () => {
     setStoredLanguage("he");
     setSpeechVoiceURI("he-voice");
 
-    expect(getSpeechParameters("en")).toMatchObject({
-      language: "en",
-      voice: { voiceURI: "voice-1" },
-    });
+    expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-1");
   });
 
   test("leaves the voice to the browser when the language has no voices", () => {
     setSpeechVoiceURI("voice-2");
 
-    expect(getSpeechParameters("fr")).toMatchObject({
-      language: "fr",
-      voice: null,
-    });
+    expect(getSpeechParameters("fr").voice).toBeNull();
   });
 });

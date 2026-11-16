@@ -109,7 +109,7 @@ change.
 Device output does not read settings stores. `AppProviders` gives the playback
 coordinator a `getSpeechParameters` function, and the coordinator calls it for
 each speech step with the language of the step's text, so every utterance uses
-that language and the voice, rate, pitch, and volume current at that moment.
+that language's voice and the rate, pitch, and volume current at that moment.
 
 The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` reload when another tab writes

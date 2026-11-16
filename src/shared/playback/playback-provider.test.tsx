@@ -14,7 +14,6 @@ import { PlaybackProvider } from "./playback-provider";
 import { useActiveCue, useIsPlaying, usePlayback } from "./use-playback";
 
 const speechParameters: SpeechParameters = {
-  language: "en",
   voice: null,
   rate: 1,
   pitch: 1,
@@ -281,14 +280,15 @@ describe("PlaybackProvider", () => {
     expect(rates).toEqual([1, 1.5]);
   });
 
-  test("speaks each step with the parameters for its own language", async () => {
+  test("speaks each step in its own language and asks for that language's parameters", async () => {
     failAudio(audio.play);
+    const ratesByLanguage: Record<string, number> = { en: 1, he: 1.5, es: 2 };
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: ({ children }: { children: ReactNode }) => (
         <PlaybackProvider
           getSpeechParameters={(language) => ({
             ...speechParameters,
-            language,
+            rate: ratesByLanguage[language] ?? 0.1,
           })}
         >
           {children}
@@ -309,8 +309,12 @@ describe("PlaybackProvider", () => {
       ],
     });
 
-    const languages = speech.speak.mock.calls.map(([spoken]) => spoken.lang);
-    expect(languages).toEqual(["en", "he", "es"]);
+    const utterances = speech.speak.mock.calls.map(([spoken]) => spoken);
+    expect(utterances).toMatchObject([
+      { lang: "en", rate: 1 },
+      { lang: "he", rate: 1.5 },
+      { lang: "es", rate: 2 },
+    ]);
   });
 
   test("rerenders each subscriber only for the playback state it reads", async () => {

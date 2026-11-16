@@ -107,7 +107,6 @@ export function getSpeechParameters(language: string): SpeechParameters {
     speechPreferencesStore.getSnapshot();
 
   return {
-    language,
     voice: resolveVoice(voicesByLanguage, language, voiceURI),
     rate,
     pitch,

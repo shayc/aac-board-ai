@@ -53,7 +53,7 @@ export function createPlaybackCoordinator(
       case "speech": {
         const { cueAt } = step;
         setActiveCue(session, cueAt?.(0) ?? null);
-        await speak(step.text, getSpeechParameters(step.language), {
+        await speak(step, getSpeechParameters(step.language), {
           signal,
           onBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))
@@ -81,9 +81,7 @@ export function createPlaybackCoordinator(
         throw error;
       }
 
-      await speak(fallback.text, getSpeechParameters(fallback.language), {
-        signal,
-      });
+      await speak(fallback, getSpeechParameters(fallback.language), { signal });
     }
   }
 

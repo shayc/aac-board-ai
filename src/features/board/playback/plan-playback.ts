@@ -1,10 +1,9 @@
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
+import type { SpokenText } from "@shared/speech/speech-synthesis";
 import type { MessagePart } from "../message/message-types";
 
-interface SpokenPart {
+interface SpokenPart extends SpokenText {
   id: string;
-  text: string;
-  language: string;
 }
 
 /** Parts in an unknown language are spoken as the default language. */
