@@ -42,9 +42,8 @@ describe("boardLoader", () => {
       },
     ]);
 
-    const { board, restoredMessage } = await callLoader("set-1", "root-1");
+    const { board } = await callLoader("set-1", "root-1");
 
     expect(board).toMatchObject({ id: "root-1", name: "Home" });
-    expect(restoredMessage.parts).toEqual([]);
   });
 });

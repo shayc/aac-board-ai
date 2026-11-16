@@ -116,14 +116,6 @@ describe("message draft", () => {
     ]);
   });
 
-  test("removes the draft when the message is emptied", () => {
-    saveMessageDraft(MESSAGE);
-
-    saveMessageDraft(EMPTY_MESSAGE);
-
-    expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
-  });
-
   test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();

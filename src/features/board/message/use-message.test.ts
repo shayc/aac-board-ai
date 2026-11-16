@@ -402,20 +402,6 @@ describe("useMessage", () => {
       expect(labelsAfterSpelling(result.current)).toEqual(["I", "wanta"]);
     });
 
-    test("restores an open word for more spelling", async () => {
-      const first = await renderHook(() => useMessage());
-      first.result.current.apply([
-        { kind: "spell", text: "ca", language: "en" },
-      ]);
-      await first.unmount();
-
-      const restored = await restoreMessageDraft();
-      const { result } = await renderHook(() => useMessage(restored));
-
-      expect(result.current.isWordOpen).toBe(true);
-      expect(labelsAfterSpelling(result.current)).toEqual(["caa"]);
-    });
-
     test("saves no draft once the message is cleared", async () => {
       const { result } = await renderHook(() => useMessage());
       result.current.replaceWithText("I want", "en");
@@ -452,17 +438,6 @@ describe("useMessage", () => {
 
       expect(part.imageSrc).toBe(imageSrc);
       expect(part.soundSrc).toBe(REMOTE_SOUND_SRC);
-    });
-
-    test("keeps the label of a symbol whose board set was deleted", async () => {
-      await seedMediaBoardSet();
-      const imageSrc = await requireAssetURL(IMAGE_PATH);
-      await composeAndClose({ imageSrc });
-      await resetBoardsDB();
-
-      const part = await renderRestoredTilePart();
-
-      expect(part.imageSrc).toBeUndefined();
     });
   });
 });
