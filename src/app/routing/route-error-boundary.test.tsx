@@ -1,4 +1,4 @@
-import { setStoredLanguage } from "@shared/language/language-store";
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { createMemoryRouter, data } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -30,7 +30,9 @@ function renderWithLoader(loader: () => unknown) {
 
   return renderWithProviders(
     <>
-      <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
+      <button onClick={() => setCommunicationLanguage("he")}>
+        switch-to-hebrew
+      </button>
       <RouterProvider router={router} />
     </>,
   );

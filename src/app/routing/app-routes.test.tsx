@@ -9,7 +9,7 @@ import {
 } from "@features/library/testing";
 import {
   DEFAULT_LANGUAGE,
-  setStoredLanguage,
+  setCommunicationLanguage,
 } from "@shared/language/language-store";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
@@ -108,7 +108,7 @@ describe("app flow", () => {
   let audio: ReturnType<typeof stubAudio>;
 
   beforeEach(async () => {
-    setStoredLanguage(DEFAULT_LANGUAGE);
+    setCommunicationLanguage(DEFAULT_LANGUAGE);
     speech = stubSpeech();
     audio = stubAudio();
     await resetBoardsDB();
@@ -137,7 +137,7 @@ describe("app flow", () => {
   });
 
   test("starter board: Hebrew comes from the board file, not the translator", async () => {
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
     const translator = stubTranslator();
     const { screen } = await renderApp();
 
@@ -239,7 +239,7 @@ describe("app flow", () => {
 
   test("?board= link imports once while another set finishes translating", async () => {
     await seedBoardSets([{ id: "zoo", name: "Zoo", rootBoardId: "home" }]);
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
     stubTranslator((input) => `[es] ${input}`);
 
     const { screen } = await renderApp(
@@ -317,7 +317,7 @@ describe("app flow", () => {
   });
 
   test("a digit-led ?board= link host keeps its order in a right-to-left language", async () => {
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
     const { screen } = await renderApp(
       `/?board=${encodeURIComponent("https://123.example.com/core.obz")}`,
     );
@@ -460,7 +460,7 @@ describe("app flow", () => {
       .element(screen.getByRole("button", { name: "fruit", exact: true }))
       .toHaveAttribute("lang", "en");
 
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
 
     await expect
       .element(screen.getByRole("grid", { name: "[es] Home" }))
@@ -502,7 +502,7 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Home" }))
       .toBeVisible();
 
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
 
     await expect
       .element(screen.getByRole("grid", { name: "[es] Home" }))
@@ -529,7 +529,7 @@ describe("app flow", () => {
     const { screen } = await renderApp("/sets/animals/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
 
     await expect
       .element(screen.getByRole("grid", { name: "[es] Animals Home" }))
@@ -550,7 +550,7 @@ describe("app flow", () => {
     const { screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
     await expect.poll(() => translator.create.mock.calls.length).toBe(1);
 
     await screen.getByRole("button", { name: "fruit" }).click();
@@ -586,7 +586,7 @@ describe("app flow", () => {
     const { screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
     await expect.poll(() => translator.create.mock.calls.length).toBe(1);
 
     await seedBoardSets([{ id: "zoo", name: "Zoo", rootBoardId: "home" }]);
@@ -626,7 +626,7 @@ describe("app flow", () => {
     const { screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
     await screen.getByRole("button", { name: "Abrir ajustes" }).click();
     const notice = screen.getByRole("status");
 
@@ -650,14 +650,14 @@ describe("app flow", () => {
     const { screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
     await screen.getByRole("button", { name: "Abrir ajustes" }).click();
     const notice = screen.getByRole("status");
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
 
     // Leave preparation pending to isolate the language change's status reset.
     translator.create.mockImplementation(() => new Promise(() => {}));
-    setStoredLanguage("fr");
+    setCommunicationLanguage("fr");
 
     await expect
       .element(screen.getByRole("combobox", { name: "Langue" }))

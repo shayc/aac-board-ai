@@ -125,7 +125,7 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("https://trusted.example/go?to=core.obz"),
     ).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "redirect",
     });
     expect(await listBoardSetRecords()).toEqual([]);
@@ -139,7 +139,7 @@ describe("importBoardFileFromURL", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     await expect(importBoardFileFromURL(url)).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "unsupported-scheme",
     });
 
@@ -161,7 +161,7 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("https://example.com/huge.obz"),
     ).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "download-too-large",
     });
 
@@ -191,7 +191,7 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("https://example.com/huge.obz"),
     ).rejects.toMatchObject({
-      name: "BoardURLError",
+      name: "BoardFileURLError",
       code: "download-too-large",
     });
 

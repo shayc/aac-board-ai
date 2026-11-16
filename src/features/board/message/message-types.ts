@@ -28,7 +28,7 @@ export interface Message {
   // True once the message has played to its end unchanged. It stays visible so
   // listeners who missed it can still read it, and the next tile or letter
   // starts a new message. Any edit, such as a backspace, makes it false again.
-  readonly isSpoken: boolean;
+  readonly hasPlayed: boolean;
 }
 
 export type MessageEdit =

@@ -11,11 +11,11 @@ import {
 import { getAssetBlob, getBoardRecord } from "./board-content-storage";
 import {
   BoardSetAlreadyExistsError,
+  deleteBoardSetRecords,
   getBoardSetRecord,
-  insertBoardSet,
+  insertBoardSetRecords,
   listBoardSetRecords,
-  putBoardSetTranslations,
-  removeBoardSet,
+  updateBoardSetTranslations,
 } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
 
@@ -25,7 +25,7 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-describe("insertBoardSet", () => {
+describe("insertBoardSetRecords", () => {
   test("derives set metadata from the selected root without changing its source", async () => {
     const rootBoard = makeOBFBoard({
       id: "root",
@@ -44,7 +44,7 @@ describe("insertBoardSet", () => {
     });
     const source = structuredClone(rootBoard);
 
-    await insertBoardSet({
+    await insertBoardSetRecords({
       id: "vocabulary",
       rootBoardId: "root",
       boards: [makeOBFBoard({ id: "child", name: "Child" }), rootBoard],
@@ -78,12 +78,12 @@ describe("insertBoardSet", () => {
       .mockResolvedValue(true);
 
     await expect(
-      insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
+      insertBoardSetRecords(makeBoardSetInput({ rootBoardId: "missing" })),
     ).rejects.toThrow("Root board not found");
 
     expect(persist).not.toHaveBeenCalled();
 
-    await insertBoardSet(makeBoardSetInput());
+    await insertBoardSetRecords(makeBoardSetInput());
 
     expect(persist).toHaveBeenCalledOnce();
   });
@@ -92,7 +92,7 @@ describe("insertBoardSet", () => {
     vi.spyOn(window, "isSecureContext", "get").mockReturnValue(false);
     const persist = vi.spyOn(navigator.storage, "persist");
 
-    await insertBoardSet(makeBoardSetInput({ id: "insecure" }));
+    await insertBoardSetRecords(makeBoardSetInput({ id: "insecure" }));
 
     expect(persist).not.toHaveBeenCalled();
     expect(await getBoardSetRecord("insecure")).toBeDefined();
@@ -100,7 +100,7 @@ describe("insertBoardSet", () => {
 
   test("rejects a missing root without storing a partial set", async () => {
     await expect(
-      insertBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
+      insertBoardSetRecords(makeBoardSetInput({ rootBoardId: "missing" })),
     ).rejects.toThrow("Root board not found");
 
     expect(await listBoardSetRecords()).toEqual([]);
@@ -111,7 +111,7 @@ describe("insertBoardSet", () => {
 
   test("rejects duplicate board IDs without overwriting a board", async () => {
     await expect(
-      insertBoardSet(
+      insertBoardSetRecords(
         makeBoardSetInput({
           boards: [
             makeOBFBoard({ id: "root-1", name: "Original" }),
@@ -128,7 +128,7 @@ describe("insertBoardSet", () => {
   });
 
   test("rejects a conflicting ID without changing the existing set", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
         name: "Original",
@@ -139,7 +139,7 @@ describe("insertBoardSet", () => {
     );
 
     await expect(
-      insertBoardSet(
+      insertBoardSetRecords(
         makeBoardSetInput({
           id: "set-1",
           name: "Replacement",
@@ -170,7 +170,7 @@ describe("insertBoardSet", () => {
     async ({ name, expectedName, expectedSetName }) => {
       const obf = makeOBFBoard({ id: "root-1", name });
 
-      await insertBoardSet(
+      await insertBoardSetRecords(
         makeBoardSetInput({ name: undefined, boards: [obf] }),
       );
 
@@ -194,7 +194,7 @@ describe("insertBoardSet", () => {
     } as unknown as OBFBoard;
 
     await expect(
-      insertBoardSet(
+      insertBoardSetRecords(
         makeBoardSetInput({
           boards: [uncloneableOBF],
           assets: [makeAssetInput("x.png", "x")],
@@ -211,7 +211,7 @@ describe("insertBoardSet", () => {
 
   test("rejects an asset whose path names no file without storing the set", async () => {
     await expect(
-      insertBoardSet(
+      insertBoardSetRecords(
         makeBoardSetInput({
           assets: [makeAssetInput("/", "x")],
         }),
@@ -222,7 +222,7 @@ describe("insertBoardSet", () => {
   });
 
   test("stores the later asset when two paths name the same file", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         assets: [
           makeAssetInput("images/a.png", "first"),
@@ -239,7 +239,7 @@ describe("insertBoardSet", () => {
   test("stores only the bytes an asset views in a larger buffer", async () => {
     const archive = new TextEncoder().encode("before|asset|after");
 
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         assets: [
           { path: "x.png", bytes: archive.subarray(7, 12), type: "image/png" },
@@ -286,9 +286,9 @@ describe("insertBoardSet", () => {
       error: "Invalid boardId",
     },
   ])("rejects $problem", async ({ input, error }) => {
-    await expect(insertBoardSet(makeBoardSetInput(input))).rejects.toThrow(
-      error,
-    );
+    await expect(
+      insertBoardSetRecords(makeBoardSetInput(input)),
+    ).rejects.toThrow(error);
   });
 });
 
@@ -302,14 +302,14 @@ describe("listBoardSetRecords", () => {
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "old",
         name: "Old",
         rootBoardId: "root-1",
       }),
     );
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "new",
         name: "New",
@@ -324,9 +324,9 @@ describe("listBoardSetRecords", () => {
   });
 });
 
-describe("removeBoardSet", () => {
+describe("deleteBoardSetRecords", () => {
   test("deletes the set and all its content while preserving a set whose ID it prefixes", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         boards: [
           makeOBFBoard({ id: "b1", name: "B1" }),
@@ -339,7 +339,7 @@ describe("removeBoardSet", () => {
       }),
     );
 
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1-2",
         name: "Set 2",
@@ -349,7 +349,7 @@ describe("removeBoardSet", () => {
       }),
     );
 
-    await removeBoardSet("set-1");
+    await deleteBoardSetRecords("set-1");
 
     const sets = await listBoardSetRecords();
     expect(sets.map((set) => set.id)).toEqual(["set-1-2"]);
@@ -375,9 +375,9 @@ describe("removeBoardSet", () => {
   test.each(["missing", ""])(
     "leaves stored sets alone when no set has the ID %j",
     async (boardSetId) => {
-      await insertBoardSet(makeBoardSetInput());
+      await insertBoardSetRecords(makeBoardSetInput());
 
-      await removeBoardSet(boardSetId);
+      await deleteBoardSetRecords(boardSetId);
 
       const sets = await listBoardSetRecords();
       expect(sets.map((set) => set.id)).toEqual(["set-1"]);
@@ -385,9 +385,9 @@ describe("removeBoardSet", () => {
   );
 });
 
-describe("putBoardSetTranslations", () => {
+describe("updateBoardSetTranslations", () => {
   test("adds the language to the set name and each board, keeping other languages", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         boards: [
           makeOBFBoard({
@@ -399,7 +399,7 @@ describe("putBoardSetTranslations", () => {
       }),
     );
 
-    await putBoardSetTranslations("set-1", "es", {
+    await updateBoardSetTranslations("set-1", "es", {
       name: "Conjunto",
       translationsByBoardId: new Map([["home", new Map([["Home", "Inicio"]])]]),
     });
@@ -418,7 +418,7 @@ describe("putBoardSetTranslations", () => {
   });
 
   test("saves nothing when one board's translations fail to store", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         boards: [makeOBFBoard({ id: "a" }), makeOBFBoard({ id: "b" })],
       }),
@@ -426,7 +426,7 @@ describe("putBoardSetTranslations", () => {
     const uncloneable = (() => "noop") as unknown as string;
 
     await expect(
-      putBoardSetTranslations("set-1", "es", {
+      updateBoardSetTranslations("set-1", "es", {
         name: "Conjunto",
         translationsByBoardId: new Map([
           ["a", new Map([["Test Board", "Tablero"]])],
@@ -441,10 +441,10 @@ describe("putBoardSetTranslations", () => {
   });
 
   test("writes nothing for a set deleted before the save", async () => {
-    await insertBoardSet(makeBoardSetInput());
-    await removeBoardSet("set-1");
+    await insertBoardSetRecords(makeBoardSetInput());
+    await deleteBoardSetRecords("set-1");
 
-    await putBoardSetTranslations("set-1", "es", {
+    await updateBoardSetTranslations("set-1", "es", {
       name: "Conjunto",
       translationsByBoardId: new Map([
         ["root-1", new Map([["Test Board", "x"]])],

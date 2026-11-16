@@ -8,7 +8,7 @@ import {
   createTilePart,
   EMPTY_MESSAGE,
   hasSameContent,
-  markSpoken,
+  markPlayed,
   spell,
 } from "./message-transforms";
 import type { Message, TilePart } from "./message-types";
@@ -95,7 +95,7 @@ describe("spell", () => {
     const closed: Message = {
       parts: [createTextPart("want", "en")],
       isWordOpen: false,
-      isSpoken: false,
+      hasPlayed: false,
     };
 
     const message = spell(closed, "s", "en");
@@ -271,8 +271,8 @@ describe("applyEdits", () => {
 describe("hasSameContent", () => {
   const message = closeWord(spell(EMPTY_MESSAGE, "hi", "en"));
 
-  test("ignores whether the message was spoken", () => {
-    expect(hasSameContent(markSpoken(message, true), message)).toBe(true);
+  test("ignores whether the message has played", () => {
+    expect(hasSameContent(markPlayed(message, true), message)).toBe(true);
   });
 
   test.each([
@@ -287,35 +287,35 @@ describe("hasSameContent", () => {
   });
 });
 
-describe("a spoken message", () => {
-  const spoken = markSpoken(spell(EMPTY_MESSAGE, "hi", "en"), true);
+describe("a played message", () => {
+  const played = markPlayed(spell(EMPTY_MESSAGE, "hi", "en"), true);
 
   test("is replaced by the next tile", () => {
-    const message = appendTilePart(spoken, HELLO_TILE);
+    const message = appendTilePart(played, HELLO_TILE);
 
     expect(labelsOf(message)).toEqual(["hello"]);
-    expect(message.isSpoken).toBe(false);
+    expect(message.hasPlayed).toBe(false);
   });
 
   test("is replaced by the next letter", () => {
-    const message = spell(spoken, "y", "en");
+    const message = spell(played, "y", "en");
 
     expect(labelsOf(message)).toEqual(["y"]);
-    expect(message.isSpoken).toBe(false);
+    expect(message.hasPlayed).toBe(false);
   });
 
   test("stays as it is for a space", () => {
-    expect(closeWord(spoken)).toBe(spoken);
+    expect(closeWord(played)).toBe(played);
   });
 
   test("is edited by backspace, and then added to", () => {
-    const message = spell(applyBackspace(spoken), "t", "en");
+    const message = spell(applyBackspace(played), "t", "en");
 
     expect(labelsOf(message)).toEqual(["ht"]);
   });
 
   test("is added to once a backspace reopens its closed word", () => {
-    const closed = markSpoken(
+    const closed = markPlayed(
       closeWord(spell(EMPTY_MESSAGE, "hi", "en")),
       true,
     );

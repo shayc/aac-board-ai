@@ -1,5 +1,5 @@
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import type { Board } from "../board-types";
 import { findBoardInLanguage } from "./board-translations";
 

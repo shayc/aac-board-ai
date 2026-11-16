@@ -17,7 +17,7 @@ describe("MessageSettings", () => {
     },
     {
       name: "Clear after speaking",
-      preference: "clearsAfterSpeaking",
+      preference: "shouldClearAfterPlayback",
       effect: "clearing after speaking",
     },
   ])(

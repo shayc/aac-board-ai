@@ -5,7 +5,7 @@ import {
   createTextPart,
   EMPTY_MESSAGE,
   hasSameContent,
-  markSpoken,
+  markPlayed,
 } from "./message-transforms";
 import type { Message, MessageEdit, MessagePart } from "./message-types";
 
@@ -30,18 +30,18 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(): UseMessageReturn {
-  const { clearsAfterSpeaking } = useMessagePreferences();
+  const { shouldClearAfterPlayback } = useMessagePreferences();
   const [state, setRenderedState] = useState(EMPTY_MESSAGE);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
   const text = state.parts.map((part) => part.label).join(" ");
 
   // The setting is read each time the message is edited, so turning it off
-  // releases a message that was already spoken.
+  // releases a message that was already played.
   function readMessage() {
-    return clearsAfterSpeaking
+    return shouldClearAfterPlayback
       ? stateRef.current
-      : markSpoken(stateRef.current, false);
+      : markPlayed(stateRef.current, false);
   }
 
   function commit(next: Message) {
@@ -49,7 +49,7 @@ export function useMessage(): UseMessageReturn {
     setRenderedState(next);
   }
 
-  // Marking the message spoken is not a step to undo, so it goes through
+  // Marking the message played is not a step to undo, so it goes through
   // `commit`.
   function commitStep(next: Message) {
     const undoStack = undoStackRef.current;
@@ -78,7 +78,7 @@ export function useMessage(): UseMessageReturn {
   }
 
   // Edits made against an earlier message belong to it: they apply to it even
-  // once it is spoken, instead of starting a new message, and are dropped if
+  // once it has played, instead of starting a new message, and are dropped if
   // its content changed since.
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = stateRef.current;
@@ -86,24 +86,24 @@ export function useMessage(): UseMessageReturn {
       return;
     }
 
-    commitEdits(markSpoken(current, false), edits);
+    commitEdits(markPlayed(current, false), edits);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
   function trackPlayback(completion: Promise<boolean>) {
-    const played = setSpoken(false);
+    const playing = setPlayed(false);
 
     void completion.then((hasCompleted) => {
-      if (hasCompleted && hasSameContent(stateRef.current, played)) {
-        setSpoken(true);
+      if (hasCompleted && hasSameContent(stateRef.current, playing)) {
+        setPlayed(true);
       }
     });
   }
 
-  function setSpoken(isSpoken: boolean): Message {
+  function setPlayed(hasPlayed: boolean): Message {
     const current = stateRef.current;
-    const next = markSpoken(current, isSpoken);
+    const next = markPlayed(current, hasPlayed);
     if (next !== current) {
       commit(next);
     }
@@ -116,7 +116,7 @@ export function useMessage(): UseMessageReturn {
     commitStep({
       parts: words.map((word) => createTextPart(word, language)),
       isWordOpen: words.length > 0,
-      isSpoken: false,
+      hasPlayed: false,
     });
   }
 
@@ -134,9 +134,9 @@ export function useMessage(): UseMessageReturn {
       return;
     }
 
-    // Like any edit, undoing opens a spoken message for more, so the next
+    // Like any edit, undoing opens a played message for more, so the next
     // tile adds to the message brought back instead of replacing it.
-    commit(markSpoken(previous, false));
+    commit(markPlayed(previous, false));
   }
 
   return {

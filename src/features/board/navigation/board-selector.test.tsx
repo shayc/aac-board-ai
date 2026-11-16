@@ -6,7 +6,7 @@ import {
 } from "@features/library/testing";
 import {
   DEFAULT_LANGUAGE,
-  setStoredLanguage,
+  setCommunicationLanguage,
 } from "@shared/language/language-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
@@ -34,7 +34,7 @@ async function renderSelector(boardSetId: string, boardId: string) {
 }
 
 beforeEach(async () => {
-  setStoredLanguage(DEFAULT_LANGUAGE);
+  setCommunicationLanguage(DEFAULT_LANGUAGE);
   await resetBoardsDB();
   await seedBoardSets([
     {
@@ -122,7 +122,7 @@ describe("BoardSelector", () => {
       .toBeVisible();
     await expect.element(screen.getByText("No matching boards")).toBeVisible();
 
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
 
     await expect
       .element(screen.getByText("לא נמצאו לוחות תואמים"))
@@ -168,7 +168,7 @@ describe("BoardSelector", () => {
       },
     ]);
 
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
 
     const { screen } = await renderSelector("set-2", "root");
 
@@ -197,7 +197,7 @@ describe("BoardSelector", () => {
       },
     ]);
 
-    setStoredLanguage("es");
+    setCommunicationLanguage("es");
 
     const { screen } = await renderSelector("set-2", "root");
 

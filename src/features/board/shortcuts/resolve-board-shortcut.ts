@@ -11,7 +11,7 @@ export const BOARD_SHORTCUT_ARIA_KEYS = {
   stop: "Escape",
 } as const;
 
-export interface BoardKeyEvent {
+export interface BoardShortcutKeyEvent {
   key: string;
   code: string;
   metaKey: boolean;
@@ -21,7 +21,7 @@ export interface BoardKeyEvent {
 }
 
 export function resolveBoardShortcut(
-  event: BoardKeyEvent,
+  event: BoardShortcutKeyEvent,
   isMessagePlaying: boolean,
 ): BoardShortcutAction | null {
   if (event.metaKey || event.ctrlKey) {
@@ -51,7 +51,7 @@ export function resolveBoardShortcut(
   return null;
 }
 
-function isUndoKey(event: BoardKeyEvent): boolean {
+function isUndoKey(event: BoardShortcutKeyEvent): boolean {
   // Shift makes the keys redo, which the board does not have. Alt is how
   // Windows reports AltGr, which types a letter, alongside Ctrl.
   if (event.shiftKey || event.altKey) {

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { setClearsAfterSpeaking } from "./message-preferences-store";
+import { setMessageClearAfterPlayback } from "./message-preferences-store";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -89,7 +89,7 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(message)).toEqual(["a"]);
   });
 
-  test("keeps adding to a spoken message once it is edited", async () => {
+  test("keeps adding to a played message once it is edited", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -101,7 +101,7 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to a played message when clearing after speaking is off", async () => {
-    setClearsAfterSpeaking(false);
+    setMessageClearAfterPlayback(false);
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -111,12 +111,12 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
 
-  test("releases a spoken message when clearing after speaking is turned off", async () => {
+  test("releases a played message when clearing after speaking is turned off", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want water", "en");
     await trackSettledPlayback(result.current, true);
-    setClearsAfterSpeaking(false);
+    setMessageClearAfterPlayback(false);
     await rerender();
 
     expect(labelsAfterSpelling(result.current)).toEqual([
@@ -137,7 +137,7 @@ describe("useMessage", () => {
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
 
-  test("keeps adding to a spoken message while it is playing again", async () => {
+  test("keeps adding to a played message while it is playing again", async () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -188,16 +188,16 @@ describe("useMessage", () => {
   });
 
   // A no-op edit, such as a tile that only plays, must not save a released
-  // copy of a spoken message while clearing after speaking is off.
-  test("keeps a spoken message spoken through an edit that changes nothing", async () => {
+  // copy of a played message while clearing after speaking is off.
+  test("keeps a played message played through an edit that changes nothing", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want water", "en");
     await trackSettledPlayback(result.current, true);
-    setClearsAfterSpeaking(false);
+    setMessageClearAfterPlayback(false);
     await rerender();
     result.current.apply([]);
-    setClearsAfterSpeaking(true);
+    setMessageClearAfterPlayback(true);
     await rerender();
 
     expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
@@ -283,7 +283,7 @@ describe("useMessage", () => {
       expect(result.current.text).toBe("a");
     });
 
-    test("opens a spoken message it brings back for more", async () => {
+    test("opens a played message it brings back for more", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
 
@@ -318,7 +318,7 @@ describe("useMessage", () => {
       expect(labelsAfterSpelling(message)).toEqual(["a"]);
     });
 
-    test("continues a message that was spoken since", async () => {
+    test("continues a message that has played since", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
       const { edited } = message.apply([

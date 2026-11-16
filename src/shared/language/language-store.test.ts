@@ -5,7 +5,7 @@ import {
   getUILocale,
   parseStoredLanguage,
   resolveUILocale,
-  setStoredLanguage,
+  setCommunicationLanguage,
 } from "./language-store";
 
 describe("parseStoredLanguage", () => {
@@ -40,14 +40,14 @@ describe("getPreferredLanguage", () => {
 
 describe("language store", () => {
   beforeEach(() => {
-    setStoredLanguage(DEFAULT_LANGUAGE);
+    setCommunicationLanguage(DEFAULT_LANGUAGE);
   });
 
   test("derives a translated UI locale from the communication language", () => {
     expect(resolveUILocale("he")).toBe("he");
     expect(resolveUILocale("ca")).toBe(DEFAULT_LANGUAGE);
 
-    setStoredLanguage("bn");
+    setCommunicationLanguage("bn");
     expect(getUILocale()).toBe("bn");
   });
 });

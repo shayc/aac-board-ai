@@ -2,7 +2,7 @@ import { deleteDB, openDB } from "idb";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   type BoardSetInput,
-  insertBoardSet,
+  insertBoardSetRecords,
 } from "../storage/board-set-storage";
 import {
   boardSetRange,
@@ -60,7 +60,7 @@ export async function countStoredBoardContent(boardSetId: string): Promise<{
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   for (const { boards, assets = [], ...record } of records) {
-    await insertBoardSet({
+    await insertBoardSetRecords({
       name: record.id,
       ...record,
       boards: boards ?? [makeOBFBoard({ id: record.rootBoardId })],

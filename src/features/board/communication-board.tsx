@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";

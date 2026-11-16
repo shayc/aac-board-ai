@@ -2,7 +2,7 @@ import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useBoardRoute } from "./use-board-route";
 

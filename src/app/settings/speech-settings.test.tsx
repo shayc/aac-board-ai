@@ -1,4 +1,4 @@
-import { setStoredLanguage } from "@shared/language/language-store";
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { setSpeechVoiceURI } from "@shared/speech/speech-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
@@ -102,7 +102,7 @@ describe("SpeechSettings", () => {
       { voiceURI: "he-1", name: "Carmit", lang: "he-IL" },
     ]);
     setSpeechVoiceURI("us-1");
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
 
     const screen = await renderWithProviders(<SpeechSettings />);
 
@@ -116,7 +116,7 @@ describe("SpeechSettings", () => {
       { voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" },
       { voiceURI: "fa-2", name: "Farid", lang: "fa-AF" },
     ]);
-    setStoredLanguage("fa");
+    setCommunicationLanguage("fa");
 
     const screen = await renderWithProviders(<SpeechSettings />);
 
@@ -129,7 +129,7 @@ describe("SpeechSettings", () => {
 
   test("formats slider values in the UI locale when the language has only a voice", async () => {
     stubVoices([{ voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" }]);
-    setStoredLanguage("fa");
+    setCommunicationLanguage("fa");
 
     const screen = await renderWithProviders(<SpeechSettings />);
 

@@ -1,7 +1,7 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { m } from "@paraglide/messages.js";
-import { setStoredLanguage } from "@shared/language/language-store";
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { setTestViewport } from "@shared/testing/viewport";
@@ -26,7 +26,9 @@ function ShowButtons({
           {name}
         </button>
       ))}
-      <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
+      <button onClick={() => setCommunicationLanguage("he")}>
+        switch-to-hebrew
+      </button>
       <button>outside</button>
     </div>
   );

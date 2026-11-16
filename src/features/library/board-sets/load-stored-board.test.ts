@@ -1,7 +1,7 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { beforeEach, describe, expect, test } from "vitest";
 import type { Board } from "../board-types";
-import { insertBoardSet } from "../storage/board-set-storage";
+import { insertBoardSetRecords } from "../storage/board-set-storage";
 import { loadTestImageAsset, makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardNotFoundError, loadStoredBoard } from "./load-stored-board";
 
@@ -22,7 +22,7 @@ async function seedTestBoard(): Promise<void> {
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
   });
 
-  await insertBoardSet({
+  await insertBoardSetRecords({
     id: SET_ID,
     name: "Loader Test",
     rootBoardId: BOARD_ID,
@@ -72,7 +72,7 @@ describe("loadStoredBoard", () => {
   });
 
   test("falls back to the media url when its stored asset is missing", async () => {
-    await insertBoardSet({
+    await insertBoardSetRecords({
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
@@ -98,7 +98,7 @@ describe("loadStoredBoard", () => {
   });
 
   test("falls back to the media url when its path names no file", async () => {
-    await insertBoardSet({
+    await insertBoardSetRecords({
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
@@ -150,7 +150,7 @@ describe("loadStoredBoard", () => {
   });
 
   test("keeps links to stored boards and drops links to boards the set lacks", async () => {
-    await insertBoardSet({
+    await insertBoardSetRecords({
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
@@ -184,7 +184,7 @@ describe("loadStoredBoard", () => {
   });
 
   test("drops a link to a board that only another set stores", async () => {
-    await insertBoardSet({
+    await insertBoardSetRecords({
       id: SET_ID,
       rootBoardId: BOARD_ID,
       boards: [
@@ -198,7 +198,7 @@ describe("loadStoredBoard", () => {
       ],
       assets: [],
     });
-    await insertBoardSet({
+    await insertBoardSetRecords({
       id: "another-set",
       rootBoardId: "food",
       boards: [makeOBFBoard({ id: "food" })],
