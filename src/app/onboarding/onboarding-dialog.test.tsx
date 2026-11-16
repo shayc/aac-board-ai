@@ -11,7 +11,16 @@ function renderDialog(onClose: () => void) {
 }
 
 describe("OnboardingDialog", () => {
-  test("renders the onboarding content with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    const screen = await renderDialog(vi.fn());
+    await expect
+      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
+      .toBeVisible();
+
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("renders the onboarding content", async () => {
     const screen = await renderDialog(vi.fn());
 
     await expect
@@ -26,8 +35,6 @@ describe("OnboardingDialog", () => {
     ]) {
       await expect.element(screen.getByText(text)).toBeVisible();
     }
-
-    await expectNoA11yViolations(document.body);
   });
 
   test("promises the interface languages when suggestions are unsupported", async () => {

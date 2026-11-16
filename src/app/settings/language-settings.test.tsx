@@ -5,6 +5,17 @@ import { describe, expect, test } from "vitest";
 import { LanguageSettings } from "./language-settings";
 
 describe("LanguageSettings", () => {
+  test("has no accessibility violations", async () => {
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
+
+    const screen = await renderWithProviders(<LanguageSettings />);
+    await expect
+      .element(screen.getByRole("combobox", { name: "Language" }))
+      .toHaveTextContent("English");
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test("keeps language selection available and shows no notice without the Translator", async () => {
     const screen = await renderWithProviders(<LanguageSettings />);
     const select = screen.getByRole("combobox", { name: "Language" });
@@ -13,7 +24,7 @@ describe("LanguageSettings", () => {
     await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
   });
 
-  test("renders the language selection with no accessibility violations", async () => {
+  test("shows the communication language as the selection", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
     const screen = await renderWithProviders(<LanguageSettings />);
@@ -21,7 +32,5 @@ describe("LanguageSettings", () => {
     await expect
       .element(screen.getByRole("combobox", { name: "Language" }))
       .toHaveTextContent("English");
-
-    await expectNoA11yViolations(screen.container);
   });
 });

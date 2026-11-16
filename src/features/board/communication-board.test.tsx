@@ -471,6 +471,15 @@ describe("CommunicationBoard", () => {
   });
 
   describe("message", () => {
+    test("has no accessibility violations with a composed message", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expectNoA11yViolations(screen.container);
+    });
+
     test("enables message playback only after content is composed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const play = screen.getByRole("button", { name: "Play message" });
@@ -639,15 +648,6 @@ describe("CommunicationBoard", () => {
         await expect.element(play).toBeDisabled();
       },
     );
-
-    test("has no accessibility violations with a composed message", async () => {
-      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-
-      await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "world" }).click();
-
-      await expectNoA11yViolations(screen.container);
-    });
   });
 
   describe("navigation", () => {

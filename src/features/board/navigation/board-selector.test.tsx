@@ -52,6 +52,20 @@ beforeEach(async () => {
 });
 
 describe("BoardSelector", () => {
+  test("has no accessibility violations with the popup open", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("combobox").click();
+    await expect
+      .element(screen.getByRole("option", { name: "Home" }))
+      .toBeVisible();
+
+    // Axe's region rule flags the popup portaled outside the app's landmarks.
+    await expectNoA11yViolations(document.body, {
+      rules: { region: { enabled: false } },
+    });
+  });
+
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
@@ -64,11 +78,6 @@ describe("BoardSelector", () => {
     await expect
       .element(screen.getByRole("option", { name: "Home" }))
       .toHaveAttribute("aria-selected", "true");
-
-    // Axe's region rule flags the popup portaled outside the app's landmarks.
-    await expectNoA11yViolations(document.body, {
-      rules: { region: { enabled: false } },
-    });
   });
 
   test("navigates, enables Back, and closes the popup when a board is clicked", async () => {

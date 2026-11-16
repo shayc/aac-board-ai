@@ -9,7 +9,18 @@ import { userEvent } from "vitest/browser";
 import { SpeechSettings } from "./speech-settings";
 
 describe("SpeechSettings", () => {
-  test("renders the speech sliders and preview action with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
+
+    const screen = await renderWithProviders(<SpeechSettings />);
+    await expect
+      .element(screen.getByRole("button", { name: "Preview voice" }))
+      .toBeInTheDocument();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("renders the speech sliders and preview action", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
     const screen = await renderWithProviders(<SpeechSettings />);
@@ -33,8 +44,6 @@ describe("SpeechSettings", () => {
     await expect
       .element(screen.getByRole("button", { name: "Preview voice" }))
       .toBeInTheDocument();
-
-    await expectNoA11yViolations(screen.container);
   });
 
   test("groups voices under locale subheaders when multiple locales exist", async () => {

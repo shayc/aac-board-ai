@@ -4,12 +4,8 @@ import { describe, expect, test, vi } from "vitest";
 import { LoadingState } from "./loading-state";
 
 describe("LoadingState", () => {
-  test("names the progress indicator with the default loading message", async () => {
+  test("has no accessibility violations once it has faded in", async () => {
     const screen = await renderWithProviders(<LoadingState />);
-
-    await expect
-      .element(screen.getByRole("progressbar", { name: "Loading…" }))
-      .toBeInTheDocument();
 
     // Wait for the fade so axe checks the final text contrast.
     await vi.waitFor(() => {

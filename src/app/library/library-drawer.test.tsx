@@ -21,13 +21,21 @@ describe("LibraryDrawer", () => {
     return renderWithProviders(<RouterProvider router={router} />);
   }
 
-  test("shows the library title with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    const screen = await renderOpenDrawer();
+    await expect
+      .element(screen.getByText("Library", { exact: true }))
+      .toBeInTheDocument();
+
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("shows the library title", async () => {
     const screen = await renderOpenDrawer();
 
     await expect
       .element(screen.getByText("Library", { exact: true }))
       .toBeInTheDocument();
-    await expectNoA11yViolations(document.body);
   });
 
   test("closes via the close button", async () => {

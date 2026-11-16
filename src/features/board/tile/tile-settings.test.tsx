@@ -10,7 +10,16 @@ import { setTileLabelPlacement } from "./tile-preferences-store";
 import { TileSettings } from "./tile-settings";
 
 describe("TileSettings", () => {
-  test("renders the tile controls with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    const screen = await renderWithProviders(<TileSettings />);
+    await expect
+      .element(screen.getByRole("slider", { name: "Color intensity" }))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("renders the tile controls", async () => {
     const screen = await renderWithProviders(<TileSettings />);
 
     const saturationSlider = screen.getByRole("slider", {
@@ -44,8 +53,6 @@ describe("TileSettings", () => {
     await expect
       .element(screen.getByRole("radio", { name: "Hidden" }))
       .not.toBeChecked();
-
-    await expectNoA11yViolations(screen.container);
   });
 
   test("formats color intensity in the UI locale when the language has no UI translation", async () => {

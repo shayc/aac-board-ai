@@ -7,7 +7,26 @@ import { makeBoardSetRecord } from "../testing";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 
 describe("BoardSetInfoDialog", () => {
-  test("shows the available metadata with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetInfoDialog
+        boardSet={makeBoardSetRecord({
+          name: "Core Words",
+          author: "Jane",
+          gridRows: 2,
+          gridColumns: 3,
+          license: "CC BY-SA 4.0",
+          description: "A starter vocabulary board.",
+        })}
+        onClose={vi.fn()}
+      />,
+    );
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("shows the available metadata", async () => {
     const screen = await renderWithProviders(
       <BoardSetInfoDialog
         boardSet={makeBoardSetRecord({
@@ -36,8 +55,6 @@ describe("BoardSetInfoDialog", () => {
     await expect
       .element(screen.getByText("A starter vocabulary board."))
       .toBeInTheDocument();
-
-    await expectNoA11yViolations(document.body);
   });
 
   test("keeps showing the board set while the dialog closes", async () => {

@@ -17,11 +17,30 @@ function makeProps(
 }
 
 describe("SuggestionBar", () => {
-  test("renders accessible phrase chips and selects their corresponding phrases", async () => {
+  test("has no accessibility violations with phrase chips", async () => {
     const props = makeProps({ phrases: ["Hello", "Goodbye"] });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
+    await expect
+      .element(screen.getByRole("button", { name: "Hello" }))
+      .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("has no accessibility violations when suggestions failed", async () => {
+    const screen = await renderWithProviders(
+      <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
+    );
+    await expect
+      .element(screen.getByText("Couldn't get suggestions"))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("selects the phrase of the chip that is clicked", async () => {
+    const props = makeProps({ phrases: ["Hello", "Goodbye"] });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Hello" }).click();
 
@@ -94,7 +113,7 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("shows that suggestions failed with no accessibility violations", async () => {
+  test("shows that suggestions failed", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
     );
@@ -102,7 +121,5 @@ describe("SuggestionBar", () => {
     await expect
       .element(screen.getByText("Couldn't get suggestions"))
       .toBeVisible();
-
-    await expectNoA11yViolations(screen.container);
   });
 });
