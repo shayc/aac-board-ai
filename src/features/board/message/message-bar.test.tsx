@@ -2,6 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
+import type { ReactNode } from "react";
 import { describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
 import { MessageBar, type MessageBarProps } from "./message-bar";
@@ -34,6 +35,15 @@ function ScrollableMessageBar(props: MessageBarProps) {
     <div style={{ width: 320 }}>
       <MessageBar {...props} />
     </div>
+  );
+}
+
+function SpaceTakingScrollbars({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <style>{"::-webkit-scrollbar { height: 15px; }"}</style>
+      {children}
+    </>
   );
 }
 
@@ -82,6 +92,30 @@ describe("MessageBar", () => {
     );
     await expect.element(screen.getByText("want")).toBeVisible();
 
+    expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
+  });
+
+  test("keeps its height when the message outgrows the bar", async () => {
+    const props = createProps();
+    const screen = await renderWithProviders(
+      <SpaceTakingScrollbars>
+        <ScrollableMessageBar {...props} />
+      </SpaceTakingScrollbars>,
+    );
+    const scroller = getScrollContainer(screen.container);
+    const bar = scroller.parentElement;
+    assertDefined(bar);
+    const emptyHeight = bar.getBoundingClientRect().height;
+
+    await screen.rerender(
+      <SpaceTakingScrollbars>
+        <ScrollableMessageBar {...props} parts={SCROLL_PARTS} />
+      </SpaceTakingScrollbars>,
+    );
+    await expect.element(screen.getByText("Part 10")).toBeVisible();
+
+    expect(scroller.scrollWidth).toBeGreaterThan(scroller.clientWidth);
+    expect(scroller.scrollHeight).toBe(scroller.clientHeight);
     expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
   });
 

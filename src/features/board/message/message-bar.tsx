@@ -130,9 +130,8 @@ function scrollContainerSx(theme: Theme) {
   return {
     flexGrow: 1,
     alignSelf: "stretch",
-    alignItems: "center",
     // A fixed height stops the first word added from pushing the board down.
-    minHeight: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
+    height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: 2,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
