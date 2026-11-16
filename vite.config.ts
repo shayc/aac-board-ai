@@ -29,7 +29,6 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["board.svg", "first-words.obz"],
-      // Installed workers are classic; a changed default would strand them.
       swType: "classic",
       generateSW: {
         cleanupOutdatedCaches: true,
