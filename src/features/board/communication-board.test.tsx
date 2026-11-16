@@ -207,7 +207,7 @@ describe("CommunicationBoard", () => {
         - list "Message"
         - button "Backspace" [disabled]
         - grid "Communication board":
-          - row "hello world":
+          - row:
             - gridcell "hello":
               - button "hello"
             - gridcell "world":
