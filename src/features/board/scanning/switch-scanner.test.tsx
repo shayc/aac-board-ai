@@ -560,7 +560,7 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["play", "sleep"]);
     });
 
-    test("restarts at the first row when another board has no row where the highlight was", async () => {
+    test("restarts at the first row when the highlighted row is gone from the next board", async () => {
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch("Space");

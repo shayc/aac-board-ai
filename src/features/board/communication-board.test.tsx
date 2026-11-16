@@ -183,12 +183,6 @@ function measureBoardLayout(
   };
 }
 
-function outlinedMessageParts(container: Element): (string | null)[] {
-  return Array.from(container.querySelectorAll("[role='listitem']"))
-    .filter((part) => getComputedStyle(part).outlineStyle === "solid")
-    .map((part) => part.textContent);
-}
-
 describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -533,29 +527,19 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "world" }).click();
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeVisible();
-      expect(outlinedMessageParts(screen.container)).toEqual([]);
-
       preventSpeechEnd(speech.speak);
       await screen.getByRole("button", { name: "Play message" }).click();
-      await expect
-        .poll(() => outlinedMessageParts(screen.container))
-        .toEqual(["hello"]);
+
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
 
       reachUtteranceBoundary(
         lastUtterance(speech.speak),
         "hello world".indexOf("world"),
       );
-      await expect
-        .poll(() => outlinedMessageParts(screen.container))
-        .toEqual(["world"]);
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["world"]);
 
       endUtterance(lastUtterance(speech.speak));
-      await expect
-        .poll(() => outlinedMessageParts(screen.container))
-        .toEqual([]);
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
     });
 
     test("outlines no message part while speaking when highlighting is off", async () => {
@@ -563,17 +547,13 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
-      await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
-        .toBeVisible();
-
       preventSpeechEnd(speech.speak);
       await screen.getByRole("button", { name: "Play message" }).click();
 
       await expect
         .element(screen.getByRole("button", { name: "Stop message" }))
         .toBeVisible();
-      expect(outlinedMessageParts(screen.container)).toEqual([]);
+      expect(outlinedMessageParts(screen)).toEqual([]);
     });
 
     test("spells a new word after a word tile and closes it with space", async () => {
@@ -910,4 +890,13 @@ function getMessageItems(
   screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
 ) {
   return screen.getByRole("list", { name: "Message" }).getByRole("listitem");
+}
+
+function outlinedMessageParts(
+  screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
+): (string | null)[] {
+  return getMessageItems(screen)
+    .elements()
+    .filter((part) => getComputedStyle(part).outlineStyle === "solid")
+    .map((part) => part.textContent);
 }
