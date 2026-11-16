@@ -48,11 +48,21 @@ describe("expectNoA11yViolations", () => {
     });
   });
 
-  test("fails on a result axe could not decide", async () => {
+  test("fails on a result axe could not decide and suggests its review", async () => {
     const screen = await render(<div role="list" aria-label="Empty" />);
 
     await expect(expectNoA11yViolations(screen.container)).rejects.toThrow(
-      /aria-required-children/,
+      /^Undecided:[\s\S]*Review: \{ rule: "aria-required-children", cause: "aria-required-children", selector: "", reason: "" \}/,
+    );
+  });
+
+  test("lists alternative fixes as a choice", async () => {
+    const screen = await render(<div />);
+    // Built outside JSX, since lint rightly rejects an unnamed button there.
+    screen.container.append(document.createElement("button"));
+
+    await expect(expectNoA11yViolations(screen.container)).rejects.toThrow(
+      /button-name[\s\S]*Fix any one of:\n\s+- .+\n\s+- aria-label attribute/,
     );
   });
 

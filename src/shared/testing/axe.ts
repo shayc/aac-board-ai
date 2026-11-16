@@ -1,5 +1,5 @@
 import * as axe from "axe-core";
-import { expect } from "vitest";
+import { assert } from "vitest";
 
 // Axe ships target-size (WCAG 2.5.8) disabled, but people selecting with a
 // head pointer, eye gaze or an unsteady hand depend on large enough targets.
@@ -50,19 +50,27 @@ export async function expectNoA11yViolations(
     withDefaultOptions(options),
   );
 
-  expect(violations.length, describeResults(violations)).toBe(0);
+  if (violations.length > 0) {
+    assert.fail(describeResults(violations));
+  }
 
   // Results axe could not decide, such as contrast over an image, would
   // otherwise pass unseen.
   const unreviewed = withoutReviewedNodes(incomplete, reviewedIncomplete);
-  expect(unreviewed.length, describeResults(unreviewed)).toBe(0);
+  if (unreviewed.length > 0) {
+    assert.fail(
+      `Undecided: axe could not check these. Review each one, then list it in reviewedIncomplete with a stable selector.\n\n${describeResults(unreviewed, { suggestReview: true })}`,
+    );
+  }
 
   const stale = reviewedIncomplete.filter(
     (reviewed) => !incomplete.some((result) => isReviewed(result, reviewed)),
   );
-  expect(stale, "these reviewed results no longer occur; remove them").toEqual(
-    [],
-  );
+  if (stale.length > 0) {
+    assert.fail(
+      `These reviewed results no longer occur; remove them:\n${stale.map(describeReview).join("\n")}`,
+    );
+  }
 }
 
 function withDefaultOptions(options: axe.RunOptions): axe.RunOptions {
@@ -81,22 +89,53 @@ function withDefaultOptions(options: axe.RunOptions): axe.RunOptions {
   };
 }
 
-function describeResults(results: axe.Result[]) {
-  const report = results.map((result) => {
-    const nodes = result.nodes
-      .map((node) => {
-        const reason = [...node.any, ...node.all, ...node.none]
-          .map((check) => check.message)
-          .join("; ");
-
-        return `${node.target.join(" ")}${reason ? ` — ${reason}` : ""}`;
-      })
-      .join("\n    ");
-
-    return `${result.id} (${result.impact ?? "unknown"}): ${result.help}\n  ${result.helpUrl}\n    ${nodes}`;
-  });
+function describeResults(
+  results: axe.Result[],
+  { suggestReview = false } = {},
+) {
+  const report = results.map((result) =>
+    [
+      `${result.id} (${result.impact ?? "unknown"}): ${result.help}`,
+      `  ${result.helpUrl}`,
+      ...result.nodes.map((node) =>
+        describeNode(node, { rule: result.id, suggestReview }),
+      ),
+    ].join("\n"),
+  );
 
   return report.join("\n\n");
+}
+
+function describeNode(
+  node: axe.NodeResult,
+  { rule, suggestReview }: { rule: string; suggestReview: boolean },
+) {
+  const reviews = suggestReview
+    ? causesOf(node).map(
+        (cause) =>
+          `Review: ${describeReview({ rule, cause, selector: "", reason: "" })}`,
+      )
+    : [];
+  const details = [...describeReasons(node), ...reviews].map(
+    (line) => `      ${line}`,
+  );
+
+  return [`    ${node.target.join(" ")}`, ...details].join("\n");
+}
+
+function describeReasons(node: axe.NodeResult) {
+  const required = [...node.all, ...node.none].map((check) => check.message);
+  // Passing any one of these checks fixes the element, so they are alternatives.
+  const alternatives =
+    node.any.length > 1
+      ? ["Fix any one of:", ...node.any.map((check) => `- ${check.message}`)]
+      : node.any.map((check) => check.message);
+
+  return [...required, ...alternatives];
+}
+
+function describeReview({ rule, cause, selector, reason }: ReviewedIncomplete) {
+  return `{ rule: ${JSON.stringify(rule)}, cause: ${JSON.stringify(cause)}, selector: ${JSON.stringify(selector)}, reason: ${JSON.stringify(reason)} }`;
 }
 
 function withoutReviewedNodes(
