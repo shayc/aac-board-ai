@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Прослухати голос",
   "speechPreviewSample": "Привіт, це мій голос!",
   "messageImages": "Показувати зображення",
-  "messageHighlight": "Підсвічувати під час мовлення",
-  "messageClearAfterSpeaking": "Очищати після мовлення",
+  "messageHighlight": "Підсвічувати під час відтворення",
+  "messageClearAfterPlaying": "Очищати після відтворення",
   "tileSaturation": "Насиченість кольору",
   "tileBrightness": "Яскравість",
   "tileBorders": "Показувати межі",
@@ -151,9 +151,9 @@
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Набір дошок не знайдено",
-  "errorBoardURLImportFailed": "Не вдалося імпортувати файл дошки за посиланням",
-  "boardLinkImportTitle": "Імпортувати файл дошки за посиланням?",
-  "boardLinkImportDescription": "Це посилання імпортує файл дошки з {host}. Імпортуйте його, лише якщо довіряєте тому, хто надіслав посилання.",
-  "boardLinkImport": "Імпортувати",
-  "boardLinkCancel": "Скасувати"
+  "errorBoardFileURLImportFailed": "Не вдалося імпортувати файл дошки за посиланням",
+  "boardFileURLImportTitle": "Імпортувати файл дошки за посиланням?",
+  "boardFileURLImportDescription": "Це посилання імпортує файл дошки з {host}. Імпортуйте його, лише якщо довіряєте тому, хто надіслав посилання.",
+  "boardFileURLImportConfirm": "Імпортувати",
+  "boardFileURLImportCancel": "Скасувати"
 }

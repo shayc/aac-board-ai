@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Kuuntele ääntä",
   "speechPreviewSample": "Hei, tämä on minun ääneni!",
   "messageImages": "Näytä kuvat",
-  "messageHighlight": "Korosta puhuttaessa",
-  "messageClearAfterSpeaking": "Tyhjennä puhumisen jälkeen",
+  "messageHighlight": "Korosta toistettaessa",
+  "messageClearAfterPlaying": "Tyhjennä toiston jälkeen",
   "tileSaturation": "Värien voimakkuus",
   "tileBrightness": "Kirkkaus",
   "tileBorders": "Näytä reunat",
@@ -151,9 +151,9 @@
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
-  "errorBoardURLImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
-  "boardLinkImportTitle": "Tuodaanko taulutiedosto linkistä?",
-  "boardLinkImportDescription": "Tämä linkki tuo taulutiedoston osoitteesta {host}. Tuo se vain, jos luotat linkin lähettäjään.",
-  "boardLinkImport": "Tuo",
-  "boardLinkCancel": "Peruuta"
+  "errorBoardFileURLImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
+  "boardFileURLImportTitle": "Tuodaanko taulutiedosto linkistä?",
+  "boardFileURLImportDescription": "Tämä linkki tuo taulutiedoston osoitteesta {host}. Tuo se vain, jos luotat linkin lähettäjään.",
+  "boardFileURLImportConfirm": "Tuo",
+  "boardFileURLImportCancel": "Peruuta"
 }

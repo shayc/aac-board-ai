@@ -29,7 +29,7 @@ Suggestions are optional and replace the original message only when accepted.
 ## Core features
 
 - Optional on-device AI suggestions and board translation
-- First Words and Quick Core starter boards
+- First Words and Quick Core board sets
 - Touch, keyboard navigation, and switch scanning with one or two switches
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL, and export board sets as `.obz` files
 - 35 interface languages, including right-to-left layouts
@@ -37,7 +37,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Privacy
 
-No accounts, backend, or tracking. Boards, settings, and the message being composed are stored on the device, so an unfinished message is still there when the app opens again. Once the whole message has been played, it is no longer kept, unless "Clear after speaking" is off. URL imports, remote media, and some online speech voices use the network.
+No accounts, backend, or tracking. Boards, settings, and the message being composed are stored on the device, so an unfinished message is still there when the app opens again. Once the whole message has been played, it is no longer kept, unless "Clear after playing" is off. URL imports, remote media, and some online speech voices use the network.
 
 ## Limitations
 
@@ -115,4 +115,4 @@ Three short files show how a selected tile becomes part of a spoken message:
 
 First Words symbols are from [Mulberry Symbols](https://mulberrysymbols.org), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-The bundled Quick Core boards are by [OpenAAC](https://www.openaac.org) and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The Quick Core board sets are by [OpenAAC](https://www.openaac.org) and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

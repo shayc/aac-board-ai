@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Vypočuť hlas",
   "speechPreviewSample": "Ahoj, toto je môj hlas!",
   "messageImages": "Zobraziť obrázky",
-  "messageHighlight": "Zvýrazňovať pri hovorení",
-  "messageClearAfterSpeaking": "Vymazať po hovorení",
+  "messageHighlight": "Zvýrazňovať pri prehrávaní",
+  "messageClearAfterPlaying": "Vymazať po prehraní",
   "tileSaturation": "Intenzita farieb",
   "tileBrightness": "Jas",
   "tileBorders": "Zobraziť okraje",
@@ -151,9 +151,9 @@
   "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
-  "errorBoardURLImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
-  "boardLinkImportTitle": "Importovať súbor tabuľky z odkazu?",
-  "boardLinkImportDescription": "Tento odkaz importuje súbor tabuľky z {host}. Importujte ho, len ak dôverujete tomu, kto odkaz poslal.",
-  "boardLinkImport": "Importovať",
-  "boardLinkCancel": "Zrušiť"
+  "errorBoardFileURLImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
+  "boardFileURLImportTitle": "Importovať súbor tabuľky z odkazu?",
+  "boardFileURLImportDescription": "Tento odkaz importuje súbor tabuľky z {host}. Importujte ho, len ak dôverujete tomu, kto odkaz poslal.",
+  "boardFileURLImportConfirm": "Importovať",
+  "boardFileURLImportCancel": "Zrušiť"
 }

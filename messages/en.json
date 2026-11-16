@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Preview voice",
   "speechPreviewSample": "Hi, this is my voice!",
   "messageImages": "Show images",
-  "messageHighlight": "Highlight while speaking",
-  "messageClearAfterSpeaking": "Clear after speaking",
+  "messageHighlight": "Highlight while playing",
+  "messageClearAfterPlaying": "Clear after playing",
   "tileSaturation": "Color intensity",
   "tileBrightness": "Brightness",
   "tileBorders": "Show borders",
@@ -151,9 +151,9 @@
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
-  "errorBoardURLImportFailed": "Couldn't import board file from link",
-  "boardLinkImportTitle": "Import board file from link?",
-  "boardLinkImportDescription": "This link imports a board file from {host}. Import it only if you trust whoever sent the link.",
-  "boardLinkImport": "Import",
-  "boardLinkCancel": "Cancel"
+  "errorBoardFileURLImportFailed": "Couldn't import board file from link",
+  "boardFileURLImportTitle": "Import board file from link?",
+  "boardFileURLImportDescription": "This link imports a board file from {host}. Import it only if you trust whoever sent the link.",
+  "boardFileURLImportConfirm": "Import",
+  "boardFileURLImportCancel": "Cancel"
 }

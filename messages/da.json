@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Lyt til stemmen",
   "speechPreviewSample": "Hej, det er min stemme!",
   "messageImages": "Vis billeder",
-  "messageHighlight": "Fremhæv under tale",
-  "messageClearAfterSpeaking": "Ryd efter tale",
+  "messageHighlight": "Fremhæv under afspilning",
+  "messageClearAfterPlaying": "Ryd efter afspilning",
   "tileSaturation": "Farveintensitet",
   "tileBrightness": "Lysstyrke",
   "tileBorders": "Vis kanter",
@@ -151,9 +151,9 @@
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
-  "errorBoardURLImportFailed": "Tavlefilen kunne ikke importeres fra linket",
-  "boardLinkImportTitle": "Importér tavlefil fra linket?",
-  "boardLinkImportDescription": "Dette link importerer en tavlefil fra {host}. Importér den kun, hvis du har tillid til den, der sendte linket.",
-  "boardLinkImport": "Importér",
-  "boardLinkCancel": "Annullér"
+  "errorBoardFileURLImportFailed": "Tavlefilen kunne ikke importeres fra linket",
+  "boardFileURLImportTitle": "Importér tavlefil fra linket?",
+  "boardFileURLImportDescription": "Dette link importerer en tavlefil fra {host}. Importér den kun, hvis du har tillid til den, der sendte linket.",
+  "boardFileURLImportConfirm": "Importér",
+  "boardFileURLImportCancel": "Annullér"
 }

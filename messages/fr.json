@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Écouter la voix",
   "speechPreviewSample": "Bonjour, voici ma voix !",
   "messageImages": "Afficher les images",
-  "messageHighlight": "Surligner pendant la lecture vocale",
-  "messageClearAfterSpeaking": "Effacer après la lecture vocale",
+  "messageHighlight": "Surligner pendant la lecture",
+  "messageClearAfterPlaying": "Effacer après la lecture",
   "tileSaturation": "Intensité des couleurs",
   "tileBrightness": "Luminosité",
   "tileBorders": "Afficher les bordures",
@@ -151,9 +151,9 @@
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
-  "errorBoardURLImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
-  "boardLinkImportTitle": "Importer le fichier de tableau depuis le lien ?",
-  "boardLinkImportDescription": "Ce lien importe un fichier de tableau depuis {host}. Ne l’importez que si vous faites confiance à la personne qui vous a envoyé le lien.",
-  "boardLinkImport": "Importer",
-  "boardLinkCancel": "Annuler"
+  "errorBoardFileURLImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
+  "boardFileURLImportTitle": "Importer le fichier de tableau depuis le lien ?",
+  "boardFileURLImportDescription": "Ce lien importe un fichier de tableau depuis {host}. Ne l’importez que si vous faites confiance à la personne qui vous a envoyé le lien.",
+  "boardFileURLImportConfirm": "Importer",
+  "boardFileURLImportCancel": "Annuler"
 }

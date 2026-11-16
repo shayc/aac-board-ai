@@ -5,19 +5,19 @@ import { routeErrorCodes, routeErrorResponse } from "../route-error";
 export async function rootIndexAction({
   request,
 }: ActionFunctionArgs): Promise<Response> {
-  const boardURL = new URL(request.url).searchParams.get("board");
-  if (!boardURL) {
+  const boardFileURL = new URL(request.url).searchParams.get("board");
+  if (!boardFileURL) {
     return redirect("/");
   }
 
   try {
-    const importedBoardSet = await importBoardFileFromURL(boardURL, {
+    const importedBoardSet = await importBoardFileFromURL(boardFileURL, {
       signal: request.signal,
     });
 
     return redirect(rootBoardPath(importedBoardSet));
   } catch {
     request.signal.throwIfAborted();
-    throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
+    throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
   }
 }
