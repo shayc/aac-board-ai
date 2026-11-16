@@ -31,7 +31,6 @@ interface CommunicationBoardProps {
   /** The language the board's text is in, when known; it may not be the communication language. */
   language: string | undefined;
   rootBoardId: string | undefined;
-  /** The message the board opens with, such as one composed before a reload. */
   initialMessage?: Message;
 }
 

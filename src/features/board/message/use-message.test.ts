@@ -378,7 +378,6 @@ describe("useMessage", () => {
       const { result } = await renderHook(() => useMessage(restored));
 
       expect(result.current.parts).toEqual(saved);
-      // A played message is restored as played, so the next word starts anew.
       expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
     });
 

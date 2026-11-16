@@ -5,7 +5,6 @@ import { normalizeAssetPath } from "./normalize-asset-path";
 const urlsByBoardSetId = new Map<string, Map<string, string>>();
 const assetKeysByURL = new Map<string, AssetKey>();
 
-/** Identifies a stored asset beyond the life of the page, unlike its URL. */
 export interface AssetKey {
   readonly boardSetId: string;
   readonly path: string;

@@ -9,7 +9,6 @@ import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 export interface BoardRouteData {
   board: Board;
-  /** Read before the board renders, so no edit can come before it. */
   restoredMessage: Message;
 }
 

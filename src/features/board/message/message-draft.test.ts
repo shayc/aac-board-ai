@@ -118,7 +118,6 @@ describe("message draft", () => {
   });
 });
 
-// Fills the origin's real quota, leaving less room than a large draft needs.
 function fillLocalStorage() {
   let chunk = "x".repeat(1024 * 1024);
   let index = 0;
