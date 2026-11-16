@@ -106,8 +106,8 @@ The message being composed outlives the page.
   restore, because a stored asset's object URL ends with the page.
 - **`boardLoader` restores the draft alongside the board**, so the board opens
   with it, symbols included, and no edit can come before it.
-- **A message that played to its end is not kept** when the next symbol would
-  replace it.
+- **A message that played to its end is not kept when the next symbol would
+  replace it.**
 - **An object URL with no stored asset behind it is left out**, since it could
   only come back broken.
 - **The undo history is not saved.**
@@ -159,11 +159,12 @@ The message being composed outlives the page.
 **When something fails**
 
 - **A set the translator fails on stays in its source language until the next
-  run**, for example because a model download needs a user gesture.
+  run.** The translator can fail, for example, because a model download needs a
+  user gesture.
 - **A storage or other error ends the pass and is reported**, and passes queued
   behind it still run.
 
-**Status**
+**Coordinator and notice**
 
 - **The hook hands each pass to the
   [board translation coordinator](../src/features/library/translation/board-translation-coordinator.ts)**,
@@ -311,7 +312,7 @@ these rules:
 - **Home and End move to the first or last focusable cell in the row**; with
   Ctrl or Cmd, in the grid.
 - **When grid content changes, focus returns to the remembered cell or first
-  focusable tile** only if no other control holds focus.
+  focusable tile only if no other control holds focus.**
 
 **Shortcuts**
 
@@ -472,9 +473,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 - **The grid's viewport sets its scroll padding to half the inset of an axis
   that scrolls.** A row or column at rest, and a tile scrolled in because it
   took focus, sit that far from the edge with the same hint of both neighbors.
-- **At rest next to a bar, the space is the clearance, the overflow hint, and
-  one tile gap.** That is the space between the bar and the nearest whole row,
-  where the scroll rests at its start or end and a hint shows next to the bar.
-  Making one of the three smaller is the only way to make that space smaller.
+- **At rest next to a bar, the space to the nearest whole row is the clearance,
+  the overflow hint, and one tile gap.** This applies where the scroll rests at
+  its start or end and a hint shows next to the bar. Making one of the three
+  smaller is the only way to make that space smaller.
 - **Mid-scroll the space is the clearance plus the scroll padding**, which is
   smaller wherever the grid's padding is less than a gap plus the hint.

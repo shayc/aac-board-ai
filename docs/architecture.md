@@ -147,7 +147,7 @@ State has distinct owners and lifetimes:
   migrations yet**: a schema change edits it in place, and a browser holding an
   older database needs its site data cleared.
 
-**Subscriptions**
+**Reading state**
 
 - **React Context provides theme, playback controls, and snackbar access.**
 - **Components subscribe to external stores through `useExternalStore`**, a
@@ -175,9 +175,8 @@ State has distinct owners and lifetimes:
 **Store lifetime**
 
 - **Stores are module singletons that start working when first imported**, so
-  they need no provider and their loading starts before React renders.
-- **The cost is that a store outlives a test**, so tests reset the state behind
-  it.
+  they need no provider and their loading starts before React renders. The
+  cost is that a store outlives a test, so tests reset the state behind it.
 - **The shared [test setup](../src/shared/testing/setup.ts) clears
   localStorage and calls `reloadPersistedStores` before each test.**
 - **Tests that touch stored boards call `resetBoardsDB`** from the library's
