@@ -92,10 +92,10 @@ export function useMessage(): UseMessageReturn {
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
   function trackPlayback(completion: Promise<boolean>) {
-    const played = setPlayed(false);
+    const playing = setPlayed(false);
 
     void completion.then((hasCompleted) => {
-      if (hasCompleted && hasSameContent(stateRef.current, played)) {
+      if (hasCompleted && hasSameContent(stateRef.current, playing)) {
         setPlayed(true);
       }
     });
