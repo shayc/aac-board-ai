@@ -66,6 +66,17 @@ const OTHER_TWO_ROW_BOARD: OBFBoard = {
   },
 };
 
+const ONE_ROW_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "one-row-board",
+  locale: "en",
+  buttons: [
+    { id: "big", label: "big" },
+    { id: "small", label: "small" },
+  ],
+  grid: { rows: 1, columns: 2, order: [["big", "small"]] },
+};
+
 function navigationGroupTree(canGoBack: boolean) {
   return (
     <ScanningScope>
@@ -547,6 +558,18 @@ describe("switch scanning", () => {
 
       await pressSwitch("Space");
       await expect.poll(highlightedNames).toEqual(["play", "sleep"]);
+    });
+
+    test("restarts at the first row when the highlighted row is gone from the next board", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch("Space");
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await screen.rerender(communicationBoardTree(ONE_ROW_BOARD));
+
+      await expect.poll(highlightedNames).toEqual(["big", "small"]);
     });
 
     test("hides the keyboard focus ring of another tile while a tile is highlighted", async () => {
