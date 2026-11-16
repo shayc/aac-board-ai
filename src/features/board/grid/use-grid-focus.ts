@@ -26,7 +26,10 @@ interface UseGridFocusReturn {
   tabStopPosition: GridPosition;
 }
 
-export function useGridFocus(grid: GridCells): UseGridFocusReturn {
+export function useGridFocus(
+  grid: GridCells,
+  contentId: string | undefined,
+): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),
@@ -62,18 +65,19 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
     tabStop?.focus();
   });
 
-  // A focused tile drops focus to the body only when it unmounts, which takes
-  // a change in which tile sits where; the grid array itself is new each render.
-  const arrangementKey = gridArrangementKey(grid);
-  const previousArrangementKeyRef = useRef(arrangementKey);
+  // A focused tile drops focus to the body only when it unmounts: another tile
+  // takes its cell, or the content changes and every tile is replaced, even by
+  // one with the same id in the same cell. The grid array is new each render.
+  const tileIdentityKey = JSON.stringify([contentId, gridArrangementKey(grid)]);
+  const previousTileIdentityKeyRef = useRef(tileIdentityKey);
   useEffect(() => {
-    if (previousArrangementKeyRef.current === arrangementKey) {
+    if (previousTileIdentityKeyRef.current === tileIdentityKey) {
       return;
     }
 
-    previousArrangementKeyRef.current = arrangementKey;
+    previousTileIdentityKeyRef.current = tileIdentityKey;
     restoreLostFocus();
-  }, [arrangementKey]);
+  }, [tileIdentityKey]);
 
   function handleFocus(event: FocusEvent<HTMLElement>) {
     const position = findGridPosition(event.target);

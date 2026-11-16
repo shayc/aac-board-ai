@@ -17,6 +17,7 @@ import { userEvent } from "vitest/browser";
 import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import {
+  communicationBoardTree,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -660,6 +661,31 @@ describe("CommunicationBoard", () => {
         .toBeEnabled();
       expect(speech.speak).not.toHaveBeenCalled();
       expect(audio.play).not.toHaveBeenCalled();
+    });
+
+    test("keeps arrow keys working on a board whose tiles reuse the previous board's button ids", async () => {
+      const nextBoard: OBFBoard = {
+        ...TWO_BUTTON_BOARD,
+        id: "next-board",
+        buttons: [
+          { id: "btn-1", label: "good" },
+          { id: "btn-2", label: "morning" },
+        ],
+      };
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      screen.getByRole("button", { name: "world" }).element().focus();
+
+      await screen.rerender(communicationBoardTree(nextBoard));
+
+      await expect
+        .element(screen.getByRole("button", { name: "morning" }))
+        .toHaveFocus();
+
+      await userEvent.keyboard("{ArrowLeft}");
+
+      await expect
+        .element(screen.getByRole("button", { name: "good" }))
+        .toHaveFocus();
     });
 
     test("keeps keyboard focus on Go back when it reaches the first board", async () => {

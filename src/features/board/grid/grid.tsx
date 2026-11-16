@@ -19,6 +19,8 @@ type GridRowDataAttributes = Record<`data-${string}`, string>;
 
 interface GridProps<Item extends { id: string }> {
   "aria-label": string;
+  /** Names what the items belong to; under a new one, items that keep their ids are still new items. */
+  contentId?: string;
   items: readonly Item[];
   order: GridOrder;
   rowProps?: GridRowDataAttributes;
@@ -27,13 +29,14 @@ interface GridProps<Item extends { id: string }> {
 
 export function Grid<Item extends { id: string }>({
   "aria-label": ariaLabel,
+  contentId,
   items,
   order,
   rowProps,
   renderItem,
 }: GridProps<Item>) {
   const grid = buildGrid(items, order);
-  const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
+  const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid, contentId);
   const rows = grid.length;
   const columns = grid[0]?.length ?? 0;
 

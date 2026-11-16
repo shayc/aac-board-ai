@@ -235,6 +235,48 @@ describe("useGridFocus", () => {
         .toHaveFocus();
     });
 
+    test("returns lost focus to the remembered cell when new content keeps the same item ids", async () => {
+      const items = makeItems(1, 2, 3, 4);
+      const renderContentButton = (contentId: string) =>
+        function renderKeyedButton(item: TestItem, props: GridItemProps) {
+          return (
+            <button key={`${contentId}/${item.id}`} {...props}>
+              {item.label}
+            </button>
+          );
+        };
+
+      const screen = await render(
+        <Grid
+          aria-label="Board"
+          contentId="first"
+          items={items}
+          order={rowMajorOrder(items, 2)}
+          renderItem={renderContentButton("first")}
+        />,
+      );
+
+      const focusedButton = screen
+        .getByRole("button", { name: "Item 2" })
+        .element();
+      focusedButton.focus();
+
+      await screen.rerender(
+        <Grid
+          aria-label="Board"
+          contentId="second"
+          items={items}
+          order={rowMajorOrder(items, 2)}
+          renderItem={renderContentButton("second")}
+        />,
+      );
+
+      expect(focusedButton.isConnected).toBe(false);
+      await expect
+        .element(screen.getByRole("button", { name: "Item 2" }))
+        .toHaveFocus();
+    });
+
     test("keeps the scroll position when lost focus returns to a tile in another column", async () => {
       const oldItems = makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
       const newItems = makeItems(

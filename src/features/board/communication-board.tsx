@@ -161,6 +161,7 @@ export function CommunicationBoard({
           <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
             <Grid<BoardButton>
               aria-label={board.name || t(m.boardGridLabel)}
+              contentId={board.id}
               items={board.buttons}
               order={board.grid.order}
               rowProps={scanGroupProps}
