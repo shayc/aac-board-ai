@@ -55,7 +55,8 @@ build. Each links to the section that explains it.
   ([Activate a tile](behavior.md#activate-a-tile)).
 - **Shared playback owns all device output and reads no settings store.** The
   board playback adapter is the only place that reports a failed playback
-  ([Activate a tile](behavior.md#activate-a-tile)).
+  ([Data and state ownership](#data-and-state-ownership),
+  [Activate a tile](behavior.md#activate-a-tile)).
 - **Speech follows the text, not the setting.** A message part whose language
   is known is spoken in that language
   ([Language and direction](behavior.md#language-and-direction)).
