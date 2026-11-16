@@ -36,11 +36,11 @@ describe("expectNoA11yViolations", () => {
     );
   });
 
-  test("fails on a result axe could not decide and names its cause", async () => {
+  test("fails on an incomplete result and names its cause", async () => {
     const screen = await render(<div role="list" aria-label="Empty" />);
 
     await expect(expectNoA11yViolations(screen.container)).rejects.toThrow(
-      /^Undecided:[\s\S]*listitem \[aria-required-children\]/,
+      /^Incomplete:[\s\S]*listitem \[aria-required-children\]/,
     );
   });
 
@@ -54,7 +54,7 @@ describe("expectNoA11yViolations", () => {
     );
   });
 
-  test("accepts an undecided result reviewed by rule, cause and selector", async () => {
+  test("accepts an incomplete result reviewed by rule, cause and selector", async () => {
     const screen = await render(<div role="list" aria-label="Empty" />);
 
     await expectNoA11yViolations(screen.container, {
@@ -101,7 +101,7 @@ describe("expectNoA11yViolations", () => {
     ).rejects.toThrow(/no longer occur/);
   });
 
-  test("passes contrast axe could not decide, such as MUI's outline over a field", async () => {
+  test("passes incomplete contrast, such as MUI's outline over a field", async () => {
     const screen = await render(<TextField label="Name" defaultValue="Ada" />);
 
     await expectNoA11yViolations(screen.container);

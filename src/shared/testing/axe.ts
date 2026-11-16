@@ -7,7 +7,7 @@ const ENABLED_BY_DEFAULT: axe.RuleObject = {
   "target-size": { enabled: true },
 };
 
-/** An undecided axe result a person has checked and judged acceptable. */
+/** An incomplete axe result a person has checked and judged acceptable. */
 export interface ReviewedIncomplete {
   rule: string;
   /** The bracketed cause a failure report prints, e.g. "aria-required-children". */
@@ -50,27 +50,34 @@ export async function expectNoA11yViolations(
     assert.fail(describeResults(violations));
   }
 
-  // Results axe could not decide would otherwise pass unseen. Contrast is left
-  // out: axe cannot see through layering such as MUI's outline drawn over a
-  // field's text, so those results say nothing about the colors.
-  const undecided = incomplete.filter(
+  // Incomplete results, which axe could not decide, would otherwise pass
+  // unseen. Contrast is left out: axe cannot see through layering such as
+  // MUI's outline drawn over a field's text, so those results say nothing
+  // about the colors.
+  const reviewableIncomplete = incomplete.filter(
     (result) => result.id !== "color-contrast",
   );
-  const unreviewed = withoutReviewedNodes(undecided, reviewedIncomplete);
-  if (unreviewed.length > 0) {
+  const unreviewedResults = withoutReviewedNodes(
+    reviewableIncomplete,
+    reviewedIncomplete,
+  );
+  if (unreviewedResults.length > 0) {
     assert.fail(
-      `Undecided: axe could not check these. Review each one, then list it in reviewedIncomplete by rule, bracketed cause and a stable selector.\n\n${describeResults(unreviewed)}`,
+      `Incomplete: axe could not decide these. Review each one, then list it in reviewedIncomplete by rule, bracketed cause and a stable selector.\n\n${describeResults(unreviewedResults)}`,
     );
   }
 
-  const stale = reviewedIncomplete
+  const staleReviews = reviewedIncomplete
     .filter(
-      (reviewed) => !undecided.some((result) => isReviewed(result, reviewed)),
+      (reviewed) =>
+        !reviewableIncomplete.some((result) =>
+          hasReviewedNode(result, reviewed),
+        ),
     )
     .map(({ rule, cause, selector }) => `${rule} [${cause}] on ${selector}`);
-  if (stale.length > 0) {
+  if (staleReviews.length > 0) {
     assert.fail(
-      `These reviewed results no longer occur; remove them:\n${stale.join("\n")}`,
+      `These reviewed results no longer occur; remove them:\n${staleReviews.join("\n")}`,
     );
   }
 }
@@ -118,14 +125,14 @@ function withoutReviewedNodes(
       nodes: result.nodes.filter(
         (node) =>
           !reviewedIncomplete.some((reviewed) =>
-            matchesReview(result, node, reviewed),
+            isNodeReviewed(result, node, reviewed),
           ),
       ),
     }))
     .filter((result) => result.nodes.length > 0);
 }
 
-function matchesReview(
+function isNodeReviewed(
   result: axe.Result,
   node: axe.NodeResult,
   reviewed: ReviewedIncomplete,
@@ -139,6 +146,6 @@ function matchesReview(
   );
 }
 
-function isReviewed(result: axe.Result, reviewed: ReviewedIncomplete) {
-  return result.nodes.some((node) => matchesReview(result, node, reviewed));
+function hasReviewedNode(result: axe.Result, reviewed: ReviewedIncomplete) {
+  return result.nodes.some((node) => isNodeReviewed(result, node, reviewed));
 }
