@@ -6,9 +6,7 @@ speak. The app uses React, TypeScript, Vite, MUI, and React Router. Built-in AI
 provides optional, on-device language help.
 
 Accessibility comes first, followed by offline reliability, privacy,
-responsiveness, and internationalization. People rely on the app to communicate,
-so optional features must never be required to read, navigate, or compose with a
-loaded board.
+responsiveness, and internationalization.
 
 See [README.md](../README.md) for product details and setup,
 [AGENTS.md](../AGENTS.md) for contribution and testing rules, and the
@@ -31,12 +29,16 @@ when working in that area.
 A change that breaks one of these rules needs a decision, not just a passing
 build. Each links to the section that explains it.
 
-- **Core communication never depends on an optional feature.** A loaded board
-  can be read, navigated, and spoken without built-in AI or the network
-  ([Runtime architecture](#runtime-architecture)).
-- **Nothing leaves the device unasked.** There is no backend, telemetry, or
-  tracking, and a board link is imported only after the user confirms its host
-  ([Start at `/`](#start-at-)).
+- **Core communication never depends on an optional feature.** People rely on
+  the app to communicate, so reading, navigating, and composing with a loaded
+  board need neither built-in AI nor the network. Speaking needs only a voice
+  that is on the device ([Runtime architecture](#runtime-architecture)).
+- **No backend, telemetry, or tracking.** Boards, settings, and messages are
+  stored only on the device. Beyond its own static host, the app reaches the
+  network only for remote media a board points at, for a voice that speaks
+  through an online service, and for a board link, after the user confirms its
+  host
+  ([Runtime architecture](#runtime-architecture), [Start at `/`](#start-at-)).
 - **Dependencies run one way.** The app composes features, the board imports
   the library, and shared code imports neither
   ([Module boundaries](#module-boundaries-and-code-map)).
@@ -216,26 +218,6 @@ in one direction, so a folder's name tells which layer it is in:
 4. `catalog/` downloads through `import/`.
 5. `panel/` is the library's UI and may use all of the above.
 
-### Settings composition
-
-The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
-[tile settings](../src/features/board/tile/tile-settings.tsx),
-[message settings](../src/features/board/message/message-settings.tsx),
-[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx), and
-[scanning settings](../src/features/board/scanning/scanning-settings.tsx)
-through feature public entry points. The app owns headings, order, layout, and
-drawer behavior; features own controls, capability checks, and persisted
-preferences. App-wide language, theme, and speech settings live in `app/settings/`;
-language settings render the library's
-[board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-instead of checking translation progress themselves.
-Reusable field controls live in `shared/ui/` so features do not depend on the
-app layer.
-
-Closing or unmounting settings does not delete preferences. Removing a feature
-requires an explicit decision about retaining or deleting its persisted
-preferences.
-
 ### Features
 
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
@@ -277,6 +259,26 @@ The app delegates OBF/OBZ parsing to
 [`@shayc/open-board-format`](https://github.com/shayc/open-board-format) and browser
 AI availability, provisioning, and session lifecycle to
 [`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai).
+
+### Settings composition
+
+The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
+[tile settings](../src/features/board/tile/tile-settings.tsx),
+[message settings](../src/features/board/message/message-settings.tsx),
+[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx), and
+[scanning settings](../src/features/board/scanning/scanning-settings.tsx)
+through feature public entry points. The app owns headings, order, layout, and
+drawer behavior; features own controls, capability checks, and persisted
+preferences. App-wide language, theme, and speech settings live in `app/settings/`;
+language settings render the library's
+[board translation notice](../src/features/library/translation/board-translation-notice.tsx)
+instead of checking translation progress themselves.
+Reusable field controls live in `shared/ui/` so features do not depend on the
+app layer.
+
+Closing or unmounting settings does not delete preferences. Removing a feature
+requires an explicit decision about retaining or deleting its persisted
+preferences.
 
 ## Core flows
 
@@ -452,7 +454,8 @@ language.
    the message with one text part per word in the communication language. It
    is one step in the undo history, so undo brings the tapped message back.
 
-Nothing is spoken and the message is unchanged until a phrase is selected. The
+The message changes only when a phrase is selected, and selecting a phrase
+does not speak it. The
 phrases are a labelled group, not a live region, because an announcement would
 interrupt the spoken feedback of the tile just pressed. The suggestion row is a
 scan group, so switch users can select a phrase.
