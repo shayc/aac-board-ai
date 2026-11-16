@@ -131,8 +131,9 @@ function scrollContainerSx(theme: Theme) {
     flexGrow: 1,
     alignSelf: "stretch",
     alignItems: "center",
-    // A fixed height stops the first word added from pushing the board down.
-    minHeight: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
+    // A fixed height stops the first word added, and the scrollbar of a long
+    // message, from pushing the board down.
+    height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: 2,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
@@ -166,6 +167,9 @@ function MessagePartItem({
       direction="row"
       sx={(theme) => ({
         [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
+        // Filling the bar gives the symbol a height to shrink within when a
+        // scrollbar takes space.
+        alignSelf: "stretch",
         py: 0.5,
         px: 1,
         borderRadius: theme.vars.shape.borderRadius,
