@@ -1,4 +1,6 @@
+import { obfToBoard } from "@features/library/testing";
 import { setCommunicationLanguage } from "@shared/language/language-store";
+import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
@@ -13,13 +15,19 @@ import {
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
+import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
+import { CommunicationBoard } from "./communication-board";
 import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
+import { restoreMessageDraft } from "./message/message-draft";
 import {
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
 } from "./message/message-preferences-store";
+import { EMPTY_MESSAGE } from "./message/message-transforms";
+import type { Message } from "./message/message-types";
 import {
   EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
@@ -403,6 +411,29 @@ describe("CommunicationBoard", () => {
         });
       },
     );
+  });
+
+  describe("message draft", () => {
+    test("keeps an edit made after a board closed mid-speech", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await render(closableBoardTree({ isOpen: true }));
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "Play message" }).click();
+      const closedBoardUtterance = lastUtterance(speech.speak);
+      await screen.rerender(closableBoardTree({ isOpen: false }));
+      const restoredMessage = await restoreMessageDraft();
+      await screen.rerender(
+        closableBoardTree({ isOpen: true, initialMessage: restoredMessage }),
+      );
+
+      await screen.getByRole("button", { name: "Backspace" }).click();
+      endUtterance(closedBoardUtterance);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeInTheDocument();
+
+      expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
+    });
   });
 
   describe("speak-then-clear tiles", () => {
@@ -904,4 +935,29 @@ function outlinedMessageParts(
     .elements()
     .filter((part) => getComputedStyle(part).outlineStyle === "solid")
     .map((part) => part.textContent);
+}
+
+interface ClosableBoardTreeProps {
+  isOpen: boolean;
+  initialMessage?: Message;
+}
+
+// Keeps the providers mounted while the board closes, as the error page does.
+function closableBoardTree({ isOpen, initialMessage }: ClosableBoardTreeProps) {
+  return (
+    <MemoryRouter>
+      <AppProviders>
+        <div style={{ height: "100vh" }}>
+          {isOpen && (
+            <CommunicationBoard
+              board={obfToBoard(TWO_BUTTON_BOARD)}
+              language={TWO_BUTTON_BOARD.locale}
+              rootBoardId={undefined}
+              initialMessage={initialMessage}
+            />
+          )}
+        </div>
+      </AppProviders>
+    </MemoryRouter>
+  );
 }

@@ -12,6 +12,7 @@ import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
+import type { Message } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -30,18 +31,20 @@ interface CommunicationBoardProps {
   /** The language the board's text is in, when known; it may not be the communication language. */
   language: string | undefined;
   rootBoardId: string | undefined;
+  initialMessage?: Message;
 }
 
 export function CommunicationBoard({
   board,
   language,
   rootBoardId,
+  initialMessage,
 }: CommunicationBoardProps) {
   const t = useTranslate();
   const communication = useCommunicationLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const message = useMessage();
+  const message = useMessage(initialMessage);
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
