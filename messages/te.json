@@ -69,6 +69,7 @@
   "settingsTitle": "సెట్టింగ్‌లు",
   "settingsOpen": "సెట్టింగ్‌లను తెరువు",
   "settingsClose": "సెట్టింగ్‌లను మూసివేయి",
+  "settingsLoadFailed": "సెట్టింగ్‌లను లోడ్ చేయడం సాధ్యపడలేదు",
   "settingsSectionLanguageVoice": "భాష మరియు వాయిస్",
   "settingsSectionAppearance": "రూపం",
   "settingsSectionBoard": "బోర్డు",

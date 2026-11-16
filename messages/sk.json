@@ -69,6 +69,7 @@
   "settingsTitle": "Nastavenia",
   "settingsOpen": "Otvoriť nastavenia",
   "settingsClose": "Zavrieť nastavenia",
+  "settingsLoadFailed": "Nastavenia sa nepodarilo načítať",
   "settingsSectionLanguageVoice": "Jazyk a hlas",
   "settingsSectionAppearance": "Vzhľad",
   "settingsSectionBoard": "Tabuľka",

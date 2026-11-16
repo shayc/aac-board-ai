@@ -69,6 +69,7 @@
   "settingsTitle": "সেটিংস",
   "settingsOpen": "সেটিংস খুলুন",
   "settingsClose": "সেটিংস বন্ধ করুন",
+  "settingsLoadFailed": "সেটিংস লোড করা যায়নি",
   "settingsSectionLanguageVoice": "ভাষা ও কণ্ঠস্বর",
   "settingsSectionAppearance": "চেহারা",
   "settingsSectionBoard": "বোর্ড",

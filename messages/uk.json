@@ -69,6 +69,7 @@
   "settingsTitle": "Налаштування",
   "settingsOpen": "Відкрити налаштування",
   "settingsClose": "Закрити налаштування",
+  "settingsLoadFailed": "Не вдалося завантажити налаштування",
   "settingsSectionLanguageVoice": "Мова і голос",
   "settingsSectionAppearance": "Вигляд",
   "settingsSectionBoard": "Дошка",

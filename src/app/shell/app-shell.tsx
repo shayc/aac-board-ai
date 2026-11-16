@@ -10,6 +10,7 @@ import {
   useTranslateBoardSets,
 } from "@features/library";
 import Box from "@mui/material/Box";
+import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppHeader } from "./app-header";
@@ -48,10 +49,12 @@ export function AppShell() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      <OnboardingDialog
-        open={onboarding.shouldShow}
-        onClose={onboarding.dismiss}
-      />
+      <ErrorBoundary fallback={null}>
+        <OnboardingDialog
+          open={onboarding.shouldShow}
+          onClose={onboarding.dismiss}
+        />
+      </ErrorBoundary>
 
       <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
     </Box>

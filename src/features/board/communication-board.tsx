@@ -7,6 +7,7 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -21,8 +22,7 @@ import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
-import { SuggestionBar } from "./suggestions/suggestion-bar";
-import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
+import { MessageSuggestions } from "./suggestions/message-suggestions";
 import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
@@ -42,7 +42,6 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
-  const suggestions = useMessageSuggestions(message.text);
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -105,8 +104,6 @@ export function CommunicationBoard({
     />
   );
 
-  const isActionRowVisible = !isSmallScreen || suggestions.isAvailable;
-
   return (
     <DirectionalThemeProvider direction={communication.direction}>
       <ScanningScope>
@@ -141,23 +138,24 @@ export function CommunicationBoard({
               {!isSmallScreen && playButton}
             </Stack>
 
-            {isActionRowVisible && (
-              <Stack {...scanGroupProps} direction="row" spacing={2}>
-                {!isSmallScreen && navigationButtons}
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={2}
+              sx={{ "&:empty": { display: "none" } }}
+            >
+              {!isSmallScreen && navigationButtons}
 
-                {suggestions.isAvailable && (
-                  <SuggestionBar
-                    status={suggestions.status}
-                    phrases={suggestions.phrases}
-                    language={communication.language}
-                    onEnable={suggestions.enable}
-                    onPhraseSelect={(phrase) =>
-                      message.replaceWithText(phrase, communication.language)
-                    }
-                  />
-                )}
-              </Stack>
-            )}
+              <ErrorBoundary fallback={null}>
+                <MessageSuggestions
+                  messageText={message.text}
+                  language={communication.language}
+                  onPhraseSelect={(phrase) =>
+                    message.replaceWithText(phrase, communication.language)
+                  }
+                />
+              </ErrorBoundary>
+            </Stack>
           </Stack>
 
           <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>

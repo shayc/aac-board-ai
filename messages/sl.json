@@ -69,6 +69,7 @@
   "settingsTitle": "Nastavitve",
   "settingsOpen": "Odpri nastavitve",
   "settingsClose": "Zapri nastavitve",
+  "settingsLoadFailed": "Nastavitev ni bilo mogoče naložiti",
   "settingsSectionLanguageVoice": "Jezik in glas",
   "settingsSectionAppearance": "Videz",
   "settingsSectionBoard": "Tabla",

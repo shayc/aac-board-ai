@@ -69,6 +69,7 @@
   "settingsTitle": "Einstellungen",
   "settingsOpen": "Einstellungen öffnen",
   "settingsClose": "Einstellungen schließen",
+  "settingsLoadFailed": "Einstellungen konnten nicht geladen werden",
   "settingsSectionLanguageVoice": "Sprache und Stimme",
   "settingsSectionAppearance": "Darstellung",
   "settingsSectionBoard": "Tafel",

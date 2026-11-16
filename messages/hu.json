@@ -69,6 +69,7 @@
   "settingsTitle": "Beállítások",
   "settingsOpen": "Beállítások megnyitása",
   "settingsClose": "Beállítások bezárása",
+  "settingsLoadFailed": "Nem sikerült betölteni a beállításokat",
   "settingsSectionLanguageVoice": "Nyelv és hang",
   "settingsSectionAppearance": "Megjelenés",
   "settingsSectionBoard": "Tábla",

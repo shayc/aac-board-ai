@@ -69,6 +69,7 @@
   "settingsTitle": "सेटिंग्स",
   "settingsOpen": "सेटिंग्स खोलें",
   "settingsClose": "सेटिंग्स बंद करें",
+  "settingsLoadFailed": "सेटिंग्स लोड नहीं हो सकीं",
   "settingsSectionLanguageVoice": "भाषा और आवाज़",
   "settingsSectionAppearance": "रूप-रंग",
   "settingsSectionBoard": "बोर्ड",

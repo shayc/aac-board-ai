@@ -69,6 +69,7 @@
   "settingsTitle": "設定",
   "settingsOpen": "設定を開く",
   "settingsClose": "設定を閉じる",
+  "settingsLoadFailed": "設定を読み込めませんでした",
   "settingsSectionLanguageVoice": "言語と音声",
   "settingsSectionAppearance": "表示",
   "settingsSectionBoard": "ボード",
