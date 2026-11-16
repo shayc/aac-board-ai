@@ -4,7 +4,7 @@ import { importBoardFile } from "../import/board-file-import";
 import { listBoardRecords } from "../storage/board-content-storage";
 import {
   getBoardSetRecord,
-  putBoardSetTranslations,
+  updateBoardSetTranslations,
 } from "../storage/board-set-storage";
 import {
   loadFixtureFile,
@@ -57,7 +57,7 @@ describe("boardSetToOBZ", () => {
 
   test("includes the translations saved on this device", async () => {
     const boardSet = await importFixtureSet();
-    await putBoardSetTranslations(boardSet.id, "es", {
+    await updateBoardSetTranslations(boardSet.id, "es", {
       name: "Muchas cosas",
       translationsByBoardId: new Map([
         [boardSet.rootBoardId, new Map([["happy", "feliz"]])],

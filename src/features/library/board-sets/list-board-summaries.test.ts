@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test } from "vitest";
-import { insertBoardSet } from "../storage/board-set-storage";
+import { insertBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB } from "../storage/boards-db";
 import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import { listBoardSummaries } from "./list-board-summaries";
@@ -11,7 +11,7 @@ beforeEach(async () => {
 afterEach(closeBoardsDB);
 
 test("maps stored boards to summaries with their names by language", async () => {
-  await insertBoardSet(
+  await insertBoardSetRecords(
     makeBoardSetInput({
       rootBoardId: "a",
       boards: [
@@ -36,7 +36,7 @@ test("maps stored boards to summaries with their names by language", async () =>
 });
 
 test("takes a name from the first locale of a language, as the board itself does", async () => {
-  await insertBoardSet(
+  await insertBoardSetRecords(
     makeBoardSetInput({
       rootBoardId: "a",
       boards: [

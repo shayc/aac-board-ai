@@ -616,8 +616,9 @@ AI availability, provisioning, and session lifecycle to
   only through [`library/storage/`](../src/features/library/storage/). The
   [board-sets store](../src/features/library/board-sets/board-sets-store.ts)
   sits on top of storage: `createBoardSet` and `deleteBoardSet` call storage's
-  `insertBoardSet` and `removeBoardSet`, then refresh the store and notify other
-  tabs.
+  `insertBoardSetRecords` and `deleteBoardSetRecords`, then refresh the store
+  and notify other tabs. Storage functions name the records they touch; store
+  functions name the board set.
 - **Playback** — speaking text or playing recorded audio.
   [`shared/playback/`](../src/shared/playback/) owns device output and progress;
   [`features/board/playback/`](../src/features/board/playback/) turns message

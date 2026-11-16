@@ -12,7 +12,7 @@ import {
   listBoardIds,
   listBoardRecords,
 } from "./board-content-storage";
-import { insertBoardSet } from "./board-set-storage";
+import { insertBoardSetRecords } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
 
 beforeEach(async () => {
@@ -23,7 +23,7 @@ afterEach(closeBoardsDB);
 
 describe("getBoardRecord", () => {
   test("returns undefined for nonexistent board", async () => {
-    await insertBoardSet(makeBoardSetInput());
+    await insertBoardSetRecords(makeBoardSetInput());
 
     const board = await getBoardRecord({
       boardSetId: "set-1",
@@ -35,7 +35,7 @@ describe("getBoardRecord", () => {
 
 describe("listBoardIds", () => {
   test("returns only the IDs of the set's boards", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
         rootBoardId: "a",
@@ -45,7 +45,7 @@ describe("listBoardIds", () => {
         ],
       }),
     );
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-2",
         rootBoardId: "c",
@@ -61,7 +61,7 @@ describe("listBoardIds", () => {
 
 describe("listBoardRecords", () => {
   test("returns only the set's boards", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
         name: "Set 1",
@@ -72,7 +72,7 @@ describe("listBoardRecords", () => {
         ],
       }),
     );
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-2",
         name: "Set 2",
@@ -95,7 +95,7 @@ describe("listBoardRecords", () => {
 
 describe("getAssetBlob", () => {
   test("retrieves asset blobs using normalized paths", async () => {
-    await insertBoardSet(
+    await insertBoardSetRecords(
       makeBoardSetInput({
         assets: [
           makeAssetInput("images\\photo.png", "data", "image/png"),

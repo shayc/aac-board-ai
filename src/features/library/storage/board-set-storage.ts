@@ -53,7 +53,7 @@ export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
-export async function removeBoardSet(boardSetId: string): Promise<void> {
+export async function deleteBoardSetRecords(boardSetId: string): Promise<void> {
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
   const keyRange = boardSetRange(boardSetId);
@@ -71,7 +71,7 @@ export interface BoardSetTranslations {
   readonly translationsByBoardId: ReadonlyMap<string, StringTranslations>;
 }
 
-export async function putBoardSetTranslations(
+export async function updateBoardSetTranslations(
   boardSetId: string,
   language: string,
   { name, translationsByBoardId }: BoardSetTranslations,
@@ -118,7 +118,9 @@ function withTranslations(
   return { ...board, obf };
 }
 
-export async function insertBoardSet(input: BoardSetInput): Promise<void> {
+export async function insertBoardSetRecords(
+  input: BoardSetInput,
+): Promise<void> {
   const rootBoard = validateBoardSetInput(input);
   const boardSetRecord = buildBoardSetRecord(input, rootBoard);
   const boardRecords = buildBoardRecords(input);
