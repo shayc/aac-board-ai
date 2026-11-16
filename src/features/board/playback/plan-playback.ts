@@ -1,4 +1,4 @@
-import type { PlaybackStep } from "@shared/playback/playback-types";
+import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
 
 interface SpokenPart {
@@ -20,18 +20,20 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   }
 
   for (const part of parts) {
+    const text = getSpokenText(part);
+
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
       steps.push({
         kind: "audio",
         src: part.soundSrc,
         cue: part.id,
+        fallbackText: text || undefined,
       });
 
       continue;
     }
 
-    const text = getSpokenText(part);
     if (text) {
       spokenRun.push({ id: part.id, text });
     }
@@ -41,8 +43,6 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
 
   return steps;
 }
-
-type SpeechStep = Extract<PlaybackStep, { kind: "speech" }>;
 
 interface PartSpan {
   id: string;
@@ -56,10 +56,9 @@ function createSpeechStep(parts: readonly SpokenPart[]): SpeechStep {
   let offset = 0;
 
   for (const part of parts) {
-    const chunk = part.text.trim().replace(/\s+/g, " ");
-    chunks.push(chunk);
-    spans.push({ id: part.id, start: offset, end: offset + chunk.length });
-    offset += chunk.length + 1;
+    chunks.push(part.text);
+    spans.push({ id: part.id, start: offset, end: offset + part.text.length });
+    offset += part.text.length + 1;
   }
 
   return {
@@ -75,5 +74,5 @@ function getSpokenText(part: MessagePart): string {
   const text =
     part.kind === "tile" ? (part.vocalization ?? part.label) : part.label;
 
-  return text.trim().toLowerCase();
+  return text.trim().replace(/\s+/g, " ").toLowerCase();
 }

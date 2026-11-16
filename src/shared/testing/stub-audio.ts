@@ -20,3 +20,7 @@ export function stubAudio(): {
 
   return { play, pause };
 }
+
+export function failAudio(play: MockInstance<HTMLAudioElement["play"]>): void {
+  play.mockRejectedValue(new DOMException("Blocked", "NotAllowedError"));
+}

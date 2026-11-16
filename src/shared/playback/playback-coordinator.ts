@@ -4,6 +4,7 @@ import { assertNever } from "@shared/utils/assert-never";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
 import type {
+  AudioStep,
   PlaybackCoordinator,
   PlaybackOutcome,
   PlaybackRequest,
@@ -46,7 +47,7 @@ export function createPlaybackCoordinator(
     switch (step.kind) {
       case "audio":
         setActiveCue(session, step.cue ?? null);
-        await playAudio(step.src, { signal });
+        await playAudioOrSpeakFallback(step, signal);
         break;
 
       case "speech": {
@@ -63,6 +64,23 @@ export function createPlaybackCoordinator(
 
       default:
         assertNever(step);
+    }
+  }
+
+  // Interrupted audio resolves rather than rejects, so only audio that could
+  // not play reaches the fallback.
+  async function playAudioOrSpeakFallback(
+    step: AudioStep,
+    signal: AbortSignal,
+  ) {
+    try {
+      await playAudio(step.src, { signal });
+    } catch (error) {
+      if (!step.fallbackText) {
+        throw error;
+      }
+
+      await speak(step.fallbackText, getSpeechParameters(), { signal });
     }
   }
 
