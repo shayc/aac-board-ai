@@ -38,9 +38,6 @@ function ScrollableMessageBar(props: MessageBarProps) {
   );
 }
 
-// The test browsers draw overlay scrollbars; a mouse on a desktop gets ones
-// that take space from the scroller. Playwright's Chromium hides scrollbars
-// altogether, so only WebKit exercises the space-taking case.
 function SpaceTakingScrollbars({ children }: { children: ReactNode }) {
   return (
     <>

@@ -50,7 +50,6 @@ export function AACSymbol({
             position: "relative",
             flexGrow: 1,
             height: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, 54px)`,
-            // A size the container asks for is a limit; the default grows.
             maxHeight: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, none)`,
             // Let the image shrink so the label keeps its full line.
             minHeight: 0,
