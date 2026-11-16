@@ -1,6 +1,6 @@
 import type { Status } from "@shayc/react-built-in-ai";
 import type { SuggestionSource } from "./suggestion-source";
-import { isEngineStatusAvailable } from "./suggestion-support";
+import { isAvailableEngineStatus } from "./suggestion-support";
 
 export type SuggestionStatus =
   | { kind: "idle" }
@@ -26,7 +26,7 @@ export function deriveSuggestionStatus({
   phraseCount,
 }: SuggestionStatusInput): SuggestionStatus {
   const availableSources = sources.filter(({ engineStatus }) =>
-    isEngineStatusAvailable(engineStatus),
+    isAvailableEngineStatus(engineStatus),
   );
   if (availableSources.length === 0) {
     return { kind: "idle" };

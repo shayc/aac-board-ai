@@ -8,7 +8,7 @@ import {
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import {
-  isEngineStatusAvailable,
+  isAvailableEngineStatus,
   SUGGESTION_ENGINES,
 } from "./suggestion-support";
 import { useProofreaderSource } from "./use-proofreader-source";
@@ -57,7 +57,7 @@ export function useMessageSuggestions(
     sources.map(({ candidate }) => candidate),
   );
   const isAvailable = sources.some(({ engineStatus }) =>
-    isEngineStatusAvailable(engineStatus),
+    isAvailableEngineStatus(engineStatus),
   );
   const status = deriveSuggestionStatus({
     sources,
