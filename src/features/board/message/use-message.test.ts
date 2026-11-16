@@ -388,7 +388,7 @@ describe("useMessage", () => {
       expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
     });
 
-    test("restores a played message when clearing after speaking is off", async () => {
+    test("restores a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
       const first = await renderHook(() => useMessage());
       first.result.current.replaceWithText("I want", "en");
