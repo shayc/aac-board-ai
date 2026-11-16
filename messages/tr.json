@@ -136,6 +136,7 @@
   "messageStop": "Mesajı durdur",
   "playbackFailed": "Ses oynatılamadı",
   "messageLabel": "Mesaj",
+  "messageRestored": "Önceki mesajınız geri geldi. Yeni semboller ona eklenir.",
   "onboardingContinue": "Devam et",
   "onboardingTitle": "AAC Board AI uygulamasına hoş geldiniz",
   "onboardingTapToSpeakTitle": "Dokunun ve konuşun",

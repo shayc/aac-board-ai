@@ -136,6 +136,7 @@
   "messageStop": "Pysäytä viesti",
   "playbackFailed": "Ääntä ei voitu toistaa",
   "messageLabel": "Viesti",
+  "messageRestored": "Aiempi viestisi on palautettu. Uudet symbolit lisätään siihen.",
   "onboardingContinue": "Jatka",
   "onboardingTitle": "Tervetuloa käyttämään AAC Board AI:ta",
   "onboardingTapToSpeakTitle": "Napauta ja puhu",

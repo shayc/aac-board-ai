@@ -136,6 +136,7 @@
   "messageStop": "إيقاف الرسالة",
   "playbackFailed": "تعذر تشغيل الصوت",
   "messageLabel": "الرسالة",
+  "messageRestored": "عادت رسالتك السابقة. تُضاف الرموز الجديدة إليها.",
   "onboardingContinue": "متابعة",
   "onboardingTitle": "مرحبًا بك في AAC Board AI",
   "onboardingTapToSpeakTitle": "انقر لتتحدث",

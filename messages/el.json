@@ -136,6 +136,7 @@
   "messageStop": "Διακοπή μηνύματος",
   "playbackFailed": "Δεν ήταν δυνατή η αναπαραγωγή ήχου",
   "messageLabel": "Μήνυμα",
+  "messageRestored": "Το προηγούμενο μήνυμά σας επανήλθε. Τα νέα σύμβολα προστίθενται σε αυτό.",
   "onboardingContinue": "Συνέχεια",
   "onboardingTitle": "Καλώς ήρθατε στο AAC Board AI",
   "onboardingTapToSpeakTitle": "Πατήστε για να μιλήσετε",

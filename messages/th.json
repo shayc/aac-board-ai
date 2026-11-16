@@ -136,6 +136,7 @@
   "messageStop": "หยุดข้อความ",
   "playbackFailed": "ไม่สามารถเล่นเสียงได้",
   "messageLabel": "ข้อความ",
+  "messageRestored": "ข้อความก่อนหน้าของคุณกลับมาแล้ว สัญลักษณ์ใหม่จะต่อท้ายข้อความนี้",
   "onboardingContinue": "ดำเนินการต่อ",
   "onboardingTitle": "ยินดีต้อนรับสู่ AAC Board AI",
   "onboardingTapToSpeakTitle": "แตะเพื่อพูด",

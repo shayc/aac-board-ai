@@ -1,5 +1,5 @@
-import { useEffect, useEffectEvent, useRef, useState } from "react";
-import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
+import { useRef, useState } from "react";
+import { saveMessageDraft } from "./message-draft";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
@@ -30,48 +30,13 @@ export interface UseMessageReturn {
   undo: () => void;
 }
 
-export function useMessage(): UseMessageReturn {
+export function useMessage(
+  initialMessage: Message = EMPTY_MESSAGE,
+): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
-  const [state, setRenderedState] = useState(EMPTY_MESSAGE);
+  const [state, setRenderedState] = useState(initialMessage);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
-  const isUntouchedRef = useRef(true);
-
-  function show(next: Message) {
-    stateRef.current = next;
-    setRenderedState(next);
-  }
-
-  // Saved on every change rather than when the page hides: a mobile system can
-  // end a page in the background without warning.
-  function commit(next: Message) {
-    isUntouchedRef.current = false;
-    show(next);
-    saveMessageDraft(next);
-  }
-
-  // The draft shows whole, media included, so nothing changes the message
-  // under a playback or an edit already under way. An edit made while it was
-  // restoring has replaced it.
-  const showRestoredMessage = useEffectEvent((restored: Message) => {
-    if (isUntouchedRef.current) {
-      show(restored);
-    }
-  });
-
-  useEffect(() => {
-    let isCurrent = true;
-    void restoreMessageDraft().then((restored) => {
-      if (isCurrent) {
-        showRestoredMessage(restored);
-      }
-    });
-
-    return () => {
-      isCurrent = false;
-    };
-  }, []);
-
   const text = state.parts.map((part) => part.label).join(" ");
 
   // The setting is read each time the message is edited, so turning it off
@@ -80,6 +45,14 @@ export function useMessage(): UseMessageReturn {
     return shouldClearAfterPlayback
       ? stateRef.current
       : markPlayed(stateRef.current, false);
+  }
+
+  // Saved on every change rather than when the page hides: a mobile system can
+  // end a page in the background without warning.
+  function commit(next: Message) {
+    stateRef.current = next;
+    setRenderedState(next);
+    saveMessageDraft(next);
   }
 
   // Marking the message played is not a step to undo, so it goes through

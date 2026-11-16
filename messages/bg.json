@@ -136,6 +136,7 @@
   "messageStop": "Спиране на съобщението",
   "playbackFailed": "Звукът не можа да се възпроизведе",
   "messageLabel": "Съобщение",
+  "messageRestored": "Предишното ви съобщение е възстановено. Новите символи се добавят към него.",
   "onboardingContinue": "Продължаване",
   "onboardingTitle": "Добре дошли в AAC Board AI",
   "onboardingTapToSpeakTitle": "Докоснете, за да говорите",

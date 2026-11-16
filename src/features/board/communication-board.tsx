@@ -8,10 +8,13 @@ import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
+import { useState } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
+import type { Message } from "./message/message-types";
+import { RestoredMessageNotice } from "./message/restored-message-notice";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -30,18 +33,22 @@ interface CommunicationBoardProps {
   /** The language the board's text is in, when known; it may not be the communication language. */
   language: string | undefined;
   rootBoardId: string | undefined;
+  /** The message the board opens with, such as one composed before a reload. */
+  initialMessage?: Message;
 }
 
 export function CommunicationBoard({
   board,
   language,
   rootBoardId,
+  initialMessage,
 }: CommunicationBoardProps) {
   const t = useTranslate();
   const communication = useCommunicationLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const message = useMessage();
+  const [restoredMessage] = useState(initialMessage);
+  const message = useMessage(restoredMessage);
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -64,6 +71,12 @@ export function CommunicationBoard({
   });
 
   const hasMessage = message.parts.length > 0;
+  // Only an unplayed message takes the next symbol, and only until it changes.
+  const isRestoredMessageOpen =
+    restoredMessage !== undefined &&
+    !restoredMessage.hasPlayed &&
+    hasMessage &&
+    message.parts === restoredMessage.parts;
 
   const navigationButtons = (
     <NavigationButtons
@@ -157,6 +170,8 @@ export function CommunicationBoard({
               </ErrorBoundary>
             </Stack>
           </Stack>
+
+          <RestoredMessageNotice isShown={isRestoredMessageOpen} />
 
           <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
             <Grid<BoardButton>

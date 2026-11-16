@@ -373,9 +373,10 @@ describe("useMessage", () => {
       const saved = first.result.current.parts;
       await first.unmount();
 
-      const { result } = await renderHook(() => useMessage());
+      const restored = await restoreMessageDraft();
+      const { result } = await renderHook(() => useMessage(restored));
 
-      await expect.poll(() => result.current.parts).toEqual(saved);
+      expect(result.current.parts).toEqual(saved);
       // A played message is restored as played, so the next word starts anew.
       expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
     });
@@ -387,9 +388,10 @@ describe("useMessage", () => {
       ]);
       await first.unmount();
 
-      const { result } = await renderHook(() => useMessage());
+      const restored = await restoreMessageDraft();
+      const { result } = await renderHook(() => useMessage(restored));
 
-      await expect.poll(() => result.current.isWordOpen).toBe(true);
+      expect(result.current.isWordOpen).toBe(true);
       expect(labelsAfterSpelling(result.current)).toEqual(["caa"]);
     });
 
@@ -440,21 +442,6 @@ describe("useMessage", () => {
       const part = await renderRestoredTilePart();
 
       expect(part.imageSrc).toBeUndefined();
-    });
-
-    test("keeps an edit made while the draft is restoring", async () => {
-      await seedSymbolSet();
-      await composeAndClose({ imageSrc: await requireAssetURL(IMAGE_PATH) });
-      await resetBoardsDB();
-      await seedSymbolSet();
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.replaceWithText("bye", "en");
-      // Reading the asset again settles after the read the restore started.
-      await requireAssetURL(IMAGE_PATH);
-      await rerender();
-
-      expect(result.current.text).toBe("bye");
     });
   });
 });
@@ -511,8 +498,8 @@ async function composeAndClose(media: {
 }
 
 async function renderRestoredTilePart(): Promise<TilePart> {
-  const { result } = await renderHook(() => useMessage());
-  await expect.poll(() => result.current.parts).toHaveLength(1);
+  const restored = await restoreMessageDraft();
+  const { result } = await renderHook(() => useMessage(restored));
   const part = result.current.parts[0];
   assert(part?.kind === "tile");
 

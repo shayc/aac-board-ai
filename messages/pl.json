@@ -136,6 +136,7 @@
   "messageStop": "Zatrzymaj wiadomość",
   "playbackFailed": "Nie udało się odtworzyć dźwięku",
   "messageLabel": "Wiadomość",
+  "messageRestored": "Twoja poprzednia wiadomość wróciła. Nowe symbole zostaną do niej dodane.",
   "onboardingContinue": "Kontynuuj",
   "onboardingTitle": "Witamy w AAC Board AI",
   "onboardingTapToSpeakTitle": "Dotknij, aby mówić",

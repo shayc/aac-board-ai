@@ -136,6 +136,7 @@
   "messageStop": "Zastavit zprávu",
   "playbackFailed": "Zvuk se nepodařilo přehrát",
   "messageLabel": "Zpráva",
+  "messageRestored": "Vaše předchozí zpráva je zpět. Nové symboly se k ní přidají.",
   "onboardingContinue": "Pokračovat",
   "onboardingTitle": "Vítejte v AAC Board AI",
   "onboardingTapToSpeakTitle": "Klepněte a mluvte",

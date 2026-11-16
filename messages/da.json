@@ -136,6 +136,7 @@
   "messageStop": "Stop besked",
   "playbackFailed": "Lyden kunne ikke afspilles",
   "messageLabel": "Besked",
+  "messageRestored": "Din tidligere besked er tilbage. Nye symboler føjes til den.",
   "onboardingContinue": "Fortsæt",
   "onboardingTitle": "Velkommen til AAC Board AI",
   "onboardingTapToSpeakTitle": "Tryk for at tale",

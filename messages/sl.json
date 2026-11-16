@@ -136,6 +136,7 @@
   "messageStop": "Ustavi sporočilo",
   "playbackFailed": "Zvoka ni bilo mogoče predvajati",
   "messageLabel": "Sporočilo",
+  "messageRestored": "Vaše prejšnje sporočilo je obnovljeno. Novi simboli se dodajo vanj.",
   "onboardingContinue": "Nadaljuj",
   "onboardingTitle": "Dobrodošli v AAC Board AI",
   "onboardingTapToSpeakTitle": "Dotaknite se in govorite",

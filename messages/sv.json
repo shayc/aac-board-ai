@@ -136,6 +136,7 @@
   "messageStop": "Stoppa meddelande",
   "playbackFailed": "Det gick inte att spela upp ljudet",
   "messageLabel": "Meddelande",
+  "messageRestored": "Ditt tidigare meddelande är tillbaka. Nya symboler läggs till i det.",
   "onboardingContinue": "Fortsätt",
   "onboardingTitle": "Välkommen till AAC Board AI",
   "onboardingTapToSpeakTitle": "Tryck för att tala",
