@@ -1,9 +1,17 @@
 import { obfToBoard } from "@features/library/testing";
 import { AppProviders } from "@shared/providers/app-providers";
+import type { ReviewedIncomplete } from "@shared/testing/axe";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { type InitialEntry, MemoryRouter } from "react-router";
 import { render } from "vitest-browser-react";
 import { CommunicationBoard } from "../communication-board";
+
+export const EMPTY_MESSAGE_REVIEW: ReviewedIncomplete = {
+  rule: "aria-required-children",
+  selector: "[role='list']",
+  reason:
+    "The message list starts empty and gains an item for each selected tile.",
+};
 
 export const TWO_BUTTON_BOARD: OBFBoard = {
   format: "open-board-0.1",

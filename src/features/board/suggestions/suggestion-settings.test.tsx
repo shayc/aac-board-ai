@@ -47,7 +47,16 @@ describe("SuggestionSettings", () => {
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();
 
-    await expectNoA11yViolations(screen.container);
+    await expectNoA11yViolations(screen.container, {
+      reviewedIncomplete: [
+        {
+          rule: "color-contrast",
+          selector: "textarea",
+          reason:
+            "The custom instructions field starts empty, so axe has no text to measure.",
+        },
+      ],
+    });
   });
 
   test("has no accessibility violations when no engine supports the language", async () => {

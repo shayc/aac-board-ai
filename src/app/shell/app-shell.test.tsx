@@ -33,7 +33,16 @@ describe("AppShell", () => {
   test("has no accessibility violations", async () => {
     await renderAppShell();
 
-    await expectNoA11yViolations(document.body);
+    await expectNoA11yViolations(document.body, {
+      reviewedIncomplete: [
+        {
+          rule: "aria-hidden-focus",
+          selector: "[aria-hidden='true']",
+          reason:
+            "The onboarding dialog hides the app behind it and traps focus, so its controls cannot be reached.",
+        },
+      ],
+    });
   });
 
   test("moves focus into the library on open and back on close on desktop", async () => {

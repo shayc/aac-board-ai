@@ -21,6 +21,7 @@ import {
   setMessageImagesVisible,
 } from "./message/message-preferences-store";
 import {
+  EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -196,7 +197,9 @@ describe("CommunicationBoard", () => {
     test("has no accessibility violations", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
-      await expectNoA11yViolations(screen.container);
+      await expectNoA11yViolations(screen.container, {
+        reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+      });
     });
 
     test("names the tile grid with the board's name", async () => {
@@ -850,7 +853,9 @@ describe("CommunicationBoard", () => {
 
         await expect.element(tile).toBeVisible();
         expect(tile.element().textContent).toBe("");
-        await expectNoA11yViolations(screen.container);
+        await expectNoA11yViolations(screen.container, {
+          reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+        });
 
         await tile.click();
 
