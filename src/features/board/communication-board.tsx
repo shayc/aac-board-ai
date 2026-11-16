@@ -21,9 +21,9 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
+import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { MessageSuggestions } from "./suggestions/message-suggestions";
 import { Tile } from "./tile/tile";
-import { useBoardShortcuts } from "./use-board-shortcuts";
 
 interface CommunicationBoardProps {
   board: Board;

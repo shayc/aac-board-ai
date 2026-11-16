@@ -287,7 +287,7 @@ these rules:
 - When grid content changes, focus returns to the remembered cell or first
   focusable tile only if no other control holds focus.
 
-While focus is anywhere in the board, [shortcuts](../src/features/board/use-board-shortcuts.ts)
+While focus is anywhere in the board, [shortcuts](../src/features/board/shortcuts/)
 remove the last word, clear the message, undo the last change to it, speak it,
 and stop speech without moving to a control;
 [`resolve-board-shortcut.ts`](../src/features/board/shortcuts/resolve-board-shortcut.ts)

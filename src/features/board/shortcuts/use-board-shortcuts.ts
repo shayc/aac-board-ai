@@ -1,9 +1,9 @@
 import { assertNever } from "@shared/utils/assert-never";
 import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
-import type { UseMessageReturn } from "./message/use-message";
-import type { UseBoardPlaybackReturn } from "./playback/use-board-playback";
-import { resolveBoardShortcut } from "./shortcuts/resolve-board-shortcut";
+import type { UseMessageReturn } from "../message/use-message";
+import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
+import { resolveBoardShortcut } from "./resolve-board-shortcut";
 
 interface UseBoardShortcutsOptions {
   message: Pick<UseMessageReturn, "parts" | "backspace" | "clear" | "undo">;
