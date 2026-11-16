@@ -199,6 +199,24 @@ describe("CommunicationBoard", () => {
       await expectNoA11yViolations(screen.container);
     });
 
+    test("exposes the message bar, controls and tiles to assistive technology", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await expect.element(screen.container).toMatchAriaInlineSnapshot(`
+        - list "Message"
+        - button "Backspace" [disabled]
+        - grid "Communication board":
+          - row "hello world":
+            - gridcell "hello":
+              - button "hello"
+            - gridcell "world":
+              - button "world"
+        - button "Go back" [disabled]
+        - button "Go to main board" [disabled]
+        - button "Play message" [disabled]
+      `);
+    });
+
     test("names the tile grid with the board's name", async () => {
       const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
 
@@ -482,6 +500,19 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "world" }).click();
 
       await expectNoA11yViolations(screen.container);
+    });
+
+    test("exposes each composed word to assistive technology", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expect.element(screen.getByRole("list")).toMatchAriaInlineSnapshot(`
+        - list "Message":
+          - listitem: hello
+          - listitem: world
+      `);
     });
 
     test("enables message playback only after content is composed", async () => {
