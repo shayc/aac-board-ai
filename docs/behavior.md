@@ -43,8 +43,8 @@ by its root board:
 [`obfToBoardSetMetadata`](../src/features/library/obf/obf-to-board-set-metadata.ts)
 reads the set's name, author, description, license, language, and grid size
 from it, and storage keeps what it is given. A root board without a name leaves
-the set named after its file. The three
-local-file entry points go through `useImportBoardFiles().importAndOpen`, which
+the set named after its file, or after its ID when the file name is only an
+extension. The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
 opens the board set when exactly one imports. It skips files without a board
 file extension and names them only when no board file was given. It imports the
 rest one at a time, so a failing file, or a launched file that can't be read,
