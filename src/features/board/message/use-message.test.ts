@@ -36,6 +36,18 @@ describe("useMessage", () => {
     expect(result.current.text).toBe(text);
   });
 
+  test("gives every word the language of the text that replaces the message", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("I am", "en");
+    await rerender();
+
+    expect(result.current.parts).toMatchObject([
+      { label: "I", language: "en" },
+      { label: "am", language: "en" },
+    ]);
+  });
+
   test("clears all existing parts when called with an empty string", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 

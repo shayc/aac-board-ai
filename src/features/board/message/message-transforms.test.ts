@@ -65,6 +65,13 @@ describe("spell", () => {
     expect(message.parts[0]?.id).toBeTruthy();
   });
 
+  test("keeps the language of a word's first letter as the word is extended", () => {
+    const first = spell(EMPTY_MESSAGE, "ho", "es");
+    const second = spell(first, "la", "en");
+
+    expect(second.parts).toMatchObject([{ label: "hola", language: "es" }]);
+  });
+
   test("extends the word being spelled, keeping its id", () => {
     const first = spell(EMPTY_MESSAGE, "ca");
 

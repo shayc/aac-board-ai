@@ -102,6 +102,18 @@ describe("getSpeechParameters", () => {
     });
   });
 
+  test("speaks text in another language with that language's voice", () => {
+    setStoredLanguage("en");
+    setSpeechVoiceURI("voice-2");
+    setSpeechRate(1.5);
+
+    expect(getSpeechParameters("he")).toMatchObject({
+      language: "he",
+      voice: { voiceURI: "he-voice" },
+      rate: 1.5,
+    });
+  });
+
   test("gives a new language its own voice and keeps the saved voice", () => {
     setStoredLanguage("en");
     setSpeechVoiceURI("voice-2");

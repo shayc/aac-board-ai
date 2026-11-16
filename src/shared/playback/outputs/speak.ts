@@ -3,7 +3,7 @@ import {
   type SpeechParameters,
 } from "@shared/speech/speech-synthesis";
 
-interface SpeakOptions {
+export interface SpeakOptions {
   signal?: AbortSignal;
   onBoundary?: (charIndex: number) => void;
 }

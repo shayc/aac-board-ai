@@ -2,7 +2,7 @@ import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { createExternalStore } from "@shared/stores/external-store";
 import { assertNever } from "@shared/utils/assert-never";
 import { playAudio } from "./outputs/play-audio";
-import { speak } from "./outputs/speak";
+import { speak, type SpeakOptions } from "./outputs/speak";
 import type {
   AudioStep,
   PlaybackCoordinator,
@@ -10,6 +10,7 @@ import type {
   PlaybackRequest,
   PlaybackState,
   PlaybackStep,
+  SpokenText,
 } from "./playback-types";
 
 interface PlaybackSession {
@@ -18,7 +19,7 @@ interface PlaybackSession {
 }
 
 export function createPlaybackCoordinator(
-  getSpeechParameters: () => SpeechParameters,
+  getSpeechParameters: (textLanguage?: string) => SpeechParameters,
 ): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
   let currentSession: PlaybackSession | null = null;
@@ -53,7 +54,7 @@ export function createPlaybackCoordinator(
       case "speech": {
         const { cueAt } = step;
         setActiveCue(session, cueAt?.(0) ?? null);
-        await speak(step.text, getSpeechParameters(), {
+        await speakText(step, {
           signal,
           onBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))
@@ -76,12 +77,16 @@ export function createPlaybackCoordinator(
     try {
       await playAudio(step.src, { signal });
     } catch (error) {
-      if (!step.fallbackText) {
+      if (!step.fallback) {
         throw error;
       }
 
-      await speak(step.fallbackText, getSpeechParameters(), { signal });
+      await speakText(step.fallback, { signal });
     }
+  }
+
+  function speakText({ text, language }: SpokenText, options: SpeakOptions) {
+    return speak(text, getSpeechParameters(language), options);
   }
 
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {

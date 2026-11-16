@@ -100,8 +100,10 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechParameters(): SpeechParameters {
-  const language = getStoredLanguage();
+// Text in another language than the communication language, such as an
+// untranslated board, is spoken in its own.
+export function getSpeechParameters(textLanguage?: string): SpeechParameters {
+  const language = textLanguage ?? getStoredLanguage();
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();

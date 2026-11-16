@@ -168,7 +168,7 @@ describe("PlaybackProvider", () => {
       owner: "message",
       steps: [
         { kind: "speech", text: "hello" },
-        { kind: "audio", src: "recording.mp3", fallbackText: "dog" },
+        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
         { kind: "speech", text: "world" },
       ],
     });
@@ -189,7 +189,12 @@ describe("PlaybackProvider", () => {
     const outcome = playback.play({
       owner: "message",
       steps: [
-        { kind: "audio", src: "recording.mp3", cue: "1", fallbackText: "dog" },
+        {
+          kind: "audio",
+          src: "recording.mp3",
+          cue: "1",
+          fallback: { text: "dog" },
+        },
       ],
     });
     await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
@@ -210,7 +215,9 @@ describe("PlaybackProvider", () => {
 
     const outcome = result.current.play({
       owner: "message",
-      steps: [{ kind: "audio", src: "recording.mp3", fallbackText: "dog" }],
+      steps: [
+        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
+      ],
     });
 
     await expect(outcome).resolves.toBe("failed");
@@ -229,12 +236,51 @@ describe("PlaybackProvider", () => {
 
     const outcome = result.current.play({
       owner: "tile",
-      steps: [{ kind: "audio", src: "recording.mp3", fallbackText: "dog" }],
+      steps: [
+        { kind: "audio", src: "recording.mp3", fallback: { text: "dog" } },
+      ],
     });
     result.current.stop();
 
     await expect(outcome).resolves.toBe("interrupted");
     expect(speech.speak).not.toHaveBeenCalled();
+  });
+
+  test("asks for speech parameters in each step's language, for speech and for an audio fallback", async () => {
+    failAudio(audio.play);
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <PlaybackProvider
+          getSpeechParameters={(textLanguage) => ({
+            ...speechParameters,
+            language: textLanguage ?? speechParameters.language,
+          })}
+        >
+          {children}
+        </PlaybackProvider>
+      ),
+    });
+
+    await result.current.play({
+      owner: "message",
+      steps: [
+        { kind: "speech", text: "hola", language: "es" },
+        {
+          kind: "audio",
+          src: "/adios.mp3",
+          fallback: { text: "adiós", language: "es" },
+        },
+        { kind: "speech", text: "hello" },
+      ],
+    });
+
+    expect(
+      speech.speak.mock.calls.map(([spoken]) => [spoken.text, spoken.lang]),
+    ).toEqual([
+      ["hola", "es"],
+      ["adiós", "es"],
+      ["hello", "en"],
+    ]);
   });
 
   test("speaks each request with the parameters current at that moment", async () => {

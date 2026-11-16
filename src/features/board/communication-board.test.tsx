@@ -2,6 +2,7 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
+import { stubRewriter } from "@shared/testing/stub-built-in-ai";
 import {
   endUtterance,
   failUtterance,
@@ -13,10 +14,12 @@ import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import {
+  communicationBoardTree,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -234,6 +237,89 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByRole("listitem"))
         .toHaveAttribute("lang", "es");
+    });
+
+    test("speaks a board in another language than the communication language in the board's own", async () => {
+      setStoredLanguage("en");
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: "es",
+      });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await expect.poll(() => lastUtterance(speech.speak).lang).toBe("es");
+
+      await screen.getByRole("button", { name: "Play message" }).click();
+      await expect.poll(() => speech.speak.mock.calls).toHaveLength(2);
+      expect(lastUtterance(speech.speak).lang).toBe("es");
+    });
+
+    test("plays each part of a message in the language it was added in", async () => {
+      setStoredLanguage("en");
+      const screen = await render(communicationBoardTree(TWO_BUTTON_BOARD));
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await screen.rerender(
+        communicationBoardTree({
+          ...TWO_BUTTON_BOARD,
+          id: "spanish-board",
+          locale: "es",
+          buttons: [{ id: "btn-1", label: "hola" }],
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        }),
+      );
+      await screen.getByRole("button", { name: "hola" }).click();
+      await expect.poll(() => speech.speak.mock.calls).toHaveLength(2);
+
+      await screen.getByRole("button", { name: "Play message" }).click();
+      await expect.poll(() => speech.speak.mock.calls).toHaveLength(4);
+
+      expect(
+        speech.speak.mock.calls
+          .slice(2)
+          .map(([spoken]) => [spoken.text, spoken.lang]),
+      ).toEqual([
+        ["hello", "en"],
+        ["hola", "es"],
+      ]);
+      const [englishPart, spanishPart] = screen
+        .getByRole("listitem")
+        .elements();
+      expect(englishPart).toHaveAttribute("lang", "en");
+      expect(spanishPart).toHaveAttribute("lang", "es");
+    });
+
+    test("speaks an accepted suggestion in the communication language on a board in another", async () => {
+      stubRewriter(() => "I want to say hello");
+      setStoredLanguage("en");
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: "es",
+      });
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await screen.getByRole("button", { name: "I want to say hello" }).click();
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await expect
+        .poll(() => lastUtterance(speech.speak).text)
+        .toBe("i want to say hello");
+      expect(lastUtterance(speech.speak).lang).toBe("en");
+      await expect
+        .element(screen.getByRole("listitem").first())
+        .toHaveAttribute("lang", "en");
+    });
+
+    test("speaks in the communication language when the board declares none", async () => {
+      setStoredLanguage("he");
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: undefined,
+      });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect.poll(() => lastUtterance(speech.speak).lang).toBe("he");
     });
 
     test("leaves tiles on the document's language when the board declares none", async () => {

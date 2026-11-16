@@ -21,7 +21,6 @@ function createProps(
 ): MessageBarProps {
   return {
     parts: [],
-    language: "en",
     isWordOpen: false,
     activePartId: null,
     areImagesVisible: true,

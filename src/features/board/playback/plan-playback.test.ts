@@ -40,6 +40,35 @@ describe("planPlayback", () => {
     expect(step.cueAt?.(99)).toBeNull();
   });
 
+  test("starts a new speech step where the language changes", () => {
+    const parts: MessagePart[] = [
+      { kind: "tile", id: "1", label: "I", language: "en" },
+      { kind: "tile", id: "2", label: "want", language: "en" },
+      { kind: "tile", id: "3", label: "agua", language: "es" },
+      { kind: "text", id: "4", label: "now" },
+    ];
+
+    const steps = planPlayback(parts);
+
+    expect(steps).toMatchObject([
+      { kind: "speech", text: "i want", language: "en" },
+      { kind: "speech", text: "agua", language: "es" },
+      { kind: "speech", text: "now", language: undefined },
+    ]);
+  });
+
+  test("gives a sound part's fallback text the part's language", () => {
+    const part = createTilePart({
+      label: "hola",
+      soundSrc: "hola.mp3",
+      language: "es",
+    });
+
+    expect(planPlayback([part])).toMatchObject([
+      { kind: "audio", fallback: { text: "hola", language: "es" } },
+    ]);
+  });
+
   test("emits a sound part as its own step carrying its part id", () => {
     const part = createTilePart({ label: "", soundSrc: "bell.mp3" });
     const steps = planPlayback([part]);
@@ -60,8 +89,13 @@ describe("planPlayback", () => {
     ]);
 
     expect(steps).toEqual([
-      { kind: "audio", cue: "1", src: "bark.mp3", fallbackText: "dog" },
-      { kind: "audio", cue: "2", src: "laugh.mp3", fallbackText: "very happy" },
+      { kind: "audio", cue: "1", src: "bark.mp3", fallback: { text: "dog" } },
+      {
+        kind: "audio",
+        cue: "2",
+        src: "laugh.mp3",
+        fallback: { text: "very happy" },
+      },
     ]);
   });
 

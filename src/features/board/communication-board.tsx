@@ -61,6 +61,7 @@ export function CommunicationBoard({
       playPart: playback.playPart,
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
+    language,
   });
 
   const hasMessage = message.parts.length > 0;
@@ -132,7 +133,6 @@ export function CommunicationBoard({
               <Box sx={{ flex: 1, minWidth: 0 }}>
                 <PlaybackMessageBar
                   parts={message.parts}
-                  language={language}
                   isWordOpen={message.isWordOpen}
                   endAction={backspaceButton}
                 />
@@ -151,7 +151,9 @@ export function CommunicationBoard({
                     phrases={suggestions.phrases}
                     language={communication.language}
                     onEnable={suggestions.enable}
-                    onPhraseSelect={message.replaceWithText}
+                    onPhraseSelect={(phrase) =>
+                      message.replaceWithText(phrase, communication.language)
+                    }
                   />
                 )}
               </Stack>

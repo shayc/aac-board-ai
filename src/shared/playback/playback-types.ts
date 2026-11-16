@@ -1,16 +1,21 @@
 export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
+export interface SpokenText {
+  text: string;
+  /** The language the text is in, when known. Unset, speech uses the communication language. */
+  language?: string;
+}
+
 export interface AudioStep {
   kind: "audio";
   src: string;
   cue?: string;
   /** Spoken in place of the audio when it cannot play. */
-  fallbackText?: string;
+  fallback?: SpokenText;
 }
 
-export interface SpeechStep {
+export interface SpeechStep extends SpokenText {
   kind: "speech";
-  text: string;
   cueAt?: (charIndex: number) => string | null;
 }
 

@@ -25,6 +25,8 @@ function tilePart(label: string): MessageEdit {
   return { kind: "tile", part: createTilePart({ label }) };
 }
 
+const BOARD_LANGUAGE = "es";
+
 function word(label: string): MessageEdit[] {
   return [{ kind: "spell", text: label }, { kind: "space" }];
 }
@@ -87,7 +89,12 @@ async function setup(
   }
 
   return {
-    activateButton: createButtonActivator({ message, playback, navigation }),
+    activateButton: createButtonActivator({
+      message,
+      playback,
+      navigation,
+      language: BOARD_LANGUAGE,
+    }),
     playback,
     navigation,
     readParts,
@@ -142,6 +149,22 @@ describe("createButtonActivator", () => {
     expect(appended.id).not.toBe("btn");
     expect(playback.playPart).toHaveBeenCalledExactlyOnceWith(appended);
     expect(playback.playMessage).not.toHaveBeenCalled();
+  });
+
+  test("gives tile parts and spelled words the board's language", async () => {
+    const { activateButton, readParts } = await setup();
+
+    activateButton({ id: "btn", label: "hola", actions: [] });
+    activateButton({
+      id: "letter",
+      label: "S",
+      actions: [{ kind: "spell", text: "s" }],
+    });
+
+    expect(await readParts()).toMatchObject([
+      { kind: "tile", label: "hola", language: BOARD_LANGUAGE },
+      { kind: "text", label: "s", language: BOARD_LANGUAGE },
+    ]);
   });
 
   test("navigates home for a home action", async () => {
