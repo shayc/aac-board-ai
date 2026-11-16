@@ -4,6 +4,7 @@ import { useRevalidateBoardSet } from "@app/routing/use-revalidate-board-set";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
+  useActiveBoardSetId,
   useBoardFileDrop,
   useImportBoardFilesOnLaunch,
   useTranslateBoardSets,
@@ -20,10 +21,14 @@ export function AppShell() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
+  const activeBoardSetId = useActiveBoardSetId();
   const revalidateBoardSet = useRevalidateBoardSet();
 
   useImportBoardFilesOnLaunch();
-  useTranslateBoardSets({ onBoardSetTranslated: revalidateBoardSet });
+  useTranslateBoardSets({
+    activeBoardSetId,
+    onBoardSetTranslated: revalidateBoardSet,
+  });
 
   return (
     <Box

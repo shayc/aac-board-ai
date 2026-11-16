@@ -1,20 +1,19 @@
-import { boardSetIdFromPath } from "@features/library";
-import { useLocation, useNavigation, useRevalidator } from "react-router";
+import { boardSetIdFromPath, useActiveBoardSetId } from "@features/library";
+import { useNavigation, useRevalidator } from "react-router";
 
 type RevalidateBoardSet = (boardSetId: string) => void;
 
 export function useRevalidateBoardSet(): RevalidateBoardSet {
   const { revalidate } = useRevalidator();
-  const { pathname } = useLocation();
+  const activeBoardSetId = useActiveBoardSetId();
   const pendingPathname = useNavigation().location?.pathname;
 
   function revalidateBoardSet(boardSetId: string) {
-    const routedBoardSetIds = [pathname, pendingPathname].map(
-      (path) => path && boardSetIdFromPath(path),
-    );
+    const pendingBoardSetId =
+      pendingPathname && boardSetIdFromPath(pendingPathname);
 
     // Unrelated revalidation could restart an in-flight ?board= import.
-    if (routedBoardSetIds.includes(boardSetId)) {
+    if (boardSetId === activeBoardSetId || boardSetId === pendingBoardSetId) {
       void revalidate();
     }
   }

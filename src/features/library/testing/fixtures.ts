@@ -1,6 +1,7 @@
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { type OBFBoard, zip } from "@shayc/open-board-format";
 import { BOARD_FILE_IMPORT_LIMITS } from "../import/board-file-import";
+import { obfToBoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 import type {
   AssetInput,
   BoardSetInput,
@@ -33,11 +34,14 @@ export function makeBoardSetInput(
   overrides: Partial<BoardSetInput> = {},
 ): BoardSetInput {
   const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
+  const rootBoardId = overrides.rootBoardId ?? boards[0]?.id ?? "root-1";
+  const rootBoard = boards.find((board) => board.id === rootBoardId);
 
   return {
-    id: "set-1",
     name: "Set",
-    rootBoardId: boards[0]?.id ?? "root-1",
+    ...(rootBoard && obfToBoardSetMetadata(rootBoard, "Set")),
+    id: "set-1",
+    rootBoardId,
     boards,
     assets: [],
     ...overrides,

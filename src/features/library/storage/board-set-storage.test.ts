@@ -26,27 +26,20 @@ beforeEach(async () => {
 afterEach(closeBoardsDB);
 
 describe("insertBoardSetRecords", () => {
-  test("derives board set metadata from the selected root without changing its source", async () => {
-    const rootBoard = makeOBFBoard({
-      id: "root",
-      name: "Core words",
-      locale: "pt_br",
-      description_html: "<p>A <strong>communication</strong> board</p>",
-      license: { type: "CC-BY", author_name: "Author" },
-      grid: {
-        rows: 2,
-        columns: 3,
-        order: [
-          [null, null, null],
-          [null, null, null],
-        ],
-      },
-    });
+  test("stores the board set's metadata and its boards unchanged", async () => {
+    const rootBoard = makeOBFBoard({ id: "root", name: "Root" });
     const source = structuredClone(rootBoard);
 
     await insertBoardSetRecords({
       id: "vocabulary",
       rootBoardId: "root",
+      name: "Core words",
+      author: "Author",
+      description: "A communication board",
+      license: "CC-BY",
+      locale: "pt-BR",
+      gridRows: 2,
+      gridColumns: 3,
       boards: [makeOBFBoard({ id: "child", name: "Child" }), rootBoard],
       assets: [],
     });
@@ -160,32 +153,17 @@ describe("insertBoardSetRecords", () => {
     expect((await listBoardSetRecords())[0]?.name).toBe("Original");
   });
 
-  test.each([
-    { name: "Home", expectedName: "Home", expectedSetName: "Home" },
-    { name: undefined, expectedName: "root-1", expectedSetName: "set-1" },
-    { name: "", expectedName: "root-1", expectedSetName: "set-1" },
-    { name: "  ", expectedName: "root-1", expectedSetName: "set-1" },
-  ])(
-    "derives display names without changing the OBF source (board name: $name)",
-    async ({ name, expectedName, expectedSetName }) => {
-      const obf = makeOBFBoard({ id: "root-1", name });
+  test("stores each board's OBF source unchanged under its key", async () => {
+    const obf = makeOBFBoard({ id: "root-1", name: "  " });
+    const source = structuredClone(obf);
 
-      await insertBoardSetRecords(
-        makeBoardSetInput({ name: undefined, boards: [obf] }),
-      );
+    await insertBoardSetRecords(makeBoardSetInput({ boards: [obf] }));
 
-      expect(
-        await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
-      ).toEqual({
-        boardSetId: "set-1",
-        id: "root-1",
-        name: expectedName,
-        obf,
-      });
-      expect(obf.name).toBe(name);
-      expect((await listBoardSetRecords())[0]?.name).toBe(expectedSetName);
-    },
-  );
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
+    ).toEqual({ boardSetId: "set-1", id: "root-1", obf: source });
+    expect(obf).toEqual(source);
+  });
 
   test("aborts the entire transaction when a board fails to clone", async () => {
     const uncloneableOBF = {
@@ -365,7 +343,7 @@ describe("deleteBoardSetRecords", () => {
     expect(
       await getBoardRecord({ boardSetId: "set-1-2", boardId: "b1" }),
     ).toMatchObject({
-      name: "Survivor",
+      obf: { name: "Survivor" },
     });
     const asset = await getAssetBlob("set-1-2", "img1.png");
     assertDefined(asset);

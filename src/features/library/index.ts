@@ -5,6 +5,7 @@ export {
   boardPath,
   boardSetIdFromPath,
   rootBoardPath,
+  useActiveBoardSetId,
 } from "./board-paths";
 export { listBoardSummaries } from "./board-sets/list-board-summaries";
 export {

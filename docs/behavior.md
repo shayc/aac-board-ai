@@ -38,8 +38,13 @@ catalog's starter board set if the library is empty.
 ### Import board files
 
 File selection, drag and drop, URL imports, and PWA file handling all use
-`importBoardFile`. Each imported file creates a separate board set. The three
-local-file entry points go through `useImportBoardFiles().importAndOpen`, which
+`importBoardFile`. Each imported file creates a separate board set, described
+by its root board:
+[`obfToBoardSetMetadata`](../src/features/library/obf/obf-to-board-set-metadata.ts)
+reads the set's name, author, description, license, language, and grid size
+from it, and storage keeps what it is given. A root board without a name leaves
+the set named after its file, or after its ID when the file name is only an
+extension. The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
 opens the board set when exactly one imports. It skips files without a board
 file extension and names them only when no board file was given. It imports the
 rest one at a time, so a failing file, or a launched file that can't be read,
@@ -105,7 +110,8 @@ runs in the app shell on start, on a language change, and when sets are added
 or removed. Only a language change aborts the pass in progress; an added or
 removed set queues another pass behind it, so a model download started by the
 language change's user gesture is never cancelled. Each pass starts with the
-set on screen, so that set never waits behind the rest.
+set on screen, which the app shell names, so that set never waits behind the
+rest.
 
 For each set not yet in the communication language, it translates the set name
 and every board missing that language, then saves them in one transaction.

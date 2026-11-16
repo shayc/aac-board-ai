@@ -214,12 +214,16 @@ Inside a feature, folders group related code and collaborate through relative
 imports; they are not separate boundaries. The library's folders still depend
 in one direction, so a folder's name tells which layer it is in:
 
-1. `storage/` and `obf/` import no other library folder.
-2. `board-sets/` keeps the reactive list of stored sets and reads their boards,
+1. `obf/` is everything the library knows about the board file format, and
+   imports no other library folder.
+2. `storage/` persists what it is given. It imports only `obf/`, for the shape
+   of what it stores and for changes that must happen inside a write, such as
+   adding a language's strings to a stored board.
+3. `board-sets/` keeps the reactive list of stored sets and reads their boards,
    and the translations they already have, through `storage/` and `obf/`.
-3. `import/`, `export/`, and `translation/` build on those.
-4. `catalog/` downloads through `import/`.
-5. `panel/` is the library's UI and may use all of the above.
+4. `import/`, `export/`, and `translation/` build on those.
+5. `catalog/` downloads through `import/`.
+6. `panel/` is the library's UI and may use all of the above.
 
 ### Features
 
