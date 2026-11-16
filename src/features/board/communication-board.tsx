@@ -22,8 +22,7 @@ import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
-import { SuggestionBar } from "./suggestions/suggestion-bar";
-import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
+import { MessageSuggestions } from "./suggestions/message-suggestions";
 import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
@@ -43,7 +42,6 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
-  const suggestions = useMessageSuggestions(message.text);
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -106,8 +104,6 @@ export function CommunicationBoard({
     />
   );
 
-  const isActionRowVisible = !isSmallScreen || suggestions.isAvailable;
-
   return (
     <DirectionalThemeProvider direction={communication.direction}>
       <ScanningScope>
@@ -142,27 +138,29 @@ export function CommunicationBoard({
               {!isSmallScreen && playButton}
             </Stack>
 
-            {isActionRowVisible && (
-              <Stack {...scanGroupProps} direction="row" spacing={2}>
-                {!isSmallScreen && navigationButtons}
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={2}
+              // On small screens the row holds only suggestions, so it must
+              // take no space when they are unavailable.
+              sx={{ "&:empty": { display: "none" } }}
+            >
+              {!isSmallScreen && navigationButtons}
 
-                {suggestions.isAvailable && (
-                  // Suggestions are optional: if they break, hide them as if
-                  // built-in AI were unavailable and keep the board usable.
-                  <ErrorBoundary fallback={null}>
-                    <SuggestionBar
-                      status={suggestions.status}
-                      phrases={suggestions.phrases}
-                      language={communication.language}
-                      onEnable={suggestions.enable}
-                      onPhraseSelect={(phrase) =>
-                        message.replaceWithText(phrase, communication.language)
-                      }
-                    />
-                  </ErrorBoundary>
-                )}
-              </Stack>
-            )}
+              {/* Suggestions are optional: if they break, hide them as if
+                  built-in AI were unavailable and keep the board usable.
+                  Changing the language tries again. */}
+              <ErrorBoundary key={communication.language} fallback={null}>
+                <MessageSuggestions
+                  messageText={message.text}
+                  language={communication.language}
+                  onPhraseSelect={(phrase) =>
+                    message.replaceWithText(phrase, communication.language)
+                  }
+                />
+              </ErrorBoundary>
+            </Stack>
           </Stack>
 
           <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
