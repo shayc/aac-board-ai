@@ -14,13 +14,54 @@ See [README.md](../README.md) for product details and setup,
 [AGENTS.md](../AGENTS.md) for contribution and testing rules, and the
 [glossary](#glossary) for AAC terms.
 
+- [Invariants](#invariants)
 - [Runtime architecture](#runtime-architecture)
 - [Data and state ownership](#data-and-state-ownership)
+- [Module boundaries and code map](#module-boundaries-and-code-map)
 - [Core flows](#core-flows)
 - [Accessibility, language, and presentation](#accessibility-language-and-presentation)
-- [Module boundaries and code map](#module-boundaries-and-code-map)
 - [Current limitations](#current-limitations)
 - [Glossary](#glossary)
+
+The first four sections give the shape of the app. The rest is detail to read
+when working in that area.
+
+## Invariants
+
+A change that breaks one of these rules needs a decision, not just a passing
+build. Each links to the section that explains it.
+
+- **Core communication never depends on an optional feature.** A loaded board
+  can be read, navigated, and spoken without built-in AI or the network
+  ([Runtime architecture](#runtime-architecture)).
+- **Nothing leaves the device unasked.** There is no backend, telemetry, or
+  tracking, and a board link is imported only after the user confirms its host
+  ([Start at `/`](#start-at-)).
+- **Dependencies run one way.** The app composes features, the board imports
+  the library, and shared code imports neither
+  ([Module boundaries](#module-boundaries-and-code-map)).
+- **Only `library/storage/` touches IndexedDB, and only `board/suggestions/`
+  and `library/translation/` use built-in AI.** Oxlint enforces both
+  ([Module boundaries](#module-boundaries-and-code-map)).
+- **Stored boards keep their OBF structure.** The runtime `Board` is derived on
+  each read, and loading never changes the stored record
+  ([Data and state ownership](#data-and-state-ownership)).
+- **Route loaders only read.** They never translate or wait on a model
+  ([Open a board](#open-a-board)).
+- **`useMessage` is the one owner of how the message changes.** Tiles,
+  shortcuts, and suggestions all edit the message through it
+  ([Activate a tile](#activate-a-tile)).
+- **Shared playback owns all device output and reads no settings store.** The
+  board playback adapter is the only place that reports a failed playback
+  ([Activate a tile](#activate-a-tile)).
+- **Speech follows the text, not the setting.** A message part whose language
+  is known is spoken in that language
+  ([Language and direction](#language-and-direction)).
+- **A populated grid has one Tab stop.** Arrow keys move inside it and follow
+  text direction ([Accessibility](#accessibility)).
+- **Scanned controls hold no scanning code.** The scanner reads scan groups
+  from the DOM, so the grid and its tiles know nothing about scanning
+  ([Switch scanning](#switch-scanning)).
 
 ## Runtime architecture
 
@@ -126,6 +167,116 @@ setup](../src/shared/testing/setup.ts) clears localStorage and calls
 `resetBoardsDB` from the library's
 [`testing`](../src/features/library/testing/index.ts) entry, which empties
 IndexedDB and refreshes the board-sets store.
+
+## Module boundaries and code map
+
+Cross-boundary imports use path aliases. Oxlint enforces these dependency rules
+for aliased imports:
+
+- `src/shared/` is the leaf layer and does not import from app or features.
+- Each directory directly under `src/features/` is a feature. It imports shared
+  code, its own relative modules, and the public entry points of the features
+  it is allowed to depend on, but never app or another feature's
+  internals.
+- `src/app/` composes features through public entry points such as
+  [`src/features/board/index.ts`](../src/features/board/index.ts).
+- Only the library's [`storage/`](../src/features/library/storage/) and its
+  [test database helper](../src/features/library/testing/db.ts) import `idb` or
+  use the `indexedDB` global, so every other module reaches stored boards
+  through the library's public entry point.
+- Only the board's [`suggestions/`](../src/features/board/suggestions/) and the
+  library's [`translation/`](../src/features/library/translation/) import the
+  built-in AI package, so nothing else can come to depend on a model.
+
+There are two features, and the dependency runs one way: the board imports the
+library's public entry point, and the library imports no feature.
+
+| Feature                               | Owns                                                                             |
+| ------------------------------------- | -------------------------------------------------------------------------------- |
+| [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning |
+| [`library`](../src/features/library/) | Stored board sets                                                                |
+
+Test files may also import the library's
+[`testing`](../src/features/library/testing/index.ts) entry.
+
+The library owns the runtime `Board` types, in
+[`board-types.ts`](../src/features/library/board-types.ts), because it builds
+them from imported files; the board reads them through the public entry point.
+The library also owns the URL scheme, in
+[`board-paths.ts`](../src/features/library/board-paths.ts), which says why.
+
+Inside a feature, folders group related code and collaborate through relative
+imports; they are not separate boundaries. The library's folders still depend
+in one direction, so a folder's name tells which layer it is in:
+
+1. `storage/` and `obf/` import no other library folder.
+2. `board-sets/` keeps the reactive list of stored sets and reads their boards,
+   and the translations they already have, through `storage/` and `obf/`.
+3. `import/`, `export/`, and `translation/` build on those.
+4. `catalog/` downloads through `import/`.
+5. `panel/` is the library's UI and may use all of the above.
+
+### Settings composition
+
+The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
+[tile settings](../src/features/board/tile/tile-settings.tsx),
+[message settings](../src/features/board/message/message-settings.tsx),
+[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx), and
+[scanning settings](../src/features/board/scanning/scanning-settings.tsx)
+through feature public entry points. The app owns headings, order, layout, and
+drawer behavior; features own controls, capability checks, and persisted
+preferences. App-wide language, theme, and speech settings live in `app/settings/`;
+language settings render the library's
+[board translation notice](../src/features/library/translation/board-translation-notice.tsx)
+instead of checking translation progress themselves.
+Reusable field controls live in `shared/ui/` so features do not depend on the
+app layer.
+
+Closing or unmounting settings does not delete preferences. Removing a feature
+requires an explicit decision about retaining or deleting its persisted
+preferences.
+
+### Features
+
+Start with `communication-board.tsx` to follow the board UI. Paths in this table
+are relative to `src/features/`.
+
+| Area                   | Source                                                                                           | Responsibility                                                                                        |
+| ---------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
+| Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                   | Compose the board UI and interaction adapters.                                                        |
+| Board playback         | [board/playback/](../src/features/board/playback/)                                               | Plan board playback and highlighting; delegate device output to shared code.                          |
+| Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                               | Scan the board's controls with one or two switches; own scanning preferences.                         |
+| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Enable suggestion models and apply rewrite instructions to the message.                               |
+| Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                                                   |
+| Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
+| Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
+| Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and read stored boards as runtime types, in the communication language. |
+| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and track their downloads.                                                |
+| Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
+| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Translate board sets that lack the communication language.                                            |
+
+### App and shared code
+
+Paths in this table are relative to `src/`.
+
+| Area                   | Source                                                                                                                                                 | Responsibility                                            |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| App composition        | [main.tsx](../src/main.tsx), [app/](../src/app/), [shared/providers/](../src/shared/providers/)                                                        | Assemble providers, shell, routing, and features.         |
+| Device output          | [shared/playback/](../src/shared/playback/)                                                                                                            | Own all Web Speech and HTML Audio output.                 |
+| Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                                   | Coordinate communication language and voice selection.    |
+| Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                                  | Apply theme and directional styling.                      |
+| Shared stores          | [shared/stores/external-store.ts](../src/shared/stores/external-store.ts), [shared/stores/persisted-store.ts](../src/shared/stores/persisted-store.ts) | Provide subscription and settings persistence primitives. |
+
+At the repository root, [messages/](../messages/) holds UI catalogs and
+[project.inlang/](../project.inlang/) configures Paraglide, which compiles them into
+generated `src/paraglide/` modules.
+
+### Companion packages
+
+The app delegates OBF/OBZ parsing to
+[`@shayc/open-board-format`](https://github.com/shayc/open-board-format) and browser
+AI availability, provisioning, and session lifecycle to
+[`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai).
 
 ## Core flows
 
@@ -267,6 +418,50 @@ it reports a failure once in an error snackbar, including when only some steps
 failed, and tells its callers only whether a message played to its end. A
 recording spoken from its text instead is not a failure: the words were heard,
 so the step counts as played and nothing is reported.
+
+### Suggest a message
+
+The board renders
+[`MessageSuggestions`](../src/features/board/suggestions/message-suggestions.tsx)
+under the message bar, inside an error boundary with no fallback, so a failure
+in suggestions removes the suggestion bar and nothing else. The bar is also
+absent when the browser has no usable suggestion model for the communication
+language.
+
+1. [`useMessageSuggestions`](../src/features/board/suggestions/use-message-suggestions.ts)
+   gives the message text to three sources: the Proofreader, and the Rewriter
+   in two tones. Each source asks only when its model is ready and the message
+   has text, and offers one candidate. The Rewriter is told that the text is
+   words an AAC user tapped, followed by the user's own suggestion
+   instructions from settings.
+2. Every change to the message aborts the requests in flight and starts new
+   ones, and a result that arrives late is dropped, so a suggestion always
+   belongs to the message on screen.
+3. [`selectSuggestionPhrases`](../src/features/board/suggestions/select-suggestion-phrases.ts)
+   keeps the candidates worth showing, in source order. It drops one that
+   repeats the message or an earlier candidate, ignoring case, a final full
+   stop, and apostrophe style, and one that carries model artifacts such as an
+   underscored word or a quotation mark.
+4. [`deriveSuggestionStatus`](../src/features/board/suggestions/derive-suggestion-status.ts)
+   reduces the sources to one status for the bar. A model that still needs
+   downloading, or that failed to prepare, shows an enable button; pressing it
+   is the user gesture a model download needs. A download shows its progress.
+   A failure shows only when the message has text, no phrase came back, and
+   every usable source failed.
+5. Selecting a phrase calls `replaceWithText` on `useMessage`, which replaces
+   the message with one text part per word in the communication language. It
+   is one step in the undo history, so undo brings the tapped message back.
+
+Nothing is spoken and the message is unchanged until a phrase is selected. The
+phrases are a labelled group, not a live region, because an announcement would
+interrupt the spoken feedback of the tile just pressed. The suggestion row is a
+scan group, so switch users can select a phrase.
+
+[Suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
+probe the same models for the communication language. They show the
+instructions field when the Rewriter supports that language, and otherwise say
+what is missing: the Rewriter, the language, or a device that can run the
+models.
 
 ## Accessibility, language, and presentation
 
@@ -421,116 +616,6 @@ about the bars around it.
   way to make that space smaller. Mid-scroll the space is the clearance plus the
   scroll padding, which is smaller wherever the grid's padding is less than a
   gap plus the hint.
-
-## Module boundaries and code map
-
-Cross-boundary imports use path aliases. Oxlint enforces these dependency rules
-for aliased imports:
-
-- `src/shared/` is the leaf layer and does not import from app or features.
-- Each directory directly under `src/features/` is a feature. It imports shared
-  code, its own relative modules, and the public entry points of the features
-  it is allowed to depend on, but never app or another feature's
-  internals.
-- `src/app/` composes features through public entry points such as
-  [`src/features/board/index.ts`](../src/features/board/index.ts).
-- Only the library's [`storage/`](../src/features/library/storage/) and its
-  [test database helper](../src/features/library/testing/db.ts) import `idb` or
-  use the `indexedDB` global, so every other module reaches stored boards
-  through the library's public entry point.
-- Only the board's [`suggestions/`](../src/features/board/suggestions/) and the
-  library's [`translation/`](../src/features/library/translation/) import the
-  built-in AI package, so nothing else can come to depend on a model.
-
-There are two features, and the dependency runs one way: the board imports the
-library's public entry point, and the library imports no feature.
-
-| Feature                               | Owns                                                                             |
-| ------------------------------------- | -------------------------------------------------------------------------------- |
-| [`board`](../src/features/board/)     | Using a board: grid, tiles, message, suggestions, activation, playback, scanning |
-| [`library`](../src/features/library/) | Stored board sets                                                                |
-
-Test files may also import the library's
-[`testing`](../src/features/library/testing/index.ts) entry.
-
-The library owns the runtime `Board` types, in
-[`board-types.ts`](../src/features/library/board-types.ts), because it builds
-them from imported files; the board reads them through the public entry point.
-The library also owns the URL scheme, in
-[`board-paths.ts`](../src/features/library/board-paths.ts), which says why.
-
-Inside a feature, folders group related code and collaborate through relative
-imports; they are not separate boundaries. The library's folders still depend
-in one direction, so a folder's name tells which layer it is in:
-
-1. `storage/` and `obf/` import no other library folder.
-2. `board-sets/` keeps the reactive list of stored sets and reads their boards,
-   and the translations they already have, through `storage/` and `obf/`.
-3. `import/`, `export/`, and `translation/` build on those.
-4. `catalog/` downloads through `import/`.
-5. `panel/` is the library's UI and may use all of the above.
-
-### Settings composition
-
-The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
-[tile settings](../src/features/board/tile/tile-settings.tsx),
-[message settings](../src/features/board/message/message-settings.tsx),
-[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx), and
-[scanning settings](../src/features/board/scanning/scanning-settings.tsx)
-through feature public entry points. The app owns headings, order, layout, and
-drawer behavior; features own controls, capability checks, and persisted
-preferences. App-wide language, theme, and speech settings live in `app/settings/`;
-language settings render the library's
-[board translation notice](../src/features/library/translation/board-translation-notice.tsx)
-instead of checking translation progress themselves.
-Reusable field controls live in `shared/ui/` so features do not depend on the
-app layer.
-
-Closing or unmounting settings does not delete preferences. Removing a feature
-requires an explicit decision about retaining or deleting its persisted
-preferences.
-
-### Features
-
-Start with `communication-board.tsx` to follow the board UI. Paths in this table
-are relative to `src/features/`.
-
-| Area                   | Source                                                                                           | Responsibility                                                                                        |
-| ---------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------- |
-| Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                   | Compose the board UI and interaction adapters.                                                        |
-| Board playback         | [board/playback/](../src/features/board/playback/)                                               | Plan board playback and highlighting; delegate device output to shared code.                          |
-| Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                               | Scan the board's controls with one or two switches; own scanning preferences.                         |
-| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Enable suggestion models and apply rewrite instructions to the message.                               |
-| Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                                                   |
-| Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
-| Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
-| Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and read stored boards as runtime types, in the communication language. |
-| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and track their downloads.                                                |
-| Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
-| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Translate board sets that lack the communication language.                                            |
-
-### App and shared code
-
-Paths in this table are relative to `src/`.
-
-| Area                   | Source                                                                                                                                                 | Responsibility                                            |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
-| App composition        | [main.tsx](../src/main.tsx), [app/](../src/app/), [shared/providers/](../src/shared/providers/)                                                        | Assemble providers, shell, routing, and features.         |
-| Device output          | [shared/playback/](../src/shared/playback/)                                                                                                            | Own all Web Speech and HTML Audio output.                 |
-| Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                                   | Coordinate communication language and voice selection.    |
-| Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                                  | Apply theme and directional styling.                      |
-| Shared stores          | [shared/stores/external-store.ts](../src/shared/stores/external-store.ts), [shared/stores/persisted-store.ts](../src/shared/stores/persisted-store.ts) | Provide subscription and settings persistence primitives. |
-
-At the repository root, [messages/](../messages/) holds UI catalogs and
-[project.inlang/](../project.inlang/) configures Paraglide, which compiles them into
-generated `src/paraglide/` modules.
-
-### Companion packages
-
-The app delegates OBF/OBZ parsing to
-[`@shayc/open-board-format`](https://github.com/shayc/open-board-format) and browser
-AI availability, provisioning, and session lifecycle to
-[`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai).
 
 ## Current limitations
 
