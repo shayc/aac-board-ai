@@ -69,6 +69,7 @@
   "settingsTitle": "Settings",
   "settingsOpen": "Open settings",
   "settingsClose": "Close settings",
+  "settingsLoadFailed": "Couldn't load settings",
   "settingsSectionLanguageVoice": "Language & voice",
   "settingsSectionAppearance": "Appearance",
   "settingsSectionBoard": "Board",

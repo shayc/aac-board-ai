@@ -69,6 +69,7 @@
   "settingsTitle": "Indstillinger",
   "settingsOpen": "Åbn indstillinger",
   "settingsClose": "Luk indstillinger",
+  "settingsLoadFailed": "Indstillingerne kunne ikke indlæses",
   "settingsSectionLanguageVoice": "Sprog og stemme",
   "settingsSectionAppearance": "Udseende",
   "settingsSectionBoard": "Tavle",

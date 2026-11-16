@@ -69,6 +69,7 @@
   "settingsTitle": "Asetukset",
   "settingsOpen": "Avaa asetukset",
   "settingsClose": "Sulje asetukset",
+  "settingsLoadFailed": "Asetuksia ei voitu ladata",
   "settingsSectionLanguageVoice": "Kieli ja ääni",
   "settingsSectionAppearance": "Ulkoasu",
   "settingsSectionBoard": "Taulu",

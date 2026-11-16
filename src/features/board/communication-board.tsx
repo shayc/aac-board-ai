@@ -7,6 +7,7 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -146,15 +147,19 @@ export function CommunicationBoard({
                 {!isSmallScreen && navigationButtons}
 
                 {suggestions.isAvailable && (
-                  <SuggestionBar
-                    status={suggestions.status}
-                    phrases={suggestions.phrases}
-                    language={communication.language}
-                    onEnable={suggestions.enable}
-                    onPhraseSelect={(phrase) =>
-                      message.replaceWithText(phrase, communication.language)
-                    }
-                  />
+                  // Suggestions are optional: if they break, hide them as if
+                  // built-in AI were unavailable and keep the board usable.
+                  <ErrorBoundary fallback={null}>
+                    <SuggestionBar
+                      status={suggestions.status}
+                      phrases={suggestions.phrases}
+                      language={communication.language}
+                      onEnable={suggestions.enable}
+                      onPhraseSelect={(phrase) =>
+                        message.replaceWithText(phrase, communication.language)
+                      }
+                    />
+                  </ErrorBoundary>
                 )}
               </Stack>
             )}

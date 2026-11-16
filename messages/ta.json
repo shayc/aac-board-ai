@@ -69,6 +69,7 @@
   "settingsTitle": "அமைப்புகள்",
   "settingsOpen": "அமைப்புகளைத் திற",
   "settingsClose": "அமைப்புகளை மூடு",
+  "settingsLoadFailed": "அமைப்புகளை ஏற்ற முடியவில்லை",
   "settingsSectionLanguageVoice": "மொழி மற்றும் குரல்",
   "settingsSectionAppearance": "தோற்றம்",
   "settingsSectionBoard": "பலகை",

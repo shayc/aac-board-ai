@@ -69,6 +69,7 @@
   "settingsTitle": "Paramètres",
   "settingsOpen": "Ouvrir les paramètres",
   "settingsClose": "Fermer les paramètres",
+  "settingsLoadFailed": "Impossible de charger les paramètres",
   "settingsSectionLanguageVoice": "Langue et voix",
   "settingsSectionAppearance": "Apparence",
   "settingsSectionBoard": "Tableau",

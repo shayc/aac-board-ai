@@ -69,6 +69,7 @@
   "settingsTitle": "Ajustes",
   "settingsOpen": "Abrir ajustes",
   "settingsClose": "Cerrar ajustes",
+  "settingsLoadFailed": "No se pudieron cargar los ajustes",
   "settingsSectionLanguageVoice": "Idioma y voz",
   "settingsSectionAppearance": "Apariencia",
   "settingsSectionBoard": "Tablero",

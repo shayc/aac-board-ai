@@ -69,6 +69,7 @@
   "settingsTitle": "Instellingen",
   "settingsOpen": "Instellingen openen",
   "settingsClose": "Instellingen sluiten",
+  "settingsLoadFailed": "Instellingen kunnen niet worden geladen",
   "settingsSectionLanguageVoice": "Taal en stem",
   "settingsSectionAppearance": "Weergave",
   "settingsSectionBoard": "Bord",

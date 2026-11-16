@@ -69,6 +69,7 @@
   "settingsTitle": "Cài đặt",
   "settingsOpen": "Mở cài đặt",
   "settingsClose": "Đóng cài đặt",
+  "settingsLoadFailed": "Không thể tải cài đặt",
   "settingsSectionLanguageVoice": "Ngôn ngữ và giọng nói",
   "settingsSectionAppearance": "Hiển thị",
   "settingsSectionBoard": "Bảng",

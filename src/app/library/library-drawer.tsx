@@ -15,6 +15,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
     <AppDrawer
       title={t(m.libraryTitle)}
       closeLabel={t(m.libraryClose)}
+      errorTitle={t(m.libraryLoadFailed)}
       open={open}
       onClose={onClose}
       anchor="left"

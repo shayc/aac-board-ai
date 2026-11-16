@@ -69,6 +69,7 @@
   "settingsTitle": "Nastavení",
   "settingsOpen": "Otevřít nastavení",
   "settingsClose": "Zavřít nastavení",
+  "settingsLoadFailed": "Nastavení se nepodařilo načíst",
   "settingsSectionLanguageVoice": "Jazyk a hlas",
   "settingsSectionAppearance": "Vzhled",
   "settingsSectionBoard": "Tabulka",

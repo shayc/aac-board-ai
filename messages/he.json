@@ -69,6 +69,7 @@
   "settingsTitle": "הגדרות",
   "settingsOpen": "פתיחת ההגדרות",
   "settingsClose": "סגירת ההגדרות",
+  "settingsLoadFailed": "לא ניתן לטעון את ההגדרות",
   "settingsSectionLanguageVoice": "שפה וקול",
   "settingsSectionAppearance": "מראה",
   "settingsSectionBoard": "לוח",
