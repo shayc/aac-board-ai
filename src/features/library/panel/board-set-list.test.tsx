@@ -42,6 +42,25 @@ describe("BoardSetList", () => {
     await expect.element(animalsLink).not.toHaveAttribute("aria-current");
   });
 
+  test("orders numbered board sets by their number", async () => {
+    const screen = await renderInRouter(
+      <BoardSetList
+        boardSets={[
+          makeBoardSetRecord({ id: "words-10", name: "Words 10" }),
+          makeBoardSetRecord({ id: "words-2", name: "Words 2" }),
+        ]}
+        downloadableBoardSets={[]}
+        onShowInfo={vi.fn()}
+        onExport={vi.fn()}
+        onRequestDelete={vi.fn()}
+      />,
+    );
+    const links = screen.getByRole("link");
+
+    await expect.element(links.nth(0)).toHaveAccessibleName("Words 2");
+    await expect.element(links.nth(1)).toHaveAccessibleName("Words 10");
+  });
+
   test("keeps labels, menus, and info actions associated with their list", async () => {
     const boardSets = [
       makeBoardSetRecord({ id: "core", name: "Core Words" }),
