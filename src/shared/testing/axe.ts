@@ -5,14 +5,16 @@ export async function expectNoA11yViolations(
   target: Element,
   options: axe.RunOptions = {},
 ) {
-  // Wait for final contrast colors while allowing infinite spinners to keep running.
-  const finiteAnimations = target
+  // Wait for final contrast colors; infinite spinners and paused animations never finish.
+  const endingAnimations = target
     .getAnimations({ subtree: true })
     .filter(
-      (animation) => animation.effect?.getComputedTiming().endTime !== Infinity,
+      (animation) =>
+        animation.playState === "running" &&
+        animation.effect?.getComputedTiming().endTime !== Infinity,
     );
   await Promise.allSettled(
-    finiteAnimations.map((animation) => animation.finished),
+    endingAnimations.map((animation) => animation.finished),
   );
 
   const { violations } = await axe.run(target, {
