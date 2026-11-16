@@ -69,6 +69,7 @@
   "settingsTitle": "设置",
   "settingsOpen": "打开设置",
   "settingsClose": "关闭设置",
+  "settingsLoadFailed": "无法加载设置",
   "settingsSectionLanguageVoice": "语言和语音",
   "settingsSectionAppearance": "外观",
   "settingsSectionBoard": "板",

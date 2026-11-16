@@ -6,6 +6,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { ErrorBoundary } from "@shared/ui/error-boundary";
+import { ErrorState } from "@shared/ui/error-state";
 import { type ReactNode, useState } from "react";
 
 const DRAWER_BASE_WIDTH = "320px";
@@ -13,6 +15,7 @@ const DRAWER_BASE_WIDTH = "320px";
 interface AppDrawerProps {
   title: string;
   closeLabel: string;
+  errorTitle: string;
   open: boolean;
   onClose: () => void;
   anchor: "left" | "right";
@@ -22,6 +25,7 @@ interface AppDrawerProps {
 export function AppDrawer({
   title,
   closeLabel,
+  errorTitle,
   open,
   onClose,
   anchor,
@@ -44,7 +48,15 @@ export function AppDrawer({
       }}
     >
       <AppDrawerContent title={title} closeLabel={closeLabel} onClose={onClose}>
-        {children}
+        <ErrorBoundary
+          fallback={
+            <Box sx={{ height: "100%", px: 2 }}>
+              <ErrorState icon={null} title={errorTitle} />
+            </Box>
+          }
+        >
+          {children}
+        </ErrorBoundary>
       </AppDrawerContent>
     </Drawer>
   );

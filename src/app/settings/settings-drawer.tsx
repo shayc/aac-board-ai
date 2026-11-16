@@ -31,6 +31,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     <AppDrawer
       title={t(m.settingsTitle)}
       closeLabel={t(m.settingsClose)}
+      errorTitle={t(m.settingsLoadFailed)}
       open={open}
       onClose={onClose}
       anchor="right"

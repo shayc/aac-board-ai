@@ -9,6 +9,7 @@ import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import {
   communicationBoardTree,
+  EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
 } from "../testing/render-communication-board";
 import { SCAN_HIGHLIGHTED_ITEM_SELECTOR, scanGroupProps } from "./scan-targets";
@@ -64,6 +65,17 @@ const OTHER_TWO_ROW_BOARD: OBFBoard = {
       ["play", "sleep"],
     ],
   },
+};
+
+const ONE_ROW_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "one-row-board",
+  locale: "en",
+  buttons: [
+    { id: "big", label: "big" },
+    { id: "small", label: "small" },
+  ],
+  grid: { rows: 1, columns: 2, order: [["big", "small"]] },
 };
 
 function navigationGroupTree(canGoBack: boolean) {
@@ -460,7 +472,9 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await expectNoA11yViolations(screen.container);
+      await expectNoA11yViolations(screen.container, {
+        reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+      });
     });
 
     test("moves with Space and selects with Enter", async () => {
@@ -547,6 +561,18 @@ describe("switch scanning", () => {
 
       await pressSwitch("Space");
       await expect.poll(highlightedNames).toEqual(["play", "sleep"]);
+    });
+
+    test("restarts at the first row when the highlighted row is gone from the next board", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch("Space");
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await screen.rerender(communicationBoardTree(ONE_ROW_BOARD));
+
+      await expect.poll(highlightedNames).toEqual(["big", "small"]);
     });
 
     test("hides the keyboard focus ring of another tile while a tile is highlighted", async () => {

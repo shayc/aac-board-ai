@@ -69,6 +69,7 @@
   "settingsTitle": "Setări",
   "settingsOpen": "Deschide setările",
   "settingsClose": "Închide setările",
+  "settingsLoadFailed": "Setările nu au putut fi încărcate",
   "settingsSectionLanguageVoice": "Limbă și voce",
   "settingsSectionAppearance": "Aspect",
   "settingsSectionBoard": "Tablă",

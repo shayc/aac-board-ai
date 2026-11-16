@@ -69,6 +69,7 @@
   "settingsTitle": "Postavke",
   "settingsOpen": "Otvori postavke",
   "settingsClose": "Zatvori postavke",
+  "settingsLoadFailed": "Nije moguće učitati postavke",
   "settingsSectionLanguageVoice": "Jezik i glas",
   "settingsSectionAppearance": "Izgled",
   "settingsSectionBoard": "Ploča",

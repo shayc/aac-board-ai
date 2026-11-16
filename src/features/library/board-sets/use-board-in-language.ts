@@ -1,7 +1,7 @@
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import type { Board } from "../board-types";
-import { findBoardInLanguage } from "./board-translations";
+import { findBoardInLanguage } from "./board-in-language";
 
 interface BoardInLanguage {
   board: Board;

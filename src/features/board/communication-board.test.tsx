@@ -7,6 +7,7 @@ import {
   failUtterance,
   lastUtterance,
   preventSpeechEnd,
+  reachUtteranceBoundary,
   stubSpeech,
 } from "@shared/testing/stub-speech";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
@@ -15,8 +16,12 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
-import { setMessageImagesVisible } from "./message/message-preferences-store";
 import {
+  setMessageHighlightingEnabled,
+  setMessageImagesVisible,
+} from "./message/message-preferences-store";
+import {
+  EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -192,7 +197,9 @@ describe("CommunicationBoard", () => {
     test("has no accessibility violations", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
-      await expectNoA11yViolations(screen.container);
+      await expectNoA11yViolations(screen.container, {
+        reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+      });
     });
 
     test("names the tile grid with the board's name", async () => {
@@ -518,6 +525,40 @@ describe("CommunicationBoard", () => {
       });
     });
 
+    test("outlines each message part while it is spoken", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+      preventSpeechEnd(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
+
+      reachUtteranceBoundary(
+        lastUtterance(speech.speak),
+        "hello world".indexOf("world"),
+      );
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["world"]);
+
+      endUtterance(lastUtterance(speech.speak));
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
+    });
+
+    test("outlines no message part while speaking when highlighting is off", async () => {
+      setMessageHighlightingEnabled(false);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      preventSpeechEnd(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+      expect(outlinedMessageParts(screen)).toEqual([]);
+    });
+
     test("spells a new word after a word tile and closes it with space", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = getMessageItems(screen);
@@ -812,7 +853,9 @@ describe("CommunicationBoard", () => {
 
         await expect.element(tile).toBeVisible();
         expect(tile.element().textContent).toBe("");
-        await expectNoA11yViolations(screen.container);
+        await expectNoA11yViolations(screen.container, {
+          reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+        });
 
         await tile.click();
 
@@ -852,4 +895,13 @@ function getMessageItems(
   screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
 ) {
   return screen.getByRole("list", { name: "Message" }).getByRole("listitem");
+}
+
+function outlinedMessageParts(
+  screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
+): (string | null)[] {
+  return getMessageItems(screen)
+    .elements()
+    .filter((part) => getComputedStyle(part).outlineStyle === "solid")
+    .map((part) => part.textContent);
 }

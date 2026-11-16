@@ -1,4 +1,3 @@
-import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateBoardSet } from "@app/routing/use-revalidate-board-set";
@@ -10,9 +9,11 @@ import {
   useTranslateBoardSets,
 } from "@features/library";
 import Box from "@mui/material/Box";
+import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppHeader } from "./app-header";
+import { LibraryDrawer } from "./library-drawer";
 
 export function AppShell() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);
@@ -48,10 +49,12 @@ export function AppShell() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      <OnboardingDialog
-        open={onboarding.shouldShow}
-        onClose={onboarding.dismiss}
-      />
+      <ErrorBoundary fallback={null}>
+        <OnboardingDialog
+          open={onboarding.shouldShow}
+          onClose={onboarding.dismiss}
+        />
+      </ErrorBoundary>
 
       <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
     </Box>

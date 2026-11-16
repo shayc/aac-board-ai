@@ -69,6 +69,7 @@
   "settingsTitle": "Setelan",
   "settingsOpen": "Buka setelan",
   "settingsClose": "Tutup setelan",
+  "settingsLoadFailed": "Tidak dapat memuat setelan",
   "settingsSectionLanguageVoice": "Bahasa & suara",
   "settingsSectionAppearance": "Tampilan",
   "settingsSectionBoard": "Papan",

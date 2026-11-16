@@ -69,6 +69,7 @@
   "settingsTitle": "الإعدادات",
   "settingsOpen": "فتح الإعدادات",
   "settingsClose": "إغلاق الإعدادات",
+  "settingsLoadFailed": "تعذر تحميل الإعدادات",
   "settingsSectionLanguageVoice": "اللغة والصوت",
   "settingsSectionAppearance": "العرض",
   "settingsSectionBoard": "اللوحة",

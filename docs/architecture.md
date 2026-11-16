@@ -464,14 +464,11 @@ imports; they are not separate boundaries. The library's folders still depend
 in one direction, so a folder's name tells which layer it is in:
 
 1. `storage/` and `obf/` import no other library folder.
-2. `board-sets/` keeps the reactive list of stored sets and reads their boards
-   through `storage/` and `obf/`.
+2. `board-sets/` keeps the reactive list of stored sets and reads their boards,
+   and the translations they already have, through `storage/` and `obf/`.
 3. `import/`, `export/`, and `translation/` build on those.
 4. `catalog/` downloads through `import/`.
 5. `panel/` is the library's UI and may use all of the above.
-
-One exception is deliberate: `board-sets/` uses `translation/`'s pure lookup of
-a board's translations, while `translation/` uses the board-sets store.
 
 ### Settings composition
 
@@ -507,10 +504,10 @@ are relative to `src/features/`.
 | Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                                                   |
 | Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
 | Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
-| Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library, create and delete board sets, and read stored boards as runtime types. |
+| Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and read stored boards as runtime types, in the communication language. |
 | Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and track their downloads.                                                |
 | Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
-| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Show a board in the communication language and translate board sets that lack it.                     |
+| Board translation      | [library/translation/](../src/features/library/translation/)                                     | Translate board sets that lack the communication language.                                            |
 
 ### App and shared code
 
@@ -608,7 +605,7 @@ AI availability, provisioning, and session lifecycle to
   read through `useTranslate()`. Board translation is separate: it shows board
   strings in the communication language, reading the translations a board
   already has in
-  [`board-translations.ts`](../src/features/library/translation/board-translations.ts)
+  [`board-in-language.ts`](../src/features/library/board-sets/board-in-language.ts)
   and producing missing ones with the Translator API in
   [`translate-board-sets.ts`](../src/features/library/translation/translate-board-sets.ts).
 - **Store and storage** — a store is reactive state that components subscribe

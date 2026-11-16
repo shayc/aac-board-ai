@@ -30,8 +30,24 @@ async function renderAppShellPastOnboarding() {
 }
 
 describe("AppShell", () => {
-  test("has no accessibility violations", async () => {
+  test("has no accessibility violations with onboarding open", async () => {
     await renderAppShell();
+
+    await expectNoA11yViolations(document.body, {
+      reviewedIncomplete: [
+        {
+          rule: "aria-hidden-focus",
+          cause: "focusable-modal-open",
+          selector: "body > [aria-hidden='true']",
+          reason:
+            "The onboarding dialog hides the app behind it and traps focus, so its controls cannot be reached.",
+        },
+      ],
+    });
+  });
+
+  test("has no accessibility violations past onboarding", async () => {
+    await renderAppShellPastOnboarding();
 
     await expectNoA11yViolations(document.body);
   });

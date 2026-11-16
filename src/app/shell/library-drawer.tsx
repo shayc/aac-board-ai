@@ -1,7 +1,7 @@
-import { AppDrawer } from "@app/shell/app-drawer";
 import { BoardSetLibrary } from "@features/library";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { AppDrawer } from "./app-drawer";
 
 interface LibraryDrawerProps {
   open: boolean;
@@ -15,6 +15,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
     <AppDrawer
       title={t(m.libraryTitle)}
       closeLabel={t(m.libraryClose)}
+      errorTitle={t(m.libraryLoadFailed)}
       open={open}
       onClose={onClose}
       anchor="left"

@@ -69,6 +69,7 @@
   "settingsTitle": "Ayarlar",
   "settingsOpen": "Ayarları aç",
   "settingsClose": "Ayarları kapat",
+  "settingsLoadFailed": "Ayarlar yüklenemedi",
   "settingsSectionLanguageVoice": "Dil ve ses",
   "settingsSectionAppearance": "Görünüm",
   "settingsSectionBoard": "Pano",
