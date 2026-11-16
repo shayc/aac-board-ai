@@ -484,6 +484,26 @@ describe("CommunicationBoard", () => {
       await expectNoA11yViolations(screen.container);
     });
 
+    test("keeps the message and its symbols when the board opens again", async () => {
+      const first = await renderCommunicationBoard(SYMBOL_BOARD);
+      await first.getByRole("button", { name: "hello" }).click();
+      await first.getByRole("button", { name: "world" }).click();
+      await first.unmount();
+
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const messageItems = getMessageItems(screen);
+
+      await expect.element(messageItems).toHaveLength(2);
+      await expect.element(messageItems.nth(0)).toHaveTextContent("hello");
+      await expect.element(messageItems.nth(1)).toHaveTextContent("world");
+      expect(
+        messageItems.nth(0).element().querySelector("img")?.getAttribute("src"),
+      ).toBe(TEST_IMAGE_SRC);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
+    });
+
     test("enables message playback only after content is composed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const play = screen.getByRole("button", { name: "Play message" });

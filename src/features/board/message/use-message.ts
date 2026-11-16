@@ -1,9 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
+import {
+  type PartMedia,
+  readMessageDraft,
+  resolveDraftAssets,
+  saveMessageDraft,
+  withPartMedia,
+} from "./message-draft";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
   createTextPart,
-  EMPTY_MESSAGE,
   hasSameContent,
   markPlayed,
 } from "./message-transforms";
@@ -31,9 +37,42 @@ export interface UseMessageReturn {
 
 export function useMessage(): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
-  const [state, setRenderedState] = useState(EMPTY_MESSAGE);
+  const [draft] = useState(readMessageDraft);
+  const [state, setRenderedState] = useState(draft.message);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
+
+  // Saved on every change rather than when the page hides: a mobile system can
+  // end a page in the background without warning.
+  function commit(next: Message) {
+    stateRef.current = next;
+    setRenderedState(next);
+    saveMessageDraft(next);
+  }
+
+  const fillDraftMedia = useEffectEvent(
+    (mediaByPartId: ReadonlyMap<string, PartMedia>) => {
+      commit(withPartMedia(stateRef.current, mediaByPartId));
+    },
+  );
+
+  useEffect(() => {
+    if (draft.assetsByPartId.size === 0) {
+      return;
+    }
+
+    let isCurrent = true;
+    void resolveDraftAssets(draft.assetsByPartId).then((mediaByPartId) => {
+      if (isCurrent) {
+        fillDraftMedia(mediaByPartId);
+      }
+    });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [draft]);
+
   const text = state.parts.map((part) => part.label).join(" ");
 
   // The setting is read each time the message is edited, so turning it off
@@ -42,11 +81,6 @@ export function useMessage(): UseMessageReturn {
     return shouldClearAfterPlayback
       ? stateRef.current
       : markPlayed(stateRef.current, false);
-  }
-
-  function commit(next: Message) {
-    stateRef.current = next;
-    setRenderedState(next);
   }
 
   // Marking the message played is not a step to undo, so it goes through

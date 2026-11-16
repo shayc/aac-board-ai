@@ -1,7 +1,20 @@
-import { describe, expect, test } from "vitest";
+import { getAssetURL } from "@features/library";
+import {
+  loadTestImageAsset,
+  makeAssetInput,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/library/testing";
+import { assert, beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setMessageClearAfterPlayback } from "./message-preferences-store";
+import { createTilePart } from "./message-transforms";
+import type { MessagePart } from "./message-types";
 import { useMessage } from "./use-message";
+
+const SYMBOL_SET_ID = "symbol-set";
+const IMAGE_PATH = "images/hello.png";
+const SOUND_PATH = "sounds/hello.wav";
 
 describe("useMessage", () => {
   test.each([
@@ -346,6 +359,102 @@ describe("useMessage", () => {
       expect(labelsAfterSpelling(message)).toEqual(["ha"]);
     });
   });
+
+  describe("draft", () => {
+    beforeEach(resetBoardsDB);
+
+    test("restores the message when it opens again", async () => {
+      const first = await renderHook(() => useMessage());
+      first.result.current.replaceWithText("I want", "en");
+      await trackSettledPlayback(first.result.current, true);
+      await first.rerender();
+      const saved = first.result.current.parts;
+      await first.unmount();
+
+      const { result } = await renderHook(() => useMessage());
+
+      expect(result.current.parts).toEqual(saved);
+      // A played message is restored as played, so the next word starts anew.
+      expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
+    });
+
+    test("restores an open word for more spelling", async () => {
+      const first = await renderHook(() => useMessage());
+      first.result.current.apply([
+        { kind: "spell", text: "ca", language: "en" },
+      ]);
+      await first.unmount();
+
+      const { result } = await renderHook(() => useMessage());
+
+      expect(result.current.isWordOpen).toBe(true);
+      expect(labelsAfterSpelling(result.current)).toEqual(["caa"]);
+    });
+
+    test("opens empty once the message is cleared", async () => {
+      const first = await renderHook(() => useMessage());
+      first.result.current.replaceWithText("I want", "en");
+      first.result.current.clear();
+      await first.unmount();
+
+      const { result } = await renderHook(() => useMessage());
+
+      expect(result.current.parts).toEqual([]);
+    });
+
+    test("creates stored symbols and sounds again after a reload", async () => {
+      await seedSymbolSet();
+      const imageSrc = await requireAssetURL(IMAGE_PATH);
+      const soundSrc = await requireAssetURL(SOUND_PATH);
+      const first = await renderHook(() => useMessage());
+      first.result.current.apply([
+        {
+          kind: "tile",
+          part: createTilePart({
+            label: "hello",
+            language: "en",
+            imageSrc,
+            soundSrc,
+          }),
+        },
+      ]);
+      await first.unmount();
+      // Storing the set again revokes its URLs, as closing the page would.
+      await resetBoardsDB();
+      await seedSymbolSet();
+
+      const { result } = await renderHook(() => useMessage());
+
+      await expect.poll(() => hasMedia(result.current.parts[0])).toBe(true);
+      const part = result.current.parts[0];
+      assert(part?.kind === "tile" && part.imageSrc && part.soundSrc);
+      expect(part.label).toBe("hello");
+      expect(part.imageSrc).not.toBe(imageSrc);
+      expect(part.soundSrc).not.toBe(soundSrc);
+      expect(await readText(part.soundSrc)).toBe("recording");
+      expect((await fetch(part.imageSrc)).ok).toBe(true);
+    });
+
+    test("keeps the label of a symbol whose board set was deleted", async () => {
+      await seedSymbolSet();
+      const imageSrc = await requireAssetURL(IMAGE_PATH);
+      const first = await renderHook(() => useMessage());
+      first.result.current.apply([
+        {
+          kind: "tile",
+          part: createTilePart({ label: "hello", language: "en", imageSrc }),
+        },
+      ]);
+      await first.unmount();
+      await resetBoardsDB();
+
+      const { result } = await renderHook(() => useMessage());
+
+      expect(result.current.parts).toMatchObject([
+        { label: "hello", imageSrc: undefined },
+      ]);
+    });
+  });
 });
 
 function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
@@ -363,4 +472,38 @@ async function trackSettledPlayback(
   const completion = Promise.resolve(hasCompleted);
   message.trackPlayback(completion);
   await completion;
+}
+
+async function seedSymbolSet() {
+  await seedBoardSets([
+    {
+      id: SYMBOL_SET_ID,
+      rootBoardId: "home",
+      assets: [
+        await loadTestImageAsset(IMAGE_PATH),
+        makeAssetInput(SOUND_PATH, "recording"),
+      ],
+    },
+  ]);
+}
+
+async function requireAssetURL(path: string): Promise<string> {
+  const url = await getAssetURL(SYMBOL_SET_ID, path);
+  assert(url);
+
+  return url;
+}
+
+function hasMedia(part: MessagePart | undefined): boolean {
+  return (
+    part?.kind === "tile" &&
+    part.imageSrc !== undefined &&
+    part.soundSrc !== undefined
+  );
+}
+
+async function readText(url: string): Promise<string> {
+  const response = await fetch(url);
+
+  return response.text();
 }

@@ -86,7 +86,8 @@ State has distinct owners and lifetimes:
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, switch scanning, suggestion instructions, onboarding       |
-| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
+| Message draft         | `useMessage` + localStorage           | The message being composed, restored when the board opens again                                        |
+| Interaction state     | Local React state                     | Message undo history and remembered grid focus                                                         |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding translations saved on this device. Board links
@@ -184,6 +185,16 @@ Route loaders only read; they never translate or wait on a model:
    that language, from the board file or saved on this device. The hook also
    names the language the board ended up in: the board file's own when it has
    no translation, and unknown when the file declares none.
+
+The message being composed outlives the page:
+[`useMessage`](../src/features/board/message/use-message.ts) saves it on every
+change, because a mobile system can end a page in the background without
+warning, and restores it when the board opens again, played or not. It uses
+localStorage rather than sessionStorage, because an installed app can restart
+from scratch after time in the background. A stored asset's object URL ends
+with the page, so the
+[draft](../src/features/board/message/message-draft.ts) keeps the asset's key in
+its place and creates the URL again on restore. The undo history is not saved.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for
