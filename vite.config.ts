@@ -1,8 +1,8 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
+import { VitePWA } from "@unplugin-pwa/vite";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import type { Plugin } from "vite";
-import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import { BOARD_FILE_EXTENSIONS_BY_MIME_TYPE } from "./src/features/library/import/board-file-formats.ts";
 import {
@@ -29,7 +29,11 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["board.svg", "first-words.obz"],
-      workbox: {
+      // Installed workers are classic; a changed default would strand them.
+      swType: "classic",
+      generateSW: {
+        cleanupOutdatedCaches: true,
+        navigateFallback: "index.html",
         runtimeCaching: [
           {
             urlPattern: ({ request, sameOrigin }) =>
