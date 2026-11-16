@@ -15,6 +15,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage --browser chromium",
+    "test:firefox": "vitest run --browser firefox",
     "test:webkit": "vitest run --browser webkit",
     "test:pwa": "npm run build && playwright test",
     "perf": "node perf/cli.ts",
