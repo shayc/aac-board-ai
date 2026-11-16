@@ -71,9 +71,10 @@ describe("BoardSelector", () => {
 
     await screen.getByRole("combobox").click();
 
-    await expect
-      .element(screen.getByRole("listbox", { name: "Board" }))
-      .toBeVisible();
+    const listbox = screen.getByRole("listbox", { name: "Board" });
+    await expect.element(listbox).toBeVisible();
+    // A reference to a missing label would fall back to aria-label unnoticed.
+    await expect.element(listbox).not.toHaveAttribute("aria-labelledby");
   });
 
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
