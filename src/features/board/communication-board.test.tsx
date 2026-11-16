@@ -236,6 +236,31 @@ describe("CommunicationBoard", () => {
         .toHaveAttribute("lang", "es");
     });
 
+    test("speaks a board that is not in the communication language in the board's language", async () => {
+      setStoredLanguage("he");
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await vi.waitFor(() => {
+        expect(lastUtterance(speech.speak).lang).toBe("en");
+      });
+    });
+
+    test("speaks a board that declares no language in the communication language", async () => {
+      setStoredLanguage("he");
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        locale: undefined,
+      });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await vi.waitFor(() => {
+        expect(lastUtterance(speech.speak).lang).toBe("he");
+      });
+    });
+
     test("leaves tiles on the document's language when the board declares none", async () => {
       const screen = await renderCommunicationBoard({
         ...TWO_BUTTON_BOARD,

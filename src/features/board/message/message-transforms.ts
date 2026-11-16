@@ -18,8 +18,8 @@ export function createTilePart(
   return { ...content, kind: "tile", id: randomId() };
 }
 
-export function createTextPart(label: string): TextPart {
-  return { kind: "text", id: randomId(), label };
+export function createTextPart(label: string, language?: string): TextPart {
+  return { kind: "text", id: randomId(), label, language };
 }
 
 export function appendTilePart(message: Message, part: TilePart): Message {
@@ -28,7 +28,13 @@ export function appendTilePart(message: Message, part: TilePart): Message {
   return { parts: [...parts, part], isWordOpen: false, isSpoken: false };
 }
 
-export function spell(message: Message, text: string): Message {
+// A word keeps the language it was started in, so letters added from a board
+// in another language do not change how the whole word is pronounced.
+export function spell(
+  message: Message,
+  text: string,
+  language?: string,
+): Message {
   if (!text) {
     return message;
   }
@@ -37,7 +43,7 @@ export function spell(message: Message, text: string): Message {
   const lastPart = parts.at(-1);
   if (!isWordOpen || lastPart?.kind !== "text") {
     return {
-      parts: [...parts, createTextPart(text)],
+      parts: [...parts, createTextPart(text, language)],
       isWordOpen: true,
       isSpoken: false,
     };
@@ -132,7 +138,7 @@ function applyEdit(message: Message, edit: MessageEdit): Message {
     case "tile":
       return appendTilePart(message, edit.part);
     case "spell":
-      return spell(message, edit.text);
+      return spell(message, edit.text, edit.language);
     case "space":
       return closeWord(message);
     case "backspace":

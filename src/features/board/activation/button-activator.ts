@@ -30,6 +30,8 @@ interface ButtonActivatorOptions {
     "playMessage" | "echoMessage" | "playPart"
   >;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
+  /** The language the board's text is in, when known. */
+  language: string | undefined;
 }
 
 type ButtonActivator = (button: BoardButton) => void;
@@ -38,6 +40,7 @@ export function createButtonActivator({
   message,
   playback,
   navigation,
+  language,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
     if (button.linkedBoardId) {
@@ -61,6 +64,7 @@ export function createButtonActivator({
       vocalization: button.vocalization,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
+      language,
     });
 
     message.apply([{ kind: "tile", part }]);
@@ -74,15 +78,15 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      message.apply(actions.filter(isMessageEdit));
+      message.apply(toMessageEdits(actions));
 
       return;
     }
 
-    const editsBeforePlay = actions.slice(0, playIndex).filter(isMessageEdit);
+    const editsBeforePlay = toMessageEdits(actions.slice(0, playIndex));
     const { edited: messageToPlay, hasChanged } =
       message.apply(editsBeforePlay);
-    const editsAfterPlay = actions.slice(playIndex + 1).filter(isMessageEdit);
+    const editsAfterPlay = toMessageEdits(actions.slice(playIndex + 1));
 
     // A tile that spells and then plays echoes the word being typed, so only a
     // tile that plays the message as it stands speaks it.
@@ -97,6 +101,13 @@ export function createButtonActivator({
         message.applyIfUnchanged(messageToPlay, editsAfterPlay);
       }
     });
+  }
+
+  // Spelled letters are the board's text, so they are in the board's language.
+  function toMessageEdits(actions: readonly BoardAction[]): MessageEdit[] {
+    return actions
+      .filter(isMessageEdit)
+      .map((edit) => (edit.kind === "spell" ? { ...edit, language } : edit));
   }
 
   return activateButton;

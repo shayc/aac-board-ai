@@ -92,6 +92,25 @@ describe("getSpeechParameters", () => {
     });
   });
 
+  test("speaks text in another language with a voice of that language", () => {
+    setStoredLanguage("he");
+    setSpeechVoiceURI("he-voice");
+    setSpeechRate(1.5);
+
+    expect(getSpeechParameters("en")).toMatchObject({
+      language: "en",
+      voice: { voiceURI: "voice-1" },
+      rate: 1.5,
+    });
+  });
+
+  test("speaks text in another language with the saved voice when it speaks that language", () => {
+    setStoredLanguage("he");
+    setSpeechVoiceURI("voice-2");
+
+    expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-2");
+  });
+
   test("leaves the voice to the browser when the language has no voices", () => {
     setSpeechVoiceURI("voice-2");
     setStoredLanguage("fr");

@@ -64,7 +64,6 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
       <ColorModeSwitch mode={mode} />
       <MessageBar
         parts={[]}
-        language="en"
         isWordOpen={false}
         activePartId={null}
         areImagesVisible

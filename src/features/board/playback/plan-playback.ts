@@ -4,6 +4,7 @@ import type { MessagePart } from "../message/message-types";
 interface SpokenPart {
   id: string;
   text: string;
+  language: string | undefined;
 }
 
 export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
@@ -11,16 +12,18 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   let spokenRun: SpokenPart[] = [];
 
   function flushSpeech() {
-    if (spokenRun.length === 0) {
+    const [firstPart] = spokenRun;
+    if (!firstPart) {
       return;
     }
 
-    steps.push(createSpeechStep(spokenRun));
+    steps.push(createSpeechStep(spokenRun, firstPart.language));
     spokenRun = [];
   }
 
   for (const part of parts) {
     const text = getSpokenText(part);
+    const { language } = part;
 
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
@@ -29,14 +32,23 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
         src: part.soundSrc,
         cue: part.id,
         fallbackText: text || undefined,
+        fallbackLanguage: language,
       });
 
       continue;
     }
 
-    if (text) {
-      spokenRun.push({ id: part.id, text });
+    if (!text) {
+      continue;
     }
+
+    // An utterance has one language and one voice, so a run ends where the
+    // language changes.
+    if (spokenRun.at(-1)?.language !== language) {
+      flushSpeech();
+    }
+
+    spokenRun.push({ id: part.id, text, language });
   }
 
   flushSpeech();
@@ -50,7 +62,10 @@ interface PartSpan {
   end: number;
 }
 
-function createSpeechStep(parts: readonly SpokenPart[]): SpeechStep {
+function createSpeechStep(
+  parts: readonly SpokenPart[],
+  language: string | undefined,
+): SpeechStep {
   const chunks: string[] = [];
   const spans: PartSpan[] = [];
   let offset = 0;
@@ -64,6 +79,7 @@ function createSpeechStep(parts: readonly SpokenPart[]): SpeechStep {
   return {
     kind: "speech",
     text: chunks.join(" "),
+    language,
     cueAt: (charIndex) =>
       spans.find((span) => charIndex >= span.start && charIndex < span.end)
         ?.id ?? null,

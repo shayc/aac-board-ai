@@ -23,6 +23,24 @@ describe("planPlayback", () => {
     expect(step.cueAt?.(2)).toBe("2");
   });
 
+  test("starts a new speech step where the language changes", () => {
+    const steps = planPlayback([
+      { kind: "tile", id: "1", label: "I", language: "en" },
+      { kind: "tile", id: "2", label: "want", language: "en" },
+      { kind: "text", id: "3", label: "מים", language: "he" },
+      { kind: "text", id: "4", label: "please" },
+    ]);
+
+    expect(steps).toMatchObject([
+      { kind: "speech", text: "i want", language: "en" },
+      { kind: "speech", text: "מים", language: "he" },
+      { kind: "speech", text: "please", language: undefined },
+    ]);
+    expect(
+      steps.map((step) => step.kind === "speech" && step.cueAt?.(0)),
+    ).toEqual(["1", "3", "4"]);
+  });
+
   test("normalizes whitespace and maps speech offsets to their message parts", () => {
     const steps = planPlayback([
       { kind: "text", id: "1", label: " I " },
@@ -62,6 +80,22 @@ describe("planPlayback", () => {
     expect(steps).toEqual([
       { kind: "audio", cue: "1", src: "bark.mp3", fallbackText: "dog" },
       { kind: "audio", cue: "2", src: "laugh.mp3", fallbackText: "very happy" },
+    ]);
+  });
+
+  test("gives a sound part's fallback text the part's language", () => {
+    const steps = planPlayback([
+      {
+        kind: "tile",
+        id: "1",
+        label: "Dog",
+        language: "en",
+        soundSrc: "bark.mp3",
+      },
+    ]);
+
+    expect(steps).toMatchObject([
+      { kind: "audio", fallbackText: "dog", fallbackLanguage: "en" },
     ]);
   });
 

@@ -21,7 +21,6 @@ function createProps(
 ): MessageBarProps {
   return {
     parts: [],
-    language: "en",
     isWordOpen: false,
     activePartId: null,
     areImagesVisible: true,
@@ -61,6 +60,23 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("I")).toBeVisible();
     await expect.element(screen.getByText("want")).toBeVisible();
     await expect.element(screen.getByText("water")).toBeVisible();
+  });
+
+  test("marks each part with its own language", async () => {
+    const parts: MessagePart[] = [
+      { kind: "tile", id: "a", label: "I", language: "en" },
+      { kind: "text", id: "b", label: "agua", language: "es" },
+      { kind: "text", id: "c", label: "water" },
+    ];
+
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts })} />,
+    );
+
+    const items = screen.getByRole("listitem");
+    await expect.element(items.nth(0)).toHaveAttribute("lang", "en");
+    await expect.element(items.nth(1)).toHaveAttribute("lang", "es");
+    await expect.element(items.nth(2)).not.toHaveAttribute("lang");
   });
 
   test("keeps its height when the first part is added", async () => {

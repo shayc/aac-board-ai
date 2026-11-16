@@ -260,6 +260,39 @@ describe("PlaybackProvider", () => {
     expect(second).toMatchObject({ lang: "he", rate: 1.5 });
   });
 
+  test("speaks each step with the parameters for its own language", async () => {
+    failAudio(audio.play);
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <PlaybackProvider
+          getSpeechParameters={(textLanguage) => ({
+            ...speechParameters,
+            language: textLanguage ?? "he",
+          })}
+        >
+          {children}
+        </PlaybackProvider>
+      ),
+    });
+
+    await result.current.play({
+      owner: "message",
+      steps: [
+        { kind: "speech", text: "hello", language: "en" },
+        { kind: "speech", text: "שלום" },
+        {
+          kind: "audio",
+          src: "recording.mp3",
+          fallbackText: "perro",
+          fallbackLanguage: "es",
+        },
+      ],
+    });
+
+    const languages = speech.speak.mock.calls.map(([spoken]) => spoken.lang);
+    expect(languages).toEqual(["en", "he", "es"]);
+  });
+
   test("rerenders each subscriber only for the playback state it reads", async () => {
     preventSpeechEnd(speech.speak);
     const commits = { controls: 0, playing: 0, tracking: 0 };

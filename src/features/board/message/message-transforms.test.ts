@@ -74,6 +74,14 @@ describe("spell", () => {
     expect(message.parts[0]?.id).toBe(first.parts[0]?.id);
   });
 
+  test("keeps the language a word was started in", () => {
+    const first = spell(EMPTY_MESSAGE, "ca", "en");
+
+    const message = spell(first, "t", "he");
+
+    expect(message.parts).toMatchObject([{ label: "cat", language: "en" }]);
+  });
+
   test("starts a new word after a tile, even one without media", () => {
     const tile = createTilePart({ label: "the" });
 

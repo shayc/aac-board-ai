@@ -6,11 +6,15 @@ export interface AudioStep {
   cue?: string;
   /** Spoken in place of the audio when it cannot play. */
   fallbackText?: string;
+  /** The language the fallback text is in, when known. */
+  fallbackLanguage?: string;
 }
 
 export interface SpeechStep {
   kind: "speech";
   text: string;
+  /** The language the text is in, when known. */
+  language?: string;
   cueAt?: (charIndex: number) => string | null;
 }
 
