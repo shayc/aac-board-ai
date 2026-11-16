@@ -21,8 +21,6 @@ export interface UseMessageReturn {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
   text: string;
-  /** Whether the message is still the initial one and the next symbol adds to it. */
-  isInitialMessageOpen: boolean;
   apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
   applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
   trackPlayback: (completion: Promise<boolean>) => void;
@@ -37,15 +35,9 @@ export function useMessage(
 ): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
   const [state, setRenderedState] = useState(initialMessage);
-  const [initialParts] = useState(initialMessage.parts);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
   const text = state.parts.map((part) => part.label).join(" ");
-  // As in `readMessage`, a played message takes more only when it is not
-  // cleared after playback.
-  const isOpenForMore = !shouldClearAfterPlayback || !state.hasPlayed;
-  const isInitialMessageOpen =
-    state.parts.length > 0 && state.parts === initialParts && isOpenForMore;
 
   // The setting is read each time the message is edited, so turning it off
   // releases a message that was already played.
@@ -157,7 +149,6 @@ export function useMessage(
     parts: state.parts,
     isWordOpen: state.isWordOpen,
     text,
-    isInitialMessageOpen,
     apply,
     applyIfUnchanged,
     trackPlayback,

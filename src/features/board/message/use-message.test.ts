@@ -9,12 +9,8 @@ import { assert, beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { restoreMessageDraft } from "./message-draft";
 import { setMessageClearAfterPlayback } from "./message-preferences-store";
-import {
-  createTextPart,
-  createTilePart,
-  EMPTY_MESSAGE,
-} from "./message-transforms";
-import type { Message, TilePart } from "./message-types";
+import { createTilePart, EMPTY_MESSAGE } from "./message-transforms";
+import type { TilePart } from "./message-types";
 import { useMessage } from "./use-message";
 
 const SYMBOL_SET_ID = "symbol-set";
@@ -363,66 +359,6 @@ describe("useMessage", () => {
       message.applyIfUnchanged(edited, [{ kind: "clear" }]);
 
       expect(labelsAfterSpelling(message)).toEqual(["ha"]);
-    });
-  });
-
-  describe("isInitialMessageOpen", () => {
-    const INITIAL_MESSAGE: Message = {
-      parts: [createTextPart("hi", "en")],
-      isWordOpen: false,
-      hasPlayed: false,
-    };
-
-    test("is true for an unplayed initial message", async () => {
-      const { result } = await renderHook(() => useMessage(INITIAL_MESSAGE));
-
-      expect(result.current.isInitialMessageOpen).toBe(true);
-    });
-
-    test("ends once the message is edited", async () => {
-      const { result, rerender } = await renderHook(() =>
-        useMessage(INITIAL_MESSAGE),
-      );
-
-      result.current.apply([{ kind: "spell", text: "a", language: "en" }]);
-      await rerender();
-
-      expect(result.current.isInitialMessageOpen).toBe(false);
-    });
-
-    test("ends once the message plays to its end", async () => {
-      const { result, rerender } = await renderHook(() =>
-        useMessage(INITIAL_MESSAGE),
-      );
-
-      await trackSettledPlayback(result.current, true);
-      await rerender();
-
-      expect(result.current.isInitialMessageOpen).toBe(false);
-    });
-
-    test("stays true for a played message when clearing after speaking is off", async () => {
-      setMessageClearAfterPlayback(false);
-
-      const { result } = await renderHook(() =>
-        useMessage({ ...INITIAL_MESSAGE, hasPlayed: true }),
-      );
-
-      expect(result.current.isInitialMessageOpen).toBe(true);
-    });
-
-    test("is false for a played message that is cleared after speaking", async () => {
-      const { result } = await renderHook(() =>
-        useMessage({ ...INITIAL_MESSAGE, hasPlayed: true }),
-      );
-
-      expect(result.current.isInitialMessageOpen).toBe(false);
-    });
-
-    test("is false without an initial message", async () => {
-      const { result } = await renderHook(() => useMessage());
-
-      expect(result.current.isInitialMessageOpen).toBe(false);
     });
   });
 

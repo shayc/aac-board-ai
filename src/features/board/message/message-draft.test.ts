@@ -71,30 +71,6 @@ describe("message draft", () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
-  test("keeps the words when the media embedded in a board do not fit", async () => {
-    saveMessageDraft({
-      ...MESSAGE,
-      parts: [createTextPart("a".repeat(1024), "en")],
-    });
-    fillLocalStorage();
-    const inlineImageSrc = `data:image/svg+xml,${"x".repeat(256 * 1024)}`;
-
-    saveMessageDraft({
-      ...MESSAGE,
-      parts: [
-        createTilePart({
-          label: "hello",
-          language: "en",
-          imageSrc: inlineImageSrc,
-        }),
-      ],
-    });
-
-    expect(await restoreMessageDraft()).toMatchObject({
-      parts: [{ label: "hello", imageSrc: undefined }],
-    });
-  });
-
   test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();

@@ -13,7 +13,6 @@ import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
 import type { Message } from "./message/message-types";
-import { RestoredMessageNotice } from "./message/restored-message-notice";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -162,8 +161,6 @@ export function CommunicationBoard({
               </ErrorBoundary>
             </Stack>
           </Stack>
-
-          <RestoredMessageNotice isShown={message.isInitialMessageOpen} />
 
           <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
             <Grid<BoardButton>

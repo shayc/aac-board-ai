@@ -195,10 +195,7 @@ object URL ends with the page, so the
 [draft](../src/features/board/message/message-draft.ts) keeps the asset's key in
 its place and creates the URL again on restore. `boardLoader` restores the
 draft alongside the board, played or not, so the board opens with it whole and
-no edit can come before it. While the restored message is unchanged and the
-next symbol adds to it, a status tells assistive technology so. A draft too
-large for storage with media embedded in a board file is saved without them. The
-undo history is not saved.
+no edit can come before it. The undo history is not saved.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for

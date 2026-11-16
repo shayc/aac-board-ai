@@ -136,7 +136,6 @@
   "messageStop": "メッセージを停止",
   "playbackFailed": "音声を再生できませんでした",
   "messageLabel": "メッセージ",
-  "messageRestored": "前回のメッセージを復元しました。新しいシンボルはこのメッセージに追加されます。",
   "onboardingContinue": "続ける",
   "onboardingTitle": "AAC Board AI へようこそ",
   "onboardingTapToSpeakTitle": "タップして話す",

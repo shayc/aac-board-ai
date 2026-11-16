@@ -136,7 +136,6 @@
   "messageStop": "停止播放消息",
   "playbackFailed": "无法播放声音",
   "messageLabel": "消息",
-  "messageRestored": "之前的消息已恢复。新的符号会添加到这条消息中。",
   "onboardingContinue": "继续",
   "onboardingTitle": "欢迎使用 AAC Board AI",
   "onboardingTapToSpeakTitle": "点按即可说话",

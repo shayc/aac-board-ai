@@ -25,14 +25,11 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const parts = message.parts.map(toStoredPart);
+  const stored = { ...message, parts: message.parts.map(toStoredPart) };
 
-  // The words matter most: a draft too large with its inline media, such as
-  // images embedded in a board file, is saved without them.
-  const isSaved =
-    writeMessageDraft({ ...message, parts }) ||
-    writeMessageDraft({ ...message, parts: parts.map(withoutMediaURLs) });
-  if (!isSaved) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+  } catch {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
   }
@@ -95,26 +92,6 @@ function toStoredPart(part: MessagePart): StoredPart {
 
 function findMediaAssetKey(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
-}
-
-interface StoredMessage extends Omit<Message, "parts"> {
-  readonly parts: readonly StoredPart[];
-}
-
-function writeMessageDraft(message: StoredMessage): boolean {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(message));
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function withoutMediaURLs(part: StoredPart): StoredPart {
-  return part.kind === "tile"
-    ? { ...part, imageSrc: undefined, soundSrc: undefined }
-    : part;
 }
 
 function readStoredDraft(): unknown {
