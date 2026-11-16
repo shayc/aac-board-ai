@@ -66,6 +66,17 @@ describe("BoardSelector", () => {
     });
   });
 
+  test("names the list of boards in the open popup", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("combobox").click();
+
+    const listbox = screen.getByRole("listbox", { name: "Board" });
+    await expect.element(listbox).toBeVisible();
+    // A reference to a missing label would fall back to aria-label unnoticed.
+    await expect.element(listbox).not.toHaveAttribute("aria-labelledby");
+  });
+
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
