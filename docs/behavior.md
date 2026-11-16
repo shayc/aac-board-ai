@@ -27,9 +27,10 @@ Each bullet leads with the rule in bold; the reason follows it.
 
 ### Start at `/`
 
-- **A board URL supplied through `?board=` takes precedence, and is imported
-  only after the user confirms.** The app names the link's host first, because
-  `/` opens the newest board set and a link alone must not change it.
+- **A board URL supplied through `?board=` takes precedence.**
+- **It is imported only after the user confirms.** The app names the link's
+  host and asks, because `/` opens the newest board set and a link alone must
+  not change it.
 - **The named host is the only one the app contacts.** URL downloads follow no
   redirects.
 - **Links must use `https:` unless they point at the app's own origin.** The
@@ -40,18 +41,18 @@ Each bullet leads with the rule in bold; the reason follows it.
 
 ### Import board files
 
-- **Every import uses `importBoardFile`.** File selection, drag and drop, URL
-  imports, and PWA file handling all go through it.
+- **File selection, drag and drop, URL imports, and PWA file handling all use
+  `importBoardFile`.**
 - **Each imported file creates a separate board set.**
 - **The three local-file entry points go through
-  `useImportBoardFiles().importAndOpen`.** It opens the board set when exactly
-  one imports.
-- **Files without a board file extension are skipped.** They are named only
-  when no board file was given.
-- **The rest import one at a time.** A failing file, or a launched file that
-  can't be read, doesn't block the others.
-- **One message reports the outcome.** It names the file when exactly one
-  fails.
+  `useImportBoardFiles().importAndOpen`.**
+  - It opens the board set when exactly one imports.
+  - It skips files without a board file extension and names them only when no
+    board file was given.
+  - It imports the rest one at a time, so a failing file, or a launched file
+    that can't be read, doesn't block the others.
+  - It reports the outcome in one message that names the file when exactly one
+    fails.
 
 ### Export a board set
 
@@ -133,9 +134,8 @@ The message being composed outlives the page.
 
 **What a pass does**
 
-- **For each set not yet in the communication language, it translates the set
-  name and every board missing that language**, then saves them in one
-  transaction.
+- **It translates each set not yet in the communication language**: the set
+  name and every board missing that language, saved in one transaction.
 - **Boards are checked one by one**, because a set's language is only its root
   board's.
 - **The set name comes from the root board's own translations when the board
@@ -195,9 +195,10 @@ how the message changes.
 **A play action (OBF `:speak`)**
 
 - **It captures the message at that point.**
-- **Changes from later actions, such as clearing the message, apply only if
-  playback finishes uninterrupted and the message was not edited meanwhile**,
-  so a clear never takes letters typed during the speech with it.
+- **Later actions wait for the playback.** Changes from later actions, such as
+  clearing the message, apply only if playback finishes uninterrupted and the
+  message was not edited meanwhile, so a clear never takes letters typed during
+  the speech with it.
 - **The played message stays visible during playback** and is preserved if
   playback is interrupted.
 
@@ -243,8 +244,9 @@ how the message changes.
 
 - **The board renders
   [`MessageSuggestions`](../src/features/board/suggestions/message-suggestions.tsx)
-  under the message bar, inside an error boundary that renders nothing**, so a
-  failure in suggestions removes the suggestion bar and nothing else.
+  under the message bar.** It sits inside an error boundary that renders
+  nothing, so a failure in suggestions removes the suggestion bar and nothing
+  else.
 - **The bar is also absent when the browser has no usable suggestion model for
   the communication language.**
 
@@ -276,7 +278,7 @@ how the message changes.
    language. It is one step in the undo history, so undo brings the tapped
    message back.
 
-**Rules**
+**Selection, accessibility, and settings**
 
 - **The message changes only when a phrase is selected**, and selecting a
   phrase does not speak it.
@@ -350,6 +352,8 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   may change between steps.
 - **After a group's last item the whole group is highlighted once more as an
   exit step**, so a group selected by accident can be left.
+- **The app header, drawers, and dialogs are not scanned**; they are for the
+  person setting up the device.
 
 **Switches and keys**
 
@@ -362,8 +366,6 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   while a dialog, drawer, or menu covers the board.
 - **While a scan highlight shows, other controls hide their keyboard focus
   ring** so only one control looks selected.
-- **The app header, drawers, and dialogs are not scanned**; they are for the
-  person setting up the device.
 
 ### Language and direction
 
@@ -398,10 +400,10 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 - **The communication board sets its own `dir` from the communication
   language**, so a right-to-left language without a catalog still gets a
   right-to-left board under a left-to-right app shell.
-- **Tiles carry the `lang` of the language the board is shown in, message
-  parts carry their own language, and suggestions carry the communication
-  language**, so assistive technology pronounces them correctly whatever the UI
-  locale is.
+- **Content carries its own `lang`.** Tiles carry the `lang` of the language
+  the board is shown in, message parts carry their own language, and
+  suggestions carry the communication language, so assistive technology
+  pronounces them correctly whatever the UI locale is.
 - **A board whose file declares no language carries no `lang`** and inherits
   the document's.
 - **The app and board each use
@@ -470,9 +472,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 - **The grid's viewport sets its scroll padding to half the inset of an axis
   that scrolls.** A row or column at rest, and a tile scrolled in because it
   took focus, sit that far from the edge with the same hint of both neighbors.
-- **Where the scroll rests at its start or end and a hint shows next to a bar,
-  the space between that bar and the nearest whole row is the clearance, the
-  overflow hint, and one tile gap.** Making one of the three smaller is the
-  only way to make that space smaller.
+- **At rest next to a bar, the space is the clearance, the overflow hint, and
+  one tile gap.** That is the space between the bar and the nearest whole row,
+  where the scroll rests at its start or end and a hint shows next to the bar.
+  Making one of the three smaller is the only way to make that space smaller.
 - **Mid-scroll the space is the clearance plus the scroll padding**, which is
   smaller wherever the grid's padding is less than a gap plus the hint.

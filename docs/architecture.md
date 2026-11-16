@@ -172,7 +172,7 @@ State has distinct owners and lifetimes:
   other's value.
 - **MUI persists and synchronizes theme mode separately.**
 
-**Stores in tests**
+**Store lifetime**
 
 - **Stores are module singletons that start working when first imported**, so
   they need no provider and their loading starts before React renders.
