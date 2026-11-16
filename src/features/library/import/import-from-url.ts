@@ -67,7 +67,7 @@ export interface DownloadProgress {
   total?: number;
 }
 
-interface ImportBoardFileFromURLOptions {
+interface ImportFromURLOptions {
   signal?: AbortSignal;
   onProgress?: (progress: DownloadProgress) => void;
   onImportStart?: () => void;
@@ -75,7 +75,7 @@ interface ImportBoardFileFromURLOptions {
 
 export async function importBoardFileFromURL(
   url: string,
-  { signal, onProgress, onImportStart }: ImportBoardFileFromURLOptions = {},
+  { signal, onProgress, onImportStart }: ImportFromURLOptions = {},
 ): Promise<ImportedBoardSet> {
   const boardURL = parseBoardFileURL(url);
   const blob = await downloadBoardFile(boardURL, { signal, onProgress });
@@ -92,10 +92,7 @@ export async function importBoardFileFromURL(
 
 async function downloadBoardFile(
   url: URL,
-  {
-    signal,
-    onProgress,
-  }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
+  { signal, onProgress }: Pick<ImportFromURLOptions, "signal" | "onProgress">,
 ): Promise<Blob> {
   const response = await fetch(url, { signal, redirect: "manual" });
   if (response.type === "opaqueredirect") {

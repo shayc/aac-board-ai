@@ -4,16 +4,16 @@ import { useNavigate } from "react-router";
 import { rootBoardPath } from "../board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
 import {
-  type BoardFileImportFailure,
   importEachBoardFile,
   type ImportedBoardSet,
+  type ImportFailure,
 } from "./board-file-import";
 import { summarizeImport, summarizeSkippedFiles } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   importAndOpen: (
     files: readonly File[],
-    readFailures?: readonly BoardFileImportFailure[],
+    readFailures?: readonly ImportFailure[],
   ) => Promise<void>;
   pickAndImport: () => Promise<void>;
 }
@@ -24,7 +24,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
   async function importFiles(
     files: readonly File[],
-    readFailures: readonly BoardFileImportFailure[],
+    readFailures: readonly ImportFailure[],
   ): Promise<ImportedBoardSet[]> {
     if (files.length === 0 && readFailures.length === 0) {
       return [];
@@ -66,7 +66,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
   async function importAndOpen(
     files: readonly File[],
-    readFailures: readonly BoardFileImportFailure[] = [],
+    readFailures: readonly ImportFailure[] = [],
   ) {
     const importedBoardSets = await importFiles(files, readFailures);
     const onlyBoardSet =

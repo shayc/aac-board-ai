@@ -8,7 +8,7 @@ import {
   importBoardFileFromURL,
 } from "../import/import-from-url";
 
-export type BoardSetDownloadPhase =
+export type DownloadPhase =
   | { kind: "connecting" }
   | ({ kind: "downloading" } & DownloadProgress)
   | { kind: "importing" };
@@ -23,10 +23,10 @@ type CompletedDownloadListener = (boardSetId: string) => void;
 const pendingDownloadsByURL = new Map<string, PendingDownload>();
 const completedDownloadListeners = new Set<CompletedDownloadListener>();
 const downloadPhasesStore = createExternalStore<
-  ReadonlyMap<string, BoardSetDownloadPhase>
+  ReadonlyMap<string, DownloadPhase>
 >(new Map());
 
-function setDownloadPhase(url: string, phase?: BoardSetDownloadPhase) {
+function setDownloadPhase(url: string, phase?: DownloadPhase) {
   const phases = new Map(downloadPhasesStore.getSnapshot());
 
   if (phase) {
@@ -128,8 +128,6 @@ export function cancelBoardSetDownload(url: string) {
   pendingDownloadsByURL.get(url)?.controller.abort();
 }
 
-export function useBoardSetDownloadPhase(
-  url: string,
-): BoardSetDownloadPhase | undefined {
+export function useDownloadPhase(url: string): DownloadPhase | undefined {
   return useExternalStore(downloadPhasesStore, (phases) => phases.get(url));
 }

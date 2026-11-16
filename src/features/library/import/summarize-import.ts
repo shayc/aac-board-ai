@@ -1,12 +1,12 @@
 import { m } from "@paraglide/messages.js";
 import type { SnackbarOptions } from "@shared/snackbar/snackbar-context";
 import { OBFError } from "@shayc/open-board-format";
-import type { BoardFilesImportOutcome } from "./board-file-import";
+import type { ImportOutcome } from "./board-file-import";
 
 export function summarizeImport({
   importedBoardSets,
   failures,
-}: BoardFilesImportOutcome): SnackbarOptions {
+}: ImportOutcome): SnackbarOptions {
   const importedCount = importedBoardSets.length;
 
   if (failures.length === 0) {

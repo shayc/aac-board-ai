@@ -13,7 +13,7 @@ import { useUILocale } from "@shared/language/language-store";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
 import { useId } from "react";
-import type { BoardSetDownloadPhase } from "../catalog/board-set-downloads";
+import type { DownloadPhase } from "../catalog/board-set-downloads";
 import { useBoardSetDownload } from "../catalog/use-board-set-download";
 import type { DownloadProgress } from "../import/import-from-url";
 
@@ -67,7 +67,7 @@ export function DownloadableBoardSetListItem({
 interface DownloadButtonProps {
   statusId: string | undefined;
   name: string;
-  phase: BoardSetDownloadPhase | undefined;
+  phase: DownloadPhase | undefined;
   onDownload: () => void;
   onCancel: () => void;
 }
@@ -106,7 +106,7 @@ function DownloadButton({
 }
 
 interface DownloadButtonIconProps {
-  phase: BoardSetDownloadPhase | undefined;
+  phase: DownloadPhase | undefined;
 }
 
 function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
@@ -139,7 +139,7 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
   );
 }
 
-function tooltipMessage(phase: BoardSetDownloadPhase | undefined) {
+function tooltipMessage(phase: DownloadPhase | undefined) {
   if (!phase) {
     return m.libraryDownload;
   }
@@ -155,7 +155,7 @@ type RingProgress =
   | { variant: "determinate"; value: number }
   | { variant: "indeterminate" };
 
-function ringProgress(phase: BoardSetDownloadPhase): RingProgress {
+function ringProgress(phase: DownloadPhase): RingProgress {
   // Wait for response headers to avoid flashing an indeterminate spinner.
   if (phase.kind === "connecting") {
     return { variant: "determinate", value: 0 };
@@ -176,7 +176,7 @@ function ringProgress(phase: BoardSetDownloadPhase): RingProgress {
 }
 
 function describeDownloadPhase(
-  phase: BoardSetDownloadPhase,
+  phase: DownloadPhase,
   t: Translate,
   locale: string,
 ): string {

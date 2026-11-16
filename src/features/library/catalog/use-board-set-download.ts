@@ -1,14 +1,14 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import {
-  type BoardSetDownloadPhase,
   cancelBoardSetDownload,
   downloadBoardSet,
-  useBoardSetDownloadPhase,
+  type DownloadPhase,
+  useDownloadPhase,
 } from "./board-set-downloads";
 
 interface UseBoardSetDownloadReturn {
-  phase: BoardSetDownloadPhase | undefined;
+  phase: DownloadPhase | undefined;
   download: () => Promise<void>;
   cancel: () => void;
 }
@@ -21,7 +21,7 @@ export function useBoardSetDownload({
   url: string;
 }): UseBoardSetDownloadReturn {
   const { showSnackbar } = useSnackbar();
-  const phase = useBoardSetDownloadPhase(url);
+  const phase = useDownloadPhase(url);
 
   async function download() {
     if (phase) {

@@ -19,14 +19,14 @@ export interface ImportedBoardSet {
   rootBoardId: string;
 }
 
-export interface BoardFileImportFailure {
+export interface ImportFailure {
   fileName: string;
   error: unknown;
 }
 
-export interface BoardFilesImportOutcome {
+export interface ImportOutcome {
   importedBoardSets: ImportedBoardSet[];
-  failures: BoardFileImportFailure[];
+  failures: ImportFailure[];
 }
 
 type BoardSetContent = Omit<BoardSetInput, "id">;
@@ -43,9 +43,9 @@ export const BOARD_FILE_IMPORT_LIMITS: UnzipLimits = {
 
 export async function importEachBoardFile(
   files: readonly File[],
-): Promise<BoardFilesImportOutcome> {
+): Promise<ImportOutcome> {
   const importedBoardSets: ImportedBoardSet[] = [];
-  const failures: BoardFileImportFailure[] = [];
+  const failures: ImportFailure[] = [];
 
   for (const file of files) {
     try {
