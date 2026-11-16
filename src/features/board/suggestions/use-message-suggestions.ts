@@ -8,20 +8,28 @@ import {
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { isEngineUsable, SUGGESTION_ENGINES } from "./suggestion-support";
+import { useContinuationSource } from "./use-continuation-source";
 import { useProofreaderSource } from "./use-proofreader-source";
 import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
+interface ContinuationContext {
+  vocabulary: readonly string[];
+  isWordOpen: boolean;
+}
+
 interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
   status: SuggestionStatus;
   phrases: readonly string[];
+  continuations: readonly (readonly string[])[];
   enable: () => void;
 }
 
 export function useMessageSuggestions(
   messageText: string,
+  { vocabulary, isWordOpen }: ContinuationContext,
 ): UseMessageSuggestionsReturn {
   const text = messageText.trim();
 
@@ -45,6 +53,12 @@ export function useMessageSuggestions(
     language,
     tone: "more-casual",
   });
+  const continuationSource = useContinuationSource({
+    text,
+    vocabulary,
+    isWordOpen,
+    language,
+  });
   const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
   const hasText = text !== "";
@@ -53,18 +67,20 @@ export function useMessageSuggestions(
     text,
     sources.map(({ candidate }) => candidate),
   );
-  const isAvailable = sources.some(({ engineStatus }) =>
+  const { continuations } = continuationSource;
+  const allSources = [...sources, continuationSource];
+  const isAvailable = allSources.some(({ engineStatus }) =>
     isEngineUsable(engineStatus),
   );
   const status = deriveSuggestionStatus({
-    sources,
+    sources: allSources,
     downloadProgress,
     hasText,
-    phraseCount: phrases.length,
+    phraseCount: phrases.length + continuations.length,
   });
 
   function enable() {
-    for (const source of sources) {
+    for (const source of allSources) {
       source.enable();
     }
   }
@@ -73,6 +89,7 @@ export function useMessageSuggestions(
     isAvailable,
     status,
     phrases,
+    continuations,
     enable,
   };
 }

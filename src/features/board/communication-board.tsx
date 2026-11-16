@@ -148,10 +148,17 @@ export function CommunicationBoard({
 
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
+                  board={board}
+                  boardLanguage={language}
+                  rootBoardId={rootBoardId}
                   messageText={message.text}
+                  isWordOpen={message.isWordOpen}
                   language={communication.language}
                   onPhraseSelect={(phrase) =>
                     message.replaceWithText(phrase, communication.language)
+                  }
+                  onContinuationSelect={(parts) =>
+                    message.apply(parts.map((part) => ({ kind: "tile", part })))
                   }
                 />
               </ErrorBoundary>

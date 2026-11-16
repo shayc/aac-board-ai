@@ -9,9 +9,12 @@ function makeProps(
   return {
     status: { kind: "idle" },
     phrases: [],
+    messageText: "",
+    continuations: [],
     language: "en",
     onEnable: vi.fn(),
     onPhraseSelect: vi.fn(),
+    onContinuationSelect: vi.fn(),
     ...overrides,
   };
 }
@@ -51,6 +54,26 @@ describe("SuggestionBar", () => {
 
     expect(props.onPhraseSelect).toHaveBeenCalledWith("Goodbye");
     expect(props.onPhraseSelect).toHaveBeenCalledTimes(2);
+  });
+
+  test("offers each continuation as the whole sentence and selects its added words", async () => {
+    const props = makeProps({
+      messageText: "I want",
+      continuations: [["to", "eat"]],
+    });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+
+    await expectNoA11yViolations(screen.container);
+
+    await screen
+      .getByRole("group", { name: "Suggestions" })
+      .getByRole("button", { name: "I want to eat" })
+      .click();
+
+    expect(props.onContinuationSelect).toHaveBeenCalledExactlyOnceWith([
+      "to",
+      "eat",
+    ]);
   });
 
   test("marks each phrase with the language it is written in", async () => {

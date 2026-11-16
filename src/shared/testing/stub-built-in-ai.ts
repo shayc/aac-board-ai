@@ -1,6 +1,6 @@
 import { type Mock, vi } from "vitest";
 
-type AINamespace = "Proofreader" | "Rewriter" | "Translator";
+type AINamespace = "LanguageModel" | "Proofreader" | "Rewriter" | "Translator";
 
 interface NamespaceSpies {
   create: Mock<(options?: Record<string, unknown>) => Promise<unknown>>;
@@ -17,6 +17,10 @@ interface ProofreaderStub extends NamespaceSpies {
 
 interface RewriterStub extends NamespaceSpies {
   rewrite: Mock<(input: string) => string | Promise<string>>;
+}
+
+interface LanguageModelStub extends NamespaceSpies {
+  prompt: Mock<(input: unknown) => string | Promise<string>>;
 }
 
 interface TranslatorStub extends NamespaceSpies {
@@ -47,6 +51,17 @@ export function stubRewriter(
   return { rewrite: action, ...spies };
 }
 
+export function stubLanguageModel(
+  prompt: (input: unknown) => string | Promise<string>,
+): LanguageModelStub {
+  const action = vi.fn(prompt);
+  const spies = installNamespace("LanguageModel", () =>
+    languageModelSession(action),
+  );
+
+  return { prompt: action, ...spies };
+}
+
 export function stubTranslator(
   translate: (input: string) => string | Promise<string> = (input) => input,
 ): TranslatorStub {
@@ -71,4 +86,17 @@ function installNamespace(
   vi.stubGlobal(name, { availability, create });
 
   return { create, availability };
+}
+
+function languageModelSession(
+  prompt: LanguageModelStub["prompt"],
+): Record<string, unknown> {
+  return {
+    prompt,
+    clone: () => Promise.resolve(languageModelSession(prompt)),
+    destroy: () => undefined,
+    addEventListener: () => undefined,
+    contextUsage: 0,
+    contextWindow: 9216,
+  };
 }

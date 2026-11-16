@@ -6,11 +6,13 @@ export {
   boardSetIdFromPath,
   rootBoardPath,
 } from "./board-paths";
+export { findBoardInLanguage } from "./board-sets/board-in-language";
 export { listBoardSummaries } from "./board-sets/list-board-summaries";
 export {
   BoardNotFoundError,
   loadStoredBoard,
 } from "./board-sets/load-stored-board";
+export { loadStoredBoardTexts } from "./board-sets/load-stored-board-texts";
 export { starterBoardSet } from "./catalog/board-set-catalog";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {

@@ -9,20 +9,28 @@ import { SuggestionStatusNotice } from "./suggestion-status-notice";
 export interface SuggestionBarProps {
   status: SuggestionStatus;
   phrases: readonly string[];
+  /** The message so far, which each continuation is shown after. */
+  messageText: string;
+  /** Each continuation is the nearby words it would add, in order. */
+  continuations: readonly (readonly string[])[];
   language: string;
   onEnable: () => void;
   onPhraseSelect: (phrase: string) => void;
+  onContinuationSelect: (words: readonly string[]) => void;
 }
 
 export function SuggestionBar({
   status,
   phrases,
+  messageText,
+  continuations,
   language,
   onEnable,
   onPhraseSelect,
+  onContinuationSelect,
 }: SuggestionBarProps) {
   const t = useTranslate();
-  const hasPhrases = phrases.length > 0;
+  const hasSuggestions = phrases.length + continuations.length > 0;
 
   return (
     <Stack
@@ -39,8 +47,8 @@ export function SuggestionBar({
 
       <Box
         // A live region would interrupt the tile's spoken feedback.
-        role={hasPhrases ? "group" : undefined}
-        aria-label={hasPhrases ? t(m.suggestionsLabel) : undefined}
+        role={hasSuggestions ? "group" : undefined}
+        aria-label={hasSuggestions ? t(m.suggestionsLabel) : undefined}
         sx={{
           display: "flex",
           alignItems: "center",
@@ -50,6 +58,20 @@ export function SuggestionBar({
           overflowX: "auto",
         }}
       >
+        {continuations.map((words) => {
+          const addedText = words.join(" ");
+
+          return (
+            <Chip
+              key={`continuation/${addedText}`}
+              lang={language}
+              label={`${messageText} ${addedText}`}
+              variant="outlined"
+              onClick={() => onContinuationSelect(words)}
+            />
+          );
+        })}
+
         {phrases.map((phrase) => (
           <Chip
             key={phrase}
