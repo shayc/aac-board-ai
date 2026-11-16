@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Ouvir a voz",
   "speechPreviewSample": "Olá, esta é a minha voz!",
   "messageImages": "Mostrar imagens",
-  "messageHighlight": "Destacar durante a fala",
-  "messageClearAfterSpeaking": "Limpar após a fala",
+  "messageHighlight": "Destacar durante a reprodução",
+  "messageClearAfterPlaying": "Limpar após a reprodução",
   "tileSaturation": "Intensidade da cor",
   "tileBrightness": "Brilho",
   "tileBorders": "Mostrar contornos",
@@ -151,9 +151,9 @@
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
-  "errorBoardURLImportFailed": "Não foi possível importar o arquivo de prancha do link",
-  "boardLinkImportTitle": "Importar o arquivo de prancha do link?",
-  "boardLinkImportDescription": "Este link importa um arquivo de prancha de {host}. Importe-o somente se você confiar em quem enviou o link.",
-  "boardLinkImport": "Importar",
-  "boardLinkCancel": "Cancelar"
+  "errorBoardFileURLImportFailed": "Não foi possível importar o arquivo de prancha do link",
+  "boardFileURLImportTitle": "Importar o arquivo de prancha do link?",
+  "boardFileURLImportDescription": "Este link importa um arquivo de prancha de {host}. Importe-o somente se você confiar em quem enviou o link.",
+  "boardFileURLImportConfirm": "Importar",
+  "boardFileURLImportCancel": "Cancelar"
 }

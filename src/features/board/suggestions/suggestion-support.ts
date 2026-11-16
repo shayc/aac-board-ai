@@ -21,7 +21,7 @@ export function areSuggestionsSupported(): boolean {
   return SUGGESTION_ENGINES.some((engine) => isSupported(engine));
 }
 
-export function isEngineUsable(status: Status): boolean {
+export function isEngineStatusAvailable(status: Status): boolean {
   return status !== "unsupported" && status !== "unavailable";
 }
 

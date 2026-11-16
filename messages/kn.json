@@ -92,8 +92,8 @@
   "speechPreviewVoice": "ಧ್ವನಿಯನ್ನು ಕೇಳಿ",
   "speechPreviewSample": "ನಮಸ್ಕಾರ, ಇದು ನನ್ನ ಧ್ವನಿ!",
   "messageImages": "ಚಿತ್ರಗಳನ್ನು ತೋರಿಸಿ",
-  "messageHighlight": "ಮಾತನಾಡುವಾಗ ಹೈಲೈಟ್ ಮಾಡಿ",
-  "messageClearAfterSpeaking": "ಮಾತನಾಡಿದ ನಂತರ ತೆರವುಗೊಳಿಸಿ",
+  "messageHighlight": "ಪ್ಲೇ ಮಾಡುವಾಗ ಹೈಲೈಟ್ ಮಾಡಿ",
+  "messageClearAfterPlaying": "ಪ್ಲೇ ಮಾಡಿದ ನಂತರ ತೆರವುಗೊಳಿಸಿ",
   "tileSaturation": "ಬಣ್ಣದ ತೀವ್ರತೆ",
   "tileBrightness": "ಹೊಳಪು",
   "tileBorders": "ಗಡಿಗಳನ್ನು ತೋರಿಸಿ",
@@ -151,9 +151,9 @@
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardURLImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "boardLinkImportTitle": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಬೇಕೆ?",
-  "boardLinkImportDescription": "ಈ ಲಿಂಕ್ {host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡುತ್ತದೆ. ಲಿಂಕ್ ಕಳುಹಿಸಿದವರನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಆಮದು ಮಾಡಿ.",
-  "boardLinkImport": "ಆಮದು ಮಾಡಿ",
-  "boardLinkCancel": "ರದ್ದುಮಾಡಿ"
+  "errorBoardFileURLImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "boardFileURLImportTitle": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಬೇಕೆ?",
+  "boardFileURLImportDescription": "ಈ ಲಿಂಕ್ {host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡುತ್ತದೆ. ಲಿಂಕ್ ಕಳುಹಿಸಿದವರನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಆಮದು ಮಾಡಿ.",
+  "boardFileURLImportConfirm": "ಆಮದು ಮಾಡಿ",
+  "boardFileURLImportCancel": "ರದ್ದುಮಾಡಿ"
 }

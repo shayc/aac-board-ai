@@ -10,13 +10,13 @@ import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 export async function rootIndexLoader({
   request,
-}: LoaderFunctionArgs): Promise<Response | { boardHost: string }> {
-  const boardURL = new URL(request.url).searchParams.get("board");
+}: LoaderFunctionArgs): Promise<Response | { boardFileHost: string }> {
+  const boardFileURL = new URL(request.url).searchParams.get("board");
 
   // The ?board= param is attacker-controlled, so a link alone must never
   // import. rootIndexAction imports once the user confirms the host.
-  if (boardURL) {
-    return { boardHost: boardFileHost(boardURL) };
+  if (boardFileURL) {
+    return { boardFileHost: parseBoardFileHost(boardFileURL) };
   }
 
   const [boardSet] = await listBoardSetRecords();
@@ -31,10 +31,10 @@ export async function rootIndexLoader({
   return redirect(rootBoardPath(importedBoardSet));
 }
 
-function boardFileHost(boardURL: string): string {
+function parseBoardFileHost(boardFileURL: string): string {
   try {
-    return parseBoardFileURL(boardURL).host;
+    return parseBoardFileURL(boardFileURL).host;
   } catch {
-    throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
+    throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
   }
 }

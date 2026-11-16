@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { parseMessagePreferences } from "./message-preferences-store";
 
 describe("parseMessagePreferences", () => {
-  test("shows images, highlights while speaking, and clears after speaking when absent", () => {
+  test("shows images, highlights while playing, and clears after playing when absent", () => {
     expect(parseMessagePreferences(undefined)).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,

@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Ascolta la voce",
   "speechPreviewSample": "Ciao, questa è la mia voce!",
   "messageImages": "Mostra le immagini",
-  "messageHighlight": "Evidenzia durante la lettura",
-  "messageClearAfterSpeaking": "Cancella dopo la lettura",
+  "messageHighlight": "Evidenzia durante la riproduzione",
+  "messageClearAfterPlaying": "Cancella dopo la riproduzione",
   "tileSaturation": "Intensità del colore",
   "tileBrightness": "Luminosità",
   "tileBorders": "Mostra i bordi",
@@ -151,9 +151,9 @@
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
-  "errorBoardURLImportFailed": "Impossibile importare il file di tabella dal link",
-  "boardLinkImportTitle": "Importare il file di tabella dal link?",
-  "boardLinkImportDescription": "Questo link importa un file di tabella da {host}. Importalo solo se ti fidi di chi ti ha inviato il link.",
-  "boardLinkImport": "Importa",
-  "boardLinkCancel": "Annulla"
+  "errorBoardFileURLImportFailed": "Impossibile importare il file di tabella dal link",
+  "boardFileURLImportTitle": "Importare il file di tabella dal link?",
+  "boardFileURLImportDescription": "Questo link importa un file di tabella da {host}. Importalo solo se ti fidi di chi ti ha inviato il link.",
+  "boardFileURLImportConfirm": "Importa",
+  "boardFileURLImportCancel": "Annulla"
 }

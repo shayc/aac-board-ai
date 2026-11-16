@@ -542,7 +542,7 @@ describe("CommunicationBoard", () => {
       await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
     });
 
-    test("outlines no message part while speaking when highlighting is off", async () => {
+    test("outlines no message part while playing when highlighting is off", async () => {
       setMessageHighlightingEnabled(false);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 

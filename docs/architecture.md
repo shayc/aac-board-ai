@@ -138,8 +138,8 @@ redirects, so the named host is the only one the app contacts.
 Links must use `https:` unless they point at the app's own origin, because the
 Content Security Policy allows no other connections; an `http:` link fails
 before the confirmation instead of after it.
-Otherwise, the app opens the newest stored board set, or imports the bundled
-starter board set if the library is empty.
+Otherwise, the app opens the newest stored board set, or imports the
+catalog's starter board set if the library is empty.
 
 ### Import board files
 
@@ -505,7 +505,7 @@ are relative to `src/features/`.
 | Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
 | Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
 | Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and read stored boards as runtime types, in the communication language. |
-| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and track their downloads.                                                |
+| Board set catalog      | [library/catalog/](../src/features/library/catalog/)                                             | List the catalog's board sets and track their downloads.                                              |
 | Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
 | Board translation      | [library/translation/](../src/features/library/translation/)                                     | Translate board sets that lack the communication language.                                            |
 
@@ -565,7 +565,7 @@ AI availability, provisioning, and session lifecycle to
 - **Root board** — the board a set opens on. Navigation calls going to it Home,
   after the OBF `:home` action, and the interface calls it the main board.
 - **Library** — the board sets stored on this device, listed alongside the
-  catalog of bundled board sets that can be downloaded.
+  catalog of board sets that can be downloaded.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It

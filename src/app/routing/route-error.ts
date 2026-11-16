@@ -4,7 +4,7 @@ import { data } from "react-router";
 export const routeErrorCodes = {
   boardNotFound: "board-not-found",
   boardSetNotFound: "board-set-not-found",
-  boardURLImportFailed: "board-url-import-failed",
+  boardFileURLImportFailed: "board-file-url-import-failed",
 } as const;
 
 export type RouteErrorCode =
@@ -17,7 +17,7 @@ interface RouteErrorPayload {
 const statusByCode: Record<RouteErrorCode, number> = {
   [routeErrorCodes.boardNotFound]: 404,
   [routeErrorCodes.boardSetNotFound]: 404,
-  [routeErrorCodes.boardURLImportFailed]: 400,
+  [routeErrorCodes.boardFileURLImportFailed]: 400,
 };
 
 export function routeErrorResponse(code: RouteErrorCode) {
