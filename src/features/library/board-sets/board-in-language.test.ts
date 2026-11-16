@@ -5,7 +5,7 @@ import {
   findBoardInLanguage,
   findStringTranslations,
   getSourceLanguage,
-} from "./board-translations";
+} from "./board-in-language";
 
 const spanishTranslations = new Map([
   ["My Board", "Mi Tablero"],

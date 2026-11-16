@@ -605,7 +605,7 @@ AI availability, provisioning, and session lifecycle to
   read through `useTranslate()`. Board translation is separate: it shows board
   strings in the communication language, reading the translations a board
   already has in
-  [`board-translations.ts`](../src/features/library/board-sets/board-translations.ts)
+  [`board-in-language.ts`](../src/features/library/board-sets/board-in-language.ts)
   and producing missing ones with the Translator API in
   [`translate-board-sets.ts`](../src/features/library/translation/translate-board-sets.ts).
 - **Store and storage** — a store is reactive state that components subscribe
