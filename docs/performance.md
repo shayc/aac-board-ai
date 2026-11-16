@@ -224,5 +224,5 @@ scorecard and its report with Node's built-in test runner.
 - In a comparison, other load on the machine cancels out between the builds but widens the
   confidence intervals, so small changes go unflagged. A machine that sleeps
   mid-run stalls the browser and fails the journey.
-- Not covered: WebKit/Safari, built-in AI, real speech, memory, imports from a
+- Not covered: Firefox, WebKit/Safari, built-in AI, real speech, memory, imports from a
   file or a link, CI.
