@@ -270,8 +270,10 @@ how the message changes:
    that cannot play, so a broken or unreachable recording does not silence a
    tile that has text to speak.
 
-Each new playback request interrupts the current one. These interruptions are
-expected and do not surface as user errors.
+Each new playback request interrupts the current one, and a board that closes
+stops its own playback, so a message it was playing is never marked played
+after another board has taken over the draft. These interruptions are expected
+and do not surface as user errors.
 
 The shared coordinator resolves each request as completed, interrupted, or
 failed. The board playback adapter is the only place that reads that outcome:
