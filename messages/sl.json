@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
   "errorBoardURLImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
-  "boardURLImportTitle": "Želite uvoziti datoteko table s povezave?",
-  "boardURLImportDescription": "Ta povezava uvozi datoteko table z {host}. Uvozite jo le, če zaupate pošiljatelju povezave.",
-  "boardURLImportConfirm": "Uvozi",
-  "boardURLImportCancel": "Prekliči"
+  "boardLinkImportTitle": "Želite uvoziti datoteko table s povezave?",
+  "boardLinkImportDescription": "Ta povezava uvozi datoteko table z {host}. Uvozite jo le, če zaupate pošiljatelju povezave.",
+  "boardLinkImport": "Uvozi",
+  "boardLinkCancel": "Prekliči"
 }

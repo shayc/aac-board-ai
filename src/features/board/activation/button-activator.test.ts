@@ -2,7 +2,7 @@ import type { BoardButton } from "@features/library";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { setClearsAfterSpeaking } from "../message/message-preferences-store";
+import { setMessageClearAfterPlayback } from "../message/message-preferences-store";
 import { createTilePart } from "../message/message-transforms";
 import type { MessageEdit } from "../message/message-types";
 import { useMessage } from "../message/use-message";
@@ -415,7 +415,7 @@ describe("createButtonActivator", () => {
     // While clearing after speaking is off, the message hook releases a
     // played message each time it is edited, which must not count as a change.
     test("replays a played message when clearing after speaking is off", async () => {
-      setClearsAfterSpeaking(false);
+      setMessageClearAfterPlayback(false);
       const { activateButton, playback } = await setup(PLAYED_PARTS, {
         hasPlayed: true,
       });

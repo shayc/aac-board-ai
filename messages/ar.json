@@ -151,8 +151,8 @@
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
   "errorBoardURLImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
-  "boardURLImportTitle": "استيراد ملف اللوحة من الرابط؟",
-  "boardURLImportDescription": "يستورد هذا الرابط ملف لوحة من {host}. لا تستورده إلا إذا كنت تثق بمن أرسل الرابط.",
-  "boardURLImportConfirm": "استيراد",
-  "boardURLImportCancel": "إلغاء"
+  "boardLinkImportTitle": "استيراد ملف اللوحة من الرابط؟",
+  "boardLinkImportDescription": "يستورد هذا الرابط ملف لوحة من {host}. لا تستورده إلا إذا كنت تثق بمن أرسل الرابط.",
+  "boardLinkImport": "استيراد",
+  "boardLinkCancel": "إلغاء"
 }

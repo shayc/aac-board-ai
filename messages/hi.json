@@ -151,8 +151,8 @@
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
   "errorBoardURLImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
-  "boardURLImportTitle": "लिंक से बोर्ड फ़ाइल आयात करें?",
-  "boardURLImportDescription": "यह लिंक {host} से एक बोर्ड फ़ाइल आयात करता है। इसे तभी आयात करें जब आपको लिंक भेजने वाले पर भरोसा हो।",
-  "boardURLImportConfirm": "आयात करें",
-  "boardURLImportCancel": "रद्द करें"
+  "boardLinkImportTitle": "लिंक से बोर्ड फ़ाइल आयात करें?",
+  "boardLinkImportDescription": "यह लिंक {host} से एक बोर्ड फ़ाइल आयात करता है। इसे तभी आयात करें जब आपको लिंक भेजने वाले पर भरोसा हो।",
+  "boardLinkImport": "आयात करें",
+  "boardLinkCancel": "रद्द करें"
 }

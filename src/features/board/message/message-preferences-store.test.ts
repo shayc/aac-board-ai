@@ -6,7 +6,7 @@ describe("parseMessagePreferences", () => {
     expect(parseMessagePreferences(undefined)).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,
-      clearsAfterSpeaking: true,
+      shouldClearAfterPlayback: true,
     });
   });
 
@@ -15,12 +15,12 @@ describe("parseMessagePreferences", () => {
       parseMessagePreferences({
         areImagesVisible: "no",
         isHighlightingEnabled: "yes",
-        clearsAfterSpeaking: 0,
+        shouldClearAfterPlayback: 0,
       }),
     ).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,
-      clearsAfterSpeaking: true,
+      shouldClearAfterPlayback: true,
     });
   });
 
@@ -29,12 +29,12 @@ describe("parseMessagePreferences", () => {
       parseMessagePreferences({
         areImagesVisible: false,
         isHighlightingEnabled: false,
-        clearsAfterSpeaking: false,
+        shouldClearAfterPlayback: false,
       }),
     ).toEqual({
       areImagesVisible: false,
       isHighlightingEnabled: false,
-      clearsAfterSpeaking: false,
+      shouldClearAfterPlayback: false,
     });
   });
 });

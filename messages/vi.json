@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
   "errorBoardURLImportFailed": "Không thể nhập tệp bảng từ liên kết",
-  "boardURLImportTitle": "Nhập tệp bảng từ liên kết?",
-  "boardURLImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
-  "boardURLImportConfirm": "Nhập",
-  "boardURLImportCancel": "Hủy"
+  "boardLinkImportTitle": "Nhập tệp bảng từ liên kết?",
+  "boardLinkImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
+  "boardLinkImport": "Nhập",
+  "boardLinkCancel": "Hủy"
 }

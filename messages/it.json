@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
   "errorBoardURLImportFailed": "Impossibile importare il file di tabella dal link",
-  "boardURLImportTitle": "Importare il file di tabella dal link?",
-  "boardURLImportDescription": "Questo link importa un file di tabella da {host}. Importalo solo se ti fidi di chi ti ha inviato il link.",
-  "boardURLImportConfirm": "Importa",
-  "boardURLImportCancel": "Annulla"
+  "boardLinkImportTitle": "Importare il file di tabella dal link?",
+  "boardLinkImportDescription": "Questo link importa un file di tabella da {host}. Importalo solo se ti fidi di chi ti ha inviato il link.",
+  "boardLinkImport": "Importa",
+  "boardLinkCancel": "Annulla"
 }

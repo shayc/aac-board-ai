@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
   "errorBoardURLImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
-  "boardURLImportTitle": "Importovať súbor tabuľky z odkazu?",
-  "boardURLImportDescription": "Tento odkaz importuje súbor tabuľky z {host}. Importujte ho, len ak dôverujete tomu, kto odkaz poslal.",
-  "boardURLImportConfirm": "Importovať",
-  "boardURLImportCancel": "Zrušiť"
+  "boardLinkImportTitle": "Importovať súbor tabuľky z odkazu?",
+  "boardLinkImportDescription": "Tento odkaz importuje súbor tabuľky z {host}. Importujte ho, len ak dôverujete tomu, kto odkaz poslal.",
+  "boardLinkImport": "Importovať",
+  "boardLinkCancel": "Zrušiť"
 }

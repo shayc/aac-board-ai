@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { setClearsAfterSpeaking } from "./message-preferences-store";
+import { setMessageClearAfterPlayback } from "./message-preferences-store";
 import { useMessage } from "./use-message";
 
 describe("useMessage", () => {
@@ -101,7 +101,7 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to a played message when clearing after speaking is off", async () => {
-    setClearsAfterSpeaking(false);
+    setMessageClearAfterPlayback(false);
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
@@ -116,7 +116,7 @@ describe("useMessage", () => {
 
     result.current.replaceWithText("I want water", "en");
     await trackSettledPlayback(result.current, true);
-    setClearsAfterSpeaking(false);
+    setMessageClearAfterPlayback(false);
     await rerender();
 
     expect(labelsAfterSpelling(result.current)).toEqual([
@@ -194,10 +194,10 @@ describe("useMessage", () => {
 
     result.current.replaceWithText("I want water", "en");
     await trackSettledPlayback(result.current, true);
-    setClearsAfterSpeaking(false);
+    setMessageClearAfterPlayback(false);
     await rerender();
     result.current.apply([]);
-    setClearsAfterSpeaking(true);
+    setMessageClearAfterPlayback(true);
     await rerender();
 
     expect(labelsAfterSpelling(result.current)).toEqual(["a"]);

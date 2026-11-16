@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
   "errorBoardURLImportFailed": "Не удалось импортировать файл доски по ссылке",
-  "boardURLImportTitle": "Импортировать файл доски по ссылке?",
-  "boardURLImportDescription": "Эта ссылка импортирует файл доски с {host}. Импортируйте его, только если доверяете тому, кто прислал ссылку.",
-  "boardURLImportConfirm": "Импортировать",
-  "boardURLImportCancel": "Отмена"
+  "boardLinkImportTitle": "Импортировать файл доски по ссылке?",
+  "boardLinkImportDescription": "Эта ссылка импортирует файл доски с {host}. Импортируйте его, только если доверяете тому, кто прислал ссылку.",
+  "boardLinkImport": "Импортировать",
+  "boardLinkCancel": "Отмена"
 }

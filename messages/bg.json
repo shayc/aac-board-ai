@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
   "errorBoardURLImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
-  "boardURLImportTitle": "Импортиране на файла с дъска от връзката?",
-  "boardURLImportDescription": "Тази връзка импортира файл с дъска от {host}. Импортирайте го само ако имате доверие на човека, изпратил връзката.",
-  "boardURLImportConfirm": "Импортиране",
-  "boardURLImportCancel": "Отказ"
+  "boardLinkImportTitle": "Импортиране на файла с дъска от връзката?",
+  "boardLinkImportDescription": "Тази връзка импортира файл с дъска от {host}. Импортирайте го само ако имате доверие на човека, изпратил връзката.",
+  "boardLinkImport": "Импортиране",
+  "boardLinkCancel": "Отказ"
 }

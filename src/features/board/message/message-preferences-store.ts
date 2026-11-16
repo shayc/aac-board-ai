@@ -6,7 +6,7 @@ import { parseBoolean } from "@shared/utils/parse-boolean";
 interface MessagePreferences {
   areImagesVisible: boolean;
   isHighlightingEnabled: boolean;
-  clearsAfterSpeaking: boolean;
+  shouldClearAfterPlayback: boolean;
 }
 
 export function parseMessagePreferences(raw: unknown): MessagePreferences {
@@ -15,7 +15,10 @@ export function parseMessagePreferences(raw: unknown): MessagePreferences {
   return {
     areImagesVisible: parseBoolean(stored.areImagesVisible, true),
     isHighlightingEnabled: parseBoolean(stored.isHighlightingEnabled, true),
-    clearsAfterSpeaking: parseBoolean(stored.clearsAfterSpeaking, true),
+    shouldClearAfterPlayback: parseBoolean(
+      stored.shouldClearAfterPlayback,
+      true,
+    ),
   };
 }
 
@@ -34,8 +37,10 @@ export function setMessageHighlightingEnabled(
   patchState(messagePreferencesStore, { isHighlightingEnabled });
 }
 
-export function setClearsAfterSpeaking(clearsAfterSpeaking: boolean): void {
-  patchState(messagePreferencesStore, { clearsAfterSpeaking });
+export function setMessageClearAfterPlayback(
+  shouldClearAfterPlayback: boolean,
+): void {
+  patchState(messagePreferencesStore, { shouldClearAfterPlayback });
 }
 
 export function useMessagePreferences(): MessagePreferences {

@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
   "errorBoardURLImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
-  "boardURLImportTitle": "Tuodaanko taulutiedosto linkistä?",
-  "boardURLImportDescription": "Tämä linkki tuo taulutiedoston osoitteesta {host}. Tuo se vain, jos luotat linkin lähettäjään.",
-  "boardURLImportConfirm": "Tuo",
-  "boardURLImportCancel": "Peruuta"
+  "boardLinkImportTitle": "Tuodaanko taulutiedosto linkistä?",
+  "boardLinkImportDescription": "Tämä linkki tuo taulutiedoston osoitteesta {host}. Tuo se vain, jos luotat linkin lähettäjään.",
+  "boardLinkImport": "Tuo",
+  "boardLinkCancel": "Peruuta"
 }

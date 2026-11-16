@@ -30,7 +30,7 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(): UseMessageReturn {
-  const { clearsAfterSpeaking } = useMessagePreferences();
+  const { shouldClearAfterPlayback } = useMessagePreferences();
   const [state, setRenderedState] = useState(EMPTY_MESSAGE);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
@@ -39,7 +39,7 @@ export function useMessage(): UseMessageReturn {
   // The setting is read each time the message is edited, so turning it off
   // releases a message that was already played.
   function readMessage() {
-    return clearsAfterSpeaking
+    return shouldClearAfterPlayback
       ? stateRef.current
       : markPlayed(stateRef.current, false);
   }

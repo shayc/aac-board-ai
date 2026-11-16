@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano seti bulunamadı",
   "errorBoardURLImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı",
-  "boardURLImportTitle": "Pano dosyası bağlantıdan içe aktarılsın mı?",
-  "boardURLImportDescription": "Bu bağlantı {host} adresinden bir pano dosyası içe aktarır. Yalnızca bağlantıyı gönderen kişiye güveniyorsanız içe aktarın.",
-  "boardURLImportConfirm": "İçe aktar",
-  "boardURLImportCancel": "İptal"
+  "boardLinkImportTitle": "Pano dosyası bağlantıdan içe aktarılsın mı?",
+  "boardLinkImportDescription": "Bu bağlantı {host} adresinden bir pano dosyası içe aktarır. Yalnızca bağlantıyı gönderen kişiye güveniyorsanız içe aktarın.",
+  "boardLinkImport": "İçe aktar",
+  "boardLinkCancel": "İptal"
 }
