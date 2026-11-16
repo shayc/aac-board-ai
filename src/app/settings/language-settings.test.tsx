@@ -13,16 +13,6 @@ describe("LanguageSettings", () => {
     await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
   });
 
-  test("shows the communication language as the selection", async () => {
-    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
-
-    const screen = await renderWithProviders(<LanguageSettings />);
-
-    await expect
-      .element(screen.getByRole("combobox", { name: "Language" }))
-      .toHaveTextContent("English");
-  });
-
   test("has no accessibility violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
@@ -32,5 +22,15 @@ describe("LanguageSettings", () => {
       .toHaveTextContent("English");
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("shows the communication language as the selection", async () => {
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
+
+    const screen = await renderWithProviders(<LanguageSettings />);
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Language" }))
+      .toHaveTextContent("English");
   });
 });

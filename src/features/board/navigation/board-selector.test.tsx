@@ -52,20 +52,6 @@ beforeEach(async () => {
 });
 
 describe("BoardSelector", () => {
-  test("opens the popup with boards listed alphabetically and the current board selected", async () => {
-    const { screen } = await renderSelector("set-1", "root");
-
-    await screen.getByRole("combobox").click();
-
-    const items = screen.getByRole("option");
-    await expect.element(items.first()).toHaveTextContent("Animals");
-    await expect.element(items.nth(1)).toHaveTextContent("Food");
-    await expect.element(items.nth(2)).toHaveTextContent("Home");
-    await expect
-      .element(screen.getByRole("option", { name: "Home" }))
-      .toHaveAttribute("aria-selected", "true");
-  });
-
   test("has no accessibility violations with the popup open", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
@@ -78,6 +64,20 @@ describe("BoardSelector", () => {
     await expectNoA11yViolations(document.body, {
       rules: { region: { enabled: false } },
     });
+  });
+
+  test("opens the popup with boards listed alphabetically and the current board selected", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("combobox").click();
+
+    const items = screen.getByRole("option");
+    await expect.element(items.first()).toHaveTextContent("Animals");
+    await expect.element(items.nth(1)).toHaveTextContent("Food");
+    await expect.element(items.nth(2)).toHaveTextContent("Home");
+    await expect
+      .element(screen.getByRole("option", { name: "Home" }))
+      .toHaveAttribute("aria-selected", "true");
   });
 
   test("navigates, enables Back, and closes the popup when a board is clicked", async () => {

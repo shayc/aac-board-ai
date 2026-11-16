@@ -102,16 +102,6 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("shows that suggestions failed", async () => {
-    const screen = await renderWithProviders(
-      <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
-    );
-
-    await expect
-      .element(screen.getByText("Couldn't get suggestions"))
-      .toBeVisible();
-  });
-
   test("has no accessibility violations when suggestions failed", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
@@ -121,5 +111,15 @@ describe("SuggestionBar", () => {
       .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("shows that suggestions failed", async () => {
+    const screen = await renderWithProviders(
+      <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
+    );
+
+    await expect
+      .element(screen.getByText("Couldn't get suggestions"))
+      .toBeVisible();
   });
 });
