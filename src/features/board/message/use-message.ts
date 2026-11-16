@@ -1,15 +1,10 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import {
-  type PartMedia,
-  readMessageDraft,
-  resolveDraftAssets,
-  saveMessageDraft,
-  withPartMedia,
-} from "./message-draft";
+import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
   createTextPart,
+  EMPTY_MESSAGE,
   hasSameContent,
   markPlayed,
 } from "./message-transforms";
@@ -37,41 +32,45 @@ export interface UseMessageReturn {
 
 export function useMessage(): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
-  const [draft] = useState(readMessageDraft);
-  const [state, setRenderedState] = useState(draft.message);
+  const [state, setRenderedState] = useState(EMPTY_MESSAGE);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
+  const isUntouchedRef = useRef(true);
+
+  function show(next: Message) {
+    stateRef.current = next;
+    setRenderedState(next);
+  }
 
   // Saved on every change rather than when the page hides: a mobile system can
   // end a page in the background without warning.
   function commit(next: Message) {
-    stateRef.current = next;
-    setRenderedState(next);
+    isUntouchedRef.current = false;
+    show(next);
     saveMessageDraft(next);
   }
 
-  const fillDraftMedia = useEffectEvent(
-    (mediaByPartId: ReadonlyMap<string, PartMedia>) => {
-      commit(withPartMedia(stateRef.current, mediaByPartId));
-    },
-  );
+  // The draft shows whole, media included, so nothing changes the message
+  // under a playback or an edit already under way. An edit made while it was
+  // restoring has replaced it.
+  const showRestoredMessage = useEffectEvent((restored: Message) => {
+    if (isUntouchedRef.current) {
+      show(restored);
+    }
+  });
 
   useEffect(() => {
-    if (draft.assetsByPartId.size === 0) {
-      return;
-    }
-
     let isCurrent = true;
-    void resolveDraftAssets(draft.assetsByPartId).then((mediaByPartId) => {
+    void restoreMessageDraft().then((restored) => {
       if (isCurrent) {
-        fillDraftMedia(mediaByPartId);
+        showRestoredMessage(restored);
       }
     });
 
     return () => {
       isCurrent = false;
     };
-  }, [draft]);
+  }, []);
 
   const text = state.parts.map((part) => part.label).join(" ");
 

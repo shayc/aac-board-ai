@@ -37,7 +37,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Privacy
 
-No accounts, backend, or tracking. Boards and settings are stored on the device. URL imports, remote media, and some online speech voices use the network.
+No accounts, backend, or tracking. Boards, settings, and the message being composed are stored on the device. A spoken message stays on the device until it is cleared or a new message starts, so it is still there when the app opens again. URL imports, remote media, and some online speech voices use the network.
 
 ## Limitations
 

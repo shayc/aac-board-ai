@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { readMessageDraft, saveMessageDraft } from "./message-draft";
+import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
   createTextPart,
   createTilePart,
@@ -24,25 +24,25 @@ const MESSAGE: Message = {
 };
 
 describe("message draft", () => {
-  test("reads back the saved message", () => {
+  test("restores the saved message", async () => {
     saveMessageDraft(MESSAGE);
 
-    expect(readMessageDraft().message).toEqual(MESSAGE);
+    expect(await restoreMessageDraft()).toEqual(MESSAGE);
   });
 
   test.each([
     { description: "nothing is saved", stored: null },
     { description: "the draft is not JSON", stored: "{ not json" },
     { description: "the draft has no parts", stored: JSON.stringify({}) },
-  ])("reads an empty message when $description", ({ stored }) => {
+  ])("restores an empty message when $description", async ({ stored }) => {
     if (stored !== null) {
       localStorage.setItem(STORAGE_KEY, stored);
     }
 
-    expect(readMessageDraft().message).toBe(EMPTY_MESSAGE);
+    expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
   });
 
-  test("drops parts it cannot read and closes a word that lost its part", () => {
+  test("drops parts it cannot read and closes a word that lost its part", async () => {
     localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
@@ -56,7 +56,7 @@ describe("message draft", () => {
       }),
     );
 
-    expect(readMessageDraft().message).toEqual({
+    expect(await restoreMessageDraft()).toEqual({
       parts: [{ kind: "tile", id: "1", label: "hello", language: "en" }],
       isWordOpen: false,
       hasPlayed: true,
@@ -71,7 +71,31 @@ describe("message draft", () => {
     expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
   });
 
-  test("removes an older draft when a newer one does not fit", () => {
+  test("keeps the words when the media embedded in a board do not fit", async () => {
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [createTextPart("a".repeat(1024), "en")],
+    });
+    fillLocalStorage();
+    const inlineImageSrc = `data:image/svg+xml,${"x".repeat(256 * 1024)}`;
+
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [
+        createTilePart({
+          label: "hello",
+          language: "en",
+          imageSrc: inlineImageSrc,
+        }),
+      ],
+    });
+
+    expect(await restoreMessageDraft()).toMatchObject({
+      parts: [{ label: "hello", imageSrc: undefined }],
+    });
+  });
+
+  test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();
 
@@ -80,7 +104,7 @@ describe("message draft", () => {
       parts: [createTextPart("a".repeat(256 * 1024), "en")],
     });
 
-    expect(readMessageDraft().message).toBe(EMPTY_MESSAGE);
+    expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
   });
 });
 

@@ -2,29 +2,21 @@ import { type AssetKey, findAssetKey, getAssetURL } from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import { EMPTY_MESSAGE } from "./message-transforms";
-import type { Message, MessagePart, TilePart } from "./message-types";
+import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
 
 // localStorage rather than sessionStorage: an installed app can restart from
 // scratch after time in the background, and a message composed ahead of time
 // should still be there when the app is opened again.
 const STORAGE_KEY = "message-draft";
 
-/** The stored media of a restored tile part, whose URLs need creating again. */
-export interface PartAssets {
-  readonly image?: AssetKey;
-  readonly sound?: AssetKey;
+// A stored asset's URL lasts only as long as the page, so a tile part keeps
+// the asset's key in its place.
+interface StoredTilePart extends TilePart {
+  readonly imageAsset?: AssetKey;
+  readonly soundAsset?: AssetKey;
 }
 
-export interface MessageDraft {
-  /** The message as it can show right away, before its stored media resolve. */
-  readonly message: Message;
-  readonly assetsByPartId: ReadonlyMap<string, PartAssets>;
-}
-
-export interface PartMedia {
-  readonly imageSrc?: string;
-  readonly soundSrc?: string;
-}
+type StoredPart = TextPart | StoredTilePart;
 
 export function saveMessageDraft(message: Message): void {
   if (message.parts.length === 0) {
@@ -33,81 +25,47 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const stored = { ...message, parts: message.parts.map(toStoredPart) };
+  const parts = message.parts.map(toStoredPart);
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
-  } catch {
+  // The words matter most: a draft too large with its inline media, such as
+  // images embedded in a board file, is saved without them.
+  const isSaved =
+    writeMessageDraft({ ...message, parts }) ||
+    writeMessageDraft({ ...message, parts: parts.map(withoutMediaURLs) });
+  if (!isSaved) {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
   }
 }
 
-export function readMessageDraft(): MessageDraft {
-  const assetsByPartId = new Map<string, PartAssets>();
+/** Reads the saved message with its stored media ready to show. */
+export async function restoreMessageDraft(): Promise<Message> {
   const stored = readStoredDraft();
   if (!isRecord(stored) || !Array.isArray(stored.parts)) {
-    return { message: EMPTY_MESSAGE, assetsByPartId };
+    return EMPTY_MESSAGE;
   }
 
-  const parts: MessagePart[] = [];
+  const storedParts: StoredPart[] = [];
 
   for (const raw of stored.parts) {
-    const parsed = parseStoredPart(raw);
-    if (!parsed) {
-      continue;
-    }
-
-    parts.push(parsed.part);
-    if (parsed.assets) {
-      assetsByPartId.set(parsed.part.id, parsed.assets);
+    const part = parseStoredPart(raw);
+    if (part) {
+      storedParts.push(part);
     }
   }
 
-  if (parts.length === 0) {
-    return { message: EMPTY_MESSAGE, assetsByPartId };
+  if (storedParts.length === 0) {
+    return EMPTY_MESSAGE;
   }
 
-  const message: Message = {
+  const parts = await Promise.all(storedParts.map(restorePart));
+
+  return {
     parts,
     isWordOpen:
       parseBoolean(stored.isWordOpen, false) && parts.at(-1)?.kind === "text",
     hasPlayed: parseBoolean(stored.hasPlayed, false),
   };
-
-  return { message, assetsByPartId };
-}
-
-export async function resolveDraftAssets(
-  assetsByPartId: ReadonlyMap<string, PartAssets>,
-): Promise<ReadonlyMap<string, PartMedia>> {
-  const entries = await Promise.all(
-    [...assetsByPartId].map(
-      async ([partId, { image, sound }]) =>
-        [
-          partId,
-          {
-            imageSrc: await resolveAssetURL(image),
-            soundSrc: await resolveAssetURL(sound),
-          },
-        ] as const,
-    ),
-  );
-
-  return new Map(entries);
-}
-
-export function withPartMedia(
-  message: Message,
-  mediaByPartId: ReadonlyMap<string, PartMedia>,
-): Message {
-  const parts = message.parts.map((part) => {
-    const media = mediaByPartId.get(part.id);
-
-    return part.kind === "tile" && media ? { ...part, ...media } : part;
-  });
-
-  return { ...message, parts };
 }
 
 function removeMessageDraft() {
@@ -118,14 +76,7 @@ function removeMessageDraft() {
   }
 }
 
-// A stored asset's URL lasts only as long as the page, so a tile part keeps
-// the asset's key in its place.
-interface StoredTilePart extends TilePart {
-  readonly imageAsset?: AssetKey;
-  readonly soundAsset?: AssetKey;
-}
-
-function toStoredPart(part: MessagePart): MessagePart | StoredTilePart {
+function toStoredPart(part: MessagePart): StoredPart {
   if (part.kind === "text") {
     return part;
   }
@@ -146,6 +97,26 @@ function findMediaAssetKey(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
+interface StoredMessage extends Omit<Message, "parts"> {
+  readonly parts: readonly StoredPart[];
+}
+
+function writeMessageDraft(message: StoredMessage): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(message));
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function withoutMediaURLs(part: StoredPart): StoredPart {
+  return part.kind === "tile"
+    ? { ...part, imageSrc: undefined, soundSrc: undefined }
+    : part;
+}
+
 function readStoredDraft(): unknown {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -156,12 +127,7 @@ function readStoredDraft(): unknown {
   }
 }
 
-interface ParsedPart {
-  part: MessagePart;
-  assets?: PartAssets;
-}
-
-function parseStoredPart(raw: unknown): ParsedPart | undefined {
+function parseStoredPart(raw: unknown): StoredPart | undefined {
   if (
     !isRecord(raw) ||
     typeof raw.id !== "string" ||
@@ -174,14 +140,14 @@ function parseStoredPart(raw: unknown): ParsedPart | undefined {
   const language = parseOptionalString(raw.language);
 
   if (raw.kind === "text") {
-    return { part: { kind: "text", id, label, language } };
+    return { kind: "text", id, label, language };
   }
 
   if (raw.kind !== "tile") {
     return undefined;
   }
 
-  const part: TilePart = {
+  return {
     kind: "tile",
     id,
     label,
@@ -189,12 +155,9 @@ function parseStoredPart(raw: unknown): ParsedPart | undefined {
     vocalization: parseOptionalString(raw.vocalization),
     imageSrc: parseOptionalString(raw.imageSrc),
     soundSrc: parseOptionalString(raw.soundSrc),
+    imageAsset: parseAssetKey(raw.imageAsset),
+    soundAsset: parseAssetKey(raw.soundAsset),
   };
-  const image = parseAssetKey(raw.imageAsset);
-  const sound = parseAssetKey(raw.soundAsset);
-  const assets = image || sound ? { image, sound } : undefined;
-
-  return { part, assets };
 }
 
 function parseOptionalString(value: unknown): string | undefined {
@@ -211,6 +174,24 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   }
 
   return { boardSetId: value.boardSetId, path: value.path };
+}
+
+async function restorePart(part: StoredPart): Promise<MessagePart> {
+  if (part.kind === "text") {
+    return part;
+  }
+
+  const { imageAsset, soundAsset, ...tilePart } = part;
+  const [imageURL, soundURL] = await Promise.all([
+    resolveAssetURL(imageAsset),
+    resolveAssetURL(soundAsset),
+  ]);
+
+  return {
+    ...tilePart,
+    imageSrc: imageURL ?? tilePart.imageSrc,
+    soundSrc: soundURL ?? tilePart.soundSrc,
+  };
 }
 
 async function resolveAssetURL(

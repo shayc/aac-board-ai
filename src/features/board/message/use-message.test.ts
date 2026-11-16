@@ -7,14 +7,16 @@ import {
 } from "@features/library/testing";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { restoreMessageDraft } from "./message-draft";
 import { setMessageClearAfterPlayback } from "./message-preferences-store";
-import { createTilePart } from "./message-transforms";
-import type { MessagePart } from "./message-types";
+import { createTilePart, EMPTY_MESSAGE } from "./message-transforms";
+import type { TilePart } from "./message-types";
 import { useMessage } from "./use-message";
 
 const SYMBOL_SET_ID = "symbol-set";
 const IMAGE_PATH = "images/hello.png";
 const SOUND_PATH = "sounds/hello.wav";
+const REMOTE_SOUND_SRC = "https://example.com/hello.mp3";
 
 describe("useMessage", () => {
   test.each([
@@ -373,7 +375,7 @@ describe("useMessage", () => {
 
       const { result } = await renderHook(() => useMessage());
 
-      expect(result.current.parts).toEqual(saved);
+      await expect.poll(() => result.current.parts).toEqual(saved);
       // A played message is restored as played, so the next word starts anew.
       expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
     });
@@ -387,72 +389,72 @@ describe("useMessage", () => {
 
       const { result } = await renderHook(() => useMessage());
 
-      expect(result.current.isWordOpen).toBe(true);
+      await expect.poll(() => result.current.isWordOpen).toBe(true);
       expect(labelsAfterSpelling(result.current)).toEqual(["caa"]);
     });
 
-    test("opens empty once the message is cleared", async () => {
-      const first = await renderHook(() => useMessage());
-      first.result.current.replaceWithText("I want", "en");
-      first.result.current.clear();
-      await first.unmount();
-
+    test("saves no draft once the message is cleared", async () => {
       const { result } = await renderHook(() => useMessage());
+      result.current.replaceWithText("I want", "en");
 
-      expect(result.current.parts).toEqual([]);
+      result.current.clear();
+
+      expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
     });
 
     test("creates stored symbols and sounds again after a reload", async () => {
       await seedSymbolSet();
       const imageSrc = await requireAssetURL(IMAGE_PATH);
       const soundSrc = await requireAssetURL(SOUND_PATH);
-      const first = await renderHook(() => useMessage());
-      first.result.current.apply([
-        {
-          kind: "tile",
-          part: createTilePart({
-            label: "hello",
-            language: "en",
-            imageSrc,
-            soundSrc,
-          }),
-        },
-      ]);
-      await first.unmount();
+      await composeAndClose({ imageSrc, soundSrc });
       // Storing the set again revokes its URLs, as closing the page would.
       await resetBoardsDB();
       await seedSymbolSet();
 
-      const { result } = await renderHook(() => useMessage());
+      const part = await renderRestoredTilePart();
 
-      await expect.poll(() => hasMedia(result.current.parts[0])).toBe(true);
-      const part = result.current.parts[0];
-      assert(part?.kind === "tile" && part.imageSrc && part.soundSrc);
-      expect(part.label).toBe("hello");
+      assert(part.imageSrc && part.soundSrc);
       expect(part.imageSrc).not.toBe(imageSrc);
       expect(part.soundSrc).not.toBe(soundSrc);
       expect(await readText(part.soundSrc)).toBe("recording");
       expect((await fetch(part.imageSrc)).ok).toBe(true);
     });
 
+    test("keeps media that are not stored beside stored ones", async () => {
+      await seedSymbolSet();
+      const imageSrc = await requireAssetURL(IMAGE_PATH);
+      await composeAndClose({ imageSrc, soundSrc: REMOTE_SOUND_SRC });
+
+      const part = await renderRestoredTilePart();
+
+      expect(part.imageSrc).toBe(imageSrc);
+      expect(part.soundSrc).toBe(REMOTE_SOUND_SRC);
+    });
+
     test("keeps the label of a symbol whose board set was deleted", async () => {
       await seedSymbolSet();
       const imageSrc = await requireAssetURL(IMAGE_PATH);
-      const first = await renderHook(() => useMessage());
-      first.result.current.apply([
-        {
-          kind: "tile",
-          part: createTilePart({ label: "hello", language: "en", imageSrc }),
-        },
-      ]);
-      await first.unmount();
+      await composeAndClose({ imageSrc });
       await resetBoardsDB();
 
-      const { result } = await renderHook(() => useMessage());
+      const part = await renderRestoredTilePart();
 
-      expect(result.current.parts).toMatchObject([
-        { label: "hello", imageSrc: undefined },
-      ]);
+      expect(part.imageSrc).toBeUndefined();
+    });
+
+    test("keeps an edit made while the draft is restoring", async () => {
+      await seedSymbolSet();
+      await composeAndClose({ imageSrc: await requireAssetURL(IMAGE_PATH) });
+      await resetBoardsDB();
+      await seedSymbolSet();
+      const { result, rerender } = await renderHook(() => useMessage());
+
+      result.current.replaceWithText("bye", "en");
+      // Reading the asset again settles after the read the restore started.
+      await requireAssetURL(IMAGE_PATH);
+      await rerender();
+
+      expect(result.current.text).toBe("bye");
     });
   });
 });
@@ -494,12 +496,27 @@ async function requireAssetURL(path: string): Promise<string> {
   return url;
 }
 
-function hasMedia(part: MessagePart | undefined): boolean {
-  return (
-    part?.kind === "tile" &&
-    part.imageSrc !== undefined &&
-    part.soundSrc !== undefined
-  );
+async function composeAndClose(media: {
+  imageSrc?: string;
+  soundSrc?: string;
+}) {
+  const { result, unmount } = await renderHook(() => useMessage());
+  result.current.apply([
+    {
+      kind: "tile",
+      part: createTilePart({ label: "hello", language: "en", ...media }),
+    },
+  ]);
+  await unmount();
+}
+
+async function renderRestoredTilePart(): Promise<TilePart> {
+  const { result } = await renderHook(() => useMessage());
+  await expect.poll(() => result.current.parts).toHaveLength(1);
+  const part = result.current.parts[0];
+  assert(part?.kind === "tile");
+
+  return part;
 }
 
 async function readText(url: string): Promise<string> {
