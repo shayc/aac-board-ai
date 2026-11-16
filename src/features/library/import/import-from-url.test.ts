@@ -12,8 +12,6 @@ import {
   MAX_BOARD_DOWNLOAD_BYTES,
 } from "./import-from-url";
 
-// What fetch resolves with when a server redirects a `redirect: "manual"`
-// request; the constructor cannot build one.
 function opaqueRedirectResponse(): Response {
   const response = new Response(null);
   Object.defineProperties(response, {

@@ -97,8 +97,6 @@ async function downloadBoardFile(
     onProgress,
   }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
 ): Promise<Blob> {
-  // The user confirmed one host. Following a redirect would contact another
-  // before any check could run, so the download stops at the first one.
   const response = await fetch(url, { signal, redirect: "manual" });
   if (response.type === "opaqueredirect") {
     throw new BoardURLError(
