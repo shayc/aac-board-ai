@@ -203,6 +203,7 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await expect.element(screen.container).toMatchAriaInlineSnapshot(`
+        - /children: deep-equal
         - list "Message"
         - button "Backspace" [disabled]
         - grid "Communication board":
@@ -509,6 +510,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "world" }).click();
 
       await expect.element(screen.getByRole("list")).toMatchAriaInlineSnapshot(`
+        - /children: deep-equal
         - list "Message":
           - listitem: hello
           - listitem: world
