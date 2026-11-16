@@ -37,13 +37,13 @@ async function setup(
   const message = result.current;
   message.apply(seed);
   if (hasPlayed) {
-    const spoken = Promise.resolve(true);
-    message.trackPlayback(spoken);
-    await spoken;
+    const completion = Promise.resolve(true);
+    message.trackPlayback(completion);
+    await completion;
   }
 
   // Like the board's playback, playing the message reports it to the message
-  // so it can be marked spoken.
+  // so it can be marked played.
   const playback = {
     playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() => {
       const completion = Promise.resolve(true);
@@ -255,7 +255,7 @@ describe("createButtonActivator", () => {
     expect(await readLabels()).toEqual(["hi", "a"]);
   });
 
-  test("keeps the message spoken when an edit after play changes nothing", async () => {
+  test("keeps the message played when an edit after play changes nothing", async () => {
     const { activateButton, readLabels, holdMessagePlayback } = await setup([
       tilePart("hi"),
     ]);
@@ -272,7 +272,7 @@ describe("createButtonActivator", () => {
     expect(await readLabels()).toEqual(["a"]);
   });
 
-  test("applies edits after play to the message it has just spoken", async () => {
+  test("applies edits after play to the message it has just played", async () => {
     const { activateButton, readLabels, holdMessagePlayback } = await setup(
       word("hi"),
     );
@@ -337,8 +337,8 @@ describe("createButtonActivator", () => {
     expect(playback.echoMessage).not.toHaveBeenCalled();
   });
 
-  describe("after the message is spoken", () => {
-    const SPOKEN_PARTS = [tilePart("hello"), tilePart("world")];
+  describe("after the message has played", () => {
+    const PLAYED_PARTS = [tilePart("hello"), tilePart("world")];
 
     test.each<{ description: string; button: BoardButton; labels: string[] }>([
       {
@@ -361,7 +361,7 @@ describe("createButtonActivator", () => {
         labels: ["a"],
       },
     ])("starts a new message with $description", async ({ button, labels }) => {
-      const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
+      const { activateButton, readLabels } = await setup(PLAYED_PARTS, {
         hasPlayed: true,
       });
 
@@ -370,8 +370,8 @@ describe("createButtonActivator", () => {
       expect(await readLabels()).toEqual(labels);
     });
 
-    test("edits the spoken message with backspace", async () => {
-      const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
+    test("edits the played message with backspace", async () => {
+      const { activateButton, readLabels } = await setup(PLAYED_PARTS, {
         hasPlayed: true,
       });
 
@@ -384,8 +384,8 @@ describe("createButtonActivator", () => {
       expect(await readLabels()).toEqual(["hello"]);
     });
 
-    test("leaves the spoken message as it is for a space", async () => {
-      const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
+    test("leaves the played message as it is for a space", async () => {
+      const { activateButton, readLabels } = await setup(PLAYED_PARTS, {
         hasPlayed: true,
       });
 
@@ -397,7 +397,7 @@ describe("createButtonActivator", () => {
 
     test("speaks the message again for a space followed by play", async () => {
       const { activateButton, playback, readParts } = await setup(
-        SPOKEN_PARTS,
+        PLAYED_PARTS,
         { hasPlayed: true },
       );
       const parts = await readParts();
@@ -413,10 +413,10 @@ describe("createButtonActivator", () => {
     });
 
     // While clearing after speaking is off, the message hook releases a
-    // spoken message each time it is edited, which must not count as a change.
-    test("replays a spoken message when clearing after speaking is off", async () => {
+    // played message each time it is edited, which must not count as a change.
+    test("replays a played message when clearing after speaking is off", async () => {
       setClearsAfterSpeaking(false);
-      const { activateButton, playback } = await setup(SPOKEN_PARTS, {
+      const { activateButton, playback } = await setup(PLAYED_PARTS, {
         hasPlayed: true,
       });
 

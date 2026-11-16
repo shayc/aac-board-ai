@@ -539,7 +539,7 @@ describe("CommunicationBoard", () => {
         .toBeDisabled();
     });
 
-    test("starts a new message with the next tile after the message is spoken", async () => {
+    test("starts a new message with the next tile after the message has played", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const messageItems = getMessageItems(screen);
 

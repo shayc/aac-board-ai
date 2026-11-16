@@ -19,7 +19,7 @@ interface UseBoardPlaybackOptions {
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /** Plays the message without reporting it as spoken, for tiles that play each word as it is spelled. */
+  /** Plays the message without reporting it as played, for tiles that play each word as it is spelled. */
   echoMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   /** Resolves to whether the message played to its end. */
   playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
