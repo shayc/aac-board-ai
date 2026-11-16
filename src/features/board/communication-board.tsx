@@ -149,9 +149,8 @@ export function CommunicationBoard({
               {!isSmallScreen && navigationButtons}
 
               {/* Suggestions are optional: if they break, hide them as if
-                  built-in AI were unavailable and keep the board usable.
-                  Changing the language tries again. */}
-              <ErrorBoundary key={communication.language} fallback={null}>
+                  built-in AI were unavailable and keep the board usable. */}
+              <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}
                   language={communication.language}
