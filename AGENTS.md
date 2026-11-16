@@ -38,7 +38,7 @@
   - `library/`: stored board sets (storage, import, export, OBF mapping, translation)
 - `board` may import `library` through its public entry point; `library` imports no feature. Only `library/storage/` touches IndexedDB, and only `board/suggestions/` and `library/translation/` use built-in AI. Oxlint enforces all three.
 - `src/shared/`: shared code
-- See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure.
+- See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure, and [docs/behavior.md](docs/behavior.md) for how each flow, accessibility rule, and layout rule works.
 
 ## Testing Instructions
 
