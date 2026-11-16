@@ -139,7 +139,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.vocalization).toBe("\tHello there\n");
     });
 
-    test("maps button visual fields + vocalization", () => {
+    test("maps a button's label, vocalization and colors", () => {
       const obfBoard = boardWithButton({
         id: "btn-1",
         label: "Hi",
@@ -214,7 +214,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.borderColor).toBe("rgb(0, 0, 0)");
     });
 
-    test("maps a load_board id to the runtime navigation target", () => {
+    test("maps a load_board ID to the runtime navigation target", () => {
       const obfBoard = boardWithButton({
         id: "btn-1",
         label: "Go",
@@ -232,7 +232,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.linkedBoardId).toBe("child-1");
     });
 
-    test("ignores a load_board without a resolved id", () => {
+    test("ignores a load_board without a resolved ID", () => {
       const obfBoard = boardWithButton({
         id: "btn-1",
         label: "Go",
@@ -327,7 +327,7 @@ describe("obfToBoard", () => {
   });
 
   describe("media resolution", () => {
-    test("chooses imageSrc/soundSrc by data > url precedence without stored assets", () => {
+    test("prefers embedded data over a url for images and sounds without stored assets", () => {
       const obfBoard = boardWithButton(
         {
           id: "btn-1",
@@ -397,7 +397,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.imageSrc).toBeUndefined();
     });
 
-    test("falls back to url when no data/path is available", () => {
+    test("falls back to the url when media has no data or path", () => {
       const obfBoard = boardWithButton(
         {
           id: "btn-1",
@@ -427,7 +427,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd.mp3");
     });
 
-    test("falls back to url when data is an empty string", () => {
+    test("falls back to the url when the data is an empty string", () => {
       const obfBoard = boardWithButton(
         {
           id: "btn-1",
@@ -459,7 +459,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd.mp3");
     });
 
-    test("returns undefined imageSrc/soundSrc for unknown ids", () => {
+    test("leaves the image and sound unset for unknown media IDs", () => {
       const obfBoard = boardWithButton(
         {
           id: "btn-1",

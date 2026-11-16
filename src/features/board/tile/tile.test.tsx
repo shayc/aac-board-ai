@@ -399,7 +399,7 @@ describe("Tile", () => {
     );
   });
 
-  test("activates with its button when clicked", async () => {
+  test("hands its button to the activation handler when clicked", async () => {
     const onActivate = vi.fn();
     const button = makeButton({ label: "Click me" });
     const screen = await renderInTheme(

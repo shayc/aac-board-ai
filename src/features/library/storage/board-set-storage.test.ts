@@ -26,7 +26,7 @@ beforeEach(async () => {
 afterEach(closeBoardsDB);
 
 describe("insertBoardSetRecords", () => {
-  test("derives set metadata from the selected root without changing its source", async () => {
+  test("derives board set metadata from the selected root without changing its source", async () => {
     const rootBoard = makeOBFBoard({
       id: "root",
       name: "Core words",
@@ -72,7 +72,7 @@ describe("insertBoardSetRecords", () => {
     expect(rootBoard).toEqual(source);
   });
 
-  test("asks the browser to keep stored boards only once a set is stored", async () => {
+  test("asks the browser to keep stored boards only once a board set is stored", async () => {
     const persist = vi
       .spyOn(navigator.storage, "persist")
       .mockResolvedValue(true);
@@ -88,7 +88,7 @@ describe("insertBoardSetRecords", () => {
     expect(persist).toHaveBeenCalledOnce();
   });
 
-  test("stores a set without asking to persist outside a secure context", async () => {
+  test("stores a board set without asking to persist outside a secure context", async () => {
     vi.spyOn(window, "isSecureContext", "get").mockReturnValue(false);
     const persist = vi.spyOn(navigator.storage, "persist");
 
@@ -98,7 +98,7 @@ describe("insertBoardSetRecords", () => {
     expect(await getBoardSetRecord("insecure")).toBeDefined();
   });
 
-  test("rejects a missing root without storing a partial set", async () => {
+  test("rejects a missing root without storing a partial board set", async () => {
     await expect(
       insertBoardSetRecords(makeBoardSetInput({ rootBoardId: "missing" })),
     ).rejects.toThrow("Root board not found");
@@ -127,7 +127,7 @@ describe("insertBoardSetRecords", () => {
     ).toBeUndefined();
   });
 
-  test("rejects a conflicting ID without changing the existing set", async () => {
+  test("rejects a conflicting ID without changing the existing board set", async () => {
     await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
@@ -166,7 +166,7 @@ describe("insertBoardSetRecords", () => {
     { name: "", expectedName: "root-1", expectedSetName: "set-1" },
     { name: "  ", expectedName: "root-1", expectedSetName: "set-1" },
   ])(
-    "derives display names without changing the OBF source ($name)",
+    "derives display names without changing the OBF source (board name: $name)",
     async ({ name, expectedName, expectedSetName }) => {
       const obf = makeOBFBoard({ id: "root-1", name });
 
@@ -209,7 +209,7 @@ describe("insertBoardSetRecords", () => {
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
-  test("rejects an asset whose path names no file without storing the set", async () => {
+  test("rejects an asset whose path names no file without storing the board set", async () => {
     await expect(
       insertBoardSetRecords(
         makeBoardSetInput({
@@ -293,12 +293,12 @@ describe("insertBoardSetRecords", () => {
 });
 
 describe("listBoardSetRecords", () => {
-  test("returns empty array when no sets exist", async () => {
+  test("returns an empty array when no board sets are stored", async () => {
     const sets = await listBoardSetRecords();
     expect(sets).toEqual([]);
   });
 
-  test("returns the most recently imported sets first", async () => {
+  test("returns the most recently imported board sets first", async () => {
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
@@ -325,7 +325,7 @@ describe("listBoardSetRecords", () => {
 });
 
 describe("deleteBoardSetRecords", () => {
-  test("deletes the set and all its content while preserving a set whose ID it prefixes", async () => {
+  test("deletes the board set and all its content, keeping another whose ID it prefixes", async () => {
     await insertBoardSetRecords(
       makeBoardSetInput({
         boards: [
@@ -373,7 +373,7 @@ describe("deleteBoardSetRecords", () => {
   });
 
   test.each(["missing", ""])(
-    "leaves stored sets alone when no set has the ID %j",
+    "leaves stored board sets alone when no board set has the ID %j",
     async (boardSetId) => {
       await insertBoardSetRecords(makeBoardSetInput());
 
@@ -386,7 +386,7 @@ describe("deleteBoardSetRecords", () => {
 });
 
 describe("updateBoardSetTranslations", () => {
-  test("adds the language to the set name and each board, keeping other languages", async () => {
+  test("adds the language to the board set name and each board, keeping other languages", async () => {
     await insertBoardSetRecords(
       makeBoardSetInput({
         boards: [
@@ -440,7 +440,7 @@ describe("updateBoardSetTranslations", () => {
     expect((await getBoardSetRecord("set-1"))?.translatedNames).toBeUndefined();
   });
 
-  test("writes nothing for a set deleted before the save", async () => {
+  test("writes nothing for a board set deleted before the save", async () => {
     await insertBoardSetRecords(makeBoardSetInput());
     await deleteBoardSetRecords("set-1");
 

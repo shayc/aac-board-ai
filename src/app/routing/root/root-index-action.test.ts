@@ -55,7 +55,7 @@ describe("rootIndexAction", () => {
     ).rejects.toMatchObject(localizedImportFailure);
   });
 
-  test("preserves navigation cancellation", async () => {
+  test("rejects with the navigation's own abort reason without importing", async () => {
     const controller = new AbortController();
     controller.abort();
 

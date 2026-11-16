@@ -149,7 +149,7 @@ describe("loadStoredBoard", () => {
     expect(await isObjectURLAlive(getImageURL(board))).toBe(true);
   });
 
-  test("keeps links to stored boards and drops links to boards the set lacks", async () => {
+  test("keeps links to stored boards and drops links to boards the board set lacks", async () => {
     await insertBoardSetRecords({
       id: SET_ID,
       rootBoardId: BOARD_ID,
@@ -183,7 +183,7 @@ describe("loadStoredBoard", () => {
     ]);
   });
 
-  test("drops a link to a board that only another set stores", async () => {
+  test("drops a link to a board that only another board set stores", async () => {
     await insertBoardSetRecords({
       id: SET_ID,
       rootBoardId: BOARD_ID,
@@ -210,7 +210,7 @@ describe("loadStoredBoard", () => {
     expect(board.buttons[0]?.linkedBoardId).toBeUndefined();
   });
 
-  test("an aborted load does not disturb a loaded board", async () => {
+  test("leaves a loaded board undisturbed when another load is aborted", async () => {
     await seedTestBoard();
 
     const url = getImageURL(await loadStoredBoard(BOARD_KEY));

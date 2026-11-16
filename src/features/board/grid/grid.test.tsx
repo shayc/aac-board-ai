@@ -175,7 +175,7 @@ describe("Grid", () => {
       ).toBeNull();
     });
 
-    test("renders no items when items is empty", async () => {
+    test("renders no items when there are none", async () => {
       const screen = await render(
         <Grid
           aria-label="Board"
@@ -227,7 +227,7 @@ describe("Grid", () => {
       expect(getCellPosition(item1)).toEqual({ row: 1, column: 1 });
     });
 
-    test("treats nulls in order matrix as empty cells", async () => {
+    test("treats nulls in the order matrix as empty cells", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },
@@ -257,7 +257,7 @@ describe("Grid", () => {
       expect(allButtons).toHaveLength(2);
     });
 
-    test("ignores unknown ids in order matrix", async () => {
+    test("ignores unknown IDs in the order matrix", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },

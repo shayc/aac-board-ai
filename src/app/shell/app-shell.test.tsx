@@ -118,7 +118,7 @@ describe("AppShell", () => {
     expect(document.documentElement).toHaveAttribute("dir", "rtl");
   });
 
-  test("keeps the document language on the fallback locale for a language with voices but no UI text", async () => {
+  test("keeps the document language on the fallback locale for a language with only a voice", async () => {
     stubVoices([{ voiceURI: "nb-1", name: "Nora", lang: "nb-NO" }]);
     const screen = await renderAppShellPastOnboarding();
     await screen.getByRole("button", { name: "Open settings" }).click();
@@ -135,7 +135,7 @@ describe("AppShell", () => {
     expect(document.documentElement).toHaveAttribute("lang", "en");
   });
 
-  test("keeps the document direction on the fallback locale for a right-to-left language with voices but no UI text", async () => {
+  test("keeps the document direction on the fallback locale for a right-to-left language with only a voice", async () => {
     stubVoices([{ voiceURI: "ur-1", name: "Asad", lang: "ur-PK" }]);
     const screen = await renderAppShellPastOnboarding();
     await screen.getByRole("button", { name: "Open settings" }).click();

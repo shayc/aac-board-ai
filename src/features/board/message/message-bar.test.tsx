@@ -152,7 +152,7 @@ describe("MessageBar", () => {
     { isWordOpen: true, caret: '""' },
     { isWordOpen: false, caret: "none" },
   ])(
-    "marks the last word with a caret only while it is open ($isWordOpen)",
+    "marks the last word with a caret only while it is open (open: $isWordOpen)",
     async ({ isWordOpen, caret }) => {
       const parts: MessagePart[] = [
         { kind: "text", id: "a", label: "I", language: "en" },

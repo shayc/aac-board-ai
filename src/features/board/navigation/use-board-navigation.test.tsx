@@ -127,7 +127,7 @@ describe("useBoardNavigation", () => {
       });
     });
 
-    test("ignores an empty board id", async () => {
+    test("ignores an empty board ID", async () => {
       const { result, act } = await setup();
 
       await act(() => result.current.nav.goToBoard(""));

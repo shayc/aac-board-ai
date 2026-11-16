@@ -115,7 +115,7 @@ describe("resolveBoardShortcut", () => {
     expect(resolveBoardShortcut(keyEvent({ key: "Enter" }), false)).toBeNull();
   });
 
-  test("does not claim printable keys", () => {
+  test("printable keys are not claimed", () => {
     for (const typed of ["h", "5", "!", " "]) {
       expect(resolveBoardShortcut(keyEvent({ key: typed }), false)).toBeNull();
     }

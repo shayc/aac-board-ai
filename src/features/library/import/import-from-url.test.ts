@@ -28,7 +28,7 @@ describe("importBoardFileFromURL", () => {
     await resetBoardsDB();
   });
 
-  test("imports a board from a URL and derives the boardSetId from the filename", async () => {
+  test("imports a board from a URL and derives the board set ID from the filename", async () => {
     const result = await importBoardFileFromURL(SAMPLE_OBZ_URL);
 
     expect(result.id).toBe(SAMPLE_BOARD_SET_ID);
@@ -64,7 +64,7 @@ describe("importBoardFileFromURL", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("derives the boardSetId from the last non-empty segment when the URL path ends with a slash", async () => {
+  test("derives the board set ID from the last path segment when the URL ends with a slash", async () => {
     const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
@@ -82,7 +82,7 @@ describe("importBoardFileFromURL", () => {
     expect(result.id).toBe("board");
   });
 
-  test("decodes a percent-encoded filename when deriving the boardSetId", async () => {
+  test("decodes a percent-encoded filename when deriving the board set ID", async () => {
     const fixtureFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 

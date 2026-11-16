@@ -90,7 +90,7 @@ describe("useMessageSuggestions", () => {
     expect(result.current.status).toEqual({ kind: "idle" });
   });
 
-  test("surfaces a proofread correction and deduped rewrites as suggestions", async () => {
+  test("surfaces a proofread correction and deduplicated rewrites as suggestions", async () => {
     stubProofreader(() => makeProofreadResult("I want to eat."));
     stubRewriter(() => "I would like to eat.");
 
@@ -192,7 +192,7 @@ describe("useMessageSuggestions", () => {
     { engine: "Proofreader", sessions: 1 },
     { engine: "Rewriter", sessions: 2 },
   ] as const)(
-    "enabling from a user gesture downloads every $engine model",
+    "downloads every $engine model when enabled from a user gesture",
     async ({ engine, sessions }) => {
       const { availability, create } = ENGINE_STUBS[engine]();
       availability.mockResolvedValue("downloadable");

@@ -61,7 +61,7 @@ describe("translateBoardSets", () => {
     await resetBoardsDB();
   });
 
-  test("saves translations for every board and the set name, then reports the set", async () => {
+  test("saves translations for every board and the board set name, then reports the board set", async () => {
     await seedFoodSet();
     const { create } = stubTranslator((input) => `[es] ${input}`);
 
@@ -121,7 +121,7 @@ describe("translateBoardSets", () => {
     });
   });
 
-  test("translates a board whose language differs from its set's", async () => {
+  test("translates a board whose language differs from its board set's", async () => {
     await seedBoardSets([
       {
         id: "mixed",
@@ -176,7 +176,7 @@ describe("translateBoardSets", () => {
     });
   });
 
-  test("skips sets already in the language without creating a Translator", async () => {
+  test("skips board sets already in the language without creating a Translator", async () => {
     await seedFoodSet();
     await seedBoardSets([
       {
@@ -196,7 +196,7 @@ describe("translateBoardSets", () => {
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
-  test("leaves a set that fails in its source language and translates the rest", async () => {
+  test("leaves a board set that fails in its source language and translates the rest", async () => {
     await seedFoodSet();
     await seedBoardSets([{ id: "zoo", name: "Zoo", rootBoardId: "home" }]);
     stubTranslator((input) =>
@@ -215,7 +215,7 @@ describe("translateBoardSets", () => {
     expect(onTranslated).toHaveBeenCalledOnce();
   });
 
-  test("rejects when storage fails instead of leaving the set as if no model were available", async () => {
+  test("rejects when storage fails instead of leaving the board set as if no model were available", async () => {
     await seedFoodSet();
     const boardSets = await listBoardSetRecords();
     stubTranslator((input) => `[es] ${input}`);
@@ -246,7 +246,7 @@ describe("translateBoardSets", () => {
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
-  test("leaves a set untranslated when its language has no translation model", async () => {
+  test("leaves a board set untranslated when its language has no translation model", async () => {
     await seedFoodSet();
     const { availability, translate } = stubTranslator();
     availability.mockResolvedValue("unavailable");
@@ -259,7 +259,7 @@ describe("translateBoardSets", () => {
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
-  test("names a set from its root board's own translations instead of translating the name", async () => {
+  test("names a board set from its root board's own translations instead of translating the name", async () => {
     await seedBoardSets([
       {
         id: "home-set",
@@ -302,7 +302,7 @@ describe("translateBoardSets", () => {
     expect(translate.mock.calls.map((call) => call.at(0))).toEqual(["Home"]);
   });
 
-  test("names a set its board file fully translates when the Translator API is unavailable", async () => {
+  test("names a board set its board file fully translates when the Translator API is unavailable", async () => {
     await seedBoardSets([
       {
         id: "shipped",
@@ -327,7 +327,7 @@ describe("translateBoardSets", () => {
     expect(onTranslated.mock.calls).toEqual([["shipped"]]);
   });
 
-  test("leaves a set with boards to translate untouched when the Translator API is unavailable", async () => {
+  test("leaves a board set with boards to translate untouched when the Translator API is unavailable", async () => {
     await seedBoardSets([
       {
         id: "partial",
