@@ -39,6 +39,21 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
 }
 
 describe("SnackbarProvider", () => {
+  test("has no accessibility violations while a message shows", async () => {
+    const screen = await renderSnackbars({ "show-saved": "Saved" });
+
+    await screen.getByRole("button", { name: "show-saved" }).click();
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+
+    // Axe needs the final opacity for color-contrast checks.
+    await vi.waitFor(() => {
+      const alert = screen.getByRole("status").element();
+      expect(getComputedStyle(alert).opacity).toBe("1");
+    });
+
+    await expectNoA11yViolations(document.body);
+  });
+
   test("replaces the current message with a new one after its exit transition", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", durationMs: LONG_DURATION_MS },
@@ -77,21 +92,6 @@ describe("SnackbarProvider", () => {
     await expect
       .element(screen.getByRole("status"))
       .toHaveTextContent("sticky");
-  });
-
-  test("has no accessibility violations while a message shows", async () => {
-    const screen = await renderSnackbars({ "show-saved": "Saved" });
-
-    await screen.getByRole("button", { name: "show-saved" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
-
-    // Axe needs the final opacity for color-contrast checks.
-    await vi.waitFor(() => {
-      const alert = screen.getByRole("status").element();
-      expect(getComputedStyle(alert).opacity).toBe("1");
-    });
-
-    await expectNoA11yViolations(document.body);
   });
 
   test("shows a plain-string message", async () => {

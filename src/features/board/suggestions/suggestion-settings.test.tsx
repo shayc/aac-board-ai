@@ -37,6 +37,34 @@ describe("SuggestionSettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
+  test("has no accessibility violations with custom instructions", async () => {
+    stubProofreader();
+    stubRewriter();
+    stubTranslator();
+
+    const screen = await renderWithProviders(<SuggestionSettings />);
+    await expect
+      .element(screen.getByRole("textbox", { name: "Custom instructions" }))
+      .toBeInTheDocument();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("has no accessibility violations when no engine supports the language", async () => {
+    setCommunicationLanguage("he");
+    stubProofreader().availability.mockImplementation(
+      availableWithoutLanguages,
+    );
+    stubRewriter().availability.mockImplementation(availableWithoutLanguages);
+
+    const screen = await renderWithProviders(<SuggestionSettings />);
+    await expect
+      .element(screen.getByText("ההצעות אינן זמינות בשפה הזו."))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test("shows an unsupported message instead of controls when no suggestion engine is supported", async () => {
     const screen = await renderWithProviders(<SuggestionSettings />);
 
@@ -91,19 +119,6 @@ describe("SuggestionSettings", () => {
       .toBeVisible();
   });
 
-  test("has no accessibility violations with custom instructions", async () => {
-    stubProofreader();
-    stubRewriter();
-    stubTranslator();
-
-    const screen = await renderWithProviders(<SuggestionSettings />);
-    await expect
-      .element(screen.getByRole("textbox", { name: "Custom instructions" }))
-      .toBeInTheDocument();
-
-    await expectNoA11yViolations(screen.container);
-  });
-
   test("shows custom instructions when the rewriter is supported", async () => {
     stubProofreader();
     stubRewriter();
@@ -114,21 +129,6 @@ describe("SuggestionSettings", () => {
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();
-  });
-
-  test("has no accessibility violations when no engine supports the language", async () => {
-    setCommunicationLanguage("he");
-    stubProofreader().availability.mockImplementation(
-      availableWithoutLanguages,
-    );
-    stubRewriter().availability.mockImplementation(availableWithoutLanguages);
-
-    const screen = await renderWithProviders(<SuggestionSettings />);
-    await expect
-      .element(screen.getByText("ההצעות אינן זמינות בשפה הזו."))
-      .toBeVisible();
-
-    await expectNoA11yViolations(screen.container);
   });
 
   test("says the language is unsupported instead of showing custom instructions when no engine supports it", async () => {

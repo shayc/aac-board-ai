@@ -27,6 +27,17 @@ describe("SuggestionBar", () => {
     await expectNoA11yViolations(screen.container);
   });
 
+  test("has no accessibility violations when suggestions failed", async () => {
+    const screen = await renderWithProviders(
+      <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
+    );
+    await expect
+      .element(screen.getByText("Couldn't get suggestions"))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test("selects the phrase of the chip that is clicked", async () => {
     const props = makeProps({ phrases: ["Hello", "Goodbye"] });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
@@ -100,17 +111,6 @@ describe("SuggestionBar", () => {
     await expect
       .element(screen.getByText("Downloading AI model…", { exact: true }))
       .toBeVisible();
-  });
-
-  test("has no accessibility violations when suggestions failed", async () => {
-    const screen = await renderWithProviders(
-      <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
-    );
-    await expect
-      .element(screen.getByText("Couldn't get suggestions"))
-      .toBeVisible();
-
-    await expectNoA11yViolations(screen.container);
   });
 
   test("shows that suggestions failed", async () => {

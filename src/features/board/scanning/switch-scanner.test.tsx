@@ -454,6 +454,15 @@ describe("switch scanning", () => {
       setScanMethod("step");
     });
 
+    test("has no accessibility violations while a row is highlighted", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await expectNoA11yViolations(screen.container);
+    });
+
     test("moves with Space and selects with Enter", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
@@ -585,15 +594,6 @@ describe("switch scanning", () => {
       }
 
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
-    });
-
-    test("has no accessibility violations while a row is highlighted", async () => {
-      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
-
-      await pressSwitch();
-      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
-
-      await expectNoA11yViolations(screen.container);
     });
   });
 });

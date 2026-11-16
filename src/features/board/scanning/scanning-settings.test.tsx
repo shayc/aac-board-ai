@@ -6,6 +6,19 @@ import { userEvent } from "vitest/browser";
 import { ScanningSettings } from "./scanning-settings";
 
 describe("ScanningSettings", () => {
+  test("has no accessibility violations with scanning on", async () => {
+    const screen = await renderWithProviders(<ScanningSettings />);
+
+    await screen
+      .getByRole("switch", { name: "Enable switch scanning" })
+      .click();
+    await expect
+      .element(screen.getByRole("radiogroup", { name: "Scan method" }))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test("shows only the scanning switch while scanning is off", async () => {
     const screen = await renderWithProviders(<ScanningSettings />);
 
@@ -18,19 +31,6 @@ describe("ScanningSettings", () => {
     await expect
       .element(screen.getByRole("slider", { name: "Scan interval" }))
       .not.toBeInTheDocument();
-  });
-
-  test("has no accessibility violations with scanning on", async () => {
-    const screen = await renderWithProviders(<ScanningSettings />);
-
-    await screen
-      .getByRole("switch", { name: "Enable switch scanning" })
-      .click();
-    await expect
-      .element(screen.getByRole("radiogroup", { name: "Scan method" }))
-      .toBeVisible();
-
-    await expectNoA11yViolations(screen.container);
   });
 
   test("turns scanning on with the automatic method and its switch keys explained", async () => {
