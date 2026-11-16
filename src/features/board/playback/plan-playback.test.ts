@@ -79,7 +79,7 @@ describe("planPlayback", () => {
     expect(step.cueAt?.(99)).toBeNull();
   });
 
-  test("emits a sound part as its own step carrying its part id", () => {
+  test("emits a sound part as its own step carrying its part ID", () => {
     const part = createTilePart({
       label: "",
       soundSrc: "bell.mp3",

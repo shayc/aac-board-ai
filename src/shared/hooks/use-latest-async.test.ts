@@ -21,7 +21,7 @@ describe("useLatestAsync", () => {
     expect(run).toHaveBeenCalledTimes(1);
   });
 
-  test("runs with an empty deps list", async () => {
+  test("runs once when it has no dependencies", async () => {
     const run = vi.fn(() => Promise.resolve("once"));
 
     const { result } = await renderHook(() =>

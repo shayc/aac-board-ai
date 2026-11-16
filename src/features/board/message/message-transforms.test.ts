@@ -26,7 +26,7 @@ function labelsOf(message: Message): string[] {
 }
 
 describe("createTilePart", () => {
-  test("mints a distinct id for each part even with identical content", () => {
+  test("mints a distinct ID for each part even with identical content", () => {
     const first = createTilePart({ label: "cat", language: "en" });
     const second = createTilePart({ label: "cat", language: "en" });
 
@@ -66,7 +66,7 @@ describe("spell", () => {
     expect(message.parts[0]?.id).toBeTruthy();
   });
 
-  test("extends the word being spelled, keeping its id", () => {
+  test("extends the word being spelled, keeping its ID", () => {
     const first = spell(EMPTY_MESSAGE, "ca", "en");
 
     const message = spell(first, "t", "en");

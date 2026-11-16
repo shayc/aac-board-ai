@@ -154,7 +154,7 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("does not advance to later segments after stop", async () => {
+  test("does not advance to later steps after stop", async () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveFirstSpeak = () => endUtterance(utterance);
@@ -216,7 +216,7 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("aborts the playing message and speaks only the new one when playMessage() is called again", async () => {
+  test("aborts the playing message and speaks only the new one when another message plays", async () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveFirstSpeak = () => endUtterance(utterance);

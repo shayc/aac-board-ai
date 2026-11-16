@@ -94,7 +94,7 @@ describe("BoardSetLibrary", () => {
   });
 
   describe("listing", () => {
-    test("offers the import action and catalog downloads when no sets are stored", async () => {
+    test("offers the import action and catalog downloads when no board sets are stored", async () => {
       const screen = await renderBoardSetLibrary();
 
       await expect
@@ -109,7 +109,7 @@ describe("BoardSetLibrary", () => {
         .toBeInTheDocument();
     });
 
-    test("shows an error instead of the empty state when sets cannot be retrieved", async () => {
+    test("shows an error instead of the empty state when board sets cannot be retrieved", async () => {
       const db = await getBoardsDB();
       db.close();
       await refreshBoardSets();
@@ -440,7 +440,7 @@ describe("BoardSetLibrary", () => {
       return promise;
     }
 
-    test("saves the set as an OBZ file named after it", async () => {
+    test("saves the board set as an OBZ file named after it", async () => {
       await seedBoardSets([
         { id: "animals", rootBoardId: "root", name: "Animals" },
       ]);
@@ -462,7 +462,7 @@ describe("BoardSetLibrary", () => {
       expect(rootBoard.id).toBe("root");
     });
 
-    test("reports a set that cannot be exported", async () => {
+    test("reports a board set that cannot be exported", async () => {
       await seedBoardSets([
         { id: "broken", rootBoardId: "root", name: "Broken" },
       ]);
@@ -484,7 +484,7 @@ describe("BoardSetLibrary", () => {
   });
 
   describe("deleting", () => {
-    test("deletes a set after confirmation", async () => {
+    test("deletes a board set after confirmation", async () => {
       await seedBoardSets([
         { id: "animals", rootBoardId: "root", name: "Animals" },
       ]);
@@ -506,7 +506,7 @@ describe("BoardSetLibrary", () => {
         .not.toBeInTheDocument();
     });
 
-    test("keeps the set when the delete dialog is cancelled", async () => {
+    test("keeps the board set when the delete dialog is cancelled", async () => {
       await seedBoardSets([
         { id: "animals", rootBoardId: "root", name: "Animals" },
       ]);

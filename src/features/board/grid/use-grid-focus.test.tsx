@@ -55,7 +55,7 @@ async function press(
 
 describe("useGridFocus", () => {
   describe("tab stops", () => {
-    test("sets tabIndex so only the tab stop is tabbable", async () => {
+    test("makes only the tab stop tabbable", async () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
@@ -76,7 +76,7 @@ describe("useGridFocus", () => {
       await expect.element(item3Button).toHaveAttribute("tabindex", "-1");
     });
 
-    test("makes first non-empty cell tabbable when (0,0) is empty", async () => {
+    test("makes the first non-empty cell tabbable when the first cell is empty", async () => {
       const items = makeItems(1, 2);
 
       const order = [
@@ -103,7 +103,7 @@ describe("useGridFocus", () => {
       await expect.element(item1).toHaveAttribute("tabindex", "-1");
     });
 
-    test("keeps a tab stop and leaves outside focus alone when the grid changes and the tab stop becomes empty", async () => {
+    test("keeps a tab stop and leaves outside focus alone when the tab stop's cell empties", async () => {
       const oldItems = makeItems(1, 2, 3, 4);
       const newItems = makeItems(5);
 
@@ -481,7 +481,7 @@ describe("useGridFocus", () => {
       await expect.element(item2).toHaveFocus();
     });
 
-    test("Ctrl+Home focuses the first focusable cell in the grid even when (0,0) is empty", async () => {
+    test("Ctrl+Home focuses the first focusable cell in the grid even when the first cell is empty", async () => {
       const items = makeItems(2, 3, 4);
 
       const order = [

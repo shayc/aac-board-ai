@@ -192,7 +192,7 @@ describe("createButtonActivator", () => {
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
-  test("clear empties the message", async () => {
+  test("empties the message for a clear action", async () => {
     const { activateButton, readLabels } = await setup(word("hello"));
 
     activateButton({ id: "btn", label: "", actions: [{ kind: "clear" }] });

@@ -163,7 +163,7 @@ describe("importBoardFile", () => {
     });
   });
 
-  test("falls back to a default boardSetId when the filename is only an extension", async () => {
+  test("falls back to a default board set ID when the filename is only an extension", async () => {
     const obzFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     const extensionOnlyFile = new File([obzFile], ".obz", {
       type: "application/octet-stream",
@@ -185,7 +185,7 @@ describe("importBoardFile", () => {
     expect((await listBoardSetRecords())[0]?.name).toBe("core");
   });
 
-  test("clamps the derived boardSetId to 255 characters", async () => {
+  test("clamps the derived board set ID to 255 characters", async () => {
     const obfFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const longNamedFile = new File([obfFile], `${"x".repeat(300)}.obf`, {
       type: "application/octet-stream",
@@ -196,7 +196,7 @@ describe("importBoardFile", () => {
     expect(importedBoardSet.id).toBe("x".repeat(255));
   });
 
-  test("re-importing the same filename keeps both board sets", async () => {
+  test("keeps both board sets when the same filename is imported again", async () => {
     const fixtureFile = await loadFixtureFile(SAMPLE_OBF_FILE);
 
     const first = await importBoardFile(fixtureFile);
@@ -211,7 +211,7 @@ describe("importBoardFile", () => {
     );
   });
 
-  test("a filename collision preserves the existing boards and assets", async () => {
+  test("preserves the existing boards and assets on a filename collision", async () => {
     const obzFile = await loadFixtureFile(SAMPLE_OBZ_FILE);
     const archive = await loadOBZ(obzFile);
     const originalFile = new File([obzFile], "board.obz");

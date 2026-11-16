@@ -10,7 +10,7 @@ function renderInRouter(children: ReactNode) {
 }
 
 describe("BoardSetList", () => {
-  test("renders board links and identifies the active set", async () => {
+  test("renders board links and identifies the active board set", async () => {
     const screen = await renderInRouter(
       <BoardSetList
         boardSets={[

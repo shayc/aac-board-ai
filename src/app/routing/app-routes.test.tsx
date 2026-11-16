@@ -218,7 +218,7 @@ describe("app flow", () => {
     expect(await response.text()).toBe("recording");
   });
 
-  test("?board= link that collides with an existing set keeps both", async () => {
+  test("?board= link that collides with an existing board set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 
     const { screen } = await renderApp(
@@ -237,7 +237,7 @@ describe("app flow", () => {
     );
   });
 
-  test("?board= link imports once while another set finishes translating", async () => {
+  test("?board= link imports once while another board set finishes translating", async () => {
     await seedBoardSets([{ id: "zoo", name: "Zoo", rootBoardId: "home" }]);
     setCommunicationLanguage("es");
     stubTranslator((input) => `[es] ${input}`);
@@ -408,7 +408,7 @@ describe("app flow", () => {
       .not.toBeInTheDocument();
   });
 
-  test("moving between boards of a set keeps the loaded board list", async () => {
+  test("moving between boards of a board set keeps the loaded board list", async () => {
     await seedTwoBoardSet();
 
     const { router, screen } = await renderApp("/sets/food/boards/home");
@@ -565,7 +565,7 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
-  test("a set added while a translation model downloads leaves the download running", async () => {
+  test("a board set added while a translation model downloads leaves the download running", async () => {
     await seedTwoBoardSet();
     const translator = stubTranslator((input) => `[es] ${input}`);
     const download = Promise.withResolvers<void>();

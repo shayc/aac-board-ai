@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { insertBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB } from "../storage/boards-db";
 import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
@@ -10,50 +10,52 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-test("maps stored boards to summaries with their names by language", async () => {
-  await insertBoardSetRecords(
-    makeBoardSetInput({
-      rootBoardId: "a",
-      boards: [
-        makeOBFBoard({
-          id: "a",
-          name: "Food",
-          strings: { es_MX: { Food: "Comida" } },
-        }),
-      ],
-    }),
-  );
+describe("listBoardSummaries", () => {
+  test("maps stored boards to summaries with their names by language", async () => {
+    await insertBoardSetRecords(
+      makeBoardSetInput({
+        rootBoardId: "a",
+        boards: [
+          makeOBFBoard({
+            id: "a",
+            name: "Food",
+            strings: { es_MX: { Food: "Comida" } },
+          }),
+        ],
+      }),
+    );
 
-  const summaries = await listBoardSummaries("set-1");
+    const summaries = await listBoardSummaries("set-1");
 
-  expect(summaries).toEqual([
-    {
-      id: "a",
-      name: "Food",
-      translatedNames: { es: "Comida" },
-    },
-  ]);
-});
+    expect(summaries).toEqual([
+      {
+        id: "a",
+        name: "Food",
+        translatedNames: { es: "Comida" },
+      },
+    ]);
+  });
 
-test("takes a name from the first locale of a language, as the board itself does", async () => {
-  await insertBoardSetRecords(
-    makeBoardSetInput({
-      rootBoardId: "a",
-      boards: [
-        makeOBFBoard({
-          id: "a",
-          name: "Food",
-          strings: {
-            "es-ES": { eat: "comer" },
-            "es-MX": { Food: "Comida" },
-            "fr-FR": { Food: "Nourriture" },
-          },
-        }),
-      ],
-    }),
-  );
+  test("takes a name from the first locale of a language, as the board itself does", async () => {
+    await insertBoardSetRecords(
+      makeBoardSetInput({
+        rootBoardId: "a",
+        boards: [
+          makeOBFBoard({
+            id: "a",
+            name: "Food",
+            strings: {
+              "es-ES": { eat: "comer" },
+              "es-MX": { Food: "Comida" },
+              "fr-FR": { Food: "Nourriture" },
+            },
+          }),
+        ],
+      }),
+    );
 
-  const [summary] = await listBoardSummaries("set-1");
+    const [summary] = await listBoardSummaries("set-1");
 
-  expect(summary?.translatedNames).toEqual({ fr: "Nourriture" });
+    expect(summary?.translatedNames).toEqual({ fr: "Nourriture" });
+  });
 });

@@ -19,7 +19,7 @@ describe("normalizeLocale", () => {
     expect(normalizeLocale(input)).toBe(expected);
   });
 
-  test("strips Unicode -u- extensions via baseName", () => {
+  test("strips Unicode -u- extensions", () => {
     expect(normalizeLocale("en-US-u-ca-hebrew")).toBe("en-US");
   });
 });
@@ -37,11 +37,11 @@ describe("getLanguageCode", () => {
 });
 
 describe("getNativeLanguageName", () => {
-  test("returns the endonym", () => {
+  test("names a language in that language", () => {
     expect(getNativeLanguageName("fr")).toBe("français");
   });
 
-  test("strips region before lookup", () => {
+  test("gives a regional locale its language's name", () => {
     expect(getNativeLanguageName("es-MX")).toBe(getNativeLanguageName("es"));
   });
 });

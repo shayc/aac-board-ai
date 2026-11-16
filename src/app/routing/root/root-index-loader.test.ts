@@ -59,7 +59,7 @@ describe("rootIndexLoader", () => {
     ).rejects.toMatchObject(localizedImportFailure);
   });
 
-  test("preserves navigation cancellation for starter import", async () => {
+  test("rejects with the navigation's own abort reason during the starter import", async () => {
     const controller = new AbortController();
     controller.abort();
 
@@ -69,7 +69,7 @@ describe("rootIndexLoader", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("redirects to the root board of the most recently updated set when no param is given", async () => {
+  test("redirects to the most recently updated board set when no board URL is given", async () => {
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
@@ -94,7 +94,7 @@ describe("rootIndexLoader", () => {
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
-  test("imports the default board when no param is given and IDB is empty", async () => {
+  test("imports the starter board set when no board URL is given and nothing is stored", async () => {
     const probe = await fetch(DEFAULT_BOARD_PATH);
     if (!probe.ok) {
       throw new Error(`Default board fixture missing at ${DEFAULT_BOARD_PATH}`);

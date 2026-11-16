@@ -22,7 +22,7 @@ beforeEach(async () => {
 afterEach(closeBoardsDB);
 
 describe("getBoardRecord", () => {
-  test("returns undefined for nonexistent board", async () => {
+  test("returns undefined for a missing board", async () => {
     await insertBoardSetRecords(makeBoardSetInput());
 
     const board = await getBoardRecord({
@@ -34,7 +34,7 @@ describe("getBoardRecord", () => {
 });
 
 describe("listBoardIds", () => {
-  test("returns only the IDs of the set's boards", async () => {
+  test("returns only the IDs of the board set's boards", async () => {
     await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
@@ -60,7 +60,7 @@ describe("listBoardIds", () => {
 });
 
 describe("listBoardRecords", () => {
-  test("returns only the set's boards", async () => {
+  test("returns only the board set's boards", async () => {
     await insertBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
@@ -86,7 +86,7 @@ describe("listBoardRecords", () => {
     expect(boards.map((board) => board.id).sort()).toEqual(["a", "b"]);
   });
 
-  test("returns empty array for a nonexistent set", async () => {
+  test("returns an empty array for a missing board set", async () => {
     const boards = await listBoardRecords("missing");
 
     expect(boards).toEqual([]);

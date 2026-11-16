@@ -24,7 +24,7 @@ describe("boardSetLoader", () => {
     });
   });
 
-  test("returns a summary of each board in the set", async () => {
+  test("returns a summary of each board in the board set", async () => {
     await seedBoardSets([
       {
         id: "set-1",
@@ -42,7 +42,7 @@ describe("boardSetLoader", () => {
     expect(new Set(names)).toEqual(new Set(["Food", "Home"]));
   });
 
-  test("returns the set's root board", async () => {
+  test("returns the board set's root board", async () => {
     await seedBoardSets([{ id: "set-1", rootBoardId: "home" }]);
 
     const { rootBoardId } = await callLoader("set-1");
@@ -50,7 +50,7 @@ describe("boardSetLoader", () => {
     expect(rootBoardId).toBe("home");
   });
 
-  test("returns no root board for a set that isn't stored", async () => {
+  test("returns no root board for a board set that isn't stored", async () => {
     const { rootBoardId, boards } = await callLoader("missing");
 
     expect(rootBoardId).toBeUndefined();

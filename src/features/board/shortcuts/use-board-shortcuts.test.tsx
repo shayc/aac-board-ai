@@ -31,7 +31,7 @@ describe("board keyboard shortcuts", () => {
     });
   });
 
-  test("Backspace works board-wide — even from a non-grid button", async () => {
+  test("Backspace from a control outside the grid removes the last tile from the message", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
