@@ -1,9 +1,6 @@
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { setSpeechVoiceURI } from "@shared/speech/speech-store";
-import {
-  expectNoA11yViolations,
-  MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
-} from "@shared/testing/axe";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { readStoredPreferences } from "@shared/testing/stored-preferences";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
@@ -20,9 +17,7 @@ describe("SpeechSettings", () => {
       .element(screen.getByRole("button", { name: "Preview voice" }))
       .toBeInTheDocument();
 
-    await expectNoA11yViolations(screen.container, {
-      reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
-    });
+    await expectNoA11yViolations(screen.container);
   });
 
   test("renders the speech sliders and preview action", async () => {

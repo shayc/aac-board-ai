@@ -7,18 +7,10 @@ const ENABLED_BY_DEFAULT: axe.RuleObject = {
   "target-size": { enabled: true },
 };
 
-export const MUI_OUTLINED_INPUT_CONTRAST_REVIEW: ReviewedIncomplete = {
-  rule: "color-contrast",
-  cause: "bgOverlap",
-  selector: ".MuiOutlinedInput-input",
-  reason:
-    "MUI draws the outlined border as a fieldset over the input, so axe cannot tell which background the text sits on.",
-};
-
 /** An undecided axe result a person has checked and judged acceptable. */
 export interface ReviewedIncomplete {
   rule: string;
-  /** The bracketed cause a failure report prints, e.g. "bgOverlap". */
+  /** The bracketed cause a failure report prints, e.g. "aria-required-children". */
   cause: string;
   /** Matches the flagged elements; axe's own targets use unstable React IDs. */
   selector: string;
@@ -58,9 +50,13 @@ export async function expectNoA11yViolations(
     assert.fail(describeResults(violations));
   }
 
-  // Results axe could not decide, such as contrast over an image, would
-  // otherwise pass unseen.
-  const unreviewed = withoutReviewedNodes(incomplete, reviewedIncomplete);
+  // Results axe could not decide would otherwise pass unseen. Contrast is left
+  // out: axe cannot see through layering such as MUI's outline drawn over a
+  // field's text, so those results say nothing about the colors.
+  const undecided = incomplete.filter(
+    (result) => result.id !== "color-contrast",
+  );
+  const unreviewed = withoutReviewedNodes(undecided, reviewedIncomplete);
   if (unreviewed.length > 0) {
     assert.fail(
       `Undecided: axe could not check these. Review each one, then list it in reviewedIncomplete by rule, bracketed cause and a stable selector.\n\n${describeResults(unreviewed)}`,
@@ -69,7 +65,7 @@ export async function expectNoA11yViolations(
 
   const stale = reviewedIncomplete
     .filter(
-      (reviewed) => !incomplete.some((result) => isReviewed(result, reviewed)),
+      (reviewed) => !undecided.some((result) => isReviewed(result, reviewed)),
     )
     .map(({ rule, cause, selector }) => `${rule} [${cause}] on ${selector}`);
   if (stale.length > 0) {

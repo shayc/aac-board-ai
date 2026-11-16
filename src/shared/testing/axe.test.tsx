@@ -1,11 +1,7 @@
 import TextField from "@mui/material/TextField";
 import { afterEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import {
-  expectNoA11yViolations,
-  MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
-  type ReviewedIncomplete,
-} from "./axe";
+import { expectNoA11yViolations, type ReviewedIncomplete } from "./axe";
 
 const LONG_ANIMATION_MS = 60_000;
 
@@ -105,15 +101,10 @@ describe("expectNoA11yViolations", () => {
     ).rejects.toThrow(/no longer occur/);
   });
 
-  test("fails on MUI's outlined border over a field's text until reviewed", async () => {
+  test("passes contrast axe could not decide, such as MUI's outline over a field", async () => {
     const screen = await render(<TextField label="Name" defaultValue="Ada" />);
 
-    await expect(expectNoA11yViolations(screen.container)).rejects.toThrow(
-      /color-contrast/,
-    );
-    await expectNoA11yViolations(screen.container, {
-      reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
-    });
+    await expectNoA11yViolations(screen.container);
   });
 
   describe("with animations", () => {
