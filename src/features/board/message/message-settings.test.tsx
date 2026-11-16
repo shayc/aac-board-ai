@@ -11,14 +11,14 @@ describe("MessageSettings", () => {
       effect: "images in the message bar",
     },
     {
-      name: "Highlight while speaking",
+      name: "Highlight while playing",
       preference: "isHighlightingEnabled",
-      effect: "highlighting while speaking",
+      effect: "highlighting while playing",
     },
     {
-      name: "Clear after speaking",
+      name: "Clear after playing",
       preference: "shouldClearAfterPlayback",
-      effect: "clearing after speaking",
+      effect: "clearing after playing",
     },
   ])(
     "turns off $effect and persists the choice",

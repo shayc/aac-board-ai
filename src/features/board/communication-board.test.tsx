@@ -210,6 +210,25 @@ describe("CommunicationBoard", () => {
       });
     });
 
+    test("exposes the message bar, controls and tiles to assistive technology", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await expect.element(screen.container).toMatchAriaInlineSnapshot(`
+        - /children: deep-equal
+        - list "Message"
+        - button "Backspace" [disabled]
+        - grid "Communication board":
+          - row:
+            - gridcell "hello":
+              - button "hello"
+            - gridcell "world":
+              - button "world"
+        - button "Go back" [disabled]
+        - button "Go to main board" [disabled]
+        - button "Play message" [disabled]
+      `);
+    });
+
     test("names the tile grid with the board's name", async () => {
       const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
 
@@ -518,6 +537,20 @@ describe("CommunicationBoard", () => {
       await expectNoA11yViolations(screen.container);
     });
 
+    test("exposes each composed word to assistive technology", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expect.element(screen.getByRole("list")).toMatchAriaInlineSnapshot(`
+        - /children: deep-equal
+        - list "Message":
+          - listitem: hello
+          - listitem: world
+      `);
+    });
+
     test("enables message playback only after content is composed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const play = screen.getByRole("button", { name: "Play message" });
@@ -576,7 +609,7 @@ describe("CommunicationBoard", () => {
       await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
     });
 
-    test("outlines no message part while speaking when highlighting is off", async () => {
+    test("outlines no message part while playing when highlighting is off", async () => {
       setMessageHighlightingEnabled(false);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 

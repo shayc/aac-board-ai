@@ -92,8 +92,8 @@
   "speechPreviewVoice": "কণ্ঠস্বর শুনুন",
   "speechPreviewSample": "হ্যালো, এটা আমার কণ্ঠস্বর!",
   "messageImages": "ছবি দেখান",
-  "messageHighlight": "বলার সময় হাইলাইট করুন",
-  "messageClearAfterSpeaking": "বলার পরে মুছুন",
+  "messageHighlight": "চালানোর সময় হাইলাইট করুন",
+  "messageClearAfterPlaying": "চালানোর পরে মুছুন",
   "tileSaturation": "রঙের তীব্রতা",
   "tileBrightness": "উজ্জ্বলতা",
   "tileBorders": "সীমানা দেখান",
@@ -151,9 +151,9 @@
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি",
-  "errorBoardURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি",
-  "boardLinkImportTitle": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করবেন?",
-  "boardLinkImportDescription": "এই লিঙ্কটি {host} থেকে একটি বোর্ড ফাইল আমদানি করে। লিঙ্কটি যিনি পাঠিয়েছেন তাঁকে বিশ্বাস করলে তবেই আমদানি করুন।",
-  "boardLinkImport": "আমদানি করুন",
-  "boardLinkCancel": "বাতিল করুন"
+  "errorBoardFileURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি",
+  "boardFileURLImportTitle": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করবেন?",
+  "boardFileURLImportDescription": "এই লিঙ্কটি {host} থেকে একটি বোর্ড ফাইল আমদানি করে। লিঙ্কটি যিনি পাঠিয়েছেন তাঁকে বিশ্বাস করলে তবেই আমদানি করুন।",
+  "boardFileURLImportConfirm": "আমদানি করুন",
+  "boardFileURLImportCancel": "বাতিল করুন"
 }

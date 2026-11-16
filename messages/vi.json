@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Nghe thử giọng nói",
   "speechPreviewSample": "Xin chào, đây là giọng nói của tôi!",
   "messageImages": "Hiển thị hình ảnh",
-  "messageHighlight": "Đánh dấu khi đọc",
-  "messageClearAfterSpeaking": "Xóa sau khi đọc",
+  "messageHighlight": "Đánh dấu khi phát",
+  "messageClearAfterPlaying": "Xóa sau khi phát",
   "tileSaturation": "Cường độ màu",
   "tileBrightness": "Độ sáng",
   "tileBorders": "Hiển thị viền",
@@ -151,9 +151,9 @@
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
-  "errorBoardURLImportFailed": "Không thể nhập tệp bảng từ liên kết",
-  "boardLinkImportTitle": "Nhập tệp bảng từ liên kết?",
-  "boardLinkImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
-  "boardLinkImport": "Nhập",
-  "boardLinkCancel": "Hủy"
+  "errorBoardFileURLImportFailed": "Không thể nhập tệp bảng từ liên kết",
+  "boardFileURLImportTitle": "Nhập tệp bảng từ liên kết?",
+  "boardFileURLImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
+  "boardFileURLImportConfirm": "Nhập",
+  "boardFileURLImportCancel": "Hủy"
 }

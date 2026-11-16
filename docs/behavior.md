@@ -37,7 +37,7 @@ Each bullet leads with the rule in bold; the reason follows it.
   Content Security Policy allows no other connections, so an `http:` link fails
   before the confirmation instead of after it.
 - **Otherwise, the app opens the newest stored board set.** If the library is
-  empty, it imports the bundled starter board set.
+  empty, it imports the catalog's starter board set.
 
 ### Import board files
 
@@ -248,8 +248,8 @@ how the message changes.
   under the message bar.** It sits inside an error boundary that renders
   nothing, so a failure in suggestions removes the suggestion bar and nothing
   else.
-- **The bar is also absent when the browser has no usable suggestion model for
-  the communication language.**
+- **The bar is also absent when the browser has no available suggestion model
+  for the communication language.**
 
 **From message to phrases**
 
@@ -273,7 +273,7 @@ how the message changes.
      enable button; pressing it is the user gesture a model download needs.
    - A download shows its progress.
    - A failure shows only when the message has text, no phrase came back, and
-     every usable source failed.
+     every available source failed.
 5. **Selecting a phrase calls `replaceWithText` on `useMessage`**, which
    replaces the message with one text part per word in the communication
    language. It is one step in the undo history, so undo brings the tapped
@@ -282,7 +282,7 @@ how the message changes.
 **Selection, accessibility, and settings**
 
 - **The message changes only when a phrase is selected**, and selecting a
-  phrase does not speak it.
+  phrase does not play it.
 - **The phrases are a labelled group, not a live region**, because an
   announcement would interrupt the spoken feedback of the tile just pressed.
 - **The suggestion row is a scan group**, so switch users can select a phrase.

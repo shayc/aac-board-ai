@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Stem beluisteren",
   "speechPreviewSample": "Hoi, dit is mijn stem!",
   "messageImages": "Afbeeldingen weergeven",
-  "messageHighlight": "Markeren tijdens spreken",
-  "messageClearAfterSpeaking": "Wissen na het spreken",
+  "messageHighlight": "Markeren tijdens afspelen",
+  "messageClearAfterPlaying": "Wissen na het afspelen",
   "tileSaturation": "Kleurintensiteit",
   "tileBrightness": "Helderheid",
   "tileBorders": "Randen weergeven",
@@ -151,9 +151,9 @@
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
-  "errorBoardURLImportFailed": "Kan bordbestand niet importeren via de link",
-  "boardLinkImportTitle": "Bordbestand importeren via de link?",
-  "boardLinkImportDescription": "Deze link importeert een bordbestand van {host}. Importeer het alleen als je de afzender van de link vertrouwt.",
-  "boardLinkImport": "Importeren",
-  "boardLinkCancel": "Annuleren"
+  "errorBoardFileURLImportFailed": "Kan bordbestand niet importeren via de link",
+  "boardFileURLImportTitle": "Bordbestand importeren via de link?",
+  "boardFileURLImportDescription": "Deze link importeert een bordbestand van {host}. Importeer het alleen als je de afzender van de link vertrouwt.",
+  "boardFileURLImportConfirm": "Importeren",
+  "boardFileURLImportCancel": "Annuleren"
 }

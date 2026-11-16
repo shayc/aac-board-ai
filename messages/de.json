@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Stimme anhören",
   "speechPreviewSample": "Hallo, das ist meine Stimme!",
   "messageImages": "Bilder anzeigen",
-  "messageHighlight": "Beim Sprechen hervorheben",
-  "messageClearAfterSpeaking": "Nach dem Sprechen löschen",
+  "messageHighlight": "Beim Abspielen hervorheben",
+  "messageClearAfterPlaying": "Nach dem Abspielen löschen",
   "tileSaturation": "Farbstärke",
   "tileBrightness": "Helligkeit",
   "tileBorders": "Rahmen anzeigen",
@@ -151,9 +151,9 @@
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
-  "errorBoardURLImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
-  "boardLinkImportTitle": "Tafeldatei über den Link importieren?",
-  "boardLinkImportDescription": "Dieser Link importiert eine Tafeldatei von {host}. Importiere sie nur, wenn du der Person vertraust, die den Link gesendet hat.",
-  "boardLinkImport": "Importieren",
-  "boardLinkCancel": "Abbrechen"
+  "errorBoardFileURLImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
+  "boardFileURLImportTitle": "Tafeldatei über den Link importieren?",
+  "boardFileURLImportDescription": "Dieser Link importiert eine Tafeldatei von {host}. Importiere sie nur, wenn du der Person vertraust, die den Link gesendet hat.",
+  "boardFileURLImportConfirm": "Importieren",
+  "boardFileURLImportCancel": "Abbrechen"
 }

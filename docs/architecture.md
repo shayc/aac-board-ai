@@ -55,7 +55,8 @@ build. Each links to the section that explains it.
   ([Activate a tile](behavior.md#activate-a-tile)).
 - **Shared playback owns all device output and reads no settings store.** The
   board playback adapter is the only place that reports a failed playback
-  ([Activate a tile](behavior.md#activate-a-tile)).
+  ([Data and state ownership](#data-and-state-ownership),
+  [Activate a tile](behavior.md#activate-a-tile)).
 - **Speech follows the text, not the setting.** A message part whose language
   is known is spoken in that language
   ([Language and direction](behavior.md#language-and-direction)).
@@ -246,7 +247,7 @@ are relative to `src/features/`.
 | Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
 | Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
 | Stored board sets      | [library/board-sets/](../src/features/library/board-sets/)                                       | Maintain the reactive library and read stored boards as runtime types, in the communication language. |
-| Bundled catalog        | [library/catalog/](../src/features/library/catalog/)                                             | List the bundled board sets and track their downloads.                                                |
+| Board set catalog      | [library/catalog/](../src/features/library/catalog/)                                             | List the catalog's board sets and track their downloads.                                              |
 | Library panel          | [library/panel/](../src/features/library/panel/)                                                 | Show stored and downloadable board sets with their info, export, and delete actions.                  |
 | Board translation      | [library/translation/](../src/features/library/translation/)                                     | Translate board sets that lack the communication language.                                            |
 
@@ -351,7 +352,7 @@ full.
 - **Root board** — the board a set opens on. Navigation calls going to it Home,
   after the OBF `:home` action, and the interface calls it the main board.
 - **Library** — the board sets stored on this device, listed alongside the
-  catalog of bundled board sets that can be downloaded.
+  catalog of board sets that can be downloaded.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It

@@ -93,7 +93,7 @@
   "speechPreviewSample": "שלום, זה הקול שלי!",
   "messageImages": "הצגת תמונות במסר",
   "messageHighlight": "הדגשה בזמן ההשמעה",
-  "messageClearAfterSpeaking": "ניקוי המסר אחרי ההשמעה",
+  "messageClearAfterPlaying": "ניקוי המסר אחרי ההשמעה",
   "tileSaturation": "עוצמת הצבעים",
   "tileBrightness": "בהירות",
   "tileBorders": "הצגת מסגרות",
@@ -151,9 +151,9 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
-  "boardLinkImportTitle": "לייבא את קובץ הלוח מהקישור?",
-  "boardLinkImportDescription": "הקישור הזה מייבא קובץ לוח מ־{host}. יש לייבא אותו רק אם סומכים על מי ששלח את הקישור.",
-  "boardLinkImport": "ייבוא",
-  "boardLinkCancel": "ביטול"
+  "errorBoardFileURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
+  "boardFileURLImportTitle": "לייבא את קובץ הלוח מהקישור?",
+  "boardFileURLImportDescription": "הקישור הזה מייבא קובץ לוח מ־{host}. יש לייבא אותו רק אם סומכים על מי ששלח את הקישור.",
+  "boardFileURLImportConfirm": "ייבוא",
+  "boardFileURLImportCancel": "ביטול"
 }
