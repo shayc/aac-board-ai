@@ -142,14 +142,10 @@ export function CommunicationBoard({
               {...scanGroupProps}
               direction="row"
               spacing={2}
-              // On small screens the row holds only suggestions, so it must
-              // take no space when they are unavailable.
               sx={{ "&:empty": { display: "none" } }}
             >
               {!isSmallScreen && navigationButtons}
 
-              {/* Suggestions are optional: if they break, hide them as if
-                  built-in AI were unavailable and keep the board usable. */}
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}

@@ -49,8 +49,6 @@ export function AppShell() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* A welcome that fails to render must not block the board. It stays
-          unseen, so the next launch tries again. */}
       <ErrorBoundary fallback={null}>
         <OnboardingDialog
           open={onboarding.shouldShow}

@@ -9,8 +9,6 @@ interface ErrorBoundaryState {
   hasError: boolean;
 }
 
-// Keeps a render error in an optional part of the screen from replacing the
-// whole route, so the board stays usable. React has no hook for this.
 export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
