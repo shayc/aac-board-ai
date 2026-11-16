@@ -16,6 +16,9 @@ const ALWAYS_REVIEWED: readonly ReviewedIncomplete[] = [
     selector: ".MuiOutlinedInput-input",
     reason:
       "MUI draws the outlined border as a fieldset over the input, so axe cannot tell which background the text sits on.",
+    // Axe names no overlapping element, so rule out anything else on top,
+    // such as a snackbar; MUI's own layers ignore pointer events.
+    confirm: hasNothingClickableOnTop,
   },
 ];
 
@@ -27,6 +30,8 @@ export interface ReviewedIncomplete {
   /** Matches the flagged elements; axe's own targets use unstable React IDs. */
   selector: string;
   reason: string;
+  /** Further narrows which flagged elements the review covers. */
+  confirm?: (element: Element) => boolean;
 }
 
 interface A11yCheckOptions extends axe.RunOptions {
@@ -117,10 +122,16 @@ function matchesReview(
   node: axe.NodeResult,
   reviewed: ReviewedIncomplete,
 ) {
+  const { element } = node;
+  if (!element) {
+    return false;
+  }
+
   return (
     result.id === reviewed.rule &&
     causesOf(node).includes(reviewed.cause) &&
-    node.element?.matches(reviewed.selector) === true
+    element.matches(reviewed.selector) &&
+    (reviewed.confirm?.(element) ?? true)
   );
 }
 
@@ -133,4 +144,11 @@ function causesOf(node: axe.NodeResult) {
 
 function isReviewed(result: axe.Result, reviewed: ReviewedIncomplete) {
   return result.nodes.some((node) => matchesReview(result, node, reviewed));
+}
+
+function hasNothingClickableOnTop(element: Element) {
+  const { left, top, width, height } = element.getBoundingClientRect();
+  const topmost = document.elementFromPoint(left + width / 2, top + height / 2);
+
+  return topmost !== null && element.contains(topmost);
 }

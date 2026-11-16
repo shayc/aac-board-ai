@@ -30,7 +30,7 @@ async function renderAppShellPastOnboarding() {
 }
 
 describe("AppShell", () => {
-  test("has no accessibility violations", async () => {
+  test("has no accessibility violations with onboarding open", async () => {
     await renderAppShell();
 
     await expectNoA11yViolations(document.body, {
@@ -44,6 +44,12 @@ describe("AppShell", () => {
         },
       ],
     });
+  });
+
+  test("has no accessibility violations past onboarding", async () => {
+    await renderAppShellPastOnboarding();
+
+    await expectNoA11yViolations(document.body);
   });
 
   test("moves focus into the library on open and back on close on desktop", async () => {
