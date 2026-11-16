@@ -1,7 +1,11 @@
 import TextField from "@mui/material/TextField";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { expectNoA11yViolations, type ReviewedIncomplete } from "./axe";
+import {
+  expectNoA11yViolations,
+  MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
+  type ReviewedIncomplete,
+} from "./axe";
 
 const EMPTY_LIST_REVIEW: ReviewedIncomplete = {
   rule: "aria-required-children",
@@ -82,22 +86,14 @@ describe("expectNoA11yViolations", () => {
     ).rejects.toThrow(/no longer occur/);
   });
 
-  test("accepts MUI's outlined border drawn over a field's text", async () => {
+  test("fails on MUI's outlined border over a field's text until reviewed", async () => {
     const screen = await render(<TextField label="Name" defaultValue="Ada" />);
-
-    await expectNoA11yViolations(screen.container);
-  });
-
-  test("fails when something else covers an outlined field's text", async () => {
-    const screen = await render(
-      <div style={{ position: "relative" }}>
-        <TextField label="Name" defaultValue="Ada" />
-        <div style={{ position: "absolute", inset: 0, background: "white" }} />
-      </div>,
-    );
 
     await expect(expectNoA11yViolations(screen.container)).rejects.toThrow(
       /color-contrast/,
     );
+    await expectNoA11yViolations(screen.container, {
+      reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
+    });
   });
 });

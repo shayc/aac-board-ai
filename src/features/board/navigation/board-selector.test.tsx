@@ -8,7 +8,10 @@ import {
   DEFAULT_LANGUAGE,
   setCommunicationLanguage,
 } from "@shared/language/language-store";
-import { expectNoA11yViolations } from "@shared/testing/axe";
+import {
+  expectNoA11yViolations,
+  MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
+} from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -60,9 +63,10 @@ describe("BoardSelector", () => {
       .element(screen.getByRole("option", { name: "Home" }))
       .toBeVisible();
 
-    // Axe's region rule flags the popup portaled outside the app's landmarks.
     await expectNoA11yViolations(document.body, {
+      // Axe's region rule flags the popup portaled outside the app's landmarks.
       rules: { region: { enabled: false } },
+      reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
     });
   });
 

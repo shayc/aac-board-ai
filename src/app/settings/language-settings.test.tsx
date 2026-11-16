@@ -1,4 +1,7 @@
-import { expectNoA11yViolations } from "@shared/testing/axe";
+import {
+  expectNoA11yViolations,
+  MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
+} from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
@@ -13,7 +16,9 @@ describe("LanguageSettings", () => {
       .element(screen.getByRole("combobox", { name: "Language" }))
       .toHaveTextContent("English");
 
-    await expectNoA11yViolations(screen.container);
+    await expectNoA11yViolations(screen.container, {
+      reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
+    });
   });
 
   test("keeps language selection available and shows no notice without the Translator", async () => {
