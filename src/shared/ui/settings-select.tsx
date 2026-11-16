@@ -3,10 +3,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { type ReactNode, useId } from "react";
 
-// A menu taller than the room under its trigger opens on top of it, and Select
-// then picks the option under the pointer when a press lasts 200ms or longer.
-const MENU_MAX_HEIGHT = 320;
-
 interface SettingsSelectProps {
   label: string;
   value: string;
@@ -34,9 +30,6 @@ export function SettingsSelect({
           onChange={(event) => onChange(event.target.value)}
           size="small"
           fullWidth
-          MenuProps={{
-            slotProps: { paper: { sx: { maxHeight: MENU_MAX_HEIGHT } } },
-          }}
           sx={{ minWidth: 0 }}
         >
           {children}
