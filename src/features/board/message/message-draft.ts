@@ -36,10 +36,7 @@ export function saveMessageDraft(message: Message): void {
   }
 }
 
-/**
- * Reads the saved message with its stored media ready to show. Never rejects:
- * the board opens whether or not the draft can be read.
- */
+/** Never rejects: the board opens whether or not the draft can be read. */
 export async function restoreMessageDraft(): Promise<Message> {
   const saved = readSavedDraft();
   if (!isRecord(saved) || !Array.isArray(saved.parts)) {
@@ -184,7 +181,5 @@ async function resolveAssetURL(
     return undefined;
   }
 
-  // Media that can't be read again leave the part with its label, which still
-  // shows and is spoken.
   return getAssetURL(key.boardSetId, key.path).catch(() => undefined);
 }

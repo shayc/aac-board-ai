@@ -40,9 +40,8 @@ export function useBoardPlayback({
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
-  // Playback outlives the board, so a board that closes stops its own: a
-  // message it finished later would otherwise be saved as played over the
-  // draft the next board is editing.
+  // Playback outlives the board, so a closing board stops its own; a message
+  // it finished later would be saved as played over the next board's draft.
   useEffect(
     () => () => {
       if (isBoardPlayback(playback.getSnapshot())) {
