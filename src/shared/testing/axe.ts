@@ -7,16 +7,23 @@ const ENABLED_BY_DEFAULT: axe.RuleObject = {
   "target-size": { enabled: true },
 };
 
-export const MUI_OUTLINED_INPUT_CONTRAST_REVIEW: ReviewedIncomplete = {
-  rule: "color-contrast",
-  selector: ".MuiOutlinedInput-input",
-  reason:
-    "MUI draws the outlined border as a fieldset over the input, so axe cannot tell which background the text sits on.",
-};
+// Every outlined MUI field has this cause, so it is reviewed once here rather
+// than in each test that renders one.
+const ALWAYS_REVIEWED: readonly ReviewedIncomplete[] = [
+  {
+    rule: "color-contrast",
+    cause: "bgOverlap",
+    selector: ".MuiOutlinedInput-input",
+    reason:
+      "MUI draws the outlined border as a fieldset over the input, so axe cannot tell which background the text sits on.",
+  },
+];
 
 /** An undecided axe result a person has checked and judged acceptable. */
 export interface ReviewedIncomplete {
   rule: string;
+  /** The check's message key, or its ID when it has none, e.g. "bgOverlap". */
+  cause: string;
   /** Matches the flagged elements; axe's own targets use unstable React IDs. */
   selector: string;
   reason: string;
@@ -38,17 +45,19 @@ export async function expectNoA11yViolations(
     );
   await Promise.all(finiteAnimations.map((animation) => animation.finished));
 
-  const { violations, incomplete } = await axe.run(target, {
-    ...options,
-    elementRef: true,
-    rules: { ...ENABLED_BY_DEFAULT, ...options.rules },
-  });
+  const { violations, incomplete } = await axe.run(
+    target,
+    withDefaultRules(options),
+  );
 
   expect(violations.length, describeResults(violations)).toBe(0);
 
   // Results axe could not decide, such as contrast over an image, would
   // otherwise pass unseen.
-  const unreviewed = withoutReviewedNodes(incomplete, reviewedIncomplete);
+  const unreviewed = withoutReviewedNodes(incomplete, [
+    ...ALWAYS_REVIEWED,
+    ...reviewedIncomplete,
+  ]);
   expect(unreviewed.length, describeResults(unreviewed)).toBe(0);
 
   const stale = reviewedIncomplete.filter(
@@ -59,30 +68,13 @@ export async function expectNoA11yViolations(
   );
 }
 
-function withoutReviewedNodes(
-  results: axe.Result[],
-  reviewedIncomplete: readonly ReviewedIncomplete[],
-): axe.Result[] {
-  return results
-    .map((result) => ({
-      ...result,
-      nodes: result.nodes.filter(
-        (node) =>
-          !reviewedIncomplete.some(
-            (reviewed) =>
-              reviewed.rule === result.id &&
-              node.element?.matches(reviewed.selector),
-          ),
-      ),
-    }))
-    .filter((result) => result.nodes.length > 0);
-}
+function withDefaultRules(options: axe.RunOptions): axe.RunOptions {
+  // An enabled rule runs even outside runOnly, which narrows a run on purpose.
+  const rules = options.runOnly
+    ? options.rules
+    : { ...ENABLED_BY_DEFAULT, ...options.rules };
 
-function isReviewed(result: axe.Result, reviewed: ReviewedIncomplete) {
-  return (
-    result.id === reviewed.rule &&
-    result.nodes.some((node) => node.element?.matches(reviewed.selector))
-  );
+  return { ...options, rules, elementRef: true };
 }
 
 function describeResults(results: axe.Result[]) {
@@ -101,4 +93,44 @@ function describeResults(results: axe.Result[]) {
   });
 
   return report.join("\n\n");
+}
+
+function withoutReviewedNodes(
+  results: axe.Result[],
+  reviewedIncomplete: readonly ReviewedIncomplete[],
+): axe.Result[] {
+  return results
+    .map((result) => ({
+      ...result,
+      nodes: result.nodes.filter(
+        (node) =>
+          !reviewedIncomplete.some((reviewed) =>
+            matchesReview(result, node, reviewed),
+          ),
+      ),
+    }))
+    .filter((result) => result.nodes.length > 0);
+}
+
+function matchesReview(
+  result: axe.Result,
+  node: axe.NodeResult,
+  reviewed: ReviewedIncomplete,
+) {
+  return (
+    result.id === reviewed.rule &&
+    causesOf(node).includes(reviewed.cause) &&
+    node.element?.matches(reviewed.selector) === true
+  );
+}
+
+function causesOf(node: axe.NodeResult) {
+  return [...node.any, ...node.all, ...node.none].map(
+    (check) =>
+      (check.data as { messageKey?: string } | null)?.messageKey ?? check.id,
+  );
+}
+
+function isReviewed(result: axe.Result, reviewed: ReviewedIncomplete) {
+  return result.nodes.some((node) => matchesReview(result, node, reviewed));
 }

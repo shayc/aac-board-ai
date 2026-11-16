@@ -8,7 +8,8 @@ import { CommunicationBoard } from "../communication-board";
 
 export const EMPTY_MESSAGE_REVIEW: ReviewedIncomplete = {
   rule: "aria-required-children",
-  selector: "[role='list']",
+  cause: "aria-required-children",
+  selector: "[role='list'][aria-label='Message']",
   reason:
     "The message list starts empty and gains an item for each selected tile.",
 };

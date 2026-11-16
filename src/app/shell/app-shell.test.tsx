@@ -37,7 +37,8 @@ describe("AppShell", () => {
       reviewedIncomplete: [
         {
           rule: "aria-hidden-focus",
-          selector: "[aria-hidden='true']",
+          cause: "focusable-modal-open",
+          selector: "body > [aria-hidden='true']",
           reason:
             "The onboarding dialog hides the app behind it and traps focus, so its controls cannot be reached.",
         },

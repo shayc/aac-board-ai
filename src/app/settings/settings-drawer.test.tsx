@@ -1,7 +1,4 @@
-import {
-  expectNoA11yViolations,
-  MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
-} from "@shared/testing/axe";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import {
   stubProofreader,
@@ -24,9 +21,7 @@ describe("SettingsDrawer", () => {
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();
 
-    await expectNoA11yViolations(document.body, {
-      reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
-    });
+    await expectNoA11yViolations(document.body);
   });
 
   test("renders every settings section when open", async () => {

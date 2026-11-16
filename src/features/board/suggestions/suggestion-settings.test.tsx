@@ -51,6 +51,7 @@ describe("SuggestionSettings", () => {
       reviewedIncomplete: [
         {
           rule: "color-contrast",
+          cause: "emptyValue",
           selector: "textarea",
           reason:
             "The custom instructions field starts empty, so axe has no text to measure.",
