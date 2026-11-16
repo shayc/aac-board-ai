@@ -42,6 +42,32 @@ test("a stored board opens and remains usable offline", async ({
   await expect(playMessageButton).toBeEnabled();
 });
 
+test("a nested board opened directly offline remains usable", async ({
+  context,
+  page,
+}) => {
+  await openStarterBoardSetUnderServiceWorker(page);
+  await page.getByRole("button", { name: "food" }).click();
+  await expect(page.getByRole("grid", { name: "Food" })).toBeVisible();
+  const foodBoardURL = page.url();
+
+  await page.close();
+  await context.setOffline(true);
+
+  const offlinePage = await context.newPage();
+  await offlinePage.goto(foodBoardURL);
+
+  await expect(offlinePage.getByRole("grid", { name: "Food" })).toBeVisible();
+
+  const playMessageButton = offlinePage.getByRole("button", {
+    name: "Play message",
+  });
+  await expect(playMessageButton).toBeDisabled();
+
+  await offlinePage.getByRole("button", { name: "water" }).click();
+  await expect(playMessageButton).toBeEnabled();
+});
+
 test("deleting the last board set offline restores the starter board set", async ({
   context,
   page,
