@@ -38,6 +38,12 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
       autoHighlight
       size="small"
       slotProps={{
+        // Autocomplete labels its listbox by the TextField's visible label,
+        // which this selector replaces with the input's aria-label.
+        listbox: {
+          "aria-labelledby": undefined,
+          "aria-label": t(m.boardSelectorLabel),
+        },
         popupIndicator: { sx: { border: "none" } },
       }}
       getOptionLabel={(option) => option.name}
