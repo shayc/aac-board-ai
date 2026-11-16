@@ -5,6 +5,7 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { assert, beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { restoreMessageDraft } from "./message-draft";
@@ -13,7 +14,7 @@ import { createTilePart, EMPTY_MESSAGE } from "./message-transforms";
 import type { TilePart } from "./message-types";
 import { useMessage } from "./use-message";
 
-const SYMBOL_SET_ID = "symbol-set";
+const MEDIA_BOARD_SET_ID = "media-set";
 const IMAGE_PATH = "images/hello.png";
 const SOUND_PATH = "sounds/hello.wav";
 const REMOTE_SOUND_SRC = "https://example.com/hello.mp3";
@@ -404,14 +405,14 @@ describe("useMessage", () => {
       expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
     });
 
-    test("creates stored symbols and sounds again after a reload", async () => {
-      await seedSymbolSet();
+    test("brings back stored symbols and sounds after a reload", async () => {
+      await seedMediaBoardSet();
       const imageSrc = await requireAssetURL(IMAGE_PATH);
       const soundSrc = await requireAssetURL(SOUND_PATH);
       await composeAndClose({ imageSrc, soundSrc });
       // Storing the set again revokes its URLs, as closing the page would.
       await resetBoardsDB();
-      await seedSymbolSet();
+      await seedMediaBoardSet();
 
       const part = await renderRestoredTilePart();
 
@@ -423,7 +424,7 @@ describe("useMessage", () => {
     });
 
     test("keeps media that are not stored beside stored ones", async () => {
-      await seedSymbolSet();
+      await seedMediaBoardSet();
       const imageSrc = await requireAssetURL(IMAGE_PATH);
       await composeAndClose({ imageSrc, soundSrc: REMOTE_SOUND_SRC });
 
@@ -434,7 +435,7 @@ describe("useMessage", () => {
     });
 
     test("keeps the label of a symbol whose board set was deleted", async () => {
-      await seedSymbolSet();
+      await seedMediaBoardSet();
       const imageSrc = await requireAssetURL(IMAGE_PATH);
       await composeAndClose({ imageSrc });
       await resetBoardsDB();
@@ -463,10 +464,10 @@ async function trackSettledPlayback(
   await completion;
 }
 
-async function seedSymbolSet() {
+async function seedMediaBoardSet() {
   await seedBoardSets([
     {
-      id: SYMBOL_SET_ID,
+      id: MEDIA_BOARD_SET_ID,
       rootBoardId: "home",
       assets: [
         await loadTestImageAsset(IMAGE_PATH),
@@ -477,8 +478,8 @@ async function seedSymbolSet() {
 }
 
 async function requireAssetURL(path: string): Promise<string> {
-  const url = await getAssetURL(SYMBOL_SET_ID, path);
-  assert(url);
+  const url = await getAssetURL(MEDIA_BOARD_SET_ID, path);
+  assertDefined(url);
 
   return url;
 }

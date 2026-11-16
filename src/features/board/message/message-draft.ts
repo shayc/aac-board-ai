@@ -1,6 +1,7 @@
 import { type AssetKey, findAssetKey, getAssetURL } from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
+import { parseOptionalString } from "@shared/utils/parse-optional-string";
 import { EMPTY_MESSAGE } from "./message-transforms";
 import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
 
@@ -25,10 +26,10 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const saved = { ...message, parts: message.parts.map(toSavedPart) };
+  const draft = { ...message, parts: message.parts.map(toSavedPart) };
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
   } catch {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
@@ -81,8 +82,8 @@ function toSavedPart(part: MessagePart): SavedPart {
     return part;
   }
 
-  const imageAssetKey = findMediaAssetKey(part.imageSrc);
-  const soundAssetKey = findMediaAssetKey(part.soundSrc);
+  const imageAssetKey = findAssetKeyOf(part.imageSrc);
+  const soundAssetKey = findAssetKeyOf(part.soundSrc);
 
   return {
     ...part,
@@ -93,7 +94,7 @@ function toSavedPart(part: MessagePart): SavedPart {
   };
 }
 
-function findMediaAssetKey(src: string | undefined): AssetKey | undefined {
+function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
@@ -138,10 +139,6 @@ function parseSavedPart(raw: unknown): SavedPart | undefined {
     imageAssetKey: parseAssetKey(raw.imageAssetKey),
     soundAssetKey: parseAssetKey(raw.soundAssetKey),
   };
-}
-
-function parseOptionalString(value: unknown): string | undefined {
-  return typeof value === "string" ? value : undefined;
 }
 
 function parseAssetKey(value: unknown): AssetKey | undefined {

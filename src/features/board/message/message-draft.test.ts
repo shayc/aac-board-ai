@@ -5,7 +5,8 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
-import { assert, describe, expect, onTestFinished, test } from "vitest";
+import { assertDefined } from "@shared/testing/assert-defined";
+import { describe, expect, onTestFinished, test } from "vitest";
 import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
   createTextPart,
@@ -74,13 +75,13 @@ describe("message draft", () => {
     await resetBoardsDB();
     await seedBoardSets([
       {
-        id: "symbol-set",
+        id: "media-set",
         rootBoardId: "home",
         assets: [await loadTestImageAsset("images/hello.png")],
       },
     ]);
-    const imageSrc = await getAssetURL("symbol-set", "images/hello.png");
-    assert(imageSrc);
+    const imageSrc = await getAssetURL("media-set", "images/hello.png");
+    assertDefined(imageSrc);
     saveMessageDraft({
       ...MESSAGE,
       parts: [createTilePart({ label: "hello", language: "en", imageSrc })],
