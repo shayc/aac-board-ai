@@ -62,8 +62,10 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loadedBoard = await loadBoard(file, {
     limits: BOARD_FILE_IMPORT_LIMITS,
   });
-  const content = buildBoardSetContent(loadedBoard, file.name);
   const baseId = deriveBoardSetId(file.name);
+  // A file named only by its extension has no stem to name the set after.
+  const fallbackName = stripBoardFileExtension(file.name) || baseId;
+  const content = buildBoardSetContent(loadedBoard, fallbackName);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
     const id = buildBoardSetIdCandidate(baseId, candidateNumber);
@@ -82,15 +84,13 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
 
 function buildBoardSetContent(
   loadedBoard: LoadedBoard,
-  fileName: string,
+  fallbackName: string,
 ): BoardSetContent {
-  const fileStem = stripBoardFileExtension(fileName);
-
   if (loadedBoard.format === "obf") {
     const { board } = loadedBoard;
 
     return {
-      ...obfToBoardSetMetadata(board, fileStem),
+      ...obfToBoardSetMetadata(board, fallbackName),
       rootBoardId: board.id,
       boards: [board],
       assets: [],
@@ -100,7 +100,7 @@ function buildBoardSetContent(
   const { boards, rootBoard, resources } = loadedBoard.archive;
 
   return {
-    ...obfToBoardSetMetadata(rootBoard, fileStem),
+    ...obfToBoardSetMetadata(rootBoard, fallbackName),
     rootBoardId: rootBoard.id,
     boards: [...boards.values()],
     assets: buildAssetInputs(resources),

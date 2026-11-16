@@ -181,15 +181,19 @@ function validateBoardSetInput({
   }
 }
 
-function buildBoardSetRecord({
-  boards,
-  assets: _assets,
-  ...boardSet
-}: BoardSetInput): BoardSetRecord {
+function buildBoardSetRecord(input: BoardSetInput): BoardSetRecord {
   return {
-    ...boardSet,
+    id: input.id,
+    name: input.name,
+    rootBoardId: input.rootBoardId,
     importedAt: Date.now(),
-    boardCount: boards.length,
+    boardCount: input.boards.length,
+    author: input.author,
+    description: input.description,
+    license: input.license,
+    locale: input.locale,
+    gridRows: input.gridRows,
+    gridColumns: input.gridColumns,
   };
 }
 

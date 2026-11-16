@@ -38,9 +38,9 @@ export function makeBoardSetInput(
   const rootBoard = boards.find((board) => board.id === rootBoardId);
 
   return {
+    name: "Set",
     ...(rootBoard && obfToBoardSetMetadata(rootBoard, "Set")),
     id: "set-1",
-    name: "Set",
     rootBoardId,
     boards,
     assets: [],
