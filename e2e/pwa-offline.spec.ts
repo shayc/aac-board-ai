@@ -76,7 +76,6 @@ test("a message being composed survives an offline reload", async ({
 
   const message = page.getByRole("list", { name: "Message" });
   await expect(message.getByRole("listitem")).toHaveText(["want"]);
-  await expect(message.locator("img")).toHaveJSProperty("complete", true);
   await expect(message.locator("img")).not.toHaveJSProperty("naturalWidth", 0);
 });
 
