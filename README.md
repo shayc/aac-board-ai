@@ -93,7 +93,7 @@ Built with React 19, TypeScript, Vite, and MUI.
 
 The app uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) to parse OBF/OBZ files and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) to manage browser AI availability and sessions.
 
-See [docs/architecture.md](docs/architecture.md) for design decisions, data flow, and accessibility invariants.
+See [docs/architecture.md](docs/architecture.md) for invariants, data ownership, and module boundaries, and [docs/behavior.md](docs/behavior.md) for how each flow, accessibility rule, and layout rule works.
 
 ## Read the code
 
