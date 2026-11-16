@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright
-        run: npx playwright install --with-deps chromium webkit
+        run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Check formatting
         run: npm run format:check
@@ -45,6 +45,9 @@ jobs:
 
       - name: Run tests with coverage
         run: npm run test:coverage
+
+      - name: Run tests in Firefox
+        run: npm run test:firefox
 
       - name: Run tests in WebKit
         run: npm run test:webkit
