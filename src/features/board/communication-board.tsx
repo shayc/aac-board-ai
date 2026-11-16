@@ -21,9 +21,9 @@ import { scanGroupProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
-import { boardVocabulary } from "./suggestions/board-vocabulary";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
+import { useNearbyVocabulary } from "./suggestions/use-nearby-vocabulary";
 import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
@@ -43,9 +43,13 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage();
-  const vocabulary = boardVocabulary(board);
+  const nearbyVocabulary = useNearbyVocabulary({
+    board,
+    boardLanguage: language,
+    rootBoardId,
+  });
   const suggestions = useMessageSuggestions(message.text, {
-    vocabulary: [...vocabulary.keys()],
+    vocabulary: nearbyVocabulary.words,
     isWordOpen: message.isWordOpen,
   });
   const playback = useBoardPlayback({
@@ -70,9 +74,12 @@ export function CommunicationBoard({
   });
 
   const hasMessage = message.parts.length > 0;
-  const nextWordButtons = suggestions.nextWords
-    .map((word) => vocabulary.get(word))
-    .filter((button) => button !== undefined);
+
+  function addContinuation(words: readonly string[]) {
+    void nearbyVocabulary.loadTileParts(words).then((parts) => {
+      message.apply(parts.map((part) => ({ kind: "tile", part })));
+    });
+  }
 
   const navigationButtons = (
     <NavigationButtons
@@ -157,14 +164,15 @@ export function CommunicationBoard({
                   <SuggestionBar
                     status={suggestions.status}
                     phrases={suggestions.phrases}
-                    nextWordButtons={nextWordButtons}
+                    messageText={message.text}
+                    continuations={suggestions.continuations}
                     language={communication.language}
                     onEnable={suggestions.enable}
                     onPhraseSelect={(phrase) =>
                       message.replaceWithText(phrase, communication.language)
                     }
 
-                    onNextWordSelect={activateButton}
+                    onContinuationSelect={addContinuation}
                   />
                 )}
               </Stack>

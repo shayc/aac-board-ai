@@ -11,6 +11,7 @@ export {
   BoardNotFoundError,
   loadStoredBoard,
 } from "./board-sets/load-stored-board";
+export { loadStoredBoardTexts } from "./board-sets/load-stored-board-texts";
 export { starterBoardSet } from "./catalog/board-set-catalog";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {
@@ -25,6 +26,7 @@ export {
   listBoardSetRecords,
 } from "./storage/board-set-storage";
 export { BoardTranslationNotice } from "./translation/board-translation-notice";
+export { findBoardInLanguage } from "./translation/board-translations";
 export { useBoardInLanguage } from "./translation/use-board-in-language";
 export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 

@@ -8,13 +8,13 @@ import {
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { isEngineUsable, SUGGESTION_ENGINES } from "./suggestion-support";
-import { useNextWordSource } from "./use-next-word-source";
+import { useContinuationSource } from "./use-continuation-source";
 import { useProofreaderSource } from "./use-proofreader-source";
 import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
-interface NextWordContext {
+interface ContinuationContext {
   vocabulary: readonly string[];
   isWordOpen: boolean;
 }
@@ -23,13 +23,13 @@ interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
   status: SuggestionStatus;
   phrases: readonly string[];
-  nextWords: readonly string[];
+  continuations: readonly (readonly string[])[];
   enable: () => void;
 }
 
 export function useMessageSuggestions(
   messageText: string,
-  { vocabulary, isWordOpen }: NextWordContext,
+  { vocabulary, isWordOpen }: ContinuationContext,
 ): UseMessageSuggestionsReturn {
   const text = messageText.trim();
 
@@ -53,7 +53,7 @@ export function useMessageSuggestions(
     language,
     tone: "more-casual",
   });
-  const nextWordSource = useNextWordSource({
+  const continuationSource = useContinuationSource({
     text,
     vocabulary,
     isWordOpen,
@@ -67,8 +67,8 @@ export function useMessageSuggestions(
     text,
     sources.map(({ candidate }) => candidate),
   );
-  const nextWords = nextWordSource.words;
-  const allSources = [...sources, nextWordSource];
+  const { continuations } = continuationSource;
+  const allSources = [...sources, continuationSource];
   const isAvailable = allSources.some(({ engineStatus }) =>
     isEngineUsable(engineStatus),
   );
@@ -76,7 +76,7 @@ export function useMessageSuggestions(
     sources: allSources,
     downloadProgress,
     hasText,
-    phraseCount: phrases.length + nextWords.length,
+    phraseCount: phrases.length + continuations.length,
   });
 
   function enable() {
@@ -89,7 +89,7 @@ export function useMessageSuggestions(
     isAvailable,
     status,
     phrases,
-    nextWords,
+    continuations,
     enable,
   };
 }

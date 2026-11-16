@@ -4,7 +4,7 @@ import {
   isSupported,
   type Status,
 } from "@shayc/react-built-in-ai";
-import { nextWordLanguageOptions } from "./next-word-prompt";
+import { continuationLanguageOptions } from "./continuation-prompt";
 
 export const SUGGESTION_ENGINES = [
   "Proofreader",
@@ -59,7 +59,7 @@ export async function checkSuggestionLanguageSupport(
   ] = await Promise.all([
     isEngineAvailable("Proofreader", proofreaderLanguageOptions(language)),
     isEngineAvailable("Rewriter", rewriterLanguageOptions(language)),
-    isEngineAvailable("LanguageModel", nextWordLanguageOptions(language)),
+    isEngineAvailable("LanguageModel", continuationLanguageOptions(language)),
   ]);
   if (isRewriterAvailable) {
     return "custom-instructions";

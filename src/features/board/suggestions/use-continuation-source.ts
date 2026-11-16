@@ -1,33 +1,36 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { type Status, useLanguageModel } from "@shayc/react-built-in-ai";
 import { useEffect, useRef } from "react";
-import { nextWordLanguageOptions } from "./next-word-prompt";
-import { predictNextWords, prepareNextWords } from "./next-word-session";
+import { continuationLanguageOptions } from "./continuation-prompt";
+import {
+  predictContinuations,
+  prepareContinuations,
+} from "./continuation-session";
 
-interface UseNextWordSourceOptions {
+interface UseContinuationSourceOptions {
   text: string;
   vocabulary: readonly string[];
   isWordOpen: boolean;
   language: string;
 }
 
-export interface NextWordSource {
+export interface ContinuationSource {
   engineStatus: Status;
-  words: readonly string[];
+  continuations: readonly (readonly string[])[];
   isRequestPending: boolean;
   hasRequestFailed: boolean;
   enable: () => void;
 }
 
-export function useNextWordSource({
+export function useContinuationSource({
   text,
   vocabulary,
   isWordOpen,
   language,
-}: UseNextWordSourceOptions): NextWordSource {
+}: UseContinuationSourceOptions): ContinuationSource {
   // The hook's own session only tracks availability, download and enabling;
   // predictions run on a per-board session that supports cloning.
-  const engine = useLanguageModel(nextWordLanguageOptions(language));
+  const engine = useLanguageModel(continuationLanguageOptions(language));
 
   // The hook keeps the options it mounted with, so a new language needs a
   // fresh session for the status to describe it.
@@ -38,13 +41,13 @@ export function useNextWordSource({
     }
 
     engineLanguage.current = language;
-    engine.reset(nextWordLanguageOptions(language));
+    engine.reset(continuationLanguageOptions(language));
   }, [engine, language]);
 
   const canUseBoard = vocabulary.length > 0 && engine.status === "ready";
   useEffect(() => {
     if (canUseBoard) {
-      prepareNextWords({ vocabulary, language });
+      prepareContinuations({ vocabulary, language });
     }
   }, [canUseBoard, vocabulary, language]);
 
@@ -53,7 +56,7 @@ export function useNextWordSource({
   const request = useLatestAsync({
     deps: [text, language, ...vocabulary],
     run: canPredict
-      ? (signal) => predictNextWords({ text, vocabulary, language, signal })
+      ? (signal) => predictContinuations({ text, vocabulary, language, signal })
       : undefined,
   });
 
@@ -64,7 +67,7 @@ export function useNextWordSource({
 
   return {
     engineStatus: engine.status,
-    words: request.value ?? [],
+    continuations: request.value ?? [],
     isRequestPending: request.isPending,
     hasRequestFailed:
       request.error !== undefined && request.error.name !== "AbortError",
