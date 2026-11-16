@@ -1,6 +1,6 @@
 import type {
   SpeechParameters,
-  SpokenText,
+  SpeechText,
 } from "@shared/speech/speech-synthesis";
 import {
   failUtterance,
@@ -11,7 +11,7 @@ import {
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
-const hello: SpokenText = { text: "hello", language: "en" };
+const hello: SpeechText = { text: "hello", language: "en" };
 
 const parameters: SpeechParameters = {
   voice: null,

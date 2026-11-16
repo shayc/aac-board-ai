@@ -1,8 +1,8 @@
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
-import type { SpokenText } from "@shared/speech/speech-synthesis";
+import type { SpeechText } from "@shared/speech/speech-synthesis";
 import type { MessagePart } from "../message/message-types";
 
-interface SpokenPart extends SpokenText {
+interface SpeechPart extends SpeechText {
   id: string;
 }
 
@@ -12,16 +12,16 @@ export function planPlayback(
   defaultLanguage: string,
 ): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
-  let spokenRun: SpokenPart[] = [];
+  let speechRun: SpeechPart[] = [];
 
   function flushSpeech() {
-    const [firstPart] = spokenRun;
+    const [firstPart] = speechRun;
     if (!firstPart) {
       return;
     }
 
-    steps.push(createSpeechStep(spokenRun, firstPart.language));
-    spokenRun = [];
+    steps.push(createSpeechStep(speechRun, firstPart.language));
+    speechRun = [];
   }
 
   for (const part of parts) {
@@ -46,11 +46,11 @@ export function planPlayback(
 
     // An utterance has one language and one voice, so a run ends where the
     // language changes.
-    if (spokenRun.at(-1)?.language !== language) {
+    if (speechRun.at(-1)?.language !== language) {
       flushSpeech();
     }
 
-    spokenRun.push({ id: part.id, text, language });
+    speechRun.push({ id: part.id, text, language });
   }
 
   flushSpeech();
@@ -65,7 +65,7 @@ interface PartSpan {
 }
 
 function createSpeechStep(
-  parts: readonly SpokenPart[],
+  parts: readonly SpeechPart[],
   language: string,
 ): SpeechStep {
   const chunks: string[] = [];

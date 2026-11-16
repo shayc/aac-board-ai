@@ -31,7 +31,7 @@ export function useBoardPlayback({
   onMessagePlayback,
 }: UseBoardPlaybackOptions = {}): UseBoardPlaybackReturn {
   const playback = usePlayback();
-  const { language } = useCommunicationLanguage();
+  const { language: communicationLanguage } = useCommunicationLanguage();
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
@@ -54,7 +54,7 @@ export function useBoardPlayback({
   function echoMessage(parts: readonly MessagePart[]) {
     return playAndReportFailure({
       owner: MESSAGE_OWNER,
-      steps: planPlayback(parts, language),
+      steps: planPlayback(parts, communicationLanguage),
     });
   }
 
@@ -68,7 +68,7 @@ export function useBoardPlayback({
   async function playPart(part: MessagePart) {
     await playAndReportFailure({
       owner: TILE_OWNER,
-      steps: planPlayback([part], language),
+      steps: planPlayback([part], communicationLanguage),
     });
   }
 

@@ -1,4 +1,4 @@
-export interface SpokenText {
+export interface SpeechText {
   text: string;
   /** The language the text is in, which picks the voice that speaks it. */
   language: string;
