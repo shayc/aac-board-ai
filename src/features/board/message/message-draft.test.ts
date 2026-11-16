@@ -97,6 +97,25 @@ describe("message draft", () => {
     ]);
   });
 
+  test("leaves out an object URL with no stored asset behind it", async () => {
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [
+        createTilePart({
+          label: "hello",
+          language: "en",
+          imageSrc: "blob:http://localhost/deleted-asset",
+        }),
+      ],
+    });
+
+    const restored = await restoreMessageDraft();
+
+    expect(restored.parts).toMatchObject([
+      { label: "hello", imageSrc: undefined },
+    ]);
+  });
+
   test("removes the draft when the message is emptied", () => {
     saveMessageDraft(MESSAGE);
 

@@ -87,8 +87,8 @@ function toSavedPart(part: MessagePart): SavedPart {
 
   return {
     ...part,
-    imageSrc: imageAssetKey ? undefined : part.imageSrc,
-    soundSrc: soundAssetKey ? undefined : part.soundSrc,
+    imageSrc: imageAssetKey ? undefined : toSavedSrc(part.imageSrc),
+    soundSrc: soundAssetKey ? undefined : toSavedSrc(part.soundSrc),
     imageAssetKey,
     soundAssetKey,
   };
@@ -96,6 +96,12 @@ function toSavedPart(part: MessagePart): SavedPart {
 
 function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
+}
+
+// An object URL ends with the page that made it, so one with no stored asset
+// behind it could only come back broken.
+function toSavedSrc(src: string | undefined): string | undefined {
+  return src?.startsWith("blob:") ? undefined : src;
 }
 
 function readSavedDraft(): unknown {

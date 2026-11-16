@@ -194,8 +194,10 @@ app can restart from scratch after time in the background. A stored asset's
 object URL ends with the page, so the
 [draft](../src/features/board/message/message-draft.ts) keeps the asset's key in
 its place and creates the URL again on restore. `boardLoader` restores the
-draft alongside the board, played or not, so the board opens with it, symbols
-included, and no edit can come before it. The undo history is not saved.
+draft alongside the board, so the board opens with it, symbols included, and
+no edit can come before it. A message that played to its end is not kept when
+the next symbol would replace it, and an object URL with no stored asset behind
+it is left out, since it could only come back broken. The undo history is not saved.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for

@@ -369,7 +369,6 @@ describe("useMessage", () => {
     test("restores the message when it opens again", async () => {
       const first = await renderHook(() => useMessage());
       first.result.current.replaceWithText("I want", "en");
-      await trackSettledPlayback(first.result.current, true);
       await first.rerender();
       const saved = first.result.current.parts;
       await first.unmount();
@@ -378,7 +377,29 @@ describe("useMessage", () => {
       const { result } = await renderHook(() => useMessage(restored));
 
       expect(result.current.parts).toEqual(saved);
-      expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
+    });
+
+    test("keeps no draft of a played message the next symbol replaces", async () => {
+      const { result } = await renderHook(() => useMessage());
+      result.current.replaceWithText("I want", "en");
+
+      await trackSettledPlayback(result.current, true);
+
+      expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
+    });
+
+    test("restores a played message when clearing after speaking is off", async () => {
+      setMessageClearAfterPlayback(false);
+      const first = await renderHook(() => useMessage());
+      first.result.current.replaceWithText("I want", "en");
+      await trackSettledPlayback(first.result.current, true);
+      await first.unmount();
+
+      const restored = await restoreMessageDraft();
+      const { result } = await renderHook(() => useMessage(restored));
+
+      expect(restored.hasPlayed).toBe(true);
+      expect(labelsAfterSpelling(result.current)).toEqual(["I", "wanta"]);
     });
 
     test("restores an open word for more spelling", async () => {

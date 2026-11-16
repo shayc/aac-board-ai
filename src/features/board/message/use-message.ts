@@ -52,7 +52,9 @@ export function useMessage(
   function commit(next: Message) {
     stateRef.current = next;
     setRenderedState(next);
-    saveMessageDraft(next);
+
+    const isKept = isKeptOnDevice(next, shouldClearAfterPlayback);
+    saveMessageDraft(isKept ? next : EMPTY_MESSAGE);
   }
 
   // Marking the message played is not a step to undo, so it goes through
@@ -157,4 +159,13 @@ export function useMessage(
     clear,
     undo,
   };
+}
+
+// A message spoken to its end that the next symbol replaces has done its job,
+// so it is not kept where the next person to open the app would see it.
+function isKeptOnDevice(
+  message: Message,
+  shouldClearAfterPlayback: boolean,
+): boolean {
+  return !(message.hasPlayed && shouldClearAfterPlayback);
 }
