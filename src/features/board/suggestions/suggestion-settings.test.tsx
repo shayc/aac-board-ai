@@ -51,6 +51,17 @@ describe("SuggestionSettings", () => {
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .not.toBeInTheDocument();
+  });
+
+  test("has no accessibility violations when suggestions are unsupported", async () => {
+    const screen = await renderWithProviders(<SuggestionSettings />);
+    await expect
+      .element(
+        screen.getByRole("link", {
+          name: "How to enable suggestions (opens in new tab)",
+        }),
+      )
+      .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
   });
@@ -80,13 +91,24 @@ describe("SuggestionSettings", () => {
       .toBeVisible();
   });
 
-  test("shows custom instructions when the rewriter is supported with no accessibility violations", async () => {
+  test("shows custom instructions when the rewriter is supported", async () => {
     stubProofreader();
     stubRewriter();
     stubTranslator();
 
     const screen = await renderWithProviders(<SuggestionSettings />);
 
+    await expect
+      .element(screen.getByRole("textbox", { name: "Custom instructions" }))
+      .toBeInTheDocument();
+  });
+
+  test("has no accessibility violations with custom instructions", async () => {
+    stubProofreader();
+    stubRewriter();
+    stubTranslator();
+
+    const screen = await renderWithProviders(<SuggestionSettings />);
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();
@@ -108,6 +130,19 @@ describe("SuggestionSettings", () => {
       .toBeVisible();
     await expect.element(screen.getByRole("textbox")).not.toBeInTheDocument();
     await expect.element(screen.getByRole("link")).not.toBeInTheDocument();
+  });
+
+  test("has no accessibility violations when no engine supports the language", async () => {
+    setCommunicationLanguage("he");
+    stubProofreader().availability.mockImplementation(
+      availableWithoutLanguages,
+    );
+    stubRewriter().availability.mockImplementation(availableWithoutLanguages);
+
+    const screen = await renderWithProviders(<SuggestionSettings />);
+    await expect
+      .element(screen.getByText("ההצעות אינן זמינות בשפה הזו."))
+      .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
   });

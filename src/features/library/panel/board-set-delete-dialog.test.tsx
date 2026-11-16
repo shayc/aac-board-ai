@@ -5,7 +5,20 @@ import { makeBoardSetRecord } from "../testing";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 
 describe("BoardSetDeleteDialog", () => {
-  test("names the board set in the warning with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetDeleteDialog
+        boardSet={makeBoardSetRecord({ name: "Core Words" })}
+        onDelete={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("names the board set in the warning", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSetRecord({ name: "Core Words" })}
@@ -24,8 +37,6 @@ describe("BoardSetDeleteDialog", () => {
       .toHaveAccessibleDescription(
         '"Core Words" will be deleted. This cannot be undone.',
       );
-
-    await expectNoA11yViolations(document.body);
   });
 
   test("keeps naming the board set while the dialog closes", async () => {

@@ -5,7 +5,17 @@ import { describe, expect, test } from "vitest";
 import { ThemeSettings } from "./theme-settings";
 
 describe("ThemeSettings", () => {
-  test("keeps repeated theme controls synchronized with no accessibility violations", async () => {
+  test("has no accessibility violations with a theme selected", async () => {
+    const screen = await renderWithProviders(<ThemeSettings />);
+    const darkButton = screen.getByRole("button", { name: "Dark" });
+
+    await darkButton.click();
+    await expect.element(darkButton).toHaveAttribute("aria-pressed", "true");
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("keeps repeated theme controls synchronized", async () => {
     const screen = await renderWithProviders(
       <>
         <ThemeSettings />
@@ -59,8 +69,6 @@ describe("ThemeSettings", () => {
     await expect
       .element(firstDarkButton)
       .toHaveAttribute("aria-pressed", "true");
-
-    await expectNoA11yViolations(screen.container);
   });
 
   test("switches every control to the new theme at once", async () => {

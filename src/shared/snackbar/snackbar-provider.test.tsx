@@ -79,7 +79,15 @@ describe("SnackbarProvider", () => {
       .toHaveTextContent("sticky");
   });
 
-  test("shows a plain-string message with no accessibility violations", async () => {
+  test("shows a plain-string message", async () => {
+    const screen = await renderSnackbars({ "show-saved": "Saved" });
+
+    await screen.getByRole("button", { name: "show-saved" }).click();
+
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+  });
+
+  test("has no accessibility violations while a message shows", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 
     await screen.getByRole("button", { name: "show-saved" }).click();

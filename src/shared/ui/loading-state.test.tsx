@@ -10,6 +10,10 @@ describe("LoadingState", () => {
     await expect
       .element(screen.getByRole("progressbar", { name: "Loading…" }))
       .toBeInTheDocument();
+  });
+
+  test("has no accessibility violations once it has faded in", async () => {
+    const screen = await renderWithProviders(<LoadingState />);
 
     // Wait for the fade so axe checks the final text contrast.
     await vi.waitFor(() => {

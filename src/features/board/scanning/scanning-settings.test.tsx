@@ -40,6 +40,17 @@ describe("ScanningSettings", () => {
         isEnabled: true,
       }),
     );
+  });
+
+  test("has no accessibility violations with scanning on", async () => {
+    const screen = await renderWithProviders(<ScanningSettings />);
+
+    await screen
+      .getByRole("switch", { name: "Enable switch scanning" })
+      .click();
+    await expect
+      .element(screen.getByRole("radiogroup", { name: "Scan method" }))
+      .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
   });

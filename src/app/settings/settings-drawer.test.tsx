@@ -9,7 +9,22 @@ import { describe, expect, test, vi } from "vitest";
 import { SettingsDrawer } from "./settings-drawer";
 
 describe("SettingsDrawer", () => {
-  test("renders every settings section when open with no accessibility violations", async () => {
+  test("has no accessibility violations", async () => {
+    stubProofreader();
+    stubRewriter();
+    stubTranslator();
+
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={vi.fn()} />,
+    );
+    await expect
+      .element(screen.getByRole("textbox", { name: "Custom instructions" }))
+      .toBeInTheDocument();
+
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("renders every settings section when open", async () => {
     stubProofreader();
     stubRewriter();
     stubTranslator();
@@ -50,8 +65,6 @@ describe("SettingsDrawer", () => {
     await expect
       .element(screen.getByText(/^Version \d+\.\d+\.\d+$/))
       .toBeInTheDocument();
-
-    await expectNoA11yViolations(document.body);
   });
 
   test("names each section group after its heading", async () => {
