@@ -33,17 +33,21 @@ export async function expectNoA11yViolations(
   target: Element,
   { reviewedIncomplete = [], ...options }: A11yCheckOptions = {},
 ) {
-  // Wait for final contrast colors while allowing infinite spinners to keep running.
-  const finiteAnimations = target
+  // Wait for final contrast colors; infinite spinners and paused animations never finish.
+  const endingAnimations = target
     .getAnimations({ subtree: true })
     .filter(
-      (animation) => animation.effect?.getComputedTiming().endTime !== Infinity,
+      (animation) =>
+        animation.playState === "running" &&
+        animation.effect?.getComputedTiming().endTime !== Infinity,
     );
-  await Promise.all(finiteAnimations.map((animation) => animation.finished));
+  await Promise.allSettled(
+    endingAnimations.map((animation) => animation.finished),
+  );
 
   const { violations, incomplete } = await axe.run(
     target,
-    withDefaultRules(options),
+    withDefaultOptions(options),
   );
 
   expect(violations.length, describeResults(violations)).toBe(0);
@@ -61,13 +65,20 @@ export async function expectNoA11yViolations(
   );
 }
 
-function withDefaultRules(options: axe.RunOptions): axe.RunOptions {
+function withDefaultOptions(options: axe.RunOptions): axe.RunOptions {
   // An enabled rule runs even outside runOnly, which narrows a run on purpose.
   const rules = options.runOnly
     ? options.rules
     : { ...ENABLED_BY_DEFAULT, ...options.rules };
 
-  return { ...options, rules, elementRef: true };
+  return {
+    // Other result types keep one example node, which skips selector work;
+    // incomplete needs every node to match against the reviewed list.
+    resultTypes: ["violations", "incomplete"],
+    ...options,
+    rules,
+    elementRef: true,
+  };
 }
 
 function describeResults(results: axe.Result[]) {

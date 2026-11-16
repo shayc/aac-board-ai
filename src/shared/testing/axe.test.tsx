@@ -1,11 +1,13 @@
 import TextField from "@mui/material/TextField";
-import { describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import {
   expectNoA11yViolations,
   MUI_OUTLINED_INPUT_CONTRAST_REVIEW,
   type ReviewedIncomplete,
 } from "./axe";
+
+const LONG_ANIMATION_MS = 60_000;
 
 const EMPTY_LIST_REVIEW: ReviewedIncomplete = {
   rule: "aria-required-children",
@@ -62,6 +64,21 @@ describe("expectNoA11yViolations", () => {
     });
   });
 
+  test("fails on an unreviewed element when another of the same rule is reviewed", async () => {
+    const screen = await render(
+      <>
+        <div role="list" aria-label="Empty" />
+        <div role="list" aria-label="Also empty" />
+      </>,
+    );
+
+    await expect(
+      expectNoA11yViolations(screen.container, {
+        reviewedIncomplete: [EMPTY_LIST_REVIEW],
+      }),
+    ).rejects.toThrow(/aria-required-children/);
+  });
+
   test("fails when the reviewed cause differs from axe's", async () => {
     const screen = await render(<div role="list" aria-label="Empty" />);
 
@@ -96,4 +113,40 @@ describe("expectNoA11yViolations", () => {
       reviewedIncomplete: [MUI_OUTLINED_INPUT_CONTRAST_REVIEW],
     });
   });
+
+  describe("with animations", () => {
+    let paragraph: HTMLParagraphElement;
+
+    afterEach(() => {
+      paragraph.remove();
+    });
+
+    test("passes when an animation it waits for is cancelled", async () => {
+      paragraph = mountParagraph();
+      const animation = paragraph.animate(
+        { opacity: [0, 1] },
+        LONG_ANIMATION_MS,
+      );
+
+      const check = expectNoA11yViolations(paragraph);
+      animation.cancel();
+
+      await check;
+    });
+
+    test("does not wait for a paused animation", async () => {
+      paragraph = mountParagraph();
+      paragraph.animate({ opacity: [0, 1] }, LONG_ANIMATION_MS).pause();
+
+      await expectNoA11yViolations(paragraph);
+    });
+  });
 });
+
+function mountParagraph() {
+  const paragraph = document.createElement("p");
+  paragraph.textContent = "Hello";
+  document.body.append(paragraph);
+
+  return paragraph;
+}
