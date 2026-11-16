@@ -19,7 +19,7 @@ const TILE_OWNER = "board-tile";
 const BOARD_OWNERS: ReadonlySet<string> = new Set([MESSAGE_OWNER, TILE_OWNER]);
 
 interface UseBoardPlaybackOptions {
-  onMessagePlayback?: (completion: Promise<boolean>) => void;
+  onMessagePlaybackStart?: (completion: Promise<boolean>) => void;
 }
 
 export interface UseBoardPlaybackReturn {
@@ -33,7 +33,7 @@ export interface UseBoardPlaybackReturn {
 }
 
 export function useBoardPlayback({
-  onMessagePlayback,
+  onMessagePlaybackStart,
 }: UseBoardPlaybackOptions = {}): UseBoardPlaybackReturn {
   const playback = usePlayback();
   const { language } = useCommunicationLanguage();
@@ -76,7 +76,7 @@ export function useBoardPlayback({
 
   function playMessage(parts: readonly MessagePart[]) {
     const completion = echoMessage(parts);
-    onMessagePlayback?.(completion);
+    onMessagePlaybackStart?.(completion);
 
     return completion;
   }

@@ -415,23 +415,25 @@ describe("useBoardPlayback", () => {
   });
 
   test("reports a played message with its completion", async () => {
-    const onMessagePlayback =
-      vi.fn<NonNullable<NonNullable<PlaybackOptions>["onMessagePlayback"]>>();
+    const onMessagePlaybackStart =
+      vi.fn<
+        NonNullable<NonNullable<PlaybackOptions>["onMessagePlaybackStart"]>
+      >();
     const parts: MessagePart[] = [
       { kind: "tile", id: "1", label: "hi", language: "en" },
     ];
-    const { result } = await renderPlayback({ onMessagePlayback });
+    const { result } = await renderPlayback({ onMessagePlaybackStart });
 
     await result.current.playMessage(parts);
 
-    expect(onMessagePlayback).toHaveBeenCalledOnce();
-    const [completion] = onMessagePlayback.mock.calls[0] ?? [];
+    expect(onMessagePlaybackStart).toHaveBeenCalledOnce();
+    const [completion] = onMessagePlaybackStart.mock.calls[0] ?? [];
     await expect(completion).resolves.toBe(true);
   });
 
   test("plays an echoed message without reporting it", async () => {
-    const onMessagePlayback = vi.fn();
-    const { result } = await renderPlayback({ onMessagePlayback });
+    const onMessagePlaybackStart = vi.fn();
+    const { result } = await renderPlayback({ onMessagePlaybackStart });
 
     await expect(
       result.current.echoMessage([
@@ -440,6 +442,6 @@ describe("useBoardPlayback", () => {
     ).resolves.toBe(true);
 
     expect(speech.spokenTexts()).toEqual(["hi"]);
-    expect(onMessagePlayback).not.toHaveBeenCalled();
+    expect(onMessagePlaybackStart).not.toHaveBeenCalled();
   });
 });

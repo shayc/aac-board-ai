@@ -41,7 +41,7 @@ export function useMessage(
 
   // The setting is read each time the message is edited, so turning it off
   // releases a message that was already played.
-  function readMessage() {
+  function readMessageToEdit() {
     return shouldClearAfterPlayback
       ? stateRef.current
       : markPlayed(stateRef.current, false);
@@ -79,7 +79,7 @@ export function useMessage(
   }
 
   function apply(edits: readonly MessageEdit[]): MessageEditOutcome {
-    const current = readMessage();
+    const current = readMessageToEdit();
     const edited = commitEdits(current, edits);
 
     return { edited, hasChanged: edited !== current };

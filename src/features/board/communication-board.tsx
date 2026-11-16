@@ -46,7 +46,7 @@ export function CommunicationBoard({
 
   const message = useMessage(initialMessage);
   const playback = useBoardPlayback({
-    onMessagePlayback: message.trackPlayback,
+    onMessagePlaybackStart: message.trackPlayback,
   });
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
