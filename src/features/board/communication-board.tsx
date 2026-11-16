@@ -8,7 +8,6 @@ import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
-import { useState } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -47,8 +46,7 @@ export function CommunicationBoard({
   const communication = useCommunicationLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const [restoredMessage] = useState(initialMessage);
-  const message = useMessage(restoredMessage);
+  const message = useMessage(initialMessage);
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -71,12 +69,6 @@ export function CommunicationBoard({
   });
 
   const hasMessage = message.parts.length > 0;
-  // Only an unplayed message takes the next symbol, and only until it changes.
-  const isRestoredMessageOpen =
-    restoredMessage !== undefined &&
-    !restoredMessage.hasPlayed &&
-    hasMessage &&
-    message.parts === restoredMessage.parts;
 
   const navigationButtons = (
     <NavigationButtons
@@ -171,7 +163,7 @@ export function CommunicationBoard({
             </Stack>
           </Stack>
 
-          <RestoredMessageNotice isShown={isRestoredMessageOpen} />
+          <RestoredMessageNotice isShown={message.isInitialMessageOpen} />
 
           <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
             <Grid<BoardButton>

@@ -1,3 +1,4 @@
+import { restoreMessageDraft } from "@features/board";
 import { importBoardFileFromURL, listBoardSetRecords } from "@features/library";
 import {
   makeAssetInput,
@@ -274,8 +275,8 @@ describe("app flow", () => {
     await first.screen.getByRole("button", { name: "Continue" }).click();
     await first.screen.getByRole("button", { name: "hello" }).click();
     await first.screen.getByRole("button", { name: "Play message" }).click();
-    await vi.waitFor(() => {
-      expect(audio.play).toHaveBeenCalledTimes(2);
+    await vi.waitFor(async () => {
+      expect((await restoreMessageDraft()).hasPlayed).toBe(true);
     });
     await first.screen.unmount();
 
