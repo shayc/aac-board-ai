@@ -12,8 +12,8 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
-import { useMatch, useNavigate } from "react-router";
-import { BOARD_SET_SEGMENT } from "../board-paths";
+import { useNavigate } from "react-router";
+import { useActiveBoardSetId } from "../board-paths";
 import { boardSetInLanguage } from "../board-sets/board-in-language";
 import { deleteBoardSet, useBoardSets } from "../board-sets/board-sets-store";
 import { listDownloadableBoardSets } from "../catalog/board-set-catalog";
@@ -26,10 +26,7 @@ import { BoardSetList } from "./board-set-list";
 
 export function BoardSetLibrary() {
   const t = useTranslate();
-  const activeBoardSetId = useMatch({
-    path: `/${BOARD_SET_SEGMENT}`,
-    end: false,
-  })?.params.boardSetId;
+  const activeBoardSetId = useActiveBoardSetId();
   const { language } = useCommunicationLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();

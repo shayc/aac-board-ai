@@ -74,6 +74,7 @@ describe("loadStoredBoard", () => {
   test("falls back to the media url when its stored asset is missing", async () => {
     await insertBoardSetRecords({
       id: SET_ID,
+      name: "Loader Test",
       rootBoardId: BOARD_ID,
       boards: [
         makeOBFBoard({
@@ -100,6 +101,7 @@ describe("loadStoredBoard", () => {
   test("falls back to the media url when its path names no file", async () => {
     await insertBoardSetRecords({
       id: SET_ID,
+      name: "Loader Test",
       rootBoardId: BOARD_ID,
       boards: [
         makeOBFBoard({
@@ -152,6 +154,7 @@ describe("loadStoredBoard", () => {
   test("keeps links to stored boards and drops links to boards the board set lacks", async () => {
     await insertBoardSetRecords({
       id: SET_ID,
+      name: "Loader Test",
       rootBoardId: BOARD_ID,
       boards: [
         makeOBFBoard({
@@ -186,6 +189,7 @@ describe("loadStoredBoard", () => {
   test("drops a link to a board that only another board set stores", async () => {
     await insertBoardSetRecords({
       id: SET_ID,
+      name: "Loader Test",
       rootBoardId: BOARD_ID,
       boards: [
         makeOBFBoard({
@@ -200,6 +204,7 @@ describe("loadStoredBoard", () => {
     });
     await insertBoardSetRecords({
       id: "another-set",
+      name: "Another Set",
       rootBoardId: "food",
       boards: [makeOBFBoard({ id: "food" })],
       assets: [],

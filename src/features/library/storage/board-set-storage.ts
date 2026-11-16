@@ -1,7 +1,5 @@
-import { normalizeLocale } from "@shared/language/locale";
-import { htmlToText } from "@shared/utils/html-to-text";
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { StringTranslations } from "../board-types";
+import type { BoardSetMetadata, StringTranslations } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import {
   type AssetRecord,
@@ -30,10 +28,9 @@ export interface AssetInput {
   readonly type: string;
 }
 
-export interface BoardSetInput {
+export interface BoardSetInput extends BoardSetMetadata {
   readonly id: string;
   readonly rootBoardId: string;
-  readonly name?: string;
   readonly boards: readonly OBFBoard[];
   readonly assets: readonly AssetInput[];
 }
@@ -121,8 +118,9 @@ function withTranslations(
 export async function insertBoardSetRecords(
   input: BoardSetInput,
 ): Promise<void> {
-  const rootBoard = validateBoardSetInput(input);
-  const boardSetRecord = buildBoardSetRecord(input, rootBoard);
+  validateBoardSetInput(input);
+
+  const boardSetRecord = buildBoardSetRecord(input);
   const boardRecords = buildBoardRecords(input);
   const assetRecords = buildAssetRecords(input);
 
@@ -157,7 +155,7 @@ function validateBoardSetInput({
   rootBoardId,
   boards,
   assets,
-}: BoardSetInput): OBFBoard {
+}: BoardSetInput): void {
   validateId(id, "boardSetId");
   validateId(rootBoardId, "rootBoardId");
 
@@ -178,32 +176,20 @@ function validateBoardSetInput({
     }
   }
 
-  const rootBoard = boards.find((obf) => obf.id === rootBoardId);
-  if (!rootBoard) {
+  if (!boardIds.has(rootBoardId)) {
     throw new Error(`Root board not found: ${rootBoardId}`);
   }
-
-  return rootBoard;
 }
 
-function buildBoardSetRecord(
-  { id, rootBoardId, name, boards }: BoardSetInput,
-  rootBoard: OBFBoard,
-): BoardSetRecord {
+function buildBoardSetRecord({
+  boards,
+  assets: _assets,
+  ...boardSet
+}: BoardSetInput): BoardSetRecord {
   return {
-    id,
-    name: nonBlankText(name) ?? nonBlankText(rootBoard.name) ?? id,
-    rootBoardId,
+    ...boardSet,
     importedAt: Date.now(),
     boardCount: boards.length,
-    author: rootBoard.license?.author_name,
-    description: rootBoard.description_html
-      ? htmlToText(rootBoard.description_html)
-      : undefined,
-    license: rootBoard.license?.type,
-    locale: rootBoard.locale ? normalizeLocale(rootBoard.locale) : undefined,
-    gridRows: rootBoard.grid.rows,
-    gridColumns: rootBoard.grid.columns,
   };
 }
 

@@ -5,7 +5,7 @@ import {
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
 import { createBoardSet } from "../board-sets/board-sets-store";
-import { nonBlankText } from "../non-blank-text";
+import { obfToBoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 import {
   type AssetInput,
   BoardSetAlreadyExistsError,
@@ -90,8 +90,8 @@ function buildBoardSetContent(
     const { board } = loadedBoard;
 
     return {
+      ...obfToBoardSetMetadata(board, fileStem),
       rootBoardId: board.id,
-      name: nonBlankText(board.name) ?? fileStem,
       boards: [board],
       assets: [],
     };
@@ -100,8 +100,8 @@ function buildBoardSetContent(
   const { boards, rootBoard, resources } = loadedBoard.archive;
 
   return {
+    ...obfToBoardSetMetadata(rootBoard, fileStem),
     rootBoardId: rootBoard.id,
-    name: nonBlankText(rootBoard.name) ?? fileStem,
     boards: [...boards.values()],
     assets: buildAssetInputs(resources),
   };
