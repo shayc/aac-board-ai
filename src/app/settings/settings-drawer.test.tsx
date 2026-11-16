@@ -98,6 +98,25 @@ describe("SettingsDrawer", () => {
       .toHaveAttribute("aria-valuetext", expect.stringMatching(/^100\s%$/));
   });
 
+  test.for(["Language", "Voice"])(
+    "keeps the %s choice when the press that opens its menu is slow",
+    async (name) => {
+      const screen = await renderWithProviders(
+        <SettingsDrawer open onClose={vi.fn()} />,
+      );
+      const select = screen.getByRole("combobox", { name });
+      await expect.element(select).toBeInTheDocument();
+      const selectElement = select.element();
+      const choice = selectElement.textContent;
+
+      // Select picks the option under the pointer when a press outlasts 400ms.
+      await select.click({ delay: 500 });
+
+      await expect.element(screen.getByRole("listbox")).toBeVisible();
+      expect(selectElement).toHaveTextContent(choice);
+    },
+  );
+
   test("calls onClose when the close button is clicked", async () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
