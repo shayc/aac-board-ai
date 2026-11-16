@@ -1,38 +1,37 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, test } from "vitest";
 import { expectNoA11yViolations } from "./axe";
 
 const LONG_ANIMATION_MS = 60_000;
 
 describe("expectNoA11yViolations", () => {
+  let paragraph: HTMLParagraphElement;
+
   afterEach(() => {
-    document.body.replaceChildren();
+    paragraph.remove();
   });
 
   test("passes when an animation it waits for is cancelled", async () => {
-    const container = renderParagraph();
-    const animation = container.animate({ opacity: [0, 1] }, LONG_ANIMATION_MS);
+    paragraph = mountParagraph();
+    const animation = paragraph.animate({ opacity: [0, 1] }, LONG_ANIMATION_MS);
 
-    const check = expectNoA11yViolations(container);
+    const check = expectNoA11yViolations(paragraph);
     animation.cancel();
 
-    await expect(check).resolves.toBeUndefined();
+    await check;
   });
 
   test("does not wait for a paused animation", async () => {
-    const container = renderParagraph();
-    const animation = container.animate({ opacity: [0, 1] }, LONG_ANIMATION_MS);
-    animation.pause();
+    paragraph = mountParagraph();
+    paragraph.animate({ opacity: [0, 1] }, LONG_ANIMATION_MS).pause();
 
-    await expect(expectNoA11yViolations(container)).resolves.toBeUndefined();
+    await expectNoA11yViolations(paragraph);
   });
 });
 
-function renderParagraph() {
-  const container = document.createElement("div");
+function mountParagraph() {
   const paragraph = document.createElement("p");
   paragraph.textContent = "Hello";
-  container.append(paragraph);
-  document.body.append(container);
+  document.body.append(paragraph);
 
-  return container;
+  return paragraph;
 }
