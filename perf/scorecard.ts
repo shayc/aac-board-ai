@@ -1,5 +1,5 @@
 import type { Budget, Unit } from "./budgets.ts";
-import type { JourneyResult } from "./results.ts";
+import type { BuildInfo, JourneyResult, RunSettings } from "./results.ts";
 import { median } from "./stats.ts";
 
 /** One stray sample in every five is tolerated before a row changes state. */
@@ -24,6 +24,12 @@ export interface Scorecard {
   counts: Record<State, number>;
   /** Problems first, then by how often a user meets each one. */
   rows: ScorecardRow[];
+}
+
+export interface XrayResults extends Scorecard {
+  date: string;
+  settings: RunSettings;
+  build: BuildInfo;
 }
 
 export function collectMeasurements(

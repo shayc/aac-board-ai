@@ -1,5 +1,3 @@
-import type { Scorecard } from "./scorecard.ts";
-
 export type BuildName = "base" | "current";
 
 /**
@@ -31,10 +29,4 @@ export interface RunResults {
   settings: RunSettings;
   builds: Record<BuildName, BuildInfo>;
   journeys: JourneyResult[];
-}
-
-export interface XrayResults extends Scorecard {
-  date: string;
-  settings: RunSettings;
-  build: BuildInfo;
 }

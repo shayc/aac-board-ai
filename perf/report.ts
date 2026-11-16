@@ -1,13 +1,8 @@
 import type { Unit } from "./budgets.ts";
 import type { Comparison, TimingComparison } from "./comparison.ts";
 import { RESULTS_FILE, XRAY_FILE } from "./paths.ts";
-import type {
-  BuildInfo,
-  RunResults,
-  RunSettings,
-  XrayResults,
-} from "./results.ts";
-import type { Scorecard, ScorecardRow } from "./scorecard.ts";
+import type { BuildInfo, RunResults, RunSettings } from "./results.ts";
+import type { Scorecard, ScorecardRow, XrayResults } from "./scorecard.ts";
 
 const MS_PER_SECOND = 1000;
 

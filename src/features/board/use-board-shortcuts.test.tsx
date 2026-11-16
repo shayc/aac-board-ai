@@ -5,7 +5,7 @@ import { userEvent } from "vitest/browser";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
-} from "../testing/render-communication-board";
+} from "./testing/render-communication-board";
 
 describe("board keyboard shortcuts", () => {
   let speech: ReturnType<typeof stubSpeech>;

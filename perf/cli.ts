@@ -21,9 +21,12 @@ import type {
   BuildName,
   JourneyResult,
   RunResults,
-  XrayResults,
 } from "./results.ts";
-import { collectMeasurements, scoreMeasurements } from "./scorecard.ts";
+import {
+  collectMeasurements,
+  scoreMeasurements,
+  type XrayResults,
+} from "./scorecard.ts";
 import { parseRoundCount } from "./settings.ts";
 
 interface BuildSource {
