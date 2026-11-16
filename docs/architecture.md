@@ -33,14 +33,14 @@ build. Each links to the section that explains it.
   the app to communicate, so reading, navigating, and composing with a loaded
   board need neither built-in AI nor the network. Speaking needs only a voice
   that is on the device ([Runtime architecture](#runtime-architecture)).
-- **No backend, telemetry, or tracking.** Boards, settings, and messages are
-  stored only on the device. Beyond its own static host, the app reaches the
-  network only for remote media a board points at, for a voice that speaks
-  through an online service, and for a board link, after the user confirms its
-  host
+- **No backend, telemetry, or tracking.** Boards and settings are stored only
+  on the device, and messages are not stored. Beyond its own static host, the
+  network is used only for remote media a board points at, for a voice that
+  speaks through an online service, for the browser's download of a built-in AI
+  model, and for a board link, after the user confirms its host
   ([Runtime architecture](#runtime-architecture), [Start at `/`](#start-at-)).
 - **Dependencies run one way.** The app composes features, the board imports
-  the library, and shared code imports neither
+  the library, and shared code imports from neither the app nor a feature
   ([Module boundaries](#module-boundaries-and-code-map)).
 - **Only `library/storage/` touches IndexedDB, and only `board/suggestions/`
   and `library/translation/` use built-in AI.** Oxlint enforces both
@@ -48,8 +48,9 @@ build. Each links to the section that explains it.
 - **Stored boards keep their OBF structure.** The runtime `Board` is derived on
   each read, and loading never changes the stored record
   ([Data and state ownership](#data-and-state-ownership)).
-- **Route loaders only read.** They never translate or wait on a model
-  ([Open a board](#open-a-board)).
+- **Board route loaders only read.** They never translate or wait on a model.
+  Only the loader for `/` writes, when it imports the starter board set into an
+  empty library ([Open a board](#open-a-board), [Start at `/`](#start-at-)).
 - **`useMessage` is the one owner of how the message changes.** Tiles,
   shortcuts, and suggestions all edit the message through it
   ([Activate a tile](#activate-a-tile)).
@@ -320,7 +321,7 @@ The set name, translated into the communication language, names the file.
 
 ### Open a board
 
-Route loaders only read; they never translate or wait on a model:
+The board route loaders only read; they never translate or wait on a model:
 
 1. Navigation to `/sets/:boardSetId/boards/:boardId` runs
    [`boardSetLoader`](../src/app/routing/board-set/board-set-loader.ts) for the
@@ -455,10 +456,9 @@ language.
    is one step in the undo history, so undo brings the tapped message back.
 
 The message changes only when a phrase is selected, and selecting a phrase
-does not speak it. The
-phrases are a labelled group, not a live region, because an announcement would
-interrupt the spoken feedback of the tile just pressed. The suggestion row is a
-scan group, so switch users can select a phrase.
+does not speak it. The phrases are a labelled group, not a live region, because
+an announcement would interrupt the spoken feedback of the tile just pressed.
+The suggestion row is a scan group, so switch users can select a phrase.
 
 [Suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 probe the same models for the communication language. They show the
