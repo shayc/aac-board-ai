@@ -21,8 +21,8 @@ See [README.md](../README.md) for product details and setup,
 - [Current limitations](#current-limitations)
 - [Glossary](#glossary)
 
-The first four sections give the shape of the app. The rest is detail to read
-when working in that area.
+The first four sections give the shape of the app. The rest is reference for
+the area you are working in.
 
 ## Invariants
 
@@ -35,9 +35,9 @@ build. Each links to the section that explains it.
   that is on the device ([Runtime architecture](#runtime-architecture)).
 - **No backend, telemetry, or tracking.** Boards and settings are stored only
   on the device, and messages are not stored. Beyond its own static host, the
-  network is used only for remote media a board points at, for a voice that
-  speaks through an online service, for the browser's download of a built-in AI
-  model, and for a board link, after the user confirms its host
+  network is used only for a board link the user confirmed, remote media a
+  board points at, a voice that speaks through an online service, and the
+  browser's download of a built-in AI model
   ([Runtime architecture](#runtime-architecture), [Start at `/`](#start-at-)).
 - **Dependencies run one way.** The app composes features, the board imports
   the library, and shared code imports from neither the app nor a feature
@@ -49,8 +49,8 @@ build. Each links to the section that explains it.
   each read, and loading never changes the stored record
   ([Data and state ownership](#data-and-state-ownership)).
 - **Board route loaders only read.** They never translate or wait on a model.
-  Only the loader for `/` writes, when it imports the starter board set into an
-  empty library ([Open a board](#open-a-board), [Start at `/`](#start-at-)).
+  Only the loader for `/` writes, importing the starter board set into an empty
+  library ([Open a board](#open-a-board), [Start at `/`](#start-at-)).
 - **`useMessage` is the one owner of how the message changes.** Tiles,
   shortcuts, and suggestions all edit the message through it
   ([Activate a tile](#activate-a-tile)).
@@ -60,8 +60,8 @@ build. Each links to the section that explains it.
 - **Speech follows the text, not the setting.** A message part whose language
   is known is spoken in that language
   ([Language and direction](#language-and-direction)).
-- **A populated grid has one Tab stop.** Arrow keys move inside it and follow
-  text direction ([Accessibility](#accessibility)).
+- **A populated grid has one Tab stop.** Arrow keys move inside it, and
+  horizontal movement follows text direction ([Accessibility](#accessibility)).
 - **Scanned controls hold no scanning code.** The scanner reads scan groups
   from the DOM, so the grid and its tiles know nothing about scanning
   ([Switch scanning](#switch-scanning)).
@@ -229,7 +229,7 @@ are relative to `src/features/`.
 | Board interaction      | [board/communication-board.tsx](../src/features/board/communication-board.tsx)                   | Compose the board UI and interaction adapters.                                                        |
 | Board playback         | [board/playback/](../src/features/board/playback/)                                               | Plan board playback and highlighting; delegate device output to shared code.                          |
 | Switch scanning        | [board/scanning/](../src/features/board/scanning/)                                               | Scan the board's controls with one or two switches; own scanning preferences.                         |
-| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Enable suggestion models and apply rewrite instructions to the message.                               |
+| Suggestions            | [board/suggestions/](../src/features/board/suggestions/)                                         | Offer proofread and rewritten phrasings of the message; own suggestion instructions.                  |
 | Import and OBF mapping | [library/import/](../src/features/library/import/), [library/obf/](../src/features/library/obf/) | Unify imports and map OBF records to runtime types.                                                   |
 | Export                 | [library/export/](../src/features/library/export/)                                               | Package a stored board set as an OBZ file.                                                            |
 | Board persistence      | [library/storage/](../src/features/library/storage/)                                             | Own all production IndexedDB access.                                                                  |
@@ -426,8 +426,8 @@ so the step counts as played and nothing is reported.
 
 The board renders
 [`MessageSuggestions`](../src/features/board/suggestions/message-suggestions.tsx)
-under the message bar, inside an error boundary with no fallback, so a failure
-in suggestions removes the suggestion bar and nothing else. The bar is also
+under the message bar, inside an error boundary that renders nothing, so a
+failure in suggestions removes the suggestion bar and nothing else. The bar is also
 absent when the browser has no usable suggestion model for the communication
 language.
 
