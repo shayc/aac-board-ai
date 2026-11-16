@@ -10,7 +10,7 @@ import { routeErrorCodes, routeErrorResponse } from "../route-error";
 export interface BoardRouteData {
   board: Board;
   /** Read before the board renders, so no edit can come before it. */
-  initialMessage: Message;
+  restoredMessage: Message;
 }
 
 export async function boardLoader({
@@ -22,12 +22,12 @@ export async function boardLoader({
     throw routeErrorResponse(routeErrorCodes.boardNotFound);
   }
 
-  const [board, initialMessage] = await Promise.all([
+  const [board, restoredMessage] = await Promise.all([
     loadBoard(boardSetId, boardId, request.signal),
     restoreMessageDraft(),
   ]);
 
-  return { board, initialMessage };
+  return { board, restoredMessage };
 }
 
 async function loadBoard(

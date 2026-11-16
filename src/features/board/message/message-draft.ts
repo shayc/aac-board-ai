@@ -11,12 +11,12 @@ const STORAGE_KEY = "message-draft";
 
 // A stored asset's URL lasts only as long as the page, so a tile part keeps
 // the asset's key in its place.
-interface StoredTilePart extends TilePart {
-  readonly imageAsset?: AssetKey;
-  readonly soundAsset?: AssetKey;
+interface SavedTilePart extends TilePart {
+  readonly imageAssetKey?: AssetKey;
+  readonly soundAssetKey?: AssetKey;
 }
 
-type StoredPart = TextPart | StoredTilePart;
+type SavedPart = TextPart | SavedTilePart;
 
 export function saveMessageDraft(message: Message): void {
   if (message.parts.length === 0) {
@@ -25,43 +25,46 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const stored = { ...message, parts: message.parts.map(toStoredPart) };
+  const saved = { ...message, parts: message.parts.map(toSavedPart) };
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
   } catch {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
   }
 }
 
-/** Reads the saved message with its stored media ready to show. */
+/**
+ * Reads the saved message with its stored media ready to show. Never rejects:
+ * the board opens whether or not the draft can be read.
+ */
 export async function restoreMessageDraft(): Promise<Message> {
-  const stored = readStoredDraft();
-  if (!isRecord(stored) || !Array.isArray(stored.parts)) {
+  const saved = readSavedDraft();
+  if (!isRecord(saved) || !Array.isArray(saved.parts)) {
     return EMPTY_MESSAGE;
   }
 
-  const storedParts: StoredPart[] = [];
+  const savedParts: SavedPart[] = [];
 
-  for (const raw of stored.parts) {
-    const part = parseStoredPart(raw);
+  for (const raw of saved.parts) {
+    const part = parseSavedPart(raw);
     if (part) {
-      storedParts.push(part);
+      savedParts.push(part);
     }
   }
 
-  if (storedParts.length === 0) {
+  if (savedParts.length === 0) {
     return EMPTY_MESSAGE;
   }
 
-  const parts = await Promise.all(storedParts.map(restorePart));
+  const parts = await Promise.all(savedParts.map(restorePart));
 
   return {
     parts,
     isWordOpen:
-      parseBoolean(stored.isWordOpen, false) && parts.at(-1)?.kind === "text",
-    hasPlayed: parseBoolean(stored.hasPlayed, false),
+      parseBoolean(saved.isWordOpen, false) && parts.at(-1)?.kind === "text",
+    hasPlayed: parseBoolean(saved.hasPlayed, false),
   };
 }
 
@@ -69,24 +72,24 @@ function removeMessageDraft() {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {
-    // Storage is unavailable, so no draft is stored either.
+    // Storage is unavailable, so no draft is saved either.
   }
 }
 
-function toStoredPart(part: MessagePart): StoredPart {
+function toSavedPart(part: MessagePart): SavedPart {
   if (part.kind === "text") {
     return part;
   }
 
-  const imageAsset = findMediaAssetKey(part.imageSrc);
-  const soundAsset = findMediaAssetKey(part.soundSrc);
+  const imageAssetKey = findMediaAssetKey(part.imageSrc);
+  const soundAssetKey = findMediaAssetKey(part.soundSrc);
 
   return {
     ...part,
-    imageSrc: imageAsset ? undefined : part.imageSrc,
-    soundSrc: soundAsset ? undefined : part.soundSrc,
-    imageAsset,
-    soundAsset,
+    imageSrc: imageAssetKey ? undefined : part.imageSrc,
+    soundSrc: soundAssetKey ? undefined : part.soundSrc,
+    imageAssetKey,
+    soundAssetKey,
   };
 }
 
@@ -94,7 +97,7 @@ function findMediaAssetKey(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
-function readStoredDraft(): unknown {
+function readSavedDraft(): unknown {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
 
@@ -104,7 +107,7 @@ function readStoredDraft(): unknown {
   }
 }
 
-function parseStoredPart(raw: unknown): StoredPart | undefined {
+function parseSavedPart(raw: unknown): SavedPart | undefined {
   if (
     !isRecord(raw) ||
     typeof raw.id !== "string" ||
@@ -132,8 +135,8 @@ function parseStoredPart(raw: unknown): StoredPart | undefined {
     vocalization: parseOptionalString(raw.vocalization),
     imageSrc: parseOptionalString(raw.imageSrc),
     soundSrc: parseOptionalString(raw.soundSrc),
-    imageAsset: parseAssetKey(raw.imageAsset),
-    soundAsset: parseAssetKey(raw.soundAsset),
+    imageAssetKey: parseAssetKey(raw.imageAssetKey),
+    soundAssetKey: parseAssetKey(raw.soundAssetKey),
   };
 }
 
@@ -153,15 +156,15 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   return { boardSetId: value.boardSetId, path: value.path };
 }
 
-async function restorePart(part: StoredPart): Promise<MessagePart> {
+async function restorePart(part: SavedPart): Promise<MessagePart> {
   if (part.kind === "text") {
     return part;
   }
 
-  const { imageAsset, soundAsset, ...tilePart } = part;
+  const { imageAssetKey, soundAssetKey, ...tilePart } = part;
   const [imageURL, soundURL] = await Promise.all([
-    resolveAssetURL(imageAsset),
-    resolveAssetURL(soundAsset),
+    resolveAssetURL(imageAssetKey),
+    resolveAssetURL(soundAssetKey),
   ]);
 
   return {

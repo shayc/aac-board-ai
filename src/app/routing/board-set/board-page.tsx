@@ -5,7 +5,7 @@ import type { boardLoader } from "./board-loader";
 import { BOARD_SET_ROUTE_ID, type boardSetLoader } from "./board-set-loader";
 
 export function BoardPage() {
-  const { board: storedBoard, initialMessage } =
+  const { board: storedBoard, restoredMessage } =
     useLoaderData<typeof boardLoader>();
   const { board, language } = useBoardInLanguage(storedBoard);
   const rootBoardId =
@@ -18,7 +18,7 @@ export function BoardPage() {
         board={board}
         language={language}
         rootBoardId={rootBoardId}
-        initialMessage={initialMessage}
+        initialMessage={restoredMessage}
       />
     </>
   );

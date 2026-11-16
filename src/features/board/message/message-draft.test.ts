@@ -1,4 +1,11 @@
-import { describe, expect, test } from "vitest";
+import { getAssetURL } from "@features/library";
+import {
+  loadTestImageAsset,
+  makeBoardsDBUnreadable,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/library/testing";
+import { assert, describe, expect, onTestFinished, test } from "vitest";
 import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
   createTextPart,
@@ -61,6 +68,32 @@ describe("message draft", () => {
       isWordOpen: false,
       hasPlayed: true,
     });
+  });
+
+  test("restores the words when stored media cannot be read", async () => {
+    await resetBoardsDB();
+    await seedBoardSets([
+      {
+        id: "symbol-set",
+        rootBoardId: "home",
+        assets: [await loadTestImageAsset("images/hello.png")],
+      },
+    ]);
+    const imageSrc = await getAssetURL("symbol-set", "images/hello.png");
+    assert(imageSrc);
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [createTilePart({ label: "hello", language: "en", imageSrc })],
+    });
+    // Emptying the set revokes its URLs, so restoring must read storage.
+    await resetBoardsDB();
+    onTestFinished(await makeBoardsDBUnreadable());
+
+    const restored = await restoreMessageDraft();
+
+    expect(restored.parts).toMatchObject([
+      { label: "hello", imageSrc: undefined },
+    ]);
   });
 
   test("removes the draft when the message is emptied", () => {

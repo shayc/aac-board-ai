@@ -595,6 +595,8 @@ AI availability, provisioning, and session lifecycle to
   backspace removes one character at a time. Spelling extends the last text part
   until a space or another tile closes the word; the first backspace on a closed
   word reopens it. The message bar marks the open word with a caret.
+- **Message draft** — the message being composed, saved on the device on every
+  change so it survives a reload or an app restart. The board opens with it.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
 - **Scroll clearance** — the room kept above and below the grid, between the
