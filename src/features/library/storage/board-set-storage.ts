@@ -1,6 +1,7 @@
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { BoardSetMetadata, StringTranslations } from "../board-types";
-import { nonBlankText } from "../non-blank-text";
+import type { StringTranslations } from "../board-types";
+import type { BoardSetMetadata } from "../obf/obf-to-board-set-metadata";
+import { withOBFStrings } from "../obf/with-obf-strings";
 import {
   type AssetRecord,
   type BoardRecord,
@@ -88,7 +89,10 @@ export async function updateBoardSetTranslations(
     for (const [boardId, translations] of translationsByBoardId) {
       const board = await boardStore.get([boardSetId, boardId]);
       if (board) {
-        await boardStore.put(withTranslations(board, language, translations));
+        await boardStore.put({
+          ...board,
+          obf: withOBFStrings(board.obf, language, translations),
+        });
       }
     }
 
@@ -97,22 +101,6 @@ export async function updateBoardSetTranslations(
       translatedNames: { ...boardSet.translatedNames, [language]: name },
     });
   });
-}
-
-function withTranslations(
-  board: BoardRecord,
-  language: string,
-  translations: StringTranslations,
-): BoardRecord {
-  const obf = {
-    ...board.obf,
-    strings: {
-      ...board.obf.strings,
-      [language]: Object.fromEntries(translations),
-    },
-  };
-
-  return { ...board, obf };
 }
 
 export async function insertBoardSetRecords(
@@ -201,7 +189,6 @@ function buildBoardRecords({ id, boards }: BoardSetInput): BoardRecord[] {
   return boards.map((obf) => ({
     boardSetId: id,
     id: obf.id,
-    name: nonBlankText(obf.name) ?? obf.id,
     obf,
   }));
 }

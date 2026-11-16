@@ -1,8 +1,18 @@
 import { normalizeLocale } from "@shared/language/locale";
 import { htmlToText } from "@shared/utils/html-to-text";
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { BoardSetMetadata } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
+
+/** What a board set's root board says about the set. */
+export interface BoardSetMetadata {
+  readonly name: string;
+  readonly author?: string;
+  readonly description?: string;
+  readonly license?: string;
+  readonly locale?: string;
+  readonly gridRows?: number;
+  readonly gridColumns?: number;
+}
 
 /** A board set is described by its root board; `fallbackName` names a set whose root board has no name. */
 export function obfToBoardSetMetadata(

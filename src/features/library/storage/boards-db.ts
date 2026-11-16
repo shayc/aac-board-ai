@@ -1,6 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { type DBSchema, type IDBPDatabase, openDB } from "idb";
-import type { BoardSetMetadata } from "../board-types";
+import type { BoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 
 const DB_NAME = "boards-db";
 const DB_VERSION = 1;
@@ -19,7 +19,6 @@ export interface BoardSetRecord extends BoardSetMetadata {
 export interface BoardRecord {
   readonly boardSetId: string;
   readonly id: string;
-  readonly name: string;
   readonly obf: OBFBoard;
 }
 

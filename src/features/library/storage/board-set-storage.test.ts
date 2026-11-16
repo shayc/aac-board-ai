@@ -153,29 +153,17 @@ describe("insertBoardSetRecords", () => {
     expect((await listBoardSetRecords())[0]?.name).toBe("Original");
   });
 
-  test.each([
-    { name: "Home", expectedName: "Home" },
-    { name: undefined, expectedName: "root-1" },
-    { name: "", expectedName: "root-1" },
-    { name: "  ", expectedName: "root-1" },
-  ])(
-    "names a board record without changing the OBF source (board name: $name)",
-    async ({ name, expectedName }) => {
-      const obf = makeOBFBoard({ id: "root-1", name });
+  test("stores each board's OBF source unchanged under its key", async () => {
+    const obf = makeOBFBoard({ id: "root-1", name: "  " });
+    const source = structuredClone(obf);
 
-      await insertBoardSetRecords(makeBoardSetInput({ boards: [obf] }));
+    await insertBoardSetRecords(makeBoardSetInput({ boards: [obf] }));
 
-      expect(
-        await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
-      ).toEqual({
-        boardSetId: "set-1",
-        id: "root-1",
-        name: expectedName,
-        obf,
-      });
-      expect(obf.name).toBe(name);
-    },
-  );
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
+    ).toEqual({ boardSetId: "set-1", id: "root-1", obf: source });
+    expect(obf).toEqual(source);
+  });
 
   test("aborts the entire transaction when a board fails to clone", async () => {
     const uncloneableOBF = {
@@ -355,7 +343,7 @@ describe("deleteBoardSetRecords", () => {
     expect(
       await getBoardRecord({ boardSetId: "set-1-2", boardId: "b1" }),
     ).toMatchObject({
-      name: "Survivor",
+      obf: { name: "Survivor" },
     });
     const asset = await getAssetBlob("set-1-2", "img1.png");
     assertDefined(asset);

@@ -3,17 +3,6 @@ export interface BoardKey {
   readonly boardId: string;
 }
 
-/** What a board set's root board says about the set. */
-export interface BoardSetMetadata {
-  readonly name: string;
-  readonly author?: string;
-  readonly description?: string;
-  readonly license?: string;
-  readonly locale?: string;
-  readonly gridRows?: number;
-  readonly gridColumns?: number;
-}
-
 export interface Board {
   readonly id: string;
   readonly name: string;

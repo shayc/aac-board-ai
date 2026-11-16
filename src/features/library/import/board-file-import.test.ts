@@ -57,7 +57,7 @@ describe("importBoardFile", () => {
     });
     assertDefined(storedBoard);
 
-    expect(storedBoard.name).toBe(board.name ?? board.id);
+    expect(storedBoard.obf.name).toBe(board.name);
     expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
