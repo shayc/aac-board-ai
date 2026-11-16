@@ -4,7 +4,7 @@ export interface AudioStep {
   kind: "audio";
   src: string;
   cue?: string;
-  /** Spoken in place of the recording when it cannot play. */
+  /** Spoken in place of the audio when it cannot play. */
   fallbackText?: string;
 }
 

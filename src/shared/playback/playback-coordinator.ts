@@ -67,8 +67,8 @@ export function createPlaybackCoordinator(
     }
   }
 
-  // An interrupted recording resolves rather than rejects, so only a recording
-  // that could not play reaches the fallback.
+  // Interrupted audio resolves rather than rejects, so only audio that could
+  // not play reaches the fallback.
   async function playAudioOrSpeakFallback(
     step: AudioStep,
     signal: AbortSignal,

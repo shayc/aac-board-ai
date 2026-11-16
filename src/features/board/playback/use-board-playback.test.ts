@@ -275,7 +275,7 @@ describe("useBoardPlayback", () => {
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
-  test("speaks a tapped tile whose recording fails without reporting a failure", async () => {
+  test("speaks a tapped tile whose sound fails without reporting a failure", async () => {
     failAudio(audio.play);
     const { result, rerender } = await renderPlayback();
 
@@ -291,7 +291,7 @@ describe("useBoardPlayback", () => {
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
-  test("speaks a failing recording in its place when the message plays", async () => {
+  test("speaks a tile in place of its failing sound when the message plays", async () => {
     failAudio(audio.play);
     const { result, rerender } = await renderPlayback();
 
@@ -314,7 +314,7 @@ describe("useBoardPlayback", () => {
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
-  test("highlights the part whose failing recording is being spoken", async () => {
+  test("highlights the part being spoken in place of its failing sound", async () => {
     failAudio(audio.play);
     preventSpeechEnd(speech.speak);
     const { result, rerender } = await renderPlayback();
@@ -331,7 +331,7 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("reports a failure when the recording and its spoken text both fail", async () => {
+  test("reports a failure when a tile's sound and its speech both fail", async () => {
     failAudio(audio.play);
     failSpeech(speech.speak);
     const { result } = await renderPlayback();

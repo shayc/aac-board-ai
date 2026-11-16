@@ -158,7 +158,7 @@ describe("PlaybackProvider", () => {
     expect(speech.spokenTexts()).toEqual(["hello"]);
   });
 
-  test("speaks a failed recording's fallback text in its place", async () => {
+  test("speaks the fallback text in place of audio that fails", async () => {
     failAudio(audio.play);
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: TestPlaybackProvider,
@@ -177,7 +177,7 @@ describe("PlaybackProvider", () => {
     expect(speech.spokenTexts()).toEqual(["hello", "dog", "world"]);
   });
 
-  test("keeps the recording's cue active while its fallback text is spoken", async () => {
+  test("keeps the audio step's cue active while its fallback text is spoken", async () => {
     failAudio(audio.play);
     preventSpeechEnd(speech.speak);
     const { result, rerender } = await renderHook(
@@ -216,7 +216,7 @@ describe("PlaybackProvider", () => {
     await expect(outcome).resolves.toBe("failed");
   });
 
-  test("does not speak the fallback text of an interrupted recording", async () => {
+  test("does not speak the fallback text of interrupted audio", async () => {
     // Browsers reject a pending play() once the element is paused.
     const pendingPlay = Promise.withResolvers<void>();
     audio.play.mockImplementationOnce(() => pendingPlay.promise);
