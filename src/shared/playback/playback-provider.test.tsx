@@ -1,6 +1,7 @@
 import type { SpeechParameters } from "@shared/speech/speech-synthesis";
 import { stubAudio } from "@shared/testing/stub-audio";
 import {
+  failSpeech,
   lastUtterance,
   preventSpeechEnd,
   reachUtteranceBoundary,
@@ -157,6 +158,86 @@ describe("PlaybackProvider", () => {
 
     await expect(outcome).resolves.toBe("failed");
     expect(speech.spokenTexts()).toEqual(["hello"]);
+  });
+
+  test("speaks a failed recording's fallback text in its place", async () => {
+    audio.play.mockImplementationOnce(() =>
+      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
+    );
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: TestPlaybackProvider,
+    });
+
+    const outcome = result.current.play({
+      owner: "message",
+      steps: [
+        { kind: "speech", text: "hello" },
+        { kind: "audio", src: "recording.mp3", fallbackText: "dog" },
+        { kind: "speech", text: "world" },
+      ],
+    });
+
+    await expect(outcome).resolves.toBe("completed");
+    expect(speech.spokenTexts()).toEqual(["hello", "dog", "world"]);
+  });
+
+  test("keeps the recording's cue active while its fallback text is spoken", async () => {
+    audio.play.mockImplementationOnce(() =>
+      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
+    );
+    preventSpeechEnd(speech.speak);
+    const { result, rerender } = await renderHook(
+      () => ({ playback: usePlayback(), activeCue: useActiveCue() }),
+      { wrapper: TestPlaybackProvider },
+    );
+    const { playback } = result.current;
+
+    const outcome = playback.play({
+      owner: "message",
+      steps: [
+        { kind: "audio", src: "recording.mp3", cue: "1", fallbackText: "dog" },
+      ],
+    });
+    await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
+    await rerender();
+
+    expect(result.current.activeCue).toBe("1");
+
+    playback.stop();
+    await outcome;
+  });
+
+  test("reports a failed step when the fallback text cannot be spoken either", async () => {
+    audio.play.mockImplementationOnce(() =>
+      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
+    );
+    failSpeech(speech.speak);
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: TestPlaybackProvider,
+    });
+
+    const outcome = result.current.play({
+      owner: "message",
+      steps: [{ kind: "audio", src: "recording.mp3", fallbackText: "dog" }],
+    });
+
+    await expect(outcome).resolves.toBe("failed");
+  });
+
+  test("does not speak the fallback text of an interrupted recording", async () => {
+    audio.play.mockImplementationOnce(() => Promise.resolve());
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: TestPlaybackProvider,
+    });
+
+    const outcome = result.current.play({
+      owner: "tile",
+      steps: [{ kind: "audio", src: "recording.mp3", fallbackText: "dog" }],
+    });
+    result.current.stop();
+
+    await expect(outcome).resolves.toBe("interrupted");
+    expect(speech.speak).not.toHaveBeenCalled();
   });
 
   test("speaks each request with the parameters current at that moment", async () => {

@@ -253,7 +253,10 @@ how the message changes:
    does not count. A message setting turns this off.
 4. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
-   and publishes progress for highlighting.
+   and publishes progress for highlighting. A recorded-audio step carries the
+   tile's spoken text, and the coordinator speaks it in place of a recording
+   that cannot play, so a broken or unreachable recording never leaves a tile
+   silent.
 
 Each new playback request interrupts the current one. These interruptions are
 expected and do not surface as user errors.
@@ -261,7 +264,9 @@ expected and do not surface as user errors.
 The shared coordinator resolves each request as completed, interrupted, or
 failed. The board playback adapter is the only place that reads that outcome:
 it reports a failure once in an error snackbar, including when only some steps
-failed, and tells its callers only whether a message played to its end.
+failed, and tells its callers only whether a message played to its end. A
+recording spoken from its text instead is not a failure: the words were heard,
+so the step counts as played and nothing is reported.
 
 ## Accessibility, language, and presentation
 

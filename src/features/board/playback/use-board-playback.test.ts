@@ -3,6 +3,7 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import {
   endUtterance,
   failSpeech,
+  preventSpeechEnd,
   reachUtteranceBoundary,
   stubSpeech,
 } from "@shared/testing/stub-speech";
@@ -263,11 +264,85 @@ describe("useBoardPlayback", () => {
     await expect(
       result.current.playMessage([
         { kind: "tile", id: "1", label: "before" },
-        { kind: "tile", id: "2", label: "ding", soundSrc: "ding.mp3" },
+        { kind: "tile", id: "2", label: "", soundSrc: "ding.mp3" },
       ]),
     ).resolves.toBe(false);
 
     expect(speech.spokenTexts()).toEqual(["before"]);
+    await expect
+      .element(page.getByRole("alert"))
+      .toHaveTextContent("Couldn't play sound");
+    expect(page.getByRole("alert").elements()).toHaveLength(1);
+  });
+
+  test("speaks a tapped tile whose recording fails without reporting a failure", async () => {
+    audio.play.mockRejectedValue(new Error("Audio failed"));
+    const { result, rerender } = await renderPlayback();
+
+    await result.current.playPart({
+      kind: "tile",
+      id: "1",
+      label: "Dog",
+      soundSrc: "bark.mp3",
+    });
+    await rerender();
+
+    expect(speech.spokenTexts()).toEqual(["dog"]);
+    expect(page.getByRole("alert").elements()).toHaveLength(0);
+  });
+
+  test("speaks a failing recording in its place when the message plays", async () => {
+    audio.play.mockRejectedValue(new Error("Audio failed"));
+    const { result, rerender } = await renderPlayback();
+
+    await expect(
+      result.current.playMessage([
+        { kind: "tile", id: "1", label: "before" },
+        {
+          kind: "tile",
+          id: "2",
+          label: "🐶",
+          vocalization: "Dog",
+          soundSrc: "bark.mp3",
+        },
+        { kind: "tile", id: "3", label: "after" },
+      ]),
+    ).resolves.toBe(true);
+    await rerender();
+
+    expect(speech.spokenTexts()).toEqual(["before", "dog", "after"]);
+    expect(page.getByRole("alert").elements()).toHaveLength(0);
+  });
+
+  test("highlights the part whose failing recording is being spoken", async () => {
+    audio.play.mockRejectedValue(new Error("Audio failed"));
+    preventSpeechEnd(speech.speak);
+    const { result, rerender } = await renderPlayback();
+
+    const playPromise = result.current.playMessage([
+      { kind: "tile", id: "1", label: "Dog", soundSrc: "bark.mp3" },
+    ]);
+    await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
+    await rerender();
+
+    expect(result.current.activePartId).toBe("1");
+
+    result.current.stop();
+    await playPromise;
+  });
+
+  test("reports a failure when the recording and its spoken text both fail", async () => {
+    audio.play.mockRejectedValue(new Error("Audio failed"));
+    failSpeech(speech.speak);
+    const { result } = await renderPlayback();
+
+    await result.current.playPart({
+      kind: "tile",
+      id: "1",
+      label: "Dog",
+      soundSrc: "bark.mp3",
+    });
+
     await expect
       .element(page.getByRole("alert"))
       .toHaveTextContent("Couldn't play sound");

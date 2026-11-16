@@ -5,6 +5,8 @@ export type PlaybackStep =
       kind: "audio";
       src: string;
       cue?: string;
+      /** Spoken in place of the recording when it cannot play. */
+      fallbackText?: string;
     }
   | {
       kind: "speech";

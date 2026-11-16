@@ -11,6 +11,8 @@ import type {
   PlaybackStep,
 } from "./playback-types";
 
+type AudioStep = Extract<PlaybackStep, { kind: "audio" }>;
+
 interface PlaybackSession {
   abortController: AbortController;
   request: PlaybackRequest;
@@ -46,7 +48,7 @@ export function createPlaybackCoordinator(
     switch (step.kind) {
       case "audio":
         setActiveCue(session, step.cue ?? null);
-        await playAudio(step.src, { signal });
+        await playAudioOrSpeakFallback(step, signal);
         break;
 
       case "speech": {
@@ -63,6 +65,23 @@ export function createPlaybackCoordinator(
 
       default:
         assertNever(step);
+    }
+  }
+
+  // An interrupted recording resolves rather than rejects, so only a recording
+  // that could not play reaches the fallback.
+  async function playAudioOrSpeakFallback(
+    step: AudioStep,
+    signal: AbortSignal,
+  ) {
+    try {
+      await playAudio(step.src, { signal });
+    } catch (error) {
+      if (!step.fallbackText) {
+        throw error;
+      }
+
+      await speak(step.fallbackText, getSpeechParameters(), { signal });
     }
   }
 

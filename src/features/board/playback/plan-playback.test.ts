@@ -47,6 +47,34 @@ describe("planPlayback", () => {
     expect(steps).toEqual([{ kind: "audio", cue: part.id, src: "bell.mp3" }]);
   });
 
+  test("gives a sound part its spoken text to fall back on", () => {
+    const steps = planPlayback([
+      { kind: "tile", id: "1", label: "Dog", soundSrc: "bark.mp3" },
+      {
+        kind: "tile",
+        id: "2",
+        label: "🙂",
+        vocalization: " Very  happy ",
+        soundSrc: "laugh.mp3",
+      },
+    ]);
+
+    expect(steps).toEqual([
+      { kind: "audio", cue: "1", src: "bark.mp3", fallbackText: "dog" },
+      { kind: "audio", cue: "2", src: "laugh.mp3", fallbackText: "very happy" },
+    ]);
+  });
+
+  test("gives a sound part without spoken text nothing to fall back on", () => {
+    const steps = planPlayback([
+      { kind: "tile", id: "1", label: " ", soundSrc: "bell.mp3" },
+    ]);
+
+    expect(steps).toStrictEqual([
+      { kind: "audio", cue: "1", src: "bell.mp3", fallbackText: undefined },
+    ]);
+  });
+
   test("preserves order when a sound breaks a text run", () => {
     const parts: MessagePart[] = [
       { kind: "tile", id: "1", label: "hello" },
