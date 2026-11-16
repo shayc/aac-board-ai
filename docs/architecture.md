@@ -133,44 +133,56 @@ State has distinct owners and lifetimes:
 | Message draft         | `useMessage` + localStorage           | The message being composed, restored by the board loader when the board opens again                    |
 | Interaction state     | Local React state                     | Message undo history and remembered grid focus                                                         |
 
-Stored boards retain their OBF structure for AAC compatibility, preserving
-imported fields while adding translations saved on this device. Board links
-carry the linked board's ID, which the OBF library resolves from the archive.
-Board-set records store the set's translated names. `obfToBoard` derives the
-runtime `Board` on each read, so runtime types can evolve without rewriting
-stored records. The storage schema in
-[`boards-db.ts`](../src/features/library/storage/boards-db.ts) has no migrations
-yet: a schema change edits it in place, and a browser holding an older database
-needs its site data cleared.
+**Stored boards**
 
-React Context provides theme, playback controls, and snackbar access.
-Components subscribe to external stores through `useExternalStore`, a
-`useSyncExternalStore` wrapper that takes an optional selector.
+- **Stored boards retain their OBF structure** for AAC compatibility,
+  preserving imported fields while adding translations saved on this device.
+- **Board links carry the linked board's ID**, which the OBF library resolves
+  from the archive.
+- **Board-set records store the set's translated names.**
+- **`obfToBoard` derives the runtime `Board` on each read**, so runtime types
+  can evolve without rewriting stored records.
+- **The storage schema in
+  [`boards-db.ts`](../src/features/library/storage/boards-db.ts) has no
+  migrations yet**: a schema change edits it in place, and a browser holding an
+  older database needs its site data cleared.
 
-Playback uses slice subscriptions: each component tracks only the progress fields
-it needs. Word-boundary updates rerender only components whose selected fields
-change.
+**Subscriptions**
 
-Device output does not read settings stores. `AppProviders` gives the playback
-coordinator a `getSpeechParameters` function, and the coordinator calls it for
-each speech step with the language of the step's text, so every utterance uses
-that language's voice and the rate, pitch, and volume current at that moment.
+- **React Context provides theme, playback controls, and snackbar access.**
+- **Components subscribe to external stores through `useExternalStore`**, a
+  `useSyncExternalStore` wrapper that takes an optional selector.
+- **Playback uses slice subscriptions**: each component tracks only the
+  progress fields it needs. Word-boundary updates rerender only components
+  whose selected fields change.
+- **Device output does not read settings stores.** `AppProviders` gives the
+  playback coordinator a `getSpeechParameters` function, and the coordinator
+  calls it for each speech step with the language of the step's text, so every
+  utterance uses that language's voice and the rate, pitch, and volume current
+  at that moment.
 
-The board-set library broadcasts changes so other tabs can refresh their lists.
-Preferences managed by `createPersistedStore` reload when another tab writes
-their key, through the window `storage` event. A reload does not write the value
-back: only a change made in a tab writes, so tabs running different app versions
-cannot keep rewriting each other's value. MUI persists and synchronizes theme
-mode separately.
+**Across tabs**
 
-Stores are module singletons that start working when first imported, so they
-need no provider and their loading starts before React renders. The cost is that
-a store outlives a test, so tests reset the state behind it. The shared [test
-setup](../src/shared/testing/setup.ts) clears localStorage and calls
-`reloadPersistedStores` before each test. Tests that touch stored boards call
-`resetBoardsDB` from the library's
-[`testing`](../src/features/library/testing/index.ts) entry, which empties
-IndexedDB and refreshes the board-sets store.
+- **The board-set library broadcasts changes** so other tabs can refresh their
+  lists.
+- **Preferences managed by `createPersistedStore` reload when another tab
+  writes their key**, through the window `storage` event.
+- **A reload does not write the value back**: only a change made in a tab
+  writes, so tabs running different app versions cannot keep rewriting each
+  other's value.
+- **MUI persists and synchronizes theme mode separately.**
+
+**Stores in tests**
+
+- **Stores are module singletons that start working when first imported**, so
+  they need no provider and their loading starts before React renders.
+- **The cost is that a store outlives a test**, so tests reset the state behind
+  it.
+- **The shared [test setup](../src/shared/testing/setup.ts) clears
+  localStorage and calls `reloadPersistedStores` before each test.**
+- **Tests that touch stored boards call `resetBoardsDB`** from the library's
+  [`testing`](../src/features/library/testing/index.ts) entry, which empties
+  IndexedDB and refreshes the board-sets store.
 
 ## Module boundaries and code map
 
