@@ -19,7 +19,6 @@ const BAR_INSET = 1;
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
-  language: string | undefined;
   isWordOpen: boolean;
   activePartId: string | null;
   areImagesVisible: boolean;
@@ -28,7 +27,6 @@ export interface MessageBarProps {
 
 export function MessageBar({
   parts,
-  language,
   isWordOpen,
   activePartId,
   areImagesVisible,
@@ -81,7 +79,7 @@ export function MessageBar({
           <MessagePartItem
             key={part.id}
             label={part.label}
-            language={language}
+            language={part.language}
             imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
             isActive={part.id === activePartId}
             isOpen={part.id === openPartId}

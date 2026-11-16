@@ -1,26 +1,32 @@
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
+import type { SpeechText } from "@shared/speech/speech-synthesis";
 import type { MessagePart } from "../message/message-types";
 
-interface SpokenPart {
+interface SpeechPart extends SpeechText {
   id: string;
-  text: string;
 }
 
-export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
+/** Parts in an unknown language are spoken as the default language. */
+export function planPlayback(
+  parts: readonly MessagePart[],
+  defaultLanguage: string,
+): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
-  let spokenRun: SpokenPart[] = [];
+  let speechRun: SpeechPart[] = [];
 
   function flushSpeech() {
-    if (spokenRun.length === 0) {
+    const [firstPart] = speechRun;
+    if (!firstPart) {
       return;
     }
 
-    steps.push(createSpeechStep(spokenRun));
-    spokenRun = [];
+    steps.push(createSpeechStep(speechRun, firstPart.language));
+    speechRun = [];
   }
 
   for (const part of parts) {
     const text = getSpokenText(part);
+    const language = part.language ?? defaultLanguage;
 
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
@@ -28,15 +34,23 @@ export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
         kind: "audio",
         src: part.soundSrc,
         cue: part.id,
-        fallbackText: text || undefined,
+        fallback: text ? { text, language } : undefined,
       });
 
       continue;
     }
 
-    if (text) {
-      spokenRun.push({ id: part.id, text });
+    if (!text) {
+      continue;
     }
+
+    // An utterance has one language and one voice, so a run ends where the
+    // language changes.
+    if (speechRun.at(-1)?.language !== language) {
+      flushSpeech();
+    }
+
+    speechRun.push({ id: part.id, text, language });
   }
 
   flushSpeech();
@@ -50,7 +64,10 @@ interface PartSpan {
   end: number;
 }
 
-function createSpeechStep(parts: readonly SpokenPart[]): SpeechStep {
+function createSpeechStep(
+  parts: readonly SpeechPart[],
+  language: string,
+): SpeechStep {
   const chunks: string[] = [];
   const spans: PartSpan[] = [];
   let offset = 0;
@@ -64,6 +81,7 @@ function createSpeechStep(parts: readonly SpokenPart[]): SpeechStep {
   return {
     kind: "speech",
     text: chunks.join(" "),
+    language,
     cueAt: (charIndex) =>
       spans.find((span) => charIndex >= span.start && charIndex < span.end)
         ?.id ?? null,

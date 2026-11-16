@@ -22,16 +22,16 @@ const SPELL_A: BoardButton = {
 };
 
 function tilePart(label: string): MessageEdit {
-  return { kind: "tile", part: createTilePart({ label }) };
+  return { kind: "tile", part: createTilePart({ label, language: "en" }) };
 }
 
 function word(label: string): MessageEdit[] {
-  return [{ kind: "spell", text: label }, { kind: "space" }];
+  return [{ kind: "spell", text: label, language: "en" }, { kind: "space" }];
 }
 
 async function setup(
   seed: readonly MessageEdit[] = [],
-  { isSpoken = false } = {},
+  { isSpoken = false, language = "en" } = {},
 ) {
   const { result, rerender } = await renderHook(() => useMessage());
   const message = result.current;
@@ -87,7 +87,12 @@ async function setup(
   }
 
   return {
-    activateButton: createButtonActivator({ message, playback, navigation }),
+    activateButton: createButtonActivator({
+      message,
+      playback,
+      navigation,
+      language,
+    }),
     playback,
     navigation,
     readParts,
@@ -142,6 +147,19 @@ describe("createButtonActivator", () => {
     expect(appended.id).not.toBe("btn");
     expect(playback.playPart).toHaveBeenCalledExactlyOnceWith(appended);
     expect(playback.playMessage).not.toHaveBeenCalled();
+  });
+
+  test("gives tiles and spelled words the board's language", async () => {
+    const { activateButton, readParts } = await setup([], { language: "es" });
+
+    activateButton({ id: "btn", label: "hola", actions: [] });
+    activateButton(SPELL_A);
+
+    const parts = await readParts();
+    expect(parts).toMatchObject([
+      { kind: "tile", label: "hola", language: "es" },
+      { kind: "text", label: "a", language: "es" },
+    ]);
   });
 
   test("navigates home for a home action", async () => {

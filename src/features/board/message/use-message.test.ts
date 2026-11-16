@@ -29,20 +29,32 @@ describe("useMessage", () => {
   ])("$description", async ({ text, labels }) => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.replaceWithText(text);
+    result.current.replaceWithText(text, "en");
     await rerender();
 
     expect(result.current.parts.map((part) => part.label)).toEqual(labels);
     expect(result.current.text).toBe(text);
   });
 
+  test("gives each word of the replacement text its language", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("más agua", "es");
+    await rerender();
+
+    expect(result.current.parts).toMatchObject([
+      { label: "más", language: "es" },
+      { label: "agua", language: "es" },
+    ]);
+  });
+
   test("clears all existing parts when called with an empty string", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.replaceWithText("existing");
+    result.current.replaceWithText("existing", "en");
     await rerender();
 
-    result.current.replaceWithText("");
+    result.current.replaceWithText("", "en");
     await rerender();
 
     expect(result.current.parts).toHaveLength(0);
@@ -52,7 +64,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     message.backspace();
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
@@ -62,7 +74,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want");
+    message.replaceWithText("I want", "en");
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "wanta"]);
   });
@@ -71,7 +83,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     await trackSettledPlayback(message, true);
 
     expect(labelsAfterSpelling(message)).toEqual(["a"]);
@@ -81,7 +93,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     await trackSettledPlayback(message, true);
     message.backspace();
 
@@ -93,7 +105,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     await trackSettledPlayback(message, true);
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
@@ -102,7 +114,7 @@ describe("useMessage", () => {
   test("releases a spoken message when clearing after speaking is turned off", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.replaceWithText("I want water");
+    result.current.replaceWithText("I want water", "en");
     await trackSettledPlayback(result.current, true);
     setClearsAfterSpeaking(false);
     await rerender();
@@ -118,7 +130,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     await trackSettledPlayback(message, true);
     await trackSettledPlayback(message, false);
 
@@ -129,7 +141,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     await trackSettledPlayback(message, true);
     message.trackPlayback(Promise.withResolvers<boolean>().promise);
 
@@ -140,7 +152,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("I want water");
+    message.replaceWithText("I want water", "en");
     const completion = Promise.resolve(true);
     message.trackPlayback(completion);
     message.backspace();
@@ -153,7 +165,10 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.apply([{ kind: "spell", text: "hi" }, { kind: "space" }]);
+    message.apply([
+      { kind: "spell", text: "hi", language: "en" },
+      { kind: "space" },
+    ]);
     const completion = Promise.resolve(true);
     message.trackPlayback(completion);
     message.backspace();
@@ -166,7 +181,7 @@ describe("useMessage", () => {
     const { result } = await renderHook(() => useMessage());
     const message = result.current;
 
-    message.replaceWithText("hi");
+    message.replaceWithText("hi", "en");
 
     expect(message.apply([{ kind: "space" }]).hasChanged).toBe(true);
     expect(message.apply([{ kind: "space" }]).hasChanged).toBe(false);
@@ -177,7 +192,7 @@ describe("useMessage", () => {
   test("keeps a spoken message spoken through an edit that changes nothing", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.replaceWithText("I want water");
+    result.current.replaceWithText("I want water", "en");
     await trackSettledPlayback(result.current, true);
     setClearsAfterSpeaking(false);
     await rerender();
@@ -192,7 +207,7 @@ describe("useMessage", () => {
     test("restores a cleared message", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.replaceWithText("I want water");
+      result.current.replaceWithText("I want water", "en");
       result.current.clear();
       result.current.undo();
       await rerender();
@@ -203,7 +218,7 @@ describe("useMessage", () => {
     test("steps back through one change at a time", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.replaceWithText("hi");
+      result.current.replaceWithText("hi", "en");
       result.current.backspace();
       result.current.backspace();
       result.current.undo();
@@ -220,8 +235,8 @@ describe("useMessage", () => {
     test("restores a message that a suggestion replaced", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.replaceWithText("I want");
-      result.current.replaceWithText("I want water please");
+      result.current.replaceWithText("I want", "en");
+      result.current.replaceWithText("I want water please", "en");
       result.current.undo();
       await rerender();
 
@@ -231,7 +246,7 @@ describe("useMessage", () => {
     test("does not count playing the message as a change", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.replaceWithText("hi");
+      result.current.replaceWithText("hi", "en");
       result.current.backspace();
       await trackSettledPlayback(result.current, true);
       result.current.undo();
@@ -243,7 +258,7 @@ describe("useMessage", () => {
     test("does not count clearing an empty message", async () => {
       const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.replaceWithText("h");
+      result.current.replaceWithText("h", "en");
       result.current.backspace();
       result.current.clear();
       result.current.undo();
@@ -257,7 +272,7 @@ describe("useMessage", () => {
 
       const changeCount = 101;
       for (let change = 0; change < changeCount; change++) {
-        result.current.apply([{ kind: "spell", text: "a" }]);
+        result.current.apply([{ kind: "spell", text: "a", language: "en" }]);
       }
 
       for (let step = 0; step < changeCount; step++) {
@@ -272,7 +287,7 @@ describe("useMessage", () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
 
-      message.replaceWithText("hi");
+      message.replaceWithText("hi", "en");
       await trackSettledPlayback(message, true);
       message.clear();
       message.undo();
@@ -294,7 +309,9 @@ describe("useMessage", () => {
     test("edits the message it was given", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
-      const { edited } = message.apply([{ kind: "spell", text: "hi" }]);
+      const { edited } = message.apply([
+        { kind: "spell", text: "hi", language: "en" },
+      ]);
 
       message.applyIfUnchanged(edited, [{ kind: "clear" }]);
 
@@ -304,10 +321,14 @@ describe("useMessage", () => {
     test("continues a message that was spoken since", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
-      const { edited } = message.apply([{ kind: "spell", text: "hi" }]);
+      const { edited } = message.apply([
+        { kind: "spell", text: "hi", language: "en" },
+      ]);
       await trackSettledPlayback(message, true);
 
-      message.applyIfUnchanged(edited, [{ kind: "spell", text: "!" }]);
+      message.applyIfUnchanged(edited, [
+        { kind: "spell", text: "!", language: "en" },
+      ]);
 
       expect(labelsAfterSpelling(message)).toEqual(["hi!a"]);
     });
@@ -315,7 +336,9 @@ describe("useMessage", () => {
     test("drops the edits when the message changed since", async () => {
       const { result } = await renderHook(() => useMessage());
       const message = result.current;
-      const { edited } = message.apply([{ kind: "spell", text: "hi" }]);
+      const { edited } = message.apply([
+        { kind: "spell", text: "hi", language: "en" },
+      ]);
       message.backspace();
 
       message.applyIfUnchanged(edited, [{ kind: "clear" }]);
@@ -326,7 +349,9 @@ describe("useMessage", () => {
 });
 
 function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
-  const { edited } = message.apply([{ kind: "spell", text: "a" }]);
+  const { edited } = message.apply([
+    { kind: "spell", text: "a", language: "en" },
+  ]);
 
   return edited.parts.map((part) => part.label);
 }

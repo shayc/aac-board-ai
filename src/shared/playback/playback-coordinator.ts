@@ -18,7 +18,7 @@ interface PlaybackSession {
 }
 
 export function createPlaybackCoordinator(
-  getSpeechParameters: () => SpeechParameters,
+  getSpeechParameters: (language: string) => SpeechParameters,
 ): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
   let currentSession: PlaybackSession | null = null;
@@ -53,7 +53,7 @@ export function createPlaybackCoordinator(
       case "speech": {
         const { cueAt } = step;
         setActiveCue(session, cueAt?.(0) ?? null);
-        await speak(step.text, getSpeechParameters(), {
+        await speak(step, getSpeechParameters(step.language), {
           signal,
           onBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))
@@ -76,11 +76,12 @@ export function createPlaybackCoordinator(
     try {
       await playAudio(step.src, { signal });
     } catch (error) {
-      if (!step.fallbackText) {
+      const { fallback } = step;
+      if (!fallback) {
         throw error;
       }
 
-      await speak(step.fallbackText, getSpeechParameters(), { signal });
+      await speak(fallback, getSpeechParameters(fallback.language), { signal });
     }
   }
 

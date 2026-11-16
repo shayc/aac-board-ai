@@ -1,4 +1,3 @@
-import { getStoredLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import { useCommunicationLanguage } from "@shared/language/use-communication-language";
 import {
@@ -100,14 +99,14 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechParameters(): SpeechParameters {
-  const language = getStoredLanguage();
+// A voice reads any text as its own language, so the voice follows the
+// language of the text rather than the communication language.
+export function getSpeechParameters(language: string): SpeechParameters {
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURI, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();
 
   return {
-    language,
     voice: resolveVoice(voicesByLanguage, language, voiceURI),
     rate,
     pitch,

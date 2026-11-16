@@ -4,7 +4,7 @@ import { PlaybackContext } from "./playback-context";
 import { createPlaybackCoordinator } from "./playback-coordinator";
 
 interface PlaybackProviderProps {
-  getSpeechParameters: () => SpeechParameters;
+  getSpeechParameters: (language: string) => SpeechParameters;
   children: ReactNode;
 }
 

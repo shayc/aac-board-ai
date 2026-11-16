@@ -108,8 +108,8 @@ change.
 
 Device output does not read settings stores. `AppProviders` gives the playback
 coordinator a `getSpeechParameters` function, and the coordinator calls it for
-each speech step, so every utterance uses the language, voice, rate, pitch, and
-volume current at that moment.
+each speech step with the language of the step's text, so every utterance uses
+that language's voice and the rate, pitch, and volume current at that moment.
 
 The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` reload when another tab writes
@@ -339,19 +339,28 @@ The communication language setting coordinates UI locale, board translation,
 text direction, and text-to-speech (TTS) voice selection. Language choices combine
 UI locales and available voice languages. UI text, board translation, and speech
 fall back independently, so selecting a language does not guarantee a matching
-voice or translation model. Speech uses the saved voice only when it speaks
-the communication language; otherwise it picks one of that language's voices,
-or leaves the choice to the browser, without changing the saved voice.
+voice or translation model.
+
+Speech follows the text, not the setting. Each message part records the
+language its text is in: the language the board is shown in for a tile or a
+spelled word, and the communication language for a suggestion. Planning a
+playback gives every speech step a language, the communication language where
+a part's own is unknown, and speaks each run of parts that share one as a
+single utterance, so a board the browser could not translate is still read by
+a voice of its own language. Speech uses the saved voice only when it speaks
+the step's language; otherwise it picks one of that language's voices, or
+leaves the choice to the browser, without changing the saved voice.
 
 Paraglide message catalogs provide UI text. The document's `lang` and `dir`
 follow the UI locale, so a communication language without a catalog keeps both
 on the fallback locale its UI text is shown in. The communication board sets its
 own `dir` from the communication language, so a right-to-left language without
 a catalog still gets a right-to-left board under a left-to-right app shell.
-Tiles and message parts carry the `lang` of the language the board is shown in,
-and suggestions carry the communication language, so assistive technology
-pronounces them correctly whatever the UI locale is. A board whose file declares
-no language carries no `lang` and inherits the document's.
+Tiles carry the `lang` of the language the board is shown in, message parts
+carry their own language, and suggestions carry the communication language, so
+assistive technology pronounces them correctly whatever the UI locale is. A
+board whose file declares no language carries no `lang` and inherits the
+document's.
 
 The app and board each use
 [`DirectionalThemeProvider`](../src/shared/theme/directional-theme-provider.tsx)

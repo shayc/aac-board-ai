@@ -2,6 +2,7 @@ export interface TilePart {
   readonly kind: "tile";
   readonly id: string;
   readonly label: string;
+  readonly language: string | undefined;
   readonly vocalization?: string;
   readonly imageSrc?: string;
   readonly soundSrc?: string;
@@ -11,9 +12,12 @@ export interface TextPart {
   readonly kind: "text";
   readonly id: string;
   readonly label: string;
+  readonly language: string | undefined;
 }
 
-// Each occurrence needs its own ID, including repeated selections of the same tile.
+// Each occurrence needs its own ID, including repeated selections of the same
+// tile. A part records the language its text is in, when known, because that
+// can differ from the communication language and from part to part.
 export type MessagePart = TilePart | TextPart;
 
 export interface Message {
@@ -29,7 +33,11 @@ export interface Message {
 
 export type MessageEdit =
   | { readonly kind: "tile"; readonly part: TilePart }
-  | { readonly kind: "spell"; readonly text: string }
+  | {
+      readonly kind: "spell";
+      readonly text: string;
+      readonly language: string | undefined;
+    }
   | { readonly kind: "space" }
   | { readonly kind: "backspace" }
   | { readonly kind: "clear" };

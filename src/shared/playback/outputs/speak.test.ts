@@ -1,4 +1,7 @@
-import type { SpeechParameters } from "@shared/speech/speech-synthesis";
+import type {
+  SpeechParameters,
+  SpeechText,
+} from "@shared/speech/speech-synthesis";
 import {
   failUtterance,
   lastUtterance,
@@ -8,8 +11,9 @@ import {
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
+const hello: SpeechText = { text: "hello", language: "en" };
+
 const parameters: SpeechParameters = {
-  language: "en",
   voice: null,
   rate: 1,
   pitch: 1,
@@ -46,13 +50,13 @@ describe("speak", () => {
     });
 
     test("rejects because nothing can be spoken", async () => {
-      await expect(speak("hello", parameters)).rejects.toThrow(
+      await expect(speak(hello, parameters)).rejects.toThrow(
         "Speech synthesis is unavailable",
       );
     });
   });
 
-  test("maps the given parameters onto the utterance", async () => {
+  test("maps the text, its language and the given parameters onto the utterance", async () => {
     stubUtteranceVoiceAccessor();
     const speech = stubSpeech();
     const voice: SpeechSynthesisVoice = {
@@ -63,13 +67,10 @@ describe("speak", () => {
       localService: true,
     };
 
-    await speak("שלום", {
-      language: "he",
-      voice,
-      rate: 1.5,
-      pitch: 0.5,
-      volume: 0.25,
-    });
+    await speak(
+      { text: "שלום", language: "he" },
+      { voice, rate: 1.5, pitch: 0.5, volume: 0.25 },
+    );
 
     const utterance = lastUtterance(speech.speak);
     expect(utterance.lang).toBe("he");
@@ -84,7 +85,7 @@ describe("speak", () => {
       const speech = stubSpeech();
 
       await expect(
-        speak("hello", parameters, { signal: AbortSignal.abort() }),
+        speak(hello, parameters, { signal: AbortSignal.abort() }),
       ).resolves.toBeUndefined();
 
       expect(speech.speak).not.toHaveBeenCalled();
@@ -95,7 +96,7 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce(() => undefined);
       const controller = new AbortController();
 
-      const playback = speak("hello", parameters, {
+      const playback = speak(hello, parameters, {
         signal: controller.signal,
       });
       const cancelsBeforeAbort = speech.cancel.mock.calls.length;
@@ -110,7 +111,7 @@ describe("speak", () => {
     test("rejects when speech synthesis fails", async () => {
       const speech = stubSpeech();
       preventSpeechEnd(speech.speak);
-      const playback = speak("hello", parameters);
+      const playback = speak(hello, parameters);
 
       failUtterance(lastUtterance(speech.speak));
 

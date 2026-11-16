@@ -1,3 +1,5 @@
+import type { SpeechText } from "@shared/speech/speech-synthesis";
+
 export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
 export interface AudioStep {
@@ -5,12 +7,11 @@ export interface AudioStep {
   src: string;
   cue?: string;
   /** Spoken in place of the audio when it cannot play. */
-  fallbackText?: string;
+  fallback?: SpeechText;
 }
 
-export interface SpeechStep {
+export interface SpeechStep extends SpeechText {
   kind: "speech";
-  text: string;
   cueAt?: (charIndex: number) => string | null;
 }
 

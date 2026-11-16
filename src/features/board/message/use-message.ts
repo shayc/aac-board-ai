@@ -23,7 +23,7 @@ export interface UseMessageReturn {
   apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
   applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
   trackPlayback: (completion: Promise<boolean>) => void;
-  replaceWithText: (input: string) => void;
+  replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
   clear: () => void;
   undo: () => void;
@@ -111,10 +111,10 @@ export function useMessage(): UseMessageReturn {
     return next;
   }
 
-  function replaceWithText(input: string) {
+  function replaceWithText(input: string, language: string | undefined) {
     const words = input.match(/\S+/g) ?? [];
     commitStep({
-      parts: words.map(createTextPart),
+      parts: words.map((word) => createTextPart(word, language)),
       isWordOpen: words.length > 0,
       isSpoken: false,
     });
