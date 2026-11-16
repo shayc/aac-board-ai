@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { saveMessageDraft } from "./message-draft";
 import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
@@ -29,9 +30,11 @@ export interface UseMessageReturn {
   undo: () => void;
 }
 
-export function useMessage(): UseMessageReturn {
+export function useMessage(
+  initialMessage: Message = EMPTY_MESSAGE,
+): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
-  const [state, setRenderedState] = useState(EMPTY_MESSAGE);
+  const [state, setRenderedState] = useState(initialMessage);
   const stateRef = useRef(state);
   const undoStackRef = useRef<Message[]>([]);
   const text = state.parts.map((part) => part.label).join(" ");
@@ -44,9 +47,14 @@ export function useMessage(): UseMessageReturn {
       : markPlayed(stateRef.current, false);
   }
 
+  // Saved on every change rather than when the page hides: a mobile system can
+  // end a page in the background without warning.
   function commit(next: Message) {
     stateRef.current = next;
     setRenderedState(next);
+
+    const isKept = isKeptOnDevice(next, shouldClearAfterPlayback);
+    saveMessageDraft(isKept ? next : EMPTY_MESSAGE);
   }
 
   // Marking the message played is not a step to undo, so it goes through
@@ -151,4 +159,13 @@ export function useMessage(): UseMessageReturn {
     clear,
     undo,
   };
+}
+
+// A message spoken to its end that the next symbol replaces has done its job,
+// so it is not kept where the next person to open the app would see it.
+function isKeptOnDevice(
+  message: Message,
+  shouldClearAfterPlayback: boolean,
+): boolean {
+  return !(message.hasPlayed && shouldClearAfterPlayback);
 }

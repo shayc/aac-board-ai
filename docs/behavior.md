@@ -79,6 +79,19 @@ The board route loaders only read; they never translate or wait on a model:
    names the language the board ended up in: the board file's own when it has
    no translation, and unknown when the file declares none.
 
+The message being composed outlives the page:
+[`useMessage`](../src/features/board/message/use-message.ts) saves it on every
+change, because a mobile system can end a page in the background without
+warning. It uses localStorage rather than sessionStorage, because an installed
+app can restart from scratch after time in the background. A stored asset's
+object URL ends with the page, so the
+[draft](../src/features/board/message/message-draft.ts) keeps the asset's key in
+its place and creates the URL again on restore. `boardLoader` restores the
+draft alongside the board, so the board opens with it, symbols included, and
+no edit can come before it. A message that played to its end is not kept when
+the next symbol would replace it, and an object URL with no stored asset behind
+it is left out, since it could only come back broken. The undo history is not saved.
+
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for
 as long as its board set exists. Message parts keep their media after leaving
@@ -152,8 +165,10 @@ how the message changes:
    that cannot play, so a broken or unreachable recording does not silence a
    tile that has text to speak.
 
-Each new playback request interrupts the current one. These interruptions are
-expected and do not surface as user errors.
+Each new playback request interrupts the current one, and a board that closes
+stops its own playback, so a message it was playing is never marked played
+after another board has taken over the draft. These interruptions are expected
+and do not surface as user errors.
 
 The shared coordinator resolves each request as completed, interrupted, or
 failed. The board playback adapter is the only place that reads that outcome:

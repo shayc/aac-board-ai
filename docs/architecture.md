@@ -30,8 +30,8 @@ build. Each links to the section that explains it.
   the app to communicate, so reading, navigating, and composing with a loaded
   board need neither built-in AI nor the network. Speaking needs only a voice
   that is on the device ([Runtime architecture](#runtime-architecture)).
-- **No backend, telemetry, or tracking.** Boards and settings are stored only
-  on the device, and messages are not stored. Beyond its own static host, the
+- **No backend, telemetry, or tracking.** Boards, settings, and the message
+  being composed are stored only on the device. Beyond its own static host, the
   network is used only for a board link the user confirmed, remote media a
   board points at, a voice that speaks through an online service, and the
   browser's download of a built-in AI model
@@ -130,7 +130,8 @@ State has distinct owners and lifetimes:
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, switch scanning, suggestion instructions, onboarding       |
-| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
+| Message draft         | `useMessage` + localStorage           | The message being composed, restored by the board loader when the board opens again                    |
+| Interaction state     | Local React state                     | Message undo history and remembered grid focus                                                         |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding translations saved on this device. Board links
@@ -295,8 +296,8 @@ full.
 - **[Export a board set](behavior.md#export-a-board-set):** `boardSetToOBZ`
   packages one set's stored OBF records and assets as an OBZ file.
 - **[Open a board](behavior.md#open-a-board):** the route loaders read the
-  stored OBF and map it through `obfToBoard`, and the page shows the board in
-  the communication language.
+  stored OBF, map it through `obfToBoard`, and restore the message draft, and
+  the page shows the board in the communication language.
 - **[Translate board sets](behavior.md#translate-board-sets):** the app shell
   translates the sets that lack the communication language and revalidates
   the one on screen.
@@ -357,6 +358,8 @@ full.
   backspace removes one character at a time. Spelling extends the last text part
   until a space or another tile closes the word; the first backspace on a closed
   word reopens it. The message bar marks the open word with a caret.
+- **Message draft** — the message being composed, saved on the device on every
+  change so it survives a reload or an app restart. The board opens with it.
 - **Page margin** — the space between the screen's edges and the board's
   content, and between one bar and the next.
 - **Scroll clearance** — the room kept above and below the grid, between the

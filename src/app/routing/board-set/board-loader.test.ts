@@ -1,4 +1,3 @@
-import type { Board } from "@features/library";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -6,12 +5,12 @@ import {
 } from "@features/library/testing";
 import { beforeEach, describe, expect, test } from "vitest";
 import { routeArgs } from "../testing/route-args";
-import { boardLoader } from "./board-loader";
+import { boardLoader, type BoardRouteData } from "./board-loader";
 
 function callLoader(
   boardSetId: string | undefined,
   boardId: string | undefined,
-): Promise<Board> {
+): Promise<BoardRouteData> {
   return boardLoader(
     routeArgs("http://localhost/", { params: { boardSetId, boardId } }),
   );
@@ -43,7 +42,7 @@ describe("boardLoader", () => {
       },
     ]);
 
-    const board = await callLoader("set-1", "root-1");
+    const { board } = await callLoader("set-1", "root-1");
 
     expect(board).toMatchObject({ id: "root-1", name: "Home" });
   });
