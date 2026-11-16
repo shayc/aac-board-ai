@@ -133,8 +133,8 @@ IndexedDB and refreshes the board-sets store.
 
 At `/`, a board URL supplied through `?board=` takes precedence: the app names
 the link's host and imports only after the user confirms, because `/` opens the
-newest board set and a link alone must not change it. URL downloads reject
-redirects to another host, so the named host is the one that serves the file.
+newest board set and a link alone must not change it. URL downloads follow no
+redirects, so the named host is the only one the app contacts.
 Links must use `https:` unless they point at the app's own origin, because the
 Content Security Policy allows no other connections; an `http:` link fails
 before the confirmation instead of after it.

@@ -8,7 +8,7 @@ export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
 type BoardURLErrorCode =
   | "unsupported-scheme"
-  | "cross-host-redirect"
+  | "redirect"
   | "download-too-large";
 
 class BoardURLError extends Error {
@@ -97,14 +97,16 @@ async function downloadBoardFile(
     onProgress,
   }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
 ): Promise<Blob> {
-  const response = await fetch(url, { signal });
-  if (!response.ok) {
-    throw new Error(`Failed to fetch board: HTTP ${response.status}`);
+  const response = await fetch(url, { signal, redirect: "manual" });
+  if (response.type === "opaqueredirect") {
+    throw new BoardURLError(
+      "redirect",
+      `Board URL on ${url.host} answered with a redirect`,
+    );
   }
 
-  // The response must come from the host the user confirmed.
-  if (response.redirected) {
-    assertSameHost(url, response);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
 
   const total = expectedDownloadBytes(response.headers);
@@ -138,19 +140,6 @@ async function downloadBoardFile(
   return new Blob(chunks, {
     type: response.headers.get("content-type") ?? "",
   });
-}
-
-function assertSameHost(requestedURL: URL, response: Response): void {
-  const servedHost = new URL(response.url).host;
-  if (servedHost === requestedURL.host) {
-    return;
-  }
-
-  void response.body?.cancel();
-  throw new BoardURLError(
-    "cross-host-redirect",
-    `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
-  );
 }
 
 function expectedDownloadBytes(headers: Headers): number | undefined {
