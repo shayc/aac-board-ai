@@ -5,10 +5,11 @@ interface Counter {
   count: number;
 }
 
-function dispatchStorageFromAnotherTab(key: string | null) {
-  window.dispatchEvent(
-    new StorageEvent("storage", { key, storageArea: localStorage }),
-  );
+function dispatchStorageFromAnotherTab(
+  key: string | null,
+  storageArea: Storage = localStorage,
+) {
+  window.dispatchEvent(new StorageEvent("storage", { key, storageArea }));
 }
 
 function parseCounter(raw: unknown): Counter {
@@ -98,6 +99,16 @@ describe("createPersistedStore", () => {
     store.setState({ count: 9 });
     localStorage.setItem("counter", JSON.stringify({ count: 4 }));
     dispatchStorageFromAnotherTab("other");
+
+    expect(store.getSnapshot()).toEqual({ count: 9 });
+  });
+
+  test("ignores another tab's session storage write to the same key", () => {
+    const store = createPersistedStore("counter", parseCounter);
+
+    store.setState({ count: 9 });
+    localStorage.setItem("counter", JSON.stringify({ count: 4 }));
+    dispatchStorageFromAnotherTab("counter", sessionStorage);
 
     expect(store.getSnapshot()).toEqual({ count: 9 });
   });
