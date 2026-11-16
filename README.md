@@ -37,7 +37,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Privacy
 
-No accounts, backend, or tracking. Boards, settings, and the message being composed are stored on the device, so an unfinished message is still there when the app opens again. Once the whole message has been played, it is no longer kept, unless "Clear after speaking" is off. URL imports, remote media, and some online speech voices use the network.
+No accounts, backend, or tracking. Boards, settings, and the message being composed are stored on the device, so an unfinished message is still there when the app opens again. Once the whole message has been played, it is no longer kept, unless "Clear after playing" is off. URL imports, remote media, and some online speech voices use the network.
 
 ## Limitations
 
