@@ -1,7 +1,7 @@
 import readme from "/README.md?raw";
 import {
   DEFAULT_LANGUAGE,
-  setStoredLanguage,
+  setCommunicationLanguage,
 } from "@shared/language/language-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
@@ -21,7 +21,7 @@ function availableWithoutLanguages(options?: Record<string, unknown>) {
 
 describe("SuggestionSettings", () => {
   beforeEach(() => {
-    setStoredLanguage(DEFAULT_LANGUAGE);
+    setCommunicationLanguage(DEFAULT_LANGUAGE);
   });
 
   test("shows an unsupported message instead of controls when no suggestion engine is supported", async () => {
@@ -95,7 +95,7 @@ describe("SuggestionSettings", () => {
   });
 
   test("says the language is unsupported instead of showing custom instructions when no engine supports it", async () => {
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
     stubProofreader().availability.mockImplementation(
       availableWithoutLanguages,
     );

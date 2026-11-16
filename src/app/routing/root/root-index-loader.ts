@@ -1,7 +1,7 @@
 import {
   importBoardFileFromURL,
   listBoardSetRecords,
-  parseBoardURL,
+  parseBoardFileURL,
   rootBoardPath,
   starterBoardSet,
 } from "@features/library";
@@ -16,7 +16,7 @@ export async function rootIndexLoader({
   // The ?board= param is attacker-controlled, so a link alone must never
   // import. rootIndexAction imports once the user confirms the host.
   if (boardURL) {
-    return { boardHost: boardLinkHost(boardURL) };
+    return { boardHost: boardFileHost(boardURL) };
   }
 
   const [boardSet] = await listBoardSetRecords();
@@ -31,9 +31,9 @@ export async function rootIndexLoader({
   return redirect(rootBoardPath(importedBoardSet));
 }
 
-function boardLinkHost(boardURL: string): string {
+function boardFileHost(boardURL: string): string {
   try {
-    return parseBoardURL(boardURL).host;
+    return parseBoardFileURL(boardURL).host;
   } catch {
     throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
   }

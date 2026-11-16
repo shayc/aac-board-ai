@@ -1,4 +1,4 @@
-import { setStoredLanguage } from "@shared/language/language-store";
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
@@ -98,7 +98,7 @@ describe("getSpeechParameters", () => {
   });
 
   test("follows the given language, not the communication language", () => {
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
     setSpeechVoiceURI("he-voice");
 
     expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-1");

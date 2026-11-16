@@ -1,6 +1,6 @@
 import {
   DEFAULT_LANGUAGE,
-  setStoredLanguage,
+  setCommunicationLanguage,
 } from "@shared/language/language-store";
 import {
   makeProofreadResult,
@@ -55,7 +55,7 @@ async function clickToRun(action: () => void): Promise<void> {
 describe("useMessageSuggestions", () => {
   beforeEach(() => {
     setSuggestionCustomInstructions("");
-    setStoredLanguage(DEFAULT_LANGUAGE);
+    setCommunicationLanguage(DEFAULT_LANGUAGE);
   });
 
   test("reports unavailable and stays empty when no Built-in AI is available", async () => {
@@ -78,7 +78,7 @@ describe("useMessageSuggestions", () => {
   });
 
   test("reports unavailable when no engine supports the language", async () => {
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
     stubProofreader().availability.mockResolvedValue("unavailable");
     stubRewriter().availability.mockResolvedValue("unavailable");
 
@@ -252,7 +252,7 @@ describe("useMessageSuggestions", () => {
       expect(result.current.status).toEqual({ kind: "not-enabled" });
     });
 
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "idle" });
@@ -337,7 +337,7 @@ describe("useMessageSuggestions", () => {
   });
 
   test("uses the selected language rather than English", async () => {
-    setStoredLanguage("he");
+    setCommunicationLanguage("he");
     const { create } = stubRewriter();
 
     await renderMessageSuggestions("שלום");

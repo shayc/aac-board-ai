@@ -15,7 +15,7 @@ export { starterBoardSet } from "./catalog/board-set-catalog";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export {
   importBoardFileFromURL,
-  parseBoardURL,
+  parseBoardFileURL,
 } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";

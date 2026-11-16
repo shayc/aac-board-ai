@@ -2,7 +2,7 @@ import { BoardTranslationNotice } from "@features/library";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { SettingsSelect } from "@shared/ui/settings-select";
 import { useLanguageOptions } from "./use-language-options";

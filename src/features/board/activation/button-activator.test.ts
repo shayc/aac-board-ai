@@ -31,12 +31,12 @@ function word(label: string): MessageEdit[] {
 
 async function setup(
   seed: readonly MessageEdit[] = [],
-  { isSpoken = false, language = "en" } = {},
+  { hasPlayed = false, language = "en" } = {},
 ) {
   const { result, rerender } = await renderHook(() => useMessage());
   const message = result.current;
   message.apply(seed);
-  if (isSpoken) {
+  if (hasPlayed) {
     const spoken = Promise.resolve(true);
     message.trackPlayback(spoken);
     await spoken;
@@ -362,7 +362,7 @@ describe("createButtonActivator", () => {
       },
     ])("starts a new message with $description", async ({ button, labels }) => {
       const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
-        isSpoken: true,
+        hasPlayed: true,
       });
 
       activateButton(button);
@@ -372,7 +372,7 @@ describe("createButtonActivator", () => {
 
     test("edits the spoken message with backspace", async () => {
       const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
-        isSpoken: true,
+        hasPlayed: true,
       });
 
       activateButton({
@@ -386,7 +386,7 @@ describe("createButtonActivator", () => {
 
     test("leaves the spoken message as it is for a space", async () => {
       const { activateButton, readLabels } = await setup(SPOKEN_PARTS, {
-        isSpoken: true,
+        hasPlayed: true,
       });
 
       activateButton({ id: "btn", label: "", actions: [{ kind: "space" }] });
@@ -398,7 +398,7 @@ describe("createButtonActivator", () => {
     test("speaks the message again for a space followed by play", async () => {
       const { activateButton, playback, readParts } = await setup(
         SPOKEN_PARTS,
-        { isSpoken: true },
+        { hasPlayed: true },
       );
       const parts = await readParts();
 
@@ -417,7 +417,7 @@ describe("createButtonActivator", () => {
     test("replays a spoken message when clearing after speaking is off", async () => {
       setClearsAfterSpeaking(false);
       const { activateButton, playback } = await setup(SPOKEN_PARTS, {
-        isSpoken: true,
+        hasPlayed: true,
       });
 
       activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });

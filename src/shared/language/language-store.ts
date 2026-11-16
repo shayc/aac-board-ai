@@ -32,24 +32,30 @@ export function resolveUILocale(language: string): Locale {
   return isLocale(language) ? language : baseLocale;
 }
 
-export function getStoredLanguage(): string {
+export function getCommunicationLanguage(): string {
   return languageStore.getSnapshot();
 }
 
-export function setStoredLanguage(language: string): void {
+export function setCommunicationLanguage(language: string): void {
   languageStore.setState(language);
 }
 
-export function useStoredLanguage(): string {
-  return useExternalStore(languageStore);
+export function useCommunicationLanguage() {
+  const language = useExternalStore(languageStore);
+
+  return {
+    language,
+    direction: getTextDirection(language),
+    setLanguage: setCommunicationLanguage,
+  };
 }
 
 export function getUILocale(): Locale {
-  return resolveUILocale(getStoredLanguage());
+  return resolveUILocale(getCommunicationLanguage());
 }
 
 export function useUILocale(): Locale {
-  return resolveUILocale(useStoredLanguage());
+  return resolveUILocale(useExternalStore(languageStore));
 }
 
 export function useUIDirection(): "ltr" | "rtl" {
@@ -57,4 +63,4 @@ export function useUIDirection(): "ltr" | "rtl" {
 }
 
 overwriteGetLocale(getUILocale);
-overwriteSetLocale(setStoredLanguage);
+overwriteSetLocale(setCommunicationLanguage);

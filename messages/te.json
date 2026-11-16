@@ -151,8 +151,8 @@
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు",
   "errorBoardURLImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
-  "boardLinkImportTitle": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయాలా?",
-  "boardLinkImportDescription": "ఈ లింక్ {host} నుండి బోర్డు ఫైల్‌ను దిగుమతి చేస్తుంది. లింక్ పంపినవారిని మీరు నమ్మితేనే దిగుమతి చేయండి.",
-  "boardLinkImport": "దిగుమతి చేయి",
-  "boardLinkCancel": "రద్దు చేయి"
+  "boardURLImportTitle": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయాలా?",
+  "boardURLImportDescription": "ఈ లింక్ {host} నుండి బోర్డు ఫైల్‌ను దిగుమతి చేస్తుంది. లింక్ పంపినవారిని మీరు నమ్మితేనే దిగుమతి చేయండి.",
+  "boardURLImportConfirm": "దిగుమతి చేయి",
+  "boardURLImportCancel": "రద్దు చేయి"
 }

@@ -1,5 +1,5 @@
 import { m } from "@paraglide/messages.js";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import type { PlaybackRequest } from "@shared/playback/playback-types";
 import {
   useActiveCue,

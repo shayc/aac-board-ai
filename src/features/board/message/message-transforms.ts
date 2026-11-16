@@ -5,7 +5,7 @@ import type { Message, MessageEdit, TextPart, TilePart } from "./message-types";
 export const EMPTY_MESSAGE: Message = {
   parts: [],
   isWordOpen: false,
-  isSpoken: false,
+  hasPlayed: false,
 };
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
@@ -28,7 +28,7 @@ export function createTextPart(
 export function appendTilePart(message: Message, part: TilePart): Message {
   const { parts } = messageToAddTo(message);
 
-  return { parts: [...parts, part], isWordOpen: false, isSpoken: false };
+  return { parts: [...parts, part], isWordOpen: false, hasPlayed: false };
 }
 
 // A word keeps the language it was started in, so letters added from a board
@@ -48,37 +48,37 @@ export function spell(
     return {
       parts: [...parts, createTextPart(text, language)],
       isWordOpen: true,
-      isSpoken: false,
+      hasPlayed: false,
     };
   }
 
   return {
     parts: parts.with(-1, { ...lastPart, label: `${lastPart.label}${text}` }),
     isWordOpen: true,
-    isSpoken: false,
+    hasPlayed: false,
   };
 }
 
-// A spoken message has no word for a space to end: the next letter starts a
+// A played message has no word for a space to end: the next letter starts a
 // new message either way.
 export function closeWord(message: Message): Message {
-  if (!message.isWordOpen || message.isSpoken) {
+  if (!message.isWordOpen || message.hasPlayed) {
     return message;
   }
 
   return { ...message, isWordOpen: false };
 }
 
-export function markSpoken(message: Message, isSpoken: boolean): Message {
-  if (message.isSpoken === isSpoken) {
+export function markPlayed(message: Message, hasPlayed: boolean): Message {
+  if (message.hasPlayed === hasPlayed) {
     return message;
   }
 
-  return { ...message, isSpoken };
+  return { ...message, hasPlayed };
 }
 
 // Every edit replaces the parts or changes whether the last word is open, so
-// two messages that share both differ at most in whether they were spoken.
+// two messages that share both differ at most in whether they have played.
 export function hasSameContent(first: Message, second: Message): boolean {
   return first.parts === second.parts && first.isWordOpen === second.isWordOpen;
 }
@@ -94,7 +94,7 @@ export function applyBackspace(message: Message): Message {
   }
 
   if (!message.isWordOpen) {
-    return { parts: message.parts, isWordOpen: true, isSpoken: false };
+    return { parts: message.parts, isWordOpen: true, hasPlayed: false };
   }
 
   const label = removeLastGrapheme(lastPart.label);
@@ -105,7 +105,7 @@ export function applyBackspace(message: Message): Message {
   return {
     parts: message.parts.with(-1, { ...lastPart, label }),
     isWordOpen: true,
-    isSpoken: false,
+    hasPlayed: false,
   };
 }
 
@@ -117,14 +117,14 @@ export function applyEdits(
 }
 
 function messageToAddTo(message: Message): Message {
-  return message.isSpoken ? EMPTY_MESSAGE : message;
+  return message.hasPlayed ? EMPTY_MESSAGE : message;
 }
 
 function removeLastPart(message: Message): Message {
   return {
     parts: message.parts.slice(0, -1),
     isWordOpen: false,
-    isSpoken: false,
+    hasPlayed: false,
   };
 }
 

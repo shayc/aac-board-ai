@@ -1,4 +1,4 @@
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useEffect, useEffectEvent } from "react";
 import { useLocation } from "react-router";
 import { boardSetIdFromPath } from "../board-paths";

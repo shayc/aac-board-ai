@@ -1,5 +1,5 @@
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import {
   deriveSuggestionStatus,

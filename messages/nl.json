@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
   "errorBoardURLImportFailed": "Kan bordbestand niet importeren via de link",
-  "boardLinkImportTitle": "Bordbestand importeren via de link?",
-  "boardLinkImportDescription": "Deze link importeert een bordbestand van {host}. Importeer het alleen als je de afzender van de link vertrouwt.",
-  "boardLinkImport": "Importeren",
-  "boardLinkCancel": "Annuleren"
+  "boardURLImportTitle": "Bordbestand importeren via de link?",
+  "boardURLImportDescription": "Deze link importeert een bordbestand van {host}. Importeer het alleen als je de afzender van de link vertrouwt.",
+  "boardURLImportConfirm": "Importeren",
+  "boardURLImportCancel": "Annuleren"
 }

@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
   "errorBoardURLImportFailed": "Couldn't import board file from link",
-  "boardLinkImportTitle": "Import board file from link?",
-  "boardLinkImportDescription": "This link imports a board file from {host}. Import it only if you trust whoever sent the link.",
-  "boardLinkImport": "Import",
-  "boardLinkCancel": "Cancel"
+  "boardURLImportTitle": "Import board file from link?",
+  "boardURLImportDescription": "This link imports a board file from {host}. Import it only if you trust whoever sent the link.",
+  "boardURLImportConfirm": "Import",
+  "boardURLImportCancel": "Cancel"
 }

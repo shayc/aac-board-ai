@@ -1,4 +1,4 @@
-import { setStoredLanguage } from "@shared/language/language-store";
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
@@ -49,7 +49,7 @@ describe("TileSettings", () => {
   });
 
   test("formats color intensity in the UI locale when the language has no UI translation", async () => {
-    setStoredLanguage("fa");
+    setCommunicationLanguage("fa");
 
     const screen = await renderWithProviders(<TileSettings />);
 

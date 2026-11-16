@@ -565,6 +565,8 @@ AI availability, provisioning, and session lifecycle to
 - **Board** — a grid of communication tiles.
 - **Board set** — a collection of linked boards with a root board, imported as a
   unit.
+- **Root board** — the board a set opens on. Navigation calls going to it Home,
+  after the OBF `:home` action, and the interface calls it the main board.
 - **Library** — the board sets stored on this device, listed alongside the
   catalog of bundled board sets that can be downloaded.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:

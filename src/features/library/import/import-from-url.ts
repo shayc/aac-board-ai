@@ -6,27 +6,27 @@ import {
 
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
-type BoardURLErrorCode =
+type BoardFileURLErrorCode =
   | "unsupported-scheme"
   | "redirect"
   | "download-too-large";
 
-class BoardURLError extends Error {
-  readonly code: BoardURLErrorCode;
+class BoardFileURLError extends Error {
+  readonly code: BoardFileURLErrorCode;
 
-  constructor(code: BoardURLErrorCode, message: string) {
+  constructor(code: BoardFileURLErrorCode, message: string) {
     super(message);
-    this.name = "BoardURLError";
+    this.name = "BoardFileURLError";
     this.code = code;
   }
 }
 
 // The ?board= param is attacker-controlled and confirmed by its host, so only
 // http(s) may reach fetch. Schemes such as data: carry a payload with no host.
-export function parseBoardURL(url: string): URL {
+export function parseBoardFileURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
-  if (!isAllowedBoardURL(resolved)) {
-    throw new BoardURLError(
+  if (!isAllowedBoardFileURL(resolved)) {
+    throw new BoardFileURLError(
       "unsupported-scheme",
       `Unsupported board URL scheme: ${resolved.protocol}`,
     );
@@ -36,7 +36,7 @@ export function parseBoardURL(url: string): URL {
 }
 
 // Matches the CSP connect-src ('self' https:) in netlify.toml.
-function isAllowedBoardURL(url: URL): boolean {
+function isAllowedBoardFileURL(url: URL): boolean {
   return (
     url.protocol === "https:" ||
     (url.protocol === "http:" && url.origin === window.location.origin)
@@ -44,7 +44,7 @@ function isAllowedBoardURL(url: URL): boolean {
 }
 
 export function deriveBoardSetIdFromURL(url: string): string {
-  return deriveBoardSetId(deriveFileName(parseBoardURL(url)));
+  return deriveBoardSetId(deriveFileName(parseBoardFileURL(url)));
 }
 
 function deriveFileName(url: URL): string {
@@ -77,7 +77,7 @@ export async function importBoardFileFromURL(
   url: string,
   { signal, onProgress, onImportStart }: ImportBoardFileFromURLOptions = {},
 ): Promise<ImportedBoardSet> {
-  const boardURL = parseBoardURL(url);
+  const boardURL = parseBoardFileURL(url);
   const blob = await downloadBoardFile(boardURL, { signal, onProgress });
   signal?.throwIfAborted();
   onImportStart?.();
@@ -99,7 +99,7 @@ async function downloadBoardFile(
 ): Promise<Blob> {
   const response = await fetch(url, { signal, redirect: "manual" });
   if (response.type === "opaqueredirect") {
-    throw new BoardURLError(
+    throw new BoardFileURLError(
       "redirect",
       `Board URL on ${url.host} answered with a redirect`,
     );
@@ -165,8 +165,8 @@ function assertWithinSizeCap(
   throw downloadTooLargeError();
 }
 
-function downloadTooLargeError(): BoardURLError {
-  return new BoardURLError(
+function downloadTooLargeError(): BoardFileURLError {
+  return new BoardFileURLError(
     "download-too-large",
     `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
   );

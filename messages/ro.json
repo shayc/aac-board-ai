@@ -151,8 +151,8 @@
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
   "errorBoardURLImportFailed": "Fișierul de tablă nu a putut fi importat din link",
-  "boardLinkImportTitle": "Imporți fișierul de tablă din link?",
-  "boardLinkImportDescription": "Acest link importă un fișier de tablă de la {host}. Importă-l doar dacă ai încredere în persoana care a trimis linkul.",
-  "boardLinkImport": "Importă",
-  "boardLinkCancel": "Anulează"
+  "boardURLImportTitle": "Imporți fișierul de tablă din link?",
+  "boardURLImportDescription": "Acest link importă un fișier de tablă de la {host}. Importă-l doar dacă ai încredere în persoana care a trimis linkul.",
+  "boardURLImportConfirm": "Importă",
+  "boardURLImportCancel": "Anulează"
 }

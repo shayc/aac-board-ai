@@ -11,7 +11,7 @@ import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
 import type { rootIndexLoader } from "./root-index-loader";
 
-export function BoardLinkImportPage() {
+export function BoardURLImportPage() {
   const { boardHost } = useLoaderData<typeof rootIndexLoader>();
   const submit = useSubmit();
   const navigate = useNavigate();
@@ -37,24 +37,24 @@ export function BoardLinkImportPage() {
 
   return (
     <>
-      <title>{t(m.boardLinkImportTitle)}</title>
+      <title>{t(m.boardURLImportTitle)}</title>
       <Dialog aria-describedby={descriptionId} open onClose={cancel}>
-        <DialogTitle>{t(m.boardLinkImportTitle)}</DialogTitle>
+        <DialogTitle>{t(m.boardURLImportTitle)}</DialogTitle>
 
         <DialogContent>
           <DialogContentText
             id={descriptionId}
             sx={{ overflowWrap: "anywhere" }}
           >
-            {t(m.boardLinkImportDescription, {
+            {t(m.boardURLImportDescription, {
               host: isolateBidi(boardHost),
             })}
           </DialogContentText>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={cancel}>{t(m.boardLinkCancel)}</Button>
-          <Button onClick={confirmImport}>{t(m.boardLinkImport)}</Button>
+          <Button onClick={cancel}>{t(m.boardURLImportCancel)}</Button>
+          <Button onClick={confirmImport}>{t(m.boardURLImportConfirm)}</Button>
         </DialogActions>
       </Dialog>
     </>

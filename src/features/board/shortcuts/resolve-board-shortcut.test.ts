@@ -1,11 +1,13 @@
 import { describe, expect, test } from "vitest";
 import {
   BOARD_SHORTCUT_ARIA_KEYS,
-  type BoardKeyEvent,
+  type BoardShortcutKeyEvent,
   resolveBoardShortcut,
 } from "./resolve-board-shortcut";
 
-function keyEvent(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
+function keyEvent(
+  overrides: Partial<BoardShortcutKeyEvent>,
+): BoardShortcutKeyEvent {
   return {
     key: "",
     code: "",
@@ -152,7 +154,7 @@ describe("resolveBoardShortcut", () => {
   );
 });
 
-function parseCombination(combination: string): BoardKeyEvent {
+function parseCombination(combination: string): BoardShortcutKeyEvent {
   const keys = combination.split("+");
 
   return keyEvent({

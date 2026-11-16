@@ -151,8 +151,8 @@
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
   "errorBoardURLImportFailed": "无法从链接导入沟通板文件",
-  "boardLinkImportTitle": "要从链接导入沟通板文件吗？",
-  "boardLinkImportDescription": "此链接会从 {host} 导入沟通板文件。仅在你信任链接发送者时才导入。",
-  "boardLinkImport": "导入",
-  "boardLinkCancel": "取消"
+  "boardURLImportTitle": "要从链接导入沟通板文件吗？",
+  "boardURLImportDescription": "此链接会从 {host} 导入沟通板文件。仅在你信任链接发送者时才导入。",
+  "boardURLImportConfirm": "导入",
+  "boardURLImportCancel": "取消"
 }

@@ -5,8 +5,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import { useUILocale } from "@shared/language/language-store";
-import { useCommunicationLanguage } from "@shared/language/use-communication-language";
+import {
+  useCommunicationLanguage,
+  useUILocale,
+} from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
 import {

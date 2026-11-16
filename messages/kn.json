@@ -151,8 +151,8 @@
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardURLImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "boardLinkImportTitle": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಬೇಕೆ?",
-  "boardLinkImportDescription": "ಈ ಲಿಂಕ್ {host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡುತ್ತದೆ. ಲಿಂಕ್ ಕಳುಹಿಸಿದವರನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಆಮದು ಮಾಡಿ.",
-  "boardLinkImport": "ಆಮದು ಮಾಡಿ",
-  "boardLinkCancel": "ರದ್ದುಮಾಡಿ"
+  "boardURLImportTitle": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಬೇಕೆ?",
+  "boardURLImportDescription": "ಈ ಲಿಂಕ್ {host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡುತ್ತದೆ. ಲಿಂಕ್ ಕಳುಹಿಸಿದವರನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಆಮದು ಮಾಡಿ.",
+  "boardURLImportConfirm": "ಆಮದು ಮಾಡಿ",
+  "boardURLImportCancel": "ರದ್ದುಮಾಡಿ"
 }
