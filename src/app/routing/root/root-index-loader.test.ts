@@ -37,7 +37,7 @@ describe("rootIndexLoader", () => {
       callLoader(
         `?board=${encodeURIComponent("https://boards.example/core.obz")}`,
       ),
-    ).resolves.toEqual({ boardHost: "boards.example" });
+    ).resolves.toEqual({ boardFileHost: "boards.example" });
 
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(await listBoardSetRecords()).toEqual([]);

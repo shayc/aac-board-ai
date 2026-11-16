@@ -92,8 +92,8 @@
   "speechPreviewVoice": "Ascultă vocea",
   "speechPreviewSample": "Bună, aceasta este vocea mea!",
   "messageImages": "Afișează imaginile",
-  "messageHighlight": "Evidențiază în timpul vorbirii",
-  "messageClearAfterSpeaking": "Șterge după vorbire",
+  "messageHighlight": "Evidențiază în timpul redării",
+  "messageClearAfterPlaying": "Șterge după redare",
   "tileSaturation": "Intensitatea culorii",
   "tileBrightness": "Luminozitate",
   "tileBorders": "Afișează marginile",
@@ -151,9 +151,9 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "errorBoardURLImportFailed": "Fișierul de tablă nu a putut fi importat din link",
-  "boardLinkImportTitle": "Imporți fișierul de tablă din link?",
-  "boardLinkImportDescription": "Acest link importă un fișier de tablă de la {host}. Importă-l doar dacă ai încredere în persoana care a trimis linkul.",
-  "boardLinkImport": "Importă",
-  "boardLinkCancel": "Anulează"
+  "errorBoardFileURLImportFailed": "Fișierul de tablă nu a putut fi importat din link",
+  "boardFileURLImportTitle": "Imporți fișierul de tablă din link?",
+  "boardFileURLImportDescription": "Acest link importă un fișier de tablă de la {host}. Importă-l doar dacă ai încredere în persoana care a trimis linkul.",
+  "boardFileURLImportConfirm": "Importă",
+  "boardFileURLImportCancel": "Anulează"
 }

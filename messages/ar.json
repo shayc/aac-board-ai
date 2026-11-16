@@ -92,8 +92,8 @@
   "speechPreviewVoice": "استماع إلى الصوت",
   "speechPreviewSample": "مرحبًا، هذا هو صوتي!",
   "messageImages": "إظهار الصور",
-  "messageHighlight": "التمييز أثناء النطق",
-  "messageClearAfterSpeaking": "المسح بعد النطق",
+  "messageHighlight": "التمييز أثناء التشغيل",
+  "messageClearAfterPlaying": "المسح بعد التشغيل",
   "tileSaturation": "شدة الألوان",
   "tileBrightness": "السطوع",
   "tileBorders": "إظهار الحدود",
@@ -151,9 +151,9 @@
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
-  "errorBoardURLImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
-  "boardLinkImportTitle": "استيراد ملف اللوحة من الرابط؟",
-  "boardLinkImportDescription": "يستورد هذا الرابط ملف لوحة من {host}. لا تستورده إلا إذا كنت تثق بمن أرسل الرابط.",
-  "boardLinkImport": "استيراد",
-  "boardLinkCancel": "إلغاء"
+  "errorBoardFileURLImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
+  "boardFileURLImportTitle": "استيراد ملف اللوحة من الرابط؟",
+  "boardFileURLImportDescription": "يستورد هذا الرابط ملف لوحة من {host}. لا تستورده إلا إذا كنت تثق بمن أرسل الرابط.",
+  "boardFileURLImportConfirm": "استيراد",
+  "boardFileURLImportCancel": "إلغاء"
 }

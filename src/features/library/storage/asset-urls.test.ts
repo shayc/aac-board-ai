@@ -2,7 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { beforeEach, describe, expect, test } from "vitest";
 import { createBoardSet, deleteBoardSet } from "../board-sets/board-sets-store";
 import { makeAssetInput, makeBoardSetInput, resetBoardsDB } from "../testing";
-import { getAssetURL } from "./asset-urls";
+import { findAssetKey, getAssetURL } from "./asset-urls";
 
 const SET_ID = "asset-url-set";
 const ASSET_PATH = "notes/hello.txt";
@@ -82,5 +82,22 @@ describe("asset URLs", () => {
     await seedAsset("new");
 
     expect(await readAssetURL(await requireAssetURL(SET_ID))).toBe("new");
+  });
+
+  test("finds the stored asset behind a URL", async () => {
+    await seedAsset("hello");
+    const url = await requireAssetURL(SET_ID);
+
+    expect(findAssetKey(url)).toEqual({ boardSetId: SET_ID, path: ASSET_PATH });
+    expect(findAssetKey("https://example.com/hello.txt")).toBeUndefined();
+  });
+
+  test("forgets the assets of a deleted board set", async () => {
+    await seedAsset("deleted");
+    const url = await requireAssetURL(SET_ID);
+
+    await deleteBoardSet(SET_ID);
+
+    expect(findAssetKey(url)).toBeUndefined();
   });
 });

@@ -29,7 +29,7 @@ function translateRouteError(code: RouteErrorCode, t: Translate): string {
       return t(m.errorBoardNotFound);
     case routeErrorCodes.boardSetNotFound:
       return t(m.errorBoardSetNotFound);
-    case routeErrorCodes.boardURLImportFailed:
-      return t(m.errorBoardURLImportFailed);
+    case routeErrorCodes.boardFileURLImportFailed:
+      return t(m.errorBoardFileURLImportFailed);
   }
 }

@@ -92,8 +92,8 @@
   "speechPreviewVoice": "试听语音",
   "speechPreviewSample": "你好，这是我的声音！",
   "messageImages": "显示图片",
-  "messageHighlight": "朗读时高亮显示",
-  "messageClearAfterSpeaking": "朗读后清空",
+  "messageHighlight": "播放时高亮显示",
+  "messageClearAfterPlaying": "播放后清空",
   "tileSaturation": "颜色强度",
   "tileBrightness": "亮度",
   "tileBorders": "显示边框",
@@ -151,9 +151,9 @@
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
-  "errorBoardURLImportFailed": "无法从链接导入沟通板文件",
-  "boardLinkImportTitle": "要从链接导入沟通板文件吗？",
-  "boardLinkImportDescription": "此链接会从 {host} 导入沟通板文件。仅在你信任链接发送者时才导入。",
-  "boardLinkImport": "导入",
-  "boardLinkCancel": "取消"
+  "errorBoardFileURLImportFailed": "无法从链接导入沟通板文件",
+  "boardFileURLImportTitle": "要从链接导入沟通板文件吗？",
+  "boardFileURLImportDescription": "此链接会从 {host} 导入沟通板文件。仅在你信任链接发送者时才导入。",
+  "boardFileURLImportConfirm": "导入",
+  "boardFileURLImportCancel": "取消"
 }

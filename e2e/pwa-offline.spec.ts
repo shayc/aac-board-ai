@@ -64,6 +64,21 @@ test("a nested board opened directly offline remains usable", async ({
   await expectBoardUsable(offlinePage, "Food", "water");
 });
 
+test("a message being composed survives an offline reload", async ({
+  context,
+  page,
+}) => {
+  await openStarterBoardSetUnderServiceWorker(page);
+  await page.getByRole("button", { name: "want" }).click();
+  await context.setOffline(true);
+
+  await page.reload();
+
+  const message = page.getByRole("list", { name: "Message" });
+  await expect(message.getByRole("listitem")).toHaveText(["want"]);
+  await expect(message.locator("img")).not.toHaveJSProperty("naturalWidth", 0);
+});
+
 test("deleting the last board set offline restores the starter board set", async ({
   context,
   page,

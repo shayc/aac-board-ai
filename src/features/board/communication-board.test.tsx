@@ -1,4 +1,6 @@
+import { obfToBoard } from "@features/library/testing";
 import { setCommunicationLanguage } from "@shared/language/language-store";
+import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
@@ -13,14 +15,21 @@ import {
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
+import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
+import { CommunicationBoard } from "./communication-board";
 import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
+import { restoreMessageDraft } from "./message/message-draft";
 import {
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
 } from "./message/message-preferences-store";
+import { EMPTY_MESSAGE } from "./message/message-transforms";
+import type { Message } from "./message/message-types";
 import {
+  EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -196,7 +205,28 @@ describe("CommunicationBoard", () => {
     test("has no accessibility violations", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
-      await expectNoA11yViolations(screen.container);
+      await expectNoA11yViolations(screen.container, {
+        reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+      });
+    });
+
+    test("exposes the message bar, controls and tiles to assistive technology", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await expect.element(screen.container).toMatchAriaInlineSnapshot(`
+        - /children: deep-equal
+        - list "Message"
+        - button "Backspace" [disabled]
+        - grid "Communication board":
+          - row:
+            - gridcell "hello":
+              - button "hello"
+            - gridcell "world":
+              - button "world"
+        - button "Go back" [disabled]
+        - button "Go to main board" [disabled]
+        - button "Play message" [disabled]
+      `);
     });
 
     test("names the tile grid with the board's name", async () => {
@@ -402,6 +432,29 @@ describe("CommunicationBoard", () => {
     );
   });
 
+  describe("message draft", () => {
+    test("keeps an edit made after a board closed mid-speech", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await render(closableBoardTree({ isOpen: true }));
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "Play message" }).click();
+      const closedBoardUtterance = lastUtterance(speech.speak);
+      await screen.rerender(closableBoardTree({ isOpen: false }));
+      const restoredMessage = await restoreMessageDraft();
+      await screen.rerender(
+        closableBoardTree({ isOpen: true, initialMessage: restoredMessage }),
+      );
+
+      await screen.getByRole("button", { name: "Backspace" }).click();
+      endUtterance(closedBoardUtterance);
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeInTheDocument();
+
+      expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
+    });
+  });
+
   describe("speak-then-clear tiles", () => {
     test("clears the message once a speak-then-clear tile finishes speaking", async () => {
       preventSpeechEnd(speech.speak);
@@ -484,6 +537,20 @@ describe("CommunicationBoard", () => {
       await expectNoA11yViolations(screen.container);
     });
 
+    test("exposes each composed word to assistive technology", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expect.element(screen.getByRole("list")).toMatchAriaInlineSnapshot(`
+        - /children: deep-equal
+        - list "Message":
+          - listitem: hello
+          - listitem: world
+      `);
+    });
+
     test("enables message playback only after content is composed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
       const play = screen.getByRole("button", { name: "Play message" });
@@ -542,7 +609,7 @@ describe("CommunicationBoard", () => {
       await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
     });
 
-    test("outlines no message part while speaking when highlighting is off", async () => {
+    test("outlines no message part while playing when highlighting is off", async () => {
       setMessageHighlightingEnabled(false);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
@@ -850,7 +917,9 @@ describe("CommunicationBoard", () => {
 
         await expect.element(tile).toBeVisible();
         expect(tile.element().textContent).toBe("");
-        await expectNoA11yViolations(screen.container);
+        await expectNoA11yViolations(screen.container, {
+          reviewedIncomplete: [EMPTY_MESSAGE_REVIEW],
+        });
 
         await tile.click();
 
@@ -899,4 +968,29 @@ function outlinedMessageParts(
     .elements()
     .filter((part) => getComputedStyle(part).outlineStyle === "solid")
     .map((part) => part.textContent);
+}
+
+interface ClosableBoardTreeProps {
+  isOpen: boolean;
+  initialMessage?: Message;
+}
+
+// Keeps the providers mounted while the board closes, as the error page does.
+function closableBoardTree({ isOpen, initialMessage }: ClosableBoardTreeProps) {
+  return (
+    <MemoryRouter>
+      <AppProviders>
+        <div style={{ height: "100vh" }}>
+          {isOpen && (
+            <CommunicationBoard
+              board={obfToBoard(TWO_BUTTON_BOARD)}
+              language={TWO_BUTTON_BOARD.locale}
+              rootBoardId={undefined}
+              initialMessage={initialMessage}
+            />
+          )}
+        </div>
+      </AppProviders>
+    </MemoryRouter>
+  );
 }

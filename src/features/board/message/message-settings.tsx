@@ -28,7 +28,7 @@ export function MessageSettings() {
       />
 
       <SettingsSwitch
-        label={t(m.messageClearAfterSpeaking)}
+        label={t(m.messageClearAfterPlaying)}
         checked={shouldClearAfterPlayback}
         onChange={setMessageClearAfterPlayback}
       />

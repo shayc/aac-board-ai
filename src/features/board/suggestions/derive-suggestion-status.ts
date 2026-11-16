@@ -1,6 +1,6 @@
 import type { Status } from "@shayc/react-built-in-ai";
 import type { SuggestionSource } from "./suggestion-source";
-import { isEngineUsable } from "./suggestion-support";
+import { isAvailableEngineStatus } from "./suggestion-support";
 
 export type SuggestionStatus =
   | { kind: "idle" }
@@ -25,15 +25,17 @@ export function deriveSuggestionStatus({
   hasText,
   phraseCount,
 }: SuggestionStatusInput): SuggestionStatus {
-  const usableSources = sources.filter(({ engineStatus }) =>
-    isEngineUsable(engineStatus),
+  const availableSources = sources.filter(({ engineStatus }) =>
+    isAvailableEngineStatus(engineStatus),
   );
-  if (usableSources.length === 0) {
+  if (availableSources.length === 0) {
     return { kind: "idle" };
   }
 
   // Engines in error require an explicit prepare() retry.
-  if (usableSources.some(({ engineStatus }) => needsEnabling(engineStatus))) {
+  if (
+    availableSources.some(({ engineStatus }) => needsEnabling(engineStatus))
+  ) {
     return { kind: "not-enabled" };
   }
 
@@ -43,11 +45,11 @@ export function deriveSuggestionStatus({
     return { kind: "downloading", percent: percent === 0 ? null : percent };
   }
 
-  if (usableSources.some(({ isRequestPending }) => isRequestPending)) {
+  if (availableSources.some(({ isRequestPending }) => isRequestPending)) {
     return { kind: "pending" };
   }
 
-  const hasWorkingSource = usableSources.some(
+  const hasWorkingSource = availableSources.some(
     ({ hasRequestFailed }) => !hasRequestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingSource) {

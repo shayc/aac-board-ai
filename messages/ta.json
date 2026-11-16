@@ -92,8 +92,8 @@
   "speechPreviewVoice": "குரலைக் கேள்",
   "speechPreviewSample": "வணக்கம், இது என் குரல்!",
   "messageImages": "படங்களைக் காட்டு",
-  "messageHighlight": "பேசும்போது தனிப்படுத்திக் காட்டு",
-  "messageClearAfterSpeaking": "பேசிய பிறகு அழி",
+  "messageHighlight": "இயக்கும்போது தனிப்படுத்திக் காட்டு",
+  "messageClearAfterPlaying": "இயக்கிய பிறகு அழி",
   "tileSaturation": "வண்ணத் தீவிரம்",
   "tileBrightness": "ஒளிர்வு",
   "tileBorders": "எல்லைகளைக் காட்டு",
@@ -151,9 +151,9 @@
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
   "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை",
-  "errorBoardURLImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை",
-  "boardLinkImportTitle": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்யவா?",
-  "boardLinkImportDescription": "இந்த இணைப்பு {host} இலிருந்து ஒரு பலகைக் கோப்பை இறக்குமதி செய்கிறது. இணைப்பை அனுப்பியவரை நீங்கள் நம்பினால் மட்டுமே இறக்குமதி செய்யுங்கள்.",
-  "boardLinkImport": "இறக்குமதி செய்",
-  "boardLinkCancel": "ரத்துசெய்"
+  "errorBoardFileURLImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை",
+  "boardFileURLImportTitle": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்யவா?",
+  "boardFileURLImportDescription": "இந்த இணைப்பு {host} இலிருந்து ஒரு பலகைக் கோப்பை இறக்குமதி செய்கிறது. இணைப்பை அனுப்பியவரை நீங்கள் நம்பினால் மட்டுமே இறக்குமதி செய்யுங்கள்.",
+  "boardFileURLImportConfirm": "இறக்குமதி செய்",
+  "boardFileURLImportCancel": "ரத்துசெய்"
 }
