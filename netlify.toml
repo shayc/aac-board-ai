@@ -6,14 +6,9 @@ from = "/*"
 to = "/index.html"
 status = 200
 
-# Scripts are same-origin files only, which also binds the blob: documents made
-# from imported board assets. Images, media, and fetches stay open to any https
-# host because boards reference remote symbols and sounds, ?board= links import
-# from any host, and the service worker fetches remote images to cache them.
-# Workers also allow blob: because unzipping a board set inflates its large
-# entries in workers built from blob: URLs; without it those sets fail to import.
-# Styles allow inline because Emotion injects <style> tags at runtime and a
-# static host cannot issue nonces.
+# Keep https: open for remote board media, ?board= imports, and SW image caching.
+# worker-src allows blob: for OBZ decompression workers; style-src allows
+# 'unsafe-inline' because Emotion injects <style> tags on a static host.
 [[headers]]
 for = "/*"
 [headers.values]

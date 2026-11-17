@@ -457,8 +457,7 @@ describe("createButtonActivator", () => {
       expect(playback.echoMessage).not.toHaveBeenCalled();
     });
 
-    // While clearing after playing is off, the message hook releases a
-    // played message each time it is edited, which must not count as a change.
+    // Releasing a played message when clear-after-play is off must not count as an edit.
     test("replays a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
       const { activateButton, playback } = await setup(PLAYED_PARTS, {

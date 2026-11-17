@@ -126,8 +126,7 @@ const themeOptions = {
         SnackbarContent: { bg: grey[100], color: grey[900] },
         action: {
           active: "rgba(255, 255, 255, 0.7)",
-          // MUI's 30% white reads as enabled on dark surfaces. 20% matches the
-          // light scheme's disabled contrast.
+          // Lower than MUI's 0.3 default to match light-mode disabled contrast.
           disabled: "rgba(255, 255, 255, 0.2)",
         },
       },
@@ -161,8 +160,7 @@ const themeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          // MUI's dark elevation overlay would add surface steps beyond
-          // background.default and background.paper.
+          // Disable MUI's dark-mode elevation tint so surfaces stay flat.
           backgroundImage: "none",
         },
       },
@@ -283,8 +281,7 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
-              // MUI's grey disabled fill is darker than the light page and
-              // would outweigh the enabled buttons beside it.
+              // Keep the white surface when disabled instead of MUI's darker grey fill.
               style: theme.applyStyles("light", {
                 [`&.${buttonClasses.disabled}`]: {
                   backgroundColor: theme.vars.palette.Button.inheritContainedBg,
@@ -329,8 +326,7 @@ const themeOptions = {
     MuiChip: {
       styleOverrides: {
         clickable: ({ theme }) => ({
-          // Chips sit beside large buttons, so they share their height and
-          // label type.
+          // Match adjacent large buttons in height and typography.
           ...theme.typography.button,
           height: 48,
           borderRadius: theme.vars.shape.borderRadiusFull,
@@ -356,8 +352,7 @@ const themeOptions = {
             },
             {
               props: { variant: "filled", color: "default" },
-              // A quieter fill than the contained buttons keeps chips
-              // distinct from navigation.
+              // Use a subtler fill than contained navigation buttons.
               style: {
                 backgroundColor: theme.alpha(theme.palette.common.black, 0.06),
                 [`&:hover, &.${chipClasses.focusVisible}`]: {

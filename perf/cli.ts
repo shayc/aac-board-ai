@@ -139,7 +139,7 @@ async function buildBase({ source, commit }: BuildSource): Promise<void> {
     run("npm", ["ci"], sourceDir, { HUSKY: "0" });
     buildApp(sourceDir, DIST_DIRS.base);
   } finally {
-    // Neither step may throw: a failure here would hide the one that led here.
+    // Must not throw and mask the build error.
     git(["worktree", "remove", "--force", sourceDir]);
     rmSync(sourceDir, { recursive: true, force: true });
   }
@@ -199,10 +199,6 @@ async function describeBuild(
   };
 }
 
-/**
- * Stays quiet unless the command fails, so the report is the whole output.
- * --verbose streams the command's output instead, to watch a slow step.
- */
 function run(
   command: string,
   args: string[],

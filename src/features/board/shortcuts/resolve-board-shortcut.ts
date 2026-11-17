@@ -1,9 +1,8 @@
 type BoardShortcutAction = "backspace" | "clear" | "undo" | "play" | "stop";
 
 /**
- * `aria-keyshortcuts` values for the controls whose action a shortcut runs.
- * Clearing has none: the attribute names keys that activate an element, and
- * the backspace button clears only on a long press.
+ * `aria-keyshortcuts` for controls activated by a shortcut (`clear` is omitted
+ * because Backspace clears only on long press).
  */
 export const BOARD_SHORTCUT_ARIA_KEYS = {
   backspace: "Backspace",
@@ -52,15 +51,13 @@ export function resolveBoardShortcut(
 }
 
 function isUndoKey(event: BoardShortcutKeyEvent): boolean {
-  // Shift makes the keys redo, which the board does not have. Alt is how
-  // Windows reports AltGr, which types a letter, alongside Ctrl.
+  // Exclude Shift (redo) and Alt (Ctrl+Alt is AltGr on Windows).
   if (event.shiftKey || event.altKey) {
     return false;
   }
 
-  // A layout without Latin letters, such as Hebrew, produces its own letter
-  // for the key, so the key's position stands in. A Latin layout that moves
-  // Z, such as German, goes by its letter.
+  // Match `key` on Latin layouts (so QWERTZ/AZERTY follow a moved Z) and
+  // physical `KeyZ` on non-Latin layouts (e.g. Hebrew).
   const isLatinLetter = /^[a-z]$/i.test(event.key);
 
   return isLatinLetter

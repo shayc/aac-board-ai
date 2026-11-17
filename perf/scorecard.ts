@@ -2,7 +2,6 @@ import type { Budget, Unit } from "./budgets.ts";
 import type { JourneyResult } from "./results.ts";
 import { median } from "./stats.ts";
 
-/** One stray sample in every five is tolerated before a row changes state. */
 const SAMPLES_PER_TOLERATED_STRAY = 5;
 
 const STATES = ["over", "watch", "ok"] as const;
@@ -88,11 +87,7 @@ export function scoreMeasurements(
   };
 }
 
-/**
- * A row is settled when nearly every sample lands on one side of its limit.
- * Samples on both sides mean the timing sits at its limit or the machine was
- * busy, and neither is a reason to call the row over.
- */
+// "watch" when samples straddle the limit (borderline timing or noisy machine).
 function stateOf(overCount: number, sampleCount: number): State {
   const strayCount = Math.floor(sampleCount / SAMPLES_PER_TOLERATED_STRAY);
 

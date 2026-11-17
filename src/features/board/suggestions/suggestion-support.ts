@@ -58,8 +58,6 @@ export async function checkSuggestionLanguageSupport(
     return "suggestions-only";
   }
 
-  // Probing without languages tells a missing language apart from a device
-  // that cannot run the models at all.
   const isDeviceCapable = await isAnyEngineAvailable();
 
   return isDeviceCapable ? "language-unavailable" : "device-unavailable";

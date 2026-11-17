@@ -13,7 +13,6 @@ const SAMPLE_BOARDS_DIR = "/src/features/library/testing/sample-boards";
 export const SAMPLE_OBF_FILE = "lots-of-stuff.obf";
 export const SAMPLE_OBZ_FILE = "lots-of-stuff.obz";
 export const SAMPLE_OBZ_URL = `${SAMPLE_BOARDS_DIR}/${SAMPLE_OBZ_FILE}`;
-// Imports name a board set after its file.
 export const SAMPLE_BOARD_SET_ID = "lots-of-stuff";
 
 export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {

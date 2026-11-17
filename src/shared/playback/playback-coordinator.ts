@@ -67,8 +67,7 @@ export function createPlaybackCoordinator(
     }
   }
 
-  // Interrupted audio resolves rather than rejects, so only audio that could
-  // not play reaches the fallback.
+  // `playAudio` resolves on abort, so `catch` runs only when the audio failed to play.
   async function playAudioOrSpeakFallback(
     step: AudioStep,
     signal: AbortSignal,

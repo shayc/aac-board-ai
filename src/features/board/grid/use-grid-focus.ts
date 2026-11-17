@@ -62,8 +62,7 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
     tabStop?.focus();
   });
 
-  // A focused tile drops focus to the body only when it unmounts, which takes
-  // a change in which tile sits where; the grid array itself is new each render.
+  // Key by tile arrangement since `grid` is a new array every render.
   const arrangementKey = gridArrangementKey(grid);
   const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {

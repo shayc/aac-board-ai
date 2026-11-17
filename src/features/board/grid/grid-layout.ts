@@ -145,8 +145,6 @@ function createTrackFit(
   { axis, breakpoint, trackCount }: AxisLayout,
   visibleTracks: number,
 ) {
-  // A fitting axis is inset by its padding on both sides. A scrolling axis has
-  // padding on one side and a gap plus the next track's hint on the other.
   const isScrollable = visibleTracks < trackCount;
   const insetPx = isScrollable
     ? scrollingInsetPx(axis, breakpoint)
@@ -162,6 +160,7 @@ function createTrackFit(
   };
 }
 
+// Leading padding plus the trailing gap and overflow hint of the next track.
 function scrollingInsetPx(axis: GridAxis, breakpoint: Breakpoint): number {
   return (
     axis.paddingPx[breakpoint] + GRID_GAP_PX + OVERFLOW_HINT_PX[breakpoint]

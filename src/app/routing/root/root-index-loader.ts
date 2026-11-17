@@ -13,8 +13,7 @@ export async function rootIndexLoader({
 }: LoaderFunctionArgs): Promise<Response | { boardFileHost: string }> {
   const boardFileURL = new URL(request.url).searchParams.get("board");
 
-  // The ?board= param is attacker-controlled, so a link alone must never
-  // import. rootIndexAction imports once the user confirms the host.
+  // ?board= is untrusted; rootIndexAction imports only after the user confirms the host.
   if (boardFileURL) {
     return { boardFileHost: parseBoardFileHost(boardFileURL) };
   }

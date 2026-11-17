@@ -29,7 +29,7 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
-  /** The language the board's text is in, when known; it may not be the communication language. */
+  /** Board text language, when known; may differ from the communication language. */
   language: string | undefined;
   rootBoardId: string | undefined;
   initialMessage?: Message;

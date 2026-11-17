@@ -12,9 +12,7 @@ import {
 } from "./translate-board-sets";
 
 interface UseTranslateBoardSetsOptions {
-  /** The set on screen is translated first, so it never waits behind the rest. */
   activeBoardSetId: string | undefined;
-  /** Called after a set's translations are saved, so whatever shows it can reload. */
   onBoardSetTranslated: (boardSetId: string) => void;
 }
 
@@ -27,7 +25,6 @@ export function useTranslateBoardSets({
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  // Read the latest callback when a pass finishes, not the one it started with.
   const reportTranslated = useEffectEvent((boardSetId: string) => {
     onBoardSetTranslated(boardSetId);
   });

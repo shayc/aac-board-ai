@@ -46,8 +46,7 @@ export async function translateBoardSets(
   }
 }
 
-// The name and all board translations commit atomically, making it a completion marker.
-// The set's locale describes only its root board.
+// `translatedNames[language]` commits atomically with all boards, marking the set complete.
 function isBoardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,

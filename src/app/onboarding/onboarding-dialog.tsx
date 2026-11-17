@@ -131,9 +131,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   );
 }
 
-// A width breakpoint cannot see a screen that is wide but short, such as a
-// phone on its side. The `sm` value keeps the threshold on the theme's scale.
-// Portrait screens are excluded so a small upright phone keeps its own layout.
+// Phones in landscape are wide enough for `sm` but too short for the stacked layout.
 function shortLandscape(theme: Theme): string {
   const maxHeight = theme.breakpoints.values.sm - 0.05;
 

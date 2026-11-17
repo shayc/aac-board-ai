@@ -17,8 +17,7 @@ const themeOptions = [
   { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
 ] as const;
 
-// Side by side, the icons and names overflow a phone's drawer in most
-// languages, so each option stacks them in an equal share of the width.
+// Stack icon and label so translated names fit the drawer width on phones.
 const optionSx = {
   flex: "1 1 0",
   flexDirection: "column",

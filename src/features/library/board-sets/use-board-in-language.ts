@@ -8,10 +8,6 @@ interface BoardInLanguage {
   language: string | undefined;
 }
 
-/**
- * Falls back to the source board when untranslated. Its language is then the
- * one the board file declares, and unknown when it declares none.
- */
 export function useBoardInLanguage(board: Board): BoardInLanguage {
   const { language } = useCommunicationLanguage();
   const translatedBoard = findBoardInLanguage(board, language);

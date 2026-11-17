@@ -3,8 +3,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactElement } from "react";
 
-// Key symbols such as ⌘ and ⌫ have no direction of their own, so a
-// right-to-left interface would reverse them without a left-to-right isolate.
+// Isolate direction-neutral key symbols (e.g. ⌘⌫) so RTL interfaces don't reverse them.
 const LEFT_TO_RIGHT_ISOLATE = "\u2066";
 const POP_DIRECTIONAL_ISOLATE = "\u2069";
 
@@ -15,9 +14,8 @@ interface ShortcutTooltipProps {
 }
 
 /**
- * Shows a control's keyboard shortcut while the control has keyboard focus.
- * Head-pointer and eye-gaze users rest on targets to select them, so hover
- * would cover what they aim at, and touch has no keys to learn.
+ * Shows shortcuts on keyboard focus only: hover tooltips block
+ * head-pointer/eye-gaze dwell targets, and touch has no keys.
  */
 export function ShortcutTooltip({
   action,
@@ -29,8 +27,7 @@ export function ShortcutTooltip({
 
   return (
     <Tooltip
-      // A string title keeps the control's own name; an element title would
-      // make MUI label the control by the tooltip while it is open.
+      // Keep `title` a string so MUI doesn't override the control's accessible name.
       title={t(m.shortcutTooltip, { action, shortcut: isolatedKeys })}
       placement="top"
       disableHoverListener

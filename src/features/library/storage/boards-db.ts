@@ -25,8 +25,7 @@ export interface BoardRecord {
 export interface AssetRecord {
   readonly boardSetId: string;
   readonly path: string;
-  // Bytes rather than a Blob: WebKit refuses to store Blobs in ephemeral
-  // sessions.
+  // Store ArrayBuffer rather than Blob, which WebKit rejects in ephemeral sessions.
   readonly bytes: ArrayBuffer;
   readonly type: string;
 }
@@ -97,10 +96,9 @@ export async function closeBoardsDB(): Promise<void> {
 }
 
 /**
- * Synchronous request failures need an explicit abort to roll back earlier writes.
- * Await both promises to handle idb's eager tx.done rejection.
- * `write` must await each request before issuing the next so an abort cannot
- * leave a pending request with an unhandled rejection.
+ * Aborts `tx` if `write` throws so synchronous failures roll back earlier writes.
+ * `write` must await each request sequentially so aborting never leaves an
+ * unawaited request to reject unhandled.
  */
 export async function runTransaction(
   tx: { readonly done: Promise<void>; abort: () => void },

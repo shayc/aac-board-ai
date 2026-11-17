@@ -14,7 +14,6 @@ export function boardSetIdFromPath(pathname: string): string | undefined {
   return match?.params.boardSetId;
 }
 
-/** The board set on screen, whichever of its boards is open. */
 export function useActiveBoardSetId(): string | undefined {
   return boardSetIdFromPath(useLocation().pathname);
 }

@@ -11,8 +11,7 @@ export async function exportBoardSet(
   boardSet: Pick<BoardSetRecord, "id" | "name" | "rootBoardId">,
 ): Promise<void> {
   const archive = await boardSetToOBZ(boardSet);
-  // Safari appends ".zip" to a download typed as a ZIP archive, and import
-  // accepts only board file extensions.
+  // Avoid "application/zip", which makes Safari append ".zip" to ".obz".
   const file = new Blob([archive], { type: "application/octet-stream" });
 
   saveFile(file, `${boardSet.name}.obz`);
@@ -39,8 +38,6 @@ function saveFile(file: Blob, fileName: string): void {
   link.download = fileName;
 
   link.click();
-  // The browser resolves the blob URL during the click, so the download
-  // survives the revoke.
   URL.revokeObjectURL(url);
 }
 

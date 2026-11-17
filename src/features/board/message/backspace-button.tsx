@@ -18,8 +18,7 @@ import { MESSAGE_ACTION_SIZE } from "./message-bar";
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
-// MUI draws the ring in a 44-unit box, so on the 80px disc this is a 4px
-// stroke; MUI's default would outweigh the icon's lines.
+// 4px stroke on the 80px disc (MUI scales thickness against a 44-unit viewBox).
 const RING_THICKNESS = 2.2;
 
 // A step smaller beside the play button, so play stays the bar's main action.
@@ -85,13 +84,8 @@ export function BackspaceButton({
   );
 }
 
-// The disc fills the whole touch target, so its visible edge is where a tap
-// counts. With the bar's inset, a large disc sits on the bar's rounded end,
-// the same distance from its top, bottom and end, and both curves run parallel.
-//
-// The bar stays light in dark mode, so the disc stays a dark tint of it with a
-// dark icon; on the greyer bar it needs a stronger tint, and a stronger
-// disabled icon, to read at all.
+// The message bar stays light in dark mode but uses a greyer fill, so the disc
+// and disabled icon need stronger dark tints.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const { disc, icon } = BUTTON_SIZES[size];
   const discColor = theme.alpha(theme.palette.common.black, 0.05);
@@ -115,9 +109,7 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   } as const;
 }
 
-// The "auto" size stretches the ring over the whole button, which is the disc,
-// so it traces the disc's edge. The fill waits out the delay so a quick tap
-// never shows it.
+// Delay the fill transition so a normal tap never flashes the progress ring.
 function ringSx(isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
 

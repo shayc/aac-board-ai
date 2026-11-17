@@ -5,13 +5,10 @@ import { parseOptionalString } from "@shared/utils/parse-optional-string";
 import { EMPTY_MESSAGE } from "./message-transforms";
 import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
 
-// localStorage rather than sessionStorage: an installed app can restart from
-// scratch after time in the background, and a message composed ahead of time
-// should still be there when the app is opened again.
+// Use localStorage so a pre-composed message survives background app restarts.
 const STORAGE_KEY = "message-draft";
 
-// A stored asset's URL lasts only as long as the page, so a tile part keeps
-// the asset's key in its place.
+// Object URLs expire with the page, so persist the storage key instead.
 interface SavedTilePart extends TilePart {
   readonly imageAssetKey?: AssetKey;
   readonly soundAssetKey?: AssetKey;
@@ -95,8 +92,7 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
-// An object URL ends with the page that made it, so one with no stored asset
-// behind it could only come back broken.
+// Drop unbacked blob: URLs, which expire with the page.
 function toSavedSrc(src: string | undefined): string | undefined {
   return src?.startsWith("blob:") ? undefined : src;
 }

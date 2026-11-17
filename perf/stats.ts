@@ -40,10 +40,7 @@ export function typicalDifference(differences: number[]): number {
   return median(pairAverages(differences));
 }
 
-/**
- * Signed-rank confidence interval. Undefined when the sample count cannot
- * support the requested confidence.
- */
+/** Signed-rank confidence interval, or undefined if sample size is too small. */
 export function differenceInterval(
   differences: number[],
   confidence: number,

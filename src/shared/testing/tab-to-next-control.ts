@@ -1,8 +1,7 @@
 import { server, userEvent } from "vitest/browser";
 
-// Safari on macOS moves Tab between text fields and elements with a tabindex
-// unless the user turns on full keyboard access; Option+Tab reaches every
-// control.
+// WebKit on macOS skips native controls without a tabindex on plain Tab;
+// Option+Tab reaches every control.
 const DOES_TAB_SKIP_NATIVE_CONTROLS =
   server.browser === "webkit" && server.platform === "darwin";
 

@@ -30,8 +30,6 @@ function PickTrigger() {
   );
 }
 
-// The native file picker can't open in the test runtime, so stand in for the
-// user choosing these files.
 function stubFilePicker(...files: File[]) {
   vi.spyOn(HTMLInputElement.prototype, "showPicker").mockImplementation(
     function (this: HTMLInputElement) {

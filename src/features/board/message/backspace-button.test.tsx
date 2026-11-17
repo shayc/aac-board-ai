@@ -56,8 +56,7 @@ function ClearableBackspace() {
   );
 }
 
-// The disc is translucent, so the icon and ring are measured against the bar
-// it sits on.
+// Composite the translucent disc over the message bar before measuring contrast.
 async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const screen = await renderWithProviders(
     <>
@@ -314,8 +313,6 @@ describe("BackspaceButton colors", () => {
     },
   );
 
-  // Disabled controls are exempt from contrast minimums, but an empty message
-  // must still show where backspace is, and the dark bar is greyer.
   test("keeps the disabled icon in dark mode at least as visible as in light mode", async () => {
     const { icon: light } = await measureContrasts("light", true);
     const { icon: dark } = await measureContrasts("dark", true);
@@ -325,8 +322,6 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  // The visible disc marks the whole touch target, and the same gap on three
-  // sides keeps its curve parallel to the bar's rounded end.
   test("fills its touch target with the disc, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(
       <MessageBar

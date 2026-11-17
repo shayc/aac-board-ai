@@ -419,7 +419,6 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "Play message" }).click();
 
-      // A tile that had played would have spoken before the message did.
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hello"]);
       });

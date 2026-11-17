@@ -44,8 +44,6 @@ export function planPlayback(
       continue;
     }
 
-    // An utterance has one language and one voice, so a run ends where the
-    // language changes.
     if (speechRun.at(-1)?.language !== language) {
       flushSpeech();
     }
@@ -63,8 +61,7 @@ interface PartSpan {
   end: number;
 }
 
-// A lone part stays highlighted for the whole utterance, while several parts
-// wait for word boundaries so a voice without them shows no stale highlight.
+// Multi-part utterances highlight only on word boundaries so boundaryless voices don't stick on part 1.
 function createSpeechStep(
   parts: readonly SpeechPart[],
   language: string,

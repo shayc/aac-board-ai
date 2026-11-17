@@ -16,7 +16,6 @@ export async function hashBuild(distDir: string): Promise<string> {
   return hash.digest("hex").slice(0, 12);
 }
 
-/** Kilobytes of every script the build ships, gzipped as a static host serves them. */
 export async function measureJSShipped(distDir: string): Promise<number> {
   const scripts = (await listFiles(distDir)).filter((file) =>
     file.endsWith(".js"),

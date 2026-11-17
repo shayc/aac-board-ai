@@ -34,8 +34,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const boardReadFailures = readFailures.filter(({ fileName }) =>
       hasBoardFileExtension(fileName),
     );
-    // Non-board files are named only when no board file was given, so a stray
-    // file never turns a successful import into an error.
+    // Ignore stray non-board files when at least one board file was selected.
     if (boardFiles.length === 0 && boardReadFailures.length === 0) {
       const skippedFileNames = [
         ...files.map(({ name }) => name),

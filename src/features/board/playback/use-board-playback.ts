@@ -24,7 +24,7 @@ interface UseBoardPlaybackOptions {
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /** Plays the message without reporting it as played, for tiles that play each word as it is spelled. */
+  /** Plays the message without marking it played (e.g. echoing a word as it is spelled). */
   echoMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   /** Resolves to whether the message played to its end. */
   playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
@@ -40,8 +40,7 @@ export function useBoardPlayback({
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
-  // Playback outlives the board, so a closing board stops its own; a message
-  // it finished later would be saved as played over the next board's draft.
+  // Stop on unmount so a finishing utterance can't overwrite the next board's draft.
   useEffect(
     () => () => {
       if (isBoardPlayback(playback.getSnapshot())) {
@@ -51,8 +50,6 @@ export function useBoardPlayback({
     [playback],
   );
 
-  // AAC users depend on knowing their speech output failed, so a failure is
-  // reported here, once, instead of being left to each caller.
   async function playAndReportFailure(
     request: PlaybackRequest,
   ): Promise<boolean> {

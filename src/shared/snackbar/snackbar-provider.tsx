@@ -123,8 +123,6 @@ function defaultDurationMs(severity: SnackbarSeverity): number | null {
 
 function snackbarSx(theme: Theme) {
   return {
-    // Sitting below the app bar keeps its controls reachable while a
-    // persistent error stays on screen.
     ...toolbarOffset(theme, theme.spacing(1)),
     [theme.breakpoints.down("sm")]: {
       right: safeAreaGutter(theme.spacing(1), "right"),
@@ -133,8 +131,7 @@ function snackbarSx(theme: Theme) {
   };
 }
 
-// MUI sizes a toolbar by breakpoint and orientation, so anything placed below
-// one follows the same rules instead of repeating its heights.
+// Offset below the app bar across MUI's responsive toolbar heights.
 function toolbarOffset(theme: Theme, gutter: string): CSSObject {
   return heightsToOffsets(theme.mixins.toolbar, gutter);
 }
@@ -160,8 +157,7 @@ function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
     color: theme.vars.palette.SnackbarContent.color,
     backgroundColor: theme.vars.palette.SnackbarContent.bg,
     boxShadow: theme.vars.shadows[6],
-    // The snackbar surface inverts the color scheme, so its icon takes the
-    // other scheme's severity color to keep contrast.
+    // SnackbarContent inverts the color scheme, so use the opposite scheme's icon color.
     [`& .${alertClasses.icon}`]: {
       color: theme.colorSchemes.dark?.palette[severity].main,
       ...theme.applyStyles("dark", {

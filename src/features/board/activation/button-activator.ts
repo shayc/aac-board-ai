@@ -53,8 +53,7 @@ export function createButtonActivator({
     });
 
     message.apply([{ kind: "tile", part }]);
-    // A silent tile interrupts playback just as a played one does, so selecting
-    // a tile while the message speaks stops it whatever the setting.
+    // Selecting a silent tile still interrupts active message playback.
     if (!shouldPlayTiles) {
       playback.stop();
 
@@ -87,9 +86,8 @@ export function createButtonActivator({
       language,
     );
 
-    // A tile that spells and then plays echoes the word being typed, so only a
-    // tile that plays the message as it stands speaks it. The echo is feedback
-    // on the tile, so it stays silent when tiles are not played.
+    // Edits before ":speak" mean the tile is echoing typed text, not speaking a
+    // finished message: treat as tile feedback and don't mark the message played.
     const isEcho = hasChanged;
     if (isEcho && !shouldPlayTiles) {
       playback.stop();
@@ -100,10 +98,8 @@ export function createButtonActivator({
 
     const play = isEcho ? playback.echoMessage : playback.playMessage;
 
-    // Edits after ":speak" (such as ":clear") wait for playback to complete
-    // without interruption, keeping the message visible while it plays, and
-    // are dropped if the message was edited meanwhile: a ":clear" must not
-    // take letters typed during the speech with it.
+    // Defer post-play edits (e.g. ":clear") so the message stays visible while
+    // speaking and mid-speech edits aren't wiped.
     void play(messageToPlay.parts).then((hasCompleted) => {
       if (hasCompleted) {
         message.applyIfUnchanged(messageToPlay, editsAfterPlay);
@@ -120,7 +116,6 @@ function toMessageEdits(
 ): MessageEdit[] {
   return actions.flatMap((action) => {
     switch (action.kind) {
-      // Spelled letters are the board's text, so they are in its language.
       case "spell":
         return { ...action, language };
       case "space":

@@ -1,8 +1,7 @@
 import * as axe from "axe-core";
 import { assert } from "vitest";
 
-// Axe ships target-size (WCAG 2.5.8) disabled, but people selecting with a
-// head pointer, eye gaze or an unsteady hand depend on large enough targets.
+// Enable WCAG 2.5.8 target-size (off by default in axe) for motor/gaze accessibility.
 const ENABLED_BY_DEFAULT: axe.RuleObject = {
   "target-size": { enabled: true },
 };
@@ -38,8 +37,7 @@ export async function expectNoA11yViolations(
   );
 
   const { violations, incomplete } = await axe.run(target, {
-    // Other result types keep one example node, which skips selector work;
-    // incomplete needs every node to match against the reviewed list.
+    // Limit resultTypes so axe collects full node lists only for violations and incomplete.
     resultTypes: ["violations", "incomplete"],
     ...options,
     rules: { ...ENABLED_BY_DEFAULT, ...options.rules },
@@ -50,10 +48,8 @@ export async function expectNoA11yViolations(
     assert.fail(describeResults(violations));
   }
 
-  // Incomplete results, which axe could not decide, would otherwise pass
-  // unseen. Contrast is left out: axe cannot see through layering such as
-  // MUI's outline drawn over a field's text, so those results say nothing
-  // about the colors.
+  // Fail on unreviewed incomplete results, except color-contrast where layered
+  // styles (e.g. MUI's notched outline) trigger false positives.
   const reviewableIncomplete = incomplete.filter(
     (result) => result.id !== "color-contrast",
   );
@@ -98,7 +94,6 @@ function describeNode(node: axe.NodeResult) {
   const describeCheck = (check: axe.CheckResult) =>
     `${check.message} [${causeOf(check)}]`;
   const required = [...node.all, ...node.none].map(describeCheck);
-  // Passing any one of these checks fixes the element, so they are alternatives.
   const alternatives =
     node.any.length > 1
       ? [

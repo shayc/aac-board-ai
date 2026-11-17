@@ -105,8 +105,7 @@ function scaleChroma(color: string, factor: number): string {
 function tileSx(theme: Theme) {
   const background = tileBackground(theme);
   const borderColor = dim("var(--tile-border-color, transparent)");
-  // The shorter side decides, so a wide but short tile keeps its label small
-  // and leaves the height to the symbol.
+  // Scale with `cqmin` so wide, short tiles leave vertical room for the symbol.
   const labelFontSize = `clamp(${theme.typography.body2.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
 
   return {
@@ -149,9 +148,8 @@ function tileSx(theme: Theme) {
   } as const;
 }
 
-// The fold mixes toward the tile's text color, so it darkens light tiles and
-// lightens dark ones; 60% keeps 3:1 even on saturated mid-tones. Boosting the
-// chroma restores some of the hue the mix greys out.
+// Mix 60% toward currentColor for >= 3:1 contrast across tile lightnesses;
+// boost chroma to counter desaturation.
 function folderTileSx(theme: Theme) {
   const foldColor = scaleChroma(
     mixWithTextColor(tileBackground(theme), "60%"),

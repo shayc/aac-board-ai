@@ -25,7 +25,6 @@ export function LoadingState({ message }: LoadingStateProps) {
         }}
       >
         <CircularProgress aria-labelledby={messageId} />
-        {/* The indicator carries the message as its name, so it is read once. */}
         <Typography aria-hidden id={messageId} color="text.secondary">
           {message ?? t(m.loading)}
         </Typography>

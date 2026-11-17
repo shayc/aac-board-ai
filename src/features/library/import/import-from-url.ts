@@ -21,8 +21,7 @@ class BoardFileURLError extends Error {
   }
 }
 
-// The ?board= param is attacker-controlled and confirmed by its host, so only
-// http(s) may reach fetch. Schemes such as data: carry a payload with no host.
+// Reject hostless schemes (e.g. data:) since the user confirms imports by host.
 export function parseBoardFileURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
   if (!isAllowedBoardFileURL(resolved)) {
@@ -146,8 +145,7 @@ function assertWithinSizeCap(
   throw downloadTooLargeError();
 }
 
-// The declared size can be missing or wrong, so the cap is enforced on the
-// bytes that actually arrive.
+// Content-Length can be omitted or spoofed, so enforce the cap on streamed bytes.
 async function readWithinSizeCap(
   reader: ReadableStreamDefaultReader<Uint8Array<ArrayBuffer>>,
   onReceived: (receivedBytes: number) => void,

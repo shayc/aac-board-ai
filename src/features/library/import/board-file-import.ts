@@ -63,7 +63,6 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
     limits: BOARD_FILE_IMPORT_LIMITS,
   });
   const baseId = deriveBoardSetId(file.name);
-  // A file named only by its extension has no stem to name the set after.
   const fallbackName = stripBoardFileExtension(file.name) || baseId;
   const content = buildBoardSetContent(loadedBoard, fallbackName);
   const id = await createBoardSetWithFreeId(baseId, content);

@@ -138,8 +138,7 @@ export default defineConfig({
         "src/paraglide/**",
         "**/testing/**",
       ],
-      // Raise these floors with meaningful gains, keeping them about two
-      // percentage points below measured coverage.
+      // Keep ~2 percentage points below measured coverage; raise with meaningful gains.
       thresholds: {
         statements: 95,
         branches: 88,

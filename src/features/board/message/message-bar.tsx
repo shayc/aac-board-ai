@@ -41,8 +41,7 @@ export function MessageBar({
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Reads the latest parts without reacting to them, so an edit during
-  // playback shows the newest part instead of jumping back to the active one.
+  // Avoid re-scrolling to activePartId when parts change mid-playback.
   const scrollActivePartIntoView = useEffectEvent((partId: string) => {
     const index = parts.findIndex((part) => part.id === partId);
     if (index === -1) {
@@ -59,8 +58,7 @@ export function MessageBar({
     scrollPartIntoView(scrollContainerRef.current?.lastElementChild, "end");
   }, [parts]);
 
-  // Declared after the newest-part scroll so it wins when an edit starts
-  // playback in the same render, as a spelling tile's echo does.
+  // Runs after the parts effect so active-part scroll wins when an edit starts playback.
   useLayoutEffect(() => {
     if (activePartId !== null) {
       scrollActivePartIntoView(activePartId);
@@ -113,8 +111,7 @@ function messageBarSx(theme: Theme) {
     px: BAR_INSET,
     overflow: "hidden",
     color: "text.primary",
-    // Forced-colors mode paints this border, outlining the bar where its
-    // shadow and fill are removed.
+    // Outlines the bar in forced-colors mode, where shadows and fills are stripped.
     border: 1,
     borderColor: "transparent",
     borderRadius: theme.vars.shape.borderRadiusFull,
@@ -122,8 +119,7 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    // A full grey 400 glares against the dark page; symbols still need a light
-    // ground.
+    // Dim the light surface against the dark page while keeping symbols on a light ground.
     ...theme.applyStyles("dark", {
       // Rings and controls inside the bar read the primary color from these.
       "--mui-palette-primary-main": DARK_GROUND_PRIMARY.main,
@@ -180,9 +176,7 @@ function MessagePartItem({
           : "none",
         // Clear of the bar's edges, which the word's box reaches.
         outlineOffset: -4,
-        // A caret marks the word that spelling still extends, so a space or
-        // a backspace that only closes or reopens it has a visible result. It
-        // is a border because forced-colors mode repaints backgrounds.
+        // Border caret marks an open word and survives forced-colors mode.
         ...(isOpen && {
           "&::after": {
             content: '""',

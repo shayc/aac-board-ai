@@ -39,16 +39,14 @@ export function useMessage(
   const undoStackRef = useRef<Message[]>([]);
   const text = state.parts.map((part) => part.label).join(" ");
 
-  // The setting is read each time the message is edited, so turning it off
-  // releases a message that was already played.
+  // Read on each edit so turning the setting off unmarks an already-played message.
   function readMessage() {
     return shouldClearAfterPlayback
       ? stateRef.current
       : markPlayed(stateRef.current, false);
   }
 
-  // Saved on every change rather than when the page hides: a mobile system can
-  // end a page in the background without warning.
+  // Save on every change since mobile OSes can kill background pages without warning.
   function commit(next: Message) {
     stateRef.current = next;
     setRenderedState(next);
@@ -57,8 +55,6 @@ export function useMessage(
     saveMessageDraft(isKept ? next : EMPTY_MESSAGE);
   }
 
-  // Marking the message played is not a step to undo, so it goes through
-  // `commit`.
   function commitStep(next: Message) {
     const undoStack = undoStackRef.current;
     undoStack.push(stateRef.current);
@@ -85,21 +81,18 @@ export function useMessage(
     return { edited, hasChanged: edited !== current };
   }
 
-  // Edits made against an earlier message belong to it: they apply to it even
-  // once it has played, instead of starting a new message, and are dropped if
-  // its content changed since.
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = stateRef.current;
     if (!hasSameContent(current, since)) {
       return;
     }
 
+    // Clear `hasPlayed` so post-play edits modify `since` instead of starting a new message.
     commitEdits(markPlayed(current, false), edits);
   }
 
-  // Only a playback that reaches the end of the unchanged message counts, so a
-  // replay that is under way or was stopped leaves the message open for more.
   function trackPlayback(completion: Promise<boolean>) {
+    // Clear `hasPlayed` while replaying so stopping mid-replay leaves the message open.
     const playing = setPlayed(false);
 
     void completion.then((hasCompleted) => {
@@ -142,8 +135,7 @@ export function useMessage(
       return;
     }
 
-    // Like any edit, undoing opens a played message for more, so the next
-    // tile adds to the message brought back instead of replacing it.
+    // Clear `hasPlayed` so the next tile appends to the restored message.
     commit(markPlayed(previous, false));
   }
 
@@ -161,8 +153,7 @@ export function useMessage(
   };
 }
 
-// A message spoken to its end that the next symbol replaces has done its job,
-// so it is not kept where the next person to open the app would see it.
+// Don't persist a finished message that the next selection will replace.
 function isKeptOnDevice(
   message: Message,
   shouldClearAfterPlayback: boolean,

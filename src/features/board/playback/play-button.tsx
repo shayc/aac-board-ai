@@ -84,8 +84,7 @@ export function PlayButton({
   );
 }
 
-// A tint of the play color reads as "not yet" in an empty message; MUI's solid
-// grey would be the heaviest shape on screen.
+// Tint with the primary color instead of MUI's heavy solid-grey disabled fill.
 function disabledSx(theme: Theme) {
   return {
     color: theme.alpha(

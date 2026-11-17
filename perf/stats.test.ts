@@ -46,8 +46,7 @@ await test("typicalDifference is the median of all pair averages", () => {
   assert.equal(typicalDifference([0, 0, 0, 0, 100]), 0);
 });
 
-// With 10 samples the 95% interval runs from the 9th smallest to the 9th
-// largest pair average, as in published signed-rank tables.
+// For n = 10, the 95% interval spans the 9th smallest to 9th largest pair average.
 await test("differenceInterval spans the differences the test would not reject", () => {
   assert.deepEqual(differenceInterval([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 0.95), {
     low: 3,
