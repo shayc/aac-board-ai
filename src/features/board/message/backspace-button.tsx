@@ -101,8 +101,9 @@ function backspaceSx(theme: Theme) {
   } as const;
 }
 
-// The "auto" size lets the insets stretch the ring to the disc's edge. The fill
-// waits out the delay so a quick tap never shows it.
+// The "auto" size stretches the ring over the whole button, which is the disc,
+// so it traces the disc's edge. The fill waits out the delay so a quick tap
+// never shows it.
 function ringSx(isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
 
