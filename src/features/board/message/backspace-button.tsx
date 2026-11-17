@@ -107,12 +107,12 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     fontSize: ICON_SIZE,
     color: "text.primary",
     // A tap leaves hover stuck on a touch screen.
-    "@media (hover: hover)": {
-      "&:hover": { backgroundColor: hoverColor },
+    "&:hover": {
+      "@media (hover: hover)": { backgroundColor: hoverColor },
     },
     ...theme.applyStyles("dark", {
-      "@media (hover: hover)": {
-        "&:hover": { backgroundColor: darkHoverColor },
+      "&:hover": {
+        "@media (hover: hover)": { backgroundColor: darkHoverColor },
       },
       [`&.${iconButtonClasses.disabled}`]: {
         color: theme.vars.palette.text.disabled,

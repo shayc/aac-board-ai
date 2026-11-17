@@ -90,17 +90,17 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const bar = button.parentElement;
   assertDefined(bar);
   const barColor = getComputedStyle(bar).backgroundColor;
-  const { backgroundColor, color: iconColor } = getComputedStyle(button);
+  const iconColor = getComputedStyle(button).color;
   const ring = button.querySelector("circle");
   assertDefined(ring);
   const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  const ground = paint(barColor, backgroundColor);
+  const ground = paint(barColor);
 
   return {
-    icon: contrastRatio(paint(barColor, backgroundColor, iconColor), ground),
-    ring: contrastRatio(paint(barColor, backgroundColor, ringColor), ground),
+    icon: contrastRatio(paint(barColor, iconColor), ground),
+    ring: contrastRatio(paint(barColor, ringColor), ground),
   };
 }
 
