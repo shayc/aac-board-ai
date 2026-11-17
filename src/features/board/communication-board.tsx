@@ -135,14 +135,10 @@ export function CommunicationBoard({
                 parts={message.parts}
                 isWordOpen={message.isWordOpen}
                 endAction={
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    sx={{ alignItems: "center" }}
-                  >
+                  <>
                     {backspaceButton}
                     {isPlayInMessageBar && playButton}
-                  </Stack>
+                  </>
                 }
               />
             </Box>
