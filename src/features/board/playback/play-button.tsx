@@ -99,9 +99,8 @@ function disabledSx(theme: Theme) {
   };
 }
 
-// The message bar is grey in dark mode, where the usual tint turns grey too
-// and the disc is lost beside backspace. A stronger tint of the lighter teal
-// keeps its hue there.
+// The usual tint turns grey on the bar's grey dark-mode ground and is lost
+// beside backspace; the lighter teal keeps its hue.
 function barDisabledDarkSx(theme: Theme) {
   return {
     color: theme.alpha(theme.vars.palette.primary.main, 0.6),

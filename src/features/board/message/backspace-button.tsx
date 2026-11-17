@@ -23,8 +23,7 @@ const RING_STROKE_WIDTH = 4;
 // MUI draws the ring in a box this many units wide, whatever its size.
 const RING_VIEW_BOX_SIZE = 44;
 
-// Beside the play button the disc is a step smaller, so play stays the bar's
-// main action. Alone in the bar it matches the play button's size.
+// A step smaller beside the play button, so play stays the bar's main action.
 const DISC_SIZES = {
   medium: { disc: 64, icon: 24 },
   large: { disc: MESSAGE_ACTION_SIZE, icon: 28 },

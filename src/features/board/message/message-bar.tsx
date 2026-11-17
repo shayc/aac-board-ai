@@ -16,13 +16,11 @@ export const MESSAGE_ACTION_SIZE = 80;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
 const BAR_INSET = 1;
-// The first word starts past the bar's rounded end, so the curve never clips
-// the ring around it.
+// Clears the bar's rounded end, which would clip the first word's ring.
 const MESSAGE_PADDING = 3;
 
-// The bar keeps the light scheme, whose teal fades into the grey ground the
-// bar takes in dark mode. This one keeps the hue and passes 3:1 on that
-// ground and on the backspace disc.
+// The light scheme's teal fades into the bar's grey dark-mode ground; this
+// one passes 3:1 on it and on the backspace disc.
 const DARK_GROUND_PRIMARY = { main: "#00443d", mainChannel: "0 68 61" };
 
 export interface MessageBarProps {
@@ -143,7 +141,7 @@ function scrollContainerSx(theme: Theme) {
     height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: MESSAGE_PADDING,
     overflow: "auto",
-    // A highlighted word scrolled back into view stops past the curve too.
+    // A highlighted word scrolled back into view clears the curve too.
     scrollPaddingInlineStart: theme.spacing(MESSAGE_PADDING),
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
@@ -182,8 +180,7 @@ function MessagePartItem({
         outline: isActive
           ? `2px solid ${theme.vars.palette.primary.main}`
           : "none",
-        // The word's box reaches the bar's top and bottom edges; the ring
-        // stays clear of them.
+        // Clear of the bar's edges, which the word's box reaches.
         outlineOffset: -4,
         // A caret marks the word that spelling still extends, so a space or
         // a backspace that only closes or reopens it has a visible result. It
