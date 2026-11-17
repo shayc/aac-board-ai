@@ -419,10 +419,18 @@ describe("CommunicationBoard", () => {
   });
 
   describe("phone controls", () => {
-    // The narrowest phones, and larger ones with display zoom, are 320px wide.
-    test.each([{ width: 320 }, { width: 375 }])(
-      "stretches play from the home button to the page margin on a $width px wide phone",
-      async ({ width }) => {
+    // Twice a 72px pill fits beside back and home from 344px up. The narrowest
+    // phones, and larger ones with display zoom, are 320px wide.
+    test.each([
+      { width: 375, playWidth: 144, name: "twice as wide as back or home" },
+      {
+        width: 320,
+        playWidth: 120,
+        name: "as wide as the room back and home leave",
+      },
+    ])(
+      "makes play $name on a $width px wide phone",
+      async ({ width, playWidth }) => {
         await setTestViewport(width, 755);
         const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
@@ -435,8 +443,9 @@ describe("CommunicationBoard", () => {
           .element()
           .getBoundingClientRect();
 
-        expect(play.left - home.right).toBeCloseTo(16, 0);
+        expect(play.width).toBeCloseTo(playWidth, 0);
         expect(play.right).toBeCloseTo(width - 16, 0);
+        expect(play.left - home.right).toBeGreaterThanOrEqual(16 - 0.5);
       },
     );
   });
