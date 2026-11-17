@@ -4,42 +4,35 @@ import Box from "@mui/material/Box";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
-import { BoardControlButton } from "../board-control-button";
-import { MESSAGE_SECONDARY_ACTION_SIZE } from "../message/message-bar";
-
-// Beside the message bar the buttons match its backspace disc.
-const ROUND_SX = {
-  width: MESSAGE_SECONDARY_ACTION_SIZE,
-  minWidth: 0,
-  height: MESSAGE_SECONDARY_ACTION_SIZE,
-  p: 0,
-} as const;
+import {
+  BoardControlButton,
+  type BoardControlShape,
+} from "../board-control-button";
 
 interface NavigationButtonsProps {
-  shape?: "pill" | "round";
   canGoBack: boolean;
   canGoHome: boolean;
+  shape?: BoardControlShape;
   onBack: () => void;
   onHome: () => void;
 }
 
 export function NavigationButtons({
-  shape = "pill",
   canGoBack,
   canGoHome,
+  shape,
   onBack,
   onHome,
 }: NavigationButtonsProps) {
   const t = useTranslate();
-  const buttonSx = shape === "round" ? ROUND_SX : undefined;
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
       <BoardControlButton
         aria-label={t(m.navBack)}
         disabled={!canGoBack}
+        shape={shape}
         onClick={onBack}
-        sx={buttonSx}
       >
         <ArrowBackOutlinedIcon sx={flipForRTL} />
       </BoardControlButton>
@@ -47,8 +40,8 @@ export function NavigationButtons({
       <BoardControlButton
         aria-label={t(m.navHome)}
         disabled={!canGoHome}
+        shape={shape}
         onClick={onHome}
-        sx={buttonSx}
       >
         <HomeOutlinedIcon />
       </BoardControlButton>
