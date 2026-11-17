@@ -15,7 +15,7 @@ interface SpeechStepBase extends SpeechText {
 }
 
 /**
- * A step highlights one cue for the whole utterance, or maps each speech
+ * A step highlights one cue for the whole utterance, or maps each word
  * boundary to the cue it reaches.
  */
 export type SpeechStep = SpeechStepBase &
