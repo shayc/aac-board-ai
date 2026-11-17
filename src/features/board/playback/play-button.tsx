@@ -47,7 +47,7 @@ export function PlayButton({
           aria-label={label}
           aria-keyshortcuts={ariaKeyShortcuts}
           disabled={disabled}
-          color={isPlaying ? "inherit" : "primary"}
+          color="primary"
           onClick={handleClick}
           sx={(theme) => ({
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
@@ -65,7 +65,7 @@ export function PlayButton({
         {...focusableDisabledProps(disabled)}
         aria-label={label}
         aria-keyshortcuts={ariaKeyShortcuts}
-        color={isPlaying ? "default" : "primary"}
+        color="primary"
         onClick={disabled ? undefined : handleClick}
         sx={(theme) => ({
           flexShrink: 0,
