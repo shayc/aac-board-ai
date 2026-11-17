@@ -27,6 +27,19 @@ describe("SuggestionBar", () => {
     await expectNoA11yViolations(screen.container);
   });
 
+  test("has no accessibility violations while more phrases are pending", async () => {
+    const props = makeProps({
+      status: { kind: "pending" },
+      phrases: ["Hello"],
+    });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+    await expect
+      .element(screen.getByRole("button", { name: "Hello" }))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test("has no accessibility violations when suggestions failed", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,

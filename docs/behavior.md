@@ -224,7 +224,10 @@ language.
    downloading, or that failed to prepare, shows an enable button; pressing it
    is the user gesture a model download needs. A download shows its progress.
    A failure shows only when the message has text, no phrase came back, and
-   every available source failed.
+   every available source failed. While a source is still answering, a pill of
+   three dots trails the phrases, where the next one will land. It holds still,
+   because a loop beside the grid would pull attention for as long as the
+   models run.
 5. Selecting a phrase calls `replaceWithText` on `useMessage`, which replaces
    the message with one text part per word in the communication language. It
    is one step in the undo history, so undo brings the tapped message back.
