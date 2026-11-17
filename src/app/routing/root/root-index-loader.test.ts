@@ -4,6 +4,7 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import {
   assert,
   beforeEach,
@@ -43,20 +44,32 @@ describe("rootIndexLoader", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("throws a localized 400 for a hostless board URL before asking", async () => {
+  test("throws a localized 400 and reports the cause for a hostless board URL before asking", async () => {
+    const reportedErrors = collectReportedErrors();
+
     await expect(
       callLoader(
         `?board=${encodeURIComponent("data:application/zip;base64,UEsDBA==")}`,
       ),
     ).rejects.toMatchObject(localizedImportFailure);
+
+    expect(reportedErrors).toMatchObject([
+      { message: "Unsupported board URL scheme: data:" },
+    ]);
   });
 
-  test("throws a localized 400 for an http: board URL on another host before asking", async () => {
+  test("throws a localized 400 and reports the cause for an http: board URL on another host before asking", async () => {
+    const reportedErrors = collectReportedErrors();
+
     await expect(
       callLoader(
         `?board=${encodeURIComponent("http://boards.example/core.obz")}`,
       ),
     ).rejects.toMatchObject(localizedImportFailure);
+
+    expect(reportedErrors).toMatchObject([
+      { message: "Unsupported board URL scheme: http:" },
+    ]);
   });
 
   test("rejects with the navigation's own abort reason during the starter import", async () => {

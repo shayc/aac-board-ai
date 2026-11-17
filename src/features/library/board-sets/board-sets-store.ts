@@ -36,6 +36,7 @@ export async function refreshBoardSets(): Promise<void> {
     revokeAssetURLsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
   } catch (error) {
+    reportError(error);
     patchState(boardSetsStore, {
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),

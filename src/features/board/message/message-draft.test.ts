@@ -6,6 +6,7 @@ import {
   seedBoardSets,
 } from "@features/library/testing";
 import { assertDefined } from "@shared/testing/assert-defined";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { describe, expect, onTestFinished, test } from "vitest";
 import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
@@ -71,7 +72,8 @@ describe("message draft", () => {
     });
   });
 
-  test("restores the words when stored media cannot be read", async () => {
+  test("restores the words and reports the cause when stored media cannot be read", async () => {
+    const reportedErrors = collectReportedErrors();
     await resetBoardsDB();
     await seedBoardSets([
       {
@@ -94,6 +96,11 @@ describe("message draft", () => {
 
     expect(restored.parts).toMatchObject([
       { label: "hello", imageSrc: undefined },
+    ]);
+    expect(reportedErrors.map(String)).toEqual([
+      expect.stringContaining(
+        "Failed to read stored assets of the message draft: ",
+      ),
     ]);
   });
 

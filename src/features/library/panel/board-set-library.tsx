@@ -51,7 +51,8 @@ export function BoardSetLibrary() {
 
     try {
       await deleteBoardSet(id);
-    } catch {
+    } catch (error) {
+      reportError(error);
       showSnackbar({
         message: (t) => t(m.libraryDeleteFailed),
         severity: "error",
@@ -68,7 +69,8 @@ export function BoardSetLibrary() {
   async function handleExport(boardSet: BoardSetRecord) {
     try {
       await exportBoardSet(boardSet);
-    } catch {
+    } catch (error) {
+      reportError(error);
       showSnackbar({
         message: (t) => t(m.libraryExportFailed),
         severity: "error",

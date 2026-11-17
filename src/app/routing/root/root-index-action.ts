@@ -1,6 +1,6 @@
 import { importBoardFileFromURL, rootBoardPath } from "@features/library";
 import { type ActionFunctionArgs, redirect } from "react-router";
-import { routeErrorCodes, routeErrorResponse } from "../route-error";
+import { failBoardFileURLImport } from "./fail-board-file-url-import";
 
 export async function rootIndexAction({
   request,
@@ -16,8 +16,8 @@ export async function rootIndexAction({
     });
 
     return redirect(rootBoardPath(importedBoardSet));
-  } catch {
+  } catch (error) {
     request.signal.throwIfAborted();
-    throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
+    failBoardFileURLImport(error);
   }
 }

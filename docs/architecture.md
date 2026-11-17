@@ -57,6 +57,10 @@ build. Each links to the section that explains it.
   board playback adapter is the only place that reports a failed playback
   ([Data and state ownership](#data-and-state-ownership),
   [Activate a tile](behavior.md#activate-a-tile)).
+- **An error is reported where it stops.** A catch that keeps an error from
+  travelling further passes it to `reportError`, because the message on screen
+  never names the cause. The few exceptions are listed with the rule
+  ([Report failures](behavior.md#report-failures)).
 - **Speech follows the text, not the setting.** A message part whose language
   is known is spoken in that language
   ([Language and direction](behavior.md#language-and-direction)).
@@ -141,8 +145,9 @@ Board-set records store the set's translated names. `obfToBoard` derives the
 runtime `Board` on each read, so runtime types can evolve without rewriting
 stored records. The storage schema in
 [`boards-db.ts`](../src/features/library/storage/boards-db.ts) has no migrations
-yet: a schema change edits it in place, and a browser holding an older database
-needs its site data cleared.
+yet: a schema change edits it in place, and a browser holding a database from
+another schema or version needs its site data cleared. Until then every load
+fails, and the error it reports names the mismatch.
 
 React Context provides theme, playback controls, and snackbar access.
 Components subscribe to external stores through `useExternalStore`, a
@@ -383,6 +388,10 @@ full.
   [`features/board/message/`](../src/features/board/message/). The UI text
   catalogs in [`messages/`](../messages/), which code reads as `m.someKey`, are
   unrelated.
+- **Report** — telling the person that something failed, in a snackbar or on
+  the error page, names what failed. Reporting an error, through the browser's
+  `reportError`, records why in the console for whoever investigates
+  ([Report failures](behavior.md#report-failures)).
 - **Translation** — UI text comes from the Paraglide message catalogs and is
   read through `useTranslate()`. Board translation is separate: it shows board
   strings in the communication language, reading the translations a board

@@ -1,32 +1,13 @@
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
-import { createMemoryRouter, data } from "react-router";
+import { data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
 import { routeErrorCodes, routeErrorResponse } from "./route-error";
-import { RouteErrorBoundary } from "./route-error-boundary";
-
-function TestRoute() {
-  return null;
-}
-
-function TestHydrateFallback() {
-  return null;
-}
+import { createErrorPageRouter } from "./testing/create-error-page-router";
 
 function renderWithLoader(loader: () => unknown) {
-  const router = createMemoryRouter(
-    [
-      {
-        path: "/",
-        loader,
-        Component: TestRoute,
-        HydrateFallback: TestHydrateFallback,
-        ErrorBoundary: RouteErrorBoundary,
-      },
-    ],
-    { initialEntries: ["/"] },
-  );
+  const router = createErrorPageRouter({ loader });
 
   return renderWithProviders(
     <>

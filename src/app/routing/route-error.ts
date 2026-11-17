@@ -1,5 +1,5 @@
 import { isRecord } from "@shared/utils/is-record";
-import { data } from "react-router";
+import { data, isRouteErrorResponse } from "react-router";
 
 export const routeErrorCodes = {
   boardNotFound: "board-not-found",
@@ -26,9 +26,26 @@ export function routeErrorResponse(code: RouteErrorCode) {
   return data(payload, { status: statusByCode[code] });
 }
 
-export function isRouteErrorPayload(
-  value: unknown,
-): value is RouteErrorPayload {
+// The error page shows only a title, so an error no loader anticipated is
+// reported here or it leaves no trace of what went wrong.
+export function reportRouteError(error: unknown): void {
+  if (getRouteErrorCode(error)) {
+    return;
+  }
+
+  reportError(error);
+}
+
+/** The code of an error the error page explains, or undefined for any other. */
+export function getRouteErrorCode(error: unknown): RouteErrorCode | undefined {
+  if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
+    return error.data.code;
+  }
+
+  return undefined;
+}
+
+function isRouteErrorPayload(value: unknown): value is RouteErrorPayload {
   return isRecord(value) && isRouteErrorCode(value.code);
 }
 

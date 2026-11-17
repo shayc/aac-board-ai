@@ -13,6 +13,7 @@ invariants, data ownership, and module boundaries. Its
   - [Translate board sets](#translate-board-sets)
   - [Activate a tile](#activate-a-tile)
   - [Suggest a message](#suggest-a-message)
+  - [Report failures](#report-failures)
 - [Accessibility, language, and presentation](#accessibility-language-and-presentation)
   - [Accessibility](#accessibility)
   - [Switch scanning](#switch-scanning)
@@ -247,6 +248,38 @@ probe the same models for the communication language. They show the
 instructions field when the Rewriter supports that language, and otherwise say
 what is missing: the Rewriter, the language, or a device that can run the
 models.
+
+### Report failures
+
+A message on screen names what failed, never why, so the error behind it is
+also passed to `reportError`, which shows its cause in the browser console.
+Nothing leaves the device. That holds for an ordinary cause too, such as a
+download tried offline or a board link the app does not support: the message
+gives no reason either way. The code that catches an error and stops it from
+travelling further is the code that reports it, which is why the reports below
+sit in loaders, stores, hooks and components alike.
+
+- **Routes:** [`reportRouteError`](../src/app/routing/route-error.ts) reports
+  loader, action and render errors that reach the error page, except the ones
+  the page explains with its own title: board not found and board set not
+  found.
+- **Board links:** a `?board=` link that can't be parsed or imported is
+  explained by the page too, but its title gives no cause, so the loader and
+  the action report the underlying error themselves, through
+  [`failBoardFileURLImport`](../src/app/routing/root/fail-board-file-url-import.ts).
+- **Library:** a failed list load, catalog download, export or delete is
+  reported beside its message.
+- **Stored pictures and sounds:** a board opens, and a message draft is
+  restored, without the assets that can't be read. Each reports its failed
+  reads together as one error. An asset that was never stored is not a failure.
+- **Translation:** a failed pass is reported, as described in
+  [Translate board sets](#translate-board-sets).
+
+Three things are not reported. Cancelled downloads and interrupted navigations
+are not failures. An error the screen already explains in full, such as board
+not found, has nothing to add. Playback, preferences, saving the message draft
+and the built-in AI fail as a matter of course on many devices and handle that
+themselves.
 
 ## Accessibility, language, and presentation
 

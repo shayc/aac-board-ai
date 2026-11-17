@@ -2,6 +2,8 @@ import { type AssetKey, findAssetKey, getAssetURL } from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import { parseOptionalString } from "@shared/utils/parse-optional-string";
+import { reportErrorsTogether } from "@shared/utils/report-errors-together";
+import { settleAll } from "@shared/utils/settle-all";
 import { EMPTY_MESSAGE } from "./message-transforms";
 import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
 
@@ -56,7 +58,8 @@ export async function restoreMessageDraft(): Promise<Message> {
     return EMPTY_MESSAGE;
   }
 
-  const parts = await Promise.all(savedParts.map(restorePart));
+  const assetURLByKey = await readAssetURLs(savedParts);
+  const parts = savedParts.map((part) => restorePart(part, assetURLByKey));
 
   return {
     parts,
@@ -156,30 +159,52 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   return { boardSetId: value.boardSetId, path: value.path };
 }
 
-async function restorePart(part: SavedPart): Promise<MessagePart> {
+// A part keeps its words without a picture or sound that can't be read. The
+// map is keyed by each part's own key object, which restorePart looks up again.
+async function readAssetURLs(
+  parts: readonly SavedPart[],
+): Promise<Map<AssetKey, string | undefined>> {
+  const { values: assetURLEntries, errors } = await settleAll(
+    parts
+      .flatMap(assetKeysOf)
+      .map(
+        async (key) =>
+          [key, await getAssetURL(key.boardSetId, key.path)] as const,
+      ),
+  );
+  reportErrorsTogether(
+    errors,
+    "Failed to read stored assets of the message draft",
+  );
+
+  return new Map(assetURLEntries);
+}
+
+function assetKeysOf(part: SavedPart): AssetKey[] {
+  if (part.kind === "text") {
+    return [];
+  }
+
+  return [part.imageAssetKey, part.soundAssetKey].filter(
+    (key) => key !== undefined,
+  );
+}
+
+function restorePart(
+  part: SavedPart,
+  assetURLByKey: ReadonlyMap<AssetKey, string | undefined>,
+): MessagePart {
   if (part.kind === "text") {
     return part;
   }
 
   const { imageAssetKey, soundAssetKey, ...tilePart } = part;
-  const [imageURL, soundURL] = await Promise.all([
-    resolveAssetURL(imageAssetKey),
-    resolveAssetURL(soundAssetKey),
-  ]);
+  const imageURL = imageAssetKey && assetURLByKey.get(imageAssetKey);
+  const soundURL = soundAssetKey && assetURLByKey.get(soundAssetKey);
 
   return {
     ...tilePart,
     imageSrc: imageURL ?? tilePart.imageSrc,
     soundSrc: soundURL ?? tilePart.soundSrc,
   };
-}
-
-async function resolveAssetURL(
-  key: AssetKey | undefined,
-): Promise<string | undefined> {
-  if (!key) {
-    return undefined;
-  }
-
-  return getAssetURL(key.boardSetId, key.path).catch(() => undefined);
 }

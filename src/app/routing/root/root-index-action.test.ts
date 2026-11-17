@@ -1,5 +1,6 @@
 import { listBoardSetRecords } from "@features/library";
 import { resetBoardsDB, SAMPLE_OBZ_URL } from "@features/library/testing";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { localizedImportFailure } from "../testing/localized-import-failure";
 import { routeArgs } from "../testing/route-args";
@@ -32,6 +33,7 @@ describe("rootIndexAction", () => {
   });
 
   test("throws a localized 400 instead of fetching a non-http(s) board URL", async () => {
+    const reportedErrors = collectReportedErrors();
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     await expect(
@@ -41,9 +43,11 @@ describe("rootIndexAction", () => {
     ).rejects.toMatchObject(localizedImportFailure);
 
     expect(fetchSpy).not.toHaveBeenCalled();
+    expect(reportedErrors).toHaveLength(1);
   });
 
-  test("throws a localized 400 when the board URL cannot be imported", async () => {
+  test("throws a localized 400 and reports the cause when the board URL cannot be imported", async () => {
+    const reportedErrors = collectReportedErrors();
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 404 }),
     );
@@ -53,6 +57,10 @@ describe("rootIndexAction", () => {
         `?board=${encodeURIComponent("https://example.com/gone.obz")}`,
       ),
     ).rejects.toMatchObject(localizedImportFailure);
+
+    expect(reportedErrors).toEqual([
+      new Error("Failed to fetch board: HTTP 404"),
+    ]);
   });
 
   test("rejects with the navigation's own abort reason without importing", async () => {

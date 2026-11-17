@@ -1,3 +1,5 @@
+import { reportErrorsTogether } from "@shared/utils/report-errors-together";
+import { settleAll } from "@shared/utils/settle-all";
 import type { OBFBoard } from "@shayc/open-board-format";
 import type { Board, BoardKey } from "../board-types";
 import { collectMediaPaths } from "../obf/collect-media-paths";
@@ -44,17 +46,28 @@ async function resolveAssetURLs(
   boardSetId: string,
   obfBoard: OBFBoard,
 ): Promise<Map<string, string>> {
-  const entries = await Promise.all(
-    Array.from(collectMediaPaths([obfBoard]), async (path) => {
-      // A board missing one picture or sound is still usable; failing the
-      // whole load would leave the user with no board at all.
-      const url = await getAssetURL(boardSetId, path).catch(() => undefined);
-
-      return url ? [[path, url] as const] : [];
-    }),
+  // A board missing one picture or sound is still usable; failing the
+  // whole load would leave the user with no board at all.
+  const { values: assetURLEntries, errors } = await settleAll(
+    Array.from(
+      collectMediaPaths([obfBoard]),
+      async (path) => [path, await getAssetURL(boardSetId, path)] as const,
+    ),
+  );
+  reportErrorsTogether(
+    errors,
+    `Failed to read stored assets of board set ${boardSetId}`,
   );
 
-  return new Map(entries.flat());
+  const assetURLByPath = new Map<string, string>();
+
+  for (const [path, url] of assetURLEntries) {
+    if (url) {
+      assetURLByPath.set(path, url);
+    }
+  }
+
+  return assetURLByPath;
 }
 
 // Broken links are dropped here, not at import: the stored file keeps them so
