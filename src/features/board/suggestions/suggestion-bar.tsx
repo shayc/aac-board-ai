@@ -8,9 +8,15 @@ import { useTranslate } from "@shared/language/use-translate";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
+// A keyframe, not a transition: the theme owns the chip's transitions for
+// press feedback.
+const phraseEnter = keyframes`
+  from { opacity: 0; }
+`;
+
 // Opacity only, so nothing beside the grid moves or changes size.
 const pendingPulse = keyframes`
-  0%, 60%, 100% { opacity: 0.35; }
+  0%, 60%, 100% { opacity: 0.5; }
   30% { opacity: 1; }
 `;
 
@@ -64,6 +70,12 @@ export function SuggestionBar({
               lang={language}
               label={phrase}
               onClick={() => onPhraseSelect(phrase)}
+              sx={(theme) => ({
+                animation: `${phraseEnter} ${theme.transitions.duration.shortest}ms ${theme.transitions.easing.easeOut}`,
+                "@media (prefers-reduced-motion: reduce)": {
+                  animation: "none",
+                },
+              })}
             />
           ))}
         </Box>
@@ -100,9 +112,8 @@ function PendingPill({ isVisible }: PendingPillProps) {
           alignSelf: "stretch",
           gap: 0.75,
           paddingInline: 2,
-          border: "1px dashed",
-          borderColor: "text.secondary",
           borderRadius: theme.vars.shape.borderRadiusFull,
+          bgcolor: "action.hover",
         }}
       >
         <PendingPillDot delayMs={0} />

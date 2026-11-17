@@ -231,7 +231,8 @@ language.
 
 While a source is still answering, the
 [suggestion bar](../src/features/board/suggestions/suggestion-bar.tsx) shows a
-pill of three dots after the phrases, where the next one will land. The dots
+softly filled pill of three dots after the phrases, where the next one will
+land, and each phrase fades in as it arrives. The dots
 pulse in opacity only, so nothing beside the grid moves, and hold still when
 the system asks for reduced motion. The pill leaves at once when the last
 source answers.
