@@ -138,7 +138,7 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .not.toBeInTheDocument();
-      expect(reportedErrors.length).toBeGreaterThan(0);
+      expect(reportedErrors).toHaveLength(1);
     });
 
     test("hides catalog downloads for board sets that are already stored", async () => {

@@ -16,8 +16,10 @@ export async function rootIndexAction({
     });
 
     return redirect(rootBoardPath(importedBoardSet));
-  } catch {
+  } catch (error) {
     request.signal.throwIfAborted();
+    // The route error names no cause, and reportRouteError skips it.
+    reportError(error);
     throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
   }
 }
