@@ -14,21 +14,21 @@
   "libraryBoardSets": "보드 세트",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "보드 파일을 가져오는 중…",
-        "countPlural=*": "보드 파일을 가져오는 중…"
+        "count=1": "보드 파일을 가져오는 중…",
+        "count=*": "보드 파일을 가져오는 중…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "보드 세트를 가져왔습니다",
-        "countPlural=*": "보드 세트를 가져왔습니다"
+        "count=1": "보드 세트를 가져왔습니다",
+        "count=*": "보드 세트를 가져왔습니다"
       }
     }
   ],

@@ -14,21 +14,21 @@
   "libraryBoardSets": "Seturi de table",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Se importă fișierul de tablă…",
-        "countPlural=*": "Se importă fișierele de table…"
+        "count=1": "Se importă fișierul de tablă…",
+        "count=*": "Se importă fișierele de table…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set de table importat",
-        "countPlural=*": "Seturi de table importate"
+        "count=1": "Set de table importat",
+        "count=*": "Seturi de table importate"
       }
     }
   ],

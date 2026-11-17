@@ -14,21 +14,21 @@
   "libraryBoardSets": "Táblakészletek",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Táblafájl importálása…",
-        "countPlural=*": "Táblafájlok importálása…"
+        "count=1": "Táblafájl importálása…",
+        "count=*": "Táblafájlok importálása…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Táblakészlet importálva",
-        "countPlural=*": "Táblakészletek importálva"
+        "count=1": "Táblakészlet importálva",
+        "count=*": "Táblakészletek importálva"
       }
     }
   ],

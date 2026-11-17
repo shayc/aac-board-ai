@@ -14,21 +14,21 @@
   "libraryBoardSets": "ערכות לוחות",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ייבוא קובץ לוח…",
-        "countPlural=*": "ייבוא קובצי לוחות…"
+        "count=1": "ייבוא קובץ לוח…",
+        "count=*": "ייבוא קובצי לוחות…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ערכת הלוחות יובאה בהצלחה",
-        "countPlural=*": "ערכות הלוחות יובאו בהצלחה"
+        "count=1": "ערכת הלוחות יובאה בהצלחה",
+        "count=*": "ערכות הלוחות יובאו בהצלחה"
       }
     }
   ],

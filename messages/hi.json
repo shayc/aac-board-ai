@@ -14,21 +14,21 @@
   "libraryBoardSets": "बोर्ड सेट",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड फ़ाइल आयात हो रही है…",
-        "countPlural=*": "बोर्ड फ़ाइलें आयात हो रही हैं…"
+        "count=1": "बोर्ड फ़ाइल आयात हो रही है…",
+        "count=*": "बोर्ड फ़ाइलें आयात हो रही हैं…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड सेट आयात हो गया",
-        "countPlural=*": "बोर्ड सेट आयात हो गए"
+        "count=1": "बोर्ड सेट आयात हो गया",
+        "count=*": "बोर्ड सेट आयात हो गए"
       }
     }
   ],

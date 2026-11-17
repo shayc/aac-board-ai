@@ -14,21 +14,21 @@
   "libraryBoardSets": "Ensembles de tableaux",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importation du fichier de tableau…",
-        "countPlural=*": "Importation des fichiers de tableaux…"
+        "count=1": "Importation du fichier de tableau…",
+        "count=*": "Importation des fichiers de tableaux…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Ensemble de tableaux importé",
-        "countPlural=*": "Ensembles de tableaux importés"
+        "count=1": "Ensemble de tableaux importé",
+        "count=*": "Ensembles de tableaux importés"
       }
     }
   ],

@@ -14,21 +14,21 @@
   "libraryBoardSets": "Bộ bảng",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Đang nhập tệp bảng…",
-        "countPlural=*": "Đang nhập các tệp bảng…"
+        "count=1": "Đang nhập tệp bảng…",
+        "count=*": "Đang nhập các tệp bảng…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Đã nhập bộ bảng",
-        "countPlural=*": "Đã nhập các bộ bảng"
+        "count=1": "Đã nhập bộ bảng",
+        "count=*": "Đã nhập các bộ bảng"
       }
     }
   ],

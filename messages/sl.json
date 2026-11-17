@@ -14,21 +14,21 @@
   "libraryBoardSets": "Kompleti tabel",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Uvažanje datoteke table…",
-        "countPlural=*": "Uvažanje datotek tabel…"
+        "count=1": "Uvažanje datoteke table…",
+        "count=*": "Uvažanje datotek tabel…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Komplet tabel uvožen",
-        "countPlural=*": "Kompleti tabel uvoženi"
+        "count=1": "Komplet tabel uvožen",
+        "count=*": "Kompleti tabel uvoženi"
       }
     }
   ],

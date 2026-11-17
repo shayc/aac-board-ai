@@ -14,21 +14,21 @@
   "libraryBoardSets": "Súpravy tabuliek",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importovanie súboru tabuľky…",
-        "countPlural=*": "Importovanie súborov tabuliek…"
+        "count=1": "Importovanie súboru tabuľky…",
+        "count=*": "Importovanie súborov tabuliek…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Súprava tabuliek importovaná",
-        "countPlural=*": "Súpravy tabuliek importované"
+        "count=1": "Súprava tabuliek importovaná",
+        "count=*": "Súpravy tabuliek importované"
       }
     }
   ],

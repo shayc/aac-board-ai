@@ -14,21 +14,21 @@
   "libraryBoardSets": "Набори от дъски",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Импортиране на файл с дъска…",
-        "countPlural=*": "Импортиране на файлове с дъски…"
+        "count=1": "Импортиране на файл с дъска…",
+        "count=*": "Импортиране на файлове с дъски…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Наборът от дъски е импортиран",
-        "countPlural=*": "Наборите от дъски са импортирани"
+        "count=1": "Наборът от дъски е импортиран",
+        "count=*": "Наборите от дъски са импортирани"
       }
     }
   ],

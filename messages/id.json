@@ -14,21 +14,21 @@
   "libraryBoardSets": "Set papan",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Mengimpor berkas papan…",
-        "countPlural=*": "Mengimpor berkas papan…"
+        "count=1": "Mengimpor berkas papan…",
+        "count=*": "Mengimpor berkas papan…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set papan diimpor",
-        "countPlural=*": "Set papan diimpor"
+        "count=1": "Set papan diimpor",
+        "count=*": "Set papan diimpor"
       }
     }
   ],

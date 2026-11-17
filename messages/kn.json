@@ -14,21 +14,21 @@
   "libraryBoardSets": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
-        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
+        "count=1": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
+        "count=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಸೆಟ್ ಆಮದಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಆಮದಾಗಿವೆ"
+        "count=1": "ಬೋರ್ಡ್ ಸೆಟ್ ಆಮದಾಗಿದೆ",
+        "count=*": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಆಮದಾಗಿವೆ"
       }
     }
   ],

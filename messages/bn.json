@@ -14,21 +14,21 @@
   "libraryBoardSets": "বোর্ড সেট",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "বোর্ড ফাইল আমদানি করা হচ্ছে…",
-        "countPlural=*": "বোর্ড ফাইল আমদানি করা হচ্ছে…"
+        "count=1": "বোর্ড ফাইল আমদানি করা হচ্ছে…",
+        "count=*": "বোর্ড ফাইল আমদানি করা হচ্ছে…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "বোর্ড সেট আমদানি করা হয়েছে",
-        "countPlural=*": "বোর্ড সেট আমদানি করা হয়েছে"
+        "count=1": "বোর্ড সেট আমদানি করা হয়েছে",
+        "count=*": "বোর্ড সেট আমদানি করা হয়েছে"
       }
     }
   ],

@@ -14,21 +14,21 @@
   "libraryBoardSets": "Наборы досок",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Импорт файла доски…",
-        "countPlural=*": "Импорт файлов досок…"
+        "count=1": "Импорт файла доски…",
+        "count=*": "Импорт файлов досок…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Набор досок импортирован",
-        "countPlural=*": "Наборы досок импортированы"
+        "count=1": "Набор досок импортирован",
+        "count=*": "Наборы досок импортированы"
       }
     }
   ],

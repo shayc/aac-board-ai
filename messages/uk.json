@@ -14,21 +14,21 @@
   "libraryBoardSets": "Набори дошок",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Імпортування файла дошки…",
-        "countPlural=*": "Імпортування файлів дошок…"
+        "count=1": "Імпортування файла дошки…",
+        "count=*": "Імпортування файлів дошок…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Набір дошок імпортовано",
-        "countPlural=*": "Набори дошок імпортовано"
+        "count=1": "Набір дошок імпортовано",
+        "count=*": "Набори дошок імпортовано"
       }
     }
   ],

@@ -14,21 +14,21 @@
   "libraryBoardSets": "مجموعات اللوحات",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "جارٍ استيراد ملف لوحة…",
-        "countPlural=*": "جارٍ استيراد ملفات لوحات…"
+        "count=1": "جارٍ استيراد ملف لوحة…",
+        "count=*": "جارٍ استيراد ملفات لوحات…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "تم استيراد مجموعة اللوحات",
-        "countPlural=*": "تم استيراد مجموعات اللوحات"
+        "count=1": "تم استيراد مجموعة اللوحات",
+        "count=*": "تم استيراد مجموعات اللوحات"
       }
     }
   ],

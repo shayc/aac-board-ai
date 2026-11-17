@@ -14,21 +14,21 @@
   "libraryBoardSets": "Sady tabulek",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importování souboru tabulky…",
-        "countPlural=*": "Importování souborů tabulek…"
+        "count=1": "Importování souboru tabulky…",
+        "count=*": "Importování souborů tabulek…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Sada tabulek importována",
-        "countPlural=*": "Sady tabulek importovány"
+        "count=1": "Sada tabulek importována",
+        "count=*": "Sady tabulek importovány"
       }
     }
   ],

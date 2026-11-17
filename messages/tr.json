@@ -14,21 +14,21 @@
   "libraryBoardSets": "Pano setleri",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Pano dosyası içe aktarılıyor…",
-        "countPlural=*": "Pano dosyaları içe aktarılıyor…"
+        "count=1": "Pano dosyası içe aktarılıyor…",
+        "count=*": "Pano dosyaları içe aktarılıyor…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Pano seti içe aktarıldı",
-        "countPlural=*": "Pano setleri içe aktarıldı"
+        "count=1": "Pano seti içe aktarıldı",
+        "count=*": "Pano setleri içe aktarıldı"
       }
     }
   ],

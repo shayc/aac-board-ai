@@ -14,21 +14,21 @@
   "libraryBoardSets": "Tafelsätze",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafeldatei wird importiert…",
-        "countPlural=*": "Tafeldateien werden importiert…"
+        "count=1": "Tafeldatei wird importiert…",
+        "count=*": "Tafeldateien werden importiert…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafelsatz importiert",
-        "countPlural=*": "Tafelsätze importiert"
+        "count=1": "Tafelsatz importiert",
+        "count=*": "Tafelsätze importiert"
       }
     }
   ],

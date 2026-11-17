@@ -14,21 +14,21 @@
   "libraryBoardSets": "沟通板集",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "正在导入沟通板文件……",
-        "countPlural=*": "正在导入沟通板文件……"
+        "count=1": "正在导入沟通板文件……",
+        "count=*": "正在导入沟通板文件……"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "已导入沟通板集",
-        "countPlural=*": "已导入沟通板集"
+        "count=1": "已导入沟通板集",
+        "count=*": "已导入沟通板集"
       }
     }
   ],

@@ -14,21 +14,21 @@
   "libraryBoardSets": "బోర్డు సెట్లు",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి అవుతోంది…",
-        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి అవుతున్నాయి…"
+        "count=1": "బోర్డు ఫైల్ దిగుమతి అవుతోంది…",
+        "count=*": "బోర్డు ఫైళ్లు దిగుమతి అవుతున్నాయి…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "బోర్డు సెట్ దిగుమతి చేయబడింది",
-        "countPlural=*": "బోర్డు సెట్లు దిగుమతి చేయబడ్డాయి"
+        "count=1": "బోర్డు సెట్ దిగుమతి చేయబడింది",
+        "count=*": "బోర్డు సెట్లు దిగుమతి చేయబడ్డాయి"
       }
     }
   ],

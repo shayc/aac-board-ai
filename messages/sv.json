@@ -14,21 +14,21 @@
   "libraryBoardSets": "Taveluppsättningar",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importerar tavelfil…",
-        "countPlural=*": "Importerar tavelfiler…"
+        "count=1": "Importerar tavelfil…",
+        "count=*": "Importerar tavelfiler…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Taveluppsättning importerad",
-        "countPlural=*": "Taveluppsättningar importerade"
+        "count=1": "Taveluppsättning importerad",
+        "count=*": "Taveluppsättningar importerade"
       }
     }
   ],

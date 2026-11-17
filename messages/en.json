@@ -14,21 +14,21 @@
   "libraryBoardSets": "Board sets",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importing board file…",
-        "countPlural=*": "Importing board files…"
+        "count=1": "Importing board file…",
+        "count=*": "Importing board files…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Board set imported",
-        "countPlural=*": "Board sets imported"
+        "count=1": "Board set imported",
+        "count=*": "Board sets imported"
       }
     }
   ],
