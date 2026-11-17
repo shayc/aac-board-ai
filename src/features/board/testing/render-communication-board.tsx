@@ -33,10 +33,7 @@ export function communicationBoardTree(
   return (
     <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
-        {/* Stands in for the shell's main, which the board fills as a flex item. */}
-        <div
-          style={{ display: "flex", flexDirection: "column", height: "100vh" }}
-        >
+        <div style={{ height: "100vh" }}>
           <CommunicationBoard
             board={obfToBoard(obfBoard)}
             language={obfBoard.locale}
