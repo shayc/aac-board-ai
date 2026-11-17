@@ -154,6 +154,10 @@ how the message changes:
    appends a message part and plays it. Other tiles apply their actions in order.
    The [glossary](architecture.md#glossary) says how spelling, a space, and backspace change a
    message part.
+   With the message setting "Play symbols as they're added" off, a tile stays
+   silent: it adds its part, and a tile that spells and then plays does not
+   echo the word. It still stops any playback, as a played tile would. A tile
+   that only plays the message still plays it, and so does the play button.
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
    finishes uninterrupted and the message was not edited meanwhile, so a clear

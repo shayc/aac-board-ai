@@ -12,6 +12,7 @@ import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
+import { useMessagePreferences } from "./message/message-preferences-store";
 import type { Message } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
@@ -45,6 +46,7 @@ export function CommunicationBoard({
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const message = useMessage(initialMessage);
+  const { shouldPlayTiles } = useMessagePreferences();
   const playback = useBoardPlayback({
     onMessagePlayback: message.trackPlayback,
   });
@@ -61,9 +63,11 @@ export function CommunicationBoard({
       playMessage: playback.playMessage,
       echoMessage: playback.echoMessage,
       playPart: playback.playPart,
+      stop: playback.stop,
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
     language,
+    shouldPlayTiles,
   });
 
   const hasMessage = message.parts.length > 0;

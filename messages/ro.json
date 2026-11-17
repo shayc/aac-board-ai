@@ -91,6 +91,7 @@
   "speechVolume": "Volum",
   "speechPreviewVoice": "Ascultă vocea",
   "speechPreviewSample": "Bună, aceasta este vocea mea!",
+  "messagePlayTiles": "Redă simbolurile când sunt adăugate",
   "messageImages": "Afișează imaginile",
   "messageHighlight": "Evidențiază în timpul redării",
   "messageClearAfterPlaying": "Șterge după redare",

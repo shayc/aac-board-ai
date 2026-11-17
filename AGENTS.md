@@ -106,6 +106,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - When starting new work without an existing task branch, create a branch from `main` using an intent-based prefix (`feat/`, `fix/`, `refactor/`). Never switch away from an existing task branch unless asked.
 - Keep changes closely scoped; avoid sweeping refactors or structural reformatting outside the task.
 - For code changes, verify with `npm run lint`, `npm test`, and `npm run build` before pushing or marking the task complete. For documentation-only changes, run only applicable formatting, link, or documentation checks.
+- Keep a pull request's title and description true to its final diff: after each round of changes, and always before merging, rewrite them to describe what the PR does now, not how it got there.
 - Follow existing module boundaries and adjacent file design patterns.
 
 ### Ask First

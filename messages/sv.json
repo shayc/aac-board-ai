@@ -91,6 +91,7 @@
   "speechVolume": "Volym",
   "speechPreviewVoice": "Lyssna på rösten",
   "speechPreviewSample": "Hej, det här är min röst!",
+  "messagePlayTiles": "Spela upp symboler när de läggs till",
   "messageImages": "Visa bilder",
   "messageHighlight": "Markera under uppspelning",
   "messageClearAfterPlaying": "Rensa efter uppspelning",

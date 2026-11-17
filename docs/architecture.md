@@ -307,8 +307,8 @@ full.
   translates the sets that lack the communication language and revalidates
   the one on screen.
 - **[Activate a tile](behavior.md#activate-a-tile):** `activateButton` opens a
-  linked board, adds the tile to the message and plays it, or runs the tile's
-  actions.
+  linked board, adds the tile to the message and plays it unless a message
+  setting keeps tiles silent, or runs the tile's actions.
 - **[Suggest a message](behavior.md#suggest-a-message):** the Proofreader and
   Rewriter offer phrasings of the message, and selecting one replaces it.
 

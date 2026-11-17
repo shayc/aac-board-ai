@@ -6,6 +6,11 @@ import { MessageSettings } from "./message-settings";
 describe("MessageSettings", () => {
   test.each([
     {
+      name: "Play symbols as they're added",
+      preference: "shouldPlayTiles",
+      effect: "playing symbols as they're added",
+    },
+    {
       name: "Show images",
       preference: "areImagesVisible",
       effect: "images in the message bar",

@@ -10,11 +10,12 @@ interface ButtonActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged">;
   playback: Pick<
     UseBoardPlaybackReturn,
-    "playMessage" | "echoMessage" | "playPart"
+    "playMessage" | "echoMessage" | "playPart" | "stop"
   >;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   /** The language the board's text is in, when known. */
   language: string | undefined;
+  shouldPlayTiles: boolean;
 }
 
 type ButtonActivator = (button: BoardButton) => void;
@@ -24,6 +25,7 @@ export function createButtonActivator({
   playback,
   navigation,
   language,
+  shouldPlayTiles,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
     if (button.linkedBoardId) {
@@ -51,6 +53,14 @@ export function createButtonActivator({
     });
 
     message.apply([{ kind: "tile", part }]);
+    // A silent tile interrupts playback just as a played one does, so selecting
+    // a tile while the message speaks stops it whatever the setting.
+    if (!shouldPlayTiles) {
+      playback.stop();
+
+      return;
+    }
+
     void playback.playPart(part);
   }
 
@@ -78,8 +88,17 @@ export function createButtonActivator({
     );
 
     // A tile that spells and then plays echoes the word being typed, so only a
-    // tile that plays the message as it stands speaks it.
-    const play = hasChanged ? playback.echoMessage : playback.playMessage;
+    // tile that plays the message as it stands speaks it. The echo is feedback
+    // on the tile, so it stays silent when tiles are not played.
+    const isEcho = hasChanged;
+    if (isEcho && !shouldPlayTiles) {
+      playback.stop();
+      message.apply(editsAfterPlay);
+
+      return;
+    }
+
+    const play = isEcho ? playback.echoMessage : playback.playMessage;
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays, and

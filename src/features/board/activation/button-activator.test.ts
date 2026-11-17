@@ -31,7 +31,7 @@ function word(label: string): MessageEdit[] {
 
 async function setup(
   seed: readonly MessageEdit[] = [],
-  { hasPlayed = false, language = "en" } = {},
+  { hasPlayed = false, language = "en", shouldPlayTiles = true } = {},
 ) {
   const { result, rerender } = await renderHook(() => useMessage());
   const message = result.current;
@@ -57,6 +57,7 @@ async function setup(
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
       Promise.resolve(),
     ),
+    stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
 
@@ -92,6 +93,7 @@ async function setup(
       playback,
       navigation,
       language,
+      shouldPlayTiles,
     }),
     playback,
     navigation,
@@ -147,6 +149,49 @@ describe("createButtonActivator", () => {
     expect(appended.id).not.toBe("btn");
     expect(playback.playPart).toHaveBeenCalledExactlyOnceWith(appended);
     expect(playback.playMessage).not.toHaveBeenCalled();
+  });
+
+  test("appends a button without actions silently, stopping playback, when tiles are not played", async () => {
+    const { activateButton, playback, readLabels } = await setup([], {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({ id: "btn", label: "bell", actions: [] });
+
+    expect(await readLabels()).toEqual(["bell"]);
+    expect(playback.playPart).not.toHaveBeenCalled();
+    expect(playback.stop).toHaveBeenCalledOnce();
+  });
+
+  test("spells without echoing, stopping playback, when tiles are not played", async () => {
+    const { activateButton, playback, readLabels } = await setup([], {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [
+        { kind: "spell", text: "a" },
+        { kind: "play" },
+        { kind: "clear" },
+      ],
+    });
+
+    expect(await readLabels()).toEqual([]);
+    expect(playback.echoMessage).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
+    expect(playback.stop).toHaveBeenCalledOnce();
+  });
+
+  test("still plays the message for a play action when tiles are not played", async () => {
+    const { activateButton, playback } = await setup(word("hi"), {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
+
+    expect(playback.playMessage).toHaveBeenCalledOnce();
   });
 
   test("gives tiles and spelled words the board's language", async () => {

@@ -91,6 +91,7 @@
   "speechVolume": "वॉल्यूम",
   "speechPreviewVoice": "आवाज़ सुनें",
   "speechPreviewSample": "नमस्ते, यह मेरी आवाज़ है!",
+  "messagePlayTiles": "प्रतीक जोड़ते समय चलाएँ",
   "messageImages": "चित्र दिखाएं",
   "messageHighlight": "चलाते समय हाइलाइट करें",
   "messageClearAfterPlaying": "चलाने के बाद साफ़ करें",
