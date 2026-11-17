@@ -178,8 +178,10 @@ function measureBoardLayout(
   return {
     isPlayBelowGrid,
     playEnd: window.innerWidth - play.right,
+    playHeight: play.height,
     messageBarStart: bar.left,
     messageBarEnd: window.innerWidth - bar.right,
+    messageBarHeight: bar.height,
     firstTileStart: firstColumn.left,
     controlsToGrid: areControlsBelowGrid
       ? controls.top - viewport.bottom
@@ -338,7 +340,10 @@ describe("CommunicationBoard", () => {
         wholeRows: 5,
         isPlayBelowGrid: true,
         playEnd: 16,
+        playHeight: 48,
         messageBarStart: 16,
+        // As tall as backspace, 80px, with the bar's 8px inset and 1px border.
+        messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
       {
         name: "a phone on its side",
@@ -350,8 +355,12 @@ describe("CommunicationBoard", () => {
         wholeRows: 2,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
+        // Fills the compact bar inside its inset, as backspace does.
+        playHeight: 64,
         // Past the back and home buttons, 64px each and 8px apart, and a 16px gap.
         messageBarStart: 16 + 64 + 8 + 64 + 16,
+        // As tall as backspace, 64px, with the bar's 8px inset and 1px border.
+        messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {
         name: "a wide, short desktop window",
@@ -363,7 +372,9 @@ describe("CommunicationBoard", () => {
         wholeRows: 3,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
+        playHeight: 64,
         messageBarStart: 16 + 64 + 8 + 64 + 16,
+        messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {
         name: "a tablet",
@@ -376,7 +387,10 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: false,
         // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
+        playHeight: 80,
         messageBarStart: 24 + 64 + 8 + 64 + 16,
+        // Play, 80px, sets the height where there is room for it.
+        messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
     ];
 
@@ -391,7 +405,9 @@ describe("CommunicationBoard", () => {
         wholeRows,
         isPlayBelowGrid,
         playEnd,
+        playHeight,
         messageBarStart,
+        messageBarHeight,
       }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
@@ -400,8 +416,10 @@ describe("CommunicationBoard", () => {
         const atStart = measureBoardLayout(screen.container);
         expect(atStart.isPlayBelowGrid).toBe(isPlayBelowGrid);
         expect(atStart.playEnd).toBeCloseTo(playEnd, 0);
+        expect(atStart.playHeight).toBeCloseTo(playHeight, 0);
         expect(atStart.messageBarStart).toBeCloseTo(messageBarStart, 0);
         expect(atStart.messageBarEnd).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarHeight).toBeCloseTo(messageBarHeight, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.controlsToGrid).toBeCloseTo(clearance, 0);
         expect(atStart.edgeAboveToFirstRow).toBeCloseTo(pageMargin, 0);
