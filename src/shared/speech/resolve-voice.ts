@@ -11,7 +11,7 @@ export type VoicesByLanguage = Partial<
 export function resolveVoice(
   voicesByLanguage: VoicesByLanguage,
   language: string,
-  savedVoiceURI: string | null,
+  savedVoiceURI: string | undefined,
   preferredLocales: readonly string[] = navigator.languages,
 ): SpeechSynthesisVoice | null {
   const voices = voicesByLanguage[language] ?? [];

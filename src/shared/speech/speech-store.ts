@@ -113,6 +113,15 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
+// Saved voices come from storage as a plain object, so an own-key check keeps
+// inherited members like `constructor` from reading as a saved voice.
+function getSavedVoiceURI(
+  voiceURIs: VoiceURIsByLanguage,
+  language: string,
+): string | undefined {
+  return Object.hasOwn(voiceURIs, language) ? voiceURIs[language] : undefined;
+}
+
 // A voice reads any text as its own language, so the voice follows the
 // language of the text rather than the communication language.
 export function getSpeechParameters(language: string): SpeechParameters {
@@ -124,7 +133,7 @@ export function getSpeechParameters(language: string): SpeechParameters {
     voice: resolveVoice(
       voicesByLanguage,
       language,
-      voiceURIs[language] ?? null,
+      getSavedVoiceURI(voiceURIs, language),
     ),
     rate,
     pitch,
@@ -137,5 +146,9 @@ export function useSpeechVoice(): SpeechSynthesisVoice | null {
   const { language } = useCommunicationLanguage();
   const { voiceURIs } = useSpeechPreferences();
 
-  return resolveVoice(voicesByLanguage, language, voiceURIs[language] ?? null);
+  return resolveVoice(
+    voicesByLanguage,
+    language,
+    getSavedVoiceURI(voiceURIs, language),
+  );
 }
