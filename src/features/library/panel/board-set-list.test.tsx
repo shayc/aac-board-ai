@@ -198,6 +198,12 @@ describe("BoardSetList", () => {
       .element(screen.getByRole("menuitem", { name: "Delete" }))
       .toHaveFocus();
 
+    await userEvent.keyboard("{ArrowUp}");
+
+    await expect
+      .element(screen.getByRole("menuitem", { name: "Export" }))
+      .toHaveFocus();
+
     await userEvent.keyboard("{Escape}");
 
     await expect.element(screen.getByRole("menu")).not.toBeInTheDocument();
