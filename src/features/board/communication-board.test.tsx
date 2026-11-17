@@ -326,7 +326,7 @@ describe("CommunicationBoard", () => {
 
   describe("layout", () => {
     // Available heights exclude the app header (57px on phones, 65px on tablets,
-    // 49px on a phone on its side).
+    // 49px on a short landscape screen).
     const LAYOUT_CASES = [
       {
         name: "a phone",
@@ -351,6 +351,18 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
         // Past the back and home buttons, 72px each and 8px apart, and a 16px gap.
+        messageBarStart: 16 + 72 + 8 + 72 + 16,
+      },
+      {
+        name: "a wide, short desktop window",
+        width: 1440,
+        height: 531,
+        pageMargin: 16,
+        clearance: 4,
+        overflowHint: 8,
+        wholeRows: 3,
+        isPlayBelowGrid: false,
+        playEnd: 16 + 8 + 1,
         messageBarStart: 16 + 72 + 8 + 72 + 16,
       },
       {
