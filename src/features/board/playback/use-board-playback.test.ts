@@ -316,7 +316,7 @@ describe("useBoardPlayback", () => {
     });
     await rerender();
 
-    expect(speech.spokenTexts()).toEqual(["dog"]);
+    expect(speech.spokenTexts()).toEqual(["Dog"]);
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
@@ -340,7 +340,7 @@ describe("useBoardPlayback", () => {
     ).resolves.toBe(true);
     await rerender();
 
-    expect(speech.spokenTexts()).toEqual(["before", "dog", "after"]);
+    expect(speech.spokenTexts()).toEqual(["before", "Dog", "after"]);
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
@@ -358,7 +358,7 @@ describe("useBoardPlayback", () => {
         soundSrc: "bark.mp3",
       },
     ]);
-    await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
+    await expect.poll(() => speech.spokenTexts()).toEqual(["Dog"]);
     await rerender();
 
     expect(result.current.activePartId).toBe("1");

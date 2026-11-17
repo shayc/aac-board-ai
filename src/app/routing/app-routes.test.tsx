@@ -186,7 +186,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["no way feline"]);
+      expect(speech.spokenTexts()).toEqual(["No way feline"]);
     });
   });
 

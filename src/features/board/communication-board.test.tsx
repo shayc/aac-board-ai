@@ -1011,7 +1011,7 @@ describe("CommunicationBoard", () => {
         await tile.click();
 
         await vi.waitFor(() => {
-          expect(speech.spokenTexts()).toEqual(["i need help"]);
+          expect(speech.spokenTexts()).toEqual(["I need help"]);
         });
       },
     );
@@ -1035,7 +1035,7 @@ describe("CommunicationBoard", () => {
         await tile.click();
 
         await vi.waitFor(() => {
-          expect(speech.spokenTexts()).toEqual(["i need help"]);
+          expect(speech.spokenTexts()).toEqual(["I need help"]);
         });
       },
     );
