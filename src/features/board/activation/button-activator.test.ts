@@ -31,7 +31,7 @@ function word(label: string): MessageEdit[] {
 
 async function setup(
   seed: readonly MessageEdit[] = [],
-  { hasPlayed = false, language = "en" } = {},
+  { hasPlayed = false, language = "en", shouldPlayTiles = true } = {},
 ) {
   const { result, rerender } = await renderHook(() => useMessage());
   const message = result.current;
@@ -92,6 +92,7 @@ async function setup(
       playback,
       navigation,
       language,
+      shouldPlayTiles,
     }),
     playback,
     navigation,
@@ -147,6 +148,27 @@ describe("createButtonActivator", () => {
     expect(appended.id).not.toBe("btn");
     expect(playback.playPart).toHaveBeenCalledExactlyOnceWith(appended);
     expect(playback.playMessage).not.toHaveBeenCalled();
+  });
+
+  test("appends a button without actions without playing it when tiles are not played", async () => {
+    const { activateButton, playback, readLabels } = await setup([], {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({ id: "btn", label: "bell", actions: [] });
+
+    expect(await readLabels()).toEqual(["bell"]);
+    expect(playback.playPart).not.toHaveBeenCalled();
+  });
+
+  test("still plays the message for a play action when tiles are not played", async () => {
+    const { activateButton, playback } = await setup(word("hi"), {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
+
+    expect(playback.playMessage).toHaveBeenCalledOnce();
   });
 
   test("gives tiles and spelled words the board's language", async () => {

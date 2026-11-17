@@ -91,6 +91,7 @@
   "speechVolume": "Громкость",
   "speechPreviewVoice": "Прослушать голос",
   "speechPreviewSample": "Привет, это мой голос!",
+  "messagePlaySymbols": "Воспроизводить символы при добавлении",
   "messageImages": "Показывать изображения",
   "messageHighlight": "Подсвечивать во время воспроизведения",
   "messageClearAfterPlaying": "Очищать после воспроизведения",

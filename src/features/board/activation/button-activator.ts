@@ -15,6 +15,8 @@ interface ButtonActivatorOptions {
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   /** The language the board's text is in, when known. */
   language: string | undefined;
+  /** Whether a tile without actions plays as it joins the message. */
+  shouldPlayTiles: boolean;
 }
 
 type ButtonActivator = (button: BoardButton) => void;
@@ -24,6 +26,7 @@ export function createButtonActivator({
   playback,
   navigation,
   language,
+  shouldPlayTiles,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
     if (button.linkedBoardId) {
@@ -51,7 +54,9 @@ export function createButtonActivator({
     });
 
     message.apply([{ kind: "tile", part }]);
-    void playback.playPart(part);
+    if (shouldPlayTiles) {
+      void playback.playPart(part);
+    }
   }
 
   function runActions(actions: readonly BoardAction[]) {

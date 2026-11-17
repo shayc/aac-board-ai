@@ -91,6 +91,7 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Stem beluisteren",
   "speechPreviewSample": "Hoi, dit is mijn stem!",
+  "messagePlaySymbols": "Symbolen afspelen bij toevoegen",
   "messageImages": "Afbeeldingen weergeven",
   "messageHighlight": "Markeren tijdens afspelen",
   "messageClearAfterPlaying": "Wissen na het afspelen",

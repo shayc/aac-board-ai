@@ -91,6 +91,7 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Écouter la voix",
   "speechPreviewSample": "Bonjour, voici ma voix !",
+  "messagePlaySymbols": "Lire les symboles à leur ajout",
   "messageImages": "Afficher les images",
   "messageHighlight": "Surligner pendant la lecture",
   "messageClearAfterPlaying": "Effacer après la lecture",

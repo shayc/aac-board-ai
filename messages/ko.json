@@ -91,6 +91,7 @@
   "speechVolume": "볼륨",
   "speechPreviewVoice": "음성 미리 듣기",
   "speechPreviewSample": "안녕하세요, 제 목소리예요!",
+  "messagePlaySymbols": "추가할 때 상징 재생",
   "messageImages": "이미지 표시",
   "messageHighlight": "재생하는 동안 강조 표시",
   "messageClearAfterPlaying": "재생 후 지우기",

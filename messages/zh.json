@@ -91,6 +91,7 @@
   "speechVolume": "音量",
   "speechPreviewVoice": "试听语音",
   "speechPreviewSample": "你好，这是我的声音！",
+  "messagePlaySymbols": "添加时播放符号",
   "messageImages": "显示图片",
   "messageHighlight": "播放时高亮显示",
   "messageClearAfterPlaying": "播放后清空",

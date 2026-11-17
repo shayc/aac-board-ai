@@ -91,6 +91,7 @@
   "speechVolume": "Lautstärke",
   "speechPreviewVoice": "Stimme anhören",
   "speechPreviewSample": "Hallo, das ist meine Stimme!",
+  "messagePlaySymbols": "Symbole beim Hinzufügen abspielen",
   "messageImages": "Bilder anzeigen",
   "messageHighlight": "Beim Abspielen hervorheben",
   "messageClearAfterPlaying": "Nach dem Abspielen löschen",

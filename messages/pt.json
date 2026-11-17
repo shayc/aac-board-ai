@@ -91,6 +91,7 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Ouvir a voz",
   "speechPreviewSample": "Olá, esta é a minha voz!",
+  "messagePlaySymbols": "Reproduzir os símbolos ao adicioná-los",
   "messageImages": "Mostrar imagens",
   "messageHighlight": "Destacar durante a reprodução",
   "messageClearAfterPlaying": "Limpar após a reprodução",

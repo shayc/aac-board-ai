@@ -151,7 +151,9 @@ coordinates navigation and playback, and hands message edits to
 how the message changes:
 
 1. A tile linking to another board navigates immediately. A tile without actions
-   appends a message part and plays it. Other tiles apply their actions in order.
+   appends a message part and plays it, unless the message setting to play
+   symbols as they're added is off; a play action still plays the message
+   then, since the board asked for it. Other tiles apply their actions in order.
    The [glossary](architecture.md#glossary) says how spelling, a space, and backspace change a
    message part.
 2. A play action (OBF `:speak`) captures the message at that point. Changes

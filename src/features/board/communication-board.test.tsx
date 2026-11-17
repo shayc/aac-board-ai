@@ -25,6 +25,7 @@ import { restoreMessageDraft } from "./message/message-draft";
 import {
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
+  setMessagePlayTiles,
 } from "./message/message-preferences-store";
 import { EMPTY_MESSAGE } from "./message/message-transforms";
 import type { Message } from "./message/message-types";
@@ -409,6 +410,24 @@ describe("CommunicationBoard", () => {
         expect(speech.spokenTexts()).toEqual(["hi"]);
       });
       expect(audio.play).not.toHaveBeenCalled();
+    });
+
+    test("adds a tile to the message silently when tiles are not played, and plays it with the message", async () => {
+      setMessagePlayTiles(false);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect
+        .element(screen.getByRole("list", { name: "Message" }))
+        .toHaveTextContent("hello");
+      expect(speech.speak).not.toHaveBeenCalled();
+
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello"]);
+      });
     });
 
     test.each(["", " \t\n "])(

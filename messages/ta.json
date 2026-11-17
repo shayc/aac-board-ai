@@ -91,6 +91,7 @@
   "speechVolume": "ஒலியளவு",
   "speechPreviewVoice": "குரலைக் கேள்",
   "speechPreviewSample": "வணக்கம், இது என் குரல்!",
+  "messagePlaySymbols": "குறியீடுகளைச் சேர்க்கும்போது இயக்கு",
   "messageImages": "படங்களைக் காட்டு",
   "messageHighlight": "இயக்கும்போது தனிப்படுத்திக் காட்டு",
   "messageClearAfterPlaying": "இயக்கிய பிறகு அழி",

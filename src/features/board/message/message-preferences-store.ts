@@ -7,6 +7,7 @@ interface MessagePreferences {
   areImagesVisible: boolean;
   isHighlightingEnabled: boolean;
   shouldClearAfterPlayback: boolean;
+  shouldPlayTiles: boolean;
 }
 
 export function parseMessagePreferences(raw: unknown): MessagePreferences {
@@ -19,6 +20,7 @@ export function parseMessagePreferences(raw: unknown): MessagePreferences {
       stored.shouldClearAfterPlayback,
       true,
     ),
+    shouldPlayTiles: parseBoolean(stored.shouldPlayTiles, true),
   };
 }
 
@@ -41,6 +43,10 @@ export function setMessageClearAfterPlayback(
   shouldClearAfterPlayback: boolean,
 ): void {
   patchState(messagePreferencesStore, { shouldClearAfterPlayback });
+}
+
+export function setMessagePlayTiles(shouldPlayTiles: boolean): void {
+  patchState(messagePreferencesStore, { shouldPlayTiles });
 }
 
 export function useMessagePreferences(): MessagePreferences {

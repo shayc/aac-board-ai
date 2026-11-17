@@ -91,6 +91,7 @@
   "speechVolume": "Hlasitost",
   "speechPreviewVoice": "Poslechnout hlas",
   "speechPreviewSample": "Ahoj, tohle je můj hlas!",
+  "messagePlaySymbols": "Přehrávat symboly při přidání",
   "messageImages": "Zobrazit obrázky",
   "messageHighlight": "Zvýrazňovat při přehrávání",
   "messageClearAfterPlaying": "Vymazat po přehrání",

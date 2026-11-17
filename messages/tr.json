@@ -91,6 +91,7 @@
   "speechVolume": "Ses düzeyi",
   "speechPreviewVoice": "Sesi dinle",
   "speechPreviewSample": "Merhaba, bu benim sesim!",
+  "messagePlaySymbols": "Semboller eklenirken oynat",
   "messageImages": "Görselleri göster",
   "messageHighlight": "Oynatılırken vurgula",
   "messageClearAfterPlaying": "Oynatıldıktan sonra temizle",

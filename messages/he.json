@@ -91,6 +91,7 @@
   "speechVolume": "עוצמת הקול",
   "speechPreviewVoice": "השמעת הקול לדוגמה",
   "speechPreviewSample": "שלום, זה הקול שלי!",
+  "messagePlaySymbols": "השמעת סמלים בזמן הוספתם",
   "messageImages": "הצגת תמונות במסר",
   "messageHighlight": "הדגשה בזמן ההשמעה",
   "messageClearAfterPlaying": "ניקוי המסר אחרי ההשמעה",

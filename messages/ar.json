@@ -91,6 +91,7 @@
   "speechVolume": "مستوى الصوت",
   "speechPreviewVoice": "استماع إلى الصوت",
   "speechPreviewSample": "مرحبًا، هذا هو صوتي!",
+  "messagePlaySymbols": "تشغيل الرموز عند إضافتها",
   "messageImages": "إظهار الصور",
   "messageHighlight": "التمييز أثناء التشغيل",
   "messageClearAfterPlaying": "المسح بعد التشغيل",

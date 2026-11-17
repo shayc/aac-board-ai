@@ -91,6 +91,7 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Preview voice",
   "speechPreviewSample": "Hi, this is my voice!",
+  "messagePlaySymbols": "Play symbols as they're added",
   "messageImages": "Show images",
   "messageHighlight": "Highlight while playing",
   "messageClearAfterPlaying": "Clear after playing",

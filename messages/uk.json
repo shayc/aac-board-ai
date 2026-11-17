@@ -91,6 +91,7 @@
   "speechVolume": "Гучність",
   "speechPreviewVoice": "Прослухати голос",
   "speechPreviewSample": "Привіт, це мій голос!",
+  "messagePlaySymbols": "Відтворювати символи під час додавання",
   "messageImages": "Показувати зображення",
   "messageHighlight": "Підсвічувати під час відтворення",
   "messageClearAfterPlaying": "Очищати після відтворення",
