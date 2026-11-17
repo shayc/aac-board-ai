@@ -476,7 +476,7 @@ const themeOptions = {
 
 // MUI shortens a toolbar in landscape only below `sm`, which a phone on its
 // side is wider than. Merged after the options so MUI's own heights stay.
-const shortLandscapeToolbar = {
+const shortLandscapeOptions = {
   mixins: {
     toolbar: {
       [shortLandscape({ breakpoints: unstable_createBreakpoints({}) })]: {
@@ -488,10 +488,10 @@ const shortLandscapeToolbar = {
 
 export const ltrTheme = createTheme(
   { ...themeOptions, direction: "ltr" },
-  shortLandscapeToolbar,
+  shortLandscapeOptions,
 );
 
 export const rtlTheme = createTheme(
   { ...themeOptions, direction: "rtl" },
-  shortLandscapeToolbar,
+  shortLandscapeOptions,
 );

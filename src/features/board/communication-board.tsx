@@ -44,7 +44,7 @@ export function CommunicationBoard({
 }: CommunicationBoardProps) {
   const t = useTranslate();
   const communication = useCommunicationLanguage();
-  const isNarrow = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
   const message = useMessage(initialMessage);
@@ -72,10 +72,9 @@ export function CommunicationBoard({
     shouldPlayTiles,
   });
 
-  // A short landscape screen has width to spare and no height, so its controls
-  // share the message bar's row and it takes the narrow screen's spacing.
-  const areControlsBelowGrid = isNarrow && !isShortLandscape;
-  const isNavigationBesideSuggestions = !isNarrow && !isShortLandscape;
+  // A short landscape screen has width to spare and no height.
+  const areControlsBelowGrid = isSmallScreen && !isShortLandscape;
+  const isNavigationBesideSuggestions = !isSmallScreen && !isShortLandscape;
   const isPlayInMessageBar = !areControlsBelowGrid;
   const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
   const scrollClearance = isShortLandscape
