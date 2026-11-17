@@ -8,10 +8,10 @@ import {
   routeErrorCodes,
   routeErrorResponse,
 } from "./route-error";
-import { createErrorRouteRouter } from "./testing/create-error-route-router";
+import { createErrorPageRouter } from "./testing/create-error-page-router";
 
-function renderErrorRoute(route: Pick<RouteObject, "loader" | "Component">) {
-  const router = createErrorRouteRouter(route);
+function renderWithRoute(route: Pick<RouteObject, "loader" | "Component">) {
+  const router = createErrorPageRouter(route);
 
   return renderWithProviders(
     <RouterProvider router={router} onError={reportRouteError} />,
@@ -23,7 +23,7 @@ describe("reportRouteError", () => {
     const reportedErrors = collectReportedErrors();
     const loaderError = new Error("boom");
 
-    const screen = await renderErrorRoute({
+    const screen = await renderWithRoute({
       loader: () => {
         throw loaderError;
       },
@@ -39,7 +39,7 @@ describe("reportRouteError", () => {
     const reportedErrors = collectReportedErrors();
     const renderError = new Error("boom");
 
-    const screen = await renderErrorRoute({
+    const screen = await renderWithRoute({
       Component: () => {
         throw renderError;
       },
@@ -54,7 +54,7 @@ describe("reportRouteError", () => {
   test("does not report an error the page explains", async () => {
     const reportedErrors = collectReportedErrors();
 
-    const screen = await renderErrorRoute({
+    const screen = await renderWithRoute({
       loader: () => {
         throw routeErrorResponse(routeErrorCodes.boardNotFound);
       },

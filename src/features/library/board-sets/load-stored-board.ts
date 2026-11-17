@@ -1,3 +1,5 @@
+import { reportErrorsTogether } from "@shared/utils/report-errors-together";
+import { settleAll } from "@shared/utils/settle-all";
 import type { OBFBoard } from "@shayc/open-board-format";
 import type { Board, BoardKey } from "../board-types";
 import { collectMediaPaths } from "../obf/collect-media-paths";
@@ -46,36 +48,23 @@ async function resolveAssetURLs(
 ): Promise<Map<string, string>> {
   // A board missing one picture or sound is still usable; failing the
   // whole load would leave the user with no board at all.
-  const results = await Promise.allSettled(
+  const { values: assetURLEntries, errors } = await settleAll(
     Array.from(
       collectMediaPaths([obfBoard]),
       async (path) => [path, await getAssetURL(boardSetId, path)] as const,
     ),
   );
+  reportErrorsTogether(
+    errors,
+    `Failed to read stored assets of board set ${boardSetId}`,
+  );
 
   const assetURLByPath = new Map<string, string>();
-  const readErrors: unknown[] = [];
 
-  for (const result of results) {
-    if (result.status === "rejected") {
-      readErrors.push(result.reason);
-      continue;
-    }
-
-    const [path, url] = result.value;
+  for (const [path, url] of assetURLEntries) {
     if (url) {
       assetURLByPath.set(path, url);
     }
-  }
-
-  // One storage fault fails every read, so the board reports them together.
-  if (readErrors.length > 0) {
-    reportError(
-      new AggregateError(
-        readErrors,
-        `Failed to read ${readErrors.length} stored assets of board set ${boardSetId}`,
-      ),
-    );
   }
 
   return assetURLByPath;

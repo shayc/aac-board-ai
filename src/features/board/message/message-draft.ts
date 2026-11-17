@@ -2,6 +2,8 @@ import { type AssetKey, findAssetKey, getAssetURL } from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import { parseOptionalString } from "@shared/utils/parse-optional-string";
+import { reportErrorsTogether } from "@shared/utils/report-errors-together";
+import { settleAll } from "@shared/utils/settle-all";
 import { EMPTY_MESSAGE } from "./message-transforms";
 import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
 
@@ -56,20 +58,8 @@ export async function restoreMessageDraft(): Promise<Message> {
     return EMPTY_MESSAGE;
   }
 
-  const readErrors: unknown[] = [];
-  const parts = await Promise.all(
-    savedParts.map((part) => restorePart(part, readErrors)),
-  );
-
-  // One storage fault fails every read, so the draft reports them together.
-  if (readErrors.length > 0) {
-    reportError(
-      new AggregateError(
-        readErrors,
-        `Failed to read ${readErrors.length} stored assets of the message draft`,
-      ),
-    );
-  }
+  const assetURLByKey = await readAssetURLs(savedParts);
+  const parts = savedParts.map((part) => restorePart(part, assetURLByKey));
 
   return {
     parts,
@@ -169,39 +159,51 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   return { boardSetId: value.boardSetId, path: value.path };
 }
 
-async function restorePart(
+// A part keeps its words without a picture or sound that can't be read.
+async function readAssetURLs(
+  parts: readonly SavedPart[],
+): Promise<Map<AssetKey, string | undefined>> {
+  const { values: assetURLEntries, errors } = await settleAll(
+    parts
+      .flatMap(assetKeysOf)
+      .map(
+        async (key) =>
+          [key, await getAssetURL(key.boardSetId, key.path)] as const,
+      ),
+  );
+  reportErrorsTogether(
+    errors,
+    "Failed to read stored assets of the message draft",
+  );
+
+  return new Map(assetURLEntries);
+}
+
+function assetKeysOf(part: SavedPart): AssetKey[] {
+  if (part.kind === "text") {
+    return [];
+  }
+
+  return [part.imageAssetKey, part.soundAssetKey].filter(
+    (key) => key !== undefined,
+  );
+}
+
+function restorePart(
   part: SavedPart,
-  readErrors: unknown[],
-): Promise<MessagePart> {
+  assetURLByKey: ReadonlyMap<AssetKey, string | undefined>,
+): MessagePart {
   if (part.kind === "text") {
     return part;
   }
 
   const { imageAssetKey, soundAssetKey, ...tilePart } = part;
-  const [imageURL, soundURL] = await Promise.all([
-    resolveAssetURL(imageAssetKey, readErrors),
-    resolveAssetURL(soundAssetKey, readErrors),
-  ]);
+  const imageURL = imageAssetKey && assetURLByKey.get(imageAssetKey);
+  const soundURL = soundAssetKey && assetURLByKey.get(soundAssetKey);
 
   return {
     ...tilePart,
     imageSrc: imageURL ?? tilePart.imageSrc,
     soundSrc: soundURL ?? tilePart.soundSrc,
   };
-}
-
-async function resolveAssetURL(
-  key: AssetKey | undefined,
-  readErrors: unknown[],
-): Promise<string | undefined> {
-  if (!key) {
-    return undefined;
-  }
-
-  // The part keeps its words without the picture or sound that can't be read.
-  return getAssetURL(key.boardSetId, key.path).catch((error: unknown) => {
-    readErrors.push(error);
-
-    return undefined;
-  });
 }

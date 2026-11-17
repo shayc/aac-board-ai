@@ -4,10 +4,10 @@ import { data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
 import { routeErrorCodes, routeErrorResponse } from "./route-error";
-import { createErrorRouteRouter } from "./testing/create-error-route-router";
+import { createErrorPageRouter } from "./testing/create-error-page-router";
 
 function renderWithLoader(loader: () => unknown) {
-  const router = createErrorRouteRouter({ loader });
+  const router = createErrorPageRouter({ loader });
 
   return renderWithProviders(
     <>

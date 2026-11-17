@@ -252,8 +252,10 @@ models.
 ### Report failures
 
 A message on screen names what failed, never why, so a failure nobody planned
-for is also passed to `reportError`, which shows it in the browser console.
-Nothing leaves the device.
+for is also passed to `reportError`, which shows its cause in the browser
+console. Nothing leaves the device. The code that catches an error and stops
+it from travelling further is the code that reports it, which is why the
+reports below sit in loaders, stores, hooks and components alike.
 
 - **Routes:** [`reportRouteError`](../src/app/routing/route-error.ts) reports
   loader, action and render errors that reach the error page, except the ones
@@ -261,7 +263,8 @@ Nothing leaves the device.
   found.
 - **Board links:** a `?board=` link that can't be parsed or imported is
   explained by the page too, but its title gives no cause, so the loader and
-  the action report the underlying error themselves.
+  the action report the underlying error themselves, through
+  [`failBoardFileURLImport`](../src/app/routing/root/fail-board-file-url-import.ts).
 - **Library:** a failed list load, catalog download, export or delete is
   reported beside its message.
 - **Stored pictures and sounds:** a board opens, and a message draft is

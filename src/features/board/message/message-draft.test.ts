@@ -98,7 +98,7 @@ describe("message draft", () => {
       { label: "hello", imageSrc: undefined },
     ]);
     expect(reportedErrors).toMatchObject([
-      { message: "Failed to read 1 stored assets of the message draft" },
+      { message: "Failed to read stored assets of the message draft" },
     ]);
   });
 

@@ -6,7 +6,7 @@ import {
   starterBoardSet,
 } from "@features/library";
 import { type LoaderFunctionArgs, redirect } from "react-router";
-import { routeErrorCodes, routeErrorResponse } from "../route-error";
+import { failBoardFileURLImport } from "./fail-board-file-url-import";
 
 export async function rootIndexLoader({
   request,
@@ -35,8 +35,6 @@ function parseBoardFileHost(boardFileURL: string): string {
   try {
     return parseBoardFileURL(boardFileURL).host;
   } catch (error) {
-    // The route error names no cause, and reportRouteError skips it.
-    reportError(error);
-    throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
+    failBoardFileURLImport(error);
   }
 }

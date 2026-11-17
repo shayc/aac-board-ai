@@ -124,7 +124,7 @@ describe("BoardSetLibrary", () => {
         .toBeInTheDocument();
     });
 
-    test("shows an error instead of the empty state when board sets cannot be retrieved", async () => {
+    test("shows an error instead of the empty state and reports the cause when board sets cannot be retrieved", async () => {
       const reportedErrors = collectReportedErrors();
       const db = await getBoardsDB();
       db.close();
@@ -348,7 +348,7 @@ describe("BoardSetLibrary", () => {
       expect(await listBoardSetRecords()).toEqual([]);
     });
 
-    test("keeps the download action when a download fails", async () => {
+    test("keeps the download action and reports the cause when a download fails", async () => {
       const reportedErrors = collectReportedErrors();
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(null, { status: 500 }),
@@ -504,7 +504,7 @@ describe("BoardSetLibrary", () => {
       expect(rootBoard.id).toBe("root");
     });
 
-    test("reports a board set that cannot be exported", async () => {
+    test("shows an error and reports the cause when a board set cannot be exported", async () => {
       const reportedErrors = collectReportedErrors();
       await seedBoardSets([
         { id: "broken", rootBoardId: "root", name: "Broken" },
