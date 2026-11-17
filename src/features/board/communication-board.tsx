@@ -189,6 +189,7 @@ export function CommunicationBoard({
               direction="row"
               spacing={2}
               sx={(theme) => ({
+                justifyContent: "space-between",
                 px: PAGE_MARGIN,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
