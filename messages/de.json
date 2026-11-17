@@ -14,30 +14,45 @@
   "libraryBoardSets": "Tafelsätze",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafeldatei wird importiert…",
-        "countPlural=*": "Tafeldateien werden importiert…"
+        "count=1": "Tafeldatei wird importiert…",
+        "count=*": "Tafeldateien werden importiert…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafelsatz importiert",
-        "countPlural=*": "Tafelsätze importiert"
+        "count=1": "Tafelsatz importiert",
+        "count=*": "Tafelsätze importiert"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tafeldatei „{fileName}“ konnte nicht importiert werden",
-  "libraryImportFailedBoardFiles": "Tafeldateien konnten nicht importiert werden",
-  "libraryImportNotBoardFile": "„{fileName}“ ist keine Tafeldatei",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tafeldatei konnte nicht importiert werden",
+        "count=*": "Tafeldateien konnten nicht importiert werden"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Nur Tafeldateien können importiert werden",
-  "libraryImportTooLargeBoardFile": "Tafeldatei „{fileName}“ ist zu groß zum Importieren",
-  "libraryImportTooLargeBoardFiles": "Die Tafeldateien sind zu groß zum Importieren",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tafeldatei ist zu groß zum Importieren",
+        "count=*": "Die Tafeldateien sind zu groß zum Importieren"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Einige Tafeldateien konnten nicht importiert werden ({failed} von {total})",
   "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
   "libraryInfo": "Info",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Raster {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Tafelsatz löschen?",
   "libraryDeleteIrreversible": "„{name}“ wird gelöscht. Dies kann nicht rückgängig gemacht werden.",
-  "libraryDeleteFailed": "Tafelsatz „{name}“ konnte nicht gelöscht werden",
-  "libraryExportFailed": "Tafelsatz „{name}“ konnte nicht exportiert werden",
+  "libraryDeleteFailed": "Tafelsatz konnte nicht gelöscht werden",
+  "libraryExportFailed": "Tafelsatz konnte nicht exportiert werden",
   "libraryTitle": "Bibliothek",
   "libraryOpen": "Bibliothek öffnen",
   "aboutSourceCode": "Quellcode",

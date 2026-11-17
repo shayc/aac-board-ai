@@ -14,30 +14,45 @@
   "libraryBoardSets": "Набори от дъски",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Импортиране на файл с дъска…",
-        "countPlural=*": "Импортиране на файлове с дъски…"
+        "count=1": "Импортиране на файл с дъска…",
+        "count=*": "Импортиране на файлове с дъски…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Наборът от дъски е импортиран",
-        "countPlural=*": "Наборите от дъски са импортирани"
+        "count=1": "Наборът от дъски е импортиран",
+        "count=*": "Наборите от дъски са импортирани"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Файлът с дъска „{fileName}“ не може да бъде импортиран",
-  "libraryImportFailedBoardFiles": "Файловете с дъски не могат да бъдат импортирани",
-  "libraryImportNotBoardFile": "„{fileName}“ не е файл с дъска",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Файлът с дъска не може да бъде импортиран",
+        "count=*": "Файловете с дъски не могат да бъдат импортирани"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Могат да се импортират само файлове с дъски",
-  "libraryImportTooLargeBoardFile": "Файлът с дъска „{fileName}“ е твърде голям за импортиране",
-  "libraryImportTooLargeBoardFiles": "Файловете с дъски са твърде големи за импортиране",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Файлът с дъска е твърде голям за импортиране",
+        "count=*": "Файловете с дъски са твърде големи за импортиране"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Някои файлове с дъски не могат да бъдат импортирани ({failed} от {total})",
   "libraryDropToImport": "Пуснете файловете с дъски за импортиране",
   "libraryInfo": "Информация",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Мрежа {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски?",
   "libraryDeleteIrreversible": "Наборът от дъски „{name}“ ще бъде изтрит. Това не може да бъде отменено.",
-  "libraryDeleteFailed": "Наборът от дъски „{name}“ не може да бъде изтрит",
-  "libraryExportFailed": "Наборът от дъски „{name}“ не може да бъде експортиран",
+  "libraryDeleteFailed": "Наборът от дъски не може да бъде изтрит",
+  "libraryExportFailed": "Наборът от дъски не може да бъде експортиран",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",
   "aboutSourceCode": "Изходен код",

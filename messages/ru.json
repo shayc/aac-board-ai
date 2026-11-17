@@ -14,30 +14,45 @@
   "libraryBoardSets": "Наборы досок",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Импорт файла доски…",
-        "countPlural=*": "Импорт файлов досок…"
+        "count=1": "Импорт файла доски…",
+        "count=*": "Импорт файлов досок…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Набор досок импортирован",
-        "countPlural=*": "Наборы досок импортированы"
+        "count=1": "Набор досок импортирован",
+        "count=*": "Наборы досок импортированы"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Не удалось импортировать файл доски «{fileName}»",
-  "libraryImportFailedBoardFiles": "Не удалось импортировать файлы досок",
-  "libraryImportNotBoardFile": "«{fileName}» не является файлом доски",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Не удалось импортировать файл доски",
+        "count=*": "Не удалось импортировать файлы досок"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Импортировать можно только файлы досок",
-  "libraryImportTooLargeBoardFile": "Файл доски «{fileName}» слишком большой для импорта",
-  "libraryImportTooLargeBoardFiles": "Файлы досок слишком большие для импорта",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Файл доски слишком большой для импорта",
+        "count=*": "Файлы досок слишком большие для импорта"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
   "libraryDropToImport": "Перетащите файлы досок для импорта",
   "libraryInfo": "Информация",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Сетка {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Удалить набор досок?",
   "libraryDeleteIrreversible": "Набор досок «{name}» будет удалён. Это действие нельзя отменить.",
-  "libraryDeleteFailed": "Не удалось удалить набор досок «{name}»",
-  "libraryExportFailed": "Не удалось экспортировать набор досок «{name}»",
+  "libraryDeleteFailed": "Не удалось удалить набор досок",
+  "libraryExportFailed": "Не удалось экспортировать набор досок",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",
   "aboutSourceCode": "Исходный код",

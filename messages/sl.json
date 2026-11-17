@@ -14,30 +14,45 @@
   "libraryBoardSets": "Kompleti tabel",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Uvažanje datoteke table…",
-        "countPlural=*": "Uvažanje datotek tabel…"
+        "count=1": "Uvažanje datoteke table…",
+        "count=*": "Uvažanje datotek tabel…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Komplet tabel uvožen",
-        "countPlural=*": "Kompleti tabel uvoženi"
+        "count=1": "Komplet tabel uvožen",
+        "count=*": "Kompleti tabel uvoženi"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Datoteke table »{fileName}« ni bilo mogoče uvoziti",
-  "libraryImportFailedBoardFiles": "Datotek tabel ni bilo mogoče uvoziti",
-  "libraryImportNotBoardFile": "»{fileName}« ni datoteka table",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteke table ni bilo mogoče uvoziti",
+        "count=*": "Datotek tabel ni bilo mogoče uvoziti"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Uvoziti je mogoče samo datoteke tabel",
-  "libraryImportTooLargeBoardFile": "Datoteka table »{fileName}« je prevelika za uvoz",
-  "libraryImportTooLargeBoardFiles": "Datoteke tabel so prevelike za uvoz",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteka table je prevelika za uvoz",
+        "count=*": "Datoteke tabel so prevelike za uvoz"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Nekaterih datotek tabel ni bilo mogoče uvoziti ({failed} od {total})",
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Mreža {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Izbrišem komplet tabel?",
   "libraryDeleteIrreversible": "Komplet tabel »{name}« bo izbrisan. Tega dejanja ni mogoče razveljaviti.",
-  "libraryDeleteFailed": "Kompleta tabel »{name}« ni bilo mogoče izbrisati",
-  "libraryExportFailed": "Kompleta tabel »{name}« ni bilo mogoče izvoziti",
+  "libraryDeleteFailed": "Kompleta tabel ni bilo mogoče izbrisati",
+  "libraryExportFailed": "Kompleta tabel ni bilo mogoče izvoziti",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",
   "aboutSourceCode": "Izvorna koda",

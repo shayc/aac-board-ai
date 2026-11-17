@@ -14,30 +14,45 @@
   "libraryBoardSets": "沟通板集",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "正在导入沟通板文件……",
-        "countPlural=*": "正在导入沟通板文件……"
+        "count=1": "正在导入沟通板文件……",
+        "count=*": "正在导入沟通板文件……"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "已导入沟通板集",
-        "countPlural=*": "已导入沟通板集"
+        "count=1": "已导入沟通板集",
+        "count=*": "已导入沟通板集"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "无法导入沟通板文件“{fileName}”",
-  "libraryImportFailedBoardFiles": "无法导入沟通板文件",
-  "libraryImportNotBoardFile": "“{fileName}”不是沟通板文件",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "无法导入沟通板文件",
+        "count=*": "无法导入沟通板文件"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "只能导入沟通板文件",
-  "libraryImportTooLargeBoardFile": "沟通板文件“{fileName}”过大，无法导入",
-  "libraryImportTooLargeBoardFiles": "沟通板文件过大，无法导入",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "沟通板文件过大，无法导入",
+        "count=*": "沟通板文件过大，无法导入"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "无法导入部分沟通板文件（{failed} / {total}）",
   "libraryDropToImport": "拖放沟通板文件以导入",
   "libraryInfo": "信息",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} 网格",
   "libraryDeleteConfirmTitle": "删除沟通板集？",
   "libraryDeleteIrreversible": "“{name}”将被删除。此操作无法撤消。",
-  "libraryDeleteFailed": "无法删除沟通板集“{name}”",
-  "libraryExportFailed": "无法导出沟通板集“{name}”",
+  "libraryDeleteFailed": "无法删除沟通板集",
+  "libraryExportFailed": "无法导出沟通板集",
   "libraryTitle": "板库",
   "libraryOpen": "打开板库",
   "aboutSourceCode": "源代码",

@@ -14,30 +14,45 @@
   "libraryBoardSets": "Bộ bảng",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Đang nhập tệp bảng…",
-        "countPlural=*": "Đang nhập các tệp bảng…"
+        "count=1": "Đang nhập tệp bảng…",
+        "count=*": "Đang nhập các tệp bảng…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Đã nhập bộ bảng",
-        "countPlural=*": "Đã nhập các bộ bảng"
+        "count=1": "Đã nhập bộ bảng",
+        "count=*": "Đã nhập các bộ bảng"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Không thể nhập tệp bảng \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Không thể nhập các tệp bảng",
-  "libraryImportNotBoardFile": "\"{fileName}\" không phải là tệp bảng",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Không thể nhập tệp bảng",
+        "count=*": "Không thể nhập các tệp bảng"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Chỉ có thể nhập tệp bảng",
-  "libraryImportTooLargeBoardFile": "Tệp bảng \"{fileName}\" quá lớn để nhập",
-  "libraryImportTooLargeBoardFiles": "Các tệp bảng quá lớn để nhập",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tệp bảng quá lớn để nhập",
+        "count=*": "Các tệp bảng quá lớn để nhập"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Không thể nhập một số tệp bảng ({failed} / {total})",
   "libraryDropToImport": "Thả tệp bảng để nhập",
   "libraryInfo": "Thông tin",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Lưới {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Xóa bộ bảng?",
   "libraryDeleteIrreversible": "\"{name}\" sẽ bị xóa. Không thể hoàn tác hành động này.",
-  "libraryDeleteFailed": "Không thể xóa bộ bảng \"{name}\"",
-  "libraryExportFailed": "Không thể xuất bộ bảng \"{name}\"",
+  "libraryDeleteFailed": "Không thể xóa bộ bảng",
+  "libraryExportFailed": "Không thể xuất bộ bảng",
   "libraryTitle": "Thư viện",
   "libraryOpen": "Mở thư viện",
   "aboutSourceCode": "Mã nguồn",

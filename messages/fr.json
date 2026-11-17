@@ -14,30 +14,45 @@
   "libraryBoardSets": "Ensembles de tableaux",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importation du fichier de tableau…",
-        "countPlural=*": "Importation des fichiers de tableaux…"
+        "count=1": "Importation du fichier de tableau…",
+        "count=*": "Importation des fichiers de tableaux…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Ensemble de tableaux importé",
-        "countPlural=*": "Ensembles de tableaux importés"
+        "count=1": "Ensemble de tableaux importé",
+        "count=*": "Ensembles de tableaux importés"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Impossible d'importer le fichier de tableau « {fileName} »",
-  "libraryImportFailedBoardFiles": "Impossible d'importer les fichiers de tableaux",
-  "libraryImportNotBoardFile": "« {fileName} » n'est pas un fichier de tableau",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Impossible d'importer le fichier de tableau",
+        "count=*": "Impossible d'importer les fichiers de tableaux"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Seuls les fichiers de tableaux peuvent être importés",
-  "libraryImportTooLargeBoardFile": "Le fichier de tableau « {fileName} » est trop volumineux pour être importé",
-  "libraryImportTooLargeBoardFiles": "Les fichiers de tableaux sont trop volumineux pour être importés",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Le fichier de tableau est trop volumineux pour être importé",
+        "count=*": "Les fichiers de tableaux sont trop volumineux pour être importés"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Impossible d'importer certains fichiers de tableaux ({failed} sur {total})",
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
   "libraryInfo": "Infos",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Grille {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Supprimer l’ensemble de tableaux ?",
   "libraryDeleteIrreversible": "L’ensemble de tableaux « {name} » sera supprimé. Cette action est irréversible.",
-  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux « {name} »",
-  "libraryExportFailed": "Impossible d’exporter l’ensemble de tableaux « {name} »",
+  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux",
+  "libraryExportFailed": "Impossible d’exporter l’ensemble de tableaux",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",
   "aboutSourceCode": "Code source",

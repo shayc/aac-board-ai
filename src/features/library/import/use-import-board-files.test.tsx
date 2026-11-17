@@ -95,7 +95,7 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board set imported");
   });
 
-  test("names the file when the only file isn't a board file", async () => {
+  test("reports an error when the only file isn't a board file", async () => {
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
     const screen = await renderImport([pdf]);
 
@@ -103,7 +103,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"manual.pdf" isn\'t a board file');
+      .toHaveTextContent("Only board files can be imported");
   });
 
   test("reports an error when several files aren't board files", async () => {
@@ -118,17 +118,21 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Only board files can be imported");
   });
 
-  test("names the file when a single import fails", async () => {
+  test("reports an error when a single import fails", async () => {
     const screen = await renderImport([makeCorruptBoardFile("corrupt.obf")]);
 
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
   });
 
-  test("names the failed file while keeping the board sets that imported", async () => {
+  test("reports a single failure while keeping the board sets that imported", async () => {
     const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const screen = await renderImport([goodFile, corruptFile]);
@@ -136,8 +140,12 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
@@ -150,8 +158,12 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
   });
 
   test("reports how many files failed when several fail alongside imports", async () => {
@@ -182,14 +194,29 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Couldn't import board files");
   });
 
-  test("names the file when it exceeds the decompression limit", async () => {
+  test("reports a file that exceeds the decompression limit", async () => {
     const screen = await renderImport([await makeOversizedOBZ("zip-bomb.obz")]);
 
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('Board file "zip-bomb.obz" is too large to import');
+      .toHaveTextContent("Board file is too large to import");
+  });
+
+  test("keeps the too-large reason when another file imports", async () => {
+    const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
+    const screen = await renderImport([
+      goodFile,
+      await makeOversizedOBZ("zip-bomb.obz"),
+    ]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Board file is too large to import");
+    expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
   test("shows the too-large message when every file exceeds the decompression limit", async () => {

@@ -14,30 +14,45 @@
   "libraryBoardSets": "Seturi de table",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Se importă fișierul de tablă…",
-        "countPlural=*": "Se importă fișierele de table…"
+        "count=1": "Se importă fișierul de tablă…",
+        "count=*": "Se importă fișierele de table…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set de table importat",
-        "countPlural=*": "Seturi de table importate"
+        "count=1": "Set de table importat",
+        "count=*": "Seturi de table importate"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Fișierul de tablă „{fileName}” nu a putut fi importat",
-  "libraryImportFailedBoardFiles": "Fișierele de table nu au putut fi importate",
-  "libraryImportNotBoardFile": "„{fileName}” nu este un fișier de tablă",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Fișierul de tablă nu a putut fi importat",
+        "count=*": "Fișierele de table nu au putut fi importate"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Se pot importa doar fișiere de table",
-  "libraryImportTooLargeBoardFile": "Fișierul de tablă „{fileName}” este prea mare pentru a fi importat",
-  "libraryImportTooLargeBoardFiles": "Fișierele de table sunt prea mari pentru a fi importate",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Fișierul de tablă este prea mare pentru a fi importat",
+        "count=*": "Fișierele de table sunt prea mari pentru a fi importate"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Unele fișiere de table nu au putut fi importate ({failed} din {total})",
   "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Grilă {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Ștergi setul de table?",
   "libraryDeleteIrreversible": "Setul de table „{name}” va fi șters. Această acțiune nu poate fi anulată.",
-  "libraryDeleteFailed": "Setul de table „{name}” nu a putut fi șters",
-  "libraryExportFailed": "Setul de table „{name}” nu a putut fi exportat",
+  "libraryDeleteFailed": "Setul de table nu a putut fi șters",
+  "libraryExportFailed": "Setul de table nu a putut fi exportat",
   "libraryTitle": "Bibliotecă",
   "libraryOpen": "Deschide biblioteca",
   "aboutSourceCode": "Cod sursă",

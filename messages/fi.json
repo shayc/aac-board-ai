@@ -14,30 +14,45 @@
   "libraryBoardSets": "Taulusarjat",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tuodaan taulutiedostoa…",
-        "countPlural=*": "Tuodaan taulutiedostoja…"
+        "count=1": "Tuodaan taulutiedostoa…",
+        "count=*": "Tuodaan taulutiedostoja…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Taulusarja tuotu",
-        "countPlural=*": "Taulusarjat tuotu"
+        "count=1": "Taulusarja tuotu",
+        "count=*": "Taulusarjat tuotu"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Taulutiedoston ”{fileName}” tuonti epäonnistui",
-  "libraryImportFailedBoardFiles": "Taulutiedostojen tuonti epäonnistui",
-  "libraryImportNotBoardFile": "”{fileName}” ei ole taulutiedosto",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Taulutiedoston tuonti epäonnistui",
+        "count=*": "Taulutiedostojen tuonti epäonnistui"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Vain taulutiedostoja voi tuoda",
-  "libraryImportTooLargeBoardFile": "Taulutiedosto ”{fileName}” on liian suuri tuotavaksi",
-  "libraryImportTooLargeBoardFiles": "Taulutiedostot ovat liian suuria tuotaviksi",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Taulutiedosto on liian suuri tuotavaksi",
+        "count=*": "Taulutiedostot ovat liian suuria tuotaviksi"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Joidenkin taulutiedostojen tuonti epäonnistui ({failed} / {total})",
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
   "libraryInfo": "Tiedot",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Ruudukko {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Poistetaanko taulusarja?",
   "libraryDeleteIrreversible": "”{name}” poistetaan. Tätä toimintoa ei voi kumota.",
-  "libraryDeleteFailed": "Taulusarjan ”{name}” poisto epäonnistui",
-  "libraryExportFailed": "Taulusarjan ”{name}” vienti epäonnistui",
+  "libraryDeleteFailed": "Taulusarjan poisto epäonnistui",
+  "libraryExportFailed": "Taulusarjan vienti epäonnistui",
   "libraryTitle": "Kirjasto",
   "libraryOpen": "Avaa kirjasto",
   "aboutSourceCode": "Lähdekoodi",

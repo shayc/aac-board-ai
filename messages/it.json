@@ -14,30 +14,45 @@
   "libraryBoardSets": "Set di tabelle",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importazione file di tabella…",
-        "countPlural=*": "Importazione file di tabelle…"
+        "count=1": "Importazione file di tabella…",
+        "count=*": "Importazione file di tabelle…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set di tabelle importato",
-        "countPlural=*": "Set di tabelle importati"
+        "count=1": "Set di tabelle importato",
+        "count=*": "Set di tabelle importati"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Impossibile importare il file di tabella \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Impossibile importare i file di tabelle",
-  "libraryImportNotBoardFile": "\"{fileName}\" non è un file di tabella",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Impossibile importare il file di tabella",
+        "count=*": "Impossibile importare i file di tabelle"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Si possono importare solo file di tabelle",
-  "libraryImportTooLargeBoardFile": "Il file di tabella \"{fileName}\" è troppo grande per essere importato",
-  "libraryImportTooLargeBoardFiles": "I file di tabelle sono troppo grandi per essere importati",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Il file di tabella è troppo grande per essere importato",
+        "count=*": "I file di tabelle sono troppo grandi per essere importati"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Impossibile importare alcuni file di tabelle ({failed} di {total})",
   "libraryDropToImport": "Rilascia i file delle tabelle per importare",
   "libraryInfo": "Info",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Griglia {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Eliminare il set di tabelle?",
   "libraryDeleteIrreversible": "Il set di tabelle \"{name}\" verrà eliminato. Questa azione non può essere annullata.",
-  "libraryDeleteFailed": "Impossibile eliminare il set di tabelle \"{name}\"",
-  "libraryExportFailed": "Impossibile esportare il set di tabelle \"{name}\"",
+  "libraryDeleteFailed": "Impossibile eliminare il set di tabelle",
+  "libraryExportFailed": "Impossibile esportare il set di tabelle",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",
   "aboutSourceCode": "Codice sorgente",

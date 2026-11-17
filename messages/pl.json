@@ -14,30 +14,45 @@
   "libraryBoardSets": "Zestawy tablic",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importowanie pliku tablicy…",
-        "countPlural=*": "Importowanie plików tablic…"
+        "count=1": "Importowanie pliku tablicy…",
+        "count=*": "Importowanie plików tablic…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Zaimportowano zestaw tablic",
-        "countPlural=*": "Zaimportowano zestawy tablic"
+        "count=1": "Zaimportowano zestaw tablic",
+        "count=*": "Zaimportowano zestawy tablic"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Nie udało się zaimportować pliku tablicy „{fileName}”",
-  "libraryImportFailedBoardFiles": "Nie udało się zaimportować plików tablic",
-  "libraryImportNotBoardFile": "„{fileName}” nie jest plikiem tablicy",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Nie udało się zaimportować pliku tablicy",
+        "count=*": "Nie udało się zaimportować plików tablic"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Można importować tylko pliki tablic",
-  "libraryImportTooLargeBoardFile": "Plik tablicy „{fileName}” jest zbyt duży, aby go zaimportować",
-  "libraryImportTooLargeBoardFiles": "Pliki tablic są zbyt duże, aby je zaimportować",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Plik tablicy jest zbyt duży, aby go zaimportować",
+        "count=*": "Pliki tablic są zbyt duże, aby je zaimportować"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Nie udało się zaimportować niektórych plików tablic ({failed} z {total})",
   "libraryDropToImport": "Upuść pliki tablic, aby zaimportować",
   "libraryInfo": "Informacje",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Siatka {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Usunąć zestaw tablic?",
   "libraryDeleteIrreversible": "Zestaw tablic „{name}” zostanie usunięty. Tej operacji nie można cofnąć.",
-  "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic „{name}”",
-  "libraryExportFailed": "Nie udało się wyeksportować zestawu tablic „{name}”",
+  "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic",
+  "libraryExportFailed": "Nie udało się wyeksportować zestawu tablic",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",
   "aboutSourceCode": "Kod źródłowy",

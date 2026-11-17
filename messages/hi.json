@@ -14,30 +14,45 @@
   "libraryBoardSets": "बोर्ड सेट",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड फ़ाइल आयात हो रही है…",
-        "countPlural=*": "बोर्ड फ़ाइलें आयात हो रही हैं…"
+        "count=1": "बोर्ड फ़ाइल आयात हो रही है…",
+        "count=*": "बोर्ड फ़ाइलें आयात हो रही हैं…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड सेट आयात हो गया",
-        "countPlural=*": "बोर्ड सेट आयात हो गए"
+        "count=1": "बोर्ड सेट आयात हो गया",
+        "count=*": "बोर्ड सेट आयात हो गए"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "बोर्ड फ़ाइल \"{fileName}\" आयात नहीं की जा सकी",
-  "libraryImportFailedBoardFiles": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं",
-  "libraryImportNotBoardFile": "\"{fileName}\" बोर्ड फ़ाइल नहीं है",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "बोर्ड फ़ाइल आयात नहीं की जा सकी",
+        "count=*": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "केवल बोर्ड फ़ाइलें आयात की जा सकती हैं",
-  "libraryImportTooLargeBoardFile": "बोर्ड फ़ाइल \"{fileName}\" आयात करने के लिए बहुत बड़ी है",
-  "libraryImportTooLargeBoardFiles": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "बोर्ड फ़ाइल आयात करने के लिए बहुत बड़ी है",
+        "count=*": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "कुछ बोर्ड फ़ाइलें आयात नहीं की जा सकीं ({total} में से {failed})",
   "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",
   "libraryInfo": "जानकारी",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} ग्रिड",
   "libraryDeleteConfirmTitle": "बोर्ड सेट हटाएँ?",
   "libraryDeleteIrreversible": "\"{name}\" हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।",
-  "libraryDeleteFailed": "बोर्ड सेट \"{name}\" को हटाया नहीं जा सका",
-  "libraryExportFailed": "बोर्ड सेट \"{name}\" निर्यात नहीं किया जा सका",
+  "libraryDeleteFailed": "बोर्ड सेट को हटाया नहीं जा सका",
+  "libraryExportFailed": "बोर्ड सेट निर्यात नहीं किया जा सका",
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",
   "aboutSourceCode": "सोर्स कोड",

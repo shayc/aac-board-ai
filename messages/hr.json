@@ -14,30 +14,45 @@
   "libraryBoardSets": "Skupovi ploča",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Uvoz datoteke ploče…",
-        "countPlural=*": "Uvoz datoteka ploča…"
+        "count=1": "Uvoz datoteke ploče…",
+        "count=*": "Uvoz datoteka ploča…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Skup ploča uvezen",
-        "countPlural=*": "Skupovi ploča uvezeni"
+        "count=1": "Skup ploča uvezen",
+        "count=*": "Skupovi ploča uvezeni"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Datoteku ploče „{fileName}” nije moguće uvesti",
-  "libraryImportFailedBoardFiles": "Datoteke ploča nije moguće uvesti",
-  "libraryImportNotBoardFile": "„{fileName}” nije datoteka ploče",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteku ploče nije moguće uvesti",
+        "count=*": "Datoteke ploča nije moguće uvesti"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Mogu se uvesti samo datoteke ploča",
-  "libraryImportTooLargeBoardFile": "Datoteka ploče „{fileName}” je prevelika za uvoz",
-  "libraryImportTooLargeBoardFiles": "Datoteke ploča su prevelike za uvoz",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteka ploče je prevelika za uvoz",
+        "count=*": "Datoteke ploča su prevelike za uvoz"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
   "libraryDropToImport": "Ispustite datoteke ploča za uvoz",
   "libraryInfo": "Informacije",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Mreža {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Izbrisati skup ploča?",
   "libraryDeleteIrreversible": "Skup ploča „{name}” bit će izbrisan. Ovu radnju nije moguće poništiti.",
-  "libraryDeleteFailed": "Skup ploča „{name}” nije moguće izbrisati",
-  "libraryExportFailed": "Skup ploča „{name}” nije moguće izvesti",
+  "libraryDeleteFailed": "Skup ploča nije moguće izbrisati",
+  "libraryExportFailed": "Skup ploča nije moguće izvesti",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",
   "aboutSourceCode": "Izvorni kod",

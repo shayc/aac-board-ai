@@ -14,30 +14,45 @@
   "libraryBoardSets": "Táblakészletek",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Táblafájl importálása…",
-        "countPlural=*": "Táblafájlok importálása…"
+        "count=1": "Táblafájl importálása…",
+        "count=*": "Táblafájlok importálása…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Táblakészlet importálva",
-        "countPlural=*": "Táblakészletek importálva"
+        "count=1": "Táblakészlet importálva",
+        "count=*": "Táblakészletek importálva"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "A(z) „{fileName}” táblafájl importálása nem sikerült",
-  "libraryImportFailedBoardFiles": "A táblafájlok importálása nem sikerült",
-  "libraryImportNotBoardFile": "A(z) „{fileName}” nem táblafájl",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "A táblafájl importálása nem sikerült",
+        "count=*": "A táblafájlok importálása nem sikerült"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Csak táblafájlok importálhatók",
-  "libraryImportTooLargeBoardFile": "A(z) „{fileName}” táblafájl túl nagy az importáláshoz",
-  "libraryImportTooLargeBoardFiles": "A táblafájlok túl nagyok az importáláshoz",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "A táblafájl túl nagy az importáláshoz",
+        "count=*": "A táblafájlok túl nagyok az importáláshoz"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Néhány táblafájl importálása nem sikerült ({failed} / {total})",
   "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",
   "libraryInfo": "Információ",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} rács",
   "libraryDeleteConfirmTitle": "Törlöd a táblakészletet?",
   "libraryDeleteIrreversible": "A(z) „{name}” törlődik. Ez a művelet nem vonható vissza.",
-  "libraryDeleteFailed": "A(z) „{name}” táblakészlet törlése nem sikerült",
-  "libraryExportFailed": "A(z) „{name}” táblakészlet exportálása nem sikerült",
+  "libraryDeleteFailed": "A táblakészlet törlése nem sikerült",
+  "libraryExportFailed": "A táblakészlet exportálása nem sikerült",
   "libraryTitle": "Könyvtár",
   "libraryOpen": "Könyvtár megnyitása",
   "aboutSourceCode": "Forráskód",

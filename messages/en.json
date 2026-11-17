@@ -14,30 +14,45 @@
   "libraryBoardSets": "Board sets",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importing board file…",
-        "countPlural=*": "Importing board files…"
+        "count=1": "Importing board file…",
+        "count=*": "Importing board files…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Board set imported",
-        "countPlural=*": "Board sets imported"
+        "count=1": "Board set imported",
+        "count=*": "Board sets imported"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Couldn't import board file \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Couldn't import board files",
-  "libraryImportNotBoardFile": "\"{fileName}\" isn't a board file",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Couldn't import board file",
+        "count=*": "Couldn't import board files"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Only board files can be imported",
-  "libraryImportTooLargeBoardFile": "Board file \"{fileName}\" is too large to import",
-  "libraryImportTooLargeBoardFiles": "Board files are too large to import",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Board file is too large to import",
+        "count=*": "Board files are too large to import"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Couldn't import some board files ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} grid",
   "libraryDeleteConfirmTitle": "Delete board set?",
   "libraryDeleteIrreversible": "\"{name}\" will be deleted. This cannot be undone.",
-  "libraryDeleteFailed": "Couldn't delete board set \"{name}\"",
-  "libraryExportFailed": "Couldn't export board set \"{name}\"",
+  "libraryDeleteFailed": "Couldn't delete board set",
+  "libraryExportFailed": "Couldn't export board set",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",
   "aboutSourceCode": "Source code",
