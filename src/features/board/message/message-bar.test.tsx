@@ -126,7 +126,7 @@ describe("MessageBar", () => {
   });
 
   test.each([
-    { screen: "a phone", width: 375, height: 667, symbolSize: 48 },
+    { screen: "a phone", width: 375, height: 667, symbolSize: 64 },
     { screen: "a phone on its side", width: 844, height: 390, symbolSize: 48 },
     { screen: "a tablet", width: 1024, height: 768, symbolSize: 64 },
   ])(

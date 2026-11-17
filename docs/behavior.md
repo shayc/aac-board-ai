@@ -369,9 +369,8 @@ the whole button, which the hold ring traces. Suggestions have the row below to
 themselves, and without them the grid starts under the message bar. Below `sm`
 the back, home, and play buttons move under the grid as wider pills. Play sits
 at the far end, twice as wide as either of the others, and narrower only on a
-screen too small for that. Backspace stays in the message bar, which drops to
-its compact height: as tall as backspace and its inset, with smaller symbols.
-The spacing tightens, as [Board spacing](#board-spacing) describes.
+screen too small for that. Backspace stays in the message bar at full size, and
+the spacing tightens, as [Board spacing](#board-spacing) describes.
 
 One height rule sits beside it, in
 [`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape
@@ -381,8 +380,8 @@ what such a screen lacks, so:
 - The controls keep their places from above `sm`, whatever the width.
 - The spacing tightens as it does below `sm`.
 - The app bar and the other toolbars take their shortest height.
-- The message bar takes its compact height, and play shrinks to backspace's
-  size to fit it.
+- The message bar drops to a compact height, as tall as backspace and its
+  inset, with smaller symbols, and play shrinks to backspace's size to fit it.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 

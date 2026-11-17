@@ -7,12 +7,11 @@ import {
   WCAG_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
-import { setTestViewport } from "@shared/testing/viewport";
 import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
-import { MESSAGE_SECONDARY_ACTION_SIZE, MessageBar } from "./message-bar";
+import { MESSAGE_ACTION_SIZE, MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
@@ -357,8 +356,7 @@ describe("BackspaceButton in the message bar", () => {
 
   // Nothing at rest marks the touch target's edge, so the hold ring must, and
   // the same gap on three sides keeps it parallel to the bar's rounded end.
-  test("traces its touch target with the ring, evenly inset in the bar's end on a phone", async () => {
-    await setTestViewport(375, 667);
+  test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(
       <MessageBar
         parts={[]}
@@ -384,7 +382,7 @@ describe("BackspaceButton in the message bar", () => {
     const ringEdges = ring.getBoundingClientRect();
     const gap = target.top - barEdges.top;
 
-    expect(target.width).toBe(MESSAGE_SECONDARY_ACTION_SIZE);
+    expect(target.width).toBe(MESSAGE_ACTION_SIZE);
     expect(ringEdges.toJSON()).toEqual(target.toJSON());
     expect(barEdges.bottom - target.bottom).toBeCloseTo(gap, 0);
     expect(barEdges.right - target.right).toBeCloseTo(gap, 0);

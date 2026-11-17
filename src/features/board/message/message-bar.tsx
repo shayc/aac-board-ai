@@ -13,6 +13,7 @@ import type { MessagePart } from "./message-types";
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
+export const MESSAGE_ACTION_SIZE = 80;
 // The bar is as tall as its main action plus its inset, so it sets that
 // action's size and the action cannot outgrow it.
 export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
@@ -20,11 +21,11 @@ export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
 export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
-// A screen short on room, as a phone is, has none for the main action's extra
-// step: the bar drops to the secondary size, and its symbols shrink so their
-// labels stay in view.
+// A short landscape screen has no height for the main action's extra step: the
+// bar drops to the secondary size, and its symbols shrink so their labels stay
+// in view.
 const BAR_SIZES = {
-  regular: { action: 80, symbol: 64 },
+  regular: { action: MESSAGE_ACTION_SIZE, symbol: 64 },
   compact: { action: MESSAGE_SECONDARY_ACTION_SIZE, symbol: 48 },
 } as const;
 
@@ -146,7 +147,6 @@ function messageBarSx(theme: Theme) {
       "--mui-palette-primary-mainChannel": DARK_GROUND_PRIMARY.mainChannel,
       bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
     }),
-    [theme.breakpoints.down("sm")]: barSizeProperties(BAR_SIZES.compact),
     [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
 }

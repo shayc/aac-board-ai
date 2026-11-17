@@ -342,8 +342,8 @@ describe("CommunicationBoard", () => {
         playEnd: 16,
         playHeight: 48,
         messageBarStart: 16,
-        // As tall as backspace, 64px, with the bar's 8px inset and 1px border.
-        messageBarHeight: 64 + 2 * 8 + 2 * 1,
+        // As tall as backspace, 80px, with the bar's 8px inset and 1px border.
+        messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
       {
         name: "a phone on its side",
@@ -359,6 +359,7 @@ describe("CommunicationBoard", () => {
         playHeight: 64,
         // Past the back and home buttons, 64px each and 8px apart, and a 16px gap.
         messageBarStart: 16 + 64 + 8 + 64 + 16,
+        // As tall as backspace, 64px, with the bar's 8px inset and 1px border.
         messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {

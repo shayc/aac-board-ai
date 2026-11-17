@@ -94,6 +94,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
+      size={areControlsBelowGrid ? "large" : "medium"}
       shortcutLabels={shortcutLabels}
       onPress={message.backspace}
       onLongPress={message.clear}
