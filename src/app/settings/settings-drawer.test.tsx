@@ -5,7 +5,9 @@ import {
   stubRewriter,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
+import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
+import type { RenderResult } from "vitest-browser-react";
 import { SettingsDrawer } from "./settings-drawer";
 
 describe("SettingsDrawer", () => {
@@ -111,6 +113,33 @@ describe("SettingsDrawer", () => {
       .toHaveAttribute("aria-valuetext", expect.stringMatching(/^100\s%$/));
   });
 
+  test("keeps each language's voice when switching languages", async () => {
+    stubVoices([
+      { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
+      { voiceURI: "us-2", name: "Alex", lang: "en-US" },
+      { voiceURI: "he-1", name: "Carmit", lang: "he-IL" },
+      { voiceURI: "he-2", name: "Ayelet", lang: "he-IL" },
+    ]);
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={vi.fn()} />,
+    );
+
+    await selectOption(screen, "Voice", "Alex");
+    await selectOption(screen, "Language", "עברית");
+    await selectOption(screen, "קול", "Ayelet");
+    await selectOption(screen, "שפה", "English");
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Voice" }))
+      .toHaveTextContent("Alex");
+
+    await selectOption(screen, "Language", "עברית");
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "קול" }))
+      .toHaveTextContent("Ayelet");
+  });
+
   test("calls onClose when the close button is clicked", async () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
@@ -137,3 +166,12 @@ describe("SettingsDrawer", () => {
       .toBeInViewport();
   });
 });
+
+async function selectOption(
+  screen: RenderResult,
+  comboboxName: string,
+  optionName: string,
+): Promise<void> {
+  await screen.getByRole("combobox", { name: comboboxName }).click();
+  await screen.getByRole("option", { name: optionName }).click();
+}

@@ -14,8 +14,10 @@ import {
 import { resolveVoice, type VoicesByLanguage } from "./resolve-voice";
 import { getSpeechSynthesis, type SpeechParameters } from "./speech-synthesis";
 
+type VoiceURIsByLanguage = Partial<Record<string, string>>;
+
 interface SpeechPreferences {
-  voiceURI: string | null;
+  voiceURIs: VoiceURIsByLanguage;
   rate: number;
   pitch: number;
   volume: number;
@@ -43,11 +45,23 @@ export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
   const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
 
   return {
-    voiceURI: typeof stored.voiceURI === "string" ? stored.voiceURI : null,
+    voiceURIs: parseVoiceURIs(stored.voiceURIs),
     rate: parseClampedNumber(stored.rate, SPEECH_RATE),
     pitch: parseClampedNumber(stored.pitch, SPEECH_PITCH),
     volume: parseClampedNumber(stored.volume, SPEECH_VOLUME),
   };
+}
+
+function parseVoiceURIs(raw: unknown): VoiceURIsByLanguage {
+  if (!isRecord(raw)) {
+    return {};
+  }
+
+  return Object.fromEntries(
+    Object.entries(raw).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
 }
 
 function groupVoicesByLanguage(
@@ -71,8 +85,12 @@ const speechPreferencesStore = createPersistedStore<SpeechPreferences>(
   parseSpeechPreferences,
 );
 
-export function setSpeechVoiceURI(voiceURI: string | null): void {
-  patchState(speechPreferencesStore, { voiceURI });
+export function setSpeechVoice(language: string, voiceURI: string): void {
+  const { voiceURIs } = speechPreferencesStore.getSnapshot();
+
+  patchState(speechPreferencesStore, {
+    voiceURIs: { ...voiceURIs, [language]: voiceURI },
+  });
 }
 
 export function setSpeechRate(rate: number): void {
@@ -99,11 +117,11 @@ export function useSpeechPreferences(): SpeechPreferences {
 // language of the text rather than the communication language.
 export function getSpeechParameters(language: string): SpeechParameters {
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
-  const { voiceURI, rate, pitch, volume } =
+  const { voiceURIs, rate, pitch, volume } =
     speechPreferencesStore.getSnapshot();
 
   return {
-    voice: resolveVoice(voicesByLanguage, language, voiceURI),
+    voice: resolveVoice(voicesByLanguage, language, voiceURIs[language]),
     rate,
     pitch,
     volume,
@@ -113,7 +131,7 @@ export function getSpeechParameters(language: string): SpeechParameters {
 export function useSpeechVoice(): SpeechSynthesisVoice | null {
   const voicesByLanguage = useVoicesByLanguage();
   const { language } = useCommunicationLanguage();
-  const { voiceURI } = useSpeechPreferences();
+  const { voiceURIs } = useSpeechPreferences();
 
-  return resolveVoice(voicesByLanguage, language, voiceURI);
+  return resolveVoice(voicesByLanguage, language, voiceURIs[language]);
 }

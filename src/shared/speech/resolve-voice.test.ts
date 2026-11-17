@@ -48,7 +48,7 @@ describe("resolveVoice", () => {
       makeVoice("en-US", "en-default", true),
     ];
 
-    expect(resolveVoice({ en: voices }, "en", null, [])?.voiceURI).toBe(
+    expect(resolveVoice({ en: voices }, "en", undefined, [])?.voiceURI).toBe(
       "en-default",
     );
   });
@@ -59,9 +59,9 @@ describe("resolveVoice", () => {
       makeVoice("fr-FR", "fr-fr-voice"),
     ];
 
-    expect(resolveVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
-      "fr-fr-voice",
-    );
+    expect(
+      resolveVoice({ fr: voices }, "fr", undefined, ["en-US"])?.voiceURI,
+    ).toBe("fr-fr-voice");
   });
 
   test("prefers the region in the browser's preferred languages over the language's likely region", () => {
@@ -70,9 +70,9 @@ describe("resolveVoice", () => {
       makeVoice("fr-CA", "fr-ca-voice"),
     ];
 
-    expect(resolveVoice({ fr: voices }, "fr", null, ["fr-CA"])?.voiceURI).toBe(
-      "fr-ca-voice",
-    );
+    expect(
+      resolveVoice({ fr: voices }, "fr", undefined, ["fr-CA"])?.voiceURI,
+    ).toBe("fr-ca-voice");
   });
 
   test("skips a region-less preferred locale and uses the next one for the language", () => {
@@ -82,7 +82,7 @@ describe("resolveVoice", () => {
     ];
 
     expect(
-      resolveVoice({ fr: voices }, "fr", null, ["fr", "fr-CA"])?.voiceURI,
+      resolveVoice({ fr: voices }, "fr", undefined, ["fr", "fr-CA"])?.voiceURI,
     ).toBe("fr-ca-voice");
   });
 
@@ -92,8 +92,8 @@ describe("resolveVoice", () => {
       makeVoice("fr-BE", "fr-be-default", true),
     ];
 
-    expect(resolveVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
-      "fr-be-default",
-    );
+    expect(
+      resolveVoice({ fr: voices }, "fr", undefined, ["en-US"])?.voiceURI,
+    ).toBe("fr-be-default");
   });
 });

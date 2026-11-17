@@ -14,7 +14,7 @@ import { usePlayback } from "@shared/playback/use-playback";
 import {
   setSpeechPitch,
   setSpeechRate,
-  setSpeechVoiceURI,
+  setSpeechVoice,
   setSpeechVolume,
   SPEECH_PITCH,
   SPEECH_RATE,
@@ -123,7 +123,7 @@ function VoiceSelect() {
     <SettingsSelect
       label={t(m.speechVoice)}
       value={selectedVoiceURI}
-      onChange={(value) => setSpeechVoiceURI(value === "" ? null : value)}
+      onChange={(value) => setSpeechVoice(language, value)}
       action={
         <Tooltip title={t(m.speechPreviewVoice)}>
           <IconButton

@@ -1,5 +1,5 @@
 import { setCommunicationLanguage } from "@shared/language/language-store";
-import { setSpeechVoiceURI } from "@shared/speech/speech-store";
+import { setSpeechVoice } from "@shared/speech/speech-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { readStoredPreferences } from "@shared/testing/stored-preferences";
@@ -100,17 +100,17 @@ describe("SpeechSettings", () => {
     await expect.element(voiceSelect).toHaveTextContent("Alex");
     await vi.waitFor(() => {
       expect(readStoredPreferences("speech-preferences")).toMatchObject({
-        voiceURI: "us-2",
+        voiceURIs: { en: "us-2" },
       });
     });
   });
 
-  test("shows the voice that will speak when the saved voice belongs to another language", async () => {
+  test("shows the voice that will speak when no voice is saved for the language", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
       { voiceURI: "he-1", name: "Carmit", lang: "he-IL" },
     ]);
-    setSpeechVoiceURI("us-1");
+    setSpeechVoice("en", "us-1");
     setCommunicationLanguage("he");
 
     const screen = await renderWithProviders(<SpeechSettings />);
