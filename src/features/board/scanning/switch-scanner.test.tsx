@@ -21,7 +21,7 @@ import {
 import { ScanningScope } from "./scanning-scope";
 
 const SCAN_INTERVAL_MS = 1000;
-// Play sits under the grid below the sm breakpoint and after the message bar
+// Play sits under the grid below the sm breakpoint and inside the message bar
 // above it, which changes the scan order.
 const PHONE_WIDTH = 375;
 const TABLET_WIDTH = 1024;

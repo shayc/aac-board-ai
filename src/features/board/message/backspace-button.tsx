@@ -18,13 +18,23 @@ import { MESSAGE_ACTION_SIZE } from "./message-bar";
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
-const ICON_SIZE = 28;
-// MUI draws the ring in a 44-unit box, so on the 80px disc this is a 4px
-// stroke; MUI's default would outweigh the icon's lines.
-const RING_THICKNESS = 2.2;
+// MUI's default ring would outweigh the icon's lines.
+const RING_STROKE_WIDTH = 4;
+// MUI draws the ring in a box this many units wide, whatever its size.
+const RING_VIEW_BOX_SIZE = 44;
+
+// Beside the play button the disc is a step smaller, so play stays the bar's
+// main action. Alone in the bar it matches the play button's size.
+const DISC_SIZES = {
+  medium: { disc: 64, icon: 24 },
+  large: { disc: MESSAGE_ACTION_SIZE, icon: 28 },
+} as const;
+
+type BackspaceButtonSize = keyof typeof DISC_SIZES;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
+  size?: BackspaceButtonSize;
   shortcutLabels: Pick<BoardShortcutLabels, "clear" | "spokenClear">;
   onPress: () => void;
   onLongPress: () => void;
@@ -32,6 +42,7 @@ interface BackspaceButtonProps {
 
 export function BackspaceButton({
   disabled = false,
+  size = "large",
   shortcutLabels,
   onPress,
   onLongPress,
@@ -58,7 +69,7 @@ export function BackspaceButton({
         {...focusableDisabledProps(disabled)}
         aria-label={t(m.messageBackspace)}
         aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
-        sx={backspaceSx}
+        sx={(theme) => backspaceSx(theme, size)}
       >
         <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
 
@@ -68,7 +79,9 @@ export function BackspaceButton({
           variant="determinate"
           value={isHolding ? 100 : 0}
           size="auto"
-          thickness={RING_THICKNESS}
+          thickness={
+            (RING_STROKE_WIDTH * RING_VIEW_BOX_SIZE) / DISC_SIZES[size].disc
+          }
           sx={ringSx(isHolding)}
         />
       </IconButton>
@@ -77,13 +90,14 @@ export function BackspaceButton({
 }
 
 // The disc fills the whole touch target, so its visible edge is where a tap
-// counts. With the bar's inset, it sits on the bar's rounded end, the same
-// distance from its top, bottom and end, and both curves run parallel.
+// counts. With the bar's inset, a large disc sits on the bar's rounded end,
+// the same distance from its top, bottom and end, and both curves run parallel.
 //
 // The bar stays light in dark mode, so the disc stays a dark tint of it with a
 // dark icon; on the greyer bar it needs a stronger tint, and a stronger
 // disabled icon, to read at all.
-function backspaceSx(theme: Theme) {
+function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
+  const { disc, icon } = DISC_SIZES[size];
   const discColor = theme.alpha(theme.palette.common.black, 0.05);
   const darkDiscColor = theme.alpha(theme.palette.common.black, 0.12);
 
@@ -91,9 +105,9 @@ function backspaceSx(theme: Theme) {
 
   return {
     flexShrink: 0,
-    width: MESSAGE_ACTION_SIZE,
-    height: MESSAGE_ACTION_SIZE,
-    fontSize: ICON_SIZE,
+    width: disc,
+    height: disc,
+    fontSize: icon,
     color: "text.primary",
     [discSelector]: { backgroundColor: discColor },
     ...theme.applyStyles("dark", {

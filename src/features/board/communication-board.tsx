@@ -84,6 +84,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
+      size={isSmallScreen ? "large" : "medium"}
       shortcutLabels={shortcutLabels}
       onPress={message.backspace}
       onLongPress={message.clear}
@@ -128,22 +129,22 @@ export function CommunicationBoard({
             spacing={PAGE_MARGIN}
             sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}
           >
-            <Stack
-              {...scanGroupProps}
-              direction="row"
-              spacing={PAGE_MARGIN}
-              sx={{ alignItems: "center" }}
-            >
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <PlaybackMessageBar
-                  parts={message.parts}
-                  isWordOpen={message.isWordOpen}
-                  endAction={backspaceButton}
-                />
-              </Box>
-
-              {!isSmallScreen && playButton}
-            </Stack>
+            <Box {...scanGroupProps}>
+              <PlaybackMessageBar
+                parts={message.parts}
+                isWordOpen={message.isWordOpen}
+                endAction={
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    sx={{ alignItems: "center" }}
+                  >
+                    {backspaceButton}
+                    {!isSmallScreen && playButton}
+                  </Stack>
+                }
+              />
+            </Box>
 
             <Stack
               {...scanGroupProps}

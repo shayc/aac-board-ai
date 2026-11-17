@@ -20,7 +20,6 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { CommunicationBoard } from "./communication-board";
-import { MESSAGE_ACTION_SIZE } from "./message/message-bar";
 import { restoreMessageDraft } from "./message/message-draft";
 import {
   setMessageHighlightingEnabled,
@@ -336,7 +335,7 @@ describe("CommunicationBoard", () => {
         overflowHint: 8,
         wholeRows: 5,
         isPlayBelowGrid: true,
-        messageBarEnd: 16,
+        playEnd: 16,
       },
       {
         name: "a tablet",
@@ -347,7 +346,8 @@ describe("CommunicationBoard", () => {
         overflowHint: 16,
         wholeRows: 4,
         isPlayBelowGrid: false,
-        messageBarEnd: 24 + MESSAGE_ACTION_SIZE + 24,
+        // Inside the bar, past its 8px inset and 1px border.
+        playEnd: 24 + 8 + 1,
       },
     ];
 
@@ -361,7 +361,7 @@ describe("CommunicationBoard", () => {
         overflowHint,
         wholeRows,
         isPlayBelowGrid,
-        messageBarEnd,
+        playEnd,
       }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
@@ -369,9 +369,9 @@ describe("CommunicationBoard", () => {
 
         const atStart = measureBoardLayout(screen.container);
         expect(atStart.isPlayBelowGrid).toBe(isPlayBelowGrid);
-        expect(atStart.playEnd).toBeCloseTo(pageMargin, 0);
+        expect(atStart.playEnd).toBeCloseTo(playEnd, 0);
         expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
-        expect(atStart.messageBarEnd).toBeCloseTo(messageBarEnd, 0);
+        expect(atStart.messageBarEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.controlsToGrid).toBeCloseTo(clearance, 0);
         expect(atStart.edgeAboveToFirstRow).toBeCloseTo(pageMargin, 0);
