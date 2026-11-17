@@ -10,12 +10,19 @@ export interface AudioStep {
   fallback?: SpeechText;
 }
 
-export interface SpeechStep extends SpeechText {
+interface SpeechStepBase extends SpeechText {
   kind: "speech";
-  /** Active for the whole utterance when it represents one message part. */
-  cue?: string;
-  cueAt?: (charIndex: number) => string | null;
 }
+
+/**
+ * A step highlights one cue for the whole utterance, or maps each speech
+ * boundary to the cue it reaches.
+ */
+export type SpeechStep = SpeechStepBase &
+  (
+    | { cue?: string; cueAt?: never }
+    | { cue?: never; cueAt: (charIndex: number) => string | null }
+  );
 
 export type PlaybackStep = AudioStep | SpeechStep;
 

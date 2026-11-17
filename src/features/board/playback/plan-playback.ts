@@ -20,16 +20,7 @@ export function planPlayback(
       return;
     }
 
-    steps.push(
-      speechRun.length === 1
-        ? {
-            kind: "speech",
-            text: firstPart.text,
-            language: firstPart.language,
-            cue: firstPart.id,
-          }
-        : createSpeechStep(speechRun, firstPart.language),
-    );
+    steps.push(createSpeechStep(speechRun, firstPart.language));
     speechRun = [];
   }
 
@@ -73,10 +64,22 @@ interface PartSpan {
   end: number;
 }
 
+// A lone part stays highlighted for the whole utterance, while several parts
+// wait for speech boundaries so a voice without them shows no stale highlight.
 function createSpeechStep(
   parts: readonly SpeechPart[],
   language: string,
 ): SpeechStep {
+  const [firstPart] = parts;
+  if (firstPart && parts.length === 1) {
+    return {
+      kind: "speech",
+      text: firstPart.text,
+      language,
+      cue: firstPart.id,
+    };
+  }
+
   const chunks: string[] = [];
   const spans: PartSpan[] = [];
   let offset = 0;
