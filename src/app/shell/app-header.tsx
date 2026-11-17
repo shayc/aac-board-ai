@@ -8,6 +8,7 @@ import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import type { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
@@ -38,18 +39,9 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gap: theme.spacing(2),
           // Matches the board's page margin, so the first and last icons line
           // up with the message bar and tiles below.
-          pl: {
-            xs: safeAreaGutter(theme.spacing(2), "left"),
-            sm: safeAreaGutter(theme.spacing(3), "left"),
-          },
-          pr: {
-            xs: safeAreaGutter(theme.spacing(2), "right"),
-            sm: safeAreaGutter(theme.spacing(3), "right"),
-          },
-          [shortLandscape(theme)]: {
-            pl: safeAreaGutter(theme.spacing(2), "left"),
-            pr: safeAreaGutter(theme.spacing(2), "right"),
-          },
+          ...sideGutters(theme, 3),
+          [theme.breakpoints.down("sm")]: sideGutters(theme, 2),
+          [shortLandscape(theme)]: sideGutters(theme, 2),
         })}
       >
         <Tooltip title={t(m.libraryOpen)}>
@@ -82,4 +74,11 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
       </Toolbar>
     </AppBar>
   );
+}
+
+function sideGutters(theme: Theme, spacingUnits: number) {
+  return {
+    pl: safeAreaGutter(theme.spacing(spacingUnits), "left"),
+    pr: safeAreaGutter(theme.spacing(spacingUnits), "right"),
+  };
 }

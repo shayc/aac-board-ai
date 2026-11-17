@@ -69,6 +69,7 @@ export function createGridViewportSx(theme: Theme) {
     scrollSnapType: "both proximity",
     [theme.breakpoints.down("sm")]: createScrollPadding("xs"),
     [theme.breakpoints.up("sm")]: createScrollPadding("sm"),
+    // Declared last so it overrides the wide rules on a phone on its side.
     [shortLandscape(theme)]: createScrollPadding("xs"),
   };
 }
@@ -107,7 +108,6 @@ export function createGridContentSx(
     gap: GRID_GAP,
     [theme.breakpoints.down("sm")]: createBreakpointRules("xs"),
     [theme.breakpoints.up("sm")]: createBreakpointRules("sm"),
-    // Declared last so it overrides the wide rules on a phone on its side.
     [shortLandscape(theme)]: createBreakpointRules("xs"),
   };
 }
