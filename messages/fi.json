@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Taulutiedoston tuonti epäonnistui",
-        "countPlural=*": "Taulutiedostojen tuonti epäonnistui"
+        "count=1": "Taulutiedoston tuonti epäonnistui",
+        "count=*": "Taulutiedostojen tuonti epäonnistui"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Vain taulutiedostoja voi tuoda",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Taulutiedosto on liian suuri tuotavaksi",
-        "countPlural=*": "Taulutiedostot ovat liian suuria tuotaviksi"
+        "count=1": "Taulutiedosto on liian suuri tuotavaksi",
+        "count=*": "Taulutiedostot ovat liian suuria tuotaviksi"
       }
     }
   ],

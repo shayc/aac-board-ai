@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Файлът с дъска не може да бъде импортиран",
-        "countPlural=*": "Файловете с дъски не могат да бъдат импортирани"
+        "count=1": "Файлът с дъска не може да бъде импортиран",
+        "count=*": "Файловете с дъски не могат да бъдат импортирани"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Могат да се импортират само файлове с дъски",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Файлът с дъска е твърде голям за импортиране",
-        "countPlural=*": "Файловете с дъски са твърде големи за импортиране"
+        "count=1": "Файлът с дъска е твърде голям за импортиране",
+        "count=*": "Файловете с дъски са твърде големи за импортиране"
       }
     }
   ],

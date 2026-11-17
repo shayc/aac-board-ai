@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Không thể nhập tệp bảng",
-        "countPlural=*": "Không thể nhập các tệp bảng"
+        "count=1": "Không thể nhập tệp bảng",
+        "count=*": "Không thể nhập các tệp bảng"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Chỉ có thể nhập tệp bảng",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tệp bảng quá lớn để nhập",
-        "countPlural=*": "Các tệp bảng quá lớn để nhập"
+        "count=1": "Tệp bảng quá lớn để nhập",
+        "count=*": "Các tệp bảng quá lớn để nhập"
       }
     }
   ],

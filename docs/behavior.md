@@ -48,12 +48,13 @@ extension. The three local-file entry points go through `useImportBoardFiles().i
 opens the board set when exactly one imports. It skips files without a board
 file extension and reports them only when no board file was given. It imports
 the rest one at a time, so a failing file, or a launched file that can't be
-read, doesn't block the others. It reports the outcome in one message that
-counts the failures when some files imported. Import, export, and delete
-messages leave out file and board set names: the person just picked that file
-or set, and names the app doesn't control can be long and unreadable. Only the
-catalog download messages name the set, because downloads finish in the
-background.
+read, doesn't block the others. It reports the outcome in one message: a single
+failure gives its reason, and several failures alongside imports give a count.
+Import, export, and delete failure messages leave out file and board set names:
+the person just picked that file or set, and names the app doesn't control can
+be long and unreadable. Two messages do name the set: catalog download results,
+because downloads finish in the background, and the delete confirmation,
+because it is the last check before an irreversible action.
 
 ### Export a board set
 

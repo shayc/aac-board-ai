@@ -174,8 +174,12 @@ describe("useBoardFileDrop", () => {
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile, corruptFile));
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent("Couldn't import some board files (1 of 2)");
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
         id: SAMPLE_BOARD_SET_ID,

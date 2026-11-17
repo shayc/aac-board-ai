@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tidak dapat mengimpor berkas papan",
-        "countPlural=*": "Tidak dapat mengimpor berkas papan"
+        "count=1": "Tidak dapat mengimpor berkas papan",
+        "count=*": "Tidak dapat mengimpor berkas papan"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Hanya berkas papan yang dapat diimpor",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Berkas papan terlalu besar untuk diimpor",
-        "countPlural=*": "Berkas papan terlalu besar untuk diimpor"
+        "count=1": "Berkas papan terlalu besar untuk diimpor",
+        "count=*": "Berkas papan terlalu besar untuk diimpor"
       }
     }
   ],

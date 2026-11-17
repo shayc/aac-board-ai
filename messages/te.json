@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
-        "countPlural=*": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం"
+        "count=1": "బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
+        "count=*": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం"
       }
     }
   ],
   "libraryImportNotBoardFiles": "బోర్డు ఫైళ్లను మాత్రమే దిగుమతి చేయవచ్చు",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దది",
-        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి"
+        "count=1": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దది",
+        "count=*": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి"
       }
     }
   ],

@@ -124,11 +124,15 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByText("Couldn't import board file", { exact: true }))
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
       .toBeVisible();
   });
 
-  test("reports the failed file while keeping the board sets that imported", async () => {
+  test("reports a single failure while keeping the board sets that imported", async () => {
     const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
     const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const screen = await renderImport([goodFile, corruptFile]);
@@ -136,8 +140,12 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent("Couldn't import some board files (1 of 2)");
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
@@ -150,8 +158,12 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent("Couldn't import some board files (1 of 2)");
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
   });
 
   test("reports how many files failed when several fail alongside imports", async () => {
@@ -190,6 +202,21 @@ describe("useImportBoardFiles", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Board file is too large to import");
+  });
+
+  test("keeps the too-large reason when another file imports", async () => {
+    const goodFile = await loadFixtureFile(SAMPLE_OBF_FILE);
+    const screen = await renderImport([
+      goodFile,
+      await makeOversizedOBZ("zip-bomb.obz"),
+    ]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Board file is too large to import");
+    expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
   test("shows the too-large message when every file exceeds the decompression limit", async () => {

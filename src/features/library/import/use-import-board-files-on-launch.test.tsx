@@ -118,8 +118,12 @@ describe("useImportBoardFilesOnLaunch", () => {
     );
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent("Couldn't import some board files (1 of 2)");
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
@@ -141,7 +145,11 @@ describe("useImportBoardFilesOnLaunch", () => {
     launchQueue.launch(inaccessibleFileHandle("board.obz"));
 
     await expect
-      .element(screen.getByText("Couldn't import board file", { exact: true }))
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
       .toBeVisible();
   });
 

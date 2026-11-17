@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Súbor tabuľky sa nepodarilo importovať",
-        "countPlural=*": "Súbory tabuliek sa nepodarilo importovať"
+        "count=1": "Súbor tabuľky sa nepodarilo importovať",
+        "count=*": "Súbory tabuliek sa nepodarilo importovať"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Importovať možno iba súbory tabuliek",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Súbor tabuľky je príliš veľký na import",
-        "countPlural=*": "Súbory tabuliek sú príliš veľké na import"
+        "count=1": "Súbor tabuľky je príliš veľký na import",
+        "count=*": "Súbory tabuliek sú príliš veľké na import"
       }
     }
   ],

@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Não foi possível importar o arquivo de prancha",
-        "countPlural=*": "Não foi possível importar os arquivos de pranchas"
+        "count=1": "Não foi possível importar o arquivo de prancha",
+        "count=*": "Não foi possível importar os arquivos de pranchas"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Só é possível importar arquivos de pranchas",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "O arquivo de prancha é grande demais para importar",
-        "countPlural=*": "Os arquivos de pranchas são grandes demais para importar"
+        "count=1": "O arquivo de prancha é grande demais para importar",
+        "count=*": "Os arquivos de pranchas são grandes demais para importar"
       }
     }
   ],

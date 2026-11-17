@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Не удалось импортировать файл доски",
-        "countPlural=*": "Не удалось импортировать файлы досок"
+        "count=1": "Не удалось импортировать файл доски",
+        "count=*": "Не удалось импортировать файлы досок"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Импортировать можно только файлы досок",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Файл доски слишком большой для импорта",
-        "countPlural=*": "Файлы досок слишком большие для импорта"
+        "count=1": "Файл доски слишком большой для импорта",
+        "count=*": "Файлы досок слишком большие для импорта"
       }
     }
   ],

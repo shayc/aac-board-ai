@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα",
-        "countPlural=*": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων"
+        "count=1": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα",
+        "count=*": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Μπορούν να εισαχθούν μόνο αρχεία πινάκων",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Το αρχείο πίνακα είναι πολύ μεγάλο για εισαγωγή",
-        "countPlural=*": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή"
+        "count=1": "Το αρχείο πίνακα είναι πολύ μεγάλο για εισαγωγή",
+        "count=*": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή"
       }
     }
   ],

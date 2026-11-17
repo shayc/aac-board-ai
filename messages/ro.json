@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Fișierul de tablă nu a putut fi importat",
-        "countPlural=*": "Fișierele de table nu au putut fi importate"
+        "count=1": "Fișierul de tablă nu a putut fi importat",
+        "count=*": "Fișierele de table nu au putut fi importate"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Se pot importa doar fișiere de table",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Fișierul de tablă este prea mare pentru a fi importat",
-        "countPlural=*": "Fișierele de table sunt prea mari pentru a fi importate"
+        "count=1": "Fișierul de tablă este prea mare pentru a fi importat",
+        "count=*": "Fișierele de table sunt prea mari pentru a fi importate"
       }
     }
   ],

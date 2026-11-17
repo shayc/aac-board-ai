@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Datoteke table ni bilo mogoče uvoziti",
-        "countPlural=*": "Datotek tabel ni bilo mogoče uvoziti"
+        "count=1": "Datoteke table ni bilo mogoče uvoziti",
+        "count=*": "Datotek tabel ni bilo mogoče uvoziti"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Uvoziti je mogoče samo datoteke tabel",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Datoteka table je prevelika za uvoz",
-        "countPlural=*": "Datoteke tabel so prevelike za uvoz"
+        "count=1": "Datoteka table je prevelika za uvoz",
+        "count=*": "Datoteke tabel so prevelike za uvoz"
       }
     }
   ],

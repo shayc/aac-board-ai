@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
-        "countPlural=*": "นำเข้าไฟล์บอร์ดไม่สำเร็จ"
+        "count=1": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
+        "count=*": "นำเข้าไฟล์บอร์ดไม่สำเร็จ"
       }
     }
   ],
   "libraryImportNotBoardFiles": "นำเข้าได้เฉพาะไฟล์บอร์ดเท่านั้น",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
-        "countPlural=*": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
+        "count=1": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+        "count=*": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
       }
     }
   ],

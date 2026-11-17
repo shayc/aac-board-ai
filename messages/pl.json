@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Nie udało się zaimportować pliku tablicy",
-        "countPlural=*": "Nie udało się zaimportować plików tablic"
+        "count=1": "Nie udało się zaimportować pliku tablicy",
+        "count=*": "Nie udało się zaimportować plików tablic"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Można importować tylko pliki tablic",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Plik tablicy jest zbyt duży, aby go zaimportować",
-        "countPlural=*": "Pliki tablic są zbyt duże, aby je zaimportować"
+        "count=1": "Plik tablicy jest zbyt duży, aby go zaimportować",
+        "count=*": "Pliki tablic są zbyt duże, aby je zaimportować"
       }
     }
   ],

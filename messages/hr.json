@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Datoteku ploče nije moguće uvesti",
-        "countPlural=*": "Datoteke ploča nije moguće uvesti"
+        "count=1": "Datoteku ploče nije moguće uvesti",
+        "count=*": "Datoteke ploča nije moguće uvesti"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Mogu se uvesti samo datoteke ploča",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Datoteka ploče je prevelika za uvoz",
-        "countPlural=*": "Datoteke ploča su prevelike za uvoz"
+        "count=1": "Datoteka ploče je prevelika za uvoz",
+        "count=*": "Datoteke ploča su prevelike za uvoz"
       }
     }
   ],

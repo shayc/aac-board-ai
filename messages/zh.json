@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "无法导入沟通板文件",
-        "countPlural=*": "无法导入沟通板文件"
+        "count=1": "无法导入沟通板文件",
+        "count=*": "无法导入沟通板文件"
       }
     }
   ],
   "libraryImportNotBoardFiles": "只能导入沟通板文件",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "沟通板文件过大，无法导入",
-        "countPlural=*": "沟通板文件过大，无法导入"
+        "count=1": "沟通板文件过大，无法导入",
+        "count=*": "沟通板文件过大，无法导入"
       }
     }
   ],

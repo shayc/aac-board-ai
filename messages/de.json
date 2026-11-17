@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafeldatei konnte nicht importiert werden",
-        "countPlural=*": "Tafeldateien konnten nicht importiert werden"
+        "count=1": "Tafeldatei konnte nicht importiert werden",
+        "count=*": "Tafeldateien konnten nicht importiert werden"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Nur Tafeldateien können importiert werden",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafeldatei ist zu groß zum Importieren",
-        "countPlural=*": "Die Tafeldateien sind zu groß zum Importieren"
+        "count=1": "Tafeldatei ist zu groß zum Importieren",
+        "count=*": "Die Tafeldateien sind zu groß zum Importieren"
       }
     }
   ],

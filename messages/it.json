@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Impossibile importare il file di tabella",
-        "countPlural=*": "Impossibile importare i file di tabelle"
+        "count=1": "Impossibile importare il file di tabella",
+        "count=*": "Impossibile importare i file di tabelle"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Si possono importare solo file di tabelle",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Il file di tabella è troppo grande per essere importato",
-        "countPlural=*": "I file di tabelle sono troppo grandi per essere importati"
+        "count=1": "Il file di tabella è troppo grande per essere importato",
+        "count=*": "I file di tabelle sono troppo grandi per essere importati"
       }
     }
   ],

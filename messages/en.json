@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Couldn't import board file",
-        "countPlural=*": "Couldn't import board files"
+        "count=1": "Couldn't import board file",
+        "count=*": "Couldn't import board files"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Only board files can be imported",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Board file is too large to import",
-        "countPlural=*": "Board files are too large to import"
+        "count=1": "Board file is too large to import",
+        "count=*": "Board files are too large to import"
       }
     }
   ],

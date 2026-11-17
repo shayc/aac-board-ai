@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "বোর্ড ফাইল আমদানি করা যায়নি",
-        "countPlural=*": "বোর্ড ফাইলগুলি আমদানি করা যায়নি"
+        "count=1": "বোর্ড ফাইল আমদানি করা যায়নি",
+        "count=*": "বোর্ড ফাইলগুলি আমদানি করা যায়নি"
       }
     }
   ],
   "libraryImportNotBoardFiles": "শুধু বোর্ড ফাইল আমদানি করা যায়",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "বোর্ড ফাইল আমদানি করার জন্য খুব বড়",
-        "countPlural=*": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়"
+        "count=1": "বোর্ড ফাইল আমদানি করার জন্য খুব বড়",
+        "count=*": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়"
       }
     }
   ],

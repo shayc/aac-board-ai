@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "تعذّر استيراد ملف اللوحة",
-        "countPlural=*": "تعذّر استيراد ملفات اللوحات"
+        "count=1": "تعذّر استيراد ملف اللوحة",
+        "count=*": "تعذّر استيراد ملفات اللوحات"
       }
     }
   ],
   "libraryImportNotBoardFiles": "يمكن استيراد ملفات اللوحات فقط",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ملف اللوحة كبير جدًا بحيث يتعذّر استيراده",
-        "countPlural=*": "ملفات اللوحات كبيرة جدًا بحيث يتعذّر استيرادها"
+        "count=1": "ملف اللوحة كبير جدًا بحيث يتعذّر استيراده",
+        "count=*": "ملفات اللوحات كبيرة جدًا بحيث يتعذّر استيرادها"
       }
     }
   ],

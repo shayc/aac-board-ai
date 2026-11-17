@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड फ़ाइल आयात नहीं की जा सकी",
-        "countPlural=*": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं"
+        "count=1": "बोर्ड फ़ाइल आयात नहीं की जा सकी",
+        "count=*": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं"
       }
     }
   ],
   "libraryImportNotBoardFiles": "केवल बोर्ड फ़ाइलें आयात की जा सकती हैं",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड फ़ाइल आयात करने के लिए बहुत बड़ी है",
-        "countPlural=*": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं"
+        "count=1": "बोर्ड फ़ाइल आयात करने के लिए बहुत बड़ी है",
+        "count=*": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं"
       }
     }
   ],

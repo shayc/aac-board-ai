@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "A táblafájl importálása nem sikerült",
-        "countPlural=*": "A táblafájlok importálása nem sikerült"
+        "count=1": "A táblafájl importálása nem sikerült",
+        "count=*": "A táblafájlok importálása nem sikerült"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Csak táblafájlok importálhatók",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "A táblafájl túl nagy az importáláshoz",
-        "countPlural=*": "A táblafájlok túl nagyok az importáláshoz"
+        "count=1": "A táblafájl túl nagy az importáláshoz",
+        "count=*": "A táblafájlok túl nagyok az importáláshoz"
       }
     }
   ],

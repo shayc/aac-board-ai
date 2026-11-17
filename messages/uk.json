@@ -34,22 +34,22 @@
   ],
   "libraryImportFailedBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Не вдалося імпортувати файл дошки",
-        "countPlural=*": "Не вдалося імпортувати файли дошок"
+        "count=1": "Не вдалося імпортувати файл дошки",
+        "count=*": "Не вдалося імпортувати файли дошок"
       }
     }
   ],
   "libraryImportNotBoardFiles": "Імпортувати можна лише файли дошок",
   "libraryImportTooLargeBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Файл дошки занадто великий для імпортування",
-        "countPlural=*": "Файли дошок занадто великі для імпортування"
+        "count=1": "Файл дошки занадто великий для імпортування",
+        "count=*": "Файли дошок занадто великі для імпортування"
       }
     }
   ],
