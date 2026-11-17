@@ -1,5 +1,6 @@
 import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
+import { filledInputClasses } from "@mui/material/FilledInput";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
@@ -52,8 +53,11 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
       renderInput={(params) => (
         <TextField
           {...params}
+          variant="filled"
+          hiddenLabel
           slotProps={{
             ...params.slotProps,
+            input: { ...params.slotProps.input, disableUnderline: true },
             htmlInput: {
               ...params.slotProps.htmlInput,
               "aria-label": t(m.boardSelectorLabel),
@@ -61,7 +65,18 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           }}
         />
       )}
-      sx={{ width: 320, maxWidth: "100%" }}
+      sx={(theme) => ({
+        width: 320,
+        maxWidth: "100%",
+        // Every other control on the board is a filled shape, so an outline
+        // would make the selector the heaviest thing in the header.
+        [`& .${filledInputClasses.root}`]: {
+          borderRadius: theme.vars.shape.borderRadiusFull,
+          [`&.${filledInputClasses.focused}`]: {
+            outline: `2px solid ${theme.vars.palette.primary.main}`,
+          },
+        },
+      })}
     />
   );
 }
