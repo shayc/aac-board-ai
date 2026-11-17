@@ -306,9 +306,11 @@ spelled word, and the communication language for a suggestion. Planning a
 playback gives every speech step a language, the communication language where
 a part's own is unknown, and speaks each run of parts that share one as a
 single utterance, so a board the browser could not translate is still read by
-a voice of its own language. Speech uses the saved voice only when it speaks
-the step's language; otherwise it picks one of that language's voices, or
-leaves the choice to the browser, without changing the saved voice.
+a voice of its own language. Each language keeps its own saved voice, so
+switching languages and back restores the earlier choice. Speech uses the voice
+saved for the step's language; when none is saved or it is unavailable, it
+picks one of that language's voices, or leaves the choice to the browser,
+without changing any saved voice.
 
 Paraglide message catalogs provide UI text. The document's `lang` and `dir`
 follow the UI locale, so a communication language without a catalog keeps both
