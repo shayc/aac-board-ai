@@ -91,7 +91,7 @@
   "speechVolume": "వాల్యూమ్",
   "speechPreviewVoice": "వాయిస్ విను",
   "speechPreviewSample": "హాయ్, ఇది నా వాయిస్!",
-  "messagePlaySymbols": "చిహ్నాలను జోడించేటప్పుడు ప్లే చేయి",
+  "messagePlayTiles": "చిహ్నాలను జోడించేటప్పుడు ప్లే చేయి",
   "messageImages": "చిత్రాలను చూపించు",
   "messageHighlight": "ప్లే చేస్తున్నప్పుడు హైలైట్ చేయి",
   "messageClearAfterPlaying": "ప్లే చేసిన తర్వాత క్లియర్ చేయి",

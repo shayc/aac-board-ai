@@ -91,7 +91,7 @@
   "speechVolume": "ভলিউম",
   "speechPreviewVoice": "কণ্ঠস্বর শুনুন",
   "speechPreviewSample": "হ্যালো, এটা আমার কণ্ঠস্বর!",
-  "messagePlaySymbols": "প্রতীক যোগ করার সময় চালান",
+  "messagePlayTiles": "প্রতীক যোগ করার সময় চালান",
   "messageImages": "ছবি দেখান",
   "messageHighlight": "চালানোর সময় হাইলাইট করুন",
   "messageClearAfterPlaying": "চালানোর পরে মুছুন",

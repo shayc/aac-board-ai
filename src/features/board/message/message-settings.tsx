@@ -21,7 +21,7 @@ export function MessageSettings() {
   return (
     <>
       <SettingsSwitch
-        label={t(m.messagePlaySymbols)}
+        label={t(m.messagePlayTiles)}
         checked={shouldPlayTiles}
         onChange={setMessagePlayTiles}
       />

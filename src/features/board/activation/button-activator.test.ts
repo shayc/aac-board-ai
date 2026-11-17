@@ -57,6 +57,7 @@ async function setup(
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
       Promise.resolve(),
     ),
+    stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
 
@@ -150,7 +151,7 @@ describe("createButtonActivator", () => {
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
-  test("appends a button without actions without playing it when tiles are not played", async () => {
+  test("appends a button without actions silently, stopping playback, when tiles are not played", async () => {
     const { activateButton, playback, readLabels } = await setup([], {
       shouldPlayTiles: false,
     });
@@ -159,6 +160,28 @@ describe("createButtonActivator", () => {
 
     expect(await readLabels()).toEqual(["bell"]);
     expect(playback.playPart).not.toHaveBeenCalled();
+    expect(playback.stop).toHaveBeenCalledOnce();
+  });
+
+  test("spells without echoing, stopping playback, when tiles are not played", async () => {
+    const { activateButton, playback, readLabels } = await setup([], {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [
+        { kind: "spell", text: "a" },
+        { kind: "play" },
+        { kind: "clear" },
+      ],
+    });
+
+    expect(await readLabels()).toEqual([]);
+    expect(playback.echoMessage).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
+    expect(playback.stop).toHaveBeenCalledOnce();
   });
 
   test("still plays the message for a play action when tiles are not played", async () => {

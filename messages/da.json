@@ -91,7 +91,7 @@
   "speechVolume": "Lydstyrke",
   "speechPreviewVoice": "Lyt til stemmen",
   "speechPreviewSample": "Hej, det er min stemme!",
-  "messagePlaySymbols": "Afspil symboler, når de tilføjes",
+  "messagePlayTiles": "Afspil symboler, når de tilføjes",
   "messageImages": "Vis billeder",
   "messageHighlight": "Fremhæv under afspilning",
   "messageClearAfterPlaying": "Ryd efter afspilning",

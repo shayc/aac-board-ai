@@ -91,7 +91,7 @@
   "speechVolume": "Âm lượng",
   "speechPreviewVoice": "Nghe thử giọng nói",
   "speechPreviewSample": "Xin chào, đây là giọng nói của tôi!",
-  "messagePlaySymbols": "Phát biểu tượng khi được thêm",
+  "messagePlayTiles": "Phát biểu tượng khi được thêm",
   "messageImages": "Hiển thị hình ảnh",
   "messageHighlight": "Đánh dấu khi phát",
   "messageClearAfterPlaying": "Xóa sau khi phát",

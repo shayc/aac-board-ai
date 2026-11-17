@@ -91,7 +91,7 @@
   "speechVolume": "Hangerő",
   "speechPreviewVoice": "Hang meghallgatása",
   "speechPreviewSample": "Szia, ez az én hangom!",
-  "messagePlaySymbols": "Szimbólumok lejátszása hozzáadáskor",
+  "messagePlayTiles": "Szimbólumok lejátszása hozzáadáskor",
   "messageImages": "Képek megjelenítése",
   "messageHighlight": "Kiemelés lejátszás közben",
   "messageClearAfterPlaying": "Törlés lejátszás után",

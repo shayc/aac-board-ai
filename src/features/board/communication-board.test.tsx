@@ -417,17 +417,29 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
-
-      await expect
-        .element(screen.getByRole("list", { name: "Message" }))
-        .toHaveTextContent("hello");
-      expect(speech.speak).not.toHaveBeenCalled();
-
       await screen.getByRole("button", { name: "Play message" }).click();
 
+      // A tile that had played would have spoken before the message did.
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hello"]);
       });
+    });
+
+    test("stops the message when a tile is selected while it plays and tiles are not played", async () => {
+      setMessagePlayTiles(false);
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const play = screen.getByRole("button", { name: "Play message" });
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await play.click();
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expect.element(play).toBeVisible();
+      expect(speech.spokenTexts()).toEqual(["hello"]);
     });
 
     test.each(["", " \t\n "])(

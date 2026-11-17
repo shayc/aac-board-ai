@@ -91,7 +91,7 @@
   "speechVolume": "音量",
   "speechPreviewVoice": "音声を試聴",
   "speechPreviewSample": "こんにちは、これが私の声です！",
-  "messagePlaySymbols": "追加時にシンボルを再生",
+  "messagePlayTiles": "追加時にシンボルを再生",
   "messageImages": "画像を表示",
   "messageHighlight": "再生中にハイライト",
   "messageClearAfterPlaying": "再生後に消去",

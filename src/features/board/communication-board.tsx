@@ -63,6 +63,7 @@ export function CommunicationBoard({
       playMessage: playback.playMessage,
       echoMessage: playback.echoMessage,
       playPart: playback.playPart,
+      stop: playback.stop,
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
     language,

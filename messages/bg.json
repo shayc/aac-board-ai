@@ -91,7 +91,7 @@
   "speechVolume": "Сила на звука",
   "speechPreviewVoice": "Прослушване на гласа",
   "speechPreviewSample": "Здравей, това е моят глас!",
-  "messagePlaySymbols": "Възпроизвеждане на символите при добавяне",
+  "messagePlayTiles": "Възпроизвеждане на символите при добавяне",
   "messageImages": "Показване на изображения",
   "messageHighlight": "Открояване по време на възпроизвеждане",
   "messageClearAfterPlaying": "Изчистване след възпроизвеждане",

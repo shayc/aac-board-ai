@@ -91,7 +91,7 @@
   "speechVolume": "Ένταση",
   "speechPreviewVoice": "Ακρόαση φωνής",
   "speechPreviewSample": "Γεια, αυτή είναι η φωνή μου!",
-  "messagePlaySymbols": "Αναπαραγωγή συμβόλων κατά την προσθήκη",
+  "messagePlayTiles": "Αναπαραγωγή συμβόλων κατά την προσθήκη",
   "messageImages": "Εμφάνιση εικόνων",
   "messageHighlight": "Επισήμανση κατά την αναπαραγωγή",
   "messageClearAfterPlaying": "Εκκαθάριση μετά την αναπαραγωγή",
