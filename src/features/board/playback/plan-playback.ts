@@ -1,3 +1,4 @@
+import { getLanguageCode } from "@shared/language/locale";
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import type { SpeechText } from "@shared/speech/speech-synthesis";
 import type { MessagePart } from "../message/message-types";
@@ -25,8 +26,8 @@ export function planPlayback(
   }
 
   for (const part of parts) {
-    const text = getSpokenText(part);
     const language = part.language ?? defaultLanguage;
+    const text = getSpokenText(part, language);
 
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
@@ -99,9 +100,13 @@ function createSpeechStep(
   };
 }
 
-function getSpokenText(part: MessagePart): string {
-  const text =
+// Keep Safari from speaking "I" as "Capital I".
+function getSpokenText(part: MessagePart, language: string): string {
+  const raw =
     part.kind === "tile" ? (part.vocalization ?? part.label) : part.label;
+  const text = raw.trim().replace(/\s+/g, " ");
 
-  return text.trim().replace(/\s+/g, " ").toLowerCase();
+  return text.length === 1 && getLanguageCode(language) === "en"
+    ? text.toLowerCase()
+    : text;
 }
