@@ -96,6 +96,18 @@ const SYMBOL_BOARD: OBFBoard = {
   ],
 };
 
+const THREE_COLUMN_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "three-column-board",
+  locale: "en",
+  buttons: [
+    { id: "btn-1", label: "yes" },
+    { id: "btn-2", label: "help" },
+    { id: "btn-3", label: "no" },
+  ],
+  grid: { rows: 1, columns: 3, order: [["btn-1", "btn-2", "btn-3"]] },
+};
+
 const LARGE_GRID_SIZE = 20;
 const LARGE_GRID_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -467,6 +479,31 @@ describe("CommunicationBoard", () => {
         expect(play.right).toBeCloseTo(width - 16, 0);
       },
     );
+
+    test("puts each control under a column of a three-column board", async () => {
+      await setTestViewport(375, 755);
+      const screen = await renderCommunicationBoard(THREE_COLUMN_BOARD);
+
+      const pairs = [
+        ["Go back", "yes"],
+        ["Go to main board", "help"],
+        ["Play message", "no"],
+      ] as const;
+
+      for (const [controlName, tileName] of pairs) {
+        const control = screen
+          .getByRole("button", { name: controlName })
+          .element()
+          .getBoundingClientRect();
+        const tile = screen
+          .getByRole("button", { name: tileName, exact: true })
+          .element()
+          .getBoundingClientRect();
+
+        expect(control.left).toBeCloseTo(tile.left, 0);
+        expect(control.right).toBeCloseTo(tile.right, 0);
+      }
+    });
   });
 
   describe("tile activation", () => {

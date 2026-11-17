@@ -1,10 +1,10 @@
 import type { Theme } from "@mui/material/styles";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { GRID_PADDING } from "../board-spacing";
+import { GRID_PADDING, TILE_GAP } from "../board-spacing";
 
 // Container-query thresholds require literal lengths for the theme's spacing unit.
 const GRID_SPACING_UNIT_PX = 8;
-const GRID_GAP_PX = spacingUnitsToPx(1);
+const GRID_GAP_PX = spacingUnitsToPx(TILE_GAP);
 const GRID_GAP = formatPx(GRID_GAP_PX);
 
 type Breakpoint = "xs" | "sm";

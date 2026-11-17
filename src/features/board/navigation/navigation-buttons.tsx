@@ -1,6 +1,5 @@
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import Box from "@mui/material/Box";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
@@ -26,12 +25,8 @@ export function NavigationButtons({
 }: NavigationButtonsProps) {
   const t = useTranslate();
 
-  // Pills are laid out by the row they share with play, so their wrapper
-  // steps out of the layout.
-  const display = shape === "pill" ? "contents" : "flex";
-
   return (
-    <Box sx={{ display, gap: 1 }}>
+    <>
       <BoardControlButton
         aria-label={t(m.navBack)}
         disabled={!canGoBack}
@@ -49,6 +44,6 @@ export function NavigationButtons({
       >
         <HomeOutlinedIcon />
       </BoardControlButton>
-    </Box>
+    </>
   );
 }

@@ -402,7 +402,9 @@ between any two of them changes in one place. Two values exist for each side of
 the `sm` breakpoint: the page margin and the scroll clearance. A short
 landscape screen uses the values from below the breakpoint. The grid's
 padding is derived from them in the same file, so the grid itself knows nothing
-about the bars around it.
+about the bars around it. The gap between tiles is there too: the grid uses it,
+and so do the phone's controls under the grid, which is what keeps them under
+the columns of a three-column board.
 
 - The bars above the grid sit one page margin apart. The board keeps the scroll
   clearance above and below the grid at every size, whether a bar or the
