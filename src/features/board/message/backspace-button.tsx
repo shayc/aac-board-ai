@@ -15,6 +15,7 @@ import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
 import {
   MESSAGE_ACTION_SIZE,
+  MESSAGE_ACTION_SIZE_PROPERTY,
   MESSAGE_SECONDARY_ACTION_SIZE,
 } from "./message-bar";
 
@@ -28,7 +29,7 @@ const ICON_SIZE = 28;
 
 const BUTTON_SIZES = {
   medium: MESSAGE_SECONDARY_ACTION_SIZE,
-  large: MESSAGE_ACTION_SIZE,
+  large: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
 } as const;
 
 type BackspaceButtonSize = keyof typeof BUTTON_SIZES;

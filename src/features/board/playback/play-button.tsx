@@ -13,6 +13,7 @@ import {
 } from "../board-control-button";
 import {
   MESSAGE_ACTION_ICON_SIZE,
+  MESSAGE_ACTION_SIZE,
   MESSAGE_ACTION_SIZE_PROPERTY,
 } from "../message/message-bar";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
@@ -76,8 +77,8 @@ export function PlayButton({
         onClick={disabled ? undefined : handleClick}
         sx={(theme) => ({
           flexShrink: 0,
-          width: `var(${MESSAGE_ACTION_SIZE_PROPERTY})`,
-          height: `var(${MESSAGE_ACTION_SIZE_PROPERTY})`,
+          width: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
+          height: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
           [`&.${fabClasses.disabled}`]: {
             ...disabledSx(theme),

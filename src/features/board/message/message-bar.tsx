@@ -14,12 +14,12 @@ import type { MessagePart } from "./message-types";
 const LIGHT_SCHEME_CLASS = "light";
 
 export const MESSAGE_ACTION_SIZE = 80;
-// The bar is as tall as its main action plus its inset, so it sets that
-// action's size and the action cannot outgrow it.
-export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
 // A step smaller, so play stays the main action of the bar and of its row.
 export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
+// The bar is as tall as its main action plus its inset, so it sets that
+// action's size and the action cannot outgrow it.
+export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
 
 // A short landscape screen has no height for the main action's extra step: the
 // bar drops to the secondary size, and its symbols shrink so their labels stay
