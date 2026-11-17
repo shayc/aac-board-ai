@@ -17,6 +17,11 @@ export const MESSAGE_ACTION_ICON_SIZE = 36;
 
 const BAR_INSET = 1;
 
+// The bar keeps the light scheme, whose teal fades into the grey ground the
+// bar takes in dark mode. This one keeps the hue and passes 3:1 on that
+// ground and on the backspace disc.
+const DARK_GROUND_PRIMARY = { main: "#00443d", mainChannel: "0 68 61" };
+
 export interface MessageBarProps {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
@@ -119,6 +124,9 @@ function messageBarSx(theme: Theme) {
     // A full grey 400 glares against the dark page; symbols still need a light
     // ground.
     ...theme.applyStyles("dark", {
+      // Rings and controls inside the bar read the primary color from these.
+      "--mui-palette-primary-main": DARK_GROUND_PRIMARY.main,
+      "--mui-palette-primary-mainChannel": DARK_GROUND_PRIMARY.mainChannel,
       bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
     }),
   } as const;
