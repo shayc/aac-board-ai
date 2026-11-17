@@ -12,6 +12,8 @@ export interface AudioStep {
 
 export interface SpeechStep extends SpeechText {
   kind: "speech";
+  /** Active for the whole utterance when it represents one message part. */
+  cue?: string;
   cueAt?: (charIndex: number) => string | null;
 }
 

@@ -20,7 +20,16 @@ export function planPlayback(
       return;
     }
 
-    steps.push(createSpeechStep(speechRun, firstPart.language));
+    steps.push(
+      speechRun.length === 1
+        ? {
+            kind: "speech",
+            text: firstPart.text,
+            language: firstPart.language,
+            cue: firstPart.id,
+          }
+        : createSpeechStep(speechRun, firstPart.language),
+    );
     speechRun = [];
   }
 

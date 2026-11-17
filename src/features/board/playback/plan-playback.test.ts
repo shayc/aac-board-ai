@@ -36,12 +36,9 @@ describe("planPlayback", () => {
 
     expect(steps).toMatchObject([
       { kind: "speech", text: "i want", language: "en" },
-      { kind: "speech", text: "מים", language: "he" },
-      { kind: "speech", text: "please", language: "en" },
+      { kind: "speech", text: "מים", language: "he", cue: "3" },
+      { kind: "speech", text: "please", language: "en", cue: "4" },
     ]);
-    expect(
-      steps.map((step) => step.kind === "speech" && step.cueAt?.(0)),
-    ).toEqual(["1", "3", "4"]);
   });
 
   test("speaks text in an unknown language in the same step as the communication language", () => {
