@@ -13,6 +13,8 @@ import type { MessagePart } from "./message-types";
 const LIGHT_SCHEME_CLASS = "light";
 
 export const MESSAGE_ACTION_SIZE = 80;
+// A step smaller, so play stays the main action of the bar and of its row.
+export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
 const BAR_INSET = 1;
@@ -108,7 +110,7 @@ function scrollPartIntoView(
 
 function messageBarSx(theme: Theme) {
   return {
-    // Fills the row it shares with the board's navigation on a short screen.
+    // Fills the row it shares with the board's navigation.
     flexGrow: 1,
     alignItems: "center",
     gap: 2,

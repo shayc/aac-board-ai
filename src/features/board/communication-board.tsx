@@ -74,7 +74,6 @@ export function CommunicationBoard({
 
   // A short landscape screen has width to spare and no height.
   const areControlsBelowGrid = isNarrowScreen && !isShortLandscape;
-  const hasNavigationRow = !isNarrowScreen && !isShortLandscape;
   const isPlayInMessageBar = !areControlsBelowGrid;
   const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
   const scrollClearance = isShortLandscape
@@ -85,6 +84,7 @@ export function CommunicationBoard({
 
   const navigationButtons = (
     <NavigationButtons
+      shape={areControlsBelowGrid ? "pill" : "round"}
       canGoBack={navigation.canGoBack}
       canGoHome={navigation.canGoHome}
       onBack={navigation.goBack}
@@ -142,7 +142,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={{ alignItems: "center" }}
             >
-              {isShortLandscape && navigationButtons}
+              {!areControlsBelowGrid && navigationButtons}
 
               <PlaybackMessageBar
                 parts={message.parts}
@@ -159,11 +159,8 @@ export function CommunicationBoard({
             <Stack
               {...scanGroupProps}
               direction="row"
-              spacing={2}
               sx={{ "&:empty": { display: "none" } }}
             >
-              {hasNavigationRow && navigationButtons}
-
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}
