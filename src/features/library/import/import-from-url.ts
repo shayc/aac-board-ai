@@ -123,6 +123,29 @@ async function downloadBoardFile(
   });
 }
 
+function expectedDownloadBytes(headers: Headers): number | undefined {
+  const contentLength = headers.get("content-length");
+  if (contentLength === null || headers.has("content-encoding")) {
+    return undefined;
+  }
+
+  const total = Number(contentLength);
+
+  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
+}
+
+function assertWithinSizeCap(
+  total: number | undefined,
+  response: Response,
+): void {
+  if (total === undefined || total <= MAX_BOARD_DOWNLOAD_BYTES) {
+    return;
+  }
+
+  void response.body?.cancel();
+  throw downloadTooLargeError();
+}
+
 // The declared size can be missing or wrong, so the cap is enforced on the
 // bytes that actually arrive.
 async function readWithinSizeCap(
@@ -148,29 +171,6 @@ async function readWithinSizeCap(
     chunks.push(value);
     onReceived(receivedBytes);
   }
-}
-
-function expectedDownloadBytes(headers: Headers): number | undefined {
-  const contentLength = headers.get("content-length");
-  if (contentLength === null || headers.has("content-encoding")) {
-    return undefined;
-  }
-
-  const total = Number(contentLength);
-
-  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
-}
-
-function assertWithinSizeCap(
-  total: number | undefined,
-  response: Response,
-): void {
-  if (total === undefined || total <= MAX_BOARD_DOWNLOAD_BYTES) {
-    return;
-  }
-
-  void response.body?.cancel();
-  throw downloadTooLargeError();
 }
 
 function downloadTooLargeError(): BoardFileURLError {
