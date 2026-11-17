@@ -105,7 +105,6 @@ export function CommunicationBoard({
 
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
     <Tile
-      key={`${board.id}/${button.id}`}
       button={button}
       language={language}
       onActivate={activateButton}
@@ -169,6 +168,7 @@ export function CommunicationBoard({
               items={board.buttons}
               order={board.grid.order}
               rowProps={scanGroupProps}
+              getItemKey={(button) => `${board.id}/${button.id}`}
               renderItem={renderTile}
             />
           </Box>
