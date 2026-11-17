@@ -359,15 +359,13 @@ tightens, as [Board spacing](#board-spacing) describes.
 
 One height rule sits beside it, in
 [`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape
-screen shorter than the `sm` value, such as a phone on its side. Such a screen
-is wide enough for the layout above `sm` but has no height for it, so:
+screen shorter than the `sm` value, such as a phone on its side. Height is
+what such a screen lacks, so:
 
-- The back and home buttons move into the message bar's row, before the bar.
-  Backspace and play stay inside the bar, and no row of controls sits under
-  the grid.
-- The board takes the spacing from below `sm`, whatever the screen's width.
-- The app bar, and every other toolbar, is 48px tall. The rule lives in the
-  theme's toolbar mixin, so the snackbar's offset below the app bar follows.
+- The back and home buttons sit in the message bar's row, before the bar, and
+  backspace and play stay inside it.
+- The spacing tightens as it does below `sm`.
+- The app bar and the other toolbars take their shortest height.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 
