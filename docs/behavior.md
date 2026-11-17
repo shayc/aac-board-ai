@@ -367,10 +367,11 @@ last and backspace a step smaller beside it. Backspace is a bare icon with no
 fill at rest, so play is the only filled shape in the bar; its touch target is
 the whole button, which the hold ring traces. Suggestions have the row below to
 themselves, and without them the grid starts under the message bar. Below `sm`
-the back, home, and play buttons move under the grid as wider pills. Play sits
-at the far end, twice as wide as either of the others, and narrower only on a
-screen too small for that. Backspace stays in the message bar at full size, and
-the spacing tightens, as [Board spacing](#board-spacing) describes.
+the back, home, and play buttons move under the grid as pills that each take a
+third of the row, play at the far end. They sit a tile gap apart, so on a
+three-column board each one is under a column of tiles. Backspace stays in the
+message bar at full size, and the spacing tightens, as
+[Board spacing](#board-spacing) describes.
 
 One height rule sits beside it, in
 [`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape

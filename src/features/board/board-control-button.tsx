@@ -3,10 +3,9 @@ import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import { MESSAGE_SECONDARY_ACTION_SIZE } from "./message/message-bar";
 
-export const BOARD_CONTROL_PILL_WIDTH = 72;
-
 const SHAPE_SX = {
-  pill: { width: BOARD_CONTROL_PILL_WIDTH },
+  // A pill is as wide as the column its row gives it.
+  pill: {},
   // As large as the message bar's backspace, which it sits beside. It holds
   // one icon, so the button's side padding gives way to the fixed width.
   round: {

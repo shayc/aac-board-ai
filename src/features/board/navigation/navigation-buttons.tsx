@@ -26,8 +26,12 @@ export function NavigationButtons({
 }: NavigationButtonsProps) {
   const t = useTranslate();
 
+  // Pills are laid out by the row they share with play, so their wrapper
+  // steps out of the layout.
+  const display = shape === "pill" ? "contents" : "flex";
+
   return (
-    <Box sx={{ display: "flex", gap: 1 }}>
+    <Box sx={{ display, gap: 1 }}>
       <BoardControlButton
         aria-label={t(m.navBack)}
         disabled={!canGoBack}

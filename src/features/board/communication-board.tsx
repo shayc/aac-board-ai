@@ -184,19 +184,21 @@ export function CommunicationBoard({
           </Box>
 
           {areControlsBelowGrid && (
-            <Stack
+            <Box
               {...scanGroupProps}
-              direction="row"
-              spacing={2}
               sx={(theme) => ({
-                justifyContent: "space-between",
+                // Three equal columns a tile gap apart, so the controls sit
+                // under the tiles of a three-column board.
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 1,
                 px: PAGE_MARGIN,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
               {navigationButtons}
               {playButton}
-            </Stack>
+            </Box>
           )}
         </Stack>
       </ScanningScope>

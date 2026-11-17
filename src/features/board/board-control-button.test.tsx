@@ -20,6 +20,7 @@ describe("BoardControlButton", () => {
   test("applies a caller's sx array without losing its own width", async () => {
     const screen = await render(
       <BoardControlButton
+        shape="round"
         sx={[{ mt: 1 }, (theme) => ({ mb: theme.spacing(2) })]}
       >
         Go back
@@ -29,7 +30,7 @@ describe("BoardControlButton", () => {
     const button = screen.getByRole("button", { name: "Go back" });
 
     await expect.element(button).toHaveStyle({
-      width: "72px",
+      width: "64px",
       marginTop: "8px",
       marginBottom: "16px",
     });

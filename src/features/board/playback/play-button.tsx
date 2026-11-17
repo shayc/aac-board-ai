@@ -7,10 +7,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
-import {
-  BOARD_CONTROL_PILL_WIDTH,
-  BoardControlButton,
-} from "../board-control-button";
+import { BoardControlButton } from "../board-control-button";
 import {
   MESSAGE_ACTION_ICON_SIZE,
   MESSAGE_ACTION_SIZE,
@@ -54,10 +51,6 @@ export function PlayButton({
           color="primary"
           onClick={handleClick}
           sx={(theme) => ({
-            // The message's main action is twice as wide as the controls
-            // beside it, where its row has the room.
-            flexGrow: 1,
-            maxWidth: 2 * BOARD_CONTROL_PILL_WIDTH,
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
           })}
         >
