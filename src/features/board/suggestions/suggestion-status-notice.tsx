@@ -1,7 +1,5 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
@@ -23,8 +21,7 @@ export function SuggestionStatusNotice({
   switch (status.kind) {
     case "idle":
     case "pending":
-      // Stays mounted while idle so the dot fades instead of popping in.
-      return <PendingDot isVisible={status.kind === "pending"} />;
+      return null;
     case "not-enabled":
       return (
         <Chip
@@ -51,29 +48,6 @@ export function SuggestionStatusNotice({
     default:
       return assertNever(status);
   }
-}
-
-interface PendingDotProps {
-  isVisible: boolean;
-}
-
-function PendingDot({ isVisible }: PendingDotProps) {
-  return (
-    <Fade
-      in={isVisible}
-      style={{ transitionDelay: isVisible ? "300ms" : "0ms" }}
-    >
-      <Box
-        sx={{
-          flexShrink: 0,
-          width: 8,
-          aspectRatio: "1",
-          borderRadius: "50%",
-          bgcolor: "warning.main",
-        }}
-      />
-    </Fade>
-  );
 }
 
 interface StatusTextProps {

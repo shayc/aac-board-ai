@@ -229,6 +229,14 @@ language.
    the message with one text part per word in the communication language. It
    is one step in the undo history, so undo brings the tapped message back.
 
+While a source is still answering, the
+[suggestion bar](../src/features/board/suggestions/suggestion-bar.tsx) shows a
+softly filled pill of three dots after the phrases, where the next one will
+land, and each phrase fades in as it arrives. The dots
+pulse in opacity only, so nothing beside the grid moves, and hold still when
+the system asks for reduced motion. The pill leaves at once when the last
+source answers.
+
 The message changes only when a phrase is selected, and selecting a phrase
 does not play it. The phrases are a labelled group, not a live region, because
 an announcement would interrupt the spoken feedback of the tile just pressed.
