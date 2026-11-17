@@ -6,9 +6,9 @@ import { MessageSettings } from "./message-settings";
 describe("MessageSettings", () => {
   test.each([
     {
-      name: "Play symbols as they're added",
+      name: "Play symbols when added",
       preference: "shouldPlayTiles",
-      effect: "playing symbols as they're added",
+      effect: "playing symbols when added",
     },
     {
       name: "Show images",
