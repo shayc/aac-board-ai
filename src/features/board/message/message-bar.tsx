@@ -2,6 +2,7 @@ import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import {
   AACSymbol,
@@ -12,10 +13,20 @@ import type { MessagePart } from "./message-types";
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
-export const MESSAGE_ACTION_SIZE = 80;
+// The bar is as tall as its main action plus its inset, so it sets that
+// action's size and the action cannot outgrow it.
+export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
 // A step smaller, so play stays the main action of the bar and of its row.
 export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
+
+// A screen short on room, as a phone is, has none for the main action's extra
+// step: the bar drops to the secondary size, and its symbols shrink so their
+// labels stay in view.
+const BAR_SIZES = {
+  regular: { action: 80, symbol: 64 },
+  compact: { action: MESSAGE_SECONDARY_ACTION_SIZE, symbol: 48 },
+} as const;
 
 const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word's ring.
@@ -110,6 +121,7 @@ function scrollPartIntoView(
 
 function messageBarSx(theme: Theme) {
   return {
+    ...barSizeProperties(BAR_SIZES.regular),
     // Fills the row it shares with the board's navigation.
     flexGrow: 1,
     alignItems: "center",
@@ -134,7 +146,18 @@ function messageBarSx(theme: Theme) {
       "--mui-palette-primary-mainChannel": DARK_GROUND_PRIMARY.mainChannel,
       bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
     }),
+    [theme.breakpoints.down("sm")]: barSizeProperties(BAR_SIZES.compact),
+    [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
+}
+
+type BarSize = (typeof BAR_SIZES)[keyof typeof BAR_SIZES];
+
+function barSizeProperties({ action, symbol }: BarSize) {
+  return {
+    [MESSAGE_ACTION_SIZE_PROPERTY]: `${action}px`,
+    [SYMBOL_IMAGE_SIZE_PROPERTY]: `${symbol}px`,
+  };
 }
 
 function scrollContainerSx(theme: Theme) {
@@ -142,7 +165,7 @@ function scrollContainerSx(theme: Theme) {
     flexGrow: 1,
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
-    height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
+    height: `calc(var(${MESSAGE_ACTION_SIZE_PROPERTY}) + ${theme.spacing(BAR_INSET * 2)})`,
     px: MESSAGE_PADDING,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
@@ -175,7 +198,6 @@ function MessagePartItem({
       lang={language}
       direction="row"
       sx={(theme) => ({
-        [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
         py: 0.5,
         px: 1,
         borderRadius: theme.vars.shape.borderRadiusSm,

@@ -13,29 +13,18 @@ import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
-import {
-  MESSAGE_ACTION_SIZE,
-  MESSAGE_SECONDARY_ACTION_SIZE,
-} from "./message-bar";
+import { MESSAGE_SECONDARY_ACTION_SIZE } from "./message-bar";
 
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
-// MUI draws the ring in a 44-unit box, so on the 80px button this is a 4px
-// stroke; MUI's default would outweigh the icon's lines.
+// MUI draws the ring in a 44-unit box, so on the 64px button this is about a
+// 3px stroke; MUI's default would outweigh the icon's lines.
 const RING_THICKNESS = 2.2;
 const ICON_SIZE = 28;
 
-const BUTTON_SIZES = {
-  medium: MESSAGE_SECONDARY_ACTION_SIZE,
-  large: MESSAGE_ACTION_SIZE,
-} as const;
-
-type BackspaceButtonSize = keyof typeof BUTTON_SIZES;
-
 interface BackspaceButtonProps {
   disabled?: boolean;
-  size?: BackspaceButtonSize;
   shortcutLabels: Pick<BoardShortcutLabels, "clear" | "spokenClear">;
   onPress: () => void;
   onLongPress: () => void;
@@ -43,7 +32,6 @@ interface BackspaceButtonProps {
 
 export function BackspaceButton({
   disabled = false,
-  size = "large",
   shortcutLabels,
   onPress,
   onLongPress,
@@ -70,7 +58,7 @@ export function BackspaceButton({
         {...focusableDisabledProps(disabled)}
         aria-label={t(m.messageBackspace)}
         aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
-        sx={(theme) => backspaceSx(theme, size)}
+        sx={backspaceSx}
       >
         <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
 
@@ -89,21 +77,20 @@ export function BackspaceButton({
 }
 
 // The icon has no fill at rest, so play is the only filled shape in the bar;
-// the touch target stays as large as the button. With the bar's inset, a large
-// button sits on the bar's rounded end, the same distance from its top, bottom
-// and end.
+// the touch target stays as large as the button. On a phone, where it is the
+// bar's last action, the bar's inset leaves it the same distance from the
+// bar's top, bottom and rounded end.
 //
 // The bar stays light in dark mode, so hovering tints it darker; on the greyer
 // bar that tint, and the disabled icon, must be stronger to read at all.
-function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
-  const targetSize = BUTTON_SIZES[size];
+function backspaceSx(theme: Theme) {
   const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
   const darkHoverColor = theme.alpha(theme.palette.common.black, 0.12);
 
   return {
     flexShrink: 0,
-    width: targetSize,
-    height: targetSize,
+    width: MESSAGE_SECONDARY_ACTION_SIZE,
+    height: MESSAGE_SECONDARY_ACTION_SIZE,
     fontSize: ICON_SIZE,
     color: "text.primary",
     // A tap leaves hover stuck on a touch screen.
