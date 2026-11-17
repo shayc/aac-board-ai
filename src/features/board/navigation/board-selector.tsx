@@ -7,8 +7,9 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useBoardRoute } from "./use-board-route";
 
-const restingOutline = `& .${outlinedInputClasses.root}:not(:hover, .${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
-const touchHoverOutline = `& .${outlinedInputClasses.root}:hover:not(.${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
+const inputRoot = `& .${outlinedInputClasses.root}`;
+const unfocusedOutline = `${inputRoot}:not(.${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
+const touchHoverOutline = `${inputRoot}:hover:not(.${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
 
 interface BoardOption {
   id: string;
@@ -69,12 +70,16 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
         width: 320,
         maxWidth: "100%",
         // Every other control on the board is a filled shape, so an outline
-        // at rest would make the selector the heaviest thing in the header.
-        [`& .${outlinedInputClasses.root}`]: {
-          backgroundColor: theme.vars.palette.action.hover,
+        // would make the selector the heaviest thing in the header. Only focus
+        // draws one.
+        [inputRoot]: { backgroundColor: theme.vars.palette.action.hover },
+        [unfocusedOutline]: { borderColor: "transparent" },
+        "@media (hover: hover)": {
+          [`${inputRoot}:hover`]: {
+            backgroundColor: theme.vars.palette.action.selected,
+          },
         },
-        [restingOutline]: { borderColor: "transparent" },
-        // Touch keeps :hover after a tap.
+        // The theme restores the outline for touch's sticky :hover.
         "@media (hover: none)": {
           [touchHoverOutline]: { borderColor: "transparent" },
         },
