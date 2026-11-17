@@ -57,7 +57,7 @@ describe("useBoardPlayback", () => {
     const playPromise = result.current.playMessage(parts);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBe("1");
+    expect(result.current.activePartId).toBeNull();
 
     fireBoundary?.(2); // "want" begins at offset 2 in "i want"
     await rerender();

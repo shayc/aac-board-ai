@@ -170,10 +170,14 @@ how the message changes:
    does not count. A message setting turns this off.
 4. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
-   and publishes progress for highlighting. A recorded-audio step carries the
-   tile's spoken text, and the coordinator speaks it in place of a recording
-   that cannot play, so a broken or unreachable recording does not silence a
-   tile that has text to speak.
+   and publishes progress for highlighting. A recording, or speech for a single
+   part, highlights its part throughout. Speech that joins several parts
+   highlights each one only when the voice reports a word boundary in it, so
+   a voice that reports no word boundaries highlights none of them rather
+   than leave the first one highlighted for the whole utterance. A
+   recorded-audio step carries the tile's spoken text, and the coordinator
+   speaks it in place of a recording that cannot play, so a broken or
+   unreachable recording does not silence a tile that has text to speak.
 
 Each new playback request interrupts the current one, and a board that closes
 stops its own playback, so a message it was playing is never marked played

@@ -620,7 +620,7 @@ describe("CommunicationBoard", () => {
       });
     });
 
-    test("outlines each message part while it is spoken", async () => {
+    test("outlines each message part at its speech boundary", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
@@ -628,13 +628,45 @@ describe("CommunicationBoard", () => {
       preventSpeechEnd(speech.speak);
       await screen.getByRole("button", { name: "Play message" }).click();
 
+      const utterance = lastUtterance(speech.speak);
+      reachUtteranceBoundary(utterance, 0);
       await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
 
-      reachUtteranceBoundary(
-        lastUtterance(speech.speak),
-        "hello world".indexOf("world"),
-      );
+      reachUtteranceBoundary(utterance, "hello world".indexOf("world"));
       await expect.poll(() => outlinedMessageParts(screen)).toEqual(["world"]);
+
+      endUtterance(utterance);
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
+    });
+
+    test("leaves multiple message parts unoutlined when speech sends no boundaries", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+      preventSpeechEnd(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+      expect(outlinedMessageParts(screen)).toEqual([]);
+
+      endUtterance(lastUtterance(speech.speak));
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeVisible();
+      expect(outlinedMessageParts(screen)).toEqual([]);
+    });
+
+    test("outlines a single message part when speech sends no boundaries", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      preventSpeechEnd(speech.speak);
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
 
       endUtterance(lastUtterance(speech.speak));
       await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
