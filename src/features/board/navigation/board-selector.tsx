@@ -1,15 +1,11 @@
 import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
-import { outlinedInputClasses } from "@mui/material/OutlinedInput";
+import { filledInputClasses } from "@mui/material/FilledInput";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useBoardRoute } from "./use-board-route";
-
-const inputRoot = `& .${outlinedInputClasses.root}`;
-const unfocusedOutline = `${inputRoot}:not(.${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
-const touchHoverOutline = `${inputRoot}:hover:not(.${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
 
 interface BoardOption {
   id: string;
@@ -57,8 +53,11 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
       renderInput={(params) => (
         <TextField
           {...params}
+          variant="filled"
+          hiddenLabel
           slotProps={{
             ...params.slotProps,
+            input: { ...params.slotProps.input, disableUnderline: true },
             htmlInput: {
               ...params.slotProps.htmlInput,
               "aria-label": t(m.boardSelectorLabel),
@@ -70,18 +69,12 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
         width: 320,
         maxWidth: "100%",
         // Every other control on the board is a filled shape, so an outline
-        // would make the selector the heaviest thing in the header. Only focus
-        // draws one.
-        [inputRoot]: { backgroundColor: theme.vars.palette.action.hover },
-        [unfocusedOutline]: { borderColor: "transparent" },
-        "@media (hover: hover)": {
-          [`${inputRoot}:hover`]: {
-            backgroundColor: theme.vars.palette.action.selected,
+        // would make the selector the heaviest thing in the header.
+        [`& .${filledInputClasses.root}`]: {
+          borderRadius: theme.vars.shape.borderRadiusFull,
+          [`&.${filledInputClasses.focused}`]: {
+            outline: `2px solid ${theme.vars.palette.primary.main}`,
           },
-        },
-        // The theme restores the outline for touch's sticky :hover.
-        "@media (hover: none)": {
-          [touchHoverOutline]: { borderColor: "transparent" },
         },
       })}
     />
