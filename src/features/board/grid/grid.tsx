@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import {
   createGridContentSx,
   createGridViewportSx,
@@ -22,6 +22,11 @@ interface GridProps<Item extends { id: string }> {
   items: readonly Item[];
   order: GridOrder;
   rowProps?: GridRowDataAttributes;
+  /**
+   * An item remounts when its key changes, and focus it loses that way returns
+   * to the grid. IDs are enough unless different items can share one.
+   */
+  getItemKey?: (item: Item) => string;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
 
@@ -30,10 +35,14 @@ export function Grid<Item extends { id: string }>({
   items,
   order,
   rowProps,
+  getItemKey = getItemId,
   renderItem,
 }: GridProps<Item>) {
   const grid = buildGrid(items, order);
-  const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
+  const { rootRef, rootProps, tabStopPosition } = useGridFocus(
+    grid,
+    getItemKey,
+  );
   const rows = grid.length;
   const columns = grid[0]?.length ?? 0;
 
@@ -58,6 +67,7 @@ export function Grid<Item extends { id: string }>({
                 : undefined
             }
             rowProps={rowProps}
+            getItemKey={getItemKey}
             renderItem={renderItem}
           />
         ))}
@@ -66,11 +76,16 @@ export function Grid<Item extends { id: string }>({
   );
 }
 
+function getItemId(item: { id: string }): string {
+  return item.id;
+}
+
 interface GridRowProps<Item extends { id: string }> {
   items: readonly (Item | undefined)[];
   rowIndex: number;
   tabStopColumn: number | undefined;
   rowProps: GridRowDataAttributes | undefined;
+  getItemKey: (item: Item) => string;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
 
@@ -79,6 +94,7 @@ function GridRow<Item extends { id: string }>({
   rowIndex,
   tabStopColumn,
   rowProps,
+  getItemKey,
   renderItem,
 }: GridRowProps<Item>) {
   return (
@@ -90,6 +106,7 @@ function GridRow<Item extends { id: string }>({
           rowIndex={rowIndex}
           columnIndex={columnIndex}
           isTabStop={columnIndex === tabStopColumn}
+          getItemKey={getItemKey}
           renderItem={renderItem}
         />
       ))}
@@ -102,6 +119,7 @@ interface GridCellProps<Item extends { id: string }> {
   rowIndex: number;
   columnIndex: number;
   isTabStop: boolean;
+  getItemKey: (item: Item) => string;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }
 
@@ -110,6 +128,7 @@ function GridCell<Item extends { id: string }>({
   rowIndex,
   columnIndex,
   isTabStop,
+  getItemKey,
   renderItem,
 }: GridCellProps<Item>) {
   return (
@@ -119,7 +138,11 @@ function GridCell<Item extends { id: string }>({
       aria-colindex={columnIndex + 1}
       sx={gridCellSx}
     >
-      {item && renderItem(item, { tabIndex: isTabStop ? 0 : -1 })}
+      {item && (
+        <Fragment key={getItemKey(item)}>
+          {renderItem(item, { tabIndex: isTabStop ? 0 : -1 })}
+        </Fragment>
+      )}
     </Stack>
   );
 }

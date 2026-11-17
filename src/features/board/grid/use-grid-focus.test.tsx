@@ -15,11 +15,7 @@ function makeItems(...ids: number[]): TestItem[] {
 }
 
 function renderButton(item: TestItem, props: GridItemProps) {
-  return (
-    <button key={item.id} {...props}>
-      {item.label}
-    </button>
-  );
+  return <button {...props}>{item.label}</button>;
 }
 
 async function press(
@@ -232,6 +228,40 @@ describe("useGridFocus", () => {
       expect(focusedButton.isConnected).toBe(false);
       await expect
         .element(screen.getByRole("button", { name: "Item 6" }))
+        .toHaveFocus();
+    });
+
+    test("returns lost focus when items with the same IDs remount under new keys", async () => {
+      const items = makeItems(1, 2, 3, 4);
+
+      const screen = await render(
+        <Grid
+          aria-label="Board"
+          items={items}
+          order={rowMajorOrder(items, 2)}
+          getItemKey={(item) => `first/${item.id}`}
+          renderItem={renderButton}
+        />,
+      );
+
+      const focusedButton = screen
+        .getByRole("button", { name: "Item 2" })
+        .element();
+      focusedButton.focus();
+
+      await screen.rerender(
+        <Grid
+          aria-label="Board"
+          items={items}
+          order={rowMajorOrder(items, 2)}
+          getItemKey={(item) => `second/${item.id}`}
+          renderItem={renderButton}
+        />,
+      );
+
+      expect(focusedButton.isConnected).toBe(false);
+      await expect
+        .element(screen.getByRole("button", { name: "Item 2" }))
         .toHaveFocus();
     });
 
