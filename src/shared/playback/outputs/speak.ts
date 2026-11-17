@@ -38,10 +38,16 @@ export function speak(
     reject(new Error(`Speech failed: ${event.error}`, { cause: event }));
   }
 
+  // A sentence boundary reports where a sentence starts, not which word is
+  // being spoken.
   if (onBoundary) {
     utterance.addEventListener(
       "boundary",
-      (event) => onBoundary(event.charIndex),
+      (event) => {
+        if (event.name === "word") {
+          onBoundary(event.charIndex);
+        }
+      },
       listenerOptions,
     );
   }
