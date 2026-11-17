@@ -114,14 +114,29 @@ async function downloadBoardFile(
     return response.blob();
   }
 
+  const chunks = await readWithinSizeCap(reader, (loaded) =>
+    onProgress?.({ loaded, total }),
+  );
+
+  return new Blob(chunks, {
+    type: response.headers.get("content-type") ?? "",
+  });
+}
+
+// The declared size can be missing or wrong, so the cap is enforced on the
+// bytes that actually arrive.
+async function readWithinSizeCap(
+  reader: ReadableStreamDefaultReader<Uint8Array<ArrayBuffer>>,
+  onReceived: (receivedBytes: number) => void,
+): Promise<BlobPart[]> {
   const chunks: BlobPart[] = [];
   let receivedBytes = 0;
-  onProgress?.({ loaded: receivedBytes, total });
+  onReceived(receivedBytes);
 
   for (;;) {
     const { done, value } = await reader.read();
     if (done) {
-      break;
+      return chunks;
     }
 
     receivedBytes += value.byteLength;
@@ -131,12 +146,8 @@ async function downloadBoardFile(
     }
 
     chunks.push(value);
-    onProgress?.({ loaded: receivedBytes, total });
+    onReceived(receivedBytes);
   }
-
-  return new Blob(chunks, {
-    type: response.headers.get("content-type") ?? "",
-  });
 }
 
 function expectedDownloadBytes(headers: Headers): number | undefined {

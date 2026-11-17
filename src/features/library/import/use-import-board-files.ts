@@ -22,7 +22,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  async function importFiles(
+  async function importAndReport(
     files: readonly File[],
     readFailures: readonly ImportFailure[],
   ): Promise<ImportedBoardSet[]> {
@@ -68,7 +68,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     files: readonly File[],
     readFailures: readonly ImportFailure[] = [],
   ) {
-    const importedBoardSets = await importFiles(files, readFailures);
+    const importedBoardSets = await importAndReport(files, readFailures);
     const onlyBoardSet =
       importedBoardSets.length === 1 ? importedBoardSets[0] : undefined;
     if (!onlyBoardSet) {

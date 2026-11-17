@@ -13,6 +13,7 @@ import {
   listBoardSetRecords,
   updateBoardSetTranslations,
 } from "../storage/board-set-storage";
+import { requestPersistentStorage } from "../storage/request-persistent-storage";
 
 export interface BoardSetsSnapshot {
   boardSets: readonly BoardSetRecord[];
@@ -59,6 +60,7 @@ export function useBoardSets(): BoardSetsSnapshot {
 
 export async function createBoardSet(input: BoardSetInput): Promise<void> {
   await insertBoardSetRecords(input);
+  requestPersistentStorage();
   await syncBoardSets();
 }
 
