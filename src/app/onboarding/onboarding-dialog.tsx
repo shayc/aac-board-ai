@@ -38,7 +38,7 @@ interface Highlight {
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const t = useTranslate();
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
@@ -77,7 +77,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      fullScreen={isSmallScreen || isShortLandscape}
+      fullScreen={isNarrowScreen || isShortLandscape}
       fullWidth
       maxWidth="xs"
     >
