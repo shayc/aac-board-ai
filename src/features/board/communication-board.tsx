@@ -191,10 +191,11 @@ export function CommunicationBoard({
             <Box
               {...scanGroupProps}
               sx={(theme) => ({
-                // Three equal columns a tile gap apart, so the controls sit
+                // Equal columns a tile gap apart, so the three controls sit
                 // under the tiles of a three-column board.
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridAutoFlow: "column",
+                gridAutoColumns: "minmax(0, 1fr)",
                 gap: TILE_GAP,
                 px: PAGE_MARGIN,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
