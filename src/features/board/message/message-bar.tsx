@@ -191,7 +191,11 @@ function MessagePartItem({
         ...(isOpen && {
           "&::after": {
             content: '""',
-            marginInlineStart: "2px",
+            alignSelf: "center",
+            // As tall as the line of the word it follows.
+            height: "1.2em",
+            marginInlineStart: theme.spacing(0.5),
+            fontSize: theme.typography.h5.fontSize,
             borderInlineStart: "2px solid currentColor",
           },
         }),
