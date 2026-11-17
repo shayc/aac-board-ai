@@ -56,7 +56,20 @@ export async function restoreMessageDraft(): Promise<Message> {
     return EMPTY_MESSAGE;
   }
 
-  const parts = await Promise.all(savedParts.map(restorePart));
+  const readErrors: unknown[] = [];
+  const parts = await Promise.all(
+    savedParts.map((part) => restorePart(part, readErrors)),
+  );
+
+  // One storage fault fails every read, so the draft reports them together.
+  if (readErrors.length > 0) {
+    reportError(
+      new AggregateError(
+        readErrors,
+        `Failed to read ${readErrors.length} stored assets of the message draft`,
+      ),
+    );
+  }
 
   return {
     parts,
@@ -156,15 +169,18 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   return { boardSetId: value.boardSetId, path: value.path };
 }
 
-async function restorePart(part: SavedPart): Promise<MessagePart> {
+async function restorePart(
+  part: SavedPart,
+  readErrors: unknown[],
+): Promise<MessagePart> {
   if (part.kind === "text") {
     return part;
   }
 
   const { imageAssetKey, soundAssetKey, ...tilePart } = part;
   const [imageURL, soundURL] = await Promise.all([
-    resolveAssetURL(imageAssetKey),
-    resolveAssetURL(soundAssetKey),
+    resolveAssetURL(imageAssetKey, readErrors),
+    resolveAssetURL(soundAssetKey, readErrors),
   ]);
 
   return {
@@ -176,10 +192,16 @@ async function restorePart(part: SavedPart): Promise<MessagePart> {
 
 async function resolveAssetURL(
   key: AssetKey | undefined,
+  readErrors: unknown[],
 ): Promise<string | undefined> {
   if (!key) {
     return undefined;
   }
 
-  return getAssetURL(key.boardSetId, key.path).catch(() => undefined);
+  // The part keeps its words without the picture or sound that can't be read.
+  return getAssetURL(key.boardSetId, key.path).catch((error: unknown) => {
+    readErrors.push(error);
+
+    return undefined;
+  });
 }

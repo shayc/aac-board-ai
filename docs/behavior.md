@@ -264,15 +264,15 @@ Nothing leaves the device.
   the action report the underlying error themselves.
 - **Library:** a failed list load, catalog download, export or delete is
   reported beside its message.
-- **Stored pictures and sounds:** a board opens without the assets that can't
-  be read, and reports those reads together as one error. An asset that was
-  never stored is not a failure.
+- **Stored pictures and sounds:** a board opens, and a message draft is
+  restored, without the assets that can't be read. Each reports its failed
+  reads together as one error. An asset that was never stored is not a failure.
 - **Translation:** a failed pass is reported, as described in
   [Translate board sets](#translate-board-sets).
 
 Cancelled downloads and interrupted navigations are not failures. Playback,
-preferences, the message draft and the built-in AI handle their own failures
-without reporting, because those are expected on many devices.
+preferences, saving the message draft and the built-in AI handle their own
+failures without reporting, because those are expected on many devices.
 
 ## Accessibility, language, and presentation
 
