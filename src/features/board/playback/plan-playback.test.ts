@@ -12,14 +12,14 @@ describe("planPlayback", () => {
   test("merges a run of tile and text parts into a single speech step", () => {
     const parts: MessagePart[] = [
       { kind: "tile", id: "1", label: "I", language: "en" },
-      { kind: "text", id: "2", label: "Want", language: "en" },
+      { kind: "text", id: "2", label: "want", language: "en" },
     ];
 
     const steps = planPlayback(parts, "en");
 
     const step = getOnlySpeechStep(steps);
 
-    expect(step.text).toBe("i Want");
+    expect(step.text).toBe("i want");
     expect(step.cueAt?.(2)).toBe("2");
   });
 
