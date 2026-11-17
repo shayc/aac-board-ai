@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Não foi possível importar o arquivo de prancha \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Não foi possível importar os arquivos de pranchas",
-  "libraryImportNotBoardFile": "\"{fileName}\" não é um arquivo de prancha",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Não foi possível importar o arquivo de prancha",
+        "countPlural=*": "Não foi possível importar os arquivos de pranchas"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Só é possível importar arquivos de pranchas",
-  "libraryImportTooLargeBoardFile": "O arquivo de prancha \"{fileName}\" é grande demais para importar",
-  "libraryImportTooLargeBoardFiles": "Os arquivos de pranchas são grandes demais para importar",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "O arquivo de prancha é grande demais para importar",
+        "countPlural=*": "Os arquivos de pranchas são grandes demais para importar"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Não foi possível importar alguns arquivos de pranchas ({failed} de {total})",
   "libraryDropToImport": "Solte arquivos de pranchas para importar",
   "libraryInfo": "Informações",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Grade {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Excluir o conjunto de pranchas?",
   "libraryDeleteIrreversible": "O conjunto de pranchas \"{name}\" será excluído. Esta ação não pode ser desfeita.",
-  "libraryDeleteFailed": "Não foi possível excluir o conjunto de pranchas \"{name}\"",
-  "libraryExportFailed": "Não foi possível exportar o conjunto de pranchas \"{name}\"",
+  "libraryDeleteFailed": "Não foi possível excluir o conjunto de pranchas",
+  "libraryExportFailed": "Não foi possível exportar o conjunto de pranchas",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
   "aboutSourceCode": "Código-fonte",

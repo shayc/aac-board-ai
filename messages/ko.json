@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "보드 파일 \"{fileName}\"을(를) 가져올 수 없습니다",
-  "libraryImportFailedBoardFiles": "보드 파일을 가져올 수 없습니다",
-  "libraryImportNotBoardFile": "\"{fileName}\"은(는) 보드 파일이 아닙니다",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "보드 파일을 가져올 수 없습니다",
+        "countPlural=*": "보드 파일을 가져올 수 없습니다"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "보드 파일만 가져올 수 있습니다",
-  "libraryImportTooLargeBoardFile": "보드 파일 \"{fileName}\"이(가) 너무 커서 가져올 수 없습니다",
-  "libraryImportTooLargeBoardFiles": "보드 파일이 너무 커서 가져올 수 없습니다",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "보드 파일이 너무 커서 가져올 수 없습니다",
+        "countPlural=*": "보드 파일이 너무 커서 가져올 수 없습니다"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "일부 보드 파일을 가져올 수 없습니다({failed} / {total})",
   "libraryDropToImport": "가져오려면 보드 파일을 놓으세요",
   "libraryInfo": "정보",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} 그리드",
   "libraryDeleteConfirmTitle": "보드 세트를 삭제하시겠어요?",
   "libraryDeleteIrreversible": "\"{name}\"이(가) 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
-  "libraryDeleteFailed": "보드 세트 \"{name}\"을(를) 삭제할 수 없습니다",
-  "libraryExportFailed": "보드 세트 \"{name}\"을(를) 내보낼 수 없습니다",
+  "libraryDeleteFailed": "보드 세트를 삭제할 수 없습니다",
+  "libraryExportFailed": "보드 세트를 내보낼 수 없습니다",
   "libraryTitle": "라이브러리",
   "libraryOpen": "라이브러리 열기",
   "aboutSourceCode": "소스 코드",

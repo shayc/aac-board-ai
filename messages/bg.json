@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Файлът с дъска „{fileName}“ не може да бъде импортиран",
-  "libraryImportFailedBoardFiles": "Файловете с дъски не могат да бъдат импортирани",
-  "libraryImportNotBoardFile": "„{fileName}“ не е файл с дъска",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Файлът с дъска не може да бъде импортиран",
+        "countPlural=*": "Файловете с дъски не могат да бъдат импортирани"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Могат да се импортират само файлове с дъски",
-  "libraryImportTooLargeBoardFile": "Файлът с дъска „{fileName}“ е твърде голям за импортиране",
-  "libraryImportTooLargeBoardFiles": "Файловете с дъски са твърде големи за импортиране",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Файлът с дъска е твърде голям за импортиране",
+        "countPlural=*": "Файловете с дъски са твърде големи за импортиране"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Някои файлове с дъски не могат да бъдат импортирани ({failed} от {total})",
   "libraryDropToImport": "Пуснете файловете с дъски за импортиране",
   "libraryInfo": "Информация",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Мрежа {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски?",
   "libraryDeleteIrreversible": "Наборът от дъски „{name}“ ще бъде изтрит. Това не може да бъде отменено.",
-  "libraryDeleteFailed": "Наборът от дъски „{name}“ не може да бъде изтрит",
-  "libraryExportFailed": "Наборът от дъски „{name}“ не може да бъде експортиран",
+  "libraryDeleteFailed": "Наборът от дъски не може да бъде изтрит",
+  "libraryExportFailed": "Наборът от дъски не може да бъде експортиран",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",
   "aboutSourceCode": "Изходен код",

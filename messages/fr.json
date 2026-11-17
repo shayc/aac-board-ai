@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Impossible d'importer le fichier de tableau « {fileName} »",
-  "libraryImportFailedBoardFiles": "Impossible d'importer les fichiers de tableaux",
-  "libraryImportNotBoardFile": "« {fileName} » n'est pas un fichier de tableau",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Impossible d'importer le fichier de tableau",
+        "countPlural=*": "Impossible d'importer les fichiers de tableaux"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Seuls les fichiers de tableaux peuvent être importés",
-  "libraryImportTooLargeBoardFile": "Le fichier de tableau « {fileName} » est trop volumineux pour être importé",
-  "libraryImportTooLargeBoardFiles": "Les fichiers de tableaux sont trop volumineux pour être importés",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Le fichier de tableau est trop volumineux pour être importé",
+        "countPlural=*": "Les fichiers de tableaux sont trop volumineux pour être importés"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Impossible d'importer certains fichiers de tableaux ({failed} sur {total})",
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
   "libraryInfo": "Infos",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Grille {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Supprimer l’ensemble de tableaux ?",
   "libraryDeleteIrreversible": "L’ensemble de tableaux « {name} » sera supprimé. Cette action est irréversible.",
-  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux « {name} »",
-  "libraryExportFailed": "Impossible d’exporter l’ensemble de tableaux « {name} »",
+  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux",
+  "libraryExportFailed": "Impossible d’exporter l’ensemble de tableaux",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",
   "aboutSourceCode": "Code source",

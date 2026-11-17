@@ -512,7 +512,7 @@ describe("BoardSetLibrary", () => {
       await screen.getByRole("menuitem", { name: "Export" }).click();
 
       await expect
-        .element(screen.getByText('Couldn\'t export board set "Broken"'))
+        .element(screen.getByText("Couldn't export board set"))
         .toBeInTheDocument();
     });
   });

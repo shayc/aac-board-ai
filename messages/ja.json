@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "ボードファイル「{fileName}」をインポートできませんでした",
-  "libraryImportFailedBoardFiles": "ボードファイルをインポートできませんでした",
-  "libraryImportNotBoardFile": "「{fileName}」はボードファイルではありません",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ボードファイルをインポートできませんでした",
+        "countPlural=*": "ボードファイルをインポートできませんでした"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "インポートできるのはボードファイルのみです",
-  "libraryImportTooLargeBoardFile": "ボードファイル「{fileName}」が大きすぎてインポートできません",
-  "libraryImportTooLargeBoardFiles": "ボードファイルが大きすぎてインポートできません",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ボードファイルが大きすぎてインポートできません",
+        "countPlural=*": "ボードファイルが大きすぎてインポートできません"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "一部のボードファイルをインポートできませんでした（{failed} / {total}）",
   "libraryDropToImport": "ボードファイルをドロップしてインポート",
   "libraryInfo": "情報",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} グリッド",
   "libraryDeleteConfirmTitle": "ボードセットを削除しますか？",
   "libraryDeleteIrreversible": "「{name}」が削除されます。この操作は取り消せません。",
-  "libraryDeleteFailed": "ボードセット「{name}」を削除できませんでした",
-  "libraryExportFailed": "ボードセット「{name}」をエクスポートできませんでした",
+  "libraryDeleteFailed": "ボードセットを削除できませんでした",
+  "libraryExportFailed": "ボードセットをエクスポートできませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",
   "aboutSourceCode": "ソースコード",

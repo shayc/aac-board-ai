@@ -46,14 +46,14 @@ export function BoardSetLibrary() {
       return;
     }
 
-    const { id, name } = deleteTarget;
+    const { id } = deleteTarget;
     setDeleteTarget(null);
 
     try {
       await deleteBoardSet(id);
     } catch {
       showSnackbar({
-        message: (t) => t(m.libraryDeleteFailed, { name }),
+        message: (t) => t(m.libraryDeleteFailed),
         severity: "error",
       });
 
@@ -70,7 +70,7 @@ export function BoardSetLibrary() {
       await exportBoardSet(boardSet);
     } catch {
       showSnackbar({
-        message: (t) => t(m.libraryExportFailed, { name: boardSet.name }),
+        message: (t) => t(m.libraryExportFailed),
         severity: "error",
       });
     }

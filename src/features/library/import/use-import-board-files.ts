@@ -8,7 +8,7 @@ import {
   type ImportedBoardSet,
   type ImportFailure,
 } from "./board-file-import";
-import { summarizeImport, summarizeSkippedFiles } from "./summarize-import";
+import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   importAndOpen: (
@@ -34,14 +34,13 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const boardReadFailures = readFailures.filter(({ fileName }) =>
       hasBoardFileExtension(fileName),
     );
-    // Non-board files are named only when no board file was given, so a stray
-    // file never turns a successful import into an error.
+    // Non-board files are reported only when no board file was given, so a
+    // stray file never turns a successful import into an error.
     if (boardFiles.length === 0 && boardReadFailures.length === 0) {
-      const skippedFileNames = [
-        ...files.map(({ name }) => name),
-        ...readFailures.map(({ fileName }) => fileName),
-      ];
-      showSnackbar(summarizeSkippedFiles(skippedFileNames));
+      showSnackbar({
+        message: (t) => t(m.libraryImportNotBoardFiles),
+        severity: "error",
+      });
 
       return [];
     }

@@ -96,7 +96,7 @@ describe("useImportBoardFilesOnLaunch", () => {
     );
   });
 
-  test("names a launched file that isn't a board file", async () => {
+  test("reports a launched file that isn't a board file", async () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
 
@@ -104,7 +104,7 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"notes.txt" isn\'t a board file');
+      .toHaveTextContent("Only board files can be imported");
     expect(await listBoardSetRecords()).toHaveLength(0);
   });
 
@@ -119,11 +119,11 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "board.obz"');
+      .toHaveTextContent("Couldn't import some board files (1 of 2)");
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
-  test("names an unreadable launched file that isn't a board file", async () => {
+  test("reports an unreadable launched file that isn't a board file", async () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
 
@@ -131,7 +131,7 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"notes.txt" isn\'t a board file');
+      .toHaveTextContent("Only board files can be imported");
   });
 
   test("reports a file that can no longer be opened", async () => {
@@ -141,8 +141,8 @@ describe("useImportBoardFilesOnLaunch", () => {
     launchQueue.launch(inaccessibleFileHandle("board.obz"));
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "board.obz"');
+      .element(screen.getByText("Couldn't import board file", { exact: true }))
+      .toBeVisible();
   });
 
   test("reports several files that can no longer be opened", async () => {

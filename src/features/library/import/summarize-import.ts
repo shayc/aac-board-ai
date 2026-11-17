@@ -8,34 +8,22 @@ export function summarizeImport({
   failures,
 }: ImportOutcome): SnackbarOptions {
   const importedCount = importedBoardSets.length;
+  const failedCount = failures.length;
 
-  if (failures.length === 0) {
+  if (failedCount === 0) {
     return {
       message: (t) => t(m.libraryImportedBoardSets, { count: importedCount }),
       severity: "success",
     };
   }
 
-  const onlyFailure = failures.length === 1 ? failures[0] : undefined;
-  if (onlyFailure) {
-    const { fileName, error } = onlyFailure;
-    const fileFailureMessage = isArchiveTooLarge(error)
-      ? m.libraryImportTooLargeBoardFile
-      : m.libraryImportFailedBoardFile;
-
-    return {
-      message: (t) => t(fileFailureMessage, { fileName }),
-      severity: "error",
-    };
-  }
-
   if (importedCount > 0) {
-    const total = importedCount + failures.length;
+    const total = importedCount + failedCount;
 
     return {
       message: (t) =>
         t(m.libraryImportPartiallyFailedBoardFiles, {
-          failed: failures.length,
+          failed: failedCount,
           total,
         }),
       severity: "error",
@@ -47,29 +35,11 @@ export function summarizeImport({
     : m.libraryImportFailedBoardFiles;
 
   return {
-    message: (t) => t(failureMessage),
+    message: (t) => t(failureMessage, { count: failedCount }),
     severity: "error",
   };
 }
 
 function isArchiveTooLarge(error: unknown): boolean {
   return error instanceof OBFError && error.info.code === "archive-too-large";
-}
-
-export function summarizeSkippedFiles(
-  fileNames: readonly string[],
-): SnackbarOptions {
-  const onlyFileName = fileNames.length === 1 ? fileNames[0] : undefined;
-  if (onlyFileName !== undefined) {
-    return {
-      message: (t) =>
-        t(m.libraryImportNotBoardFile, { fileName: onlyFileName }),
-      severity: "error",
-    };
-  }
-
-  return {
-    message: (t) => t(m.libraryImportNotBoardFiles),
-    severity: "error",
-  };
 }

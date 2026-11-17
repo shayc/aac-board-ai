@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "\"{fileName}\" pano dosyası içe aktarılamadı",
-  "libraryImportFailedBoardFiles": "Pano dosyaları içe aktarılamadı",
-  "libraryImportNotBoardFile": "\"{fileName}\" bir pano dosyası değil",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Pano dosyası içe aktarılamadı",
+        "countPlural=*": "Pano dosyaları içe aktarılamadı"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Yalnızca pano dosyaları içe aktarılabilir",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" pano dosyası içe aktarılamayacak kadar büyük",
-  "libraryImportTooLargeBoardFiles": "Pano dosyaları içe aktarılamayacak kadar büyük",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Pano dosyası içe aktarılamayacak kadar büyük",
+        "countPlural=*": "Pano dosyaları içe aktarılamayacak kadar büyük"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Bazı pano dosyaları içe aktarılamadı ({failed} / {total})",
   "libraryDropToImport": "İçe aktarmak için pano dosyalarını bırakın",
   "libraryInfo": "Bilgi",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} ızgara",
   "libraryDeleteConfirmTitle": "Pano seti silinsin mi?",
   "libraryDeleteIrreversible": "\"{name}\" silinecek. Bu işlem geri alınamaz.",
-  "libraryDeleteFailed": "\"{name}\" pano seti silinemedi",
-  "libraryExportFailed": "\"{name}\" pano seti dışa aktarılamadı",
+  "libraryDeleteFailed": "Pano seti silinemedi",
+  "libraryExportFailed": "Pano seti dışa aktarılamadı",
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
   "aboutSourceCode": "Kaynak kodu",

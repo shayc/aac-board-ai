@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Не удалось импортировать файл доски «{fileName}»",
-  "libraryImportFailedBoardFiles": "Не удалось импортировать файлы досок",
-  "libraryImportNotBoardFile": "«{fileName}» не является файлом доски",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Не удалось импортировать файл доски",
+        "countPlural=*": "Не удалось импортировать файлы досок"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Импортировать можно только файлы досок",
-  "libraryImportTooLargeBoardFile": "Файл доски «{fileName}» слишком большой для импорта",
-  "libraryImportTooLargeBoardFiles": "Файлы досок слишком большие для импорта",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Файл доски слишком большой для импорта",
+        "countPlural=*": "Файлы досок слишком большие для импорта"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
   "libraryDropToImport": "Перетащите файлы досок для импорта",
   "libraryInfo": "Информация",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Сетка {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Удалить набор досок?",
   "libraryDeleteIrreversible": "Набор досок «{name}» будет удалён. Это действие нельзя отменить.",
-  "libraryDeleteFailed": "Не удалось удалить набор досок «{name}»",
-  "libraryExportFailed": "Не удалось экспортировать набор досок «{name}»",
+  "libraryDeleteFailed": "Не удалось удалить набор досок",
+  "libraryExportFailed": "Не удалось экспортировать набор досок",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",
   "aboutSourceCode": "Исходный код",

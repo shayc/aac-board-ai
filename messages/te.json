@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "బోర్డు ఫైల్ \"{fileName}\"ను దిగుమతి చేయలేకపోయాం",
-  "libraryImportFailedBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం",
-  "libraryImportNotBoardFile": "\"{fileName}\" బోర్డు ఫైల్ కాదు",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
+        "countPlural=*": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "బోర్డు ఫైళ్లను మాత్రమే దిగుమతి చేయవచ్చు",
-  "libraryImportTooLargeBoardFile": "బోర్డు ఫైల్ \"{fileName}\" దిగుమతి చేయడానికి చాలా పెద్దది",
-  "libraryImportTooLargeBoardFiles": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దది",
+        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "కొన్ని బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం ({total}లో {failed})",
   "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను వదలండి",
   "libraryInfo": "సమాచారం",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "{rows}×{columns} గ్రిడ్",
   "libraryDeleteConfirmTitle": "బోర్డు సెట్‌ను తొలగించాలా?",
   "libraryDeleteIrreversible": "\"{name}\" తొలగించబడుతుంది. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
-  "libraryDeleteFailed": "బోర్డు సెట్ \"{name}\"ను తొలగించలేకపోయాం",
-  "libraryExportFailed": "బోర్డు సెట్ \"{name}\"ను ఎగుమతి చేయలేకపోయాం",
+  "libraryDeleteFailed": "బోర్డు సెట్‌ను తొలగించలేకపోయాం",
+  "libraryExportFailed": "బోర్డు సెట్‌ను ఎగుమతి చేయలేకపోయాం",
   "libraryTitle": "లైబ్రరీ",
   "libraryOpen": "లైబ్రరీని తెరువు",
   "aboutSourceCode": "సోర్స్ కోడ్",

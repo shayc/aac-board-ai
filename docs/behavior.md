@@ -46,10 +46,14 @@ from it, and storage keeps what it is given. A root board without a name leaves
 the set named after its file, or after its ID when the file name is only an
 extension. The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
 opens the board set when exactly one imports. It skips files without a board
-file extension and names them only when no board file was given. It imports the
-rest one at a time, so a failing file, or a launched file that can't be read,
-doesn't block the others. It reports the outcome in one message that names the
-file when exactly one fails.
+file extension and reports them only when no board file was given. It imports
+the rest one at a time, so a failing file, or a launched file that can't be
+read, doesn't block the others. It reports the outcome in one message that
+counts the failures when some files imported. Import, export, and delete
+messages leave out file and board set names: the person just picked that file
+or set, and names the app doesn't control can be long and unreadable. Only the
+catalog download messages name the set, because downloads finish in the
+background.
 
 ### Export a board set
 

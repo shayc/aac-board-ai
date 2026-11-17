@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "ייבוא קובץ הלוח \"{fileName}\" נכשל",
-  "libraryImportFailedBoardFiles": "ייבוא קובצי הלוחות נכשל",
-  "libraryImportNotBoardFile": "\"{fileName}\" אינו קובץ לוח",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ייבוא קובץ הלוח נכשל",
+        "countPlural=*": "ייבוא קובצי הלוחות נכשל"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "אפשר לייבא רק קובצי לוחות",
-  "libraryImportTooLargeBoardFile": "קובץ הלוח \"{fileName}\" גדול מדי לייבוא",
-  "libraryImportTooLargeBoardFiles": "קובצי הלוחות גדולים מדי לייבוא",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "קובץ הלוח גדול מדי לייבוא",
+        "countPlural=*": "קובצי הלוחות גדולים מדי לייבוא"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "ייבוא חלק מקובצי הלוחות נכשל ({failed} מתוך {total})",
   "libraryDropToImport": "גררו לכאן קובצי לוחות כדי לייבא אותם",
   "libraryInfo": "מידע",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "רשת {rows}×{columns}",
   "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות?",
   "libraryDeleteIrreversible": "ערכת הלוחות \"{name}\" תימחק. לא ניתן לבטל זאת.",
-  "libraryDeleteFailed": "מחיקת ערכת הלוחות \"{name}\" נכשלה",
-  "libraryExportFailed": "ייצוא ערכת הלוחות \"{name}\" נכשל",
+  "libraryDeleteFailed": "מחיקת ערכת הלוחות נכשלה",
+  "libraryExportFailed": "ייצוא ערכת הלוחות נכשל",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת הספרייה",
   "aboutSourceCode": "קוד המקור",

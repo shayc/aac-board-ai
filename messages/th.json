@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "นำเข้าไฟล์บอร์ด \"{fileName}\" ไม่สำเร็จ",
-  "libraryImportFailedBoardFiles": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
-  "libraryImportNotBoardFile": "\"{fileName}\" ไม่ใช่ไฟล์บอร์ด",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
+        "countPlural=*": "นำเข้าไฟล์บอร์ดไม่สำเร็จ"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "นำเข้าได้เฉพาะไฟล์บอร์ดเท่านั้น",
-  "libraryImportTooLargeBoardFile": "ไฟล์บอร์ด \"{fileName}\" มีขนาดใหญ่เกินไปที่จะนำเข้า",
-  "libraryImportTooLargeBoardFiles": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+        "countPlural=*": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "นำเข้าไฟล์บอร์ดบางไฟล์ไม่สำเร็จ ({failed} จาก {total})",
   "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
   "libraryInfo": "ข้อมูล",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "ตาราง {rows}×{columns}",
   "libraryDeleteConfirmTitle": "ลบชุดบอร์ดไหม",
   "libraryDeleteIrreversible": "\"{name}\" จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
-  "libraryDeleteFailed": "ลบชุดบอร์ด \"{name}\" ไม่สำเร็จ",
-  "libraryExportFailed": "ส่งออกชุดบอร์ด \"{name}\" ไม่สำเร็จ",
+  "libraryDeleteFailed": "ลบชุดบอร์ดไม่สำเร็จ",
+  "libraryExportFailed": "ส่งออกชุดบอร์ดไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
   "aboutSourceCode": "ซอร์สโค้ด",

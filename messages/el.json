@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα «{fileName}»",
-  "libraryImportFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων",
-  "libraryImportNotBoardFile": "Το «{fileName}» δεν είναι αρχείο πίνακα",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα",
+        "countPlural=*": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Μπορούν να εισαχθούν μόνο αρχεία πινάκων",
-  "libraryImportTooLargeBoardFile": "Το αρχείο πίνακα «{fileName}» είναι πολύ μεγάλο για εισαγωγή",
-  "libraryImportTooLargeBoardFiles": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Το αρχείο πίνακα είναι πολύ μεγάλο για εισαγωγή",
+        "countPlural=*": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
   "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Πλέγμα {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων;",
   "libraryDeleteIrreversible": "Το σύνολο πινάκων «{name}» θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-  "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων «{name}»",
-  "libraryExportFailed": "Δεν ήταν δυνατή η εξαγωγή του συνόλου πινάκων «{name}»",
+  "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων",
+  "libraryExportFailed": "Δεν ήταν δυνατή η εξαγωγή του συνόλου πινάκων",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",
   "aboutSourceCode": "Πηγαίος κώδικας",

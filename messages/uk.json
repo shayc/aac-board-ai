@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Не вдалося імпортувати файл дошки «{fileName}»",
-  "libraryImportFailedBoardFiles": "Не вдалося імпортувати файли дошок",
-  "libraryImportNotBoardFile": "«{fileName}» не є файлом дошки",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Не вдалося імпортувати файл дошки",
+        "countPlural=*": "Не вдалося імпортувати файли дошок"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Імпортувати можна лише файли дошок",
-  "libraryImportTooLargeBoardFile": "Файл дошки «{fileName}» занадто великий для імпортування",
-  "libraryImportTooLargeBoardFiles": "Файли дошок занадто великі для імпортування",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Файл дошки занадто великий для імпортування",
+        "countPlural=*": "Файли дошок занадто великі для імпортування"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Не вдалося імпортувати деякі файли дошок ({failed} з {total})",
   "libraryDropToImport": "Перетягніть файли дошок для імпорту",
   "libraryInfo": "Інформація",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Сітка {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Видалити набір дошок?",
   "libraryDeleteIrreversible": "Набір дошок «{name}» буде видалено. Цю дію не можна скасувати.",
-  "libraryDeleteFailed": "Не вдалося видалити набір дошок «{name}»",
-  "libraryExportFailed": "Не вдалося експортувати набір дошок «{name}»",
+  "libraryDeleteFailed": "Не вдалося видалити набір дошок",
+  "libraryExportFailed": "Не вдалося експортувати набір дошок",
   "libraryTitle": "Бібліотека",
   "libraryOpen": "Відкрити бібліотеку",
   "aboutSourceCode": "Вихідний код",

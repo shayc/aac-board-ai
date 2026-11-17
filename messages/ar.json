@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "تعذّر استيراد ملف اللوحة \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "تعذّر استيراد ملفات اللوحات",
-  "libraryImportNotBoardFile": "\"{fileName}\" ليس ملف لوحة",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "تعذّر استيراد ملف اللوحة",
+        "countPlural=*": "تعذّر استيراد ملفات اللوحات"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "يمكن استيراد ملفات اللوحات فقط",
-  "libraryImportTooLargeBoardFile": "ملف اللوحة \"{fileName}\" كبير جدًا بحيث يتعذّر استيراده",
-  "libraryImportTooLargeBoardFiles": "ملفات اللوحات كبيرة جدًا بحيث يتعذّر استيرادها",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ملف اللوحة كبير جدًا بحيث يتعذّر استيراده",
+        "countPlural=*": "ملفات اللوحات كبيرة جدًا بحيث يتعذّر استيرادها"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "تعذّر استيراد بعض ملفات اللوحات ({failed} من {total})",
   "libraryDropToImport": "أفلت ملفات اللوحات لاستيرادها",
   "libraryInfo": "معلومات",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "شبكة {rows}×{columns}",
   "libraryDeleteConfirmTitle": "حذف مجموعة اللوحات؟",
   "libraryDeleteIrreversible": "سيتم حذف \"{name}\". لا يمكن التراجع عن ذلك.",
-  "libraryDeleteFailed": "تعذّر حذف مجموعة اللوحات \"{name}\"",
-  "libraryExportFailed": "تعذّر تصدير مجموعة اللوحات \"{name}\"",
+  "libraryDeleteFailed": "تعذّر حذف مجموعة اللوحات",
+  "libraryExportFailed": "تعذّر تصدير مجموعة اللوحات",
   "libraryTitle": "المكتبة",
   "libraryOpen": "فتح المكتبة",
   "aboutSourceCode": "الكود المصدري",

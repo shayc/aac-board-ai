@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tidak dapat mengimpor berkas papan \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Tidak dapat mengimpor berkas papan",
-  "libraryImportNotBoardFile": "\"{fileName}\" bukan berkas papan",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tidak dapat mengimpor berkas papan",
+        "countPlural=*": "Tidak dapat mengimpor berkas papan"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Hanya berkas papan yang dapat diimpor",
-  "libraryImportTooLargeBoardFile": "Berkas papan \"{fileName}\" terlalu besar untuk diimpor",
-  "libraryImportTooLargeBoardFiles": "Berkas papan terlalu besar untuk diimpor",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Berkas papan terlalu besar untuk diimpor",
+        "countPlural=*": "Berkas papan terlalu besar untuk diimpor"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Tidak dapat mengimpor beberapa berkas papan ({failed} dari {total})",
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Kisi {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Hapus set papan?",
   "libraryDeleteIrreversible": "\"{name}\" akan dihapus. Tindakan ini tidak dapat dibatalkan.",
-  "libraryDeleteFailed": "Tidak dapat menghapus set papan \"{name}\"",
-  "libraryExportFailed": "Tidak dapat mengekspor set papan \"{name}\"",
+  "libraryDeleteFailed": "Tidak dapat menghapus set papan",
+  "libraryExportFailed": "Tidak dapat mengekspor set papan",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",
   "aboutSourceCode": "Kode sumber",

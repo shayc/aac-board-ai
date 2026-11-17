@@ -32,12 +32,27 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Kan bordbestand \"{fileName}\" niet importeren",
-  "libraryImportFailedBoardFiles": "Kan bordbestanden niet importeren",
-  "libraryImportNotBoardFile": "\"{fileName}\" is geen bordbestand",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Kan bordbestand niet importeren",
+        "countPlural=*": "Kan bordbestanden niet importeren"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Alleen bordbestanden kunnen worden geïmporteerd",
-  "libraryImportTooLargeBoardFile": "Het bordbestand \"{fileName}\" is te groot om te importeren",
-  "libraryImportTooLargeBoardFiles": "De bordbestanden zijn te groot om te importeren",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Het bordbestand is te groot om te importeren",
+        "countPlural=*": "De bordbestanden zijn te groot om te importeren"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Kan sommige bordbestanden niet importeren ({failed} van {total})",
   "libraryDropToImport": "Zet bordbestanden neer om te importeren",
   "libraryInfo": "Info",
@@ -60,8 +75,8 @@
   "libraryGridDimensions": "Raster {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Bordset verwijderen?",
   "libraryDeleteIrreversible": "\"{name}\" wordt verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
-  "libraryDeleteFailed": "Kan bordset \"{name}\" niet verwijderen",
-  "libraryExportFailed": "Kan bordset \"{name}\" niet exporteren",
+  "libraryDeleteFailed": "Kan bordset niet verwijderen",
+  "libraryExportFailed": "Kan bordset niet exporteren",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",
   "aboutSourceCode": "Broncode",
