@@ -11,6 +11,9 @@ import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
 import type { rootIndexLoader } from "./root-index-loader";
 
+const FIRST_STRONG_ISOLATE = "\u2068";
+const POP_DIRECTIONAL_ISOLATE = "\u2069";
+
 export function BoardFileURLImportPage() {
   const { boardFileHost } = useLoaderData<typeof rootIndexLoader>();
   const submit = useSubmit();
@@ -65,5 +68,5 @@ export function BoardFileURLImportPage() {
 
 // FSI/PDI preserve host order in RTL translations, including digit-led hosts.
 function isolateBidi(text: string): string {
-  return `⁨${text}⁩`;
+  return `${FIRST_STRONG_ISOLATE}${text}${POP_DIRECTIONAL_ISOLATE}`;
 }

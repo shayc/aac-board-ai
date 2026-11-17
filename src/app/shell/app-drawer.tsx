@@ -39,11 +39,7 @@ export function AppDrawer({
       slotProps={{
         paper: {
           "aria-label": title,
-          sx: {
-            display: "flex",
-            flexDirection: "column",
-            width: safeAreaGutter(DRAWER_BASE_WIDTH, anchor),
-          },
+          sx: { width: safeAreaGutter(DRAWER_BASE_WIDTH, anchor) },
         },
       }}
     >
