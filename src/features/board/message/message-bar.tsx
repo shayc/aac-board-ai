@@ -16,6 +16,12 @@ export const MESSAGE_ACTION_SIZE = 80;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
 const BAR_INSET = 1;
+// Clears the bar's rounded end, which would clip the first word's ring.
+const MESSAGE_PADDING = 3;
+
+// The light scheme's teal fades into the bar's grey dark-mode ground; this
+// one passes 3:1 on it and on the backspace disc.
+const DARK_GROUND_PRIMARY = { main: "#00443d", mainChannel: "0 68 61" };
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -119,6 +125,9 @@ function messageBarSx(theme: Theme) {
     // A full grey 400 glares against the dark page; symbols still need a light
     // ground.
     ...theme.applyStyles("dark", {
+      // Rings and controls inside the bar read the primary color from these.
+      "--mui-palette-primary-main": DARK_GROUND_PRIMARY.main,
+      "--mui-palette-primary-mainChannel": DARK_GROUND_PRIMARY.mainChannel,
       bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
     }),
   } as const;
@@ -130,7 +139,7 @@ function scrollContainerSx(theme: Theme) {
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
     height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
-    px: 2,
+    px: MESSAGE_PADDING,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
@@ -165,18 +174,23 @@ function MessagePartItem({
         [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
         py: 0.5,
         px: 1,
-        borderRadius: theme.vars.shape.borderRadius,
+        borderRadius: theme.vars.shape.borderRadiusSm,
         outline: isActive
           ? `2px solid ${theme.vars.palette.primary.main}`
           : "none",
-        outlineOffset: -2,
+        // Clear of the bar's edges, which the word's box reaches.
+        outlineOffset: -4,
         // A caret marks the word that spelling still extends, so a space or
         // a backspace that only closes or reopens it has a visible result. It
         // is a border because forced-colors mode repaints backgrounds.
         ...(isOpen && {
           "&::after": {
             content: '""',
-            marginInlineStart: "2px",
+            alignSelf: "center",
+            // As tall as the line of the word it follows.
+            height: "1.2em",
+            marginInlineStart: theme.spacing(0.5),
+            fontSize: theme.typography.h5.fontSize,
             borderInlineStart: "2px solid currentColor",
           },
         }),

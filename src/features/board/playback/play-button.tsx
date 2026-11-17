@@ -47,7 +47,7 @@ export function PlayButton({
           aria-label={label}
           aria-keyshortcuts={ariaKeyShortcuts}
           disabled={disabled}
-          color={isPlaying ? "inherit" : "primary"}
+          color="primary"
           onClick={handleClick}
           sx={(theme) => ({
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
@@ -65,14 +65,17 @@ export function PlayButton({
         {...focusableDisabledProps(disabled)}
         aria-label={label}
         aria-keyshortcuts={ariaKeyShortcuts}
-        color={isPlaying ? "default" : "primary"}
+        color="primary"
         onClick={disabled ? undefined : handleClick}
         sx={(theme) => ({
           flexShrink: 0,
           width: MESSAGE_ACTION_SIZE,
           height: MESSAGE_ACTION_SIZE,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-          [`&.${fabClasses.disabled}`]: disabledSx(theme),
+          [`&.${fabClasses.disabled}`]: {
+            ...disabledSx(theme),
+            ...theme.applyStyles("dark", disabledOnDarkBarSx(theme)),
+          },
         })}
       >
         <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
@@ -92,6 +95,18 @@ function disabledSx(theme: Theme) {
     backgroundColor: theme.alpha(
       theme.vars.palette.primary.main,
       theme.vars.palette.action.activatedOpacity,
+    ),
+  };
+}
+
+// The usual tint turns grey on the bar's grey dark-mode ground and is lost
+// beside backspace; the lighter teal keeps its hue.
+function disabledOnDarkBarSx(theme: Theme) {
+  return {
+    color: theme.alpha(theme.vars.palette.primary.main, 0.6),
+    backgroundColor: theme.alpha(
+      theme.vars.palette.primary.light,
+      theme.vars.palette.action.disabledOpacity,
     ),
   };
 }

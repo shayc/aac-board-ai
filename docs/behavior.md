@@ -346,11 +346,11 @@ a flash of the wrong color scheme.
 
 ### Screen sizes
 
-Layout turns on one width breakpoint, `sm`. Above it the play button sits
-after the message bar, and backspace sits inside the bar at its end. Below it
-the back, home, and play buttons move under the grid, backspace stays in the
-message bar, and the spacing tightens, as [Board spacing](#board-spacing)
-describes.
+Layout turns on one width breakpoint, `sm`. Above it backspace and the play
+button sit inside the message bar at its end, play last and backspace a step
+smaller beside it. Below it the back, home, and play buttons move under the
+grid, backspace stays in the message bar at full size, and the spacing
+tightens, as [Board spacing](#board-spacing) describes.
 
 The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) also checks
 the viewport height. On a landscape screen shorter than the `sm` value, such
