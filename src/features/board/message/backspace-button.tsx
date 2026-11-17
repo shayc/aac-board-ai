@@ -19,7 +19,9 @@ const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 const ICON_SIZE = 28;
-const DISC_INSET = 1;
+// MUI draws the ring in a 44-unit box, so on the 80px disc this is a 4px
+// stroke; MUI's default would outweigh the icon's lines.
+const RING_THICKNESS = 2.2;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
@@ -66,17 +68,17 @@ export function BackspaceButton({
           variant="determinate"
           value={isHolding ? 100 : 0}
           size="auto"
-          sx={(theme) => ringSx(theme, isHolding)}
+          thickness={RING_THICKNESS}
+          sx={ringSx(isHolding)}
         />
       </IconButton>
     </ShortcutTooltip>
   );
 }
 
-// The disc is the button's content box, so the touch target keeps the full
-// action size. With the bar's inset, the disc sits on the bar's rounded end,
-// the same distance from its top, bottom and end, and both curves run
-// parallel.
+// The disc fills the whole touch target, so its visible edge is where a tap
+// counts. With the bar's inset, it sits on the bar's rounded end, the same
+// distance from its top, bottom and end, and both curves run parallel.
 //
 // The bar stays light in dark mode, so the disc stays a dark tint of it with a
 // dark icon; on the greyer bar it needs a stronger tint, and a stronger
@@ -91,12 +93,9 @@ function backspaceSx(theme: Theme) {
     flexShrink: 0,
     width: MESSAGE_ACTION_SIZE,
     height: MESSAGE_ACTION_SIZE,
-    padding: DISC_INSET,
-    backgroundClip: "content-box",
     fontSize: ICON_SIZE,
     color: "text.primary",
     [discSelector]: { backgroundColor: discColor },
-    "&::before": { inset: theme.spacing(DISC_INSET) },
     ...theme.applyStyles("dark", {
       [discSelector]: { backgroundColor: darkDiscColor },
       [`&.${iconButtonClasses.disabled}`]: {
@@ -106,14 +105,15 @@ function backspaceSx(theme: Theme) {
   } as const;
 }
 
-// The "auto" size lets the insets stretch the ring to the disc's edge. The fill
-// waits out the delay so a quick tap never shows it.
-function ringSx(theme: Theme, isHolding: boolean) {
+// The "auto" size stretches the ring over the whole button, which is the disc,
+// so it traces the disc's edge. The fill waits out the delay so a quick tap
+// never shows it.
+function ringSx(isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
 
   return {
     position: "absolute",
-    inset: theme.spacing(DISC_INSET),
+    inset: 0,
     pointerEvents: "none",
     [`& .${circularProgressClasses.circle}`]: {
       transition: isHolding ? fillTransition : "none",

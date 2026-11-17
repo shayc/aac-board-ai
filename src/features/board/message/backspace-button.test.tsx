@@ -11,7 +11,7 @@ import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { BackspaceButton } from "./backspace-button";
-import { MessageBar } from "./message-bar";
+import { MESSAGE_ACTION_SIZE, MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 
@@ -321,5 +321,42 @@ describe("BackspaceButton colors", () => {
     const { icon: dark } = await measureContrasts("dark", true);
 
     expect(dark).toBeGreaterThanOrEqual(light);
+  });
+});
+
+describe("BackspaceButton in the message bar", () => {
+  // The visible disc marks the whole touch target, and the same gap on three
+  // sides keeps its curve parallel to the bar's rounded end.
+  test("fills its touch target with the disc, evenly inset in the bar's end", async () => {
+    const screen = await renderWithProviders(
+      <MessageBar
+        parts={[]}
+        isWordOpen={false}
+        activePartId={null}
+        areImagesVisible
+        endAction={
+          <BackspaceButton
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+          />
+        }
+      />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" }).element();
+    const bar = button.parentElement;
+    assertDefined(bar);
+    const ring = button.querySelector("[role=progressbar]");
+    assertDefined(ring);
+
+    const disc = button.getBoundingClientRect();
+    const barEdges = bar.getBoundingClientRect();
+    const ringEdges = ring.getBoundingClientRect();
+    const gap = disc.top - barEdges.top;
+
+    expect(disc.width).toBe(MESSAGE_ACTION_SIZE);
+    expect(getComputedStyle(button).backgroundClip).toBe("border-box");
+    expect(ringEdges.toJSON()).toEqual(disc.toJSON());
+    expect(barEdges.bottom - disc.bottom).toBeCloseTo(gap, 0);
+    expect(barEdges.right - disc.right).toBeCloseTo(gap, 0);
   });
 });
