@@ -1,10 +1,14 @@
 import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useBoardRoute } from "./use-board-route";
+
+const restingOutline = `& .${outlinedInputClasses.root}:not(:hover, .${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
+const touchHoverOutline = `& .${outlinedInputClasses.root}:hover:not(.${outlinedInputClasses.focused}) .${outlinedInputClasses.notchedOutline}`;
 
 interface BoardOption {
   id: string;
@@ -61,7 +65,20 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           }}
         />
       )}
-      sx={{ width: 320, maxWidth: "100%" }}
+      sx={(theme) => ({
+        width: 320,
+        maxWidth: "100%",
+        // Every other control on the board is a filled shape, so an outline
+        // at rest would make the selector the heaviest thing in the header.
+        [`& .${outlinedInputClasses.root}`]: {
+          backgroundColor: theme.vars.palette.action.hover,
+        },
+        [restingOutline]: { borderColor: "transparent" },
+        // Touch keeps :hover after a tap.
+        "@media (hover: none)": {
+          [touchHoverOutline]: { borderColor: "transparent" },
+        },
+      })}
     />
   );
 }
