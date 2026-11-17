@@ -141,8 +141,6 @@ function scrollContainerSx(theme: Theme) {
     height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
     px: MESSAGE_PADDING,
     overflow: "auto",
-    // A highlighted word scrolled back into view clears the curve too.
-    scrollPaddingInlineStart: theme.spacing(MESSAGE_PADDING),
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
     // Keep the focus ring inside the bar's clipped overflow.

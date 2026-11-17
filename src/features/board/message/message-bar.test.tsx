@@ -56,15 +56,6 @@ function getScrollContainer(container: Element): HTMLElement {
   return scroller;
 }
 
-// A part scrolled back into view stops past the bar's rounded end.
-function getScrolledStartEdge(scroller: HTMLElement): number {
-  const scrollPadding = parseFloat(
-    getComputedStyle(scroller).scrollPaddingInlineStart,
-  );
-
-  return scroller.getBoundingClientRect().left + scrollPadding;
-}
-
 describe("MessageBar", () => {
   test("renders a label for each tile and text part", async () => {
     const parts: MessagePart[] = [
@@ -308,7 +299,7 @@ describe("MessageBar", () => {
 
       expect(scroller.scrollLeft).toBeLessThan(initialScrollLeft);
       expect(activePart.getBoundingClientRect().left).toBeCloseTo(
-        getScrolledStartEdge(scroller),
+        scroller.getBoundingClientRect().left,
         0,
       );
       expect(activePart.getBoundingClientRect().right).toBeLessThanOrEqual(
@@ -365,7 +356,7 @@ describe("MessageBar", () => {
       const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
       assertDefined(activePart);
       expect(activePart.getBoundingClientRect().left).toBeCloseTo(
-        getScrolledStartEdge(scroller),
+        scroller.getBoundingClientRect().left,
         0,
       );
     });
