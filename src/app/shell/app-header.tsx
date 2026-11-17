@@ -76,9 +76,9 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   );
 }
 
-function toolbarGutters(theme: Theme, spacingUnits: number) {
+function toolbarGutters(theme: Theme, units: number) {
   return {
-    pl: safeAreaGutter(theme.spacing(spacingUnits), "left"),
-    pr: safeAreaGutter(theme.spacing(spacingUnits), "right"),
+    pl: safeAreaGutter(theme.spacing(units), "left"),
+    pr: safeAreaGutter(theme.spacing(units), "right"),
   };
 }

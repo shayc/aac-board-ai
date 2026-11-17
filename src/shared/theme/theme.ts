@@ -6,7 +6,6 @@ import {
   createTheme,
   type Shadows,
   type ThemeOptions,
-  unstable_createBreakpoints,
 } from "@mui/material/styles";
 import { toggleButtonClasses } from "@mui/material/ToggleButton";
 import {
@@ -83,9 +82,21 @@ function softShadow(elevation: number) {
 // Sticky touch hover must preserve focused, error, and disabled outlines.
 const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
 
+// Setting the toolbar mixin replaces MUI's heights, so they are read from its
+// default theme, which also has the breakpoints the app's theme keeps.
+const defaultTheme = createTheme();
+
 const themeOptions = {
   focusVisible: true,
   shadows,
+  mixins: {
+    toolbar: {
+      ...defaultTheme.mixins.toolbar,
+      // MUI shortens a toolbar in landscape only below `sm`, which a phone on
+      // its side is wider than.
+      [shortLandscape(defaultTheme)]: { minHeight: 48 },
+    },
+  },
   // Explicit lengths prevent sx from multiplying these radii by the base radius.
   shape: {
     borderRadius: "20px",
@@ -474,24 +485,12 @@ const themeOptions = {
   },
 } satisfies ThemeOptions;
 
-// MUI shortens a toolbar in landscape only below `sm`, which a phone on its
-// side is wider than. Merged after the options so MUI's own heights stay.
-const shortLandscapeOptions = {
-  mixins: {
-    toolbar: {
-      [shortLandscape({ breakpoints: unstable_createBreakpoints({}) })]: {
-        minHeight: 48,
-      },
-    },
-  },
-} satisfies ThemeOptions;
+export const ltrTheme = createTheme({
+  ...themeOptions,
+  direction: "ltr",
+});
 
-export const ltrTheme = createTheme(
-  { ...themeOptions, direction: "ltr" },
-  shortLandscapeOptions,
-);
-
-export const rtlTheme = createTheme(
-  { ...themeOptions, direction: "rtl" },
-  shortLandscapeOptions,
-);
+export const rtlTheme = createTheme({
+  ...themeOptions,
+  direction: "rtl",
+});

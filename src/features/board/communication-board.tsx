@@ -74,7 +74,7 @@ export function CommunicationBoard({
 
   // A short landscape screen has width to spare and no height.
   const areControlsBelowGrid = isNarrowScreen && !isShortLandscape;
-  const isNavigationBesideSuggestions = !isNarrowScreen && !isShortLandscape;
+  const hasNavigationRow = !isNarrowScreen && !isShortLandscape;
   const isPlayInMessageBar = !areControlsBelowGrid;
   const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
   const scrollClearance = isShortLandscape
@@ -144,18 +144,16 @@ export function CommunicationBoard({
             >
               {isShortLandscape && navigationButtons}
 
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <PlaybackMessageBar
-                  parts={message.parts}
-                  isWordOpen={message.isWordOpen}
-                  endAction={
-                    <>
-                      {backspaceButton}
-                      {isPlayInMessageBar && playButton}
-                    </>
-                  }
-                />
-              </Box>
+              <PlaybackMessageBar
+                parts={message.parts}
+                isWordOpen={message.isWordOpen}
+                endAction={
+                  <>
+                    {backspaceButton}
+                    {isPlayInMessageBar && playButton}
+                  </>
+                }
+              />
             </Stack>
 
             <Stack
@@ -164,7 +162,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={{ "&:empty": { display: "none" } }}
             >
-              {isNavigationBesideSuggestions && navigationButtons}
+              {hasNavigationRow && navigationButtons}
 
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions

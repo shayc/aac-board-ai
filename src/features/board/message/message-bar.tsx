@@ -108,6 +108,8 @@ function scrollPartIntoView(
 
 function messageBarSx(theme: Theme) {
   return {
+    // Fills the row it shares with the board's navigation on a short screen.
+    flexGrow: 1,
     alignItems: "center",
     gap: 2,
     px: BAR_INSET,
