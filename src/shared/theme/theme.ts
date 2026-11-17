@@ -6,6 +6,7 @@ import {
   createTheme,
   type Shadows,
   type ThemeOptions,
+  unstable_createBreakpoints,
 } from "@mui/material/styles";
 import { toggleButtonClasses } from "@mui/material/ToggleButton";
 import {
@@ -14,6 +15,7 @@ import {
   instantFeedbackOnTouch,
 } from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
+import { shortLandscape } from "./short-landscape";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
 declare module "@mui/material/styles" {
@@ -472,12 +474,24 @@ const themeOptions = {
   },
 } satisfies ThemeOptions;
 
-export const ltrTheme = createTheme({
-  ...themeOptions,
-  direction: "ltr",
-});
+// MUI shortens a toolbar in landscape only below `sm`, which a phone on its
+// side is wider than. Merged after the options so MUI's own heights stay.
+const shortLandscapeToolbar = {
+  mixins: {
+    toolbar: {
+      [shortLandscape({ breakpoints: unstable_createBreakpoints({}) })]: {
+        minHeight: 48,
+      },
+    },
+  },
+} satisfies ThemeOptions;
 
-export const rtlTheme = createTheme({
-  ...themeOptions,
-  direction: "rtl",
-});
+export const ltrTheme = createTheme(
+  { ...themeOptions, direction: "ltr" },
+  shortLandscapeToolbar,
+);
+
+export const rtlTheme = createTheme(
+  { ...themeOptions, direction: "rtl" },
+  shortLandscapeToolbar,
+);

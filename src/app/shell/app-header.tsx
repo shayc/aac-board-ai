@@ -14,6 +14,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { useRouteLoaderData } from "react-router";
 
 interface AppHeaderProps {
@@ -44,6 +45,10 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           pr: {
             xs: safeAreaGutter(theme.spacing(2), "right"),
             sm: safeAreaGutter(theme.spacing(3), "right"),
+          },
+          [shortLandscape(theme)]: {
+            pl: safeAreaGutter(theme.spacing(2), "left"),
+            pr: safeAreaGutter(theme.spacing(2), "right"),
           },
         })}
       >

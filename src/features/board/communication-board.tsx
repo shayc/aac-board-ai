@@ -7,6 +7,7 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
@@ -43,7 +44,8 @@ export function CommunicationBoard({
 }: CommunicationBoardProps) {
   const t = useTranslate();
   const communication = useCommunicationLanguage();
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isNarrow = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isShortLandscape = useMediaQuery(shortLandscape);
 
   const message = useMessage(initialMessage);
   const { shouldPlayTiles } = useMessagePreferences();
@@ -70,8 +72,17 @@ export function CommunicationBoard({
     shouldPlayTiles,
   });
 
+  // A short landscape screen has width to spare and no height, so its controls
+  // share the message bar's row and it takes the narrow screen's spacing.
+  const areControlsBelowGrid = isNarrow && !isShortLandscape;
+  const isNavigationBesideSuggestions = !isNarrow && !isShortLandscape;
+  const isPlayInMessageBar = !areControlsBelowGrid;
+  const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
+  const scrollClearance = isShortLandscape
+    ? SCROLL_CLEARANCE.xs
+    : SCROLL_CLEARANCE;
+
   const hasMessage = message.parts.length > 0;
-  const isPlayInMessageBar = !isSmallScreen;
 
   const navigationButtons = (
     <NavigationButtons
@@ -125,22 +136,28 @@ export function CommunicationBoard({
             pr: { sm: safeAreaInset("right") },
           }}
         >
-          <Stack
-            spacing={PAGE_MARGIN}
-            sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}
-          >
-            <Box {...scanGroupProps}>
-              <PlaybackMessageBar
-                parts={message.parts}
-                isWordOpen={message.isWordOpen}
-                endAction={
-                  <>
-                    {backspaceButton}
-                    {isPlayInMessageBar && playButton}
-                  </>
-                }
-              />
-            </Box>
+          <Stack spacing={pageMargin} sx={{ pt: pageMargin, px: pageMargin }}>
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={2}
+              sx={{ alignItems: "center" }}
+            >
+              {isShortLandscape && navigationButtons}
+
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <PlaybackMessageBar
+                  parts={message.parts}
+                  isWordOpen={message.isWordOpen}
+                  endAction={
+                    <>
+                      {backspaceButton}
+                      {isPlayInMessageBar && playButton}
+                    </>
+                  }
+                />
+              </Box>
+            </Stack>
 
             <Stack
               {...scanGroupProps}
@@ -148,7 +165,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={{ "&:empty": { display: "none" } }}
             >
-              {!isSmallScreen && navigationButtons}
+              {isNavigationBesideSuggestions && navigationButtons}
 
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
@@ -162,7 +179,7 @@ export function CommunicationBoard({
             </Stack>
           </Stack>
 
-          <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
+          <Box sx={{ flex: 1, minHeight: 0, py: scrollClearance }}>
             <Grid<BoardButton>
               aria-label={board.name || t(m.boardGridLabel)}
               items={board.buttons}
@@ -173,7 +190,7 @@ export function CommunicationBoard({
             />
           </Box>
 
-          {isSmallScreen && (
+          {areControlsBelowGrid && (
             <Stack
               {...scanGroupProps}
               direction="row"

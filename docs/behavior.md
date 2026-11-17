@@ -357,9 +357,19 @@ smaller beside it. Below it the back, home, and play buttons move under the
 grid, backspace stays in the message bar at full size, and the spacing
 tightens, as [Board spacing](#board-spacing) describes.
 
-The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) also checks
-the viewport height. On a landscape screen shorter than the `sm` value, such
-as a phone on its side, it stays full-screen with its action in view.
+One height rule sits beside it, in
+[`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape
+screen shorter than the `sm` value, such as a phone on its side. Such a screen
+is wide enough for the layout above `sm` but has no height for it, so:
+
+- The back and home buttons move into the message bar's row, before the bar.
+  Backspace and play stay inside the bar, and no row of controls sits under
+  the grid.
+- The board takes the spacing from below `sm`, whatever the screen's width.
+- The app bar, and every other toolbar, is 48px tall. The rule lives in the
+  theme's toolbar mixin, so the snackbar's offset below the app bar follows.
+- The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
+  full-screen with its action in view.
 
 Sizes inside a component follow the component, not the screen. The grid's
 viewport is a size container that decides how many rows and columns fit. Each
@@ -374,7 +384,8 @@ with no symbol keeps the `h5` size on every tile.
 The board places its bars, and the grid pads itself, with the spacing in
 [`board-spacing.ts`](../src/features/board/board-spacing.ts), so the space
 between any two of them changes in one place. Two values exist for each side of
-the `sm` breakpoint: the page margin and the scroll clearance. The grid's
+the `sm` breakpoint: the page margin and the scroll clearance. A short
+landscape screen uses the values from below the breakpoint. The grid's
 padding is derived from them in the same file, so the grid itself knows nothing
 about the bars around it.
 

@@ -121,7 +121,8 @@ describe("SnackbarProvider", () => {
 
   test.each([
     { screen: "a phone", width: 375, height: 667 },
-    { screen: "a phone on its side", width: 568, height: 320 },
+    { screen: "a small phone on its side", width: 568, height: 320 },
+    { screen: "a phone on its side", width: 844, height: 390 },
     { screen: "a desktop", width: 1024, height: 667 },
   ])(
     "keeps a persistent error below the app bar and clear of controls along the bottom on $screen",
