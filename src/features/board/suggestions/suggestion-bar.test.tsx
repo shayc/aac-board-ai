@@ -34,10 +34,30 @@ describe("SuggestionBar", () => {
     });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
     await expect
-      .element(screen.getByRole("button", { name: "Hello" }))
+      .element(screen.getByTestId("suggestions-pending"))
       .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("shows the pending pill only while a source is still answering", async () => {
+    const props = makeProps({ status: { kind: "pending" } });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+    await expect
+      .element(screen.getByTestId("suggestions-pending"))
+      .toBeVisible();
+
+    await screen.rerender(
+      <SuggestionBar
+        {...props}
+        status={{ kind: "idle" }}
+        phrases={["Hello"]}
+      />,
+    );
+
+    await expect
+      .element(screen.getByTestId("suggestions-pending"))
+      .not.toBeInTheDocument();
   });
 
   test("has no accessibility violations when suggestions failed", async () => {

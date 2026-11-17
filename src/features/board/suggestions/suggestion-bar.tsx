@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Fade from "@mui/material/Fade";
 import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { SuggestionStatus } from "./derive-suggestion-status";
@@ -67,47 +68,56 @@ export function SuggestionBar({
   );
 }
 
-const PENDING_PILL_DOTS = [0, 1, 2];
-
 interface PendingPillProps {
   isVisible: boolean;
 }
 
 function PendingPill({ isVisible }: PendingPillProps) {
+  const theme = useTheme();
+
   return (
     <Fade
       in={isVisible}
       mountOnEnter
       unmountOnExit
+      // Leaves at once: the last phrase lands in the same render and would
+      // push a fading pill past it.
+      timeout={{ enter: theme.transitions.duration.enteringScreen, exit: 0 }}
       style={{ transitionDelay: isVisible ? "300ms" : "0ms" }}
     >
       <Box
+        data-testid="suggestions-pending"
         sx={{
           display: "flex",
           flexShrink: 0,
           alignItems: "center",
+          alignSelf: "stretch",
           gap: 0.75,
-          height: 48,
           paddingInline: 2,
           border: "1px dashed",
-          borderColor: "divider",
-          borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
+          borderColor: "text.secondary",
+          borderRadius: theme.vars.shape.borderRadiusFull,
         }}
       >
         {/* The dots hold still: a loop beside the grid would pull attention
             for as long as the models run. */}
-        {PENDING_PILL_DOTS.map((dot) => (
-          <Box
-            key={dot}
-            sx={{
-              width: 6,
-              aspectRatio: "1",
-              borderRadius: "50%",
-              bgcolor: "text.secondary",
-            }}
-          />
-        ))}
+        <PendingPillDot />
+        <PendingPillDot />
+        <PendingPillDot />
       </Box>
     </Fade>
+  );
+}
+
+function PendingPillDot() {
+  return (
+    <Box
+      sx={{
+        width: 6,
+        aspectRatio: "1",
+        borderRadius: "50%",
+        bgcolor: "text.secondary",
+      }}
+    />
   );
 }
