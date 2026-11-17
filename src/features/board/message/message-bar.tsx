@@ -22,7 +22,7 @@ const BAR_INSET = 1;
 const MESSAGE_PADDING = 3;
 
 // The light scheme's teal fades into the bar's grey dark-mode ground; this
-// one passes 3:1 on it and on the backspace disc.
+// one passes 3:1 on it.
 const DARK_GROUND_PRIMARY = { main: "#00443d", mainChannel: "0 68 61" };
 
 export interface MessageBarProps {

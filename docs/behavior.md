@@ -363,7 +363,9 @@ a flash of the wrong color scheme.
 Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
 sit in the message bar's row, before the bar, as round buttons the size of its
 backspace. Backspace and the play button sit inside the bar at its end, play
-last and backspace a step smaller beside it. Suggestions have the row below to
+last and backspace a step smaller beside it. Backspace is a bare icon with no
+fill at rest, so play is the only filled shape in the bar; its touch target is
+the whole button, which the hold ring traces. Suggestions have the row below to
 themselves, and without them the grid starts under the message bar. Below `sm`
 the back, home, and play buttons move under the grid as wider pills. Play sits
 at the far end, twice as wide as either of the others, and narrower only on a

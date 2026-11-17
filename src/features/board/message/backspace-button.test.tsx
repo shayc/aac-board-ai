@@ -56,8 +56,8 @@ function ClearableBackspace() {
   );
 }
 
-// The disc is translucent, so the icon and ring are measured against the bar
-// it sits on.
+// The button has no fill at rest, so the icon and ring are measured against
+// the bar it sits on.
 async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const screen = await renderWithProviders(
     <>
@@ -81,7 +81,7 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
   await expect.poll(() => document.documentElement.className).toBe(mode);
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
-  // Switching modes animates the disc; measure where it settles.
+  // Switching modes animates the colors; measure where they settle.
   await Promise.all(
     button.getAnimations({ subtree: true }).map(({ finished }) => finished),
   );
@@ -89,18 +89,17 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const bar = button.parentElement;
   assertDefined(bar);
   const barColor = getComputedStyle(bar).backgroundColor;
-  const { backgroundColor: discColor, color: iconColor } =
-    getComputedStyle(button);
+  const { backgroundColor, color: iconColor } = getComputedStyle(button);
   const ring = button.querySelector("circle");
   assertDefined(ring);
   const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  const disc = paint(barColor, discColor);
+  const ground = paint(barColor, backgroundColor);
 
   return {
-    icon: contrastRatio(paint(barColor, discColor, iconColor), disc),
-    ring: contrastRatio(paint(barColor, discColor, ringColor), disc),
+    icon: contrastRatio(paint(barColor, backgroundColor, iconColor), ground),
+    ring: contrastRatio(paint(barColor, backgroundColor, ringColor), ground),
   };
 }
 
@@ -325,9 +324,9 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  // The visible disc marks the whole touch target, and the same gap on three
-  // sides keeps its curve parallel to the bar's rounded end.
-  test("fills its touch target with the disc, evenly inset in the bar's end", async () => {
+  // Nothing at rest marks the touch target's edge, so the hold ring must, and
+  // the same gap on three sides keeps it parallel to the bar's rounded end.
+  test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(
       <MessageBar
         parts={[]}
@@ -348,15 +347,14 @@ describe("BackspaceButton in the message bar", () => {
     const ring = button.querySelector("[role=progressbar]");
     assertDefined(ring);
 
-    const disc = button.getBoundingClientRect();
+    const target = button.getBoundingClientRect();
     const barEdges = bar.getBoundingClientRect();
     const ringEdges = ring.getBoundingClientRect();
-    const gap = disc.top - barEdges.top;
+    const gap = target.top - barEdges.top;
 
-    expect(disc.width).toBe(MESSAGE_ACTION_SIZE);
-    expect(getComputedStyle(button).backgroundClip).toBe("border-box");
-    expect(ringEdges.toJSON()).toEqual(disc.toJSON());
-    expect(barEdges.bottom - disc.bottom).toBeCloseTo(gap, 0);
-    expect(barEdges.right - disc.right).toBeCloseTo(gap, 0);
+    expect(target.width).toBe(MESSAGE_ACTION_SIZE);
+    expect(ringEdges.toJSON()).toEqual(target.toJSON());
+    expect(barEdges.bottom - target.bottom).toBeCloseTo(gap, 0);
+    expect(barEdges.right - target.right).toBeCloseTo(gap, 0);
   });
 });
