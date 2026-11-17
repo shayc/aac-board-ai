@@ -129,7 +129,10 @@ export function CommunicationBoard({
           dir={communication.direction}
           direction="column"
           sx={{
-            height: "100%",
+            // Flexing to fill main, not a percentage of it, keeps iOS Safari
+            // from sizing the board from its content after a partial layout.
+            flex: 1,
+            minHeight: 0,
             pl: { sm: safeAreaInset("left") },
             pr: { sm: safeAreaInset("right") },
           }}
