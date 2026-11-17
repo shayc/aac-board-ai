@@ -325,7 +325,8 @@ describe("CommunicationBoard", () => {
   });
 
   describe("layout", () => {
-    // Available heights exclude the app header (57px on phones, 65px on tablets).
+    // Available heights exclude the app header (57px on phones, 65px on tablets,
+    // 49px on a phone on its side).
     const LAYOUT_CASES = [
       {
         name: "a phone",
@@ -337,6 +338,20 @@ describe("CommunicationBoard", () => {
         wholeRows: 5,
         isPlayBelowGrid: true,
         playEnd: 16,
+        messageBarStart: 16,
+      },
+      {
+        name: "a phone on its side",
+        width: 874,
+        height: 353,
+        pageMargin: 16,
+        clearance: 4,
+        overflowHint: 8,
+        wholeRows: 2,
+        isPlayBelowGrid: false,
+        playEnd: 16 + 8 + 1,
+        // Past the back and home buttons, 72px each and 8px apart, and a 16px gap.
+        messageBarStart: 16 + 72 + 8 + 72 + 16,
       },
       {
         name: "a tablet",
@@ -349,6 +364,7 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: false,
         // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
+        messageBarStart: 24,
       },
     ];
 
@@ -363,6 +379,7 @@ describe("CommunicationBoard", () => {
         wholeRows,
         isPlayBelowGrid,
         playEnd,
+        messageBarStart,
       }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
@@ -371,7 +388,7 @@ describe("CommunicationBoard", () => {
         const atStart = measureBoardLayout(screen.container);
         expect(atStart.isPlayBelowGrid).toBe(isPlayBelowGrid);
         expect(atStart.playEnd).toBeCloseTo(playEnd, 0);
-        expect(atStart.messageBarStart).toBeCloseTo(pageMargin, 0);
+        expect(atStart.messageBarStart).toBeCloseTo(messageBarStart, 0);
         expect(atStart.messageBarEnd).toBeCloseTo(pageMargin, 0);
         expect(atStart.firstTileStart).toBeCloseTo(pageMargin, 0);
         expect(atStart.controlsToGrid).toBeCloseTo(clearance, 0);
@@ -777,10 +794,14 @@ describe("CommunicationBoard", () => {
         .toBeVisible();
     });
 
-    test.each([390, 1024])(
-      "edits the message with Backspace alongside board navigation at a viewport width of %i",
-      async (width) => {
-        await setTestViewport(width, 800);
+    test.each([
+      { width: 390, height: 800 },
+      { width: 1024, height: 800 },
+      { width: 844, height: 390 },
+    ])(
+      "edits the message with Backspace alongside board navigation on a $width by $height viewport",
+      async ({ width, height }) => {
+        await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(
           SYMBOL_BOARD,
           [`/sets/set-1/boards/${SYMBOL_BOARD.id}`],

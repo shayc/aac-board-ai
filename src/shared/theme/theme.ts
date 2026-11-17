@@ -14,6 +14,7 @@ import {
   instantFeedbackOnTouch,
 } from "./button-feedback";
 import { safeAreaInset } from "./safe-area";
+import { shortLandscape } from "./short-landscape";
 import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
 declare module "@mui/material/styles" {
@@ -81,9 +82,21 @@ function softShadow(elevation: number) {
 // Sticky touch hover must preserve focused, error, and disabled outlines.
 const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
 
+// Setting the toolbar mixin replaces MUI's heights, so they are read from its
+// default theme, which also has the breakpoints the app's theme keeps.
+const defaultTheme = createTheme();
+
 const themeOptions = {
   focusVisible: true,
   shadows,
+  mixins: {
+    toolbar: {
+      ...defaultTheme.mixins.toolbar,
+      // MUI shortens a toolbar in landscape only below `sm`, which a phone on
+      // its side is wider than.
+      [shortLandscape(defaultTheme)]: { minHeight: 48 },
+    },
+  },
   // Explicit lengths prevent sx from multiplying these radii by the base radius.
   shape: {
     borderRadius: "20px",

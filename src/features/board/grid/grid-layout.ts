@@ -1,4 +1,5 @@
 import type { Theme } from "@mui/material/styles";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { GRID_PADDING } from "../board-spacing";
 
 // Container-query thresholds require literal lengths for the theme's spacing unit.
@@ -68,6 +69,8 @@ export function createGridViewportSx(theme: Theme) {
     scrollSnapType: "both proximity",
     [theme.breakpoints.down("sm")]: createScrollPadding("xs"),
     [theme.breakpoints.up("sm")]: createScrollPadding("sm"),
+    // Declared last so it overrides the wide rules on a phone on its side.
+    [shortLandscape(theme)]: createScrollPadding("xs"),
   };
 }
 
@@ -105,6 +108,7 @@ export function createGridContentSx(
     gap: GRID_GAP,
     [theme.breakpoints.down("sm")]: createBreakpointRules("xs"),
     [theme.breakpoints.up("sm")]: createBreakpointRules("sm"),
+    [shortLandscape(theme)]: createBreakpointRules("xs"),
   };
 }
 

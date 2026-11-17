@@ -52,6 +52,28 @@ describe("AppShell", () => {
     await expectNoA11yViolations(document.body);
   });
 
+  test.each([
+    {
+      screen: "a phone on its side",
+      width: 844,
+      height: 390,
+      appBarHeight: 49,
+    },
+    { screen: "a tablet", width: 844, height: 1100, appBarHeight: 65 },
+  ])(
+    "sizes the app bar to the height of $screen",
+    async ({ width, height, appBarHeight }) => {
+      await setTestViewport(width, height);
+      const screen = await renderAppShellPastOnboarding();
+
+      const bounds = screen
+        .getByRole("banner")
+        .element()
+        .getBoundingClientRect();
+      expect(bounds.height).toBeCloseTo(appBarHeight, 0);
+    },
+  );
+
   test("moves focus into the library on open and back on close on desktop", async () => {
     await setTestViewport(1200, 800);
     const screen = await renderAppShellPastOnboarding();

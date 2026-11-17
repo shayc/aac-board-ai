@@ -8,12 +8,14 @@ import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
+import type { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { useRouteLoaderData } from "react-router";
 
 interface AppHeaderProps {
@@ -37,14 +39,9 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gap: theme.spacing(2),
           // Matches the board's page margin, so the first and last icons line
           // up with the message bar and tiles below.
-          pl: {
-            xs: safeAreaGutter(theme.spacing(2), "left"),
-            sm: safeAreaGutter(theme.spacing(3), "left"),
-          },
-          pr: {
-            xs: safeAreaGutter(theme.spacing(2), "right"),
-            sm: safeAreaGutter(theme.spacing(3), "right"),
-          },
+          ...toolbarGutters(theme, 3),
+          [theme.breakpoints.down("sm")]: toolbarGutters(theme, 2),
+          [shortLandscape(theme)]: toolbarGutters(theme, 2),
         })}
       >
         <Tooltip title={t(m.libraryOpen)}>
@@ -77,4 +74,11 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
       </Toolbar>
     </AppBar>
   );
+}
+
+function toolbarGutters(theme: Theme, units: number) {
+  return {
+    pl: safeAreaGutter(theme.spacing(units), "left"),
+    pr: safeAreaGutter(theme.spacing(units), "right"),
+  };
 }
