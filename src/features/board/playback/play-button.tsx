@@ -72,7 +72,10 @@ export function PlayButton({
           width: MESSAGE_ACTION_SIZE,
           height: MESSAGE_ACTION_SIZE,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-          [`&.${fabClasses.disabled}`]: disabledSx(theme),
+          [`&.${fabClasses.disabled}`]: {
+            ...disabledSx(theme),
+            ...theme.applyStyles("dark", barDisabledDarkSx(theme)),
+          },
         })}
       >
         <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
@@ -92,6 +95,19 @@ function disabledSx(theme: Theme) {
     backgroundColor: theme.alpha(
       theme.vars.palette.primary.main,
       theme.vars.palette.action.activatedOpacity,
+    ),
+  };
+}
+
+// The message bar is grey in dark mode, where the usual tint turns grey too
+// and the disc is lost beside backspace. A stronger tint of the lighter teal
+// keeps its hue there.
+function barDisabledDarkSx(theme: Theme) {
+  return {
+    color: theme.alpha(theme.vars.palette.primary.main, 0.6),
+    backgroundColor: theme.alpha(
+      theme.vars.palette.primary.light,
+      theme.vars.palette.action.disabledOpacity,
     ),
   };
 }
