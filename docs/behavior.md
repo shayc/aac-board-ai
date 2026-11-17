@@ -278,9 +278,10 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 [`scanning/`](../src/features/board/scanning/) holds all of it:
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
-  enabled buttons inside it. The board marks the message bar, its controls, and
-  each grid row; the grid itself knows nothing about scanning and spreads the
-  row props the board hands it. The
+  enabled buttons inside it. The board marks the message bar's row, the
+  suggestion row, the controls under the grid, and each grid row; the grid
+  itself knows nothing about scanning and spreads the row props the board
+  hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The buttons being
