@@ -74,7 +74,7 @@ export function PlayButton({
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
           [`&.${fabClasses.disabled}`]: {
             ...disabledSx(theme),
-            ...theme.applyStyles("dark", barDisabledDarkSx(theme)),
+            ...theme.applyStyles("dark", disabledOnDarkBarSx(theme)),
           },
         })}
       >
@@ -101,7 +101,7 @@ function disabledSx(theme: Theme) {
 
 // The usual tint turns grey on the bar's grey dark-mode ground and is lost
 // beside backspace; the lighter teal keeps its hue.
-function barDisabledDarkSx(theme: Theme) {
+function disabledOnDarkBarSx(theme: Theme) {
   return {
     color: theme.alpha(theme.vars.palette.primary.main, 0.6),
     backgroundColor: theme.alpha(

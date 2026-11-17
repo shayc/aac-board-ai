@@ -71,6 +71,7 @@ export function CommunicationBoard({
   });
 
   const hasMessage = message.parts.length > 0;
+  const isPlayInMessageBar = !isSmallScreen;
 
   const navigationButtons = (
     <NavigationButtons
@@ -84,7 +85,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
-      size={isSmallScreen ? "large" : "medium"}
+      size={isPlayInMessageBar ? "medium" : "large"}
       shortcutLabels={shortcutLabels}
       onPress={message.backspace}
       onLongPress={message.clear}
@@ -95,7 +96,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      variant={isSmallScreen ? "boardControl" : "prominent"}
+      variant={isPlayInMessageBar ? "prominent" : "boardControl"}
       shortcutLabels={shortcutLabels}
       onPlay={() => void playback.playMessage(message.parts)}
       onStop={playback.stop}
@@ -140,7 +141,7 @@ export function CommunicationBoard({
                     sx={{ alignItems: "center" }}
                   >
                     {backspaceButton}
-                    {!isSmallScreen && playButton}
+                    {isPlayInMessageBar && playButton}
                   </Stack>
                 }
               />

@@ -18,18 +18,17 @@ import { MESSAGE_ACTION_SIZE } from "./message-bar";
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
-// MUI's default ring would outweigh the icon's lines.
-const RING_STROKE_WIDTH = 4;
-// MUI draws the ring in a box this many units wide, whatever its size.
-const RING_VIEW_BOX_SIZE = 44;
+// MUI draws the ring in a 44-unit box, so on the 80px disc this is a 4px
+// stroke; MUI's default would outweigh the icon's lines.
+const RING_THICKNESS = 2.2;
 
 // A step smaller beside the play button, so play stays the bar's main action.
-const DISC_SIZES = {
+const BUTTON_SIZES = {
   medium: { disc: 64, icon: 24 },
   large: { disc: MESSAGE_ACTION_SIZE, icon: 28 },
 } as const;
 
-type BackspaceButtonSize = keyof typeof DISC_SIZES;
+type BackspaceButtonSize = keyof typeof BUTTON_SIZES;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
@@ -78,9 +77,7 @@ export function BackspaceButton({
           variant="determinate"
           value={isHolding ? 100 : 0}
           size="auto"
-          thickness={
-            (RING_STROKE_WIDTH * RING_VIEW_BOX_SIZE) / DISC_SIZES[size].disc
-          }
+          thickness={RING_THICKNESS}
           sx={ringSx(isHolding)}
         />
       </IconButton>
@@ -96,7 +93,7 @@ export function BackspaceButton({
 // dark icon; on the greyer bar it needs a stronger tint, and a stronger
 // disabled icon, to read at all.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
-  const { disc, icon } = DISC_SIZES[size];
+  const { disc, icon } = BUTTON_SIZES[size];
   const discColor = theme.alpha(theme.palette.common.black, 0.05);
   const darkDiscColor = theme.alpha(theme.palette.common.black, 0.12);
 
