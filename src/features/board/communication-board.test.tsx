@@ -350,8 +350,8 @@ describe("CommunicationBoard", () => {
         wholeRows: 2,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
-        // Past the back and home buttons, 72px each and 8px apart, and a 16px gap.
-        messageBarStart: 16 + 72 + 8 + 72 + 16,
+        // Past the back and home buttons, 64px each and 8px apart, and a 16px gap.
+        messageBarStart: 16 + 64 + 8 + 64 + 16,
       },
       {
         name: "a wide, short desktop window",
@@ -363,7 +363,7 @@ describe("CommunicationBoard", () => {
         wholeRows: 3,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
-        messageBarStart: 16 + 72 + 8 + 72 + 16,
+        messageBarStart: 16 + 64 + 8 + 64 + 16,
       },
       {
         name: "a tablet",
@@ -372,11 +372,11 @@ describe("CommunicationBoard", () => {
         pageMargin: 24,
         clearance: 8,
         overflowHint: 16,
-        wholeRows: 4,
+        wholeRows: 5,
         isPlayBelowGrid: false,
         // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
-        messageBarStart: 24,
+        messageBarStart: 24 + 64 + 8 + 64 + 16,
       },
     ];
 

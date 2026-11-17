@@ -278,9 +278,10 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 [`scanning/`](../src/features/board/scanning/) holds all of it:
 
 - A scan group is any element spread with `scanGroupProps`; its items are the
-  enabled buttons inside it. The board marks the message bar, its controls, and
-  each grid row; the grid itself knows nothing about scanning and spreads the
-  row props the board hands it. The
+  enabled buttons inside it. The board marks the message bar's row, the
+  suggestion row, the controls under the grid, and each grid row; the grid
+  itself knows nothing about scanning and spreads the row props the board
+  hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The buttons being
@@ -351,19 +352,21 @@ a flash of the wrong color scheme.
 
 ### Screen sizes
 
-Layout turns on one width breakpoint, `sm`. Above it backspace and the play
-button sit inside the message bar at its end, play last and backspace a step
-smaller beside it. Below it the back, home, and play buttons move under the
-grid, backspace stays in the message bar at full size, and the spacing
-tightens, as [Board spacing](#board-spacing) describes.
+Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
+sit in the message bar's row, before the bar, as round buttons the size of its
+backspace. Backspace and the play button sit inside the bar at its end, play
+last and backspace a step smaller beside it. Suggestions have the row below to
+themselves, and without them the grid starts under the message bar. Below `sm`
+the back, home, and play buttons move under the grid as wider pills, backspace
+stays in the message bar at full size, and the spacing tightens, as
+[Board spacing](#board-spacing) describes.
 
 One height rule sits beside it, in
 [`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape
 screen shorter than the `sm` value, such as a phone on its side. Height is
 what such a screen lacks, so:
 
-- The back and home buttons sit in the message bar's row, before the bar, and
-  backspace and play stay inside it.
+- The controls keep their places from above `sm`, whatever the width.
 - The spacing tightens as it does below `sm`.
 - The app bar and the other toolbars take their shortest height.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays

@@ -74,8 +74,6 @@ export function CommunicationBoard({
 
   // A short landscape screen has width to spare and no height.
   const areControlsBelowGrid = isNarrowScreen && !isShortLandscape;
-  const hasNavigationRow = !isNarrowScreen && !isShortLandscape;
-  const isPlayInMessageBar = !areControlsBelowGrid;
   const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
   const scrollClearance = isShortLandscape
     ? SCROLL_CLEARANCE.xs
@@ -87,6 +85,7 @@ export function CommunicationBoard({
     <NavigationButtons
       canGoBack={navigation.canGoBack}
       canGoHome={navigation.canGoHome}
+      shape={areControlsBelowGrid ? "pill" : "round"}
       onBack={navigation.goBack}
       onHome={navigation.goHome}
     />
@@ -95,7 +94,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
-      size={isPlayInMessageBar ? "medium" : "large"}
+      size={areControlsBelowGrid ? "large" : "medium"}
       shortcutLabels={shortcutLabels}
       onPress={message.backspace}
       onLongPress={message.clear}
@@ -106,7 +105,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      variant={isPlayInMessageBar ? "prominent" : "boardControl"}
+      variant={areControlsBelowGrid ? "boardControl" : "prominent"}
       shortcutLabels={shortcutLabels}
       onPlay={() => void playback.playMessage(message.parts)}
       onStop={playback.stop}
@@ -142,7 +141,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={{ alignItems: "center" }}
             >
-              {isShortLandscape && navigationButtons}
+              {!areControlsBelowGrid && navigationButtons}
 
               <PlaybackMessageBar
                 parts={message.parts}
@@ -150,7 +149,7 @@ export function CommunicationBoard({
                 endAction={
                   <>
                     {backspaceButton}
-                    {isPlayInMessageBar && playButton}
+                    {!areControlsBelowGrid && playButton}
                   </>
                 }
               />
@@ -159,11 +158,8 @@ export function CommunicationBoard({
             <Stack
               {...scanGroupProps}
               direction="row"
-              spacing={2}
               sx={{ "&:empty": { display: "none" } }}
             >
-              {hasNavigationRow && navigationButtons}
-
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}

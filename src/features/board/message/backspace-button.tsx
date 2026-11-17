@@ -13,7 +13,10 @@ import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
-import { MESSAGE_ACTION_SIZE } from "./message-bar";
+import {
+  MESSAGE_ACTION_SIZE,
+  MESSAGE_SECONDARY_ACTION_SIZE,
+} from "./message-bar";
 
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
@@ -22,9 +25,8 @@ const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 // stroke; MUI's default would outweigh the icon's lines.
 const RING_THICKNESS = 2.2;
 
-// A step smaller beside the play button, so play stays the bar's main action.
 const BUTTON_SIZES = {
-  medium: { disc: 64, icon: 24 },
+  medium: { disc: MESSAGE_SECONDARY_ACTION_SIZE, icon: 24 },
   large: { disc: MESSAGE_ACTION_SIZE, icon: 28 },
 } as const;
 
