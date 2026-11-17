@@ -39,8 +39,10 @@ export function isScanningScopeCovered(scope: HTMLElement): boolean {
 export function highlightScanTarget(target: HTMLElement): () => void {
   target.setAttribute(HIGHLIGHT_ATTRIBUTE, "");
 
+  return () => target.removeAttribute(HIGHLIGHT_ATTRIBUTE);
+}
+
+export function scrollScanTargetIntoView(target: HTMLElement): void {
   const firstItem = target.querySelector(ITEM_SELECTOR) ?? target;
   firstItem.scrollIntoView({ block: "nearest", inline: "nearest" });
-
-  return () => target.removeAttribute(HIGHLIGHT_ATTRIBUTE);
 }

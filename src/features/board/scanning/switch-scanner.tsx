@@ -10,6 +10,7 @@ import {
   highlightScanTarget,
   isScanningScopeCovered,
   listScanGroups,
+  scrollScanTargetIntoView,
 } from "./scan-targets";
 import type { ScanMethod } from "./scanning-preferences-store";
 import { useSwitchKeys } from "./use-switch-keys";
@@ -104,6 +105,7 @@ export function SwitchScanner({
     const target =
       position.level === "items" ? position.item : position.container;
     const removeHighlight = highlightScanTarget(target);
+    scrollScanTargetIntoView(target);
 
     const observer = new MutationObserver(() => {
       if (!target.isConnected) {

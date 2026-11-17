@@ -114,25 +114,9 @@ async function downloadBoardFile(
     return response.blob();
   }
 
-  const chunks: BlobPart[] = [];
-  let receivedBytes = 0;
-  onProgress?.({ loaded: receivedBytes, total });
-
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
-
-    receivedBytes += value.byteLength;
-    if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
-      await reader.cancel();
-      throw downloadTooLargeError();
-    }
-
-    chunks.push(value);
-    onProgress?.({ loaded: receivedBytes, total });
-  }
+  const chunks = await readWithinSizeCap(reader, (loaded) =>
+    onProgress?.({ loaded, total }),
+  );
 
   return new Blob(chunks, {
     type: response.headers.get("content-type") ?? "",
@@ -160,6 +144,33 @@ function assertWithinSizeCap(
 
   void response.body?.cancel();
   throw downloadTooLargeError();
+}
+
+// The declared size can be missing or wrong, so the cap is enforced on the
+// bytes that actually arrive.
+async function readWithinSizeCap(
+  reader: ReadableStreamDefaultReader<Uint8Array<ArrayBuffer>>,
+  onReceived: (receivedBytes: number) => void,
+): Promise<BlobPart[]> {
+  const chunks: BlobPart[] = [];
+  let receivedBytes = 0;
+  onReceived(receivedBytes);
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) {
+      return chunks;
+    }
+
+    receivedBytes += value.byteLength;
+    if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
+      await reader.cancel();
+      throw downloadTooLargeError();
+    }
+
+    chunks.push(value);
+    onReceived(receivedBytes);
+  }
 }
 
 function downloadTooLargeError(): BoardFileURLError {

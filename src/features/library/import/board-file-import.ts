@@ -66,20 +66,9 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   // A file named only by its extension has no stem to name the set after.
   const fallbackName = stripBoardFileExtension(file.name) || baseId;
   const content = buildBoardSetContent(loadedBoard, fallbackName);
+  const id = await createBoardSetWithFreeId(baseId, content);
 
-  for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const id = buildBoardSetIdCandidate(baseId, candidateNumber);
-
-    try {
-      await createBoardSet({ ...content, id });
-
-      return { id, rootBoardId: content.rootBoardId };
-    } catch (error) {
-      if (!(error instanceof BoardSetAlreadyExistsError)) {
-        throw error;
-      }
-    }
-  }
+  return { id, rootBoardId: content.rootBoardId };
 }
 
 function buildBoardSetContent(
@@ -127,6 +116,25 @@ export function deriveBoardSetId(fileName: string): string {
   const stem = stripBoardFileExtension(fileName).toLowerCase();
 
   return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
+}
+
+async function createBoardSetWithFreeId(
+  baseId: string,
+  content: BoardSetContent,
+): Promise<string> {
+  for (let candidateNumber = 1; ; candidateNumber += 1) {
+    const id = buildBoardSetIdCandidate(baseId, candidateNumber);
+
+    try {
+      await createBoardSet({ ...content, id });
+
+      return id;
+    } catch (error) {
+      if (!(error instanceof BoardSetAlreadyExistsError)) {
+        throw error;
+      }
+    }
+  }
 }
 
 function buildBoardSetIdCandidate(baseId: string, candidateNumber: number) {

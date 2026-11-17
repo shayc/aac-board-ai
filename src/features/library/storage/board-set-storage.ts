@@ -134,8 +134,6 @@ export async function insertBoardSetRecords(
 
     await boardSetStore.add(boardSetRecord);
   });
-
-  requestPersistentStorage();
 }
 
 function validateBoardSetInput({
@@ -210,13 +208,4 @@ function exactBuffer(bytes: Uint8Array<ArrayBuffer>): ArrayBuffer {
   }
 
   return buffer.slice(byteOffset, byteOffset + byteLength);
-}
-
-function requestPersistentStorage(): void {
-  if (!window.isSecureContext) {
-    return;
-  }
-
-  // Not awaited: Firefox settles only once the user answers its prompt.
-  void navigator.storage.persist();
 }
