@@ -23,9 +23,8 @@ interface GridProps<Item extends { id: string }> {
   order: GridOrder;
   rowProps?: GridRowDataAttributes;
   /**
-   * Pass it when one ID can name different items from one render to the next.
-   * An item remounts when its key changes, and focus it loses that way returns
-   * to the grid.
+   * Pass it when one ID can name different items from one render to the next,
+   * so each mounts as a new item.
    */
   getItemKey?: (item: Item) => string;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
