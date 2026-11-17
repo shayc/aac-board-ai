@@ -14,6 +14,7 @@ import { BackspaceButton } from "./backspace-button";
 import { MESSAGE_ACTION_SIZE, MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 type ColorMode = "light" | "dark";
 
@@ -324,6 +325,35 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
+  // Play is the bar's only filled shape; backspace shows a fill only as
+  // feedback that the pointer is on it.
+  test("has no fill until the pointer is on it", async () => {
+    const screen = await renderWithProviders(
+      <MessageBar
+        parts={[]}
+        isWordOpen={false}
+        activePartId={null}
+        areImagesVisible
+        endAction={
+          <BackspaceButton
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+          />
+        }
+      />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" });
+    const readFill = () => getComputedStyle(button.element()).backgroundColor;
+
+    await screen.getByRole("list", { name: "Message" }).hover();
+
+    await expect.poll(readFill).toBe(TRANSPARENT);
+
+    await button.hover();
+
+    await expect.poll(readFill).not.toBe(TRANSPARENT);
+  });
+
   // Nothing at rest marks the touch target's edge, so the hold ring must, and
   // the same gap on three sides keeps it parallel to the bar's rounded end.
   test("traces its touch target with the ring, evenly inset in the bar's end", async () => {

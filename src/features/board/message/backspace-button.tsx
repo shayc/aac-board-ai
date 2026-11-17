@@ -97,6 +97,8 @@ export function BackspaceButton({
 // bar that tint, and the disabled icon, must be stronger to read at all.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const targetSize = BUTTON_SIZES[size];
+  const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
+  const darkHoverColor = theme.alpha(theme.palette.common.black, 0.12);
 
   return {
     flexShrink: 0,
@@ -104,8 +106,14 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     height: targetSize,
     fontSize: ICON_SIZE,
     color: "text.primary",
+    // A tap leaves hover stuck on a touch screen.
+    "@media (hover: hover)": {
+      "&:hover": { backgroundColor: hoverColor },
+    },
     ...theme.applyStyles("dark", {
-      "--IconButton-hoverBg": theme.alpha(theme.palette.common.black, 0.12),
+      "@media (hover: hover)": {
+        "&:hover": { backgroundColor: darkHoverColor },
+      },
       [`&.${iconButtonClasses.disabled}`]: {
         color: theme.vars.palette.text.disabled,
       },
