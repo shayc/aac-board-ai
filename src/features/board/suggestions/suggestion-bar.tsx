@@ -2,11 +2,17 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Fade from "@mui/material/Fade";
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material/styles";
+import { keyframes, useTheme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
+
+// Opacity only, so nothing beside the grid moves or changes size.
+const pendingPulse = keyframes`
+  0%, 60%, 100% { opacity: 0.35; }
+  30% { opacity: 1; }
+`;
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;
@@ -99,17 +105,19 @@ function PendingPill({ isVisible }: PendingPillProps) {
           borderRadius: theme.vars.shape.borderRadiusFull,
         }}
       >
-        {/* The dots hold still: a loop beside the grid would pull attention
-            for as long as the models run. */}
-        <PendingPillDot />
-        <PendingPillDot />
-        <PendingPillDot />
+        <PendingPillDot delayMs={0} />
+        <PendingPillDot delayMs={150} />
+        <PendingPillDot delayMs={300} />
       </Box>
     </Fade>
   );
 }
 
-function PendingPillDot() {
+interface PendingPillDotProps {
+  delayMs: number;
+}
+
+function PendingPillDot({ delayMs }: PendingPillDotProps) {
   return (
     <Box
       sx={{
@@ -117,6 +125,10 @@ function PendingPillDot() {
         aspectRatio: "1",
         borderRadius: "50%",
         bgcolor: "text.secondary",
+        animation: `${pendingPulse} 1.4s ease-in-out ${delayMs}ms infinite`,
+        "@media (prefers-reduced-motion: reduce)": {
+          animation: "none",
+        },
       }}
     />
   );

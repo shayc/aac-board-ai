@@ -231,9 +231,10 @@ language.
 
 While a source is still answering, the
 [suggestion bar](../src/features/board/suggestions/suggestion-bar.tsx) shows a
-pill of three dots after the phrases, where the next one will land. It holds
-still, because a loop beside the grid would pull attention for as long as the
-models run, and it leaves at once when the last source answers.
+pill of three dots after the phrases, where the next one will land. The dots
+pulse in opacity only, so nothing beside the grid moves, and hold still when
+the system asks for reduced motion. The pill leaves at once when the last
+source answers.
 
 The message changes only when a phrase is selected, and selecting a phrase
 does not play it. The phrases are a labelled group, not a live region, because
