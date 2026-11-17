@@ -118,7 +118,6 @@ export function deriveBoardSetId(fileName: string): string {
   return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
 }
 
-/** Resolves to the ID the set was stored under: `baseId`, or `baseId` with the first free number. */
 async function createBoardSetWithFreeId(
   baseId: string,
   content: BoardSetContent,
