@@ -2,6 +2,7 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
 import { describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { makeBoardSetRecord } from "../testing";
 import { BoardSetList } from "./board-set-list";
 
@@ -168,5 +169,38 @@ describe("BoardSetList", () => {
     expect(onExport).toHaveBeenCalledOnce();
     expect(onExport.mock.calls[0]?.[0]).toMatchObject({ name: "Core Words" });
     await expect.element(screen.getByRole("menu")).not.toBeInTheDocument();
+  });
+
+  test("moves through the menu with arrow keys and returns focus on Escape", async () => {
+    const screen = await renderInRouter(
+      <BoardSetList
+        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
+        downloadableBoardSets={[]}
+        onShowInfo={vi.fn()}
+        onExport={vi.fn()}
+        onRequestDelete={vi.fn()}
+      />,
+    );
+    const trigger = screen.getByRole("button", {
+      name: "More options for Core Words",
+    });
+
+    trigger.element().focus();
+    await userEvent.keyboard("{Enter}");
+
+    await expect
+      .element(screen.getByRole("menuitem", { name: "Info" }))
+      .toHaveFocus();
+
+    await userEvent.keyboard("{ArrowDown}{ArrowDown}");
+
+    await expect
+      .element(screen.getByRole("menuitem", { name: "Delete" }))
+      .toHaveFocus();
+
+    await userEvent.keyboard("{Escape}");
+
+    await expect.element(screen.getByRole("menu")).not.toBeInTheDocument();
+    await expect.element(trigger).toHaveFocus();
   });
 });
