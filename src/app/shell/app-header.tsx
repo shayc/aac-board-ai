@@ -39,9 +39,9 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gap: theme.spacing(2),
           // Matches the board's page margin, so the first and last icons line
           // up with the message bar and tiles below.
-          ...sideGutters(theme, 3),
-          [theme.breakpoints.down("sm")]: sideGutters(theme, 2),
-          [shortLandscape(theme)]: sideGutters(theme, 2),
+          ...toolbarGutters(theme, 3),
+          [theme.breakpoints.down("sm")]: toolbarGutters(theme, 2),
+          [shortLandscape(theme)]: toolbarGutters(theme, 2),
         })}
       >
         <Tooltip title={t(m.libraryOpen)}>
@@ -76,7 +76,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   );
 }
 
-function sideGutters(theme: Theme, spacingUnits: number) {
+function toolbarGutters(theme: Theme, spacingUnits: number) {
   return {
     pl: safeAreaGutter(theme.spacing(spacingUnits), "left"),
     pr: safeAreaGutter(theme.spacing(spacingUnits), "right"),
