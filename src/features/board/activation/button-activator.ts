@@ -15,7 +15,6 @@ interface ButtonActivatorOptions {
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   /** The language the board's text is in, when known. */
   language: string | undefined;
-  /** Whether a tile plays what it adds to the message as it adds it. */
   shouldPlayTiles: boolean;
 }
 
