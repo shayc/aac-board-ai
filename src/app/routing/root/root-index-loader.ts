@@ -34,7 +34,9 @@ export async function rootIndexLoader({
 function parseBoardFileHost(boardFileURL: string): string {
   try {
     return parseBoardFileURL(boardFileURL).host;
-  } catch {
+  } catch (error) {
+    // The route error names no cause, and reportRouteError skips it.
+    reportError(error);
     throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
   }
 }

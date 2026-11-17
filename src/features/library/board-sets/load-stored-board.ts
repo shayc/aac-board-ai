@@ -44,17 +44,41 @@ async function resolveAssetURLs(
   boardSetId: string,
   obfBoard: OBFBoard,
 ): Promise<Map<string, string>> {
-  const entries = await Promise.all(
-    Array.from(collectMediaPaths([obfBoard]), async (path) => {
-      // A board missing one picture or sound is still usable; failing the
-      // whole load would leave the user with no board at all.
-      const url = await getAssetURL(boardSetId, path).catch(reportError);
-
-      return url ? [[path, url] as const] : [];
-    }),
+  // A board missing one picture or sound is still usable; failing the
+  // whole load would leave the user with no board at all.
+  const results = await Promise.allSettled(
+    Array.from(
+      collectMediaPaths([obfBoard]),
+      async (path) => [path, await getAssetURL(boardSetId, path)] as const,
+    ),
   );
 
-  return new Map(entries.flat());
+  const assetURLByPath = new Map<string, string>();
+  const readErrors: unknown[] = [];
+
+  for (const result of results) {
+    if (result.status === "rejected") {
+      readErrors.push(result.reason);
+      continue;
+    }
+
+    const [path, url] = result.value;
+    if (url) {
+      assetURLByPath.set(path, url);
+    }
+  }
+
+  // One storage fault fails every read, so the board reports them together.
+  if (readErrors.length > 0) {
+    reportError(
+      new AggregateError(
+        readErrors,
+        `Failed to read ${readErrors.length} stored assets of board set ${boardSetId}`,
+      ),
+    );
+  }
+
+  return assetURLByPath;
 }
 
 // Broken links are dropped here, not at import: the stored file keeps them so

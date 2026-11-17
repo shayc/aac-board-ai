@@ -1,6 +1,6 @@
 import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
-import { createMemoryRouter } from "react-router";
+import type { RouteObject } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test } from "vitest";
 import {
@@ -8,29 +8,10 @@ import {
   routeErrorCodes,
   routeErrorResponse,
 } from "./route-error";
-import { RouteErrorBoundary } from "./route-error-boundary";
+import { createErrorRouteRouter } from "./testing/create-error-route-router";
 
-function TestRoute() {
-  return null;
-}
-
-function TestHydrateFallback() {
-  return null;
-}
-
-function renderWithLoader(loader: () => unknown) {
-  const router = createMemoryRouter(
-    [
-      {
-        path: "/",
-        loader,
-        Component: TestRoute,
-        HydrateFallback: TestHydrateFallback,
-        ErrorBoundary: RouteErrorBoundary,
-      },
-    ],
-    { initialEntries: ["/"] },
-  );
+function renderErrorRoute(route: Pick<RouteObject, "loader" | "Component">) {
+  const router = createErrorRouteRouter(route);
 
   return renderWithProviders(
     <RouterProvider router={router} onError={reportRouteError} />,
@@ -42,8 +23,10 @@ describe("reportRouteError", () => {
     const reportedErrors = collectReportedErrors();
     const loaderError = new Error("boom");
 
-    const screen = await renderWithLoader(() => {
-      throw loaderError;
+    const screen = await renderErrorRoute({
+      loader: () => {
+        throw loaderError;
+      },
     });
 
     await expect
@@ -52,11 +35,29 @@ describe("reportRouteError", () => {
     expect(reportedErrors).toEqual([loaderError]);
   });
 
+  test("reports an error a route throws while rendering", async () => {
+    const reportedErrors = collectReportedErrors();
+    const renderError = new Error("boom");
+
+    const screen = await renderErrorRoute({
+      Component: () => {
+        throw renderError;
+      },
+    });
+
+    await expect
+      .element(screen.getByText("Couldn't load this page"))
+      .toBeVisible();
+    expect(reportedErrors).toEqual([renderError]);
+  });
+
   test("does not report an error the page explains", async () => {
     const reportedErrors = collectReportedErrors();
 
-    const screen = await renderWithLoader(() => {
-      throw routeErrorResponse(routeErrorCodes.boardNotFound);
+    const screen = await renderErrorRoute({
+      loader: () => {
+        throw routeErrorResponse(routeErrorCodes.boardNotFound);
+      },
     });
 
     await expect.element(screen.getByText("Board not found")).toBeVisible();

@@ -1,8 +1,8 @@
 import { m } from "@paraglide/messages.js";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
-import { isRouteErrorResponse, useRouteError } from "react-router";
+import { useRouteError } from "react-router";
 import {
-  isRouteErrorPayload,
+  getRouteErrorCode,
   type RouteErrorCode,
   routeErrorCodes,
 } from "./route-error";
@@ -16,8 +16,9 @@ export function RouteErrorBoundary() {
 }
 
 function getErrorTitle(error: unknown, t: Translate): string {
-  if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
-    return translateRouteError(error.data.code, t);
+  const code = getRouteErrorCode(error);
+  if (code) {
+    return translateRouteError(code, t);
   }
 
   return t(m.errorGenericTitle);

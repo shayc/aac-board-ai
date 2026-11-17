@@ -13,6 +13,7 @@ invariants, data ownership, and module boundaries. Its
   - [Translate board sets](#translate-board-sets)
   - [Activate a tile](#activate-a-tile)
   - [Suggest a message](#suggest-a-message)
+  - [Report failures](#report-failures)
 - [Accessibility, language, and presentation](#accessibility-language-and-presentation)
   - [Accessibility](#accessibility)
   - [Switch scanning](#switch-scanning)
@@ -247,6 +248,31 @@ probe the same models for the communication language. They show the
 instructions field when the Rewriter supports that language, and otherwise say
 what is missing: the Rewriter, the language, or a device that can run the
 models.
+
+### Report failures
+
+A message on screen names what failed, never why, so a failure nobody planned
+for is also passed to `reportError`, which shows it in the browser console.
+Nothing leaves the device.
+
+- **Routes:** [`reportRouteError`](../src/app/routing/route-error.ts) reports
+  loader, action and render errors that reach the error page, except the ones
+  the page explains with its own title: board not found and board set not
+  found.
+- **Board links:** a `?board=` link that can't be parsed or imported is
+  explained by the page too, but its title gives no cause, so the loader and
+  the action report the underlying error themselves.
+- **Library:** a failed list load, catalog download, export or delete is
+  reported beside its message.
+- **Stored pictures and sounds:** a board opens without the assets that can't
+  be read, and reports those reads together as one error. An asset that was
+  never stored is not a failure.
+- **Translation:** a failed pass is reported, as described in
+  [Translate board sets](#translate-board-sets).
+
+Cancelled downloads and interrupted navigations are not failures. Playback,
+preferences, the message draft and the built-in AI handle their own failures
+without reporting, because those are expected on many devices.
 
 ## Accessibility, language, and presentation
 

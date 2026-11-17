@@ -29,16 +29,23 @@ export function routeErrorResponse(code: RouteErrorCode) {
 // The error page shows only a title, so an error no loader anticipated is
 // reported here or it leaves no trace of what went wrong.
 export function reportRouteError(error: unknown): void {
-  if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
+  if (getRouteErrorCode(error)) {
     return;
   }
 
   reportError(error);
 }
 
-export function isRouteErrorPayload(
-  value: unknown,
-): value is RouteErrorPayload {
+/** The code of an error the error page explains, or undefined for any other. */
+export function getRouteErrorCode(error: unknown): RouteErrorCode | undefined {
+  if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
+    return error.data.code;
+  }
+
+  return undefined;
+}
+
+function isRouteErrorPayload(value: unknown): value is RouteErrorPayload {
   return isRecord(value) && isRouteErrorCode(value.code);
 }
 

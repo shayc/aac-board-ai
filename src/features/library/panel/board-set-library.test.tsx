@@ -138,7 +138,8 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .not.toBeInTheDocument();
-      expect(reportedErrors).toHaveLength(1);
+      // The message is the browser's own wording, so only the name is stable.
+      expect(reportedErrors).toMatchObject([{ name: "InvalidStateError" }]);
     });
 
     test("hides catalog downloads for board sets that are already stored", async () => {
@@ -366,7 +367,9 @@ describe("BoardSetLibrary", () => {
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .toHaveFocus();
       expect(await listBoardSetRecords()).toEqual([]);
-      expect(reportedErrors).toHaveLength(1);
+      expect(reportedErrors).toMatchObject([
+        { message: "Failed to fetch board: HTTP 500" },
+      ]);
     });
 
     test("marks the button unavailable while a downloaded board set imports", async () => {
@@ -520,7 +523,7 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByText("Couldn't export board set"))
         .toBeInTheDocument();
-      expect(reportedErrors).toHaveLength(1);
+      expect(reportedErrors).toMatchObject([{ name: "OBFError" }]);
     });
   });
 
