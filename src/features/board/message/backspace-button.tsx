@@ -21,13 +21,14 @@ import {
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
-// MUI draws the ring in a 44-unit box, so on the 80px disc this is a 4px
+// MUI draws the ring in a 44-unit box, so on the 80px button this is a 4px
 // stroke; MUI's default would outweigh the icon's lines.
 const RING_THICKNESS = 2.2;
+const ICON_SIZE = 28;
 
 const BUTTON_SIZES = {
-  medium: { disc: MESSAGE_SECONDARY_ACTION_SIZE, icon: 24 },
-  large: { disc: MESSAGE_ACTION_SIZE, icon: 28 },
+  medium: MESSAGE_SECONDARY_ACTION_SIZE,
+  large: MESSAGE_ACTION_SIZE,
 } as const;
 
 type BackspaceButtonSize = keyof typeof BUTTON_SIZES;
@@ -87,29 +88,32 @@ export function BackspaceButton({
   );
 }
 
-// The disc fills the whole touch target, so its visible edge is where a tap
-// counts. With the bar's inset, a large disc sits on the bar's rounded end,
-// the same distance from its top, bottom and end, and both curves run parallel.
+// The icon has no fill at rest, so play is the only filled shape in the bar;
+// the touch target stays as large as the button. With the bar's inset, a large
+// button sits on the bar's rounded end, the same distance from its top, bottom
+// and end.
 //
-// The bar stays light in dark mode, so the disc stays a dark tint of it with a
-// dark icon; on the greyer bar it needs a stronger tint, and a stronger
-// disabled icon, to read at all.
+// The bar stays light in dark mode, so hovering tints it darker; on the greyer
+// bar that tint, and the disabled icon, must be stronger to read at all.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
-  const { disc, icon } = BUTTON_SIZES[size];
-  const discColor = theme.alpha(theme.palette.common.black, 0.05);
-  const darkDiscColor = theme.alpha(theme.palette.common.black, 0.12);
-
-  const discSelector = `&, &:hover, &.${iconButtonClasses.disabled}`;
+  const targetSize = BUTTON_SIZES[size];
+  const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
+  const darkHoverColor = theme.alpha(theme.palette.common.black, 0.12);
 
   return {
     flexShrink: 0,
-    width: disc,
-    height: disc,
-    fontSize: icon,
+    width: targetSize,
+    height: targetSize,
+    fontSize: ICON_SIZE,
     color: "text.primary",
-    [discSelector]: { backgroundColor: discColor },
+    // A tap leaves hover stuck on a touch screen.
+    "&:hover": {
+      "@media (hover: hover)": { backgroundColor: hoverColor },
+    },
     ...theme.applyStyles("dark", {
-      [discSelector]: { backgroundColor: darkDiscColor },
+      "&:hover": {
+        "@media (hover: hover)": { backgroundColor: darkHoverColor },
+      },
       [`&.${iconButtonClasses.disabled}`]: {
         color: theme.vars.palette.text.disabled,
       },
@@ -117,8 +121,8 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   } as const;
 }
 
-// The "auto" size stretches the ring over the whole button, which is the disc,
-// so it traces the disc's edge. The fill waits out the delay so a quick tap
+// The "auto" size stretches the ring over the whole button, so a hold shows
+// the edge of the touch target. The fill waits out the delay so a quick tap
 // never shows it.
 function ringSx(isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;

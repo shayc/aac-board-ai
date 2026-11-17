@@ -14,6 +14,7 @@ import { BackspaceButton } from "./backspace-button";
 import { MESSAGE_ACTION_SIZE, MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 type ColorMode = "light" | "dark";
 
@@ -56,8 +57,8 @@ function ClearableBackspace() {
   );
 }
 
-// The disc is translucent, so the icon and ring are measured against the bar
-// it sits on.
+// The button has no fill at rest, so the icon and ring are measured against
+// the bar it sits on.
 async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const screen = await renderWithProviders(
     <>
@@ -81,7 +82,7 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
   await expect.poll(() => document.documentElement.className).toBe(mode);
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
-  // Switching modes animates the disc; measure where it settles.
+  // Switching modes animates the colors; measure where they settle.
   await Promise.all(
     button.getAnimations({ subtree: true }).map(({ finished }) => finished),
   );
@@ -89,18 +90,17 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const bar = button.parentElement;
   assertDefined(bar);
   const barColor = getComputedStyle(bar).backgroundColor;
-  const { backgroundColor: discColor, color: iconColor } =
-    getComputedStyle(button);
+  const iconColor = getComputedStyle(button).color;
   const ring = button.querySelector("circle");
   assertDefined(ring);
   const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  const disc = paint(barColor, discColor);
+  const ground = paint(barColor);
 
   return {
-    icon: contrastRatio(paint(barColor, discColor, iconColor), disc),
-    ring: contrastRatio(paint(barColor, discColor, ringColor), disc),
+    icon: contrastRatio(paint(barColor, iconColor), ground),
+    ring: contrastRatio(paint(barColor, ringColor), ground),
   };
 }
 
@@ -325,9 +325,38 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  // The visible disc marks the whole touch target, and the same gap on three
-  // sides keeps its curve parallel to the bar's rounded end.
-  test("fills its touch target with the disc, evenly inset in the bar's end", async () => {
+  // Play is the bar's only filled shape; backspace shows a fill only as
+  // feedback that the pointer is on it.
+  test("has no fill until the pointer is on it", async () => {
+    const screen = await renderWithProviders(
+      <MessageBar
+        parts={[]}
+        isWordOpen={false}
+        activePartId={null}
+        areImagesVisible
+        endAction={
+          <BackspaceButton
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+          />
+        }
+      />,
+    );
+    const button = screen.getByRole("button", { name: "Backspace" });
+    const readFill = () => getComputedStyle(button.element()).backgroundColor;
+
+    await screen.getByRole("list", { name: "Message" }).hover();
+
+    await expect.poll(readFill).toBe(TRANSPARENT);
+
+    await button.hover();
+
+    await expect.poll(readFill).not.toBe(TRANSPARENT);
+  });
+
+  // Nothing at rest marks the touch target's edge, so the hold ring must, and
+  // the same gap on three sides keeps it parallel to the bar's rounded end.
+  test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(
       <MessageBar
         parts={[]}
@@ -348,15 +377,14 @@ describe("BackspaceButton in the message bar", () => {
     const ring = button.querySelector("[role=progressbar]");
     assertDefined(ring);
 
-    const disc = button.getBoundingClientRect();
+    const target = button.getBoundingClientRect();
     const barEdges = bar.getBoundingClientRect();
     const ringEdges = ring.getBoundingClientRect();
-    const gap = disc.top - barEdges.top;
+    const gap = target.top - barEdges.top;
 
-    expect(disc.width).toBe(MESSAGE_ACTION_SIZE);
-    expect(getComputedStyle(button).backgroundClip).toBe("border-box");
-    expect(ringEdges.toJSON()).toEqual(disc.toJSON());
-    expect(barEdges.bottom - disc.bottom).toBeCloseTo(gap, 0);
-    expect(barEdges.right - disc.right).toBeCloseTo(gap, 0);
+    expect(target.width).toBe(MESSAGE_ACTION_SIZE);
+    expect(ringEdges.toJSON()).toEqual(target.toJSON());
+    expect(barEdges.bottom - target.bottom).toBeCloseTo(gap, 0);
+    expect(barEdges.right - target.right).toBeCloseTo(gap, 0);
   });
 });
