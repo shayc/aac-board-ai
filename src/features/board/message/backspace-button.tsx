@@ -106,8 +106,6 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     fontSize: icon,
     color: "text.primary",
     [discSelector]: { backgroundColor: discColor },
-    // The tint alone is too faint on the white bar to show the disc's edge.
-    boxShadow: `inset 0 0 0 1px ${theme.vars.palette.divider}`,
     ...theme.applyStyles("dark", {
       [discSelector]: { backgroundColor: darkDiscColor },
       [`&.${iconButtonClasses.disabled}`]: {
