@@ -357,9 +357,9 @@ sit in the message bar's row, before the bar, as round buttons the size of its
 backspace. Backspace and the play button sit inside the bar at its end, play
 last and backspace a step smaller beside it. Suggestions have the row below to
 themselves, and without them the grid starts under the message bar. Below `sm`
-the back, home, and play buttons move under the grid as wider pills, backspace
-stays in the message bar at full size, and the spacing tightens, as
-[Board spacing](#board-spacing) describes.
+the back, home, and play buttons move under the grid as wider pills, and play
+takes the room the other two leave. Backspace stays in the message bar at full
+size, and the spacing tightens, as [Board spacing](#board-spacing) describes.
 
 One height rule sits beside it, in
 [`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape

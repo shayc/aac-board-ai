@@ -50,6 +50,8 @@ export function PlayButton({
           color="primary"
           onClick={handleClick}
           sx={(theme) => ({
+            // The message's main action takes the room its row has to spare.
+            flexGrow: 1,
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
           })}
         >

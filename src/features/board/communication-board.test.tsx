@@ -418,6 +418,29 @@ describe("CommunicationBoard", () => {
     );
   });
 
+  describe("phone controls", () => {
+    // The narrowest phones, and larger ones with display zoom, are 320px wide.
+    test.each([{ width: 320 }, { width: 375 }])(
+      "stretches play from the home button to the page margin on a $width px wide phone",
+      async ({ width }) => {
+        await setTestViewport(width, 755);
+        const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+        const home = screen
+          .getByRole("button", { name: "Go to main board" })
+          .element()
+          .getBoundingClientRect();
+        const play = screen
+          .getByRole("button", { name: "Play message" })
+          .element()
+          .getBoundingClientRect();
+
+        expect(play.left - home.right).toBeCloseTo(16, 0);
+        expect(play.right).toBeCloseTo(width - 16, 0);
+      },
+    );
+  });
+
   describe("tile activation", () => {
     test("activates a focused tile with the Space key", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
