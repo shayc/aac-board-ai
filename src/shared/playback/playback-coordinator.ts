@@ -55,7 +55,7 @@ export function createPlaybackCoordinator(
         setActiveCue(session, cue ?? null);
         await speak(step, getSpeechParameters(step.language), {
           signal,
-          onBoundary: cueAt
+          onWordBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))
             : undefined,
         });

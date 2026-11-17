@@ -60,12 +60,11 @@ export function planPlayback(
 
 interface PartSpan {
   id: string;
-  start: number;
   end: number;
 }
 
 // A lone part stays highlighted for the whole utterance, while several parts
-// wait for speech boundaries so a voice without them shows no stale highlight.
+// wait for word boundaries so a voice without them shows no stale highlight.
 function createSpeechStep(
   parts: readonly SpeechPart[],
   language: string,
@@ -86,7 +85,7 @@ function createSpeechStep(
 
   for (const part of parts) {
     chunks.push(part.text);
-    spans.push({ id: part.id, start: offset, end: offset + part.text.length });
+    spans.push({ id: part.id, end: offset + part.text.length });
     offset += part.text.length + 1;
   }
 
@@ -94,9 +93,9 @@ function createSpeechStep(
     kind: "speech",
     text: chunks.join(" "),
     language,
+    // A boundary on the space between parts belongs to the word after it.
     cueAt: (charIndex) =>
-      spans.find((span) => charIndex >= span.start && charIndex < span.end)
-        ?.id ?? null,
+      spans.find((span) => charIndex < span.end)?.id ?? null,
   };
 }
 

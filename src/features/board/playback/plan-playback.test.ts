@@ -70,8 +70,10 @@ describe("planPlayback", () => {
 
     expect(step.text).toBe("i want a cookie");
     expect(step.cueAt?.(0)).toBe("1");
+    expect(step.cueAt?.(1)).toBe("2");
     expect(step.cueAt?.(2)).toBe("2");
     expect(step.cueAt?.(7)).toBe("2");
+    expect(step.cueAt?.(8)).toBe("3");
     expect(step.cueAt?.(9)).toBe("3");
     expect(step.cueAt?.(99)).toBeNull();
   });

@@ -59,7 +59,7 @@ export function failUtterance(utterance: SpeechSynthesisUtterance): void {
 export function reachUtteranceBoundary(
   utterance: SpeechSynthesisUtterance,
   charIndex: number,
-  name: "word" | "sentence" = "word",
+  name = "word",
 ): void {
   utterance.dispatchEvent(
     new SpeechSynthesisEvent("boundary", { utterance, charIndex, name }),

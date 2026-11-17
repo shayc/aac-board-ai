@@ -6,13 +6,13 @@ import {
 
 interface SpeakOptions {
   signal?: AbortSignal;
-  onBoundary?: (charIndex: number) => void;
+  onWordBoundary?: (charIndex: number) => void;
 }
 
 export function speak(
   speechText: SpeechText,
   parameters: SpeechParameters,
-  { signal, onBoundary }: SpeakOptions = {},
+  { signal, onWordBoundary }: SpeakOptions = {},
 ): Promise<void> {
   if (signal?.aborted) {
     return Promise.resolve();
@@ -39,13 +39,13 @@ export function speak(
   }
 
   // A sentence boundary reports where a sentence starts, not which word is
-  // being spoken.
-  if (onBoundary) {
+  // being spoken. Other names pass, since an engine may leave the name empty.
+  if (onWordBoundary) {
     utterance.addEventListener(
       "boundary",
       (event) => {
-        if (event.name === "word") {
-          onBoundary(event.charIndex);
+        if (event.name !== "sentence") {
+          onWordBoundary(event.charIndex);
         }
       },
       listenerOptions,

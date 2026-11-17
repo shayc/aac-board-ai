@@ -121,21 +121,22 @@ describe("speak", () => {
     });
   });
 
-  test("reports word boundaries and ignores sentence boundaries", async () => {
+  test("reports word boundaries, including unnamed ones, and ignores sentence boundaries", async () => {
     const speech = stubSpeech();
     preventSpeechEnd(speech.speak);
-    const onBoundary = vi.fn<(charIndex: number) => void>();
+    const onWordBoundary = vi.fn<(charIndex: number) => void>();
     const playback = speak(
       { text: "hello world", language: "en" },
       parameters,
-      { onBoundary },
+      { onWordBoundary },
     );
     const utterance = lastUtterance(speech.speak);
 
     reachUtteranceBoundary(utterance, 0, "sentence");
     reachUtteranceBoundary(utterance, 6);
+    reachUtteranceBoundary(utterance, 8, "");
 
-    expect(onBoundary.mock.calls).toEqual([[6]]);
+    expect(onWordBoundary.mock.calls).toEqual([[6], [8]]);
 
     endUtterance(utterance);
     await playback;
