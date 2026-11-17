@@ -3,16 +3,20 @@ import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import { MESSAGE_SECONDARY_ACTION_SIZE } from "./message/message-bar";
 
-// As large as the message bar's backspace, which it sits beside. It holds one
-// icon, so the button's side padding gives way to the fixed width.
-const ROUND_SX = {
-  width: MESSAGE_SECONDARY_ACTION_SIZE,
-  height: MESSAGE_SECONDARY_ACTION_SIZE,
-  px: 0,
+const SHAPE_SX = {
+  // As wide as the grid's narrowest tile. Three of them and the gaps between
+  // them fill the narrowest phone, 320px wide.
+  pill: { width: 88 },
+  // As large as the message bar's backspace, which it sits beside. It holds
+  // one icon, so the button's side padding gives way to the fixed width.
+  round: {
+    width: MESSAGE_SECONDARY_ACTION_SIZE,
+    height: MESSAGE_SECONDARY_ACTION_SIZE,
+    px: 0,
+  },
 } as const;
 
-/** A pill takes the width its row gives it; a round button has a fixed size. */
-export type BoardControlShape = "pill" | "round";
+export type BoardControlShape = keyof typeof SHAPE_SX;
 
 interface BoardControlButtonProps extends Omit<
   ButtonProps,
@@ -37,7 +41,7 @@ export function BoardControlButton({
       color={color}
       variant="contained"
       onClick={disabled ? undefined : onClick}
-      sx={mergeSx(shape === "round" && ROUND_SX, sx)}
+      sx={mergeSx(SHAPE_SX[shape], sx)}
     />
   );
 }

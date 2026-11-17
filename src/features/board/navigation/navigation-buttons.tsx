@@ -1,5 +1,6 @@
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import Box from "@mui/material/Box";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
@@ -26,7 +27,7 @@ export function NavigationButtons({
   const t = useTranslate();
 
   return (
-    <>
+    <Box sx={{ display: "flex", gap: 1 }}>
       <BoardControlButton
         aria-label={t(m.navBack)}
         disabled={!canGoBack}
@@ -44,6 +45,6 @@ export function NavigationButtons({
       >
         <HomeOutlinedIcon />
       </BoardControlButton>
-    </>
+    </Box>
   );
 }

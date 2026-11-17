@@ -2,8 +2,6 @@ export const PAGE_MARGIN = { xs: 2, sm: 3 } as const;
 
 export const SCROLL_CLEARANCE = { xs: 0.5, sm: 1 } as const;
 
-export const TILE_GAP = 1;
-
 export const GRID_PADDING = {
   inline: PAGE_MARGIN,
   block: {

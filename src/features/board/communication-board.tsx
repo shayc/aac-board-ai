@@ -10,7 +10,7 @@ import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
-import { PAGE_MARGIN, SCROLL_CLEARANCE, TILE_GAP } from "./board-spacing";
+import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessagePreferences } from "./message/message-preferences-store";
@@ -141,11 +141,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={{ alignItems: "center" }}
             >
-              {!areControlsBelowGrid && (
-                <Stack direction="row" spacing={1}>
-                  {navigationButtons}
-                </Stack>
-              )}
+              {!areControlsBelowGrid && navigationButtons}
 
               <PlaybackMessageBar
                 parts={message.parts}
@@ -188,22 +184,19 @@ export function CommunicationBoard({
           </Box>
 
           {areControlsBelowGrid && (
-            <Box
+            <Stack
               {...scanGroupProps}
+              direction="row"
+              spacing={2}
               sx={(theme) => ({
-                // Equal columns a tile gap apart, so the three controls sit
-                // under the tiles of a three-column board.
-                display: "grid",
-                gridAutoFlow: "column",
-                gridAutoColumns: "minmax(0, 1fr)",
-                gap: TILE_GAP,
+                justifyContent: "space-between",
                 px: PAGE_MARGIN,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
               {navigationButtons}
               {playButton}
-            </Box>
+            </Stack>
           )}
         </Stack>
       </ScanningScope>
