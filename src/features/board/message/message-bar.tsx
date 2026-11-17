@@ -16,6 +16,9 @@ export const MESSAGE_ACTION_SIZE = 80;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 
 const BAR_INSET = 1;
+// The first word starts past the bar's rounded end, so the curve never clips
+// the ring around it.
+const MESSAGE_PADDING = 3;
 
 // The bar keeps the light scheme, whose teal fades into the grey ground the
 // bar takes in dark mode. This one keeps the hue and passes 3:1 on that
@@ -138,8 +141,10 @@ function scrollContainerSx(theme: Theme) {
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
     height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
-    px: 2,
+    px: MESSAGE_PADDING,
     overflow: "auto",
+    // A highlighted word scrolled back into view stops past the curve too.
+    scrollPaddingInlineStart: theme.spacing(MESSAGE_PADDING),
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
     // Keep the focus ring inside the bar's clipped overflow.
@@ -173,11 +178,13 @@ function MessagePartItem({
         [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
         py: 0.5,
         px: 1,
-        borderRadius: theme.vars.shape.borderRadius,
+        borderRadius: theme.vars.shape.borderRadiusSm,
         outline: isActive
           ? `2px solid ${theme.vars.palette.primary.main}`
           : "none",
-        outlineOffset: -2,
+        // The word's box reaches the bar's top and bottom edges; the ring
+        // stays clear of them.
+        outlineOffset: -4,
         // A caret marks the word that spelling still extends, so a space or
         // a backspace that only closes or reopens it has a visible result. It
         // is a border because forced-colors mode repaints backgrounds.
