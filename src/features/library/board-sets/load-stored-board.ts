@@ -48,7 +48,7 @@ async function resolveAssetURLs(
     Array.from(collectMediaPaths([obfBoard]), async (path) => {
       // A board missing one picture or sound is still usable; failing the
       // whole load would leave the user with no board at all.
-      const url = await getAssetURL(boardSetId, path).catch(() => undefined);
+      const url = await getAssetURL(boardSetId, path).catch(reportError);
 
       return url ? [[path, url] as const] : [];
     }),

@@ -1,4 +1,5 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { extractOBZ } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
@@ -124,6 +125,7 @@ describe("BoardSetLibrary", () => {
     });
 
     test("shows an error instead of the empty state when board sets cannot be retrieved", async () => {
+      const reportedErrors = collectReportedErrors();
       const db = await getBoardsDB();
       db.close();
       await refreshBoardSets();
@@ -136,6 +138,7 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .not.toBeInTheDocument();
+      expect(reportedErrors.length).toBeGreaterThan(0);
     });
 
     test("hides catalog downloads for board sets that are already stored", async () => {
@@ -345,6 +348,7 @@ describe("BoardSetLibrary", () => {
     });
 
     test("keeps the download action when a download fails", async () => {
+      const reportedErrors = collectReportedErrors();
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(null, { status: 500 }),
       );
@@ -362,6 +366,7 @@ describe("BoardSetLibrary", () => {
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .toHaveFocus();
       expect(await listBoardSetRecords()).toEqual([]);
+      expect(reportedErrors).toHaveLength(1);
     });
 
     test("marks the button unavailable while a downloaded board set imports", async () => {
@@ -497,6 +502,7 @@ describe("BoardSetLibrary", () => {
     });
 
     test("reports a board set that cannot be exported", async () => {
+      const reportedErrors = collectReportedErrors();
       await seedBoardSets([
         { id: "broken", rootBoardId: "root", name: "Broken" },
       ]);
@@ -514,6 +520,7 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByText("Couldn't export board set"))
         .toBeInTheDocument();
+      expect(reportedErrors).toHaveLength(1);
     });
   });
 

@@ -38,7 +38,8 @@ export function useBoardSetDownload({
         message: (t) => t(m.libraryDownloadedBoardSet, { name }),
         severity: "success",
       });
-    } catch {
+    } catch (error) {
+      reportError(error);
       showSnackbar({
         message: (t) => t(m.libraryDownloadFailed, { name }),
         severity: "error",
