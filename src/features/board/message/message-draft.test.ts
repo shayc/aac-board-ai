@@ -97,8 +97,10 @@ describe("message draft", () => {
     expect(restored.parts).toMatchObject([
       { label: "hello", imageSrc: undefined },
     ]);
-    expect(reportedErrors).toMatchObject([
-      { message: "Failed to read stored assets of the message draft" },
+    expect(reportedErrors.map(String)).toEqual([
+      expect.stringContaining(
+        "Failed to read stored assets of the message draft: ",
+      ),
     ]);
   });
 
