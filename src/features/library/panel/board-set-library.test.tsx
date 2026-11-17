@@ -3,14 +3,26 @@ import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { extractOBZ } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  onTestFinished,
+  test,
+  vi,
+} from "vitest";
 import type { RenderResult } from "vitest-browser-react";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { starterBoardSet } from "../catalog/board-set-catalog";
 import { cancelBoardSetDownload } from "../catalog/board-set-downloads";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
-import { resetBoardsDB, seedBoardSets } from "../testing";
+import {
+  makeBoardsDBUnreadable,
+  resetBoardsDB,
+  seedBoardSets,
+} from "../testing";
 import { BoardSetLibrary } from "./board-set-library";
 
 function renderBoardSetLibrary() {
@@ -548,6 +560,27 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("link", { name: "Animals" }))
         .not.toBeInTheDocument();
+    });
+
+    test("shows an error and reports the cause when a board set cannot be deleted", async () => {
+      const reportedErrors = collectReportedErrors();
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
+
+      const screen = await renderBoardSetLibrary();
+      onTestFinished(await makeBoardsDBUnreadable());
+
+      await screen
+        .getByRole("button", { name: "More options for Animals" })
+        .click();
+      await screen.getByRole("menuitem", { name: "Delete" }).click();
+      await screen.getByRole("button", { name: "Delete" }).click();
+
+      await expect
+        .element(screen.getByText("Couldn't delete board set"))
+        .toBeInTheDocument();
+      expect(reportedErrors).toMatchObject([{ name: "VersionError" }]);
     });
 
     test("keeps the board set when the delete dialog is cancelled", async () => {

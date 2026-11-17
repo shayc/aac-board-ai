@@ -251,11 +251,13 @@ models.
 
 ### Report failures
 
-A message on screen names what failed, never why, so a failure nobody planned
-for is also passed to `reportError`, which shows its cause in the browser
-console. Nothing leaves the device. The code that catches an error and stops
-it from travelling further is the code that reports it, which is why the
-reports below sit in loaders, stores, hooks and components alike.
+A message on screen names what failed, never why, so the error behind it is
+also passed to `reportError`, which shows its cause in the browser console.
+Nothing leaves the device. That holds for an ordinary cause too, such as a
+download tried offline or a board link the app does not support: the message
+gives no reason either way. The code that catches an error and stops it from
+travelling further is the code that reports it, which is why the reports below
+sit in loaders, stores, hooks and components alike.
 
 - **Routes:** [`reportRouteError`](../src/app/routing/route-error.ts) reports
   loader, action and render errors that reach the error page, except the ones
@@ -273,9 +275,11 @@ reports below sit in loaders, stores, hooks and components alike.
 - **Translation:** a failed pass is reported, as described in
   [Translate board sets](#translate-board-sets).
 
-Cancelled downloads and interrupted navigations are not failures. Playback,
-preferences, saving the message draft and the built-in AI handle their own
-failures without reporting, because those are expected on many devices.
+Three things are not reported. Cancelled downloads and interrupted navigations
+are not failures. An error the screen already explains in full, such as board
+not found, has nothing to add. Playback, preferences, saving the message draft
+and the built-in AI fail as a matter of course on many devices and handle that
+themselves.
 
 ## Accessibility, language, and presentation
 

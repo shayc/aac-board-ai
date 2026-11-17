@@ -159,7 +159,8 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   return { boardSetId: value.boardSetId, path: value.path };
 }
 
-// A part keeps its words without a picture or sound that can't be read.
+// A part keeps its words without a picture or sound that can't be read. The
+// map is keyed by each part's own key object, which restorePart looks up again.
 async function readAssetURLs(
   parts: readonly SavedPart[],
 ): Promise<Map<AssetKey, string | undefined>> {
