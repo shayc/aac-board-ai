@@ -1,6 +1,6 @@
 export type GridOrder = readonly (readonly (string | null)[])[];
 
-export type GridCells<Item = { id: string }> = readonly (readonly (
+export type GridCells<Item extends object = object> = readonly (readonly (
   | Item
   | undefined
 )[])[];
@@ -21,7 +21,7 @@ export function buildGrid<Item extends { id: string }>(
   );
 }
 
-export function gridArrangementKey<Item>(
+export function gridArrangementKey<Item extends object>(
   grid: GridCells<Item>,
   getItemKey: (item: Item) => string,
 ): string {

@@ -29,6 +29,7 @@ import {
 import { EMPTY_MESSAGE } from "./message/message-transforms";
 import type { Message } from "./message/message-types";
 import {
+  communicationBoardTree,
   EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
@@ -875,6 +876,29 @@ describe("CommunicationBoard", () => {
 
       await expect.element(back).toHaveAttribute("aria-disabled", "true");
       await expect.element(back).toHaveFocus();
+    });
+
+    test("keeps keyboard focus in the same cell when the next board reuses its button IDs", async () => {
+      const nextBoard: OBFBoard = {
+        ...TWO_BUTTON_BOARD,
+        id: "next-board",
+        buttons: [
+          { id: "btn-1", label: "yes" },
+          { id: "btn-2", label: "no" },
+        ],
+      };
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const focusedTile = screen
+        .getByRole("button", { name: "world" })
+        .element();
+      focusedTile.focus();
+
+      await screen.rerender(communicationBoardTree(nextBoard));
+
+      expect(focusedTile.isConnected).toBe(false);
+      await expect
+        .element(screen.getByRole("button", { name: "no" }))
+        .toHaveFocus();
     });
 
     test("resets navigation history when Home is clicked from Home", async () => {

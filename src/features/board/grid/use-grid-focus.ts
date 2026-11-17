@@ -26,7 +26,7 @@ interface UseGridFocusReturn {
   tabStopPosition: GridPosition;
 }
 
-export function useGridFocus<Item extends { id: string }>(
+export function useGridFocus<Item extends object>(
   grid: GridCells<Item>,
   getItemKey: (item: Item) => string,
 ): UseGridFocusReturn {
@@ -65,9 +65,9 @@ export function useGridFocus<Item extends { id: string }>(
     tabStop?.focus();
   });
 
-  // A focused item drops focus to the body only when it unmounts, which takes
-  // a change in which key sits where: the grid mounts each item under the same
-  // key. The grid array itself is new each render.
+  // Grid mounts each item under its key, so a focused item unmounts, dropping
+  // focus to the body, only when the keys in the cells change. The grid array
+  // itself is new each render.
   const arrangementKey = gridArrangementKey(grid, getItemKey);
   const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {
