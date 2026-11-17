@@ -19,6 +19,9 @@ const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 const ICON_SIZE = 28;
+// MUI draws the ring in a 44-unit box, so on the 80px disc this is a 4px
+// stroke; MUI's default would outweigh the icon's lines.
+const RING_THICKNESS = 2.2;
 
 interface BackspaceButtonProps {
   disabled?: boolean;
@@ -65,6 +68,7 @@ export function BackspaceButton({
           variant="determinate"
           value={isHolding ? 100 : 0}
           size="auto"
+          thickness={RING_THICKNESS}
           sx={ringSx(isHolding)}
         />
       </IconButton>
