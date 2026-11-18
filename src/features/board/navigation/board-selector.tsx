@@ -48,7 +48,7 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           color="inherit"
-          endIcon={<ArrowDropDownIcon />}
+          endIcon={<ArrowDropDownIcon color="action" />}
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
@@ -59,6 +59,10 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
             pr: 1.5,
             font: "inherit",
             [`& .${buttonClasses.endIcon}`]: { margin: 0 },
+            // Button shrinks its icons to 20px. The header's icons are 24px.
+            [`& .${buttonClasses.endIcon} > *:nth-of-type(1)`]: {
+              fontSize: 24,
+            },
           }}
         >
           <Typography component="span" variant="inherit" noWrap>
