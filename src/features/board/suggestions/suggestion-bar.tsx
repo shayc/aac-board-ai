@@ -23,6 +23,10 @@ const pendingPulse = keyframes`
 // flash the dots just before the phrase takes its place.
 const PENDING_DOTS_DELAY_MS = 700;
 
+// Room for the widest outline a chip gets: the scan highlight, 4px at a 2px
+// offset. A scroll container clips at its padding edge.
+const OUTLINE_CLEARANCE = 0.75;
+
 export interface SuggestionBarProps {
   status: SuggestionStatus;
   phrases: readonly string[];
@@ -47,9 +51,9 @@ export function SuggestionBar({
       sx={{
         flex: "1",
         alignItems: "center",
+        minWidth: 0,
         minHeight: 48,
         gap: 2,
-        overflow: "hidden",
       }}
     >
       <SuggestionStatusNotice status={status} onEnable={onEnable} />
@@ -59,13 +63,16 @@ export function SuggestionBar({
           // A live region would interrupt the tile's spoken feedback.
           role="group"
           aria-label={t(m.suggestionsLabel)}
-          sx={{
+          sx={(theme) => ({
             display: "flex",
             alignItems: "center",
-            height: "100%",
             gap: 2,
+            // The margin takes the padding back, so the row keeps its size.
+            p: OUTLINE_CLEARANCE,
+            m: -OUTLINE_CLEARANCE,
             overflowX: "auto",
-          }}
+            scrollPaddingInline: theme.spacing(OUTLINE_CLEARANCE),
+          })}
         >
           {phrases.map((phrase) => (
             <Chip
