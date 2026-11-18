@@ -16,9 +16,8 @@ export interface TextPart {
 }
 
 /**
- * Each occurrence needs its own ID, including repeated selections of the same
- * tile. A part records the language its text is in, when known, because that
- * can differ from the communication language and from part to part.
+ * Each occurrence has its own ID, even repeats of one tile. Its language, when
+ * known, can differ from the communication language and from part to part.
  */
 export type MessagePart = TilePart | TextPart;
 

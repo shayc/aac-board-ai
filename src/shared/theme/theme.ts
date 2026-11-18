@@ -356,8 +356,7 @@ const themeOptions = {
     MuiChip: {
       styleOverrides: {
         clickable: ({ theme }) => ({
-          // Chips sit beside large buttons, so they share their height and
-          // label type.
+          // Beside large buttons, so chips share their height and label type.
           ...theme.typography.button,
           height: 48,
           borderRadius: theme.vars.shape.borderRadiusFull,
@@ -383,8 +382,7 @@ const themeOptions = {
             },
             {
               props: { variant: "filled", color: "default" },
-              // A quieter fill than the contained buttons keeps chips
-              // distinct from navigation.
+              // A quieter fill keeps chips distinct from navigation buttons.
               style: {
                 backgroundColor: theme.alpha(theme.palette.common.black, 0.06),
                 [`&:hover, &.${chipClasses.focusVisible}`]: {

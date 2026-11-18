@@ -22,10 +22,7 @@ interface GridProps<Item extends { id: string }> {
   items: readonly Item[];
   order: GridOrder;
   rowProps?: GridRowDataAttributes;
-  /**
-   * Pass it when one ID can name different items from one render to the next,
-   * so each mounts as a new item.
-   */
+  /** For IDs that can name different items across renders, so each remounts. */
   getItemKey?: (item: Item) => string;
   renderItem: (item: Item, props: GridItemProps) => ReactNode;
 }

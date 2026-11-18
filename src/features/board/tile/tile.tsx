@@ -127,8 +127,7 @@ function tileSx(theme: Theme) {
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
-    // A press shows in the tile's own background, mixed for any tile color,
-    // so the theme's press overlay is not drawn.
+    // A press tints the tile's own background; the theme's overlay is hidden.
     "&::before": {
       display: "none",
     },

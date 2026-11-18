@@ -44,8 +44,7 @@ export function useSwitchKeys<Action>(
 
     const options = { capture: true };
 
-    // Listen on the document: focus can remain outside the scope after a
-    // drawer closes.
+    // On the document: focus can stay outside the scope after a drawer closes.
     document.addEventListener("keydown", handleKeyDown, options);
     document.addEventListener("keyup", handleKeyUp, options);
 

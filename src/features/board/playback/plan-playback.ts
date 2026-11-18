@@ -45,8 +45,7 @@ export function planPlayback(
       continue;
     }
 
-    // An utterance has one language and one voice, so a run ends where the
-    // language changes.
+    // An utterance has one language, so a run ends where the language changes.
     if (speechRun.at(-1)?.language !== language) {
       flushSpeech();
     }

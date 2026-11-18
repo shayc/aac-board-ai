@@ -26,9 +26,8 @@ export function useLaunchHandler(): void {
   const openLaunchedLink = useEffectEvent((targetURL: string) => {
     const { pathname, search } = new URL(targetURL);
     const targetPath = pathname + search;
-    // Launching from the app's icon targets the start URL, and the launch that
-    // opens a window targets the page it already shows. Neither is a link to
-    // follow, so the user stays on the board they are using.
+    // A launch from the app's icon targets the start URL; one that opens a
+    // window targets the page already shown. Neither is a link to follow.
     const isLinkToFollow =
       targetPath !== START_PATH &&
       targetPath !== location.pathname + location.search;

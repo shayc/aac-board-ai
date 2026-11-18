@@ -14,8 +14,7 @@ import type { MessagePart } from "./message-types";
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
-// A short landscape screen has no height for a large control: the bar drops to
-// the medium size, and its symbols shrink so their labels stay in view.
+// A short landscape screen gets compact; smaller symbols leave room for labels.
 const BAR_SIZES = {
   regular: { control: CONTROL_SIZES.large, symbol: 64 },
   compact: { control: CONTROL_SIZES.medium, symbol: 48 },
@@ -111,15 +110,13 @@ function scrollPartIntoView(
 function messageBarSx(theme: Theme) {
   return {
     ...barSizeProperties(BAR_SIZES.regular),
-    // Fills the row it shares with the board's navigation.
     flexGrow: 1,
     alignItems: "center",
     gap: 2,
     px: BAR_INSET,
     overflow: "hidden",
     color: "text.primary",
-    // Forced-colors mode paints this border, outlining the bar where its
-    // shadow and fill are removed.
+    // Forced-colors mode paints this border in place of the shadow and fill.
     border: 1,
     borderColor: "transparent",
     borderRadius: theme.vars.shape.borderRadiusFull,
@@ -127,9 +124,8 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    // Symbols need a light ground in both themes. In dark mode, white would
-    // outshine the board, while a mid grey reads as disabled; grey 300 is as
-    // light as the board's pastel tiles.
+    // In dark mode white would outshine the board and mid grey reads as
+    // disabled; grey 300 is as light as the board's pastel tiles.
     ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[300] }),
     [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
@@ -190,9 +186,8 @@ function MessagePartItem({
           : "none",
         // Clear of the bar's edges, which the word's box reaches.
         outlineOffset: -4,
-        // A caret marks the word that spelling still extends, so a space or
-        // a backspace that only closes or reopens it has a visible result. It
-        // is a border because forced-colors mode repaints backgrounds.
+        // A caret marks the open word, so closing or reopening it shows. A
+        // border, because forced-colors mode repaints backgrounds.
         ...(isOpen && {
           "&::after": {
             content: '""',

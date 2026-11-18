@@ -1,10 +1,7 @@
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 
-/**
- * Each shortcut's keys as the platform's menus print them, except
- * `spokenClear`.
- */
+/** Keys as the platform's menus print them, except `spokenClear`. */
 export interface BoardShortcutLabels {
   clear: string;
   /** The clear keys in words, for the hint a screen reader reads aloud. */

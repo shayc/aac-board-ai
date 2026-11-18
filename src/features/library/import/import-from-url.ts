@@ -146,8 +146,7 @@ function assertWithinSizeCap(
   throw downloadTooLargeError();
 }
 
-// The declared size can be missing or wrong, so the cap is enforced on the
-// bytes that actually arrive.
+// The declared size can be missing or wrong, so the cap counts received bytes.
 async function readWithinSizeCap(
   reader: ReadableStreamDefaultReader<Uint8Array<ArrayBuffer>>,
   onReceived: (receivedBytes: number) => void,

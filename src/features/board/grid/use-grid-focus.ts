@@ -65,9 +65,8 @@ export function useGridFocus<Item extends object>(
     tabStop?.focus();
   });
 
-  // Grid mounts each item under its key, so a focused item unmounts, dropping
-  // focus to the body, only when the keys in the cells change. The grid array
-  // itself is new each render.
+  // A focused item unmounts, dropping focus to the body, only when the cells'
+  // keys change. The grid array itself is new each render.
   const arrangementKey = gridArrangementKey(grid, getItemKey);
   const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {
