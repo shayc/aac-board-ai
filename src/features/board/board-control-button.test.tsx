@@ -8,24 +8,22 @@ import {
   type ColorMode,
   renderInColorMode,
 } from "@shared/testing/render-in-color-mode";
+import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { ComponentProps } from "react";
 import { describe, expect, test } from "vitest";
-import { render } from "vitest-browser-react";
 import { BoardControlButton } from "./board-control-button";
 
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
 const NO_RING = "0px";
 
-type RoundButtonProps = Pick<
+type MeasuredProps = Pick<
   ComponentProps<typeof BoardControlButton>,
-  "color" | "disabled"
+  "color" | "disabled" | "shape"
 >;
 
-async function measureRoundButton(mode: ColorMode, props?: RoundButtonProps) {
+async function measureButton(mode: ColorMode, props?: MeasuredProps) {
   const screen = await renderInColorMode(
-    <BoardControlButton {...props} shape="round">
-      Go back
-    </BoardControlButton>,
+    <BoardControlButton {...props}>Go back</BoardControlButton>,
     mode,
   );
 
@@ -50,7 +48,7 @@ async function measureRoundButton(mode: ColorMode, props?: RoundButtonProps) {
 
 describe("BoardControlButton", () => {
   test("keeps the caller's class when the button is enabled", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardControlButton className="custom-control">
         Go back
       </BoardControlButton>,
@@ -63,7 +61,7 @@ describe("BoardControlButton", () => {
   });
 
   test("applies a caller's sx array without losing its own width", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardControlButton
         sx={[{ mt: 1 }, (theme) => ({ mb: theme.spacing(2) })]}
       >
@@ -81,7 +79,7 @@ describe("BoardControlButton", () => {
   });
 
   test("preserves the caller's class when the button is disabled", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardControlButton className="custom-control" disabled>
         Go back
       </BoardControlButton>,
@@ -95,19 +93,24 @@ describe("BoardControlButton", () => {
   });
 });
 
-describe("BoardControlButton beside the message bar", () => {
-  // The bar stays light in dark mode, so it is the row's only filled surface
-  // there; the ring is then the button's only edge.
-  test("draws a ring with non-text contrast instead of a fill in dark mode", async () => {
-    const { fill, ringWidth, ringContrast } = await measureRoundButton("dark");
+describe("BoardControlButton colors", () => {
+  // The message bar stays light in dark mode, so it is the board's only
+  // filled surface besides play; the ring is then the button's only edge.
+  test.each(["pill", "round"] as const)(
+    "draws a %s button in dark mode with a ring of non-text contrast and no fill",
+    async (shape) => {
+      const { fill, ringWidth, ringContrast } = await measureButton("dark", {
+        shape,
+      });
 
-    expect(fill).toBe(TRANSPARENT);
-    expect(ringWidth).not.toBe(NO_RING);
-    expect(ringContrast).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
-  });
+      expect(fill).toBe(TRANSPARENT);
+      expect(ringWidth).not.toBe(NO_RING);
+      expect(ringContrast).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
+    },
+  );
 
   test("dims the ring with its icon when disabled in dark mode", async () => {
-    const { fill, iconColor, ringColor, ringWidth } = await measureRoundButton(
+    const { fill, iconColor, ringColor, ringWidth } = await measureButton(
       "dark",
       { disabled: true },
     );
@@ -117,8 +120,9 @@ describe("BoardControlButton beside the message bar", () => {
     expect(ringColor).toBe(iconColor);
   });
 
+  // Play is a board control below the grid on a phone.
   test("keeps the fill of a button with its own color in dark mode", async () => {
-    const { fill, ringWidth } = await measureRoundButton("dark", {
+    const { fill, ringWidth } = await measureButton("dark", {
       color: "primary",
     });
 
@@ -127,7 +131,7 @@ describe("BoardControlButton beside the message bar", () => {
   });
 
   test("keeps its fill and has no ring in light mode", async () => {
-    const { fill, ringWidth } = await measureRoundButton("light");
+    const { fill, ringWidth } = await measureButton("light");
 
     expect(fill).not.toBe(TRANSPARENT);
     expect(ringWidth).toBe(NO_RING);
