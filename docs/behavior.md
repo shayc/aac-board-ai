@@ -103,6 +103,14 @@ no edit can come before it. A message that played to its end is not kept when
 the next symbol would replace it, and an object URL with no stored asset behind
 it is left out, since it could only come back broken. The undo history is not saved.
 
+While a board is open,
+[`useScreenWakeLock`](../src/shared/hooks/use-screen-wake-lock.ts) holds a
+screen wake lock, so a device left on the table during a conversation does not
+dim and lock. The browser releases the lock whenever the page is hidden, so the
+hook asks again each time the page is shown. Where the API is missing or the
+browser refuses (low battery, or an installed app before iOS 18.4), the screen
+follows the device's auto-lock setting and nothing is reported.
+
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for
 as long as its board set exists. Message parts keep their media after leaving
