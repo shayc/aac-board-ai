@@ -89,54 +89,76 @@ describe("useMessage", () => {
   });
 
   test("applies each edit to the latest message before the next render", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
     message.backspace();
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
+      "I",
+      "want",
+      "watea",
+    ]);
   });
 
   test("leaves the last suggested word open for spelling", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want", "en");
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "wanta"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual(["I", "wanta"]);
   });
 
   test("starts a new message once the message plays to its end", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
     await playToCompletion(message, true);
 
-    expect(labelsAfterSpelling(message)).toEqual(["a"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual(["a"]);
   });
 
   test("keeps adding to a played message once it is edited", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
     await playToCompletion(message, true);
     message.backspace();
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
+      "I",
+      "want",
+      "watea",
+    ]);
   });
 
   test("keeps adding to a played message when clearing after playing is off", async () => {
     setMessageClearAfterPlayback(false);
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
     await playToCompletion(message, true);
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
+      "I",
+      "want",
+      "watera",
+    ]);
   });
 
   test("releases a played message when clearing after playing is turned off", async () => {
@@ -149,7 +171,7 @@ describe("useMessage", () => {
     setMessageClearAfterPlayback(false);
     await rerender();
 
-    expect(labelsAfterSpelling(result.current)).toEqual([
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
       "I",
       "want",
       "watera",
@@ -157,18 +179,26 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to the message when its playback did not complete", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
     await playToCompletion(message, true);
     await playToCompletion(message, false);
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
+      "I",
+      "want",
+      "watera",
+    ]);
   });
 
   test("keeps adding to a played message while it is playing again", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -176,11 +206,17 @@ describe("useMessage", () => {
     playMessage.mockReturnValueOnce(Promise.withResolvers<boolean>().promise);
     void message.play();
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
+      "I",
+      "want",
+      "watera",
+    ]);
   });
 
   test("keeps adding to the message when it changed while playing", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -188,11 +224,17 @@ describe("useMessage", () => {
     message.backspace();
     await playing;
 
-    expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual([
+      "I",
+      "want",
+      "watea",
+    ]);
   });
 
   test("keeps adding to the message when its last word was reopened while playing", async () => {
-    const { result } = await renderHook(() => useMessage(playMessage));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.apply([
@@ -203,7 +245,7 @@ describe("useMessage", () => {
     message.backspace();
     await playing;
 
-    expect(labelsAfterSpelling(message)).toEqual(["hia"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual(["hia"]);
   });
 
   test("reports whether an edit changed the message", async () => {
@@ -212,8 +254,8 @@ describe("useMessage", () => {
 
     message.replaceWithText("hi", "en");
 
-    expect(message.apply([{ kind: "space" }]).hasChanged).toBe(true);
-    expect(message.apply([{ kind: "space" }]).hasChanged).toBe(false);
+    expect(message.apply([{ kind: "space" }])).toBe(true);
+    expect(message.apply([{ kind: "space" }])).toBe(false);
   });
 
   // A no-op edit, such as a tile that only plays, must not save a released
@@ -231,7 +273,7 @@ describe("useMessage", () => {
     setMessageClearAfterPlayback(true);
     await rerender();
 
-    expect(labelsAfterSpelling(result.current)).toEqual(["a"]);
+    expect(await labelsAfterSpelling(result, rerender)).toEqual(["a"]);
   });
 
   describe("undo", () => {
@@ -327,7 +369,9 @@ describe("useMessage", () => {
     });
 
     test("opens a played message it brings back for more", async () => {
-      const { result } = await renderHook(() => useMessage(playMessage));
+      const { result, rerender } = await renderHook(() =>
+        useMessage(playMessage),
+      );
       const message = result.current;
 
       message.replaceWithText("hi", "en");
@@ -335,7 +379,7 @@ describe("useMessage", () => {
       message.clear();
       message.undo();
 
-      expect(labelsAfterSpelling(message)).toEqual(["hia"]);
+      expect(await labelsAfterSpelling(result, rerender)).toEqual(["hia"]);
     });
 
     test("leaves the message as it is with nothing to undo", async () => {
@@ -350,45 +394,74 @@ describe("useMessage", () => {
     });
   });
 
-  describe("applyIfUnchanged", () => {
-    test("edits the message it was given", async () => {
-      const { result } = await renderHook(() => useMessage(playMessage));
+  describe("echo", () => {
+    test("plays the message and leaves it open for more", async () => {
+      const { result, rerender } = await renderHook(() =>
+        useMessage(playMessage),
+      );
       const message = result.current;
-      const { edited } = message.apply([
-        { kind: "spell", text: "hi", language: "en" },
-      ]);
+      message.apply([{ kind: "spell", text: "hi", language: "en" }]);
 
-      message.applyIfUnchanged(edited, [{ kind: "clear" }]);
+      await message.echo([]);
 
-      expect(labelsAfterSpelling(message)).toEqual(["a"]);
+      expect(playMessage).toHaveBeenCalledOnce();
+      expect(await labelsAfterSpelling(result, rerender)).toEqual(["hia"]);
+    });
+
+    test("applies the edits that follow once it has played", async () => {
+      const { result, rerender } = await renderHook(() =>
+        useMessage(playMessage),
+      );
+      const message = result.current;
+      message.apply([{ kind: "spell", text: "hi", language: "en" }]);
+
+      await message.echo([{ kind: "clear" }]);
+
+      expect(await labelsAfterSpelling(result, rerender)).toEqual(["a"]);
     });
 
     test("continues a message that has played since", async () => {
-      const { result } = await renderHook(() => useMessage(playMessage));
+      const { result, rerender } = await renderHook(() =>
+        useMessage(playMessage),
+      );
       const message = result.current;
-      const { edited } = message.apply([
-        { kind: "spell", text: "hi", language: "en" },
-      ]);
+      message.apply([{ kind: "spell", text: "hi", language: "en" }]);
+      const echoPlayback = Promise.withResolvers<boolean>();
+      playMessage.mockReturnValueOnce(echoPlayback.promise);
+      const echo = message.echo([{ kind: "spell", text: "!", language: "en" }]);
       await playToCompletion(message, true);
 
-      message.applyIfUnchanged(edited, [
-        { kind: "spell", text: "!", language: "en" },
-      ]);
+      echoPlayback.resolve(true);
+      await echo;
 
-      expect(labelsAfterSpelling(message)).toEqual(["hi!a"]);
+      expect(await labelsAfterSpelling(result, rerender)).toEqual(["hi!a"]);
     });
 
-    test("drops the edits when the message changed since", async () => {
-      const { result } = await renderHook(() => useMessage(playMessage));
+    test("drops the edits when the message changed meanwhile", async () => {
+      const { result, rerender } = await renderHook(() =>
+        useMessage(playMessage),
+      );
       const message = result.current;
-      const { edited } = message.apply([
-        { kind: "spell", text: "hi", language: "en" },
-      ]);
+      message.apply([{ kind: "spell", text: "hi", language: "en" }]);
+      const echo = message.echo([{ kind: "clear" }]);
       message.backspace();
 
-      message.applyIfUnchanged(edited, [{ kind: "clear" }]);
+      await echo;
 
-      expect(labelsAfterSpelling(message)).toEqual(["ha"]);
+      expect(await labelsAfterSpelling(result, rerender)).toEqual(["ha"]);
+    });
+
+    test("drops the edits when it does not play to its end", async () => {
+      playMessage.mockResolvedValue(false);
+      const { result, rerender } = await renderHook(() =>
+        useMessage(playMessage),
+      );
+      const message = result.current;
+      message.apply([{ kind: "spell", text: "hi", language: "en" }]);
+
+      await message.echo([{ kind: "clear" }]);
+
+      expect(await labelsAfterSpelling(result, rerender)).toEqual(["hia"]);
     });
   });
 
@@ -427,12 +500,15 @@ describe("useMessage", () => {
       await first.unmount();
 
       const restored = await restoreMessageDraft();
-      const { result } = await renderHook(() =>
+      const { result, rerender } = await renderHook(() =>
         useMessage(playMessage, restored),
       );
 
       expect(restored.hasPlayed).toBe(true);
-      expect(labelsAfterSpelling(result.current)).toEqual(["I", "wanta"]);
+      expect(await labelsAfterSpelling(result, rerender)).toEqual([
+        "I",
+        "wanta",
+      ]);
     });
 
     test("saves no draft once the message is cleared", async () => {
@@ -475,12 +551,14 @@ describe("useMessage", () => {
   });
 });
 
-function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
-  const { edited } = message.apply([
-    { kind: "spell", text: "a", language: "en" },
-  ]);
+async function labelsAfterSpelling(
+  result: { current: ReturnType<typeof useMessage> },
+  rerender: () => Promise<void>,
+): Promise<string[]> {
+  result.current.apply([{ kind: "spell", text: "a", language: "en" }]);
+  await rerender();
 
-  return edited.parts.map((part) => part.label);
+  return result.current.parts.map((part) => part.label);
 }
 
 async function playToCompletion(
