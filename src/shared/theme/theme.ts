@@ -112,9 +112,9 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: "#0b7468" },
+        primary: { main: "#14657e" },
         // MUI's default info blue would be the only blue in the app.
-        info: { main: "#0b7468" },
+        info: { main: "#14657e" },
         grey,
         background: { default: BACKGROUND_LIGHT, paper: "#ffffff" },
         Button: {
@@ -129,8 +129,8 @@ const themeOptions = {
     },
     dark: {
       palette: {
-        primary: { main: "#3fd0bd" },
-        info: { main: "#3fd0bd" },
+        primary: { main: "#72c4de" },
+        info: { main: "#72c4de" },
         grey,
         background: { default: BACKGROUND_DARK, paper: "#262930" },
         error: { main: red.A100 },
@@ -457,7 +457,7 @@ const themeOptions = {
           return {
             borderColor: theme.vars.palette.outline,
             [`&.${toggleButtonClasses.selected}`]: {
-              // Teal text on the stronger tint falls under 4.5:1.
+              // Primary-colored text on the stronger tint falls under 4.5:1.
               color: theme.vars.palette.text.primary,
               backgroundColor: selectedBackground,
               "&:hover": {

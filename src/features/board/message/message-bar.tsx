@@ -33,9 +33,9 @@ const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word's ring.
 const MESSAGE_PADDING = 3;
 
-// The light scheme's teal fades into the bar's grey dark-mode ground; this
+// The light scheme's primary fades into the bar's grey dark-mode ground; this
 // one passes 3:1 on it.
-const DARK_GROUND_PRIMARY = { main: "#00443d", mainChannel: "0 68 61" };
+const DARK_GROUND_PRIMARY = { main: "#0a4154", mainChannel: "10 65 84" };
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
