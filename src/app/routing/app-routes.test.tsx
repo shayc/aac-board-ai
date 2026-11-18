@@ -458,15 +458,18 @@ describe("app flow", () => {
     const { screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    await screen.getByRole("combobox", { name: "Board" }).click();
+    await screen
+      .getByRole("heading", { level: 1, name: "Home" })
+      .getByRole("button")
+      .click();
     await screen.getByRole("option", { name: "Fruit" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Fruit" }))
       .toBeVisible();
     await expect
-      .element(screen.getByRole("combobox", { name: "Board" }))
-      .toHaveValue("Fruit");
+      .element(screen.getByRole("heading", { level: 1, name: "Fruit" }))
+      .toBeVisible();
 
     await screen.getByRole("button", { name: "Go back" }).click();
 
@@ -497,11 +500,10 @@ describe("app flow", () => {
     await expect
       .element(screen.getByRole("button", { name: "[es] fruit" }))
       .toHaveAttribute("lang", "es");
-    await expect
-      .element(screen.getByRole("combobox", { name: "Tablero" }))
-      .toHaveValue("[es] Home");
-
-    await screen.getByRole("combobox", { name: "Tablero" }).click();
+    await screen
+      .getByRole("heading", { level: 1, name: "[es] Home" })
+      .getByRole("button")
+      .click();
     await expect
       .element(screen.getByRole("option", { name: "[es] Fruit" }))
       .toBeInTheDocument();
