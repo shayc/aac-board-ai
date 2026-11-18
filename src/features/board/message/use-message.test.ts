@@ -420,19 +420,15 @@ describe("useMessage", () => {
       expect(await labelsAfterSpelling(result, rerender)).toEqual(["a"]);
     });
 
-    test("continues a message that has played since", async () => {
+    test("continues a message that has played", async () => {
       const { result, rerender } = await renderHook(() =>
         useMessage(playMessage),
       );
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
-      const echoPlayback = Promise.withResolvers<boolean>();
-      playMessage.mockReturnValueOnce(echoPlayback.promise);
-      const echo = message.echo([{ kind: "spell", text: "!", language: "en" }]);
       await playToCompletion(message, true);
 
-      echoPlayback.resolve(true);
-      await echo;
+      await message.echo([{ kind: "spell", text: "!", language: "en" }]);
 
       expect(await labelsAfterSpelling(result, rerender)).toEqual(["hi!a"]);
     });

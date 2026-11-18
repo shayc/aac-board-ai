@@ -87,12 +87,17 @@ export function useMessage(
     return commitEdits(current, edits) !== current;
   }
 
-  // Edits made against an earlier message belong to it: they apply to it even
-  // once it has played, instead of starting a new message, and are dropped if
-  // its content changed since.
-  function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
+  // Edits that wait for a playback belong to the message it played: they apply
+  // to it even once it has played, instead of starting a new message, and are
+  // dropped if the playback did not reach its end or the content changed since.
+  async function applyAfterPlayback(
+    completion: Promise<boolean>,
+    played: Message,
+    edits: readonly MessageEdit[],
+  ) {
+    const hasCompleted = await completion;
     const current = stateRef.current;
-    if (!hasSameContent(current, since)) {
+    if (!hasCompleted || !hasSameContent(current, played)) {
       return undefined;
     }
 
@@ -109,12 +114,11 @@ export function useMessage(
     const completion = playMessage(stateRef.current.parts);
     const playing = setPlayed(false);
 
-    const hasCompleted = await completion;
-    if (!hasCompleted) {
-      return;
-    }
-
-    const edited = applyIfUnchanged(playing, editsAfterPlay);
+    const edited = await applyAfterPlayback(
+      completion,
+      playing,
+      editsAfterPlay,
+    );
     if (edited && hasSameContent(edited, playing)) {
       setPlayed(true);
     }
@@ -125,10 +129,7 @@ export function useMessage(
   async function echo(editsAfterPlay: readonly MessageEdit[]) {
     const echoed = stateRef.current;
 
-    const hasCompleted = await playMessage(echoed.parts);
-    if (hasCompleted) {
-      applyIfUnchanged(echoed, editsAfterPlay);
-    }
+    await applyAfterPlayback(playMessage(echoed.parts), echoed, editsAfterPlay);
   }
 
   function setPlayed(hasPlayed: boolean): Message {
