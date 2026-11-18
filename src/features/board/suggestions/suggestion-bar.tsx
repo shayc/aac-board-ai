@@ -63,6 +63,12 @@ export function SuggestionBar({
           // A live region would interrupt the tile's spoken feedback.
           role="group"
           aria-label={t(m.suggestionsLabel)}
+          onFocus={({ target }) => {
+            // Tab can focus a partly visible chip without scrolling its ring into view.
+            if (target.matches(":focus-visible")) {
+              target.scrollIntoView({ block: "nearest", inline: "nearest" });
+            }
+          }}
           sx={(theme) => ({
             display: "flex",
             alignItems: "center",
