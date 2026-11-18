@@ -355,7 +355,8 @@ describe("CommunicationBoard", () => {
         wholeRows: 5,
         isPlayBelowGrid: true,
         playEnd: 16,
-        playHeight: 48,
+        // The shared 28px icon and the pill's 12px padding.
+        playHeight: 28 + 2 * 12,
         messageBarStart: 16,
         // As tall as backspace, 80px, with the bar's 8px inset and 1px border.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,

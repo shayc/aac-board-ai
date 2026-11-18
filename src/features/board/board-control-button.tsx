@@ -7,19 +7,20 @@ import { mergeSx } from "@shared/ui/merge-sx";
 import { CONTROL_ICON_SIZE, CONTROL_SIZES } from "./board-control-sizes";
 import { MIN_CELL_WIDTH_PX } from "./grid/grid-layout";
 
+const ICON_SX = {
+  [`& .${svgIconClasses.root}`]: { fontSize: CONTROL_ICON_SIZE },
+};
+
 const SHAPE_SX = {
-  // As wide as the grid's narrowest tile. Three of them and the gaps between
-  // them fill the narrowest phone, 320px wide.
-  pill: { width: MIN_CELL_WIDTH_PX },
+  // As wide as the grid's narrowest tile.
+  pill: { width: MIN_CELL_WIDTH_PX, ...ICON_SX },
   // It holds one icon, so the button's side padding gives way to the fixed
   // width, which matches the message bar's controls at the row's other end.
   round: (theme: Theme) => ({
     width: CONTROL_SIZES.large,
     height: CONTROL_SIZES.large,
     px: 0,
-    [`& .${svgIconClasses.root}`]: {
-      fontSize: CONTROL_ICON_SIZE,
-    },
+    ...ICON_SX,
     // A button with a color of its own keeps its fill.
     ...theme.applyStyles("dark", {
       [`&.${buttonClasses.colorInherit}`]: ringSx(theme),

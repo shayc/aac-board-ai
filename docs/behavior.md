@@ -470,8 +470,9 @@ gives a filled default chip, so play stays the bar's one solid shape; the fill
 stays when backspace is off, and the hold ring traces its edge. Suggestions
 have the row below to themselves, and without them the grid starts under the
 message bar. Below `sm`
-the home and play buttons move under the grid as two pills of one width, home
-at the start and play at the far end, with the room that is left between them.
+the home and play buttons move under the grid as two pills of one width, with
+backspace's icon size, home at the start and play at the far end, with the room
+that is left between them.
 Backspace stays in the message bar at full size, and the spacing tightens, as
 [Board spacing](#board-spacing) describes.
 
