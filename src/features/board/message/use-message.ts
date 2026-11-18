@@ -8,7 +8,12 @@ import {
   hasSameContent,
   markPlayed,
 } from "./message-transforms";
-import type { Message, MessageEdit, MessagePart } from "./message-types";
+import type {
+  Message,
+  MessageEdit,
+  MessagePart,
+  PlayMessage,
+} from "./message-types";
 
 const UNDO_LIMIT = 100;
 
@@ -23,7 +28,7 @@ export interface UseMessageReturn {
   text: string;
   apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
   applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
-  trackPlayback: (completion: Promise<boolean>) => void;
+  play: (editsAfterPlay?: readonly MessageEdit[]) => Promise<void>;
   replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
   clear: () => void;
@@ -31,6 +36,7 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(
+  playMessage: PlayMessage,
   initialMessage: Message = EMPTY_MESSAGE,
 ): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
@@ -91,22 +97,31 @@ export function useMessage(
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = stateRef.current;
     if (!hasSameContent(current, since)) {
-      return;
+      return undefined;
     }
 
-    commitEdits(markPlayed(current, false), edits);
+    return commitEdits(markPlayed(current, false), edits);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
-  function trackPlayback(completion: Promise<boolean>) {
+  // Edits that follow (such as a tile's ":clear") wait for it, keeping the
+  // message visible while it plays; one they leave as it was has played.
+  async function play(editsAfterPlay: readonly MessageEdit[] = []) {
+    // Playback starts first, so one that cannot start leaves the message as
+    // it was.
+    const completion = playMessage(stateRef.current.parts);
     const playing = setPlayed(false);
 
-    void completion.then((hasCompleted) => {
-      if (hasCompleted && hasSameContent(stateRef.current, playing)) {
-        setPlayed(true);
-      }
-    });
+    const hasCompleted = await completion;
+    if (!hasCompleted) {
+      return;
+    }
+
+    const edited = applyIfUnchanged(playing, editsAfterPlay);
+    if (edited && hasSameContent(edited, playing)) {
+      setPlayed(true);
+    }
   }
 
   function setPlayed(hasPlayed: boolean): Message {
@@ -153,7 +168,7 @@ export function useMessage(
     text,
     apply,
     applyIfUnchanged,
-    trackPlayback,
+    play,
     replaceWithText,
     backspace,
     clear,
@@ -161,7 +176,7 @@ export function useMessage(
   };
 }
 
-// A message spoken to its end that the next symbol replaces has done its job,
+// A message played to its end that the next symbol replaces has done its job,
 // so it is not kept where the next person to open the app would see it.
 function isKeptOnDevice(
   message: Message,

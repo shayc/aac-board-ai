@@ -8,13 +8,12 @@ import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { BoardControlButton } from "../board-control-button";
-import {
-  MESSAGE_ACTION_ICON_SIZE,
-  MESSAGE_ACTION_SIZE,
-  MESSAGE_ACTION_SIZE_PROPERTY,
-} from "../message/message-bar";
+import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
+
+const PLAY_SIZE = `var(${CONTROL_SIZE_PROPERTY}, ${CONTROL_SIZES.large}px)`;
+const PLAY_ICON_SIZE = 36;
 
 interface PlayButtonProps {
   disabled?: boolean;
@@ -70,8 +69,8 @@ export function PlayButton({
         onClick={disabled ? undefined : handleClick}
         sx={(theme) => ({
           flexShrink: 0,
-          width: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
-          height: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
+          width: PLAY_SIZE,
+          height: PLAY_SIZE,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
           [`&.${fabClasses.disabled}`]: {
             ...disabledSx(theme),
@@ -79,7 +78,7 @@ export function PlayButton({
           },
         })}
       >
-        <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
+        <Icon sx={{ fontSize: PLAY_ICON_SIZE }} />
       </Fab>
     </ShortcutTooltip>
   );

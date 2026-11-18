@@ -78,6 +78,24 @@ describe("board keyboard shortcuts", () => {
     });
   });
 
+  test("⌘+Enter counts the message as played, so the next tile starts a new one", async () => {
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+    const messageItems = screen
+      .getByRole("list", { name: "Message" })
+      .getByRole("listitem");
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    screen.getByRole("button", { name: "hello" }).element().focus();
+    await userEvent.keyboard("{Meta>}{Enter}{/Meta}");
+    await vi.waitFor(() => {
+      expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
+    });
+    await screen.getByRole("button", { name: "world" }).click();
+
+    await expect.element(messageItems).toHaveLength(1);
+    await expect.element(messageItems).toHaveTextContent("world");
+  });
+
   test("Escape stops playback in progress", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();

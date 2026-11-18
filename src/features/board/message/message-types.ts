@@ -31,6 +31,9 @@ export interface Message {
   readonly hasPlayed: boolean;
 }
 
+/** Plays the parts and resolves to whether they played to their end. */
+export type PlayMessage = (parts: readonly MessagePart[]) => Promise<boolean>;
+
 export type MessageEdit =
   | { readonly kind: "tile"; readonly part: TilePart }
   | {
