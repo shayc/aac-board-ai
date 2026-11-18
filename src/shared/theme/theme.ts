@@ -310,7 +310,21 @@ const themeOptions = {
     },
     MuiIconButton: {
       styleOverrides: {
-        root: ({ theme }) => buttonFeedbackTiming(theme),
+        root: ({ theme }) => ({
+          ...buttonFeedbackTiming(theme),
+          variants: [
+            {
+              props: { color: "default" },
+              // The icon's dimmer color would press fainter than a text
+              // button beside it, as in the header.
+              style: {
+                "&::before": {
+                  backgroundColor: theme.vars.palette.text.primary,
+                },
+              },
+            },
+          ],
+        }),
       },
     },
     MuiFab: {
