@@ -127,7 +127,7 @@ function measureBoardLayout(
   const messageBar = container.querySelector("[role='list']")?.parentElement;
   const playButton = container.querySelector("[aria-label='Play message']");
   const controlBar = container
-    .querySelector("[aria-label='Go to main board']")
+    .querySelector("[aria-label='Go home']")
     ?.closest("[data-scan-group]");
   assertDefined(grid);
   assertDefined(scroller);
@@ -228,7 +228,7 @@ describe("CommunicationBoard", () => {
             - gridcell "world":
               - button "world"
         - button "Go back" [disabled]
-        - button "Go to main board" [disabled]
+        - button "Go home" [disabled]
         - button "Play message" [disabled]
       `);
     });
@@ -466,7 +466,7 @@ describe("CommunicationBoard", () => {
 
         const button = (name: string) => screen.getByRole("button", { name });
         const back = iconSize(button("Go back"));
-        const home = iconSize(button("Go to main board"));
+        const home = iconSize(button("Go home"));
         const backspace = iconSize(button("Backspace"));
         const play = iconSize(button("Play message"));
 
@@ -490,7 +490,7 @@ describe("CommunicationBoard", () => {
           .element()
           .getBoundingClientRect();
         const home = screen
-          .getByRole("button", { name: "Go to main board" })
+          .getByRole("button", { name: "Go home" })
           .element()
           .getBoundingClientRect();
         const play = screen
@@ -919,7 +919,7 @@ describe("CommunicationBoard", () => {
           .element(screen.getByRole("button", { name: "Go back" }))
           .toBeVisible();
         await expect
-          .element(screen.getByRole("button", { name: "Go to main board" }))
+          .element(screen.getByRole("button", { name: "Go home" }))
           .toBeVisible();
 
         await screen.getByRole("button", { name: "hello" }).click();
@@ -1036,7 +1036,7 @@ describe("CommunicationBoard", () => {
         "test-board",
       );
       const back = screen.getByRole("button", { name: "Go back" });
-      const home = screen.getByRole("button", { name: "Go to main board" });
+      const home = screen.getByRole("button", { name: "Go home" });
 
       await expect.element(home).toHaveAttribute("aria-disabled", "true");
       await expect.element(back).not.toHaveAttribute("aria-disabled");
