@@ -22,8 +22,8 @@ interface UseMessageSuggestionsOptions {
 
 interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
-  status: SuggestionStatus;
   phrases: readonly string[];
+  status: SuggestionStatus;
   enable: () => void;
 }
 
@@ -56,12 +56,12 @@ export function useMessageSuggestions({
 
   const hasText = text !== "";
   const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
+  const isAvailable = sources.some(({ engineStatus }) =>
+    isAvailableEngineStatus(engineStatus),
+  );
   const phrases = selectSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),
-  );
-  const isAvailable = sources.some(({ engineStatus }) =>
-    isAvailableEngineStatus(engineStatus),
   );
   const status = deriveSuggestionStatus({
     sources,
@@ -78,8 +78,8 @@ export function useMessageSuggestions({
 
   return {
     isAvailable,
-    status,
     phrases,
+    status,
     enable,
   };
 }

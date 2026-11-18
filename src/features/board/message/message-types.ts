@@ -15,19 +15,25 @@ export interface TextPart {
   readonly language: string | undefined;
 }
 
-// Each occurrence needs its own ID, including repeated selections of the same
-// tile. A part records the language its text is in, when known, because that
-// can differ from the communication language and from part to part.
+/**
+ * Each occurrence needs its own ID, including repeated selections of the same
+ * tile. A part records the language its text is in, when known, because that
+ * can differ from the communication language and from part to part.
+ */
 export type MessagePart = TilePart | TextPart;
 
 export interface Message {
   readonly parts: readonly MessagePart[];
-  // True while the last part is a text part that spelling still extends. A
-  // space or a new tile closes the word, so it is never true for a tile part.
+  /**
+   * True while the last part is a text part that spelling still extends. A
+   * space or a new tile closes the word, so it is never true for a tile part.
+   */
   readonly isWordOpen: boolean;
-  // True once the message has played to its end unchanged. It stays visible so
-  // listeners who missed it can still read it, and the next tile or letter
-  // starts a new message. Any edit, such as a backspace, makes it false again.
+  /**
+   * True once the message has played to its end unchanged. It stays visible so
+   * listeners who missed it can still read it, and the next tile or letter
+   * starts a new message. Any edit, such as a backspace, makes it false again.
+   */
   readonly hasPlayed: boolean;
 }
 

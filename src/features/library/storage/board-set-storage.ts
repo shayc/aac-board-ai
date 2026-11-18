@@ -147,13 +147,13 @@ function validateBoardSetInput({
 
   const boardIds = new Set<string>();
 
-  for (const obf of boards) {
-    validateId(obf.id, "boardId");
-    if (boardIds.has(obf.id)) {
-      throw new Error(`Duplicate board ID: ${obf.id}`);
+  for (const obfBoard of boards) {
+    validateId(obfBoard.id, "boardId");
+    if (boardIds.has(obfBoard.id)) {
+      throw new Error(`Duplicate board ID: ${obfBoard.id}`);
     }
 
-    boardIds.add(obf.id);
+    boardIds.add(obfBoard.id);
   }
 
   for (const { path } of assets) {
@@ -184,10 +184,10 @@ function buildBoardSetRecord(input: BoardSetInput): BoardSetRecord {
 }
 
 function buildBoardRecords({ id, boards }: BoardSetInput): BoardRecord[] {
-  return boards.map((obf) => ({
+  return boards.map((obfBoard) => ({
     boardSetId: id,
-    id: obf.id,
-    obf,
+    id: obfBoard.id,
+    obf: obfBoard,
   }));
 }
 

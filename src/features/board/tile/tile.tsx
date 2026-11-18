@@ -90,6 +90,8 @@ function tileColorStyle({
   };
 }
 
+// contrast-color() ignores alpha, so a see-through color would get the wrong
+// label color. White is the surface OBF boards are authored against.
 function flattenOntoWhite(color: string): string {
   return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
 }
@@ -125,6 +127,8 @@ function tileSx(theme: Theme) {
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
+    // A press shows in the tile's own background, mixed for any tile color,
+    // so the theme's press overlay is not drawn.
     "&::before": {
       display: "none",
     },

@@ -2,10 +2,10 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { Fragment, type ReactNode } from "react";
 import {
-  createGridContentSx,
-  createGridViewportSx,
   gridCellSx,
+  gridContentSx,
   gridRowSx,
+  gridViewportSx,
 } from "./grid-layout";
 import { buildGrid, type GridOrder } from "./grid-model";
 import { useGridFocus } from "./use-grid-focus";
@@ -47,14 +47,14 @@ export function Grid<Item extends { id: string }>({
   const columns = grid[0]?.length ?? 0;
 
   return (
-    <Box sx={createGridViewportSx}>
+    <Box sx={gridViewportSx}>
       <Stack
         {...rootProps}
         ref={rootRef}
         role="grid"
         aria-label={ariaLabel}
         direction="column"
-        sx={(theme) => createGridContentSx(theme, { rows, columns })}
+        sx={(theme) => gridContentSx(theme, { rows, columns })}
       >
         {grid.map((row, rowIndex) => (
           <GridRow

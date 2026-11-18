@@ -60,7 +60,7 @@ const grey = {
   A700: "#5e6167",
 };
 
-const outline = {
+const OUTLINE = {
   light: "rgba(0, 0, 0, 0.5)",
   dark: "rgba(255, 255, 255, 0.42)",
 };
@@ -80,7 +80,7 @@ function softShadow(elevation: number) {
 }
 
 // Sticky touch hover must preserve focused, error, and disabled outlines.
-const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
+const IDLE_TOUCH_HOVER_OUTLINE = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
 
 // Setting the toolbar mixin replaces MUI's heights, so they are read from its
 // default theme, which also has the breakpoints the app's theme keeps.
@@ -121,8 +121,8 @@ const themeOptions = {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        outline: outline.light,
-        Chip: { defaultBorder: outline.light },
+        outline: OUTLINE.light,
+        Chip: { defaultBorder: OUTLINE.light },
         SnackbarContent: { bg: grey[900], color: grey[50] },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
@@ -134,8 +134,8 @@ const themeOptions = {
         grey,
         background: { default: BACKGROUND_DARK, paper: "#262930" },
         error: { main: red.A100 },
-        outline: outline.dark,
-        Chip: { defaultBorder: outline.dark },
+        outline: OUTLINE.dark,
+        Chip: { defaultBorder: OUTLINE.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
         action: {
           active: "rgba(255, 255, 255, 0.7)",
@@ -337,7 +337,7 @@ const themeOptions = {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
           "@media (hover: none)": {
-            [idleTouchHoverOutline]: {
+            [IDLE_TOUCH_HOVER_OUTLINE]: {
               borderColor: theme.vars.palette.outline,
             },
           },

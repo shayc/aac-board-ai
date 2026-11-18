@@ -39,7 +39,10 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
   }
 
   const isOpen = anchorElement !== null;
-  const close = () => setAnchorElement(null);
+
+  function handleClose() {
+    setAnchorElement(null);
+  }
 
   return (
     <>
@@ -93,14 +96,14 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
             sx: { width: 320, mt: 0.5 },
           },
         }}
-        onClose={close}
+        onClose={handleClose}
       >
         <BoardSearch
           searchFieldRef={searchFieldRef}
           options={options}
           selectedOption={selectedOption}
           onSelect={goToBoard}
-          onClose={close}
+          onClose={handleClose}
         />
       </Popover>
     </>
@@ -191,9 +194,9 @@ function BoardSearch({
             },
           }}
           sx={(theme) => ({
-            borderBottom: `1px solid ${theme.vars.palette.divider}`,
             px: 2,
             py: 1,
+            borderBottom: `1px solid ${theme.vars.palette.divider}`,
           })}
         />
       )}

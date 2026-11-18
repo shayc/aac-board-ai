@@ -7,7 +7,10 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
-import { BoardControlButton } from "../board-control-button";
+import {
+  BoardControlButton,
+  type BoardControlShape,
+} from "../board-control-button";
 import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
@@ -18,7 +21,8 @@ const PLAY_ICON_SIZE = 36;
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  variant?: "prominent" | "boardControl";
+  /** Round in the message bar; a pill in the row of board controls. */
+  shape?: BoardControlShape;
   shortcutLabels: Pick<BoardShortcutLabels, "play" | "stop">;
   onPlay: () => void;
   onStop: () => void;
@@ -27,7 +31,7 @@ interface PlayButtonProps {
 export function PlayButton({
   disabled = false,
   isPlaying,
-  variant = "prominent",
+  shape = "round",
   shortcutLabels,
   onPlay,
   onStop,
@@ -40,7 +44,7 @@ export function PlayButton({
   const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopIcon : PlayArrowIcon;
 
-  if (variant === "boardControl") {
+  if (shape === "pill") {
     return (
       <ShortcutTooltip action={label} keys={shortcutKeys}>
         <BoardControlButton

@@ -1,4 +1,4 @@
-import { routeErrorCodes, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../route-error";
 
 /**
  * Ends a `?board=` navigation on the "import failed" page. That page names no
@@ -6,5 +6,5 @@ import { routeErrorCodes, routeErrorResponse } from "../route-error";
  */
 export function failBoardFileURLImport(cause: unknown): never {
   reportError(cause);
-  throw routeErrorResponse(routeErrorCodes.boardFileURLImportFailed);
+  throw routeErrorResponse(ROUTE_ERROR_CODES.boardFileURLImportFailed);
 }

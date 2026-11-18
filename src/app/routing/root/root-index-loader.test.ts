@@ -54,7 +54,7 @@ describe("rootIndexLoader", () => {
     ).rejects.toMatchObject(localizedImportFailure);
 
     expect(reportedErrors).toMatchObject([
-      { message: "Unsupported board URL scheme: data:" },
+      { message: "Unsupported board file URL scheme: data:" },
     ]);
   });
 
@@ -68,7 +68,7 @@ describe("rootIndexLoader", () => {
     ).rejects.toMatchObject(localizedImportFailure);
 
     expect(reportedErrors).toMatchObject([
-      { message: "Unsupported board URL scheme: http:" },
+      { message: "Unsupported board file URL scheme: http:" },
     ]);
   });
 

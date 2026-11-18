@@ -5,7 +5,7 @@ import {
   loadStoredBoard,
 } from "@features/library";
 import type { LoaderFunctionArgs } from "react-router";
-import { routeErrorCodes, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../route-error";
 
 export interface BoardRouteData {
   board: Board;
@@ -18,7 +18,7 @@ export async function boardLoader({
 }: LoaderFunctionArgs): Promise<BoardRouteData> {
   const { boardSetId, boardId } = params;
   if (!boardSetId || !boardId) {
-    throw routeErrorResponse(routeErrorCodes.boardNotFound);
+    throw routeErrorResponse(ROUTE_ERROR_CODES.boardNotFound);
   }
 
   const [board, restoredMessage] = await Promise.all([
@@ -38,7 +38,7 @@ async function loadBoard(
     return await loadStoredBoard({ boardSetId, boardId }, signal);
   } catch (error) {
     if (error instanceof BoardNotFoundError) {
-      throw routeErrorResponse(routeErrorCodes.boardNotFound);
+      throw routeErrorResponse(ROUTE_ERROR_CODES.boardNotFound);
     }
 
     throw error;

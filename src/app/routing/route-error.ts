@@ -1,29 +1,29 @@
 import { isRecord } from "@shared/utils/is-record";
 import { data, isRouteErrorResponse } from "react-router";
 
-export const routeErrorCodes = {
+export const ROUTE_ERROR_CODES = {
   boardNotFound: "board-not-found",
   boardSetNotFound: "board-set-not-found",
   boardFileURLImportFailed: "board-file-url-import-failed",
 } as const;
 
 export type RouteErrorCode =
-  (typeof routeErrorCodes)[keyof typeof routeErrorCodes];
+  (typeof ROUTE_ERROR_CODES)[keyof typeof ROUTE_ERROR_CODES];
 
 interface RouteErrorPayload {
   code: RouteErrorCode;
 }
 
-const statusByCode: Record<RouteErrorCode, number> = {
-  [routeErrorCodes.boardNotFound]: 404,
-  [routeErrorCodes.boardSetNotFound]: 404,
-  [routeErrorCodes.boardFileURLImportFailed]: 400,
+const STATUS_BY_CODE: Record<RouteErrorCode, number> = {
+  [ROUTE_ERROR_CODES.boardNotFound]: 404,
+  [ROUTE_ERROR_CODES.boardSetNotFound]: 404,
+  [ROUTE_ERROR_CODES.boardFileURLImportFailed]: 400,
 };
 
 export function routeErrorResponse(code: RouteErrorCode) {
   const payload: RouteErrorPayload = { code };
 
-  return data(payload, { status: statusByCode[code] });
+  return data(payload, { status: STATUS_BY_CODE[code] });
 }
 
 // The error page shows only a title, so an error no loader anticipated is
@@ -50,5 +50,5 @@ function isRouteErrorPayload(value: unknown): value is RouteErrorPayload {
 }
 
 function isRouteErrorCode(value: unknown): value is RouteErrorCode {
-  return Object.values(routeErrorCodes).some((code) => code === value);
+  return Object.values(ROUTE_ERROR_CODES).some((code) => code === value);
 }

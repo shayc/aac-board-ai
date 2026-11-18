@@ -380,7 +380,7 @@ describe("BoardSetLibrary", () => {
         .toHaveFocus();
       expect(await listBoardSetRecords()).toEqual([]);
       expect(reportedErrors).toMatchObject([
-        { message: "Failed to fetch board: HTTP 500" },
+        { message: "Failed to fetch board file: HTTP 500" },
       ]);
     });
 

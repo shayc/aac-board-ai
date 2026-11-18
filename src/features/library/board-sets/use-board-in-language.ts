@@ -3,7 +3,7 @@ import { getLanguageCode } from "@shared/language/locale";
 import type { Board } from "../board-types";
 import { findBoardInLanguage } from "./board-in-language";
 
-interface BoardInLanguage {
+interface UseBoardInLanguageReturn {
   board: Board;
   language: string | undefined;
 }
@@ -12,7 +12,7 @@ interface BoardInLanguage {
  * Falls back to the source board when untranslated. Its language is then the
  * one the board file declares, and unknown when it declares none.
  */
-export function useBoardInLanguage(board: Board): BoardInLanguage {
+export function useBoardInLanguage(board: Board): UseBoardInLanguageReturn {
   const { language } = useCommunicationLanguage();
   const translatedBoard = findBoardInLanguage(board, language);
   if (translatedBoard) {

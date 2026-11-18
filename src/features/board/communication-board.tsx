@@ -57,14 +57,10 @@ export function CommunicationBoard({
   const activateButton = createButtonActivator({
     message: {
       apply: message.apply,
-      applyIfUnchanged: message.applyIfUnchanged,
       play: message.play,
+      echo: message.echo,
     },
-    playback: {
-      echoMessage: playback.playMessage,
-      playPart: playback.playPart,
-      stop: playback.stop,
-    },
+    playback: { playPart: playback.playPart, stop: playback.stop },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
     language,
     shouldPlayTiles,
@@ -103,7 +99,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      variant={areControlsBelowGrid ? "boardControl" : "prominent"}
+      shape={areControlsBelowGrid ? "pill" : "round"}
       shortcutLabels={shortcutLabels}
       onPlay={() => void message.play()}
       onStop={playback.stop}

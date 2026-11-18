@@ -406,7 +406,7 @@ full.
   to, held in memory or persisted to localStorage. Storage is IndexedDB, reached
   only through [`library/storage/`](../src/features/library/storage/). The
   [board-sets store](../src/features/library/board-sets/board-sets-store.ts)
-  sits on top of storage: `createBoardSet` and `deleteBoardSet` call storage's
+  sits on top of storage: `addBoardSet` and `deleteBoardSet` call storage's
   `insertBoardSetRecords` and `deleteBoardSetRecords`, then refresh the store
   and notify other tabs. Storage functions name the records they touch; store
   functions name the board set.

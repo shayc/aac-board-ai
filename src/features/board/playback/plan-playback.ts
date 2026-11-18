@@ -21,7 +21,7 @@ export function planPlayback(
       return;
     }
 
-    steps.push(createSpeechStep(speechRun, firstPart.language));
+    steps.push(buildSpeechStep(speechRun, firstPart.language));
     speechRun = [];
   }
 
@@ -66,7 +66,7 @@ interface PartSpan {
 
 // A lone part stays highlighted for the whole utterance, while several parts
 // wait for word boundaries so a voice without them shows no stale highlight.
-function createSpeechStep(
+function buildSpeechStep(
   parts: readonly SpeechPart[],
   language: string,
 ): SpeechStep {

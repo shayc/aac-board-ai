@@ -61,21 +61,21 @@ export const gridRowSx = {
   scrollSnapAlign: "start none",
 } as const;
 
-export function createGridViewportSx(theme: Theme) {
+export function gridViewportSx(theme: Theme) {
   return {
     containerType: "size",
     height: "100%",
     overflow: "auto",
     scrollSnapType: "both proximity",
-    [theme.breakpoints.down("sm")]: createScrollPadding("xs"),
-    [theme.breakpoints.up("sm")]: createScrollPadding("sm"),
+    [theme.breakpoints.down("sm")]: buildScrollPadding("xs"),
+    [theme.breakpoints.up("sm")]: buildScrollPadding("sm"),
     // Declared last so it overrides the wide rules on a phone on its side.
-    [shortLandscape(theme)]: createScrollPadding("xs"),
+    [shortLandscape(theme)]: buildScrollPadding("xs"),
   };
 }
 
 // Padding wider than the hint makes keyboard focus scroll the whole tile into view.
-function createScrollPadding(breakpoint: Breakpoint) {
+function buildScrollPadding(breakpoint: Breakpoint) {
   return {
     scrollPaddingInline: formatPx(
       scrollingInsetPx(AXES.inline, breakpoint) / 2,
@@ -89,26 +89,23 @@ interface GridDimensions {
   columns: number;
 }
 
-export function createGridContentSx(
-  theme: Theme,
-  { rows, columns }: GridDimensions,
-) {
-  function createBreakpointRules(breakpoint: Breakpoint) {
+export function gridContentSx(theme: Theme, { rows, columns }: GridDimensions) {
+  function buildBreakpointRules(breakpoint: Breakpoint) {
     return {
-      ...createAxisRules({
+      ...buildAxisRules({
         axis: AXES.inline,
         breakpoint,
         trackCount: columns,
       }),
-      ...createAxisRules({ axis: AXES.block, breakpoint, trackCount: rows }),
+      ...buildAxisRules({ axis: AXES.block, breakpoint, trackCount: rows }),
     };
   }
 
   return {
     gap: GRID_GAP,
-    [theme.breakpoints.down("sm")]: createBreakpointRules("xs"),
-    [theme.breakpoints.up("sm")]: createBreakpointRules("sm"),
-    [shortLandscape(theme)]: createBreakpointRules("xs"),
+    [theme.breakpoints.down("sm")]: buildBreakpointRules("xs"),
+    [theme.breakpoints.up("sm")]: buildBreakpointRules("sm"),
+    [shortLandscape(theme)]: buildBreakpointRules("xs"),
   };
 }
 
@@ -120,7 +117,7 @@ interface AxisLayout {
 
 type AxisRules = Record<string, string | Record<string, string>>;
 
-function createAxisRules(layout: AxisLayout): AxisRules {
+function buildAxisRules(layout: AxisLayout): AxisRules {
   const { axis, breakpoint, trackCount } = layout;
   const paddingPx = axis.paddingPx[breakpoint];
   const gapsAndPaddingPx = (trackCount - 1) * GRID_GAP_PX + 2 * paddingPx;
@@ -128,11 +125,11 @@ function createAxisRules(layout: AxisLayout): AxisRules {
   const rules: AxisRules = {
     [axis.paddingProperty]: formatPx(paddingPx),
     [axis.extentProperty]: `calc(${trackCount} * var(${axis.cellSizeProperty}) + ${formatPx(gapsAndPaddingPx)})`,
-    ...createTrackFit(layout, 1).cellSizeRule,
+    ...buildTrackFit(layout, 1).cellSizeRule,
   };
 
   for (let visibleTracks = 2; visibleTracks <= trackCount; visibleTracks++) {
-    const { minViewportSizePx, cellSizeRule } = createTrackFit(
+    const { minViewportSizePx, cellSizeRule } = buildTrackFit(
       layout,
       visibleTracks,
     );
@@ -145,7 +142,7 @@ function createAxisRules(layout: AxisLayout): AxisRules {
   return rules;
 }
 
-function createTrackFit(
+function buildTrackFit(
   { axis, breakpoint, trackCount }: AxisLayout,
   visibleTracks: number,
 ) {

@@ -6,7 +6,7 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "../testing";
-import { createBoardSet, saveBoardSetTranslations } from "./board-sets-store";
+import { addBoardSet, saveBoardSetTranslations } from "./board-sets-store";
 
 function listenForSync(): Promise<void> {
   const channel = new BroadcastChannel("board-sets-sync");
@@ -22,19 +22,19 @@ beforeEach(async () => {
   await resetBoardsDB();
 });
 
-describe("createBoardSet", () => {
+describe("addBoardSet", () => {
   test("asks the browser to keep stored boards only once a board set is stored", async () => {
     const persist = vi
       .spyOn(navigator.storage, "persist")
       .mockResolvedValue(true);
 
     await expect(
-      createBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
+      addBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
     ).rejects.toThrow("Root board not found");
 
     expect(persist).not.toHaveBeenCalled();
 
-    await createBoardSet(makeBoardSetInput());
+    await addBoardSet(makeBoardSetInput());
 
     expect(persist).toHaveBeenCalledOnce();
   });
@@ -43,7 +43,7 @@ describe("createBoardSet", () => {
     vi.spyOn(window, "isSecureContext", "get").mockReturnValue(false);
     const persist = vi.spyOn(navigator.storage, "persist");
 
-    await createBoardSet(makeBoardSetInput({ id: "insecure" }));
+    await addBoardSet(makeBoardSetInput({ id: "insecure" }));
 
     expect(persist).not.toHaveBeenCalled();
     expect(await getBoardSetRecord("insecure")).toBeDefined();
