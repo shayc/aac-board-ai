@@ -433,7 +433,8 @@ them the same in everything but size:
 
 Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
 sit in the message bar's row, before the bar, as round buttons the size of its
-play button, so the row has one large button at each end. Backspace and the play button sit inside the bar at its end, play
+play button, so the row has one large button at each end. Their icons are
+backspace's size, a step lighter than play's, so play stays the main action. Backspace and the play button sit inside the bar at its end, play
 last and backspace a step smaller beside it. Backspace is a bare icon with no
 fill at rest, so play is the only filled shape in the bar; its touch target is
 the whole button, which the hold ring traces. Suggestions have the row below to
