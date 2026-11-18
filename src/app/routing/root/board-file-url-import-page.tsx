@@ -25,12 +25,12 @@ export function BoardFileURLImportPage() {
     return <LoadingState />;
   }
 
-  function cancel() {
+  function handleCancel() {
     setHasAnswered(true);
     void navigate("/", { replace: true });
   }
 
-  function confirmImport() {
+  function handleConfirm() {
     setHasAnswered(true);
     // Replace the link's history entry so Back doesn't offer the import again.
     void submit(null, { method: "post", replace: true });
@@ -39,7 +39,7 @@ export function BoardFileURLImportPage() {
   return (
     <>
       <title>{t(m.boardFileURLImportTitle)}</title>
-      <Dialog aria-describedby={descriptionId} open onClose={cancel}>
+      <Dialog aria-describedby={descriptionId} open onClose={handleCancel}>
         <DialogTitle>{t(m.boardFileURLImportTitle)}</DialogTitle>
 
         <DialogContent>
@@ -54,8 +54,10 @@ export function BoardFileURLImportPage() {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={cancel}>{t(m.boardFileURLImportCancel)}</Button>
-          <Button onClick={confirmImport}>
+          <Button onClick={handleCancel}>
+            {t(m.boardFileURLImportCancel)}
+          </Button>
+          <Button onClick={handleConfirm}>
             {t(m.boardFileURLImportConfirm)}
           </Button>
         </DialogActions>

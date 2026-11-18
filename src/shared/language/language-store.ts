@@ -40,7 +40,13 @@ export function setCommunicationLanguage(language: string): void {
   languageStore.setState(language);
 }
 
-export function useCommunicationLanguage() {
+interface UseCommunicationLanguageReturn {
+  language: string;
+  direction: "ltr" | "rtl";
+  setLanguage: (language: string) => void;
+}
+
+export function useCommunicationLanguage(): UseCommunicationLanguageReturn {
   const language = useExternalStore(languageStore);
 
   return {
