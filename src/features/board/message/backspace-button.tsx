@@ -94,12 +94,12 @@ export function BackspaceButton({
 // button sits on the bar's rounded end, the same distance from its top, bottom
 // and end.
 //
-// The bar stays light in dark mode, so hovering tints it darker; on the greyer
-// bar that tint, and the disabled icon, must be stronger to read at all.
+// The bar stays light in dark mode, so hovering tints it darker in both themes;
+// its grey ground there is a step darker than white, so the disabled icon needs
+// more weight to read as clearly as it does in light mode.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const targetSize = BUTTON_SIZES[size];
   const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
-  const darkHoverColor = theme.alpha(theme.palette.common.black, 0.12);
 
   return {
     flexShrink: 0,
@@ -112,9 +112,6 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
       "@media (hover: hover)": { backgroundColor: hoverColor },
     },
     ...theme.applyStyles("dark", {
-      "&:hover": {
-        "@media (hover: hover)": { backgroundColor: darkHoverColor },
-      },
       [`&.${iconButtonClasses.disabled}`]: {
         color: theme.vars.palette.text.disabled,
       },

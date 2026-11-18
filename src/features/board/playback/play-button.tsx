@@ -73,10 +73,7 @@ export function PlayButton({
           width: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
           height: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-          [`&.${fabClasses.disabled}`]: {
-            ...disabledSx(theme),
-            ...theme.applyStyles("dark", disabledOnDarkBarSx(theme)),
-          },
+          [`&.${fabClasses.disabled}`]: disabledSx(theme),
         })}
       >
         <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
@@ -96,18 +93,6 @@ function disabledSx(theme: Theme) {
     backgroundColor: theme.alpha(
       theme.vars.palette.primary.main,
       theme.vars.palette.action.activatedOpacity,
-    ),
-  };
-}
-
-// The usual tint turns grey on the bar's grey dark-mode ground and is lost
-// beside backspace; the lighter primary keeps its hue.
-function disabledOnDarkBarSx(theme: Theme) {
-  return {
-    color: theme.alpha(theme.vars.palette.primary.main, 0.6),
-    backgroundColor: theme.alpha(
-      theme.vars.palette.primary.light,
-      theme.vars.palette.action.disabledOpacity,
     ),
   };
 }
