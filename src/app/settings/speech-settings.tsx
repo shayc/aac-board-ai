@@ -125,7 +125,7 @@ function VoiceSelect() {
       value={selectedVoiceURI}
       onChange={(value) => setSpeechVoice(language, value)}
       action={
-        <Tooltip title={t(m.speechPreviewVoice)}>
+        <Tooltip title={t(m.speechPreviewVoice)} placement="top">
           <IconButton
             aria-label={t(m.speechPreviewVoice)}
             onClick={handlePreviewVoice}
