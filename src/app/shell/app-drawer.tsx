@@ -5,6 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { ErrorState } from "@shared/ui/error-state";
@@ -43,7 +44,12 @@ export function AppDrawer({
         },
       }}
     >
-      <AppDrawerContent title={title} closeLabel={closeLabel} onClose={onClose}>
+      <AppDrawerContent
+        title={title}
+        closeLabel={closeLabel}
+        anchor={anchor}
+        onClose={onClose}
+      >
         <ErrorBoundary
           fallback={
             <Box sx={{ height: "100%", px: 2 }}>
@@ -61,6 +67,7 @@ export function AppDrawer({
 interface AppDrawerContentProps {
   title: string;
   closeLabel: string;
+  anchor: "left" | "right";
   children: ReactNode;
   onClose: () => void;
 }
@@ -68,10 +75,16 @@ interface AppDrawerContentProps {
 function AppDrawerContent({
   title,
   closeLabel,
+  anchor,
   children,
   onClose,
 }: AppDrawerContentProps) {
+  const startSide = useStartSide();
+  const endSide = useEndSide();
   const [isScrolled, setIsScrolled] = useState(false);
+  // MUI mirrors the drawer anchor in right-to-left, so "left" is the start
+  // side; the tooltip points into the screen, away from the drawer's edge.
+  const closeTooltipPlacement = anchor === "left" ? endSide : startSide;
 
   return (
     <>
@@ -86,7 +99,7 @@ function AppDrawerContent({
           {title}
         </Typography>
 
-        <Tooltip title={closeLabel}>
+        <Tooltip title={closeLabel} placement={closeTooltipPlacement}>
           <IconButton
             aria-label={closeLabel}
             size="large"
