@@ -343,8 +343,8 @@ describe("CommunicationBoard", () => {
   });
 
   describe("layout", () => {
-    // Available heights exclude the app header (57px on phones, 65px on tablets,
-    // 49px on a short landscape screen).
+    // Available heights exclude the app header (56px on phones, 64px on tablets,
+    // 48px on a short landscape screen).
     const LAYOUT_CASES = [
       {
         name: "a phone",
