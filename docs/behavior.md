@@ -407,7 +407,7 @@ a flash of the wrong color scheme.
 
 Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
 sit in the message bar's row, before the bar, as round buttons the size of its
-backspace. Backspace and the play button sit inside the bar at its end, play
+play button, so the row has one large button at each end. Backspace and the play button sit inside the bar at its end, play
 last and backspace a step smaller beside it. Backspace is a bare icon with no
 fill at rest, so play is the only filled shape in the bar; its touch target is
 the whole button, which the hold ring traces. Suggestions have the row below to
@@ -427,6 +427,7 @@ what such a screen lacks, so:
 - The app bar and the other toolbars take their shortest height.
 - The message bar drops to a compact height, as tall as backspace and its
   inset, with smaller symbols, and play shrinks to backspace's size to fit it.
+  The back and home buttons shrink with play.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 
