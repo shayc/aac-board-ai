@@ -15,10 +15,18 @@ interface TileProps {
   button: BoardButton;
   language: string | undefined;
   tabIndex: number;
+  /** Whether a tile that toggles, such as Shift, is on. Other tiles leave it out. */
+  isPressed?: boolean;
   onActivate: (button: BoardButton) => void;
 }
 
-export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
+export function Tile({
+  button,
+  language,
+  tabIndex,
+  isPressed,
+  onActivate,
+}: TileProps) {
   const t = useTranslate();
   const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
@@ -40,6 +48,7 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
     <Button
       aria-label={ariaLabel}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
+      aria-pressed={isPressed}
       // The description is UI text, but the name is what must be pronounced right.
       lang={language}
       tabIndex={tabIndex}
@@ -141,6 +150,11 @@ function tileSx(theme: Theme) {
     [`&.${buttonClasses.focusVisible}`]: {
       outlineWidth: 3,
       boxShadow: theme.vars.shadows[6],
+    },
+    // The ring shows the state without relying on the darker background alone.
+    '&[aria-pressed="true"]': {
+      backgroundColor: mixWithTextColor(background, "16%"),
+      boxShadow: `inset 0 0 0 3px currentColor, ${theme.vars.shadows[2]}`,
     },
     "& img": {
       filter: "brightness(var(--tile-brightness))",

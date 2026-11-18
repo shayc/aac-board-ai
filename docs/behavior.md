@@ -172,6 +172,11 @@ how the message changes:
 
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.
+   A shift action (OBF `:shift`) capitalizes the next spelled letter, in the
+   board's language, and its tile shows as pressed until then; selecting it
+   again or any other tile lets go of it. A command the app does not run stays
+   on its tile as an unsupported action, so the tile does nothing instead of
+   adding its label to the message and speaking it.
    The [glossary](architecture.md#glossary) says how spelling, a space, and backspace change a
    message part.
    With the message setting "Play symbols when added" off, a tile stays

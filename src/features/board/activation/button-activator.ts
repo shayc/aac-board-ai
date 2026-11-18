@@ -16,6 +16,8 @@ interface ButtonActivatorOptions {
   /** The language the board's text is in, when known. */
   language: string | undefined;
   shouldPlayTiles: boolean;
+  isShiftOn: boolean;
+  onShiftChange: (isShiftOn: boolean) => void;
 }
 
 type ButtonActivator = (button: BoardButton) => void;
@@ -26,8 +28,13 @@ export function createButtonActivator({
   navigation,
   language,
   shouldPlayTiles,
+  isShiftOn,
+  onShiftChange,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
+    const shifted = applyShift(button.actions, isShiftOn, language);
+    onShiftChange(shifted.isShiftOn);
+
     if (button.linkedBoardId) {
       navigation.goToBoard(button.linkedBoardId);
 
@@ -40,7 +47,7 @@ export function createButtonActivator({
       return;
     }
 
-    runActions(button.actions);
+    runActions(shifted.actions);
   }
 
   function composeAndPlayButton(button: BoardButton) {
@@ -114,6 +121,60 @@ export function createButtonActivator({
   return activateButton;
 }
 
+interface ShiftedActions {
+  actions: BoardAction[];
+  isShiftOn: boolean;
+}
+
+// Shift capitalizes the next spelled text and then lets go, as on a phone
+// keyboard. A tile without a shift action lets go of it too, so a capital
+// never waits for a letter spelled much later.
+function applyShift(
+  actions: readonly BoardAction[],
+  isShiftOn: boolean,
+  language: string | undefined,
+): ShiftedActions {
+  let isOn = isShiftOn;
+  const shiftedActions: BoardAction[] = [];
+
+  for (const action of actions) {
+    if (action.kind === "shift") {
+      isOn = !isOn;
+      continue;
+    }
+
+    if (action.kind === "spell" && isOn && action.text) {
+      isOn = false;
+      shiftedActions.push({
+        ...action,
+        text: capitalize(action.text, language),
+      });
+      continue;
+    }
+
+    shiftedActions.push(action);
+  }
+
+  const hasShiftAction = actions.some((action) => action.kind === "shift");
+
+  return { actions: shiftedActions, isShiftOn: hasShiftAction && isOn };
+}
+
+function capitalize(text: string, language: string | undefined): string {
+  const [firstLetter = ""] = text;
+
+  return `${toUpperCase(firstLetter, language)}${text.slice(firstLetter.length)}`;
+}
+
+function toUpperCase(text: string, language: string | undefined): string {
+  try {
+    return text.toLocaleUpperCase(language);
+  } catch {
+    // A board can declare a locale the browser rejects.
+    return text.toUpperCase();
+  }
+}
+
 function toMessageEdits(
   actions: readonly BoardAction[],
   language: string | undefined,
@@ -129,6 +190,8 @@ function toMessageEdits(
         return action;
       case "home":
       case "play":
+      case "shift":
+      case "unsupported":
         return [];
       default:
         return assertNever(action);

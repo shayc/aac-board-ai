@@ -34,7 +34,11 @@ export type BoardAction =
   | { readonly kind: "clear" }
   | { readonly kind: "home" }
   | { readonly kind: "play" }
-  | { readonly kind: "spell"; readonly text: string };
+  | { readonly kind: "shift" }
+  | { readonly kind: "spell"; readonly text: string }
+  // A command the app does not run. It stays on the tile, so the tile is not
+  // taken for a word to add to the message and speak.
+  | { readonly kind: "unsupported" };
 
 export type StringTranslations = ReadonlyMap<string, string>;
 

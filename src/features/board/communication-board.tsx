@@ -9,6 +9,7 @@ import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provid
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
+import { useState } from "react";
 import { createButtonActivator } from "./activation/button-activator";
 import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -55,6 +56,7 @@ export function CommunicationBoard({
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
+  const [isShiftOn, setIsShiftOn] = useState(false);
 
   const activateButton = createButtonActivator({
     message: {
@@ -70,6 +72,8 @@ export function CommunicationBoard({
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
     language,
     shouldPlayTiles,
+    isShiftOn,
+    onShiftChange: setIsShiftOn,
   });
 
   // A short landscape screen has width to spare and no height.
@@ -116,6 +120,7 @@ export function CommunicationBoard({
     <Tile
       button={button}
       language={language}
+      isPressed={isShiftTile(button) ? isShiftOn : undefined}
       onActivate={activateButton}
       {...gridItemProps}
     />
@@ -202,4 +207,8 @@ export function CommunicationBoard({
       </ScanningScope>
     </DirectionalThemeProvider>
   );
+}
+
+function isShiftTile(button: BoardButton): boolean {
+  return button.actions.some((action) => action.kind === "shift");
 }

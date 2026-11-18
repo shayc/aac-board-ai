@@ -96,6 +96,10 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
 }
 
 function parseAction(raw: string): BoardAction | undefined {
+  if (!raw.trim()) {
+    return undefined;
+  }
+
   if (raw.startsWith("+")) {
     return { kind: "spell", text: raw.slice(1).trim() };
   }
@@ -111,8 +115,10 @@ function parseAction(raw: string): BoardAction | undefined {
       return { kind: "home" };
     case ":speak":
       return { kind: "play" };
+    case ":shift":
+      return { kind: "shift" };
     default:
-      return undefined;
+      return { kind: "unsupported" };
   }
 }
 

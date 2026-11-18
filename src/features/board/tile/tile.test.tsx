@@ -399,6 +399,28 @@ describe("Tile", () => {
     );
   });
 
+  test("reports whether a toggling tile is on, and gives other tiles no pressed state", async () => {
+    const screen = await renderInTheme(
+      <>
+        <Tile
+          button={makeButton({ label: "shift" })}
+          language="en"
+          tabIndex={0}
+          isPressed
+          onActivate={vi.fn()}
+        />
+        {tileElement({ label: "Cat" })}
+      </>,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "shift", pressed: true }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "Cat" }))
+      .not.toHaveAttribute("aria-pressed");
+  });
+
   test("hands its button to the activation handler when clicked", async () => {
     const onActivate = vi.fn();
     const button = makeButton({ label: "Click me" });

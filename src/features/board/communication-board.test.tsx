@@ -65,6 +65,17 @@ const KEYBOARD_BOARD: OBFBoard = {
   },
 };
 
+const SHIFT_KEYBOARD_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "shift-keyboard-board",
+  locale: "en",
+  buttons: [
+    { id: "shift", label: "shift", action: ":shift" },
+    { id: "letter-a", label: "a", action: "+a" },
+  ],
+  grid: { rows: 1, columns: 2, order: [["shift", "letter-a"]] },
+};
+
 const SPEAK_THEN_CLEAR_BOARD: OBFBoard = {
   format: "open-board-0.1",
   id: "speak-then-clear-board",
@@ -820,6 +831,26 @@ describe("CommunicationBoard", () => {
       await expect.element(messageItems.nth(0)).toHaveTextContent("the");
       await expect.element(messageItems.nth(1)).toHaveTextContent("ca");
       await expect.element(messageItems.nth(2)).toHaveTextContent("the");
+    });
+
+    test("capitalizes the letter after shift without adding or speaking shift", async () => {
+      const screen = await renderCommunicationBoard(SHIFT_KEYBOARD_BOARD);
+      const messageItems = getMessageItems(screen);
+      const shift = screen.getByRole("button", { name: "shift" });
+      const letter = screen.getByRole("button", { name: "a", exact: true });
+
+      await shift.click();
+
+      await expect.element(shift).toHaveAttribute("aria-pressed", "true");
+      await expect.element(messageItems).toHaveLength(0);
+
+      await letter.click();
+      await letter.click();
+
+      await expect.element(shift).toHaveAttribute("aria-pressed", "false");
+      await expect.element(messageItems).toHaveLength(1);
+      await expect.element(messageItems).toHaveTextContent("Aa");
+      expect(speech.spokenTexts()).not.toContain("shift");
     });
 
     test("leaves the message empty when space is pressed first", async () => {

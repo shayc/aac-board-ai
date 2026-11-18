@@ -60,6 +60,24 @@ async function setup(
     stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
+  let isShiftOn = false;
+
+  // Like the board, each activation sees the shift state the last one left.
+  function activateButton(button: BoardButton) {
+    const activate = createButtonActivator({
+      message,
+      playback,
+      navigation,
+      language,
+      shouldPlayTiles,
+      isShiftOn,
+      onShiftChange: (isOn) => {
+        isShiftOn = isOn;
+      },
+    });
+
+    activate(button);
+  }
 
   async function readParts() {
     await rerender();
@@ -88,13 +106,7 @@ async function setup(
   }
 
   return {
-    activateButton: createButtonActivator({
-      message,
-      playback,
-      navigation,
-      language,
-      shouldPlayTiles,
-    }),
+    activateButton,
     playback,
     navigation,
     readParts,
@@ -380,6 +392,112 @@ describe("createButtonActivator", () => {
 
     expect(playback.playMessage).toHaveBeenCalledOnce();
     expect(playback.echoMessage).not.toHaveBeenCalled();
+  });
+
+  describe("unsupported commands", () => {
+    test("leaves the message alone and stays silent for a tile whose only command is unsupported", async () => {
+      const { activateButton, playback, readLabels } = await setup(word("hi"));
+
+      activateButton({
+        id: "btn",
+        label: "louder",
+        actions: [{ kind: "unsupported" }],
+      });
+
+      expect(await readLabels()).toEqual(["hi"]);
+      expect(playback.playPart).not.toHaveBeenCalled();
+      expect(playback.playMessage).not.toHaveBeenCalled();
+    });
+
+    test("runs the commands it supports beside one it does not", async () => {
+      const { activateButton, readLabels } = await setup();
+
+      activateButton({
+        id: "btn",
+        label: "",
+        actions: [{ kind: "unsupported" }, { kind: "spell", text: "a" }],
+      });
+
+      expect(await readLabels()).toEqual(["a"]);
+    });
+  });
+
+  describe("shift", () => {
+    const SHIFT: BoardButton = {
+      id: "shift",
+      label: "shift",
+      actions: [{ kind: "shift" }],
+    };
+
+    test("capitalizes only the next letter and adds nothing to the message itself", async () => {
+      const { activateButton, playback, readLabels } = await setup();
+
+      activateButton(SHIFT);
+      activateButton(SPELL_A);
+      activateButton(SPELL_A);
+
+      expect(await readLabels()).toEqual(["Aa"]);
+      expect(playback.playPart).not.toHaveBeenCalled();
+    });
+
+    test("capitalizes the first letter of a spelled ending", async () => {
+      const { activateButton, readLabels } = await setup();
+
+      activateButton(SHIFT);
+      activateButton({
+        id: "btn",
+        label: "",
+        actions: [{ kind: "spell", text: "less" }],
+      });
+
+      expect(await readLabels()).toEqual(["Less"]);
+    });
+
+    test("lets go when shift is selected again", async () => {
+      const { activateButton, readLabels } = await setup();
+
+      activateButton(SHIFT);
+      activateButton(SHIFT);
+      activateButton(SPELL_A);
+
+      expect(await readLabels()).toEqual(["a"]);
+    });
+
+    test("lets go when another tile is selected before a letter", async () => {
+      const { activateButton, readLabels } = await setup();
+
+      activateButton(SHIFT);
+      activateButton({ id: "word", label: "the", actions: [] });
+      activateButton(SPELL_A);
+
+      expect(await readLabels()).toEqual(["the", "a"]);
+    });
+
+    test("capitalizes by the board's language", async () => {
+      const { activateButton, readLabels } = await setup([], {
+        language: "tr",
+      });
+
+      activateButton(SHIFT);
+      activateButton({
+        id: "btn",
+        label: "",
+        actions: [{ kind: "spell", text: "i" }],
+      });
+
+      expect(await readLabels()).toEqual(["İ"]);
+    });
+
+    test("capitalizes on a board whose locale the browser rejects", async () => {
+      const { activateButton, readLabels } = await setup([], {
+        language: "not a locale",
+      });
+
+      activateButton(SHIFT);
+      activateButton(SPELL_A);
+
+      expect(await readLabels()).toEqual(["A"]);
+    });
   });
 
   describe("after the message has played", () => {
