@@ -12,7 +12,7 @@ export function MessageSuggestions({
   language,
   onPhraseSelect,
 }: MessageSuggestionsProps) {
-  const suggestions = useMessageSuggestions(messageText, language);
+  const suggestions = useMessageSuggestions({ messageText, language });
 
   if (!suggestions.isAvailable) {
     return null;

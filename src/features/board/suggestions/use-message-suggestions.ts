@@ -15,6 +15,11 @@ import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
+interface UseMessageSuggestionsOptions {
+  messageText: string;
+  language: string;
+}
+
 interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
   status: SuggestionStatus;
@@ -22,10 +27,10 @@ interface UseMessageSuggestionsReturn {
   enable: () => void;
 }
 
-export function useMessageSuggestions(
-  messageText: string,
-  language: string,
-): UseMessageSuggestionsReturn {
+export function useMessageSuggestions({
+  messageText,
+  language,
+}: UseMessageSuggestionsOptions): UseMessageSuggestionsReturn {
   const text = messageText.trim();
 
   const { customInstructions } = useSuggestionPreferences();

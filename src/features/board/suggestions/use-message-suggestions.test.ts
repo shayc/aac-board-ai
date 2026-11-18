@@ -19,7 +19,9 @@ function renderMessageSuggestions(
   text: string,
   language: string = DEFAULT_LANGUAGE,
 ) {
-  return renderHook(() => useMessageSuggestions(text, language));
+  return renderHook(() =>
+    useMessageSuggestions({ messageText: text, language }),
+  );
 }
 
 function stubRewritesByTone(
@@ -246,7 +248,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ language }: { language: string } = { language: "en" }) =>
-        useMessageSuggestions("want eat", language),
+        useMessageSuggestions({ messageText: "want eat", language }),
       { initialProps: { language: "en" } },
     );
 
@@ -389,7 +391,10 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text, DEFAULT_LANGUAGE),
+        useMessageSuggestions({
+          messageText: text,
+          language: DEFAULT_LANGUAGE,
+        }),
       { initialProps: { text: "old" } },
     );
 
@@ -421,7 +426,10 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text, DEFAULT_LANGUAGE),
+        useMessageSuggestions({
+          messageText: text,
+          language: DEFAULT_LANGUAGE,
+        }),
       { initialProps: { text: "old" } },
     );
 
