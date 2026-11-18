@@ -429,11 +429,9 @@ The [message bar](../src/features/board/message/message-bar.tsx) stays light in
 dark mode, because imported symbols need a light ground. It is a light grey
 there, since white would outshine the board. The controls on and beside it
 follow from that: backspace and play inside the bar keep the light scheme's
-colors, and the back and home buttons have a ring and no fill. Beside the bar a
-dark fill would clash with it and a light one would outshine the board, while
-the ring still draws the edge of each target. Below the grid on a phone they
-keep the ring, so they look the same when the phone is turned; play keeps its
-fill there.
+colors, and the round back and home buttons beside it have a ring and no fill.
+A dark fill would clash with the bar and a light one would outshine the board,
+while the ring still draws the edge of each target.
 
 ### Install screenshots
 
@@ -462,6 +460,7 @@ Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
 sit in the message bar's row, before the bar, as round buttons the size of its
 play button, so the row has one large button at each end. Their icons are
 backspace's size, a step lighter than play's, so play stays the main action.
+In dark mode they have a ring and no fill (see [Theming](#theming)).
 Backspace and the play button sit inside the bar at its end, play last and
 backspace a step smaller beside it. Backspace is a bare icon with no fill at
 rest, so play is the only filled shape in the bar; its touch target is the
