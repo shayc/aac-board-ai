@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Forslag er ikke tilgængelige på dette sprog.",
   "suggestionsFailed": "Forslag kunne ikke hentes",
   "suggestionsLabel": "Forslag",
-  "navBack": "Tilbage",
   "navHome": "Gå til start",
   "messageBackspace": "Slet",
   "messageBackspaceLongPressHint": "Hold nede, eller tryk på {shortcut}, for at rydde beskeden.",

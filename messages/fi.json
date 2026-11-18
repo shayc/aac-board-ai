@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Ehdotukset eivät ole käytettävissä tällä kielellä.",
   "suggestionsFailed": "Ehdotuksia ei voitu hakea",
   "suggestionsLabel": "Ehdotukset",
-  "navBack": "Takaisin",
   "navHome": "Siirry etusivulle",
   "messageBackspace": "Poista",
   "messageBackspaceLongPressHint": "Tyhjennä viesti pitämällä painettuna tai painamalla {shortcut}.",

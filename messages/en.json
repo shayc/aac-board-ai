@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Suggestions are unavailable in this language.",
   "suggestionsFailed": "Couldn't get suggestions",
   "suggestionsLabel": "Suggestions",
-  "navBack": "Go back",
   "navHome": "Go home",
   "messageBackspace": "Backspace",
   "messageBackspaceLongPressHint": "Hold, or press {shortcut}, to clear the message.",

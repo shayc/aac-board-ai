@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "الاقتراحات غير متاحة بهذه اللغة.",
   "suggestionsFailed": "تعذّر الحصول على اقتراحات",
   "suggestionsLabel": "الاقتراحات",
-  "navBack": "رجوع",
   "navHome": "الانتقال إلى الرئيسية",
   "messageBackspace": "حذف",
   "messageBackspaceLongPressHint": "اضغط مع الاستمرار، أو اضغط {shortcut}، لمحو الرسالة.",

@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Förslag är inte tillgängliga på det här språket.",
   "suggestionsFailed": "Det gick inte att hämta förslag",
   "suggestionsLabel": "Förslag",
-  "navBack": "Tillbaka",
   "navHome": "Till startsidan",
   "messageBackspace": "Radera",
   "messageBackspaceLongPressHint": "Håll inne, eller tryck på {shortcut}, för att rensa meddelandet.",

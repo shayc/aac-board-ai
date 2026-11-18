@@ -453,7 +453,7 @@ describe("app flow", () => {
     expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSetData);
   });
 
-  test("choosing a board in the header's board list opens it and enables Back", async () => {
+  test("choosing a board in the header's board list opens it", async () => {
     await seedTwoBoardSet();
 
     const { screen } = await renderApp("/sets/food/boards/home");
@@ -470,12 +470,6 @@ describe("app flow", () => {
       .toBeVisible();
     await expect
       .element(screen.getByRole("heading", { level: 1, name: "Fruit" }))
-      .toBeVisible();
-
-    await screen.getByRole("button", { name: "Go back" }).click();
-
-    await expect
-      .element(screen.getByRole("grid", { name: "Home" }))
       .toBeVisible();
   });
 

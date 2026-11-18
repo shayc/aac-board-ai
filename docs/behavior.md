@@ -432,9 +432,9 @@ The [message bar](../src/features/board/message/message-bar.tsx) stays light in
 dark mode, because imported symbols need a light ground. It is a light grey
 there, since white would outshine the board. The controls on and beside it
 follow from that: backspace and play inside the bar keep the light scheme's
-colors, and the round back and home buttons beside it have a ring and no fill.
-A dark fill would clash with the bar and a light one would outshine the board,
-while the ring still draws the edge of each target.
+colors, and the round home button beside it has a ring and no fill. A dark
+fill would clash with the bar and a light one would outshine the board, while
+the ring still draws the edge of the target.
 
 ### Install screenshots
 
@@ -459,20 +459,20 @@ them the same in everything but size:
 
 ### Screen sizes
 
-Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
-sit in the message bar's row, before the bar, as round buttons the size of its
-play button, so the row has one large button at each end. Their icons are
-backspace's size, a step lighter than play's, so play stays the main action.
-In dark mode they have a ring and no fill (see [Theming](#theming)).
+Layout turns on one width breakpoint, `sm`. Above it the home button sits in
+the message bar's row, before the bar, as a round button the size of its play
+button, so the row has one large button at each end. Its icon is backspace's
+size, a step lighter than play's, so play stays the main action.
+In dark mode it has a ring and no fill (see [Theming](#theming)).
 Backspace and the play button sit inside the bar at its end, play last and
 backspace a step smaller beside it. Backspace is a bare icon with no fill at
 rest, so play is the only filled shape in the bar; its touch target is the
 whole button, which the hold ring traces. Suggestions have the row below to
 themselves, and without them the grid starts under the message bar. Below `sm`
-the back, home, and play buttons move under the grid as three pills of one
-width. Back and home sit together at the start and play at the far end, with
-the room that is left between them. Backspace stays in the message bar at full
-size, and the spacing tightens, as [Board spacing](#board-spacing) describes.
+the home and play buttons move under the grid as two pills of one width, home
+at the start and play at the far end, with the room that is left between them.
+Backspace stays in the message bar at full size, and the spacing tightens, as
+[Board spacing](#board-spacing) describes.
 
 One height rule sits beside it, in
 [`short-landscape.ts`](../src/shared/theme/short-landscape.ts): a landscape
@@ -484,7 +484,7 @@ what such a screen lacks, so:
 - The app bar and the other toolbars take their shortest height.
 - The message bar drops to a compact height, as tall as backspace and its
   inset, with smaller symbols, and play shrinks to backspace's size to fit it.
-  The back and home buttons shrink with play.
+  The home button shrinks with play.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 

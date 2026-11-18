@@ -24,7 +24,7 @@ export const BUDGETS: Budget[] = [
     unit: "ms",
     limit: 600,
   },
-  { name: "backToGrid", label: "back", unit: "ms", limit: 300 },
+  { name: "homeToGrid", label: "home", unit: "ms", limit: 300 },
   {
     name: "returnVisit.toGrid",
     label: "return visit",

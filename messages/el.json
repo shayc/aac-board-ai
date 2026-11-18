@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες για αυτήν τη γλώσσα.",
   "suggestionsFailed": "Δεν ήταν δυνατή η λήψη προτάσεων",
   "suggestionsLabel": "Προτάσεις",
-  "navBack": "Πίσω",
   "navHome": "Μετάβαση στην αρχική",
   "messageBackspace": "Διαγραφή",
   "messageBackspaceLongPressHint": "Κρατήστε πατημένο ή πατήστε {shortcut} για εκκαθάριση του μηνύματος.",

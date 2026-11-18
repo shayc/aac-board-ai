@@ -24,12 +24,12 @@ type RoundButtonProps = Pick<
 async function measureRoundButton(mode: ColorMode, props?: RoundButtonProps) {
   const screen = await renderInColorMode(
     <BoardControlButton {...props} shape="round">
-      Go back
+      Go home
     </BoardControlButton>,
     mode,
   );
 
-  const button = screen.getByRole("button", { name: "Go back" }).element();
+  const button = screen.getByRole("button", { name: "Go home" }).element();
 
   const pageColor = getComputedStyle(document.body).backgroundColor;
   const { backgroundColor, borderTopColor, borderTopWidth, color } =
@@ -52,11 +52,11 @@ describe("BoardControlButton", () => {
   test("keeps the caller's class when the button is enabled", async () => {
     const screen = await render(
       <BoardControlButton className="custom-control">
-        Go back
+        Go home
       </BoardControlButton>,
     );
 
-    const button = screen.getByRole("button", { name: "Go back" });
+    const button = screen.getByRole("button", { name: "Go home" });
 
     await expect.element(button).toHaveClass("custom-control");
     await expect.element(button).not.toHaveClass(buttonClasses.disabled);
@@ -67,11 +67,11 @@ describe("BoardControlButton", () => {
       <BoardControlButton
         sx={[{ mt: 1 }, (theme) => ({ mb: theme.spacing(2) })]}
       >
-        Go back
+        Go home
       </BoardControlButton>,
     );
 
-    const button = screen.getByRole("button", { name: "Go back" });
+    const button = screen.getByRole("button", { name: "Go home" });
 
     await expect.element(button).toHaveStyle({
       width: "88px",
@@ -83,11 +83,11 @@ describe("BoardControlButton", () => {
   test("preserves the caller's class when the button is disabled", async () => {
     const screen = await render(
       <BoardControlButton className="custom-control" disabled>
-        Go back
+        Go home
       </BoardControlButton>,
     );
 
-    const button = screen.getByRole("button", { name: "Go back" });
+    const button = screen.getByRole("button", { name: "Go home" });
 
     await expect
       .element(button)

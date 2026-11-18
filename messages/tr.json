@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Öneriler bu dilde kullanılamıyor.",
   "suggestionsFailed": "Öneriler alınamadı",
   "suggestionsLabel": "Öneriler",
-  "navBack": "Geri",
   "navHome": "Ana sayfaya git",
   "messageBackspace": "Geri sil",
   "messageBackspaceLongPressHint": "Mesajı temizlemek için basılı tutun veya {shortcut} tuşlarına basın.",

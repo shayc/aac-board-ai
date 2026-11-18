@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "ภาษานี้ไม่รองรับคำแนะนำ",
   "suggestionsFailed": "ไม่สามารถรับคำแนะนำได้",
   "suggestionsLabel": "คำแนะนำ",
-  "navBack": "กลับ",
   "navHome": "ไปที่หน้าแรก",
   "messageBackspace": "ลบ",
   "messageBackspaceLongPressHint": "กดค้าง หรือกด {shortcut} เพื่อล้างข้อความ",

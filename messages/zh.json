@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "此语言不支持建议功能。",
   "suggestionsFailed": "无法获取建议",
   "suggestionsLabel": "建议",
-  "navBack": "返回",
   "navHome": "返回主页",
   "messageBackspace": "删除",
   "messageBackspaceLongPressHint": "按住或按 {shortcut} 可清空消息。",

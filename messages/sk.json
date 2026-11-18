@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Návrhy nie sú pre tento jazyk k dispozícii.",
   "suggestionsFailed": "Návrhy sa nepodarilo získať",
   "suggestionsLabel": "Návrhy",
-  "navBack": "Späť",
   "navHome": "Prejsť domov",
   "messageBackspace": "Vymazať",
   "messageBackspaceLongPressHint": "Správu vymažete podržaním alebo stlačením {shortcut}.",
