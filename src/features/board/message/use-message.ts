@@ -97,10 +97,10 @@ export function useMessage(
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = stateRef.current;
     if (!hasSameContent(current, since)) {
-      return;
+      return undefined;
     }
 
-    commitEdits(markPlayed(current, false), edits);
+    return commitEdits(markPlayed(current, false), edits);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
@@ -109,15 +109,18 @@ export function useMessage(
   // keeping the message visible while it plays, then apply to the message that
   // played; one they leave as it was has played.
   async function play(editsAfterPlay: readonly MessageEdit[] = []) {
+    // Playback starts first, so one that cannot start leaves the message as
+    // it was.
+    const completion = playMessage(stateRef.current.parts);
     const playing = setPlayed(false);
 
-    const hasCompleted = await playMessage(playing.parts);
-    if (!hasCompleted || !hasSameContent(stateRef.current, playing)) {
+    const hasCompleted = await completion;
+    if (!hasCompleted) {
       return;
     }
 
-    const edited = commitEdits(playing, editsAfterPlay);
-    if (edited === playing) {
+    const edited = applyIfUnchanged(playing, editsAfterPlay);
+    if (edited && hasSameContent(edited, playing)) {
       setPlayed(true);
     }
   }
@@ -174,7 +177,7 @@ export function useMessage(
   };
 }
 
-// A message spoken to its end that the next symbol replaces has done its job,
+// A message played to its end that the next symbol replaces has done its job,
 // so it is not kept where the next person to open the app would see it.
 function isKeptOnDevice(
   message: Message,

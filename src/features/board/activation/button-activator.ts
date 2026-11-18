@@ -107,7 +107,7 @@ export function createButtonActivator({
     // Like edits after the message plays, edits after an echo (such as
     // ":clear") wait for it to complete and are dropped if the message was
     // edited meanwhile: a ":clear" must not take letters typed during the
-    // speech with it.
+    // playback with it.
     void playback.echoMessage(edited.parts).then((hasCompleted) => {
       if (hasCompleted) {
         message.applyIfUnchanged(edited, editsAfterPlay);

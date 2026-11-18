@@ -10,9 +10,9 @@ const SHAPE_SX = {
   // As wide as the grid's narrowest tile. Three of them and the gaps between
   // them fill the narrowest phone, 320px wide.
   pill: { width: 88 },
-  // As large as the message bar's play, the row's other end. It holds one
-  // icon, so the button's side padding gives way to the fixed width. A short
-  // landscape bar drops a step, and the buttons follow it.
+  // It holds one icon, so the button's side padding gives way to the fixed
+  // width. The size follows the message bar's controls at the row's other end,
+  // on a short landscape screen too.
   round: (theme: Theme) => ({
     width: CONTROL_SIZES.large,
     height: CONTROL_SIZES.large,
