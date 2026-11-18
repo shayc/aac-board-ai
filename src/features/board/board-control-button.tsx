@@ -5,11 +5,12 @@ import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import { CONTROL_ICON_SIZE, CONTROL_SIZES } from "./board-control-sizes";
+import { MIN_CELL_WIDTH_PX } from "./grid/grid-layout";
 
 const SHAPE_SX = {
   // As wide as the grid's narrowest tile. Three of them and the gaps between
   // them fill the narrowest phone, 320px wide.
-  pill: { width: 88 },
+  pill: { width: MIN_CELL_WIDTH_PX },
   // It holds one icon, so the button's side padding gives way to the fixed
   // width, which matches the message bar's controls at the row's other end.
   round: (theme: Theme) => ({

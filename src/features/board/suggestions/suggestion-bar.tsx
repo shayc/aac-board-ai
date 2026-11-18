@@ -5,6 +5,7 @@ import { keyframes } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { FocusEvent } from "react";
+import { SCAN_OUTLINE_REACH_PX } from "../scanning/scan-targets";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
@@ -24,9 +25,9 @@ const pendingPulse = keyframes`
 // flash the dots just before the phrase takes its place.
 const PENDING_DOTS_DELAY_MS = 700;
 
-// Room for the widest outline a chip gets: the scan highlight, 4px at a 2px
-// offset. A scroll container clips at its padding edge.
-const OUTLINE_CLEARANCE = "6px";
+// Room for the widest outline a chip gets, the scan highlight. A scroll
+// container clips at its padding edge.
+const OUTLINE_CLEARANCE = `${SCAN_OUTLINE_REACH_PX}px`;
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;

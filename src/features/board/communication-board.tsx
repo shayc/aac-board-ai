@@ -31,19 +31,19 @@ import { Tile } from "./tile/tile";
 interface CommunicationBoardProps {
   board: Board;
   /** The language the board's text is in, when known; it may not be the communication language. */
-  language: string | undefined;
+  boardLanguage: string | undefined;
   rootBoardId: string | undefined;
   initialMessage?: Message;
 }
 
 export function CommunicationBoard({
   board,
-  language,
+  boardLanguage,
   rootBoardId,
   initialMessage,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-  const communication = useCommunicationLanguage();
+  const { language, direction } = useCommunicationLanguage();
   const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
@@ -54,6 +54,9 @@ export function CommunicationBoard({
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
+  // The members are picked one by one: `message` is a new object on every
+  // edit, and an activator built from the whole object would change with it
+  // and re-render every tile on each tap.
   const activateButton = createButtonActivator({
     message: {
       apply: message.apply,
@@ -62,7 +65,7 @@ export function CommunicationBoard({
     },
     playback: { playPart: playback.playPart, stop: playback.stop },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
-    language,
+    boardLanguage,
     shouldPlayTiles,
   });
 
@@ -109,18 +112,18 @@ export function CommunicationBoard({
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
     <Tile
       button={button}
-      language={language}
+      language={boardLanguage}
       onActivate={activateButton}
       {...gridItemProps}
     />
   );
 
   return (
-    <DirectionalThemeProvider direction={communication.direction}>
+    <DirectionalThemeProvider direction={direction}>
       <ScanningScope>
         <Stack
           {...shortcuts.rootProps}
-          dir={communication.direction}
+          dir={direction}
           direction="column"
           sx={{
             height: "100%",
@@ -157,9 +160,9 @@ export function CommunicationBoard({
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}
-                  language={communication.language}
+                  language={language}
                   onPhraseSelect={(phrase) =>
-                    message.replaceWithText(phrase, communication.language)
+                    message.replaceWithText(phrase, language)
                   }
                 />
               </ErrorBoundary>

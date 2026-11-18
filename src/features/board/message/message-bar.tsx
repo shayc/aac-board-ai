@@ -3,6 +3,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
+import { LIGHT_SCHEME_CLASS } from "@shared/theme/theme";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import {
   AACSymbol,
@@ -10,9 +11,6 @@ import {
 } from "../aac-symbol/aac-symbol";
 import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
 import type { MessagePart } from "./message-types";
-
-// Imported symbols need a light background in both themes.
-const LIGHT_SCHEME_CLASS = "light";
 
 // A short landscape screen has no height for a large control: the bar drops to
 // the medium size, and its symbols shrink so their labels stay in view.
@@ -72,7 +70,12 @@ export function MessageBar({
   const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
 
   return (
-    <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
+    <Stack
+      // Imported symbols need a light background in both themes.
+      className={LIGHT_SCHEME_CLASS}
+      direction="row"
+      sx={messageBarSx}
+    >
       <Stack
         ref={scrollContainerRef}
         // A live region would repeat the tile's spoken feedback.

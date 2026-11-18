@@ -1199,7 +1199,7 @@ function closableBoardTree({ isOpen, initialMessage }: ClosableBoardTreeProps) {
           {isOpen && (
             <CommunicationBoard
               board={obfToBoard(TWO_BUTTON_BOARD)}
-              language={TWO_BUTTON_BOARD.locale}
+              boardLanguage={TWO_BUTTON_BOARD.locale}
               rootBoardId={undefined}
               initialMessage={initialMessage}
             />

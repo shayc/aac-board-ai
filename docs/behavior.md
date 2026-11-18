@@ -142,11 +142,13 @@ without the Translator API. A saved set name therefore marks the whole set as
 translated, so later runs skip it without reading its boards. A set deleted
 mid-translation is not written back.
 
-After each saved set, it syncs the library and tells the app shell, which
-revalidates the routes (board and board list) when that set is on screen or
-being navigated to, so everything on screen updates without a reload. Other
-sets are not revalidated: that would re-run a `?board=` link import still in
-flight. The library knows nothing about route loaders; the app owns that
+After each saved set, it syncs the library. When the set's boards gained
+translations, it also tells the app shell, which revalidates the routes (board
+and board list) when that set is on screen or being navigated to, so everything
+on screen updates without a reload. A set that only gained its name, such as
+one already in the communication language, has the same boards as before and is
+not revalidated. Other sets are not revalidated either: that would re-run a
+`?board=` link import still in flight. The library knows nothing about route loaders; the app owns that
 decision in
 [`useRevalidateBoardSet`](../src/app/routing/use-revalidate-board-set.ts). A set the
 translator fails on, for example because a model download needs a user

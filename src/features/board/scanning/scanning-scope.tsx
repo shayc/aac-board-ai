@@ -5,6 +5,8 @@ import { type ReactNode, useRef } from "react";
 import {
   SCAN_HIGHLIGHTED_ITEM_SELECTOR,
   SCAN_HIGHLIGHTED_ROW_SELECTOR,
+  SCAN_OUTLINE_OFFSET_PX,
+  SCAN_OUTLINE_WIDTH_PX,
 } from "./scan-targets";
 import { useScanningPreferences } from "./scanning-preferences-store";
 import { SwitchScanner } from "./switch-scanner";
@@ -41,8 +43,8 @@ function scopeSx(theme: Theme) {
     display: "contents",
     // Doubled so the highlight also wins on a control that has keyboard focus.
     [`&& ${OUTLINED_SELECTOR}`]: {
-      outline: `4px solid ${theme.vars.palette.primary.main}`,
-      outlineOffset: 2,
+      outline: `${SCAN_OUTLINE_WIDTH_PX}px solid ${theme.vars.palette.primary.main}`,
+      outlineOffset: SCAN_OUTLINE_OFFSET_PX,
     },
     // The outline follows the radius, so the row's corners match its tiles'.
     [`& ${SCAN_HIGHLIGHTED_ROW_SELECTOR}`]: {

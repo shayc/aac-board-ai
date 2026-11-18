@@ -86,6 +86,11 @@ const IDLE_TOUCH_HOVER_OUTLINE = `&:hover:not(.${outlinedInputClasses.focused}, 
 // default theme, which also has the breakpoints the app's theme keeps.
 const defaultTheme = createTheme();
 
+// The theme selects a scheme by class (`colorSchemeSelector` below), and MUI
+// names each class after its scheme. An element with this class is in the
+// light scheme, with its subtree, whatever the theme mode.
+export const LIGHT_SCHEME_CLASS = "light";
+
 const themeOptions = {
   focusVisible: true,
   shadows,

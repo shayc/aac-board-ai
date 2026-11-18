@@ -5,7 +5,7 @@ import { findBoardInLanguage } from "./board-in-language";
 
 interface UseBoardInLanguageReturn {
   board: Board;
-  language: string | undefined;
+  boardLanguage: string | undefined;
 }
 
 /**
@@ -16,11 +16,11 @@ export function useBoardInLanguage(board: Board): UseBoardInLanguageReturn {
   const { language } = useCommunicationLanguage();
   const translatedBoard = findBoardInLanguage(board, language);
   if (translatedBoard) {
-    return { board: translatedBoard, language };
+    return { board: translatedBoard, boardLanguage: language };
   }
 
   return {
     board,
-    language: board.locale ? getLanguageCode(board.locale) : undefined,
+    boardLanguage: board.locale ? getLanguageCode(board.locale) : undefined,
   };
 }

@@ -324,7 +324,7 @@ describe("translateBoardSets", () => {
       es: "Inicio",
     });
     expect(onTranslating).not.toHaveBeenCalled();
-    expect(onTranslated.mock.calls).toEqual([["shipped"]]);
+    expect(onTranslated).not.toHaveBeenCalled();
   });
 
   test("leaves a board set with boards to translate untouched when the Translator API is unavailable", async () => {

@@ -7,6 +7,11 @@ const GRID_SPACING_UNIT_PX = 8;
 const GRID_GAP_PX = spacingUnitsToPx(1);
 const GRID_GAP = formatPx(GRID_GAP_PX);
 
+// Narrower than the height so wide boards fit more columns before scrolling.
+export const MIN_CELL_WIDTH_PX = 88;
+// A tile's symbol and label need the extra height.
+const MIN_CELL_HEIGHT_PX = 96;
+
 type Breakpoint = "xs" | "sm";
 
 const OVERFLOW_HINT_PX: Record<Breakpoint, number> = { xs: 8, sm: 16 };
@@ -16,8 +21,7 @@ const AXES = {
     containerFeature: "min-width",
     viewportSize: "100cqi",
     cellSizeProperty: "--grid-cell-width",
-    // Narrower than the height so wide boards fit more columns before scrolling.
-    minCellSizePx: 88,
+    minCellSizePx: MIN_CELL_WIDTH_PX,
     paddingPx: {
       xs: spacingUnitsToPx(GRID_PADDING.inline.xs),
       sm: spacingUnitsToPx(GRID_PADDING.inline.sm),
@@ -29,8 +33,7 @@ const AXES = {
     containerFeature: "min-height",
     viewportSize: "100cqb",
     cellSizeProperty: "--grid-cell-height",
-    // A tile's symbol and label need the extra height.
-    minCellSizePx: 96,
+    minCellSizePx: MIN_CELL_HEIGHT_PX,
     paddingPx: {
       xs: spacingUnitsToPx(GRID_PADDING.block.xs),
       sm: spacingUnitsToPx(GRID_PADDING.block.sm),
