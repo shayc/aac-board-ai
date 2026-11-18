@@ -20,7 +20,11 @@ const BOARD_OWNERS: ReadonlySet<string> = new Set([MESSAGE_OWNER, TILE_OWNER]);
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /** Resolves to whether the message played to its end. */
+  /**
+   * Resolves to whether the message played to its end. It only plays: the
+   * board speaks the message through `useMessage`'s `speak`, which decides
+   * whether it counts as played.
+   */
   playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   playPart: (part: MessagePart) => Promise<void>;
   stop: () => void;

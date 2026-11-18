@@ -78,6 +78,8 @@ async function setup(
       message,
       playback,
       navigation,
+      speakMessage: (editsOnceSpoken) =>
+        message.speak(playback.playMessage, editsOnceSpoken),
       language,
       shouldPlayTiles,
     }),

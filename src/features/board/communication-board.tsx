@@ -14,7 +14,7 @@ import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessagePreferences } from "./message/message-preferences-store";
-import type { Message } from "./message/message-types";
+import type { Message, MessageEdit } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -51,14 +51,19 @@ export function CommunicationBoard({
   const { shouldPlayTiles } = useMessagePreferences();
   const playback = useBoardPlayback();
   const navigation = useBoardNavigation(rootBoardId);
-  const shortcuts = useBoardShortcuts({ message, playback });
+
+  // The one place the message meets its playback: the play button, the
+  // shortcut and tiles all speak through it, so each counts the message as
+  // played.
+  const speakMessage = (editsOnceSpoken?: readonly MessageEdit[]) =>
+    message.speak(playback.playMessage, editsOnceSpoken);
+  const shortcuts = useBoardShortcuts({ message, playback, speakMessage });
   const shortcutLabels = useBoardShortcutLabels();
 
   const activateButton = createButtonActivator({
     message: {
       apply: message.apply,
       applyIfUnchanged: message.applyIfUnchanged,
-      speak: message.speak,
     },
     playback: {
       playMessage: playback.playMessage,
@@ -66,6 +71,7 @@ export function CommunicationBoard({
       stop: playback.stop,
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
+    speakMessage,
     language,
     shouldPlayTiles,
   });
@@ -105,7 +111,7 @@ export function CommunicationBoard({
       isPlaying={playback.isMessagePlaying}
       variant={areControlsBelowGrid ? "boardControl" : "prominent"}
       shortcutLabels={shortcutLabels}
-      onPlay={() => void message.speak(playback.playMessage)}
+      onPlay={() => void speakMessage()}
       onStop={playback.stop}
     />
   );

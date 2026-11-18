@@ -7,9 +7,11 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged" | "speak">;
+  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged">;
   playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
+  /** Speaks the message so that it counts as played, then applies the edits that waited for it. */
+  speakMessage: (editsOnceSpoken: readonly MessageEdit[]) => Promise<void>;
   /** The language the board's text is in, when known. */
   language: string | undefined;
   shouldPlayTiles: boolean;
@@ -21,6 +23,7 @@ export function createButtonActivator({
   message,
   playback,
   navigation,
+  speakMessage,
   language,
   shouldPlayTiles,
 }: ButtonActivatorOptions): ButtonActivator {
@@ -89,7 +92,7 @@ export function createButtonActivator({
     // take letters typed during the speech with it.
     const isEcho = hasChanged;
     if (!isEcho) {
-      void message.speak(playback.playMessage, editsAfterPlay);
+      void speakMessage(editsAfterPlay);
 
       return;
     }
