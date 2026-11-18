@@ -388,7 +388,8 @@ describe("CommunicationBoard", () => {
         // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
         playHeight: 80,
-        messageBarStart: 24 + 64 + 8 + 64 + 16,
+        // Back and home grow to play's 80px where the bar has room for it.
+        messageBarStart: 24 + 80 + 8 + 80 + 16,
         // Play, 80px, sets the height where there is room for it.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },

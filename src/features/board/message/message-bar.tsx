@@ -14,7 +14,7 @@ import type { MessagePart } from "./message-types";
 const LIGHT_SCHEME_CLASS = "light";
 
 export const MESSAGE_ACTION_SIZE = 80;
-// A step smaller, so play stays the main action of the bar and of its row.
+// A step smaller, so play stays the main action of the bar.
 export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
 // The bar is as tall as its main action plus its inset, so it sets that
