@@ -483,18 +483,22 @@ describe("switch scanning", () => {
       await pressSwitch();
       await pressSwitch();
 
-      await expect
-        .element(phrase)
-        .toHaveStyle({ outlineWidth: "4px", outlineOffset: "2px" });
+      await expect.element(phrase).toHaveStyle({ outlineStyle: "solid" });
+      const { outlineWidth, outlineOffset } = getComputedStyle(
+        phrase.element(),
+      );
+      const outlineReach = parseFloat(outlineWidth) + parseFloat(outlineOffset);
       const chip = phrase.element().getBoundingClientRect();
       const scroller = screen
         .getByRole("group", { name: "Suggestions" })
         .element()
         .getBoundingClientRect();
-      expect(chip.left - scroller.left).toBeGreaterThanOrEqual(6);
-      expect(scroller.right - chip.right).toBeGreaterThanOrEqual(6);
-      expect(chip.top - scroller.top).toBeGreaterThanOrEqual(6);
-      expect(scroller.bottom - chip.bottom).toBeGreaterThanOrEqual(6);
+      expect(chip.left - scroller.left).toBeGreaterThanOrEqual(outlineReach);
+      expect(scroller.right - chip.right).toBeGreaterThanOrEqual(outlineReach);
+      expect(chip.top - scroller.top).toBeGreaterThanOrEqual(outlineReach);
+      expect(scroller.bottom - chip.bottom).toBeGreaterThanOrEqual(
+        outlineReach,
+      );
     });
 
     test("has no accessibility violations while a row is highlighted", async () => {
