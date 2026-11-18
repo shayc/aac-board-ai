@@ -169,16 +169,22 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
     });
 
-    test("outlines the highlighted tiles", async () => {
+    test("outlines the highlighted row, then the highlighted tile", async () => {
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
       const yes = screen.getByRole("button", { name: "yes" }).element();
-      const more = screen.getByRole("button", { name: "more" }).element();
+      const row = screen.getByRole("row").first().element();
 
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
+      expect(getComputedStyle(row).outlineStyle).toBe("solid");
+      expect(getComputedStyle(yes).outlineStyle).not.toBe("solid");
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      expect(getComputedStyle(row).outlineStyle).not.toBe("solid");
       expect(getComputedStyle(yes).outlineStyle).toBe("solid");
-      expect(getComputedStyle(more).outlineStyle).not.toBe("solid");
     });
 
     test("moves to the next row after each scan interval", async () => {

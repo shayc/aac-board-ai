@@ -8,8 +8,13 @@ const ITEM_SELECTOR =
 /** Spread on an element to scan the enabled buttons inside it as one group. */
 export const scanGroupProps = { [GROUP_ATTRIBUTE]: "" } as const;
 
+/** A scan group of alike controls, such as a row of tiles, highlighted as one outline. */
+export const scanRowProps = { [GROUP_ATTRIBUTE]: "row" } as const;
+
 // CSS keeps group highlighting current as buttons are enabled or replaced.
 export const SCAN_HIGHLIGHTED_ITEM_SELECTOR = `${ITEM_SELECTOR}:is([${HIGHLIGHT_ATTRIBUTE}], [${HIGHLIGHT_ATTRIBUTE}] *)`;
+
+export const SCAN_HIGHLIGHTED_ROW_SELECTOR = `[${GROUP_ATTRIBUTE}='row'][${HIGHLIGHT_ATTRIBUTE}]`;
 
 export function listScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
   const groups: ScanGroup<HTMLElement>[] = [];

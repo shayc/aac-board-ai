@@ -21,7 +21,7 @@ import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
-import { scanGroupProps } from "./scanning/scan-targets";
+import { scanGroupProps, scanRowProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -177,7 +177,7 @@ export function CommunicationBoard({
               aria-label={board.name || t(m.boardGridLabel)}
               items={board.buttons}
               order={board.grid.order}
-              rowProps={scanGroupProps}
+              rowProps={scanRowProps}
               getItemKey={(button) => `${board.id}/${button.id}`}
               renderItem={renderTile}
             />
