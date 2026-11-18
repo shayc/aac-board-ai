@@ -1,4 +1,3 @@
-import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
@@ -107,17 +106,8 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 function radioSx(theme: Theme) {
   return {
     p: 0.5,
-    borderRadius: theme.vars.shape.borderRadius,
-    [`&.${buttonBaseClasses.focusVisible}`]: {
-      // MUI rings a radio's first SVG, which here is the picture inside the
-      // preview. The preview's own box takes the ring instead, so the ring
-      // follows its corners at the theme's offset rather than the padded root's.
-      "& svg:first-of-type": {
-        borderRadius: 0,
-        outline: "none",
-        boxShadow: "none",
-      },
-      "& > span:first-of-type": theme.focusVisible,
-    },
+    // Concentric with the preview's corners across the padding, so the hover
+    // and ripple halo runs parallel to its border.
+    borderRadius: `calc(${theme.vars.shape.borderRadiusSm} + ${theme.spacing(0.5)})`,
   };
 }
