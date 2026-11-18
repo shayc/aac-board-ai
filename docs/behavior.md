@@ -407,6 +407,27 @@ background colors, which `index.html`, the PWA manifest, and the `theme-color`
 meta tag share with the theme. Theme mode is set before the first paint to avoid
 a flash of the wrong color scheme.
 
+### Install screenshots
+
+Chrome shows its richer install dialog when the manifest has a screenshot for
+the device's form factor. The two in `public/` are static, so retake both after
+a visible change to the header, message bar, suggestions, or tiles, keeping
+them the same in everything but size:
+
+- **State:** a fresh origin after onboarding, light theme, English, First Words
+  with the tiles "I", "want", "more" in the message bar and the pointer off the
+  page.
+- **Suggestion:** "I'd like more.", the phrase Chrome's built-in AI gave for
+  that message. A browser without built-in AI needs `Proofreader` and `Rewriter`
+  stubbed to return it.
+- **Narrow:** a 390×844 viewport at scale 2, saved as 780×1688.
+- **Wide:** a 1024×640 viewport at scale 1.875, saved as 1920×1200. The dialog
+  shrinks it to about 580px wide, and this is the smallest viewport where the
+  whole board fits.
+
+`e2e/pwa-manifest.spec.ts` fails when a file's dimensions stop matching its
+`sizes` in `vite.config.ts`.
+
 ### Screen sizes
 
 Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
