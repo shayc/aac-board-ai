@@ -42,16 +42,14 @@ export function useMessage(
   const undoStackRef = useRef<Message[]>([]);
   const text = message.parts.map((part) => part.label).join(" ");
 
-  // The setting is read each time the message is edited, so turning it off
-  // releases a message that was already played.
+  // Read on every edit, so turning the setting off releases a played message.
   function readMessage() {
     return shouldClearAfterPlayback
       ? messageRef.current
       : markPlayed(messageRef.current, false);
   }
 
-  // Saved on every change rather than when the page hides: a mobile system can
-  // end a page in the background without warning.
+  // Saved on every change: mobile systems end hidden pages without warning.
   function commit(next: Message) {
     messageRef.current = next;
     setRenderedMessage(next);
@@ -60,8 +58,7 @@ export function useMessage(
     saveMessageDraft(isKept ? next : EMPTY_MESSAGE);
   }
 
-  // Marking the message played is not a step to undo, so it goes through
-  // `commit`.
+  // Marking the message played is not a step to undo, so it uses `commit`.
   function commitUndoable(next: Message) {
     const undoStack = undoStackRef.current;
     undoStack.push(messageRef.current);
@@ -87,9 +84,8 @@ export function useMessage(
     return editFrom(current, edits) !== current;
   }
 
-  // Edits made against an earlier message belong to it: they apply to it even
-  // once it has played, instead of starting a new message, and are dropped if
-  // its content changed since.
+  // Edits made against an earlier message apply to it even once it has played,
+  // and are dropped if its content changed since.
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = messageRef.current;
     if (!hasSameContent(current, since)) {
@@ -107,13 +103,10 @@ export function useMessage(
     }
   }
 
-  // Only a playback that reaches the end of the unchanged message counts, so a
-  // replay that is under way or was stopped leaves the message open for more.
-  // Edits that follow (such as a tile's ":clear") wait for it, keeping the
-  // message visible while it plays; one they leave as it was has played.
+  // Counts as played only at the end of the unchanged message. Edits that
+  // follow (such as a tile's ":clear") wait, so it stays visible while playing.
   async function play(editsAfterPlay: readonly MessageEdit[] = []) {
-    // Playback starts first, so one that cannot start leaves the message as
-    // it was.
+    // Started first, so a playback that cannot start changes nothing.
     const completion = playMessage(messageRef.current.parts);
     setPlayed(false);
     const playingMessage = messageRef.current;
@@ -163,8 +156,7 @@ export function useMessage(
       return;
     }
 
-    // Like any edit, undoing opens a played message for more, so the next
-    // tile adds to the message brought back instead of replacing it.
+    // Like any edit, undo reopens a played message, so the next tile adds on.
     commit(markPlayed(previous, false));
   }
 
@@ -182,8 +174,7 @@ export function useMessage(
   };
 }
 
-// A message played to its end that the next symbol replaces has done its job,
-// so it is not kept where the next person to open the app would see it.
+// A played message due to be replaced is not kept for the next person to see.
 function isKeptOnDevice(
   message: Message,
   shouldClearAfterPlayback: boolean,

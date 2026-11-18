@@ -89,14 +89,10 @@ export function BackspaceButton({
   );
 }
 
-// A tonal fill, as MUI gives a filled default Chip, lighter than play's so play
-// stays the main action. The bar's light scheme resolves the action tokens in
-// both themes. With the bar's inset, a large button sits on the bar's rounded
-// end, the same distance from its top, bottom and end.
-//
-// MUI clears a disabled icon button's fill; it stays so the button keeps its
-// place beside play's tinted disc. The bar's grey ground in dark mode is a step
-// darker than white, so the disabled icon needs more weight to read as clearly.
+// A tonal fill like MUI's filled Chip, lighter than play's. The bar's light
+// scheme resolves the action tokens in both themes. MUI clears a disabled icon
+// button's fill; it stays to keep the button's shape, and the dark-mode bar's
+// grey needs a heavier disabled icon.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const targetSize = BUTTON_SIZES[size];
   const { action } = theme.vars.palette;
@@ -131,9 +127,8 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   } as const;
 }
 
-// The "auto" size stretches the ring over the whole button, so a hold shows
-// the edge of the touch target. The fill waits out the delay so a quick tap
-// never shows it.
+// The "auto" size stretches the ring over the whole touch target. The fill
+// waits out the delay so a quick tap never shows it.
 function ringSx(isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
 

@@ -14,7 +14,6 @@ export interface BoardSetMetadata {
   readonly gridColumns?: number;
 }
 
-/** A board set is described by its root board; `fallbackName` names a set whose root board has no name. */
 export function obfToBoardSetMetadata(
   rootBoard: OBFBoard,
   fallbackName: string,

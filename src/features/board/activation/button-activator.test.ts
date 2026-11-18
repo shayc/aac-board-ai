@@ -64,8 +64,7 @@ async function setup(
     return parts.map((part) => part.label);
   }
 
-  // Rendering again runs everything that waited for a playback that has
-  // resolved.
+  // Rerendering runs everything that waited for a resolved playback.
   async function playbackSettled() {
     await rerender();
   }

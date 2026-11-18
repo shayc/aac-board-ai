@@ -37,8 +37,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gridTemplateColumns: "1fr minmax(0, auto) 1fr",
           alignItems: "center",
           gap: theme.spacing(2),
-          // Matches the board's page margin, so the first and last icons line
-          // up with the message bar and tiles below.
+          // Aligns the outer icons with the board's page margin below.
           ...toolbarGutters(theme, 3),
           [theme.breakpoints.down("sm")]: toolbarGutters(theme, 2),
           [shortLandscape(theme)]: toolbarGutters(theme, 2),

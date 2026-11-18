@@ -9,12 +9,10 @@ export interface Budget {
 }
 
 /**
- * Ordered by how often a user meets each one. A tap has to feel instant, so
- * its limit is the 100 ms perception threshold. The other limits are round
- * numbers about half again above what the lab measured when they were set:
- * a busy machine alone slows a run by a quarter, and a row should only go
- * over when something is clearly wrong. Timings run under the lab's CPU
- * slowdown, except the import, which is setup and runs at full speed.
+ * Ordered by how often a user meets each one. Tap is the 100 ms perception
+ * threshold; the rest sit about half again above what the lab measured (see
+ * docs/performance.md). Timings run under the lab's CPU slowdown, except the
+ * import, which runs at full speed.
  */
 export const BUDGETS: Budget[] = [
   { name: "wordTap", label: "word tap", unit: "ms", limit: 100 },

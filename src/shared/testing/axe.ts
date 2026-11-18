@@ -51,9 +51,8 @@ export async function expectNoA11yViolations(
   }
 
   // Incomplete results, which axe could not decide, would otherwise pass
-  // unseen. Contrast is left out: axe cannot see through layering such as
-  // MUI's outline drawn over a field's text, so those results say nothing
-  // about the colors.
+  // unseen. Contrast is left out: axe cannot judge layered colors, such as
+  // MUI's outline drawn over a field's text.
   const reviewableIncomplete = incomplete.filter(
     (result) => result.id !== "color-contrast",
   );
@@ -98,7 +97,6 @@ function describeNode(node: axe.NodeResult) {
   const describeCheck = (check: axe.CheckResult) =>
     `${check.message} [${causeOf(check)}]`;
   const required = [...node.all, ...node.none].map(describeCheck);
-  // Passing any one of these checks fixes the element, so they are alternatives.
   const alternatives =
     node.any.length > 1
       ? [

@@ -29,9 +29,8 @@ export function LabelPlacementPreview({
         borderRadius: theme.vars.shape.borderRadiusSm,
         color: isSelected ? "primary.main" : "text.secondary",
         bgcolor: isSelected ? "action.selected" : "background.paper",
-        // MUI rings a focused radio's first SVG, which here is the picture
-        // inside the preview. The preview takes the ring instead, so the ring
-        // follows its border.
+        // MUI rings a focused radio's first SVG, here the preview's picture.
+        // The preview takes the ring instead, so it follows the border.
         [`.${buttonBaseClasses.focusVisible} > &`]: {
           ...theme.focusVisible,
           "& svg:first-of-type": {

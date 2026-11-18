@@ -342,8 +342,6 @@ describe("BackspaceButton in the message bar", () => {
     await expect.poll(readShade).toBeLessThan(restShade);
   });
 
-  // The hold ring traces the touch target's edge, and the same gap on three
-  // sides keeps it parallel to the bar's rounded end.
   test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" }).element();
