@@ -19,7 +19,7 @@ export function RouteErrorPage({ title }: RouteErrorPageProps) {
         titleComponent="h1"
         action={
           <Button component={Link} to="/" variant="contained">
-            {t(m.errorGoHome)}
+            {t(m.navHome)}
           </Button>
         }
       />
