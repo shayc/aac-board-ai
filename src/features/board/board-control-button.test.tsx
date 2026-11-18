@@ -1,28 +1,33 @@
 import { buttonClasses } from "@mui/material/Button";
-import { useColorScheme } from "@mui/material/styles";
 import {
   contrastRatio,
   paint,
   WCAG_NON_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
-import { renderWithProviders } from "@shared/testing/render-with-providers";
+import {
+  type ColorMode,
+  renderInColorMode,
+} from "@shared/testing/render-in-color-mode";
+import type { ComponentProps } from "react";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardControlButton } from "./board-control-button";
 
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
+const NO_RING = "0px";
 
-type ColorMode = "light" | "dark";
+type RoundButtonProps = Pick<
+  ComponentProps<typeof BoardControlButton>,
+  "color" | "disabled"
+>;
 
-async function measureRoundButton(mode: ColorMode) {
-  const screen = await renderWithProviders(
-    <>
-      <ColorModeSwitch mode={mode} />
-      <BoardControlButton shape="round">Go back</BoardControlButton>
-    </>,
+async function measureRoundButton(mode: ColorMode, props?: RoundButtonProps) {
+  const screen = await renderInColorMode(
+    <BoardControlButton {...props} shape="round">
+      Go back
+    </BoardControlButton>,
+    mode,
   );
-  await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
-  await expect.poll(() => document.documentElement.className).toBe(mode);
 
   const button = screen.getByRole("button", { name: "Go back" }).element();
   // Switching modes animates the colors; measure where they settle.
@@ -31,28 +36,20 @@ async function measureRoundButton(mode: ColorMode) {
   );
 
   const pageColor = getComputedStyle(document.body).backgroundColor;
-  const { backgroundColor, borderTopColor, borderTopWidth } =
+  const { backgroundColor, borderTopColor, borderTopWidth, color } =
     getComputedStyle(button);
   await screen.unmount();
 
   return {
     fill: backgroundColor,
+    iconColor: color,
+    ringColor: borderTopColor,
     ringWidth: borderTopWidth,
     ringContrast: contrastRatio(
       paint(pageColor, borderTopColor),
       paint(pageColor),
     ),
   };
-}
-
-function ColorModeSwitch({ mode }: { mode: ColorMode }) {
-  const { setMode } = useColorScheme();
-
-  return (
-    <button type="button" onClick={() => setMode(mode)}>
-      Use {mode} mode
-    </button>
-  );
 }
 
 describe("BoardControlButton", () => {
@@ -109,14 +106,34 @@ describe("BoardControlButton beside the message bar", () => {
     const { fill, ringWidth, ringContrast } = await measureRoundButton("dark");
 
     expect(fill).toBe(TRANSPARENT);
-    expect(ringWidth).toBe("1px");
+    expect(ringWidth).not.toBe(NO_RING);
     expect(ringContrast).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
+  });
+
+  test("dims the ring with its icon when disabled in dark mode", async () => {
+    const { fill, iconColor, ringColor, ringWidth } = await measureRoundButton(
+      "dark",
+      { disabled: true },
+    );
+
+    expect(fill).toBe(TRANSPARENT);
+    expect(ringWidth).not.toBe(NO_RING);
+    expect(ringColor).toBe(iconColor);
+  });
+
+  test("keeps the fill of a button with its own color in dark mode", async () => {
+    const { fill, ringWidth } = await measureRoundButton("dark", {
+      color: "primary",
+    });
+
+    expect(fill).not.toBe(TRANSPARENT);
+    expect(ringWidth).toBe(NO_RING);
   });
 
   test("keeps its fill and has no ring in light mode", async () => {
     const { fill, ringWidth } = await measureRoundButton("light");
 
     expect(fill).not.toBe(TRANSPARENT);
-    expect(ringWidth).toBe("0px");
+    expect(ringWidth).toBe(NO_RING);
   });
 });

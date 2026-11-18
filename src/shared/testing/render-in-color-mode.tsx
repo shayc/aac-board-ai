@@ -1,0 +1,20 @@
+import type { ReactNode } from "react";
+import { expect } from "vitest";
+import { type ColorMode, ColorModeSwitch } from "./color-mode-switch";
+import { renderWithProviders } from "./render-with-providers";
+
+export type { ColorMode };
+
+/** Renders with the app's providers and resolves once the document is in the given color mode. */
+export async function renderInColorMode(children: ReactNode, mode: ColorMode) {
+  const screen = await renderWithProviders(
+    <>
+      <ColorModeSwitch mode={mode} />
+      {children}
+    </>,
+  );
+  await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
+  await expect.poll(() => document.documentElement.className).toBe(mode);
+
+  return screen;
+}
