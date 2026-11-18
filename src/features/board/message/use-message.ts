@@ -25,7 +25,7 @@ export interface UseMessageReturn {
   apply: (edits: readonly MessageEdit[]) => boolean;
   play: (editsAfterPlay?: readonly MessageEdit[]) => Promise<void>;
   /** Plays the message without counting it as played. */
-  echo: (editsAfterPlay?: readonly MessageEdit[]) => Promise<void>;
+  echo: (editsAfterPlay: readonly MessageEdit[]) => Promise<void>;
   replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
   clear: () => void;
@@ -121,9 +121,8 @@ export function useMessage(
   }
 
   // An echo is feedback on a tile, such as the word being spelled, so the
-  // message stays open for more. Edits that follow wait for it as they do for
-  // `play`: a ":clear" must not take letters typed during the playback with it.
-  async function echo(editsAfterPlay: readonly MessageEdit[] = []) {
+  // message stays open for more. Edits that follow wait as they do for `play`.
+  async function echo(editsAfterPlay: readonly MessageEdit[]) {
     const echoed = stateRef.current;
 
     const hasCompleted = await playMessage(echoed.parts);

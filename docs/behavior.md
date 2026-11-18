@@ -215,7 +215,8 @@ Playback knows nothing of the message's state. `useMessage` is given the
 adapter's play function, and its `play` runs it and decides from the result
 whether the message has played. The play button, the keyboard shortcut, and a
 tile that plays the message as it stands all call `play`. An echo calls
-`useMessage`'s `echo`, which runs the same function and never counts.
+`useMessage`'s `echo`, which runs the adapter's play function too and never
+counts.
 
 ### Suggest a message
 

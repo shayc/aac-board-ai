@@ -402,7 +402,7 @@ describe("useMessage", () => {
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
 
-      await message.echo();
+      await message.echo([]);
 
       expect(playMessage).toHaveBeenCalledOnce();
       expect(await labelsAfterSpelling(result, rerender)).toEqual(["hia"]);
