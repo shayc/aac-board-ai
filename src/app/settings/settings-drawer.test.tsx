@@ -1,4 +1,5 @@
 import { backdropClasses } from "@mui/material/Backdrop";
+import { drawerClasses } from "@mui/material/Drawer";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
@@ -81,7 +82,9 @@ describe("SettingsDrawer", () => {
       .element(screen.getByRole("slider", { name: "Brightness" }))
       .toBeInTheDocument();
 
-    const backdrop = document.querySelector(`.${backdropClasses.root}`);
+    const backdrop = document.querySelector(
+      `.${drawerClasses.root} > .${backdropClasses.root}`,
+    );
     assertDefined(backdrop);
 
     expect(getComputedStyle(backdrop).backgroundColor).toBe("rgba(0, 0, 0, 0)");

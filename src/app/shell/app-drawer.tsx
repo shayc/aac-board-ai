@@ -76,7 +76,7 @@ export function AppDrawer({
 function innerEdgeSx(anchor: "left" | "right") {
   const innerBorder = anchor === "left" ? "borderRight" : "borderLeft";
 
-  return { [innerBorder]: 1, borderColor: "divider" };
+  return { [innerBorder]: 1, borderColor: "outline" };
 }
 
 interface AppDrawerContentProps {

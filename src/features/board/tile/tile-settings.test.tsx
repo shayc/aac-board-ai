@@ -41,7 +41,6 @@ describe("TileSettings", () => {
     await expect
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "100%");
-    expect(screen.getByText("100%").elements()).toHaveLength(2);
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect

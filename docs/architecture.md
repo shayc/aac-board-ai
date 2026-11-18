@@ -282,8 +282,9 @@ The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
 preferences. The drawer is modal but does not dim the page, so tile settings are
-judged on the board behind it; a line marks its inner edge instead. App-wide language, theme, and speech settings live in `app/settings/`;
-language settings render the library's
+judged on the board behind it; a line marks its inner edge instead. App-wide
+language, theme, and speech settings live in `app/settings/`; language settings
+render the library's
 [board translation notice](../src/features/library/translation/board-translation-notice.tsx)
 instead of checking translation progress themselves.
 Reusable field controls live in `shared/ui/` so features do not depend on the

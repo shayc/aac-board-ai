@@ -35,7 +35,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       open={open}
       onClose={onClose}
       anchor="right"
-      // Tile and message settings are judged against the board behind them.
+      // Tile settings are judged against the board behind the drawer.
       hasInvisibleBackdrop
     >
       <Stack divider={<Divider />} spacing={3} sx={{ px: 3, pb: 3 }}>
