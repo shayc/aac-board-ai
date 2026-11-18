@@ -348,7 +348,7 @@ describe("CommunicationBoard", () => {
       {
         name: "a phone",
         width: 375,
-        height: 755,
+        height: 756,
         pageMargin: 16,
         clearance: 4,
         overflowHint: 8,
@@ -364,7 +364,7 @@ describe("CommunicationBoard", () => {
       {
         name: "a phone on its side",
         width: 874,
-        height: 353,
+        height: 354,
         pageMargin: 16,
         clearance: 4,
         overflowHint: 8,
@@ -373,7 +373,7 @@ describe("CommunicationBoard", () => {
         playEnd: 16 + 8 + 1,
         // Fills the compact bar inside its inset, as backspace does.
         playHeight: 64,
-        // Past the back and home buttons, 64px each and 8px apart, and a 16px gap.
+        // Past the 64px home button and a 16px gap.
         messageBarStart: 16 + 64 + 16,
         // As tall as backspace, 64px, with the bar's 8px inset and 1px border.
         messageBarHeight: 64 + 2 * 8 + 2 * 1,
@@ -395,7 +395,7 @@ describe("CommunicationBoard", () => {
       {
         name: "a tablet",
         width: 1024,
-        height: 703,
+        height: 704,
         pageMargin: 24,
         clearance: 8,
         overflowHint: 16,

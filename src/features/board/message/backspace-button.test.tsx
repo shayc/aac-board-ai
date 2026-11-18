@@ -2,6 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import {
   contrastRatio,
   paint,
+  type Rgb,
   WCAG_NON_TEXT_CONTRAST,
   WCAG_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
@@ -99,6 +100,10 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
     icon: contrastRatio(paint(barColor, fillColor, iconColor), ground),
     ring: contrastRatio(paint(barColor, fillColor, ringColor), ground),
   };
+}
+
+function brightness([red, green, blue]: Rgb) {
+  return red + green + blue;
 }
 
 describe("BackspaceButton", () => {
@@ -317,8 +322,15 @@ describe("BackspaceButton in the message bar", () => {
     const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" });
     const readFill = () => getComputedStyle(button.element()).backgroundColor;
+    const bar = button.element().parentElement;
+    assertDefined(bar);
+    const barColor = getComputedStyle(bar).backgroundColor;
+    const readShade = () => brightness(paint(barColor, readFill()));
+
+    await screen.getByRole("list", { name: "Message" }).hover();
     await expect.poll(readFill).not.toBe(TRANSPARENT);
     const restFill = readFill();
+    const restShade = readShade();
 
     await screen.rerender(barWithBackspace(true));
 
@@ -327,25 +339,13 @@ describe("BackspaceButton in the message bar", () => {
     await screen.rerender(barWithBackspace(false));
     await button.hover();
 
-    await expect.poll(readFill).not.toBe(restFill);
+    await expect.poll(readShade).toBeLessThan(restShade);
   });
 
-  // The hold ring traces the touch target's edge, and the same gap on three sides keeps it parallel to the bar's rounded end.
+  // The hold ring traces the touch target's edge, and the same gap on three
+  // sides keeps it parallel to the bar's rounded end.
   test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
-    const screen = await renderWithProviders(
-      <MessageBar
-        parts={[]}
-        isWordOpen={false}
-        activePartId={null}
-        areImagesVisible
-        endAction={
-          <BackspaceButton
-            shortcutLabels={SHORTCUT_LABELS}
-            {...createHandlers()}
-          />
-        }
-      />,
-    );
+    const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" }).element();
     const bar = button.parentElement;
     assertDefined(bar);
