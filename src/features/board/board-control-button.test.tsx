@@ -30,10 +30,6 @@ async function measureRoundButton(mode: ColorMode, props?: RoundButtonProps) {
   );
 
   const button = screen.getByRole("button", { name: "Go back" }).element();
-  // Switching modes animates the colors; measure where they settle.
-  await Promise.all(
-    button.getAnimations({ subtree: true }).map(({ finished }) => finished),
-  );
 
   const pageColor = getComputedStyle(document.body).backgroundColor;
   const { backgroundColor, borderTopColor, borderTopWidth, color } =

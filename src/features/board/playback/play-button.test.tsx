@@ -55,12 +55,6 @@ async function measureDisabledGlyphContrasts(mode: ColorMode) {
 
   const play = screen.getByRole("button", { name: "Speak message" }).element();
   const backspace = screen.getByRole("button", { name: "Backspace" }).element();
-  // Switching modes animates the colors; measure where they settle.
-  await Promise.all(
-    play.parentElement
-      ?.getAnimations({ subtree: true })
-      .map(({ finished }) => finished) ?? [],
-  );
 
   const bar = play.parentElement;
   assertDefined(bar);

@@ -5,7 +5,7 @@ import { renderWithProviders } from "./render-with-providers";
 
 export type { ColorMode };
 
-/** Renders with the app's providers and resolves once the document is in the given color mode. */
+/** Renders with the app's providers and resolves once the given color mode's colors have settled. */
 export async function renderInColorMode(children: ReactNode, mode: ColorMode) {
   const screen = await renderWithProviders(
     <>
@@ -15,6 +15,8 @@ export async function renderInColorMode(children: ReactNode, mode: ColorMode) {
   );
   await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
   await expect.poll(() => document.documentElement.className).toBe(mode);
+  // Switching modes animates the colors.
+  await Promise.all(document.getAnimations().map(({ finished }) => finished));
 
   return screen;
 }

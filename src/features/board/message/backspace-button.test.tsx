@@ -80,10 +80,6 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
   );
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
-  // Switching modes animates the colors; measure where they settle.
-  await Promise.all(
-    button.getAnimations({ subtree: true }).map(({ finished }) => finished),
-  );
 
   const bar = button.parentElement;
   assertDefined(bar);

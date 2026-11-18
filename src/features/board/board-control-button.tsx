@@ -19,7 +19,7 @@ const SHAPE_SX = {
     [`& .${svgIconClasses.root}`]: {
       fontSize: CONTROL_ICON_SIZE,
     },
-    // A button with a color of its own, as play has, keeps its fill.
+    // A button with a color of its own keeps its fill.
     ...theme.applyStyles("dark", {
       [`&.${buttonClasses.colorInherit}`]: ringSx(theme),
     }),
@@ -75,7 +75,8 @@ function ringSx(theme: Theme) {
     "@media (hover: hover)": {
       "&:hover": { backgroundColor: theme.vars.palette.action.hover },
     },
-    // As dim as its icon, so a button that is off still shows where it is.
+    // As dim as its icon, so a button that is off still shows where it is;
+    // hovering it must not tint it.
     [`&.${buttonClasses.disabled}`]: {
       borderColor: "currentColor",
       backgroundColor: "transparent",
