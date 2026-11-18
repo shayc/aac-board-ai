@@ -45,7 +45,12 @@ by its root board:
 reads the set's name, author, description, license, language, and grid size
 from it, and storage keeps what it is given. A root board without a name leaves
 the set named after its file, or after its ID when the file name is only an
-extension. The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
+extension. The installed app's manifest sets `launch_handler` to
+`focus-existing`, so a launch focuses the window that is already open instead
+of starting a second one, and `useLaunchHandler` decides what that window does:
+it imports launched board files, follows a launched link such as a `?board=`
+link, and stays on the current board when the launch comes from the app's icon.
+The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
 opens the board set when exactly one imports. It skips files without a board
 file extension and reports them only when no board file was given. It imports
 the rest one at a time, so a failing file, or a launched file that can't be
@@ -402,6 +407,27 @@ The palette and component styles live in
 background colors, which `index.html`, the PWA manifest, and the `theme-color`
 meta tag share with the theme. Theme mode is set before the first paint to avoid
 a flash of the wrong color scheme.
+
+### Install screenshots
+
+Chrome shows its richer install dialog when the manifest has a screenshot for
+the device's form factor. The two in `public/` are static, so retake both after
+a visible change to the header, message bar, suggestions, or tiles, keeping
+them the same in everything but size:
+
+- **State:** a fresh origin after onboarding, light theme, English, First Words
+  with the tiles "I", "want", "more" in the message bar and the pointer off the
+  page.
+- **Suggestion:** "I'd like more.", the phrase Chrome's built-in AI gave for
+  that message. A browser without built-in AI needs `Proofreader` and `Rewriter`
+  stubbed to return it.
+- **Narrow:** a 390×844 viewport at scale 2, saved as 780×1688.
+- **Wide:** a 1024×640 viewport at scale 1.875, saved as 1920×1200. The dialog
+  shrinks it to about 580px wide, and this is the smallest viewport where the
+  whole board fits.
+
+`e2e/pwa-manifest.spec.ts` fails when a file's dimensions stop matching its
+`sizes` in `vite.config.ts`.
 
 ### Screen sizes
 
