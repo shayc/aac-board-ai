@@ -83,11 +83,7 @@ async function setup(
   return {
     activateButton: createButtonActivator({
       message,
-      playback: {
-        echoMessage: playback.playMessage,
-        playPart: playback.playPart,
-        stop: playback.stop,
-      },
+      playback: { playPart: playback.playPart, stop: playback.stop },
       navigation,
       language,
       shouldPlayTiles,

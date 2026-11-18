@@ -17,18 +17,15 @@ import type {
 
 const UNDO_LIMIT = 100;
 
-export interface MessageEditOutcome {
-  edited: Message;
-  hasChanged: boolean;
-}
-
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
   text: string;
-  apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
-  applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
+  /** Returns whether the edits changed the message. */
+  apply: (edits: readonly MessageEdit[]) => boolean;
   play: (editsAfterPlay?: readonly MessageEdit[]) => Promise<void>;
+  /** Plays the message without counting it as played. */
+  echo: (editsAfterPlay: readonly MessageEdit[]) => Promise<void>;
   replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
   clear: () => void;
@@ -84,11 +81,10 @@ export function useMessage(
     return edited;
   }
 
-  function apply(edits: readonly MessageEdit[]): MessageEditOutcome {
+  function apply(edits: readonly MessageEdit[]): boolean {
     const current = readMessage();
-    const edited = commitEdits(current, edits);
 
-    return { edited, hasChanged: edited !== current };
+    return commitEdits(current, edits) !== current;
   }
 
   // Edits made against an earlier message belong to it: they apply to it even
@@ -121,6 +117,17 @@ export function useMessage(
     const edited = applyIfUnchanged(playing, editsAfterPlay);
     if (edited && hasSameContent(edited, playing)) {
       setPlayed(true);
+    }
+  }
+
+  // An echo is feedback on a tile, such as the word being spelled, so the
+  // message stays open for more. Edits that follow wait as they do for `play`.
+  async function echo(editsAfterPlay: readonly MessageEdit[]) {
+    const echoed = stateRef.current;
+
+    const hasCompleted = await playMessage(echoed.parts);
+    if (hasCompleted) {
+      applyIfUnchanged(echoed, editsAfterPlay);
     }
   }
 
@@ -167,8 +174,8 @@ export function useMessage(
     isWordOpen: state.isWordOpen,
     text,
     apply,
-    applyIfUnchanged,
     play,
+    echo,
     replaceWithText,
     backspace,
     clear,

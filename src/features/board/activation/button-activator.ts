@@ -1,17 +1,14 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import { createTilePart } from "../message/message-transforms";
-import type { MessageEdit, PlayMessage } from "../message/message-types";
+import type { MessageEdit } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged" | "play">;
-  playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop"> & {
-    /** Plays the message without counting it as played. */
-    echoMessage: PlayMessage;
-  };
+  message: Pick<UseMessageReturn, "apply" | "play" | "echo">;
+  playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   /** The language the board's text is in, when known. */
   language: string | undefined;
@@ -80,7 +77,7 @@ export function createButtonActivator({
       actions.slice(0, playIndex),
       language,
     );
-    const { edited, hasChanged } = message.apply(editsBeforePlay);
+    const hasChanged = message.apply(editsBeforePlay);
     const editsAfterPlay = toMessageEdits(
       actions.slice(playIndex + 1),
       language,
@@ -102,14 +99,7 @@ export function createButtonActivator({
       return;
     }
 
-    // Edits after an echo wait for it to complete and are dropped if the
-    // message was edited meanwhile: a ":clear" must not take letters typed
-    // during the playback with it.
-    void playback.echoMessage(edited.parts).then((hasCompleted) => {
-      if (hasCompleted) {
-        message.applyIfUnchanged(edited, editsAfterPlay);
-      }
-    });
+    void message.echo(editsAfterPlay);
   }
 
   return activateButton;
