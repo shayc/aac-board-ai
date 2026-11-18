@@ -10,7 +10,11 @@ import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
-import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
+import {
+  BOTTOM_CONTROLS_INSET,
+  PAGE_MARGIN,
+  SCROLL_CLEARANCE,
+} from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessagePreferences } from "./message/message-preferences-store";
@@ -185,7 +189,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={(theme) => ({
                 justifyContent: "space-between",
-                px: PAGE_MARGIN,
+                px: BOTTOM_CONTROLS_INSET,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >

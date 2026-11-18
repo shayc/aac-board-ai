@@ -354,7 +354,8 @@ describe("CommunicationBoard", () => {
         overflowHint: 8,
         wholeRows: 5,
         isPlayBelowGrid: true,
-        playEnd: 16,
+        // Inset toward the thumb, twice the page margin.
+        playEnd: 32,
         // The shared 28px icon and the pill's 12px padding.
         playHeight: 28 + 2 * 12,
         messageBarStart: 16,
@@ -499,7 +500,7 @@ describe("CommunicationBoard", () => {
   describe("phone controls", () => {
     // The narrowest phones, and larger ones with display zoom, are 320px wide.
     test.each([{ width: 375 }, { width: 320 }])(
-      "makes home and play equally wide, with play at the far end, on a $width px wide phone",
+      "makes home and play equally wide and inset toward the thumb, on a $width px wide phone",
       async ({ width }) => {
         await setTestViewport(width, 755);
         const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
@@ -515,8 +516,8 @@ describe("CommunicationBoard", () => {
 
         expect(home.width).toBeCloseTo(88, 0);
         expect(play.width).toBeCloseTo(88, 0);
-        expect(home.left).toBeCloseTo(16, 0);
-        expect(play.right).toBeCloseTo(width - 16, 0);
+        expect(home.left).toBeCloseTo(32, 0);
+        expect(play.right).toBeCloseTo(width - 32, 0);
         expect(play.left - home.right).toBeGreaterThanOrEqual(16 - 0.5);
       },
     );
