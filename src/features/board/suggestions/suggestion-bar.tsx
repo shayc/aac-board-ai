@@ -1,16 +1,15 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import Fade from "@mui/material/Fade";
 import Stack from "@mui/material/Stack";
-import { keyframes, useTheme } from "@mui/material/styles";
+import { keyframes } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
 // A keyframe, not a transition: the theme owns the chip's transitions for
-// press feedback.
-const phraseEnter = keyframes`
+// press feedback, and a keyframe starts over each time its element mounts.
+const fadeIn = keyframes`
   from { opacity: 0; }
 `;
 
@@ -75,7 +74,7 @@ export function SuggestionBar({
               label={phrase}
               onClick={() => onPhraseSelect(phrase)}
               sx={(theme) => ({
-                animation: `${phraseEnter} ${theme.transitions.duration.shortest}ms ${theme.transitions.easing.easeOut}`,
+                animation: `${fadeIn} ${theme.transitions.duration.shortest}ms ${theme.transitions.easing.easeOut}`,
                 "@media (prefers-reduced-motion: reduce)": {
                   animation: "none",
                 },
@@ -85,53 +84,40 @@ export function SuggestionBar({
         </Box>
       )}
 
-      <PendingPill
-        // The pill moves when the first phrase arrives and when the phrases
-        // clear, so it waits again instead of jumping there at full strength.
-        key={hasPhrases ? "after-phrases" : "alone"}
-        isVisible={status.kind === "pending"}
-      />
+      {status.kind === "pending" && (
+        <PendingPill
+          // The pill moves when the first phrase arrives and when the phrases
+          // clear, so it waits again instead of jumping there at full strength.
+          key={hasPhrases ? "after-phrases" : "alone"}
+        />
+      )}
     </Stack>
   );
 }
 
-interface PendingPillProps {
-  isVisible: boolean;
-}
-
-function PendingPill({ isVisible }: PendingPillProps) {
-  const theme = useTheme();
-
+// Rendered only while pending, so it leaves at once: the last phrase lands in
+// the same render and would push a fading pill past it.
+function PendingPill() {
   return (
-    <Fade
-      in={isVisible}
-      mountOnEnter
-      unmountOnExit
-      // Leaves at once: the last phrase lands in the same render and would
-      // push a fading pill past it.
-      timeout={{ enter: theme.transitions.duration.enteringScreen, exit: 0 }}
-      style={{
-        transitionDelay: isVisible ? `${PENDING_PILL_DELAY_MS}ms` : "0ms",
-      }}
+    <Box
+      data-testid="suggestions-pending"
+      sx={(theme) => ({
+        display: "flex",
+        flexShrink: 0,
+        alignItems: "center",
+        alignSelf: "stretch",
+        gap: 0.75,
+        paddingInline: 2,
+        borderRadius: theme.vars.shape.borderRadiusFull,
+        bgcolor: "action.hover",
+        // Stays clear through the delay, then fades in.
+        animation: `${fadeIn} ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeOut} ${PENDING_PILL_DELAY_MS}ms backwards`,
+      })}
     >
-      <Box
-        data-testid="suggestions-pending"
-        sx={{
-          display: "flex",
-          flexShrink: 0,
-          alignItems: "center",
-          alignSelf: "stretch",
-          gap: 0.75,
-          paddingInline: 2,
-          borderRadius: theme.vars.shape.borderRadiusFull,
-          bgcolor: "action.hover",
-        }}
-      >
-        <PendingPillDot delayMs={0} />
-        <PendingPillDot delayMs={150} />
-        <PendingPillDot delayMs={300} />
-      </Box>
-    </Fade>
+      <PendingPillDot delayMs={0} />
+      <PendingPillDot delayMs={150} />
+      <PendingPillDot delayMs={300} />
+    </Box>
   );
 }
 
