@@ -69,7 +69,7 @@ describe("TileSettings", () => {
     { placement: "bottom", name: "Bottom" },
     { placement: "hidden", name: "Hidden" },
   ] as const)(
-    "shows one focus outline around the $name label option while keeping its preview visible",
+    "shows one focus outline around the $name label option's preview while keeping its symbol visible",
     async ({ placement, name }) => {
       setTileLabelPlacement(placement);
       const screen = await renderWithProviders(<TileSettings />);
@@ -80,11 +80,14 @@ describe("TileSettings", () => {
       await expect.element(radio).toHaveFocus();
       const option = radio.element().parentElement;
       assertDefined(option);
-      const symbol = option.querySelector("svg");
+      const preview = option.querySelector("span");
+      assertDefined(preview);
+      const symbol = preview.querySelector("svg");
       assertDefined(symbol);
 
       await expect.element(symbol).toBeVisible();
-      await expect.element(option).toHaveStyle({ outlineStyle: "solid" });
+      await expect.element(preview).toHaveStyle({ outlineStyle: "solid" });
+      await expect.element(option).toHaveStyle({ outlineStyle: "none" });
       await expect
         .element(symbol)
         .toHaveStyle({ outlineStyle: "none", boxShadow: "none" });
