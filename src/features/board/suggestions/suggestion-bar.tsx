@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import { keyframes } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import type { FocusEvent } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
@@ -25,7 +26,7 @@ const PENDING_DOTS_DELAY_MS = 700;
 
 // Room for the widest outline a chip gets: the scan highlight, 4px at a 2px
 // offset. A scroll container clips at its padding edge.
-const OUTLINE_CLEARANCE = 0.75;
+const OUTLINE_CLEARANCE = "6px";
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;
@@ -63,22 +64,17 @@ export function SuggestionBar({
           // A live region would interrupt the tile's spoken feedback.
           role="group"
           aria-label={t(m.suggestionsLabel)}
-          onFocus={({ target }) => {
-            // Tab can focus a partly visible chip without scrolling its ring into view.
-            if (target.matches(":focus-visible")) {
-              target.scrollIntoView({ block: "nearest", inline: "nearest" });
-            }
-          }}
-          sx={(theme) => ({
+          onFocus={revealKeyboardFocusedChip}
+          sx={{
             display: "flex",
             alignItems: "center",
             gap: 2,
             // The margin takes the padding back, so the row keeps its size.
             p: OUTLINE_CLEARANCE,
-            m: -OUTLINE_CLEARANCE,
+            m: `-${OUTLINE_CLEARANCE}`,
             overflowX: "auto",
-            scrollPaddingInline: theme.spacing(OUTLINE_CLEARANCE),
-          })}
+            scrollPaddingInline: OUTLINE_CLEARANCE,
+          }}
         >
           {phrases.map((phrase) => (
             <Chip
@@ -106,6 +102,14 @@ export function SuggestionBar({
       )}
     </Stack>
   );
+}
+
+// Browsers leave a partly visible chip where it is on Tab, so its focus ring
+// stays cut off. A tapped chip shows no ring and stays put.
+function revealKeyboardFocusedChip({ target }: FocusEvent) {
+  if (target.matches(":focus-visible")) {
+    target.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
 }
 
 // Rendered only while pending, so they leave at once: the last phrase lands in
