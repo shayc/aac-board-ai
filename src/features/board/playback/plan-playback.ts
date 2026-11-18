@@ -100,7 +100,7 @@ function buildSpeechStep(
   };
 }
 
-// A lone English letter is lowercased, or Safari speaks "I" as "Capital I".
+// Keep Safari from speaking "I" as "Capital I".
 function getSpokenText(part: MessagePart, language: string): string {
   const raw =
     part.kind === "tile" ? (part.vocalization ?? part.label) : part.label;

@@ -171,7 +171,7 @@ describe("importBoardFile", () => {
 
     const importedBoardSet = await importBoardFile(extensionOnlyFile);
 
-    expect(importedBoardSet.id).toBe("imported-board-set");
+    expect(importedBoardSet.id).toBe("imported-board");
   });
 
   test("names the board set by its ID when neither the root board nor the file has a name", async () => {
@@ -182,7 +182,7 @@ describe("importBoardFile", () => {
 
     await importBoardFile(extensionOnlyFile);
 
-    expect((await listBoardSetRecords())[0]?.name).toBe("imported-board-set");
+    expect((await listBoardSetRecords())[0]?.name).toBe("imported-board");
   });
 
   test("names the board set after its file when the root board name is blank", async () => {

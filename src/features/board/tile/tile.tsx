@@ -182,7 +182,7 @@ function tileBackground(theme: Theme): string {
   );
 }
 
-// Matches the symbol's CSS brightness filter.
+// Match the symbol's CSS brightness filter.
 function dim(color: string): string {
   const dimmed = (channel: "r" | "g" | "b") =>
     `calc(${channel} * var(--tile-brightness))`;

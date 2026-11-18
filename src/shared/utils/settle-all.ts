@@ -1,5 +1,5 @@
-interface Settled<Value> {
-  values: Value[];
+interface Settled<T> {
+  values: T[];
   errors: unknown[];
 }
 
@@ -7,10 +7,10 @@ interface Settled<Value> {
  * Waits for every promise and never rejects: the values that fulfilled keep
  * their order, and each rejection comes back as an error.
  */
-export async function settleAll<Value>(
-  promises: Iterable<Promise<Value>>,
-): Promise<Settled<Value>> {
-  const values: Value[] = [];
+export async function settleAll<T>(
+  promises: Iterable<Promise<T>>,
+): Promise<Settled<T>> {
+  const values: T[] = [];
   const errors: unknown[] = [];
 
   for (const result of await Promise.allSettled(promises)) {

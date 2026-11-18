@@ -6,7 +6,7 @@ const TILE_ROWS = [
   ["#F9C99A", "#BFE3C6", "#ECEEF2"],
 ];
 
-// Matches the background of public/board.svg.
+// Keep in sync with public/board.svg.
 const ICON_BACKGROUND = "#0e1014";
 
 const VIEW_BOX_SIZE = 560;

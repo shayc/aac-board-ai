@@ -1,29 +1,29 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
-interface UseLatestAsyncOptions<Value> {
+interface UseLatestAsyncOptions<T> {
   deps: readonly (string | number | boolean | undefined)[];
-  run: ((signal: AbortSignal) => Promise<Value>) | undefined;
+  run: ((signal: AbortSignal) => Promise<T>) | undefined;
 }
 
-export interface UseLatestAsyncReturn<Value> {
-  value: Value | undefined;
+export interface UseLatestAsyncReturn<T> {
+  value: T | undefined;
   error: Error | undefined;
   isPending: boolean;
 }
 
-type SettledResult<Value> =
-  | { dependencyKey: string; status: "resolved"; value: Value }
+type SettledResult<T> =
+  | { dependencyKey: string; status: "resolved"; value: T }
   | { dependencyKey: string; status: "rejected"; error: Error };
 
-export function useLatestAsync<Value>({
+export function useLatestAsync<T>({
   deps,
   run,
-}: UseLatestAsyncOptions<Value>): UseLatestAsyncReturn<Value> {
+}: UseLatestAsyncOptions<T>): UseLatestAsyncReturn<T> {
   const isEnabled = run !== undefined;
   const dependencyKey = JSON.stringify(deps);
   const runLatest = useEffectEvent((signal: AbortSignal) => run?.(signal));
 
-  const [result, setResult] = useState<SettledResult<Value>>();
+  const [result, setResult] = useState<SettledResult<T>>();
 
   useEffect(() => {
     const controller = new AbortController();

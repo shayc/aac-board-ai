@@ -27,7 +27,7 @@ export function useTranslateBoardSets({
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  // A pass that finishes calls the latest callback, not the one it started with.
+  // Read the latest callback when a pass finishes, not the one it started with.
   const notifyTranslated = useEffectEvent((boardSetId: string) => {
     onBoardSetTranslated(boardSetId);
   });

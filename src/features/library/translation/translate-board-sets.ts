@@ -176,14 +176,13 @@ async function translateBySourceLanguage(
   const translators = new Map<string, OpenTranslator>();
 
   try {
-    // Every translator opens first, so a refused one wastes no translation.
+    // Open every translator first so a refused one wastes no translation.
     for (const sourceLanguage of stringsBySourceLanguage.keys()) {
       const translator = await createTranslator({
         sourceLanguage,
         targetLanguage,
         signal,
-        // Download progress keeps the status active across the model-download
-        // handoff.
+        // Keep translation status active across the model-download handoff.
         onDownloadProgress: onTranslating,
       });
       translators.set(sourceLanguage, translator);

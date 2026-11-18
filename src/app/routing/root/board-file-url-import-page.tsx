@@ -18,7 +18,7 @@ export function BoardFileURLImportPage() {
   const navigate = useNavigate();
   const t = useTranslate();
   const descriptionId = useId();
-  // A second tap can land before the router updates its navigation state.
+  // Guard against duplicate taps before the router updates navigation state.
   const [hasAnswered, setHasAnswered] = useState(false);
 
   if (hasAnswered) {
@@ -32,7 +32,7 @@ export function BoardFileURLImportPage() {
 
   function confirmImport() {
     setHasAnswered(true);
-    // Replacing the link's history entry stops Back from offering the import again.
+    // Replace the link's history entry so Back doesn't offer the import again.
     void submit(null, { method: "post", replace: true });
   }
 

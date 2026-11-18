@@ -1,7 +1,7 @@
 import { reloadPersistedStores } from "@shared/stores/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
-// Tests stay independent of the browser's installed AI models.
+// Keep tests independent of the browser's installed AI models.
 const BUILT_IN_AI_NAMESPACES = ["Proofreader", "Rewriter", "Translator"];
 
 function clearStorage() {

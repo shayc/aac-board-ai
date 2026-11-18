@@ -77,8 +77,7 @@ export function SwitchScanner({
       return;
     }
 
-    // The activation commits first, so the scan restarts on the targets it
-    // enabled.
+    // Commit activation before reading the newly enabled scan targets.
     flushSync(() => outcome.target.click());
     setPosition(startScan(listScanGroups(scope)));
   }

@@ -66,6 +66,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - In a component or hook, call hooks first, then derive values; a value that feeds a later hook stays with that hook. A hook's return type and returned object list members in the order they are defined.
 - Use early returns and guard clauses; keep the happy path at the left margin.
 - Extract dense conditionals and nested ternaries into named locals or helper functions.
+- End a `switch` over a union with `default: return assertNever(value)`, so a new member fails the build instead of falling through.
 - Extract complex conditional JSX and nested mapping loops into sub-components.
 - Order JSX props as identity (`key`, `ref`) → semantics/accessibility → primary data/state → configuration → callbacks. Keep controlled prop pairs together even when that overrides the category order. Place spreads first or last according to precedence. Keep `sx` last and outside this ordering.
 - Within `sx`, order properties as custom properties → positioning → layout → sizing → spacing → overflow/scrolling → typography → visuals → interaction → motion → nested/conditional rules. Keep related properties together. Put broad shorthands before intentional specific overrides, and base declarations before conditional overrides. Don't alphabetize or add blank lines solely to separate categories.
@@ -75,6 +76,10 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - Folders under `src/` are kebab-case.
 - Avoid vague filler words (`data`, `info`, `manager`) when a precise domain name is available, and avoid cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
 - Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs, except conversions and pure value builders that read better as nouns (`obfToBoard`, `rootBoardPath`); React components use descriptive PascalCase nouns.
+- Use one word for one idea across files. Helpers that do the same job share a verb (`readAssetURLs` in both the draft and the board loader), and sibling components name the same choice with the same prop and values (`shape="pill"` on `NavigationButtons` and `PlayButton`).
+- `create` returns a live object or a new identity (`createExternalStore`, `createTilePart`); `build` assembles a plain value (`buildSpeechStep`); a write to storage takes `add`, `save`, or `delete` (`addBoardSet`), never `create`.
+- A function that returns `sx` is a noun ending in `Sx` (`tileSx`, `gridContentSx`).
+- Module constants that are fixed tables or tuning values are `UPPER_SNAKE_CASE` (`CONTROL_SIZES`, `ROUTE_ERROR_CODES`). Values built by a call, and objects handed straight to JSX or a library (props, `sx`, theme options), stay camelCase (`starterBoardSet`, `scanRowProps`, `gridCellSx`).
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
 - Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
 - Write acronyms in uppercase (`boardURL`, `getUILocale`, `flipForLTR`) except at the start of a camelCase name (`url`, `uiLocale`) or where a library or platform API spells them otherwise (`CssBaseline`). `Id` is an abbreviation, not an acronym (`boardSetId`).

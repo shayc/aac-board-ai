@@ -66,8 +66,8 @@ async function readStoredAssets(
 }
 
 /**
- * Archive paths must match stored entry names. A missing path is cleared, so
- * consumers fall back to embedded media or remote URLs.
+ * Archive paths must match stored entry names. Clear missing paths to allow
+ * consumers to fall back to embedded media or remote URLs.
  */
 function withPackagedMedia(
   board: OBFBoard,

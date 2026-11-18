@@ -14,8 +14,7 @@ export function BoardTranslationNotice() {
   const progress = useGlobalDownloadProgress("Translator");
   const isTranslating = useIsTranslatingBoards();
 
-  // Both phases share one live region, so assistive technology announces the
-  // change from one to the other.
+  // Reuse the live region so assistive technology announces the phase change.
   if (progress !== null) {
     return (
       <TranslationStatusAlert

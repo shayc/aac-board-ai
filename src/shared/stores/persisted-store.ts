@@ -8,11 +8,11 @@ export function reloadPersistedStores(): void {
   }
 }
 
-export function createPersistedStore<State>(
+export function createPersistedStore<T>(
   storageKey: string,
-  parse: (raw: unknown) => State,
-): ExternalStore<State> {
-  function load(): State {
+  parse: (raw: unknown) => T,
+): ExternalStore<T> {
+  function load(): T {
     try {
       const raw = localStorage.getItem(storageKey);
 
@@ -22,9 +22,9 @@ export function createPersistedStore<State>(
     }
   }
 
-  const store = createExternalStore<State>(load());
+  const store = createExternalStore<T>(load());
 
-  function persist(state: State) {
+  function persist(state: T) {
     try {
       localStorage.setItem(storageKey, JSON.stringify(state));
     } catch {
@@ -32,7 +32,7 @@ export function createPersistedStore<State>(
     }
   }
 
-  function setState(next: State) {
+  function setState(next: T) {
     persist(next);
     store.setState(next);
   }

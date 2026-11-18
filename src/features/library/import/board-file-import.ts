@@ -115,7 +115,7 @@ export function buildAssetInputs(
 export function deriveBoardSetId(fileName: string): string {
   const stem = stripBoardFileExtension(fileName).toLowerCase();
 
-  return stem.slice(0, MAX_ID_LENGTH) || "imported-board-set";
+  return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
 }
 
 async function addBoardSetWithFreeId(

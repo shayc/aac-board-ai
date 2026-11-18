@@ -53,8 +53,7 @@ export const gridCellSx = {
   scrollSnapAlign: "none start",
 } as const;
 
-// Rows and cells snap on separate axes, which stops Safari focus from
-// shifting columns.
+// Keep row and cell snap axes separate to prevent Safari focus from shifting columns.
 export const gridRowSx = {
   flex: 1,
   minHeight: GRID_CELL_HEIGHT,

@@ -16,9 +16,8 @@ const isTranslatingStore = createExternalStore(false);
 let currentRun: TranslationRun | undefined;
 
 /**
- * Passes in the same language queue behind one another, which preserves model
- * downloads started by a user gesture. Aborting those downloads would require
- * another gesture to restart them.
+ * Queue same-language passes to preserve model downloads started by a user gesture.
+ * Aborting those downloads would require another gesture to restart them.
  */
 export function queueBoardTranslationPass(
   language: string,

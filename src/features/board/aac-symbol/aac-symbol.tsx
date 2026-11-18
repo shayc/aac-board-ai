@@ -54,7 +54,7 @@ export function AACSymbol({
             // The fallback holds the image's place until it loads.
             height: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, 54px)`,
             maxHeight: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, none)`,
-            // The image shrinks first, so the label keeps its full line.
+            // Let the image shrink so the label keeps its full line.
             minHeight: 0,
             aspectRatio: "1 / 1",
           }}
