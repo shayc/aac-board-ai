@@ -15,6 +15,7 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
+import { stubWakeLock } from "@shared/testing/stub-wake-lock";
 import { textLeft } from "@shared/testing/text-position";
 import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter } from "react-router";
@@ -694,6 +695,24 @@ describe("app flow", () => {
       .element(screen.getByRole("combobox", { name: "Langue" }))
       .toBeVisible();
     await expect.element(notice).not.toBeInTheDocument();
+  });
+
+  test("the screen stays awake while a board is open, and no longer after leaving it", async () => {
+    const { locks } = stubWakeLock();
+    const { router, screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "First Words" }))
+      .toBeVisible();
+
+    await vi.waitFor(() => expect(locks).toHaveLength(1));
+    expect(locks[0]?.released).toBe(false);
+
+    await router.navigate("/nonexistent");
+
+    await expect.element(screen.getByText("Page not found")).toBeVisible();
+    expect(locks[0]?.released).toBe(true);
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {
