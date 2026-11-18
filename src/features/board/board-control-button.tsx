@@ -1,20 +1,33 @@
 import Button, { type ButtonProps } from "@mui/material/Button";
+import type { Theme } from "@mui/material/styles";
+import { svgIconClasses } from "@mui/material/SvgIcon";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
-import { MESSAGE_SECONDARY_ACTION_SIZE } from "./message/message-bar";
+import {
+  MESSAGE_ACTION_ICON_SIZE,
+  MESSAGE_ACTION_SIZE,
+  MESSAGE_SECONDARY_ACTION_SIZE,
+} from "./message/message-bar";
 
 const SHAPE_SX = {
   // As wide as the grid's narrowest tile. Three of them and the gaps between
   // them fill the narrowest phone, 320px wide.
   pill: { width: 88 },
-  // As large as the message bar's backspace, which it sits beside. It holds
-  // one icon, so the button's side padding gives way to the fixed width.
-  round: {
-    width: MESSAGE_SECONDARY_ACTION_SIZE,
-    height: MESSAGE_SECONDARY_ACTION_SIZE,
+  // As large as the message bar's play, the row's other end. It holds one
+  // icon, so the button's side padding gives way to the fixed width. A short
+  // landscape bar drops a step, and the buttons follow it.
+  round: (theme: Theme) => ({
+    width: MESSAGE_ACTION_SIZE,
+    height: MESSAGE_ACTION_SIZE,
     px: 0,
-  },
-} as const;
+    [`& .${svgIconClasses.root}`]: { fontSize: MESSAGE_ACTION_ICON_SIZE },
+    [shortLandscape(theme)]: {
+      width: MESSAGE_SECONDARY_ACTION_SIZE,
+      height: MESSAGE_SECONDARY_ACTION_SIZE,
+    },
+  }),
+};
 
 export type BoardControlShape = keyof typeof SHAPE_SX;
 

@@ -40,7 +40,7 @@ describe("SuggestionBar", () => {
     await expectNoA11yViolations(screen.container);
   });
 
-  test("shows the pending pill only while a source is still answering", async () => {
+  test("shows the pending dots only while a source is still answering", async () => {
     const props = makeProps({ status: { kind: "pending" } });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
     await expect
@@ -60,7 +60,7 @@ describe("SuggestionBar", () => {
       .not.toBeInTheDocument();
   });
 
-  test("fades the pending pill in again once the first phrase arrives", async () => {
+  test("fades the pending dots in again once the first phrase arrives", async () => {
     const props = makeProps({ status: { kind: "pending" } });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
     await expect

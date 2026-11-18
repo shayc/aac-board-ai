@@ -45,7 +45,12 @@ by its root board:
 reads the set's name, author, description, license, language, and grid size
 from it, and storage keeps what it is given. A root board without a name leaves
 the set named after its file, or after its ID when the file name is only an
-extension. The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
+extension. The installed app's manifest sets `launch_handler` to
+`focus-existing`, so a launch focuses the window that is already open instead
+of starting a second one, and `useLaunchHandler` decides what that window does:
+it imports launched board files, follows a launched link such as a `?board=`
+link, and stays on the current board when the launch comes from the app's icon.
+The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
 opens the board set when exactly one imports. It skips files without a board
 file extension and reports them only when no board file was given. It imports
 the rest one at a time, so a failing file, or a launched file that can't be
@@ -241,13 +246,14 @@ language.
 
 While a source is still answering, the
 [suggestion bar](../src/features/board/suggestions/suggestion-bar.tsx) shows a
-softly filled pill of three dots after the phrases, where the next one will
-land, and each phrase fades in as it arrives. The pill waits a little longer
-than a first phrase usually takes before it fades in, so quick answers never
-flash it. It waits again whenever the first phrase arrives or the phrases
-clear, since either moves it along the row. The dots pulse in opacity only, so
-nothing beside the grid moves, and hold still when the system asks for reduced
-motion. The pill leaves at once when the last source answers.
+three bare dots after the phrases, where the next one will land, and each
+phrase fades in as it arrives. The dots have no fill or outline, so they never
+read as one more chip to tap. They wait a little longer than a first phrase
+usually takes before they fade in, so quick answers never flash them. They
+wait again whenever the first phrase arrives or the phrases clear, since
+either moves them along the row. The dots pulse in opacity only, so nothing
+beside the grid moves, and hold still when the system asks for reduced motion.
+They leave at once when the last source answers.
 
 The message changes only when a phrase is selected, and selecting a phrase
 does not play it. The phrases are a labelled group, not a live region, because
@@ -411,11 +417,32 @@ background colors, which `index.html`, the PWA manifest, and the `theme-color`
 meta tag share with the theme. Theme mode is set before the first paint to avoid
 a flash of the wrong color scheme.
 
+### Install screenshots
+
+Chrome shows its richer install dialog when the manifest has a screenshot for
+the device's form factor. The two in `public/` are static, so retake both after
+a visible change to the header, message bar, suggestions, or tiles, keeping
+them the same in everything but size:
+
+- **State:** a fresh origin after onboarding, light theme, English, First Words
+  with the tiles "I", "want", "more" in the message bar and the pointer off the
+  page.
+- **Suggestion:** "I'd like more.", the phrase Chrome's built-in AI gave for
+  that message. A browser without built-in AI needs `Proofreader` and `Rewriter`
+  stubbed to return it.
+- **Narrow:** a 390×844 viewport at scale 2, saved as 780×1688.
+- **Wide:** a 1024×640 viewport at scale 1.875, saved as 1920×1200. The dialog
+  shrinks it to about 580px wide, and this is the smallest viewport where the
+  whole board fits.
+
+`e2e/pwa-manifest.spec.ts` fails when a file's dimensions stop matching its
+`sizes` in `vite.config.ts`.
+
 ### Screen sizes
 
 Layout turns on one width breakpoint, `sm`. Above it the back and home buttons
 sit in the message bar's row, before the bar, as round buttons the size of its
-backspace. Backspace and the play button sit inside the bar at its end, play
+play button, so the row has one large button at each end. Backspace and the play button sit inside the bar at its end, play
 last and backspace a step smaller beside it. Backspace is a bare icon with no
 fill at rest, so play is the only filled shape in the bar; its touch target is
 the whole button, which the hold ring traces. Suggestions have the row below to
@@ -435,6 +462,7 @@ what such a screen lacks, so:
 - The app bar and the other toolbars take their shortest height.
 - The message bar drops to a compact height, as tall as backspace and its
   inset, with smaller symbols, and play shrinks to backspace's size to fit it.
+  The back and home buttons shrink with play.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 

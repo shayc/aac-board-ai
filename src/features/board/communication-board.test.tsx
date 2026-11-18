@@ -388,7 +388,8 @@ describe("CommunicationBoard", () => {
         // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
         playHeight: 80,
-        messageBarStart: 24 + 64 + 8 + 64 + 16,
+        // Back and home grow to play's 80px where the bar has room for it.
+        messageBarStart: 24 + 80 + 8 + 80 + 16,
         // Play, 80px, sets the height where there is room for it.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
@@ -983,7 +984,7 @@ describe("CommunicationBoard", () => {
         .toHaveFocus();
     });
 
-    test("resets navigation history when Home is clicked from Home", async () => {
+    test("disables Home on the home board and keeps Back", async () => {
       const screen = await renderCommunicationBoard(
         TWO_BUTTON_BOARD,
         [
@@ -995,12 +996,10 @@ describe("CommunicationBoard", () => {
         "test-board",
       );
       const back = screen.getByRole("button", { name: "Go back" });
+      const home = screen.getByRole("button", { name: "Go to main board" });
 
+      await expect.element(home).toHaveAttribute("aria-disabled", "true");
       await expect.element(back).not.toHaveAttribute("aria-disabled");
-
-      await screen.getByRole("button", { name: "Go to main board" }).click();
-
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
     });
   });
 
