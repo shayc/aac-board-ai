@@ -1,15 +1,94 @@
+import { useColorScheme } from "@mui/material/styles";
+import { assertDefined } from "@shared/testing/assert-defined";
+import { contrastRatio, paint } from "@shared/testing/contrast";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { BackspaceButton } from "../message/backspace-button";
+import { MessageBar } from "../message/message-bar";
 import { PlayButton } from "./play-button";
 
 const SHORTCUT_LABELS = { play: "⌘↩", stop: "Esc" };
+const BACKSPACE_SHORTCUT_LABELS = {
+  clear: "⌘⌫",
+  spokenClear: "Command+Delete",
+};
+
+type ColorMode = "light" | "dark";
 
 function createHandlers() {
   return {
     onPlay: vi.fn(),
     onStop: vi.fn(),
   };
+}
+
+// Measures each disabled glyph where it is seen: play's over its own tint,
+// backspace's straight on the bar, both against the bar.
+async function measureDisabledGlyphContrasts(mode: ColorMode) {
+  const screen = await renderWithProviders(
+    <>
+      <ColorModeSwitch mode={mode} />
+      <MessageBar
+        parts={[]}
+        isWordOpen={false}
+        activePartId={null}
+        areImagesVisible
+        endAction={
+          <>
+            <BackspaceButton
+              disabled
+              shortcutLabels={BACKSPACE_SHORTCUT_LABELS}
+              onPress={vi.fn()}
+              onLongPress={vi.fn()}
+            />
+            <PlayButton
+              disabled
+              isPlaying={false}
+              shortcutLabels={SHORTCUT_LABELS}
+              {...createHandlers()}
+            />
+          </>
+        }
+      />
+    </>,
+  );
+  await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
+  await expect.poll(() => document.documentElement.className).toBe(mode);
+
+  const play = screen.getByRole("button", { name: "Play message" }).element();
+  const backspace = screen.getByRole("button", { name: "Backspace" }).element();
+  // Switching modes animates the colors; measure where they settle.
+  await Promise.all(
+    play.parentElement
+      ?.getAnimations({ subtree: true })
+      .map(({ finished }) => finished) ?? [],
+  );
+
+  const bar = play.parentElement;
+  assertDefined(bar);
+  const barColor = getComputedStyle(bar).backgroundColor;
+  const playStyle = getComputedStyle(play);
+  const playGlyph = paint(barColor, playStyle.backgroundColor, playStyle.color);
+  const backspaceGlyph = paint(barColor, getComputedStyle(backspace).color);
+  await screen.unmount();
+
+  const ground = paint(barColor);
+
+  return {
+    play: contrastRatio(playGlyph, ground),
+    backspace: contrastRatio(backspaceGlyph, ground),
+  };
+}
+
+function ColorModeSwitch({ mode }: { mode: ColorMode }) {
+  const { setMode } = useColorScheme();
+
+  return (
+    <button type="button" onClick={() => setMode(mode)}>
+      Use {mode} mode
+    </button>
+  );
 }
 
 describe("PlayButton", () => {
@@ -113,4 +192,17 @@ describe("PlayButton", () => {
     );
     await expect.element(stop).toHaveAttribute("aria-keyshortcuts", "Escape");
   });
+});
+
+describe("PlayButton in an empty message bar", () => {
+  // Play is the bar's main action, so even disabled it must not read weaker
+  // than the backspace beside it.
+  test.each(["light", "dark"] as const)(
+    "keeps its disabled glyph at least as visible as backspace's in %s mode",
+    async (mode) => {
+      const { play, backspace } = await measureDisabledGlyphContrasts(mode);
+
+      expect(play).toBeGreaterThanOrEqual(backspace);
+    },
+  );
 });

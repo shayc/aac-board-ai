@@ -73,7 +73,10 @@ export function PlayButton({
           width: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
           height: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${MESSAGE_ACTION_SIZE}px)`,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-          [`&.${fabClasses.disabled}`]: disabledSx(theme),
+          [`&.${fabClasses.disabled}`]: {
+            ...disabledSx(theme),
+            ...theme.applyStyles("dark", disabledOnDarkBarSx(theme)),
+          },
         })}
       >
         <Icon sx={{ fontSize: MESSAGE_ACTION_ICON_SIZE }} />
@@ -95,4 +98,10 @@ function disabledSx(theme: Theme) {
       theme.vars.palette.action.activatedOpacity,
     ),
   };
+}
+
+// The bar's dark-mode grey is a step darker than white, which mutes the tint;
+// a heavier glyph keeps play at least as visible as the backspace beside it.
+function disabledOnDarkBarSx(theme: Theme) {
+  return { color: theme.alpha(theme.vars.palette.primary.main, 0.6) };
 }
