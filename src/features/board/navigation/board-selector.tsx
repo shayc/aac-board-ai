@@ -52,8 +52,13 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           onClick={(event) => setAnchor(event.currentTarget)}
           sx={{
             maxWidth: "100%",
+            // 48px tall, the height of the icon buttons beside it. The end
+            // side is narrower because the triangle carries its own space.
+            py: 1,
+            pl: 2.5,
+            pr: 1.5,
             font: "inherit",
-            [`& .${buttonClasses.endIcon}`]: { marginLeft: 0 },
+            [`& .${buttonClasses.endIcon}`]: { margin: 0 },
           }}
         >
           <Typography component="span" variant="inherit" noWrap>
