@@ -20,6 +20,10 @@ const pendingPulse = keyframes`
   30% { opacity: 1; }
 `;
 
+// A first phrase mostly arrives within about 600ms, so a shorter wait would
+// flash the pill just before the phrase takes its place.
+const PENDING_PILL_DELAY_MS = 700;
+
 export interface SuggestionBarProps {
   status: SuggestionStatus;
   phrases: readonly string[];
@@ -81,7 +85,12 @@ export function SuggestionBar({
         </Box>
       )}
 
-      <PendingPill isVisible={status.kind === "pending"} />
+      <PendingPill
+        // The first phrase moves the pill along the row, so it waits again
+        // before showing there instead of jumping across at full strength.
+        key={hasPhrases ? "after-phrases" : "alone"}
+        isVisible={status.kind === "pending"}
+      />
     </Stack>
   );
 }
@@ -101,7 +110,9 @@ function PendingPill({ isVisible }: PendingPillProps) {
       // Leaves at once: the last phrase lands in the same render and would
       // push a fading pill past it.
       timeout={{ enter: theme.transitions.duration.enteringScreen, exit: 0 }}
-      style={{ transitionDelay: isVisible ? "300ms" : "0ms" }}
+      style={{
+        transitionDelay: isVisible ? `${PENDING_PILL_DELAY_MS}ms` : "0ms",
+      }}
     >
       <Box
         data-testid="suggestions-pending"

@@ -60,6 +60,20 @@ describe("SuggestionBar", () => {
       .not.toBeInTheDocument();
   });
 
+  test("fades the pending pill in again once the first phrase arrives", async () => {
+    const props = makeProps({ status: { kind: "pending" } });
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
+    await expect
+      .element(screen.getByTestId("suggestions-pending"), { timeout: 3000 })
+      .toHaveStyle({ opacity: "1" });
+
+    await screen.rerender(<SuggestionBar {...props} phrases={["Hello"]} />);
+
+    await expect
+      .element(screen.getByTestId("suggestions-pending"))
+      .toHaveStyle({ opacity: "0" });
+  });
+
   test("has no accessibility violations when suggestions failed", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
