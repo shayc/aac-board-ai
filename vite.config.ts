@@ -10,6 +10,9 @@ import {
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
 
+const SCREENSHOT_LABEL =
+  "The First Words board with “I want more” in the message bar and the suggestion “I'd like more.”";
+
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
   transformIndexHtml: (html) =>
@@ -52,11 +55,13 @@ export default defineConfig({
         short_name: "AAC Board",
         description:
           "A free communication board for people who cannot rely on speech. Tap symbols to build a message and hear it spoken aloud, with optional on-device AI suggestions.",
+        id: "/",
         start_url: "/",
         display: "standalone",
         file_handlers: [
           { action: "/", accept: BOARD_FILE_EXTENSIONS_BY_MIME_TYPE },
         ],
+        launch_handler: { client_mode: "focus-existing" },
         theme_color: BACKGROUND_DARK,
         background_color: BACKGROUND_DARK,
         icons: [
@@ -75,6 +80,22 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
+          },
+        ],
+        screenshots: [
+          {
+            src: "screenshot-narrow.png",
+            sizes: "780x1688",
+            type: "image/png",
+            form_factor: "narrow",
+            label: SCREENSHOT_LABEL,
+          },
+          {
+            src: "screenshot-wide.png",
+            sizes: "1920x1200",
+            type: "image/png",
+            form_factor: "wide",
+            label: SCREENSHOT_LABEL,
           },
         ],
       },
