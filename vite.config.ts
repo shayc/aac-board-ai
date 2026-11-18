@@ -54,7 +54,7 @@ export default defineConfig({
         name: "AAC Board AI",
         short_name: "AAC Board",
         description:
-          "A free communication board for people who cannot rely on speech. Tap symbols to build a message and hear it spoken aloud, with optional on-device AI suggestions.",
+          "A free communication board for people who cannot rely on speech. Tap symbols to build a message and hear it spoken aloud. Works offline, with no account, ads or tracking.",
         id: "/",
         start_url: "/",
         display: "standalone",
