@@ -66,16 +66,14 @@ export function BoardControlButton({
 // eye gaze rests on.
 function ringSx(theme: Theme) {
   return {
-    "--variant-containedBg": "transparent",
     border: `1px solid ${theme.vars.palette.outline}`,
+    backgroundColor: "transparent",
     [`&, &:hover, &:active, &.${buttonClasses.focusVisible}`]: {
       boxShadow: "none",
     },
     // A tap leaves hover stuck on a touch screen.
     "@media (hover: hover)": {
-      "&:hover": {
-        "--variant-containedBg": theme.vars.palette.action.hover,
-      },
+      "&:hover": { backgroundColor: theme.vars.palette.action.hover },
     },
     // As dim as its icon, so a button that is off still shows where it is.
     [`&.${buttonClasses.disabled}`]: {
