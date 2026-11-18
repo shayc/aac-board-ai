@@ -1,15 +1,9 @@
 import { normalizeLocale } from "@shared/language/locale";
-import type {
-  OBFBoard,
-  OBFButton,
-  OBFGrid,
-  OBFMedia,
-} from "@shayc/open-board-format";
+import type { OBFBoard, OBFButton, OBFMedia } from "@shayc/open-board-format";
 import type {
   Board,
   BoardAction,
   BoardButton,
-  BoardGrid,
   TranslationsByLocale,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
@@ -28,7 +22,7 @@ export function obfToBoard(
     buttons: obfBoard.buttons.map((obfButton) =>
       obfToBoardButton(obfButton, imageSrcById, soundSrcById),
     ),
-    grid: obfToBoardGrid(obfBoard.grid),
+    grid: { order: obfBoard.grid.order },
     translationsByLocale: obfToTranslationsByLocale(obfBoard.strings),
   };
 }
@@ -120,14 +114,6 @@ function parseAction(raw: string): BoardAction | undefined {
     default:
       return undefined;
   }
-}
-
-function obfToBoardGrid(obfGrid: OBFGrid): BoardGrid {
-  return {
-    rows: obfGrid.rows,
-    columns: obfGrid.columns,
-    order: obfGrid.order,
-  };
 }
 
 export function obfToTranslationsByLocale(

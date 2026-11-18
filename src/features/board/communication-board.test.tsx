@@ -4,6 +4,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
+import { stubRewriter } from "@shared/testing/stub-built-in-ai";
 import {
   endUtterance,
   failUtterance,
@@ -296,6 +297,21 @@ describe("CommunicationBoard", () => {
       await vi.waitFor(() => {
         expect(lastUtterance(speech.speak).lang).toBe("he");
       });
+    });
+
+    test("suggests in the communication language, not the board's", async () => {
+      setCommunicationLanguage("he");
+      const { create } = stubRewriter((input) => `${input}!`);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect
+        .element(screen.getByRole("button", { name: "hello!" }))
+        .toHaveAttribute("lang", "he");
+      for (const [options] of create.mock.calls) {
+        expect(options).toMatchObject({ outputLanguage: "he" });
+      }
     });
 
     test("leaves tiles on the document's language when the board declares none", async () => {

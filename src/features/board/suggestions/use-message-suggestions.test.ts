@@ -1,7 +1,4 @@
-import {
-  DEFAULT_LANGUAGE,
-  setCommunicationLanguage,
-} from "@shared/language/language-store";
+import { DEFAULT_LANGUAGE } from "@shared/language/language-store";
 import {
   makeProofreadResult,
   stubProofreader,
@@ -18,8 +15,13 @@ const ENGINE_STUBS = {
   Rewriter: stubRewriter,
 };
 
-function renderMessageSuggestions(text: string) {
-  return renderHook(() => useMessageSuggestions(text));
+function renderMessageSuggestions(
+  text: string,
+  language: string = DEFAULT_LANGUAGE,
+) {
+  return renderHook(() =>
+    useMessageSuggestions({ messageText: text, language }),
+  );
 }
 
 function stubRewritesByTone(
@@ -55,7 +57,6 @@ async function clickToRun(action: () => void): Promise<void> {
 describe("useMessageSuggestions", () => {
   beforeEach(() => {
     setSuggestionCustomInstructions("");
-    setCommunicationLanguage(DEFAULT_LANGUAGE);
   });
 
   test("reports unavailable and stays empty when no Built-in AI is available", async () => {
@@ -78,11 +79,10 @@ describe("useMessageSuggestions", () => {
   });
 
   test("reports unavailable when no engine supports the language", async () => {
-    setCommunicationLanguage("he");
     stubProofreader().availability.mockResolvedValue("unavailable");
     stubRewriter().availability.mockResolvedValue("unavailable");
 
-    const { result } = await renderMessageSuggestions("שלום");
+    const { result } = await renderMessageSuggestions("שלום", "he");
 
     await vi.waitFor(() => {
       expect(result.current.isAvailable).toBe(false);
@@ -246,13 +246,17 @@ describe("useMessageSuggestions", () => {
         : new Promise<Availability>(() => undefined),
     );
 
-    const { result } = await renderMessageSuggestions("want eat");
+    const { result, rerender } = await renderHook(
+      ({ language }: { language: string } = { language: "en" }) =>
+        useMessageSuggestions({ messageText: "want eat", language }),
+      { initialProps: { language: "en" } },
+    );
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "not-enabled" });
     });
 
-    setCommunicationLanguage("he");
+    await rerender({ language: "he" });
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "idle" });
@@ -337,10 +341,9 @@ describe("useMessageSuggestions", () => {
   });
 
   test("uses the selected language rather than English", async () => {
-    setCommunicationLanguage("he");
     const { create } = stubRewriter();
 
-    await renderMessageSuggestions("שלום");
+    await renderMessageSuggestions("שלום", "he");
 
     await vi.waitFor(() => {
       expect(create).toHaveBeenCalledTimes(2);
@@ -388,7 +391,10 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text),
+        useMessageSuggestions({
+          messageText: text,
+          language: DEFAULT_LANGUAGE,
+        }),
       { initialProps: { text: "old" } },
     );
 
@@ -420,7 +426,10 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text),
+        useMessageSuggestions({
+          messageText: text,
+          language: DEFAULT_LANGUAGE,
+        }),
       { initialProps: { text: "old" } },
     );
 

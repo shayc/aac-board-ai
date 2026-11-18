@@ -25,8 +25,6 @@ describe("obfToBoard", () => {
     expect(board.buttons).toHaveLength(1);
     expect(board.buttons[0]?.id).toBe("btn-1");
     expect(board.buttons[0]?.actions).toEqual([]);
-    expect(board.grid.rows).toBe(1);
-    expect(board.grid.columns).toBe(1);
     expect(board.grid.order).toEqual([["btn-1"]]);
   });
 
@@ -95,8 +93,6 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.grid).toEqual({
-        rows: 2,
-        columns: 2,
         order: [
           ["btn-1", null],
           [null, "btn-2"],

@@ -1,5 +1,4 @@
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
-import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import {
   deriveSuggestionStatus,
@@ -16,6 +15,11 @@ import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
+interface UseMessageSuggestionsOptions {
+  messageText: string;
+  language: string;
+}
+
 interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
   status: SuggestionStatus;
@@ -23,9 +27,10 @@ interface UseMessageSuggestionsReturn {
   enable: () => void;
 }
 
-export function useMessageSuggestions(
-  messageText: string,
-): UseMessageSuggestionsReturn {
+export function useMessageSuggestions({
+  messageText,
+  language,
+}: UseMessageSuggestionsOptions): UseMessageSuggestionsReturn {
   const text = messageText.trim();
 
   const { customInstructions } = useSuggestionPreferences();
@@ -34,7 +39,6 @@ export function useMessageSuggestions(
     CUSTOM_INSTRUCTIONS_DEBOUNCE_MS,
   );
 
-  const { language } = useCommunicationLanguage();
   const proofreaderSource = useProofreaderSource({ text, language });
   const rewriterSource = useRewriterSource({
     text,

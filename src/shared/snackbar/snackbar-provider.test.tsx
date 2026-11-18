@@ -12,7 +12,7 @@ const LONG_DURATION_MS = 60_000;
 function ShowButtons({
   snackbars,
 }: {
-  snackbars: Record<string, SnackbarOptions | string>;
+  snackbars: Record<string, SnackbarOptions>;
 }) {
   const { showSnackbar } = useSnackbar();
 
@@ -32,13 +32,15 @@ function ShowButtons({
   );
 }
 
-function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
+function renderSnackbars(snackbars: Record<string, SnackbarOptions>) {
   return renderWithProviders(<ShowButtons snackbars={snackbars} />);
 }
 
 describe("SnackbarProvider", () => {
   test("has no accessibility violations while a message shows", async () => {
-    const screen = await renderSnackbars({ "show-saved": "Saved" });
+    const screen = await renderSnackbars({
+      "show-saved": { message: "Saved" },
+    });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
@@ -93,7 +95,9 @@ describe("SnackbarProvider", () => {
   });
 
   test("shows a plain-string message", async () => {
-    const screen = await renderSnackbars({ "show-saved": "Saved" });
+    const screen = await renderSnackbars({
+      "show-saved": { message: "Saved" },
+    });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
 
@@ -156,7 +160,9 @@ describe("SnackbarProvider", () => {
     });
 
     test("hides an informational message on its own", async () => {
-      const screen = await renderSnackbars({ "show-saved": "Saved" });
+      const screen = await renderSnackbars({
+        "show-saved": { message: "Saved" },
+      });
 
       await screen.getByRole("button", { name: "show-saved" }).click();
       await expect

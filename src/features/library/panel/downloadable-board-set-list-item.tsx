@@ -96,7 +96,7 @@ function DownloadButton({
         aria-describedby={statusId}
         aria-disabled={isImporting}
         edge="end"
-        onClick={handleClick}
+        onClick={isImporting ? undefined : handleClick}
         sx={{ border: "none" }}
       >
         <DownloadButtonIcon phase={phase} />
