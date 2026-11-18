@@ -1,3 +1,5 @@
+import { backdropClasses } from "@mui/material/Backdrop";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import {
@@ -8,6 +10,7 @@ import {
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
 import type { RenderResult } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { SettingsDrawer } from "./settings-drawer";
 
 describe("SettingsDrawer", () => {
@@ -67,6 +70,26 @@ describe("SettingsDrawer", () => {
     await expect
       .element(screen.getByText(/^Version \d+\.\d+\.\d+$/))
       .toBeInTheDocument();
+  });
+
+  test("leaves the page undimmed and closes on a click outside", async () => {
+    const onClose = vi.fn();
+    const screen = await renderWithProviders(
+      <SettingsDrawer open onClose={onClose} />,
+    );
+    await expect
+      .element(screen.getByRole("slider", { name: "Brightness" }))
+      .toBeInTheDocument();
+
+    const backdrop = document.querySelector(`.${backdropClasses.root}`);
+    assertDefined(backdrop);
+
+    expect(getComputedStyle(backdrop).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+
+    // The drawer covers the backdrop's center in a narrow test viewport.
+    await userEvent.click(backdrop, { position: { x: 4, y: 4 } });
+
+    expect(onClose).toHaveBeenCalledOnce();
   });
 
   test("names each section group after its heading", async () => {

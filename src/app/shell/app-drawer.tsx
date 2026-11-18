@@ -20,6 +20,7 @@ interface AppDrawerProps {
   open: boolean;
   onClose: () => void;
   anchor: "left" | "right";
+  hasInvisibleBackdrop?: boolean;
   children: ReactNode;
 }
 
@@ -30,6 +31,7 @@ export function AppDrawer({
   open,
   onClose,
   anchor,
+  hasInvisibleBackdrop = false,
   children,
 }: AppDrawerProps) {
   return (
@@ -38,9 +40,13 @@ export function AppDrawer({
       onClose={onClose}
       anchor={anchor}
       slotProps={{
+        backdrop: { invisible: hasInvisibleBackdrop },
         paper: {
           "aria-label": title,
-          sx: { width: safeAreaGutter(DRAWER_BASE_WIDTH, anchor) },
+          sx: [
+            { width: safeAreaGutter(DRAWER_BASE_WIDTH, anchor) },
+            hasInvisibleBackdrop && innerEdgeSx(anchor),
+          ],
         },
       }}
     >
@@ -62,6 +68,15 @@ export function AppDrawer({
       </AppDrawerContent>
     </Drawer>
   );
+}
+
+// Without the dimming, the dark drawer is the page's own color and its shadow
+// does not show, so a line marks where it ends. The RTL stylis plugin mirrors
+// the side with the drawer anchor.
+function innerEdgeSx(anchor: "left" | "right") {
+  const innerBorder = anchor === "left" ? "borderRight" : "borderLeft";
+
+  return { [innerBorder]: 1, borderColor: "divider" };
 }
 
 interface AppDrawerContentProps {

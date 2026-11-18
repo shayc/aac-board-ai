@@ -35,6 +35,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       open={open}
       onClose={onClose}
       anchor="right"
+      // Tile and message settings are judged against the board behind them.
+      hasInvisibleBackdrop
     >
       <Stack divider={<Divider />} spacing={3} sx={{ px: 3, pb: 3 }}>
         <SettingsSection title={t(m.settingsSectionAppearance)}>
