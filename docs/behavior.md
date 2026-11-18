@@ -46,8 +46,11 @@ reads the set's name, author, description, license, language, and grid size
 from it, and storage keeps what it is given. A root board without a name leaves
 the set named after its file, or after its ID when the file name is only an
 extension. The installed app's manifest sets `launch_handler` to
-`focus-existing`, so a board file opened from the operating system imports into
-the window that is already open instead of starting a second one. The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
+`focus-existing`, so a launch focuses the window that is already open instead
+of starting a second one, and `useLaunchHandler` decides what that window does:
+it imports launched board files, follows a launched link such as a `?board=`
+link, and stays on the current board when the launch comes from the app's icon.
+The three local-file entry points go through `useImportBoardFiles().importAndOpen`, which
 opens the board set when exactly one imports. It skips files without a board
 file extension and reports them only when no board file was given. It imports
 the rest one at a time, so a failing file, or a launched file that can't be

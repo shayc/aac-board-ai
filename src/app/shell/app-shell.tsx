@@ -6,7 +6,7 @@ import {
   BoardFileDropOverlay,
   useActiveBoardSetId,
   useBoardFileDrop,
-  useImportBoardFilesOnLaunch,
+  useLaunchHandler,
   useTranslateBoardSets,
 } from "@features/library";
 import Box from "@mui/material/Box";
@@ -24,7 +24,7 @@ export function AppShell() {
   const activeBoardSetId = useActiveBoardSetId();
   const revalidateBoardSet = useRevalidateBoardSet();
 
-  useImportBoardFilesOnLaunch();
+  useLaunchHandler();
   useTranslateBoardSets({
     activeBoardSetId,
     onBoardSetTranslated: revalidateBoardSet,
