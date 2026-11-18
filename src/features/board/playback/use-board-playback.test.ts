@@ -256,7 +256,7 @@ describe("useBoardPlayback", () => {
     expect(result.current.isMessagePlaying).toBe(false);
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -273,7 +273,7 @@ describe("useBoardPlayback", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -297,7 +297,7 @@ describe("useBoardPlayback", () => {
     expect(speech.spokenTexts()).toEqual(["before"]);
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -380,7 +380,7 @@ describe("useBoardPlayback", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 

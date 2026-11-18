@@ -24,7 +24,7 @@ async function expectBoardUsable(
 ) {
   await expect(page.getByRole("grid", { name: boardName })).toBeVisible();
 
-  const playMessageButton = page.getByRole("button", { name: "Play message" });
+  const playMessageButton = page.getByRole("button", { name: "Speak message" });
   await expect(playMessageButton).toBeDisabled();
 
   await page.getByRole("button", { name: tileName }).click();

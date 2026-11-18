@@ -334,7 +334,7 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
       await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
+      await expect.poll(highlightedNames).toEqual(["Speak message"]);
 
       await pressSwitch();
 
@@ -352,13 +352,13 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect
         .poll(highlightedNames)
-        .toEqual(["Backspace", "Play message"]);
+        .toEqual(["Backspace", "Speak message"]);
 
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["Backspace"]);
 
       await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
+      await expect.poll(highlightedNames).toEqual(["Speak message"]);
 
       await pressSwitch();
 
