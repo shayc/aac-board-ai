@@ -1,15 +1,12 @@
 import {
   deferNextWakeLock,
   refuseNextWakeLock,
+  setPageVisibility,
   stubWakeLock,
 } from "@shared/testing/stub-wake-lock";
 import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useScreenWakeLock } from "./use-screen-wake-lock";
-
-function showPageAgain() {
-  document.dispatchEvent(new Event("visibilitychange"));
-}
 
 describe("useScreenWakeLock", () => {
   test("holds a screen lock while mounted and releases it on unmount", async () => {
@@ -27,12 +24,16 @@ describe("useScreenWakeLock", () => {
   });
 
   test("takes a new lock when the page is shown after the browser released it", async () => {
-    const { locks } = stubWakeLock();
+    const { request, locks } = stubWakeLock();
     await renderHook(() => useScreenWakeLock());
     await vi.waitFor(() => expect(locks).toHaveLength(1));
 
     await locks[0]?.release();
-    showPageAgain();
+    setPageVisibility("hidden");
+
+    expect(request).toHaveBeenCalledTimes(1);
+
+    setPageVisibility("visible");
 
     await vi.waitFor(() => expect(locks).toHaveLength(2));
     expect(locks[1]?.released).toBe(false);
@@ -43,7 +44,7 @@ describe("useScreenWakeLock", () => {
     await renderHook(() => useScreenWakeLock());
     await vi.waitFor(() => expect(locks).toHaveLength(1));
 
-    showPageAgain();
+    setPageVisibility("visible");
 
     expect(request).toHaveBeenCalledTimes(1);
   });
@@ -65,7 +66,7 @@ describe("useScreenWakeLock", () => {
     await renderHook(() => useScreenWakeLock());
     await vi.waitFor(() => expect(request).toHaveBeenCalledTimes(1));
 
-    showPageAgain();
+    setPageVisibility("visible");
 
     await vi.waitFor(() => expect(locks).toHaveLength(1));
   });

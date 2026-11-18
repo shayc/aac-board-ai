@@ -108,8 +108,9 @@ While a board is open,
 screen wake lock, so a device left on the table during a conversation does not
 dim and lock. The browser releases the lock whenever the page is hidden, so the
 hook asks again each time the page is shown. Where the API is missing or the
-browser refuses (low battery, or an installed app before iOS 18.4), the screen
-follows the device's auto-lock setting and nothing is reported.
+browser refuses (low battery, for example), the screen follows the device's
+auto-lock setting and nothing is reported. An installed app before iOS 18.4
+grants the lock but does not honor it, so the screen locks there too.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/library/storage/asset-urls.ts) for

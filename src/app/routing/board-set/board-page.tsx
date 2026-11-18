@@ -11,6 +11,7 @@ export function BoardPage() {
   const { board, language } = useBoardInLanguage(storedBoard);
   const rootBoardId =
     useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.rootBoardId;
+
   useScreenWakeLock();
 
   return (

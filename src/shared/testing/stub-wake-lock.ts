@@ -27,6 +27,12 @@ export function refuseNextWakeLock(request: Mock<WakeLock["request"]>): void {
   request.mockRejectedValueOnce(new DOMException("Refused", "NotAllowedError"));
 }
 
+/** Hides or shows the page as the browser would, which a test cannot do. */
+export function setPageVisibility(visibility: DocumentVisibilityState): void {
+  vi.spyOn(document, "visibilityState", "get").mockReturnValue(visibility);
+  document.dispatchEvent(new Event("visibilitychange"));
+}
+
 /** Leaves the next request pending until the returned function is called. */
 export function deferNextWakeLock({
   request,
