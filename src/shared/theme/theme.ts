@@ -87,8 +87,10 @@ const IDLE_TOUCH_HOVER_OUTLINE = `&:hover:not(.${outlinedInputClasses.focused}, 
 const defaultTheme = createTheme();
 
 // The theme selects a scheme by class (`colorSchemeSelector` below), and MUI
-// names each class after its scheme. An element with this class is in the
-// light scheme, with its subtree, whatever the theme mode.
+// names each class after its scheme. An element with this class gives itself
+// and its subtree the light scheme's `theme.vars`, whatever the theme mode.
+// `applyStyles("dark")` still applies there in dark mode: it matches the class
+// on the root.
 export const LIGHT_SCHEME_CLASS = "light";
 
 const themeOptions = {

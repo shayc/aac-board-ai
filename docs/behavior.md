@@ -148,8 +148,8 @@ and board list) when that set is on screen or being navigated to, so everything
 on screen updates without a reload. A set that only gained its name, such as
 one already in the communication language, has the same boards as before and is
 not revalidated. Other sets are not revalidated either: that would re-run a
-`?board=` link import still in flight. The library knows nothing about route loaders; the app owns that
-decision in
+`?board=` link import still in flight. The library knows nothing about route
+loaders; the app owns that decision in
 [`useRevalidateBoardSet`](../src/app/routing/use-revalidate-board-set.ts). A set the
 translator fails on, for example because a model download needs a user
 gesture, stays in its source language until the next run. A storage or other

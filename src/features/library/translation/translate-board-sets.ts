@@ -17,7 +17,7 @@ export interface TranslationPassOptions {
 
 interface TranslateBoardSetsOptions extends TranslationPassOptions {
   /** Called for each set whose boards gained translations. */
-  onTranslated: (boardSetId: string) => void;
+  onBoardsTranslated: (boardSetId: string) => void;
 }
 
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
@@ -26,7 +26,7 @@ type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
-  { signal, onTranslating, onTranslated }: TranslateBoardSetsOptions,
+  { signal, onTranslating, onBoardsTranslated }: TranslateBoardSetsOptions,
 ): Promise<void> {
   for (const boardSet of boardSets) {
     if (signal.aborted) {
@@ -42,7 +42,7 @@ export async function translateBoardSets(
       onTranslating,
     });
     if (hasTranslatedBoards) {
-      onTranslated(boardSet.id);
+      onBoardsTranslated(boardSet.id);
     }
   }
 }

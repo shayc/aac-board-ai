@@ -54,9 +54,9 @@ export function CommunicationBoard({
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
-  // The members are picked one by one: `message` is a new object on every
-  // edit, and an activator built from the whole object would change with it
-  // and re-render every tile on each tap.
+  // The members are picked one by one: each hook returns a new object when its
+  // state changes, `message` on every edit, and an activator built from the
+  // whole objects would change with them and re-render every tile on each tap.
   const activateButton = createButtonActivator({
     message: {
       apply: message.apply,

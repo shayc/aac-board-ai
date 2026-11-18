@@ -27,7 +27,7 @@ export function AppShell() {
   useLaunchHandler();
   useTranslateBoardSets({
     activeBoardSetId,
-    onBoardSetTranslated: revalidateBoardSet,
+    onBoardsTranslated: revalidateBoardSet,
   });
 
   return (

@@ -42,14 +42,14 @@ async function runTranslation(
   signal = new AbortController().signal,
 ) {
   const onTranslating = vi.fn<() => void>();
-  const onTranslated = vi.fn<(boardSetId: string) => void>();
+  const onBoardsTranslated = vi.fn<(boardSetId: string) => void>();
   await translateBoardSets(await listBoardSetRecords(), language, {
     signal,
     onTranslating,
-    onTranslated,
+    onBoardsTranslated,
   });
 
-  return { onTranslating, onTranslated };
+  return { onTranslating, onBoardsTranslated };
 }
 
 async function readStrings(boardSetId: string, boardId: string) {
@@ -65,7 +65,7 @@ describe("translateBoardSets", () => {
     await seedFoodSet();
     const { create } = stubTranslator((input) => `[es] ${input}`);
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslating, onBoardsTranslated } = await runTranslation("es");
 
     expect(await readStrings("food", "home")).toEqual({
       es: { Home: "[es] Home", eat: "[es] eat", "eat now": "[es] eat now" },
@@ -77,7 +77,7 @@ describe("translateBoardSets", () => {
       es: "[es] Food",
     });
     expect(onTranslating).toHaveBeenCalledOnce();
-    expect(onTranslated.mock.calls).toEqual([["food"]]);
+    expect(onBoardsTranslated.mock.calls).toEqual([["food"]]);
     expect(create).toHaveBeenCalledOnce();
     expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
       sourceLanguage: "en",
@@ -189,11 +189,11 @@ describe("translateBoardSets", () => {
     await runTranslation("es");
     const { create } = stubTranslator();
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslating, onBoardsTranslated } = await runTranslation("es");
 
     expect(create).not.toHaveBeenCalled();
     expect(onTranslating).not.toHaveBeenCalled();
-    expect(onTranslated).not.toHaveBeenCalled();
+    expect(onBoardsTranslated).not.toHaveBeenCalled();
   });
 
   test("leaves a board set that fails in its source language and translates the rest", async () => {
@@ -205,14 +205,14 @@ describe("translateBoardSets", () => {
         : `[es] ${input}`,
     );
 
-    const { onTranslated } = await runTranslation("es");
+    const { onBoardsTranslated } = await runTranslation("es");
 
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
     expect(await readStrings("food", "home")).toBeUndefined();
     expect((await getBoardSetRecord("zoo"))?.translatedNames).toEqual({
       es: "[es] Zoo",
     });
-    expect(onTranslated).toHaveBeenCalledOnce();
+    expect(onBoardsTranslated).toHaveBeenCalledOnce();
   });
 
   test("rejects when storage fails instead of leaving the board set as if no model were available", async () => {
@@ -225,7 +225,7 @@ describe("translateBoardSets", () => {
       translateBoardSets(boardSets, "es", {
         signal: new AbortController().signal,
         onTranslating: vi.fn<() => void>(),
-        onTranslated: vi.fn<(boardSetId: string) => void>(),
+        onBoardsTranslated: vi.fn<(boardSetId: string) => void>(),
       }),
     ).rejects.toThrow();
   });
@@ -239,11 +239,14 @@ describe("translateBoardSets", () => {
       return Promise.reject(controller.signal.reason);
     });
 
-    const { onTranslated } = await runTranslation("es", controller.signal);
+    const { onBoardsTranslated } = await runTranslation(
+      "es",
+      controller.signal,
+    );
 
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
     expect(await readStrings("food", "home")).toBeUndefined();
-    expect(onTranslated).not.toHaveBeenCalled();
+    expect(onBoardsTranslated).not.toHaveBeenCalled();
   });
 
   test("leaves a board set untranslated when its language has no translation model", async () => {
@@ -251,12 +254,12 @@ describe("translateBoardSets", () => {
     const { availability, translate } = stubTranslator();
     availability.mockResolvedValue("unavailable");
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslating, onBoardsTranslated } = await runTranslation("es");
 
     expect(translate).not.toHaveBeenCalled();
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
     expect(onTranslating).not.toHaveBeenCalled();
-    expect(onTranslated).not.toHaveBeenCalled();
+    expect(onBoardsTranslated).not.toHaveBeenCalled();
   });
 
   test("names a board set from its root board's own translations instead of translating the name", async () => {
@@ -302,6 +305,31 @@ describe("translateBoardSets", () => {
     expect(translate.mock.calls.map((call) => call.at(0))).toEqual(["Home"]);
   });
 
+  test("translates a board set's name without reporting the set when its boards need no translation", async () => {
+    await seedBoardSets([
+      {
+        id: "named",
+        name: "Food",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            name: "Home",
+            strings: { es: { Home: "Inicio" } },
+          }),
+        ],
+      },
+    ]);
+    stubTranslator((input) => `[es] ${input}`);
+
+    const { onBoardsTranslated } = await runTranslation("es");
+
+    expect((await getBoardSetRecord("named"))?.translatedNames).toEqual({
+      es: "[es] Food",
+    });
+    expect(onBoardsTranslated).not.toHaveBeenCalled();
+  });
+
   test("names a board set its board file fully translates when the Translator API is unavailable", async () => {
     await seedBoardSets([
       {
@@ -318,13 +346,13 @@ describe("translateBoardSets", () => {
       },
     ]);
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslating, onBoardsTranslated } = await runTranslation("es");
 
     expect((await getBoardSetRecord("shipped"))?.translatedNames).toEqual({
       es: "Inicio",
     });
     expect(onTranslating).not.toHaveBeenCalled();
-    expect(onTranslated).not.toHaveBeenCalled();
+    expect(onBoardsTranslated).not.toHaveBeenCalled();
   });
 
   test("leaves a board set with boards to translate untouched when the Translator API is unavailable", async () => {
@@ -344,11 +372,11 @@ describe("translateBoardSets", () => {
       },
     ]);
 
-    const { onTranslated } = await runTranslation("es");
+    const { onBoardsTranslated } = await runTranslation("es");
 
     expect(
       (await getBoardSetRecord("partial"))?.translatedNames,
     ).toBeUndefined();
-    expect(onTranslated).not.toHaveBeenCalled();
+    expect(onBoardsTranslated).not.toHaveBeenCalled();
   });
 });
