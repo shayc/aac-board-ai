@@ -28,7 +28,7 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
   const { language } = useCommunicationLanguage();
   const { boardId, goToBoard } = useBoardRoute();
-  const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [anchorElement, setAnchorElement] = useState<HTMLElement | null>(null);
   const searchFieldRef = useRef<HTMLInputElement>(null);
   const hasFinePointer = useMediaQuery("(pointer: fine)");
 
@@ -38,18 +38,18 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
     return null;
   }
 
-  const isOpen = anchor !== null;
-  const close = () => setAnchor(null);
+  const isOpen = anchorElement !== null;
+  const close = () => setAnchorElement(null);
 
   return (
     <>
-      <Typography component="h1" variant="h6" sx={{ minWidth: 0 }}>
+      <Typography component="h1" variant="h6">
         <Button
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           color="inherit"
           endIcon={<ArrowDropDownIcon />}
-          onClick={(event) => setAnchor(event.currentTarget)}
+          onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
             // 48px tall, the height of the icon buttons beside it. The end
@@ -69,7 +69,7 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
 
       <Popover
         open={isOpen}
-        anchorEl={anchor}
+        anchorEl={anchorElement}
         anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{
@@ -148,13 +148,14 @@ function BoardSearch({
       }}
       open
       onClose={(_event, reason) => {
+        // Choosing the current board changes nothing, so onChange alone would
+        // leave the popup open. Blur and a click in the field must not close.
         if (reason === "selectOption" || reason === "escape") {
           onClose();
         }
       }}
       disableClearable
       autoHighlight
-      forcePopupIcon={false}
       slots={{ popper: InlineList }}
       slotProps={{
         paper: { elevation: 0 },
@@ -172,8 +173,8 @@ function BoardSearch({
         <InputBase
           ref={slotProps.input.ref}
           inputRef={searchFieldRef}
-          fullWidth
           placeholder={t(m.boardSelectorSearch)}
+          fullWidth
           startAdornment={
             <InputAdornment position="start">
               <SearchIcon />
@@ -197,7 +198,8 @@ function BoardSearch({
 }
 
 // Renders the options in the popover's flow, under the search field, where
-// Autocomplete would float them in a Popper of their own.
+// Autocomplete would float them in a Popper of their own. Popper's children
+// may be a render function, but Autocomplete only passes elements.
 function InlineList({ className, children }: PopperProps) {
   return <div className={className}>{children as ReactNode}</div>;
 }
