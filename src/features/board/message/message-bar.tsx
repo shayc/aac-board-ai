@@ -8,18 +8,12 @@ import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
 } from "../aac-symbol/aac-symbol";
+import { CONTROL_SIZE, SECONDARY_CONTROL_SIZE } from "../board-control-sizes";
 import type { MessagePart } from "./message-types";
 
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
-export const MESSAGE_ACTION_SIZE = 80;
-// A step smaller, so play stays the main action of the bar.
-export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
-export const MESSAGE_ACTION_ICON_SIZE = 36;
-// One size for every secondary action, 64px or 80px: Material 3's icon for an
-// 80px button. Play's heavier glyph keeps it the main action of the row.
-export const MESSAGE_SECONDARY_ACTION_ICON_SIZE = 28;
 // The bar is as tall as its main action plus its inset, so it sets that
 // action's size and the action cannot outgrow it.
 export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
@@ -28,8 +22,8 @@ export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
 // bar drops to the secondary size, and its symbols shrink so their labels stay
 // in view.
 const BAR_SIZES = {
-  regular: { action: MESSAGE_ACTION_SIZE, symbol: 64 },
-  compact: { action: MESSAGE_SECONDARY_ACTION_SIZE, symbol: 48 },
+  regular: { action: CONTROL_SIZE, symbol: 64 },
+  compact: { action: SECONDARY_CONTROL_SIZE, symbol: 48 },
 } as const;
 
 const BAR_INSET = 1;

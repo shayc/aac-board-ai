@@ -10,8 +10,9 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { CONTROL_SIZE } from "../board-control-sizes";
 import { BackspaceButton } from "./backspace-button";
-import { MESSAGE_ACTION_SIZE, MessageBar } from "./message-bar";
+import { MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
@@ -382,7 +383,7 @@ describe("BackspaceButton in the message bar", () => {
     const ringEdges = ring.getBoundingClientRect();
     const gap = target.top - barEdges.top;
 
-    expect(target.width).toBe(MESSAGE_ACTION_SIZE);
+    expect(target.width).toBe(CONTROL_SIZE);
     expect(ringEdges.toJSON()).toEqual(target.toJSON());
     expect(barEdges.bottom - target.bottom).toBeCloseTo(gap, 0);
     expect(barEdges.right - target.right).toBeCloseTo(gap, 0);

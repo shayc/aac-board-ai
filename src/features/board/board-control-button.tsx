@@ -5,10 +5,10 @@ import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import {
-  MESSAGE_ACTION_SIZE,
-  MESSAGE_SECONDARY_ACTION_ICON_SIZE,
-  MESSAGE_SECONDARY_ACTION_SIZE,
-} from "./message/message-bar";
+  CONTROL_SIZE,
+  SECONDARY_CONTROL_ICON_SIZE,
+  SECONDARY_CONTROL_SIZE,
+} from "./board-control-sizes";
 
 const SHAPE_SX = {
   // As wide as the grid's narrowest tile. Three of them and the gaps between
@@ -18,15 +18,15 @@ const SHAPE_SX = {
   // icon, so the button's side padding gives way to the fixed width. A short
   // landscape bar drops a step, and the buttons follow it.
   round: (theme: Theme) => ({
-    width: MESSAGE_ACTION_SIZE,
-    height: MESSAGE_ACTION_SIZE,
+    width: CONTROL_SIZE,
+    height: CONTROL_SIZE,
     px: 0,
     [`& .${svgIconClasses.root}`]: {
-      fontSize: MESSAGE_SECONDARY_ACTION_ICON_SIZE,
+      fontSize: SECONDARY_CONTROL_ICON_SIZE,
     },
     [shortLandscape(theme)]: {
-      width: MESSAGE_SECONDARY_ACTION_SIZE,
-      height: MESSAGE_SECONDARY_ACTION_SIZE,
+      width: SECONDARY_CONTROL_SIZE,
+      height: SECONDARY_CONTROL_SIZE,
     },
   }),
 };
