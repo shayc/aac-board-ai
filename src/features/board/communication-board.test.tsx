@@ -125,7 +125,7 @@ function measureBoardLayout(
   const grid = container.querySelector("[role='grid']");
   const scroller = grid?.parentElement;
   const messageBar = container.querySelector("[role='list']")?.parentElement;
-  const playButton = container.querySelector("[aria-label='Play message']");
+  const playButton = container.querySelector("[aria-label='Speak message']");
   const controlBar = container
     .querySelector("[aria-label='Go home']")
     ?.closest("[data-scan-group]");
@@ -229,7 +229,7 @@ describe("CommunicationBoard", () => {
               - button "world"
         - button "Go back" [disabled]
         - button "Go home" [disabled]
-        - button "Play message" [disabled]
+        - button "Speak message" [disabled]
       `);
     });
 
@@ -468,7 +468,7 @@ describe("CommunicationBoard", () => {
         const back = iconSize(button("Go back"));
         const home = iconSize(button("Go home"));
         const backspace = iconSize(button("Backspace"));
-        const play = iconSize(button("Play message"));
+        const play = iconSize(button("Speak message"));
 
         expect(back).toBe(backspace);
         expect(home).toBe(backspace);
@@ -494,7 +494,7 @@ describe("CommunicationBoard", () => {
           .element()
           .getBoundingClientRect();
         const play = screen
-          .getByRole("button", { name: "Play message" })
+          .getByRole("button", { name: "Speak message" })
           .element()
           .getBoundingClientRect();
 
@@ -537,7 +537,7 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       // A tile that had played would have spoken before the message did.
       await vi.waitFor(() => {
@@ -549,12 +549,12 @@ describe("CommunicationBoard", () => {
       setMessagePlayTiles(false);
       preventSpeechEnd(speech.speak);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-      const play = screen.getByRole("button", { name: "Play message" });
+      const play = screen.getByRole("button", { name: "Speak message" });
 
       await screen.getByRole("button", { name: "hello" }).click();
       await play.click();
       await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
+        .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
       await screen.getByRole("button", { name: "world" }).click();
 
@@ -588,7 +588,7 @@ describe("CommunicationBoard", () => {
       preventSpeechEnd(speech.speak);
       const screen = await render(closableBoardTree({ isOpen: true }));
       await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
       const closedBoardUtterance = lastUtterance(speech.speak);
       await screen.rerender(closableBoardTree({ isOpen: false }));
       const restoredMessage = await restoreMessageDraft();
@@ -599,7 +599,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "Backspace" }).click();
       endUtterance(closedBoardUtterance);
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeInTheDocument();
 
       expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
@@ -614,7 +614,7 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "Say then clear" }).click();
       await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
+        .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
       await expect.element(message).toBeVisible();
 
@@ -622,7 +622,7 @@ describe("CommunicationBoard", () => {
 
       await expect.element(message).not.toBeInTheDocument();
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeDisabled();
     });
 
@@ -632,20 +632,20 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "Say then clear" }).click();
       await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
+        .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
 
       failUtterance(lastUtterance(speech.speak));
 
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeEnabled();
       await expect
         .element(screen.getByText("hi", { exact: true }))
         .toBeVisible();
       await expect
         .element(screen.getByRole("alert"))
-        .toHaveTextContent("Couldn't play sound");
+        .toHaveTextContent("Couldn't speak");
       expect(screen.getByRole("alert").elements()).toHaveLength(1);
     });
 
@@ -656,7 +656,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "Say then clear" }).click();
       await screen.getByRole("button", { name: "Backspace" }).click();
       endUtterance(lastUtterance(speech.speak));
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hi", "h"]);
@@ -668,9 +668,9 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
 
       await screen.getByRole("button", { name: "Say then clear" }).click();
-      await screen.getByRole("button", { name: "Stop message" }).click();
+      await screen.getByRole("button", { name: "Stop speaking" }).click();
       speech.speak.mockClear();
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hi"]);
@@ -704,7 +704,7 @@ describe("CommunicationBoard", () => {
 
     test("enables message playback only after content is composed", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-      const play = screen.getByRole("button", { name: "Play message" });
+      const play = screen.getByRole("button", { name: "Speak message" });
 
       await expect.element(play).toBeDisabled();
 
@@ -733,7 +733,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "world" }).click();
       speech.speak.mockClear();
 
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hello world"]);
@@ -746,7 +746,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "world" }).click();
       preventSpeechEnd(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       const utterance = lastUtterance(speech.speak);
       reachUtteranceBoundary(utterance, 0);
@@ -765,16 +765,16 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "world" }).click();
       preventSpeechEnd(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
+        .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
       expect(outlinedMessageParts(screen)).toEqual([]);
 
       endUtterance(lastUtterance(speech.speak));
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeVisible();
       expect(outlinedMessageParts(screen)).toEqual([]);
     });
@@ -784,7 +784,7 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "hello" }).click();
       preventSpeechEnd(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
 
@@ -798,10 +798,10 @@ describe("CommunicationBoard", () => {
 
       await screen.getByRole("button", { name: "hello" }).click();
       preventSpeechEnd(speech.speak);
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
 
       await expect
-        .element(screen.getByRole("button", { name: "Stop message" }))
+        .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
       expect(outlinedMessageParts(screen)).toEqual([]);
     });
@@ -829,7 +829,7 @@ describe("CommunicationBoard", () => {
 
       await expect.element(getMessageItems(screen)).toHaveLength(0);
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeDisabled();
       await expect
         .element(screen.getByRole("button", { name: "Backspace" }))
@@ -841,7 +841,7 @@ describe("CommunicationBoard", () => {
       const messageItems = getMessageItems(screen);
 
       await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hello", "hello"]);
       });
@@ -878,8 +878,8 @@ describe("CommunicationBoard", () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
-      await screen.getByRole("button", { name: "Play message" }).click();
-      await screen.getByRole("button", { name: "Stop message" }).click();
+      await screen.getByRole("button", { name: "Speak message" }).click();
+      await screen.getByRole("button", { name: "Stop speaking" }).click();
       await screen.getByRole("button", { name: "world" }).click();
 
       await expect.element(getMessageItems(screen)).toHaveLength(2);
@@ -892,7 +892,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
 
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeVisible();
     });
 
@@ -910,7 +910,7 @@ describe("CommunicationBoard", () => {
           SYMBOL_BOARD.id,
         );
         const backspace = screen.getByRole("button", { name: "Backspace" });
-        const play = screen.getByRole("button", { name: "Play message" });
+        const play = screen.getByRole("button", { name: "Speak message" });
 
         await expect
           .element(backspace)
@@ -973,7 +973,7 @@ describe("CommunicationBoard", () => {
 
       await expect.element(back).not.toHaveAttribute("aria-disabled");
       await expect
-        .element(screen.getByRole("button", { name: "Play message" }))
+        .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeEnabled();
       expect(speech.speak).not.toHaveBeenCalled();
       expect(audio.play).not.toHaveBeenCalled();

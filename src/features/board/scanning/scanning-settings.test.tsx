@@ -41,7 +41,7 @@ describe("ScanningSettings", () => {
       .click();
 
     await expect
-      .element(screen.getByRole("radio", { name: "Automatic" }))
+      .element(screen.getByRole("radio", { name: "Automatic scanning" }))
       .toBeChecked();
     await expect
       .element(screen.getByRole("radiogroup", { name: "Scan method" }))
@@ -61,9 +61,7 @@ describe("ScanningSettings", () => {
     await screen
       .getByRole("switch", { name: "Enable switch scanning" })
       .click();
-    await screen
-      .getByRole("radio", { name: "Two-switch step scanning" })
-      .click();
+    await screen.getByRole("radio", { name: "Step scanning" }).click();
 
     await expect
       .element(screen.getByRole("radiogroup", { name: "Scan method" }))
