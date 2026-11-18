@@ -109,13 +109,15 @@ function radioSx(theme: Theme) {
     p: 0.5,
     borderRadius: theme.vars.shape.borderRadius,
     [`&.${buttonBaseClasses.focusVisible}`]: {
-      ...theme.focusVisible,
-      // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
+      // MUI rings a radio's first SVG, which here is the picture inside the
+      // preview. The preview's own box takes the ring instead, so the ring
+      // follows its corners at the theme's offset rather than the padded root's.
       "& svg:first-of-type": {
         borderRadius: 0,
         outline: "none",
         boxShadow: "none",
       },
+      "& > span:first-of-type": theme.focusVisible,
     },
   };
 }
