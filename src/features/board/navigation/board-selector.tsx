@@ -52,8 +52,8 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
-            // 48px tall, the height of the icon buttons beside it. The end
-            // side is narrower because the triangle carries its own space.
+            // As tall as the icon buttons beside it. The triangle carries its
+            // own space, so the end side needs less padding.
             py: 1,
             pl: 2.5,
             pr: 1.5,
@@ -197,9 +197,8 @@ function BoardSearch({
   );
 }
 
-// Renders the options in the popover's flow, under the search field, where
-// Autocomplete would float them in a Popper of their own. Popper's children
-// may be a render function, but Autocomplete only passes elements.
+// Keeps the options in the popover's flow, under the search field, where
+// Autocomplete would float them in a Popper. It only passes elements as children.
 function InlineList({ className, children }: PopperProps) {
   return <div className={className}>{children as ReactNode}</div>;
 }

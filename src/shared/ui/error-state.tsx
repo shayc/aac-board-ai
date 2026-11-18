@@ -9,7 +9,6 @@ const defaultIcon = <ErrorOutlineIcon />;
 interface ErrorStateProps {
   icon?: ReactNode;
   title: string;
-  /** A full-page error passes its heading level; inside a panel the title is plain text. */
   titleComponent?: ElementType;
   action?: ReactNode;
 }
