@@ -82,8 +82,7 @@ accessibility, offline reliability, or privacy for elegance.
 - Extract dense conditionals and nested ternaries into named locals or helper functions.
 - End a `switch` over a union with a `default` that calls `assertNever`, so a new member fails the build.
 - Extract complex conditional JSX and nested mapping loops into sub-components.
-- Order JSX props as identity (`key`, `ref`) → semantics/accessibility → primary data/state → configuration → callbacks. Keep controlled prop pairs together even when that overrides the category order. Place spreads first or last according to precedence. Keep `sx` last and outside this ordering.
-- Within `sx`, order properties as custom properties → positioning → layout → sizing → spacing → overflow/scrolling → typography → visuals → interaction → motion → nested/conditional rules. Keep related properties together. Put broad shorthands before intentional specific overrides, and base declarations before conditional overrides. Don't alphabetize or add blank lines solely to separate categories.
+- Order JSX props and `sx` properties the way the nearest component does; `sx` goes last.
 
 ### Naming
 
