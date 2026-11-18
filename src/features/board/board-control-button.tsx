@@ -1,4 +1,4 @@
-import Button, { type ButtonProps } from "@mui/material/Button";
+import Button, { buttonClasses, type ButtonProps } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { svgIconClasses } from "@mui/material/SvgIcon";
 import { shortLandscape } from "@shared/theme/short-landscape";
@@ -19,6 +19,10 @@ const SHAPE_SX = {
     [`& .${svgIconClasses.root}`]: {
       fontSize: CONTROL_ICON_SIZE,
     },
+    // A button with a color of its own keeps its fill.
+    ...theme.applyStyles("dark", {
+      [`&.${buttonClasses.colorInherit}`]: ringSx(theme),
+    }),
     [shortLandscape(theme)]: {
       width: CONTROL_SIZES.medium,
       height: CONTROL_SIZES.medium,
@@ -54,4 +58,28 @@ export function BoardControlButton({
       sx={mergeSx(SHAPE_SX[shape], sx)}
     />
   );
+}
+
+// The message bar stays light in dark mode, so beside it a dark fill clashes
+// and a light one outshines the board. A ring leaves the bar as the row's only
+// surface and still draws the button's edge, which someone dwelling on it with
+// eye gaze rests on.
+function ringSx(theme: Theme) {
+  return {
+    border: `1px solid ${theme.vars.palette.outline}`,
+    backgroundColor: "transparent",
+    [`&, &:hover, &:active, &.${buttonClasses.focusVisible}`]: {
+      boxShadow: "none",
+    },
+    // A tap leaves hover stuck on a touch screen.
+    "@media (hover: hover)": {
+      "&:hover": { backgroundColor: theme.vars.palette.action.hover },
+    },
+    // As dim as its icon, so a button that is off still shows where it is;
+    // hovering it must not tint it.
+    [`&.${buttonClasses.disabled}`]: {
+      borderColor: "currentColor",
+      backgroundColor: "transparent",
+    },
+  };
 }

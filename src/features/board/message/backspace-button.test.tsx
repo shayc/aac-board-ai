@@ -1,4 +1,3 @@
-import { useColorScheme } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
 import {
   contrastRatio,
@@ -6,6 +5,10 @@ import {
   WCAG_NON_TEXT_CONTRAST,
   WCAG_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
+import {
+  type ColorMode,
+  renderInColorMode,
+} from "@shared/testing/render-in-color-mode";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
@@ -16,8 +19,6 @@ import { MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
-
-type ColorMode = "light" | "dark";
 
 function createHandlers() {
   return {
@@ -61,32 +62,24 @@ function ClearableBackspace() {
 // The button has no fill at rest, so the icon and ring are measured against
 // the bar it sits on.
 async function measureContrasts(mode: ColorMode, disabled: boolean) {
-  const screen = await renderWithProviders(
-    <>
-      <ColorModeSwitch mode={mode} />
-      <MessageBar
-        parts={[]}
-        isWordOpen={false}
-        activePartId={null}
-        areImagesVisible
-        endAction={
-          <BackspaceButton
-            shortcutLabels={SHORTCUT_LABELS}
-            {...createHandlers()}
-            disabled={disabled}
-          />
-        }
-      />
-    </>,
+  const screen = await renderInColorMode(
+    <MessageBar
+      parts={[]}
+      isWordOpen={false}
+      activePartId={null}
+      areImagesVisible
+      endAction={
+        <BackspaceButton
+          shortcutLabels={SHORTCUT_LABELS}
+          {...createHandlers()}
+          disabled={disabled}
+        />
+      }
+    />,
+    mode,
   );
-  await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
-  await expect.poll(() => document.documentElement.className).toBe(mode);
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
-  // Switching modes animates the colors; measure where they settle.
-  await Promise.all(
-    button.getAnimations({ subtree: true }).map(({ finished }) => finished),
-  );
 
   const bar = button.parentElement;
   assertDefined(bar);
@@ -103,16 +96,6 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
     icon: contrastRatio(paint(barColor, iconColor), ground),
     ring: contrastRatio(paint(barColor, ringColor), ground),
   };
-}
-
-function ColorModeSwitch({ mode }: { mode: ColorMode }) {
-  const { setMode } = useColorScheme();
-
-  return (
-    <button type="button" onClick={() => setMode(mode)}>
-      Use {mode} mode
-    </button>
-  );
 }
 
 describe("BackspaceButton", () => {
