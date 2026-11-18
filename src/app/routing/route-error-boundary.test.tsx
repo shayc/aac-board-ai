@@ -43,7 +43,12 @@ describe("RouteErrorBoundary", () => {
     });
 
     await expect
-      .element(screen.getByText("Couldn't load this page"))
+      .element(
+        screen.getByRole("heading", {
+          level: 1,
+          name: "Couldn't load this page",
+        }),
+      )
       .toBeVisible();
     await expect
       .element(screen.getByRole("link", { name: "Go home" }))

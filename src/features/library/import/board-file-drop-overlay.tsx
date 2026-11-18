@@ -42,7 +42,9 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
           })}
         >
           <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />
-          <Typography variant="h6">{t(m.libraryDropToImport)}</Typography>
+          <Typography component="p" variant="h6">
+            {t(m.libraryDropToImport)}
+          </Typography>
         </Paper>
       </Grow>
     </Backdrop>
