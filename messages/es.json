@@ -53,7 +53,7 @@
     }
   ],
   "libraryImportPartiallyFailedBoardFiles": "No se pudieron importar algunos archivos de tableros ({failed} de {total})",
-  "libraryDropToImport": "Suelta archivos de tableros para importar",
+  "libraryDropToImport": "Suelta archivos de tableros para importarlos",
   "libraryInfo": "Información",
   "libraryExport": "Exportar",
   "libraryDelete": "Eliminar",
@@ -120,7 +120,7 @@
   "scanningEnabled": "Activar barrido con pulsador",
   "scanningMethod": "Método de barrido",
   "scanningMethodAuto": "Barrido automático",
-  "scanningMethodStep": "Barrido por pasos",
+  "scanningMethodStep": "Barrido paso a paso",
   "scanningMethodAutoHint": "Pulsa Espacio o Intro para iniciar el barrido y para seleccionar. El barrido se pausa tras dos pasadas.",
   "scanningMethodStepHint": "Pulsa Espacio para pasar al siguiente elemento e Intro para seleccionarlo.",
   "scanningInterval": "Intervalo de barrido",
