@@ -1,5 +1,5 @@
 import type { Translate } from "@shared/language/use-translate";
-import { createContext, type ReactNode } from "react";
+import { createContext } from "react";
 
 export type SnackbarSeverity = "success" | "error" | "info" | "warning";
 type SnackbarMessage = string | ((t: Translate) => string);
@@ -8,11 +8,10 @@ export interface SnackbarOptions {
   message: SnackbarMessage;
   severity?: SnackbarSeverity;
   durationMs?: number;
-  action?: ReactNode;
 }
 
 export interface SnackbarContextValue {
-  showSnackbar: (options: SnackbarOptions | string) => void;
+  showSnackbar: (options: SnackbarOptions) => void;
 }
 
 export const SnackbarContext = createContext<SnackbarContextValue | null>(null);

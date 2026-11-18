@@ -45,12 +45,9 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
 
-  function showSnackbar(options: SnackbarOptions | string) {
-    const snackbarOptions: SnackbarOptions =
-      typeof options === "string" ? { message: options } : options;
-
+  function showSnackbar(options: SnackbarOptions) {
     const snackbar: QueuedSnackbar = {
-      ...snackbarOptions,
+      ...options,
       key: nextKeyRef.current++,
     };
 
@@ -101,7 +98,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           role={isUrgent(severity) ? "alert" : "status"}
           closeText={t(m.close)}
-          action={state.current?.action}
           severity={severity}
           onClose={handleClose}
           sx={(theme) => createAlertSx(theme, severity)}

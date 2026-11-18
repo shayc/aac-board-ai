@@ -5,7 +5,7 @@ import { collectBoardStrings } from "./collect-board-strings";
 const mockBoard: Board = {
   id: "board-1",
   name: "My Board",
-  grid: { rows: 1, columns: 2, order: [["hello", "more"]] },
+  grid: { order: [["hello", "more"]] },
   buttons: [
     {
       id: "btn-1",
