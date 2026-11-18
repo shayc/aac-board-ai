@@ -11,7 +11,7 @@ interface ButtonActivatorOptions {
   playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   /** The language the board's text is in, when known. */
-  language: string | undefined;
+  boardLanguage: string | undefined;
   shouldPlayTiles: boolean;
 }
 
@@ -21,7 +21,7 @@ export function createButtonActivator({
   message,
   playback,
   navigation,
-  language,
+  boardLanguage,
   shouldPlayTiles,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
@@ -46,7 +46,7 @@ export function createButtonActivator({
       vocalization: button.vocalization,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
-      language,
+      language: boardLanguage,
     });
 
     message.apply([{ kind: "tile", part }]);
@@ -68,19 +68,19 @@ export function createButtonActivator({
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      message.apply(toMessageEdits(actions, language));
+      message.apply(toMessageEdits(actions, boardLanguage));
 
       return;
     }
 
     const editsBeforePlay = toMessageEdits(
       actions.slice(0, playIndex),
-      language,
+      boardLanguage,
     );
     const hasChanged = message.apply(editsBeforePlay);
     const editsAfterPlay = toMessageEdits(
       actions.slice(playIndex + 1),
-      language,
+      boardLanguage,
     );
 
     // Only a tile that leaves the message as it stands plays it.
@@ -107,13 +107,13 @@ export function createButtonActivator({
 
 function toMessageEdits(
   actions: readonly BoardAction[],
-  language: string | undefined,
+  boardLanguage: string | undefined,
 ): MessageEdit[] {
   return actions.flatMap((action) => {
     switch (action.kind) {
       // Spelled letters are the board's text, so they are in its language.
       case "spell":
-        return { ...action, language };
+        return { ...action, language: boardLanguage };
       case "space":
       case "backspace":
       case "clear":

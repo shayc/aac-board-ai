@@ -14,13 +14,13 @@ import {
 interface UseTranslateBoardSetsOptions {
   /** The set on screen is translated first, so it never waits behind the rest. */
   activeBoardSetId: string | undefined;
-  /** Called after a set's translations are saved, so whatever shows it can reload. */
-  onBoardSetTranslated: (boardSetId: string) => void;
+  /** Called after a set's boards gain translations, so whatever shows them can reload. */
+  onBoardsTranslated: (boardSetId: string) => void;
 }
 
 export function useTranslateBoardSets({
   activeBoardSetId,
-  onBoardSetTranslated,
+  onBoardsTranslated,
 }: UseTranslateBoardSetsOptions): void {
   const { language } = useCommunicationLanguage();
   const { boardSets, isLoading } = useBoardSets();
@@ -28,14 +28,14 @@ export function useTranslateBoardSets({
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
   // Read the latest callback when a pass finishes, not the one it started with.
-  const notifyTranslated = useEffectEvent((boardSetId: string) => {
-    onBoardSetTranslated(boardSetId);
+  const notifyBoardsTranslated = useEffectEvent((boardSetId: string) => {
+    onBoardsTranslated(boardSetId);
   });
 
   const translate = useEffectEvent((options: TranslationPassOptions) =>
     translateBoardSets(activeFirst(boardSets, activeBoardSetId), language, {
       ...options,
-      onTranslated: (boardSetId) => notifyTranslated(boardSetId),
+      onBoardsTranslated: (boardSetId) => notifyBoardsTranslated(boardSetId),
     }),
   );
 
