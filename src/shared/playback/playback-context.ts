@@ -1,4 +1,4 @@
 import { createContext } from "react";
-import type { PlaybackController } from "./playback-types";
+import type { PlaybackCoordinator } from "./playback-types";
 
-export const PlaybackContext = createContext<PlaybackController | null>(null);
+export const PlaybackContext = createContext<PlaybackCoordinator | null>(null);

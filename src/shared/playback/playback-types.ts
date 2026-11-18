@@ -39,13 +39,9 @@ export type PlaybackState =
       activeCue: string | null;
     };
 
-export interface PlaybackController {
+export interface PlaybackCoordinator {
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => PlaybackState;
   play: (request: PlaybackRequest) => Promise<PlaybackOutcome>;
   stop: () => void;
-}
-
-export interface PlaybackCoordinator extends PlaybackController {
-  dispose: () => void;
 }

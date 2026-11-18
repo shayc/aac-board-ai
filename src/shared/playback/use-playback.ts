@@ -1,11 +1,11 @@
 import { useExternalStore } from "@shared/stores/external-store";
 import { use } from "react";
 import { PlaybackContext } from "./playback-context";
-import type { PlaybackController, PlaybackState } from "./playback-types";
+import type { PlaybackCoordinator, PlaybackState } from "./playback-types";
 
 type PlayingState = Extract<PlaybackState, { status: "playing" }>;
 
-export function usePlayback(): PlaybackController {
+export function usePlayback(): PlaybackCoordinator {
   const context = use(PlaybackContext);
   if (!context) {
     throw new Error("usePlayback must be used within PlaybackProvider");
