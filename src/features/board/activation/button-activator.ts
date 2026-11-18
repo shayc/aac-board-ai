@@ -86,8 +86,7 @@ export function createButtonActivator({
       language,
     );
 
-    // Only a tile that leaves the message as it stands plays it; `play` holds
-    // the edits that follow until the message has played.
+    // Only a tile that leaves the message as it stands plays it.
     if (!hasChanged) {
       void message.play(editsAfterPlay);
 
@@ -95,8 +94,7 @@ export function createButtonActivator({
     }
 
     // A tile that spells and then plays echoes the word being typed, which is
-    // feedback on the tile: it stays silent when tiles are not played, and the
-    // message does not count as played.
+    // feedback on the tile, so it stays silent when tiles are not played.
     if (!shouldPlayTiles) {
       playback.stop();
       message.apply(editsAfterPlay);
@@ -104,10 +102,9 @@ export function createButtonActivator({
       return;
     }
 
-    // Like edits after the message plays, edits after an echo (such as
-    // ":clear") wait for it to complete and are dropped if the message was
-    // edited meanwhile: a ":clear" must not take letters typed during the
-    // playback with it.
+    // Edits after an echo wait for it to complete and are dropped if the
+    // message was edited meanwhile: a ":clear" must not take letters typed
+    // during the playback with it.
     void playback.echoMessage(edited.parts).then((hasCompleted) => {
       if (hasCompleted) {
         message.applyIfUnchanged(edited, editsAfterPlay);

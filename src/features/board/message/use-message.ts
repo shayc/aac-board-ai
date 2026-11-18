@@ -105,9 +105,8 @@ export function useMessage(
 
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
-  // Edits that follow the playback (such as a tile's ":clear") wait for it,
-  // keeping the message visible while it plays, then apply to the message that
-  // played; one they leave as it was has played.
+  // Edits that follow (such as a tile's ":clear") wait for it, keeping the
+  // message visible while it plays; one they leave as it was has played.
   async function play(editsAfterPlay: readonly MessageEdit[] = []) {
     // Playback starts first, so one that cannot start leaves the message as
     // it was.
