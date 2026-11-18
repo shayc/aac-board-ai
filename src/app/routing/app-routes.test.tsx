@@ -130,7 +130,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "water" }).click();
     speech.speak.mockClear();
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["i want water"]);
@@ -156,7 +156,7 @@ describe("app flow", () => {
 
     await screen.getByRole("button", { name: "מים" }).click();
     speech.speak.mockClear();
-    await screen.getByRole("button", { name: "השמעת המסר" }).click();
+    await screen.getByRole("button", { name: "הקראת המסר" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["אני רוצה מים"]);
@@ -184,7 +184,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "cat" }).click();
     speech.speak.mockClear();
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["No way feline"]);
@@ -205,7 +205,7 @@ describe("app flow", () => {
       .toBeVisible();
 
     audio.play.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(audio.play).toHaveBeenCalledTimes(1);
@@ -236,7 +236,7 @@ describe("app flow", () => {
       .toHaveTextContent("hello");
 
     audio.play.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(audio.play).toHaveBeenCalledTimes(1);

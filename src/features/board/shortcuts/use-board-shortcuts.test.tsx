@@ -24,7 +24,7 @@ describe("board keyboard shortcuts", () => {
     await userEvent.keyboard("{Backspace}");
 
     speech.speak.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["hello"]);
@@ -36,11 +36,11 @@ describe("board keyboard shortcuts", () => {
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
 
-    screen.getByRole("button", { name: "Play message" }).element().focus();
+    screen.getByRole("button", { name: "Speak message" }).element().focus();
     await userEvent.keyboard("{Backspace}");
 
     speech.speak.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["hello"]);
@@ -57,7 +57,7 @@ describe("board keyboard shortcuts", () => {
     await userEvent.keyboard("{Meta>}z{/Meta}");
 
     speech.speak.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["hello world"]);
@@ -102,16 +102,16 @@ describe("board keyboard shortcuts", () => {
 
     preventSpeechEnd(speech.speak);
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
     await expect
-      .element(screen.getByRole("button", { name: "Stop message" }))
+      .element(screen.getByRole("button", { name: "Stop speaking" }))
       .toBeVisible();
 
     screen.getByRole("button", { name: "world" }).element().focus();
     await userEvent.keyboard("{Escape}");
 
     await expect
-      .element(screen.getByRole("button", { name: "Play message" }))
+      .element(screen.getByRole("button", { name: "Speak message" }))
       .toBeVisible();
   });
 });

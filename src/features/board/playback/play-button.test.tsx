@@ -56,7 +56,7 @@ async function measureDisabledGlyphContrasts(mode: ColorMode) {
   await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
   await expect.poll(() => document.documentElement.className).toBe(mode);
 
-  const play = screen.getByRole("button", { name: "Play message" }).element();
+  const play = screen.getByRole("button", { name: "Speak message" }).element();
   const backspace = screen.getByRole("button", { name: "Backspace" }).element();
   // Switching modes animates the colors; measure where they settle.
   await Promise.all(
@@ -103,7 +103,7 @@ describe("PlayButton", () => {
       />,
     );
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     expect(handlers.onPlay).toHaveBeenCalledTimes(1);
     expect(handlers.onStop).not.toHaveBeenCalled();
@@ -116,7 +116,7 @@ describe("PlayButton", () => {
       <PlayButton shortcutLabels={SHORTCUT_LABELS} isPlaying {...handlers} />,
     );
 
-    await screen.getByRole("button", { name: "Stop message" }).click();
+    await screen.getByRole("button", { name: "Stop speaking" }).click();
 
     expect(handlers.onStop).toHaveBeenCalledTimes(1);
     expect(handlers.onPlay).not.toHaveBeenCalled();
@@ -131,7 +131,7 @@ describe("PlayButton", () => {
         {...handlers}
       />,
     );
-    const play = screen.getByRole("button", { name: "Play message" });
+    const play = screen.getByRole("button", { name: "Speak message" });
     play.element().focus();
     await expect.element(play).toHaveFocus();
 
@@ -160,13 +160,15 @@ describe("PlayButton", () => {
         {...createHandlers()}
       />,
     );
-    const play = screen.getByRole("button", { name: "Play message" });
+    const play = screen.getByRole("button", { name: "Speak message" });
 
     await userEvent.tab();
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
-    expect(tooltip.element().textContent).toBe("Play message (\u2066⌘↩\u2069)");
+    expect(tooltip.element().textContent).toBe(
+      "Speak message (\u2066⌘↩\u2069)",
+    );
     await expect
       .element(play)
       .toHaveAttribute("aria-keyshortcuts", "Meta+Enter Control+Enter");
@@ -181,14 +183,14 @@ describe("PlayButton", () => {
         {...createHandlers()}
       />,
     );
-    const stop = screen.getByRole("button", { name: "Stop message" });
+    const stop = screen.getByRole("button", { name: "Stop speaking" });
 
     await userEvent.tab();
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
     expect(tooltip.element().textContent).toBe(
-      "Stop message (\u2066Esc\u2069)",
+      "Stop speaking (\u2066Esc\u2069)",
     );
     await expect.element(stop).toHaveAttribute("aria-keyshortcuts", "Escape");
   });

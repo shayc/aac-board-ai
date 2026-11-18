@@ -174,7 +174,7 @@ how the message changes:
    appends a message part and plays it. Other tiles apply their actions in order.
    The [glossary](architecture.md#glossary) says how spelling, a space, and backspace change a
    message part.
-   With the message setting "Play symbols when added" off, a tile stays
+   With the message setting "Speak symbols when added" off, a tile stays
    silent: it adds its part, and a tile that spells and then plays does not
    echo the word. It still stops any playback, as a played tile would. A tile
    that only plays the message still plays it, and so does the play button.
