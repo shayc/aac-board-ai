@@ -1,6 +1,7 @@
 import Dialog from "@mui/material/Dialog";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { stubRewriter } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -470,6 +471,30 @@ describe("switch scanning", () => {
     beforeEach(() => {
       setScanningEnabled(true);
       setScanMethod("step");
+    });
+
+    test("keeps the full scan outline visible around a suggested phrase", async () => {
+      stubRewriter(() => "Yes, please.");
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+      await screen.getByRole("button", { name: "yes" }).click();
+      const phrase = screen.getByRole("button", { name: "Yes, please." });
+      await expect.element(phrase).toBeVisible();
+
+      await pressSwitch();
+      await pressSwitch();
+
+      await expect
+        .element(phrase)
+        .toHaveStyle({ outlineWidth: "4px", outlineOffset: "2px" });
+      const chip = phrase.element().getBoundingClientRect();
+      const scroller = screen
+        .getByRole("group", { name: "Suggestions" })
+        .element()
+        .getBoundingClientRect();
+      expect(chip.left - scroller.left).toBeGreaterThanOrEqual(6);
+      expect(scroller.right - chip.right).toBeGreaterThanOrEqual(6);
+      expect(chip.top - scroller.top).toBeGreaterThanOrEqual(6);
+      expect(scroller.bottom - chip.bottom).toBeGreaterThanOrEqual(6);
     });
 
     test("has no accessibility violations while a row is highlighted", async () => {

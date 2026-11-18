@@ -118,6 +118,7 @@ describe("SuggestionBar", () => {
     await expect.element(suggestions.getByRole("button")).toHaveLength(2);
   });
 
+  // Tab can stop with a chip flush against the edge or with only a sliver visible.
   test.each([266, 288])(
     "keeps each tabbed chip's full focus ring visible in a %ipx row",
     async (width) => {
