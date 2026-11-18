@@ -16,8 +16,8 @@ import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels
 import {
   MESSAGE_ACTION_SIZE,
   MESSAGE_ACTION_SIZE_PROPERTY,
+  MESSAGE_SECONDARY_ACTION_ICON_SIZE,
   MESSAGE_SECONDARY_ACTION_SIZE,
-  MESSAGE_SECONDARY_ICON_SIZE,
 } from "./message-bar";
 
 const RING_DELAY_MS = 300;
@@ -105,7 +105,7 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     flexShrink: 0,
     width: targetSize,
     height: targetSize,
-    fontSize: MESSAGE_SECONDARY_ICON_SIZE,
+    fontSize: MESSAGE_SECONDARY_ACTION_ICON_SIZE,
     color: "text.primary",
     // A tap leaves hover stuck on a touch screen.
     "&:hover": {

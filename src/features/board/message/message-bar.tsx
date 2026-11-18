@@ -17,9 +17,9 @@ export const MESSAGE_ACTION_SIZE = 80;
 // A step smaller, so play stays the main action of the bar.
 export const MESSAGE_SECONDARY_ACTION_SIZE = 64;
 export const MESSAGE_ACTION_ICON_SIZE = 36;
-// Material 3's icon for an 80px button. Play's heavier glyph keeps it the
-// main action of the row, whichever size the secondary buttons are.
-export const MESSAGE_SECONDARY_ICON_SIZE = 28;
+// One size for every secondary action, 64px or 80px: Material 3's icon for an
+// 80px button. Play's heavier glyph keeps it the main action of the row.
+export const MESSAGE_SECONDARY_ACTION_ICON_SIZE = 28;
 // The bar is as tall as its main action plus its inset, so it sets that
 // action's size and the action cannot outgrow it.
 export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";

@@ -6,8 +6,8 @@ import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import {
   MESSAGE_ACTION_SIZE,
+  MESSAGE_SECONDARY_ACTION_ICON_SIZE,
   MESSAGE_SECONDARY_ACTION_SIZE,
-  MESSAGE_SECONDARY_ICON_SIZE,
 } from "./message/message-bar";
 
 const SHAPE_SX = {
@@ -16,13 +16,14 @@ const SHAPE_SX = {
   pill: { width: 88 },
   // As large as the message bar's play, the row's other end. It holds one
   // icon, so the button's side padding gives way to the fixed width. A short
-  // landscape bar drops a step, and the buttons follow it. The icon matches
-  // backspace's rather than play's, so play stays the heaviest glyph.
+  // landscape bar drops a step, and the buttons follow it.
   round: (theme: Theme) => ({
     width: MESSAGE_ACTION_SIZE,
     height: MESSAGE_ACTION_SIZE,
     px: 0,
-    [`& .${svgIconClasses.root}`]: { fontSize: MESSAGE_SECONDARY_ICON_SIZE },
+    [`& .${svgIconClasses.root}`]: {
+      fontSize: MESSAGE_SECONDARY_ACTION_ICON_SIZE,
+    },
     [shortLandscape(theme)]: {
       width: MESSAGE_SECONDARY_ACTION_SIZE,
       height: MESSAGE_SECONDARY_ACTION_SIZE,
