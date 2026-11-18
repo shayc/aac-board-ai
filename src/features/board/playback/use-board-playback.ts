@@ -18,23 +18,15 @@ const MESSAGE_OWNER = "board-message";
 const TILE_OWNER = "board-tile";
 const BOARD_OWNERS: ReadonlySet<string> = new Set([MESSAGE_OWNER, TILE_OWNER]);
 
-interface UseBoardPlaybackOptions {
-  onMessagePlayback?: (completion: Promise<boolean>) => void;
-}
-
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /** Plays the message without reporting it as played, for tiles that play each word as it is spelled. */
-  echoMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   /** Resolves to whether the message played to its end. */
   playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
   playPart: (part: MessagePart) => Promise<void>;
   stop: () => void;
 }
 
-export function useBoardPlayback({
-  onMessagePlayback,
-}: UseBoardPlaybackOptions = {}): UseBoardPlaybackReturn {
+export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
   const { language } = useCommunicationLanguage();
   const { showSnackbar } = useSnackbar();
@@ -67,18 +59,11 @@ export function useBoardPlayback({
     return outcome === "completed";
   }
 
-  function echoMessage(parts: readonly MessagePart[]) {
+  function playMessage(parts: readonly MessagePart[]) {
     return playAndReportFailure({
       owner: MESSAGE_OWNER,
       steps: planPlayback(parts, language),
     });
-  }
-
-  function playMessage(parts: readonly MessagePart[]) {
-    const completion = echoMessage(parts);
-    onMessagePlayback?.(completion);
-
-    return completion;
   }
 
   async function playPart(part: MessagePart) {
@@ -90,7 +75,6 @@ export function useBoardPlayback({
 
   return {
     isMessagePlaying,
-    echoMessage,
     playMessage,
     playPart,
     stop: playback.stop,

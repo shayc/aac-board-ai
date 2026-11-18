@@ -7,11 +7,8 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged">;
-  playback: Pick<
-    UseBoardPlaybackReturn,
-    "playMessage" | "echoMessage" | "playPart" | "stop"
-  >;
+  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged" | "speak">;
+  playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   /** The language the board's text is in, when known. */
   language: string | undefined;
@@ -80,33 +77,36 @@ export function createButtonActivator({
       actions.slice(0, playIndex),
       language,
     );
-    const { edited: messageToPlay, hasChanged } =
-      message.apply(editsBeforePlay);
+    const { edited, hasChanged } = message.apply(editsBeforePlay);
     const editsAfterPlay = toMessageEdits(
       actions.slice(playIndex + 1),
       language,
     );
 
-    // A tile that spells and then plays echoes the word being typed, so only a
-    // tile that plays the message as it stands speaks it. The echo is feedback
-    // on the tile, so it stays silent when tiles are not played.
+    // Edits after ":speak" (such as ":clear") wait for playback to complete
+    // without interruption, keeping the message visible while it plays, and
+    // are dropped if the message was edited meanwhile: a ":clear" must not
+    // take letters typed during the speech with it.
     const isEcho = hasChanged;
-    if (isEcho && !shouldPlayTiles) {
+    if (!isEcho) {
+      void message.speak(playback.playMessage, editsAfterPlay);
+
+      return;
+    }
+
+    // A tile that spells and then plays echoes the word being typed, which is
+    // feedback on the tile: it stays silent when tiles are not played, and the
+    // message does not count as played.
+    if (!shouldPlayTiles) {
       playback.stop();
       message.apply(editsAfterPlay);
 
       return;
     }
 
-    const play = isEcho ? playback.echoMessage : playback.playMessage;
-
-    // Edits after ":speak" (such as ":clear") wait for playback to complete
-    // without interruption, keeping the message visible while it plays, and
-    // are dropped if the message was edited meanwhile: a ":clear" must not
-    // take letters typed during the speech with it.
-    void play(messageToPlay.parts).then((hasCompleted) => {
+    void playback.playMessage(edited.parts).then((hasCompleted) => {
       if (hasCompleted) {
-        message.applyIfUnchanged(messageToPlay, editsAfterPlay);
+        message.applyIfUnchanged(edited, editsAfterPlay);
       }
     });
   }

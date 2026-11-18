@@ -49,9 +49,7 @@ export function CommunicationBoard({
 
   const message = useMessage(initialMessage);
   const { shouldPlayTiles } = useMessagePreferences();
-  const playback = useBoardPlayback({
-    onMessagePlayback: message.trackPlayback,
-  });
+  const playback = useBoardPlayback();
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
@@ -60,10 +58,10 @@ export function CommunicationBoard({
     message: {
       apply: message.apply,
       applyIfUnchanged: message.applyIfUnchanged,
+      speak: message.speak,
     },
     playback: {
       playMessage: playback.playMessage,
-      echoMessage: playback.echoMessage,
       playPart: playback.playPart,
       stop: playback.stop,
     },
@@ -107,7 +105,7 @@ export function CommunicationBoard({
       isPlaying={playback.isMessagePlaying}
       variant={areControlsBelowGrid ? "boardControl" : "prominent"}
       shortcutLabels={shortcutLabels}
-      onPlay={() => void playback.playMessage(message.parts)}
+      onPlay={() => void message.speak(playback.playMessage)}
       onStop={playback.stop}
     />
   );

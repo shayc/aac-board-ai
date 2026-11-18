@@ -12,6 +12,9 @@ import type { Message, MessageEdit, MessagePart } from "./message-types";
 
 const UNDO_LIMIT = 100;
 
+/** Resolves to whether the message played to its end. */
+export type PlayMessage = (parts: readonly MessagePart[]) => Promise<boolean>;
+
 export interface MessageEditOutcome {
   edited: Message;
   hasChanged: boolean;
@@ -23,7 +26,10 @@ export interface UseMessageReturn {
   text: string;
   apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
   applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
-  trackPlayback: (completion: Promise<boolean>) => void;
+  speak: (
+    play: PlayMessage,
+    editsOnceSpoken?: readonly MessageEdit[],
+  ) => Promise<void>;
   replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
   clear: () => void;
@@ -99,14 +105,23 @@ export function useMessage(
 
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
-  function trackPlayback(completion: Promise<boolean>) {
-    const playing = setPlayed(false);
+  // Edits that waited for the speech then apply to the message that was spoken,
+  // and one they leave as it was has played.
+  async function speak(
+    play: PlayMessage,
+    editsOnceSpoken: readonly MessageEdit[] = [],
+  ) {
+    const spoken = setPlayed(false);
 
-    void completion.then((hasCompleted) => {
-      if (hasCompleted && hasSameContent(stateRef.current, playing)) {
-        setPlayed(true);
-      }
-    });
+    const hasCompleted = await play(spoken.parts);
+    if (!hasCompleted || !hasSameContent(stateRef.current, spoken)) {
+      return;
+    }
+
+    const edited = commitEdits(spoken, editsOnceSpoken);
+    if (edited === spoken) {
+      setPlayed(true);
+    }
   }
 
   function setPlayed(hasPlayed: boolean): Message {
@@ -153,7 +168,7 @@ export function useMessage(
     text,
     apply,
     applyIfUnchanged,
-    trackPlayback,
+    speak,
     replaceWithText,
     backspace,
     clear,

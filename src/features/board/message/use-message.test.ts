@@ -100,7 +100,7 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
-    await trackSettledPlayback(message, true);
+    await speakToCompletion(message, true);
 
     expect(labelsAfterSpelling(message)).toEqual(["a"]);
   });
@@ -110,7 +110,7 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
-    await trackSettledPlayback(message, true);
+    await speakToCompletion(message, true);
     message.backspace();
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
@@ -122,7 +122,7 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
-    await trackSettledPlayback(message, true);
+    await speakToCompletion(message, true);
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
@@ -131,7 +131,7 @@ describe("useMessage", () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want water", "en");
-    await trackSettledPlayback(result.current, true);
+    await speakToCompletion(result.current, true);
     setMessageClearAfterPlayback(false);
     await rerender();
 
@@ -147,8 +147,8 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
-    await trackSettledPlayback(message, true);
-    await trackSettledPlayback(message, false);
+    await speakToCompletion(message, true);
+    await speakToCompletion(message, false);
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
@@ -158,8 +158,8 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
-    await trackSettledPlayback(message, true);
-    message.trackPlayback(Promise.withResolvers<boolean>().promise);
+    await speakToCompletion(message, true);
+    void message.speak(() => Promise.withResolvers<boolean>().promise);
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watera"]);
   });
@@ -169,10 +169,9 @@ describe("useMessage", () => {
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
-    const completion = Promise.resolve(true);
-    message.trackPlayback(completion);
+    const speaking = message.speak(() => Promise.resolve(true));
     message.backspace();
-    await completion;
+    await speaking;
 
     expect(labelsAfterSpelling(message)).toEqual(["I", "want", "watea"]);
   });
@@ -185,10 +184,9 @@ describe("useMessage", () => {
       { kind: "spell", text: "hi", language: "en" },
       { kind: "space" },
     ]);
-    const completion = Promise.resolve(true);
-    message.trackPlayback(completion);
+    const speaking = message.speak(() => Promise.resolve(true));
     message.backspace();
-    await completion;
+    await speaking;
 
     expect(labelsAfterSpelling(message)).toEqual(["hia"]);
   });
@@ -209,7 +207,7 @@ describe("useMessage", () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
     result.current.replaceWithText("I want water", "en");
-    await trackSettledPlayback(result.current, true);
+    await speakToCompletion(result.current, true);
     setMessageClearAfterPlayback(false);
     await rerender();
     result.current.apply([]);
@@ -264,7 +262,7 @@ describe("useMessage", () => {
 
       result.current.replaceWithText("hi", "en");
       result.current.backspace();
-      await trackSettledPlayback(result.current, true);
+      await speakToCompletion(result.current, true);
       result.current.undo();
       await rerender();
 
@@ -304,7 +302,7 @@ describe("useMessage", () => {
       const message = result.current;
 
       message.replaceWithText("hi", "en");
-      await trackSettledPlayback(message, true);
+      await speakToCompletion(message, true);
       message.clear();
       message.undo();
 
@@ -340,7 +338,7 @@ describe("useMessage", () => {
       const { edited } = message.apply([
         { kind: "spell", text: "hi", language: "en" },
       ]);
-      await trackSettledPlayback(message, true);
+      await speakToCompletion(message, true);
 
       message.applyIfUnchanged(edited, [
         { kind: "spell", text: "!", language: "en" },
@@ -383,7 +381,7 @@ describe("useMessage", () => {
       const { result } = await renderHook(() => useMessage());
       result.current.replaceWithText("I want", "en");
 
-      await trackSettledPlayback(result.current, true);
+      await speakToCompletion(result.current, true);
 
       expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
     });
@@ -392,7 +390,7 @@ describe("useMessage", () => {
       setMessageClearAfterPlayback(false);
       const first = await renderHook(() => useMessage());
       first.result.current.replaceWithText("I want", "en");
-      await trackSettledPlayback(first.result.current, true);
+      await speakToCompletion(first.result.current, true);
       await first.unmount();
 
       const restored = await restoreMessageDraft();
@@ -450,13 +448,11 @@ function labelsAfterSpelling(message: ReturnType<typeof useMessage>): string[] {
   return edited.parts.map((part) => part.label);
 }
 
-async function trackSettledPlayback(
+async function speakToCompletion(
   message: ReturnType<typeof useMessage>,
   hasCompleted: boolean,
 ) {
-  const completion = Promise.resolve(hasCompleted);
-  message.trackPlayback(completion);
-  await completion;
+  await message.speak(() => Promise.resolve(hasCompleted));
 }
 
 async function seedMediaBoardSet() {
