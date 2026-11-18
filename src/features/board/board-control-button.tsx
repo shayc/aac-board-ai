@@ -4,11 +4,7 @@ import { svgIconClasses } from "@mui/material/SvgIcon";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
-import {
-  CONTROL_SIZE,
-  SECONDARY_CONTROL_ICON_SIZE,
-  SECONDARY_CONTROL_SIZE,
-} from "./board-control-sizes";
+import { CONTROL_ICON_SIZE, CONTROL_SIZES } from "./board-control-sizes";
 
 const SHAPE_SX = {
   // As wide as the grid's narrowest tile. Three of them and the gaps between
@@ -18,15 +14,15 @@ const SHAPE_SX = {
   // icon, so the button's side padding gives way to the fixed width. A short
   // landscape bar drops a step, and the buttons follow it.
   round: (theme: Theme) => ({
-    width: CONTROL_SIZE,
-    height: CONTROL_SIZE,
+    width: CONTROL_SIZES.large,
+    height: CONTROL_SIZES.large,
     px: 0,
     [`& .${svgIconClasses.root}`]: {
-      fontSize: SECONDARY_CONTROL_ICON_SIZE,
+      fontSize: CONTROL_ICON_SIZE,
     },
     [shortLandscape(theme)]: {
-      width: SECONDARY_CONTROL_SIZE,
-      height: SECONDARY_CONTROL_SIZE,
+      width: CONTROL_SIZES.medium,
+      height: CONTROL_SIZES.medium,
     },
   }),
 };

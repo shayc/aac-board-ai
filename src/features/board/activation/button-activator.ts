@@ -1,17 +1,18 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import { createTilePart } from "../message/message-transforms";
-import type { MessageEdit } from "../message/message-types";
+import type { MessageEdit, PlayMessage } from "../message/message-types";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface ButtonActivatorOptions {
-  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged">;
-  playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart" | "stop">;
+  message: Pick<UseMessageReturn, "apply" | "applyIfUnchanged" | "play">;
+  playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop"> & {
+    /** Plays the message without counting it as played. */
+    echoMessage: PlayMessage;
+  };
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
-  /** Speaks the message so that it counts as played, then applies the edits that waited for it. */
-  speakMessage: (editsOnceSpoken: readonly MessageEdit[]) => Promise<void>;
   /** The language the board's text is in, when known. */
   language: string | undefined;
   shouldPlayTiles: boolean;
@@ -23,7 +24,6 @@ export function createButtonActivator({
   message,
   playback,
   navigation,
-  speakMessage,
   language,
   shouldPlayTiles,
 }: ButtonActivatorOptions): ButtonActivator {
@@ -86,13 +86,10 @@ export function createButtonActivator({
       language,
     );
 
-    // Edits after ":speak" (such as ":clear") wait for playback to complete
-    // without interruption, keeping the message visible while it plays, and
-    // are dropped if the message was edited meanwhile: a ":clear" must not
-    // take letters typed during the speech with it.
-    const isEcho = hasChanged;
-    if (!isEcho) {
-      void speakMessage(editsAfterPlay);
+    // Only a tile that leaves the message as it stands plays it; `play` holds
+    // the edits that follow until the message has played.
+    if (!hasChanged) {
+      void message.play(editsAfterPlay);
 
       return;
     }
@@ -107,7 +104,11 @@ export function createButtonActivator({
       return;
     }
 
-    void playback.playMessage(edited.parts).then((hasCompleted) => {
+    // Like edits after the message plays, edits after an echo (such as
+    // ":clear") wait for it to complete and are dropped if the message was
+    // edited meanwhile: a ":clear" must not take letters typed during the
+    // speech with it.
+    void playback.echoMessage(edited.parts).then((hasCompleted) => {
       if (hasCompleted) {
         message.applyIfUnchanged(edited, editsAfterPlay);
       }

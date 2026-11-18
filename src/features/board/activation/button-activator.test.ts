@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setMessageClearAfterPlayback } from "../message/message-preferences-store";
 import { createTilePart } from "../message/message-transforms";
-import type { MessageEdit } from "../message/message-types";
+import type { MessageEdit, PlayMessage } from "../message/message-types";
 import { useMessage } from "../message/use-message";
 import { createButtonActivator } from "./button-activator";
 
@@ -33,22 +33,23 @@ async function setup(
   seed: readonly MessageEdit[] = [],
   { hasPlayed = false, language = "en", shouldPlayTiles = true } = {},
 ) {
-  const { result, rerender } = await renderHook(() => useMessage());
-  const message = result.current;
-  message.apply(seed);
-  if (hasPlayed) {
-    await message.speak(() => Promise.resolve(true));
-  }
-
   const playback = {
-    playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() =>
-      Promise.resolve(true),
-    ),
+    playMessage: vi.fn<PlayMessage>(() => Promise.resolve(true)),
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
       Promise.resolve(),
     ),
     stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
   };
+  const { result, rerender } = await renderHook(() =>
+    useMessage(playback.playMessage),
+  );
+  const message = result.current;
+  message.apply(seed);
+  if (hasPlayed) {
+    await message.play();
+    playback.playMessage.mockClear();
+  }
+
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
 
   async function readParts() {
@@ -63,23 +64,31 @@ async function setup(
     return parts.map((part) => part.label);
   }
 
+  // Rendering again runs everything that waited for a playback that has
+  // resolved.
+  async function playbackSettled() {
+    await rerender();
+  }
+
   function holdMessagePlayback() {
     const { promise, resolve } = Promise.withResolvers<boolean>();
     playback.playMessage.mockImplementation(() => promise);
 
     return async (hasCompleted: boolean) => {
       resolve(hasCompleted);
-      await promise;
+      await playbackSettled();
     };
   }
 
   return {
     activateButton: createButtonActivator({
       message,
-      playback,
+      playback: {
+        echoMessage: playback.playMessage,
+        playPart: playback.playPart,
+        stop: playback.stop,
+      },
       navigation,
-      speakMessage: (editsOnceSpoken) =>
-        message.speak(playback.playMessage, editsOnceSpoken),
       language,
       shouldPlayTiles,
     }),
@@ -87,6 +96,7 @@ async function setup(
     navigation,
     readParts,
     readLabels,
+    playbackSettled,
     holdMessagePlayback,
   };
 }
@@ -250,14 +260,14 @@ describe("createButtonActivator", () => {
   });
 
   test("keeps adding to a message once its echo has played", async () => {
-    const { activateButton, playback, readLabels } = await setup();
+    const { activateButton, readLabels, playbackSettled } = await setup();
 
     activateButton({
       id: "btn",
       label: "",
       actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
     });
-    await playback.playMessage.mock.results[0]?.value;
+    await playbackSettled();
     activateButton(SPELL_A);
 
     expect(await readLabels()).toEqual(["sa"]);
@@ -333,7 +343,7 @@ describe("createButtonActivator", () => {
   });
 
   test("closes the word being spelled when space follows play", async () => {
-    const { activateButton, playback, readLabels } = await setup();
+    const { activateButton, readLabels, playbackSettled } = await setup();
 
     activateButton({
       id: "btn",
@@ -344,9 +354,7 @@ describe("createButtonActivator", () => {
         { kind: "space" },
       ],
     });
-    const echo = playback.playMessage.mock.results[0];
-    assertDefined(echo);
-    await echo.value;
+    await playbackSettled();
     activateButton({
       id: "btn",
       label: "",
@@ -369,16 +377,15 @@ describe("createButtonActivator", () => {
   });
 
   test("counts the message as played for a space that changes nothing, followed by play", async () => {
-    const { activateButton, playback, readLabels } = await setup([
-      tilePart("hello"),
-    ]);
+    const { activateButton, playback, readLabels, playbackSettled } =
+      await setup([tilePart("hello")]);
 
     activateButton({
       id: "btn",
       label: "",
       actions: [{ kind: "space" }, { kind: "play" }],
     });
-    await playback.playMessage.mock.results[0]?.value;
+    await playbackSettled();
     activateButton(SPELL_A);
 
     expect(playback.playMessage).toHaveBeenCalledOnce();

@@ -12,13 +12,12 @@ import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 import {
-  CONTROL_SIZE,
-  SECONDARY_CONTROL_ICON_SIZE,
-  SECONDARY_CONTROL_SIZE,
+  CONTROL_ICON_SIZE,
+  CONTROL_SIZE_PROPERTY,
+  CONTROL_SIZES,
 } from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
-import { MESSAGE_ACTION_SIZE_PROPERTY } from "./message-bar";
 
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
@@ -28,8 +27,8 @@ const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 const RING_THICKNESS = 2.2;
 
 const BUTTON_SIZES = {
-  medium: SECONDARY_CONTROL_SIZE,
-  large: `var(${MESSAGE_ACTION_SIZE_PROPERTY}, ${CONTROL_SIZE}px)`,
+  medium: CONTROL_SIZES.medium,
+  large: `var(${CONTROL_SIZE_PROPERTY}, ${CONTROL_SIZES.large}px)`,
 } as const;
 
 type BackspaceButtonSize = keyof typeof BUTTON_SIZES;
@@ -105,7 +104,7 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     flexShrink: 0,
     width: targetSize,
     height: targetSize,
-    fontSize: SECONDARY_CONTROL_ICON_SIZE,
+    fontSize: CONTROL_ICON_SIZE,
     color: "text.primary",
     // A tap leaves hover stuck on a touch screen.
     "&:hover": {

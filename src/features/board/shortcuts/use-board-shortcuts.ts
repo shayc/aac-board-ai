@@ -6,9 +6,8 @@ import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 import { resolveBoardShortcut } from "./resolve-board-shortcut";
 
 interface UseBoardShortcutsOptions {
-  message: Pick<UseMessageReturn, "backspace" | "clear" | "undo">;
+  message: Pick<UseMessageReturn, "play" | "backspace" | "clear" | "undo">;
   playback: Pick<UseBoardPlaybackReturn, "stop" | "isMessagePlaying">;
-  speakMessage: () => Promise<void>;
 }
 
 interface UseBoardShortcutsReturn {
@@ -18,7 +17,6 @@ interface UseBoardShortcutsReturn {
 export function useBoardShortcuts({
   message,
   playback,
-  speakMessage,
 }: UseBoardShortcutsOptions): UseBoardShortcutsReturn {
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
@@ -42,7 +40,7 @@ export function useBoardShortcuts({
           message.undo();
           break;
         case "play":
-          void speakMessage();
+          void message.play();
           break;
         case "stop":
           playback.stop();

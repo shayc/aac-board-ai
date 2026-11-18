@@ -8,12 +8,14 @@ import {
   hasSameContent,
   markPlayed,
 } from "./message-transforms";
-import type { Message, MessageEdit, MessagePart } from "./message-types";
+import type {
+  Message,
+  MessageEdit,
+  MessagePart,
+  PlayMessage,
+} from "./message-types";
 
 const UNDO_LIMIT = 100;
-
-/** Resolves to whether the message played to its end. */
-export type PlayMessage = (parts: readonly MessagePart[]) => Promise<boolean>;
 
 export interface MessageEditOutcome {
   edited: Message;
@@ -26,10 +28,7 @@ export interface UseMessageReturn {
   text: string;
   apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
   applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
-  speak: (
-    play: PlayMessage,
-    editsOnceSpoken?: readonly MessageEdit[],
-  ) => Promise<void>;
+  play: (editsAfterPlay?: readonly MessageEdit[]) => Promise<void>;
   replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
   clear: () => void;
@@ -37,6 +36,7 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(
+  playMessage: PlayMessage,
   initialMessage: Message = EMPTY_MESSAGE,
 ): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
@@ -105,21 +105,19 @@ export function useMessage(
 
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
-  // Edits that waited for the speech then apply to the message that was spoken,
-  // and one they leave as it was has played.
-  async function speak(
-    play: PlayMessage,
-    editsOnceSpoken: readonly MessageEdit[] = [],
-  ) {
-    const spoken = setPlayed(false);
+  // Edits that follow the playback (such as a tile's ":clear") wait for it,
+  // keeping the message visible while it plays, then apply to the message that
+  // played; one they leave as it was has played.
+  async function play(editsAfterPlay: readonly MessageEdit[] = []) {
+    const playing = setPlayed(false);
 
-    const hasCompleted = await play(spoken.parts);
-    if (!hasCompleted || !hasSameContent(stateRef.current, spoken)) {
+    const hasCompleted = await playMessage(playing.parts);
+    if (!hasCompleted || !hasSameContent(stateRef.current, playing)) {
       return;
     }
 
-    const edited = commitEdits(spoken, editsOnceSpoken);
-    if (edited === spoken) {
+    const edited = commitEdits(playing, editsAfterPlay);
+    if (edited === playing) {
       setPlayed(true);
     }
   }
@@ -168,7 +166,7 @@ export function useMessage(
     text,
     apply,
     applyIfUnchanged,
-    speak,
+    play,
     replaceWithText,
     backspace,
     clear,

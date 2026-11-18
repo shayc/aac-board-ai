@@ -14,7 +14,7 @@ import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessagePreferences } from "./message/message-preferences-store";
-import type { Message, MessageEdit } from "./message/message-types";
+import type { Message } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
@@ -47,31 +47,25 @@ export function CommunicationBoard({
   const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
-  const message = useMessage(initialMessage);
-  const { shouldPlayTiles } = useMessagePreferences();
   const playback = useBoardPlayback();
+  const message = useMessage(playback.playMessage, initialMessage);
+  const { shouldPlayTiles } = useMessagePreferences();
   const navigation = useBoardNavigation(rootBoardId);
-
-  // The one place the message meets its playback: the play button, the
-  // shortcut and tiles all speak through it, so each counts the message as
-  // played.
-  const speakMessage = (editsOnceSpoken?: readonly MessageEdit[]) =>
-    message.speak(playback.playMessage, editsOnceSpoken);
-  const shortcuts = useBoardShortcuts({ message, playback, speakMessage });
+  const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
   const activateButton = createButtonActivator({
     message: {
       apply: message.apply,
       applyIfUnchanged: message.applyIfUnchanged,
+      play: message.play,
     },
     playback: {
-      playMessage: playback.playMessage,
+      echoMessage: playback.playMessage,
       playPart: playback.playPart,
       stop: playback.stop,
     },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
-    speakMessage,
     language,
     shouldPlayTiles,
   });
@@ -111,7 +105,7 @@ export function CommunicationBoard({
       isPlaying={playback.isMessagePlaying}
       variant={areControlsBelowGrid ? "boardControl" : "prominent"}
       shortcutLabels={shortcutLabels}
-      onPlay={() => void speakMessage()}
+      onPlay={() => void message.play()}
       onStop={playback.stop}
     />
   );

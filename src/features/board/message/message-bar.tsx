@@ -8,22 +8,17 @@ import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
 } from "../aac-symbol/aac-symbol";
-import { CONTROL_SIZE, SECONDARY_CONTROL_SIZE } from "../board-control-sizes";
+import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
 import type { MessagePart } from "./message-types";
 
 // Imported symbols need a light background in both themes.
 const LIGHT_SCHEME_CLASS = "light";
 
-// The bar is as tall as its main action plus its inset, so it sets that
-// action's size and the action cannot outgrow it.
-export const MESSAGE_ACTION_SIZE_PROPERTY = "--message-action-size";
-
-// A short landscape screen has no height for the main action's extra step: the
-// bar drops to the secondary size, and its symbols shrink so their labels stay
-// in view.
+// A short landscape screen has no height for a large control: the bar drops to
+// the medium size, and its symbols shrink so their labels stay in view.
 const BAR_SIZES = {
-  regular: { action: CONTROL_SIZE, symbol: 64 },
-  compact: { action: SECONDARY_CONTROL_SIZE, symbol: 48 },
+  regular: { control: CONTROL_SIZES.large, symbol: 64 },
+  compact: { control: CONTROL_SIZES.medium, symbol: 48 },
 } as const;
 
 const BAR_INSET = 1;
@@ -142,9 +137,9 @@ function messageBarSx(theme: Theme) {
 
 type BarSize = (typeof BAR_SIZES)[keyof typeof BAR_SIZES];
 
-function barSizeProperties({ action, symbol }: BarSize) {
+function barSizeProperties({ control, symbol }: BarSize) {
   return {
-    [MESSAGE_ACTION_SIZE_PROPERTY]: `${action}px`,
+    [CONTROL_SIZE_PROPERTY]: `${control}px`,
     [SYMBOL_IMAGE_SIZE_PROPERTY]: `${symbol}px`,
   };
 }
@@ -154,7 +149,7 @@ function scrollContainerSx(theme: Theme) {
     flexGrow: 1,
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
-    height: `calc(var(${MESSAGE_ACTION_SIZE_PROPERTY}) + ${theme.spacing(BAR_INSET * 2)})`,
+    height: `calc(var(${CONTROL_SIZE_PROPERTY}) + ${theme.spacing(BAR_INSET * 2)})`,
     px: MESSAGE_PADDING,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
