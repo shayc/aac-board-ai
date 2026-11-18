@@ -115,14 +115,13 @@ describe("BoardSelector", () => {
       .toHaveAttribute("aria-selected", "true");
   });
 
-  test("navigates, enables Back, and closes the popup when a board is clicked", async () => {
+  test("navigates and closes the popup when a board is clicked", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("button", { name: "Home" }).click();
     await screen.getByRole("option", { name: "Animals" }).click();
 
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
-    expect(router.state.location.state).toEqual({ canGoBack: true });
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
     await expect
       .element(screen.getByRole("heading", { level: 1, name: "Animals" }))

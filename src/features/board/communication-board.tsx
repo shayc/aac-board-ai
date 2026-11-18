@@ -10,13 +10,17 @@ import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
-import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
+import {
+  BOTTOM_CONTROLS_INSET,
+  PAGE_MARGIN,
+  SCROLL_CLEARANCE,
+} from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessagePreferences } from "./message/message-preferences-store";
 import type { Message } from "./message/message-types";
 import { useMessage } from "./message/use-message";
-import { NavigationButtons } from "./navigation/navigation-buttons";
+import { HomeButton } from "./navigation/home-button";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
@@ -78,13 +82,11 @@ export function CommunicationBoard({
 
   const hasMessage = message.parts.length > 0;
 
-  const navigationButtons = (
-    <NavigationButtons
-      canGoBack={navigation.canGoBack}
-      canGoHome={navigation.canGoHome}
+  const homeButton = (
+    <HomeButton
+      disabled={!navigation.canGoHome}
       shape={areControlsBelowGrid ? "pill" : "round"}
-      onBack={navigation.goBack}
-      onHome={navigation.goHome}
+      onClick={navigation.goHome}
     />
   );
 
@@ -138,7 +140,7 @@ export function CommunicationBoard({
               spacing={2}
               sx={{ alignItems: "center" }}
             >
-              {!areControlsBelowGrid && navigationButtons}
+              {!areControlsBelowGrid && homeButton}
 
               <PlaybackMessageBar
                 parts={message.parts}
@@ -187,11 +189,11 @@ export function CommunicationBoard({
               spacing={2}
               sx={(theme) => ({
                 justifyContent: "space-between",
-                px: PAGE_MARGIN,
+                px: BOTTOM_CONTROLS_INSET,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
-              {navigationButtons}
+              {homeButton}
               {playButton}
             </Stack>
           )}

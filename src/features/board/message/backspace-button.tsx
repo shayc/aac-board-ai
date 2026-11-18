@@ -7,6 +7,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
@@ -88,22 +89,35 @@ export function BackspaceButton({
   );
 }
 
-// No fill at rest, so play is the bar's only filled shape. The bar stays light
-// in dark mode, so hover darkens in both themes, and its dark-mode grey needs a
-// heavier disabled icon.
+// A tonal fill like MUI's filled Chip, lighter than play's. The bar's light
+// scheme resolves the action tokens in both themes. MUI clears a disabled icon
+// button's fill; it stays to keep the button's shape, and the dark-mode bar's
+// grey needs a heavier disabled icon.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const targetSize = BUTTON_SIZES[size];
-  const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
+  const { action } = theme.vars.palette;
 
   return {
     flexShrink: 0,
     width: targetSize,
     height: targetSize,
+    [shortLandscape(theme)]: {
+      width: CONTROL_SIZES.small,
+      height: CONTROL_SIZES.small,
+    },
     fontSize: CONTROL_ICON_SIZE,
     color: "text.primary",
+    [`&, &.${iconButtonClasses.disabled}`]: {
+      backgroundColor: action.selected,
+    },
     // A tap leaves hover stuck on a touch screen.
     "&:hover": {
-      "@media (hover: hover)": { backgroundColor: hoverColor },
+      "@media (hover: hover)": {
+        backgroundColor: theme.alpha(
+          action.selected,
+          `${action.selectedOpacity} + ${action.hoverOpacity}`,
+        ),
+      },
     },
     ...theme.applyStyles("dark", {
       [`&.${iconButtonClasses.disabled}`]: {

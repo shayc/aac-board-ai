@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Les suggestions ne sont pas disponibles dans cette langue.",
   "suggestionsFailed": "Impossible d’obtenir des suggestions",
   "suggestionsLabel": "Suggestions",
-  "navBack": "Retour",
   "navHome": "Aller à l’accueil",
   "messageBackspace": "Effacer",
   "messageBackspaceLongPressHint": "Maintenez appuyé ou appuyez sur {shortcut} pour effacer le message.",

@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Подсказки недоступны для этого языка.",
   "suggestionsFailed": "Не удалось получить подсказки",
   "suggestionsLabel": "Подсказки",
-  "navBack": "Назад",
   "navHome": "На главную",
   "messageBackspace": "Стереть",
   "messageBackspaceLongPressHint": "Нажмите и удерживайте или нажмите {shortcut}, чтобы очистить сообщение.",

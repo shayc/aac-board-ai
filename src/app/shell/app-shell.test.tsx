@@ -57,9 +57,9 @@ describe("AppShell", () => {
       screen: "a phone on its side",
       width: 844,
       height: 390,
-      appBarHeight: 49,
+      appBarHeight: 48,
     },
-    { screen: "a tablet", width: 844, height: 1100, appBarHeight: 65 },
+    { screen: "a tablet", width: 844, height: 1100, appBarHeight: 64 },
   ])(
     "sizes the app bar to the height of $screen",
     async ({ width, height, appBarHeight }) => {

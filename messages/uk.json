@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Пропозиції недоступні для цієї мови.",
   "suggestionsFailed": "Не вдалося отримати пропозиції",
   "suggestionsLabel": "Пропозиції",
-  "navBack": "Назад",
   "navHome": "На головну",
   "messageBackspace": "Стерти",
   "messageBackspaceLongPressHint": "Натисніть і утримуйте або натисніть {shortcut}, щоб очистити повідомлення.",

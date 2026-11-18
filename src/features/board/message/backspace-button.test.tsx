@@ -2,6 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import {
   contrastRatio,
   paint,
+  type Rgb,
   WCAG_NON_TEXT_CONTRAST,
   WCAG_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
@@ -59,9 +60,8 @@ function ClearableBackspace() {
   );
 }
 
-// No fill at rest, so the icon and ring are measured against the bar.
-async function measureContrasts(mode: ColorMode, disabled: boolean) {
-  const screen = await renderInColorMode(
+function barWithBackspace(disabled: boolean) {
+  return (
     <MessageBar
       parts={[]}
       isWordOpen={false}
@@ -74,27 +74,36 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
           disabled={disabled}
         />
       }
-    />,
-    mode,
+    />
   );
+}
+
+// The icon and ring are measured against the button's fill over the bar.
+async function measureContrasts(mode: ColorMode, disabled: boolean) {
+  const screen = await renderInColorMode(barWithBackspace(disabled), mode);
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
 
   const bar = button.parentElement;
   assertDefined(bar);
   const barColor = getComputedStyle(bar).backgroundColor;
+  const fillColor = getComputedStyle(button).backgroundColor;
   const iconColor = getComputedStyle(button).color;
   const ring = button.querySelector("circle");
   assertDefined(ring);
   const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  const ground = paint(barColor);
+  const ground = paint(barColor, fillColor);
 
   return {
-    icon: contrastRatio(paint(barColor, iconColor), ground),
-    ring: contrastRatio(paint(barColor, ringColor), ground),
+    icon: contrastRatio(paint(barColor, fillColor, iconColor), ground),
+    ring: contrastRatio(paint(barColor, fillColor, ringColor), ground),
   };
+}
+
+function brightness([red, green, blue]: Rgb) {
+  return red + green + blue;
 }
 
 describe("BackspaceButton", () => {
@@ -308,48 +317,33 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  test("has no fill until the pointer is on it", async () => {
-    const screen = await renderWithProviders(
-      <MessageBar
-        parts={[]}
-        isWordOpen={false}
-        activePartId={null}
-        areImagesVisible
-        endAction={
-          <BackspaceButton
-            shortcutLabels={SHORTCUT_LABELS}
-            {...createHandlers()}
-          />
-        }
-      />,
-    );
+  // A disabled icon button loses its fill by MUI's default; backspace keeps it.
+  test("keeps its fill while disabled and darkens it under the pointer", async () => {
+    const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" });
     const readFill = () => getComputedStyle(button.element()).backgroundColor;
+    const bar = button.element().parentElement;
+    assertDefined(bar);
+    const barColor = getComputedStyle(bar).backgroundColor;
+    const readShade = () => brightness(paint(barColor, readFill()));
 
     await screen.getByRole("list", { name: "Message" }).hover();
+    await expect.poll(readFill).not.toBe(TRANSPARENT);
+    const restFill = readFill();
+    const restShade = readShade();
 
-    await expect.poll(readFill).toBe(TRANSPARENT);
+    await screen.rerender(barWithBackspace(true));
 
+    await expect.poll(readFill).toBe(restFill);
+
+    await screen.rerender(barWithBackspace(false));
     await button.hover();
 
-    await expect.poll(readFill).not.toBe(TRANSPARENT);
+    await expect.poll(readShade).toBeLessThan(restShade);
   });
 
   test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
-    const screen = await renderWithProviders(
-      <MessageBar
-        parts={[]}
-        isWordOpen={false}
-        activePartId={null}
-        areImagesVisible
-        endAction={
-          <BackspaceButton
-            shortcutLabels={SHORTCUT_LABELS}
-            {...createHandlers()}
-          />
-        }
-      />,
-    );
+    const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" }).element();
     const bar = button.parentElement;
     assertDefined(bar);

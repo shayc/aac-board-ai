@@ -227,7 +227,6 @@ describe("CommunicationBoard", () => {
               - button "hello"
             - gridcell "world":
               - button "world"
-        - button "Go back" [disabled]
         - button "Go home" [disabled]
         - button "Speak message" [disabled]
       `);
@@ -343,20 +342,22 @@ describe("CommunicationBoard", () => {
   });
 
   describe("layout", () => {
-    // Available heights exclude the app header (57px on phones, 65px on tablets,
-    // 49px on a short landscape screen).
+    // Available heights exclude the app header (56px on phones, 64px on tablets,
+    // 48px on a short landscape screen).
     const LAYOUT_CASES = [
       {
         name: "a phone",
         width: 375,
-        height: 755,
+        height: 756,
         pageMargin: 16,
         clearance: 4,
         overflowHint: 8,
         wholeRows: 5,
         isPlayBelowGrid: true,
-        playEnd: 16,
-        playHeight: 48,
+        // Inset toward the thumb, twice the page margin.
+        playEnd: 32,
+        // The shared 28px icon and the pill's 12px padding.
+        playHeight: 28 + 2 * 12,
         messageBarStart: 16,
         // As tall as backspace, 80px, with the bar's 8px inset and 1px border.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
@@ -364,18 +365,18 @@ describe("CommunicationBoard", () => {
       {
         name: "a phone on its side",
         width: 874,
-        height: 353,
+        height: 354,
         pageMargin: 16,
         clearance: 4,
         overflowHint: 8,
         wholeRows: 2,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
-        // Fills the compact bar inside its inset, as backspace does.
+        // Fills the compact bar inside its inset.
         playHeight: 64,
-        // Past the back and home buttons, 64px each and 8px apart, and a 16px gap.
-        messageBarStart: 16 + 64 + 8 + 64 + 16,
-        // As tall as backspace, 64px, with the bar's 8px inset and 1px border.
+        // Past the 64px home button and a 16px gap.
+        messageBarStart: 16 + 64 + 16,
+        // As tall as play, 64px, with the bar's 8px inset and 1px border.
         messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {
@@ -389,13 +390,13 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
         playHeight: 64,
-        messageBarStart: 16 + 64 + 8 + 64 + 16,
+        messageBarStart: 16 + 64 + 16,
         messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {
         name: "a tablet",
         width: 1024,
-        height: 703,
+        height: 704,
         pageMargin: 24,
         clearance: 8,
         overflowHint: 16,
@@ -404,8 +405,8 @@ describe("CommunicationBoard", () => {
         // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
         playHeight: 80,
-        // Back and home grow to play's 80px where the bar has room for it.
-        messageBarStart: 24 + 80 + 8 + 80 + 16,
+        // Home grows to play's 80px where the bar has room for it.
+        messageBarStart: 24 + 80 + 16,
         // Play, 80px, sets the height where there is room for it.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
@@ -458,21 +459,40 @@ describe("CommunicationBoard", () => {
       { name: "a tablet", width: 1024, height: 703 },
       { name: "a wide, short desktop window", width: 1440, height: 531 },
     ])(
-      "gives back and home backspace's icon, lighter than play's, on $name",
+      "gives home backspace's icon, lighter than play's, on $name",
       async ({ width, height }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
         await expect.element(screen.getByRole("grid")).toBeVisible();
 
         const button = (name: string) => screen.getByRole("button", { name });
-        const back = iconSize(button("Go back"));
         const home = iconSize(button("Go home"));
         const backspace = iconSize(button("Backspace"));
         const play = iconSize(button("Speak message"));
 
-        expect(back).toBe(backspace);
         expect(home).toBe(backspace);
         expect(backspace).toBeLessThan(play);
+      },
+    );
+
+    test.each([
+      { name: "a tablet", width: 1024, height: 704 },
+      { name: "a phone on its side", width: 874, height: 354 },
+    ])(
+      "keeps backspace a step smaller than play on $name",
+      async ({ width, height }) => {
+        await setTestViewport(width, height);
+        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+        await expect.element(screen.getByRole("grid")).toBeVisible();
+
+        const widthOf = (name: string) =>
+          screen.getByRole("button", { name }).element().getBoundingClientRect()
+            .width;
+
+        expect(widthOf("Backspace") / widthOf("Speak message")).toBeCloseTo(
+          0.8,
+          1,
+        );
       },
     );
   });
@@ -480,15 +500,11 @@ describe("CommunicationBoard", () => {
   describe("phone controls", () => {
     // The narrowest phones, and larger ones with display zoom, are 320px wide.
     test.each([{ width: 375 }, { width: 320 }])(
-      "makes back, home and play equally wide, with play at the far end, on a $width px wide phone",
+      "makes home and play equally wide and inset toward the thumb, on a $width px wide phone",
       async ({ width }) => {
         await setTestViewport(width, 755);
         const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
-        const back = screen
-          .getByRole("button", { name: "Go back" })
-          .element()
-          .getBoundingClientRect();
         const home = screen
           .getByRole("button", { name: "Go home" })
           .element()
@@ -498,11 +514,10 @@ describe("CommunicationBoard", () => {
           .element()
           .getBoundingClientRect();
 
-        expect(back.width).toBeCloseTo(88, 0);
         expect(home.width).toBeCloseTo(88, 0);
         expect(play.width).toBeCloseTo(88, 0);
-        expect(back.left).toBeCloseTo(16, 0);
-        expect(play.right).toBeCloseTo(width - 16, 0);
+        expect(home.left).toBeCloseTo(32, 0);
+        expect(play.right).toBeCloseTo(width - 32, 0);
         expect(play.left - home.right).toBeGreaterThanOrEqual(16 - 0.5);
       },
     );
@@ -916,9 +931,6 @@ describe("CommunicationBoard", () => {
           .element(backspace)
           .toHaveAttribute("aria-disabled", "true");
         await expect
-          .element(screen.getByRole("button", { name: "Go back" }))
-          .toBeVisible();
-        await expect
           .element(screen.getByRole("button", { name: "Go home" }))
           .toBeVisible();
 
@@ -963,15 +975,15 @@ describe("CommunicationBoard", () => {
         ["/sets/set-1/boards/test-board"],
         "test-board",
       );
-      const back = screen.getByRole("button", { name: "Go back" });
+      const home = screen.getByRole("button", { name: "Go home" });
 
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
+      await expect.element(home).toHaveAttribute("aria-disabled", "true");
       await screen.getByRole("button", { name: "hello" }).click();
       speech.speak.mockClear();
 
       await screen.getByRole("button", { name: "Folder" }).click();
 
-      await expect.element(back).not.toHaveAttribute("aria-disabled");
+      await expect.element(home).not.toHaveAttribute("aria-disabled");
       await expect
         .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeEnabled();
@@ -979,26 +991,20 @@ describe("CommunicationBoard", () => {
       expect(audio.play).not.toHaveBeenCalled();
     });
 
-    test("keeps keyboard focus on Go back when it reaches the first board", async () => {
+    test("keeps keyboard focus on Go home when it reaches the home board", async () => {
       const screen = await renderCommunicationBoard(
         TWO_BUTTON_BOARD,
-        [
-          "/sets/set-1/boards/test-board",
-          {
-            pathname: "/sets/set-1/boards/test-board",
-            state: { canGoBack: true },
-          },
-        ],
+        ["/sets/set-1/boards/child-board"],
         "test-board",
       );
-      const back = screen.getByRole("button", { name: "Go back" });
+      const home = screen.getByRole("button", { name: "Go home" });
 
-      await expect.element(back).not.toHaveAttribute("aria-disabled");
-      back.element().focus();
+      await expect.element(home).not.toHaveAttribute("aria-disabled");
+      home.element().focus();
       await userEvent.keyboard("{Enter}");
 
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
-      await expect.element(back).toHaveFocus();
+      await expect.element(home).toHaveAttribute("aria-disabled", "true");
+      await expect.element(home).toHaveFocus();
     });
 
     test("keeps keyboard focus in the same cell when the next board reuses its button IDs", async () => {
@@ -1022,24 +1028,6 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByRole("button", { name: "no" }))
         .toHaveFocus();
-    });
-
-    test("disables Home on the home board and keeps Back", async () => {
-      const screen = await renderCommunicationBoard(
-        TWO_BUTTON_BOARD,
-        [
-          {
-            pathname: "/sets/set-1/boards/test-board",
-            state: { canGoBack: true },
-          },
-        ],
-        "test-board",
-      );
-      const back = screen.getByRole("button", { name: "Go back" });
-      const home = screen.getByRole("button", { name: "Go home" });
-
-      await expect.element(home).toHaveAttribute("aria-disabled", "true");
-      await expect.element(back).not.toHaveAttribute("aria-disabled");
     });
   });
 

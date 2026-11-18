@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Предложенията не са налични за този език.",
   "suggestionsFailed": "Предложенията не можаха да бъдат получени",
   "suggestionsLabel": "Предложения",
-  "navBack": "Назад",
   "navHome": "Към началото",
   "messageBackspace": "Изтриване",
   "messageBackspaceLongPressHint": "Задръжте или натиснете {shortcut}, за да изчистите съобщението.",

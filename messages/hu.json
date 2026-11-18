@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "A javaslatok ezen a nyelven nem érhetők el.",
   "suggestionsFailed": "Nem sikerült lekérni a javaslatokat",
   "suggestionsLabel": "Javaslatok",
-  "navBack": "Vissza",
   "navHome": "Ugrás a kezdőlapra",
   "messageBackspace": "Törlés",
   "messageBackspaceLongPressHint": "Az üzenet törléséhez tartsd lenyomva, vagy nyomd le ezt: {shortcut}.",

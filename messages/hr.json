@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Prijedlozi nisu dostupni za ovaj jezik.",
   "suggestionsFailed": "Nije moguće dohvatiti prijedloge",
   "suggestionsLabel": "Prijedlozi",
-  "navBack": "Natrag",
   "navHome": "Idi na početnu",
   "messageBackspace": "Obriši",
   "messageBackspaceLongPressHint": "Pritisnite i držite ili pritisnite {shortcut} za brisanje poruke.",

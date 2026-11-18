@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Vorschläge sind für diese Sprache nicht verfügbar.",
   "suggestionsFailed": "Vorschläge konnten nicht abgerufen werden",
   "suggestionsLabel": "Vorschläge",
-  "navBack": "Zurück",
   "navHome": "Zur Startseite",
   "messageBackspace": "Löschen",
   "messageBackspaceLongPressHint": "Gedrückt halten oder {shortcut} drücken, um die Nachricht zu löschen.",

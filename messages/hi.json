@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "इस भाषा में सुझाव उपलब्ध नहीं हैं।",
   "suggestionsFailed": "सुझाव नहीं मिल सके",
   "suggestionsLabel": "सुझाव",
-  "navBack": "वापस जाएँ",
   "navHome": "होम पर जाएँ",
   "messageBackspace": "मिटाएँ",
   "messageBackspaceLongPressHint": "संदेश साफ़ करने के लिए दबाकर रखें, या {shortcut} दबाएँ।",

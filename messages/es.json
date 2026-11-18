@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "Las sugerencias no están disponibles en este idioma.",
   "suggestionsFailed": "No se pudieron obtener sugerencias",
   "suggestionsLabel": "Sugerencias",
-  "navBack": "Volver",
   "navHome": "Ir al inicio",
   "messageBackspace": "Borrar",
   "messageBackspaceLongPressHint": "Mantén pulsado o pulsa {shortcut} para borrar el mensaje.",

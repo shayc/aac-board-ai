@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "এই ভাষায় পরামর্শ উপলভ্য নয়।",
   "suggestionsFailed": "পরামর্শ পাওয়া যায়নি",
   "suggestionsLabel": "পরামর্শ",
-  "navBack": "ফিরে যান",
   "navHome": "হোমে যান",
   "messageBackspace": "মুছুন",
   "messageBackspaceLongPressHint": "পুরো বার্তা মুছতে চেপে ধরে রাখুন, অথবা {shortcut} চাপুন।",

@@ -192,11 +192,6 @@ const themeOptions = {
         color: "transparent",
         elevation: 0,
       },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          borderBottom: `1px solid ${theme.vars.palette.divider}`,
-        }),
-      },
     },
     MuiToolbar: {
       styleOverrides: {

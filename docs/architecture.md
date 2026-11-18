@@ -132,7 +132,7 @@ State has distinct owners and lifetimes:
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset bytes                                                |
 | Active board          | React Router loaders                  | Stored `Board`, and its set's board list and root board, for the current route                         |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
-| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
+| Navigation history    | React Router                          | Browser history of the boards visited                                                                  |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, switch scanning, suggestion instructions, onboarding       |
 | Message draft         | `useMessage` + localStorage           | The message being composed, restored by the board loader when the board opens again                    |
@@ -414,8 +414,8 @@ full.
   [`shared/playback/`](../src/shared/playback/) owns device output and progress;
   [`features/board/playback/`](../src/features/board/playback/) turns message
   parts into the steps to play and reports a playback that fails.
-- **Navigation** — moving between boards with Back, Home, and the board
-  selector, in [`features/board/navigation/`](../src/features/board/navigation/).
+- **Navigation** — moving between boards with Home and the board selector,
+  in [`features/board/navigation/`](../src/features/board/navigation/).
   Moving focus between tiles is the grid's
   [keyboard navigation](../src/features/board/grid/grid-key-navigation.ts), and
   matching URLs to pages is [`app/routing/`](../src/app/routing/).

@@ -135,7 +135,6 @@
   "suggestionsLanguageUnavailable": "이 언어에서는 제안 기능을 사용할 수 없습니다.",
   "suggestionsFailed": "제안을 가져올 수 없습니다",
   "suggestionsLabel": "제안",
-  "navBack": "뒤로",
   "navHome": "홈으로",
   "messageBackspace": "지우기",
   "messageBackspaceLongPressHint": "누른 상태를 유지하거나 {shortcut} 키를 누르면 메시지가 지워집니다.",

@@ -1,62 +1,45 @@
 import { buttonClasses } from "@mui/material/Button";
 import {
-  contrastRatio,
-  paint,
-  WCAG_NON_TEXT_CONTRAST,
-} from "@shared/testing/contrast";
-import {
   type ColorMode,
   renderInColorMode,
 } from "@shared/testing/render-in-color-mode";
-import type { ComponentProps } from "react";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { BoardControlButton } from "./board-control-button";
+import {
+  BoardControlButton,
+  type BoardControlShape,
+} from "./board-control-button";
 
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
-const NO_RING = "0px";
 
-type RoundButtonProps = Pick<
-  ComponentProps<typeof BoardControlButton>,
-  "color" | "disabled"
->;
-
-async function measureRoundButton(mode: ColorMode, props?: RoundButtonProps) {
+async function measureFill(
+  shape: BoardControlShape,
+  mode: ColorMode,
+  disabled: boolean,
+) {
   const screen = await renderInColorMode(
-    <BoardControlButton {...props} shape="round">
-      Go back
+    <BoardControlButton shape={shape} disabled={disabled}>
+      Go home
     </BoardControlButton>,
     mode,
   );
 
-  const button = screen.getByRole("button", { name: "Go back" }).element();
-
-  const pageColor = getComputedStyle(document.body).backgroundColor;
-  const { backgroundColor, borderTopColor, borderTopWidth, color } =
-    getComputedStyle(button);
+  const button = screen.getByRole("button", { name: "Go home" }).element();
+  const fill = getComputedStyle(button).backgroundColor;
   await screen.unmount();
 
-  return {
-    fill: backgroundColor,
-    iconColor: color,
-    ringColor: borderTopColor,
-    ringWidth: borderTopWidth,
-    ringContrast: contrastRatio(
-      paint(pageColor, borderTopColor),
-      paint(pageColor),
-    ),
-  };
+  return fill;
 }
 
 describe("BoardControlButton", () => {
   test("keeps the caller's class when the button is enabled", async () => {
     const screen = await render(
       <BoardControlButton className="custom-control">
-        Go back
+        Go home
       </BoardControlButton>,
     );
 
-    const button = screen.getByRole("button", { name: "Go back" });
+    const button = screen.getByRole("button", { name: "Go home" });
 
     await expect.element(button).toHaveClass("custom-control");
     await expect.element(button).not.toHaveClass(buttonClasses.disabled);
@@ -67,11 +50,11 @@ describe("BoardControlButton", () => {
       <BoardControlButton
         sx={[{ mt: 1 }, (theme) => ({ mb: theme.spacing(2) })]}
       >
-        Go back
+        Go home
       </BoardControlButton>,
     );
 
-    const button = screen.getByRole("button", { name: "Go back" });
+    const button = screen.getByRole("button", { name: "Go home" });
 
     await expect.element(button).toHaveStyle({
       width: "88px",
@@ -83,11 +66,11 @@ describe("BoardControlButton", () => {
   test("preserves the caller's class when the button is disabled", async () => {
     const screen = await render(
       <BoardControlButton className="custom-control" disabled>
-        Go back
+        Go home
       </BoardControlButton>,
     );
 
-    const button = screen.getByRole("button", { name: "Go back" });
+    const button = screen.getByRole("button", { name: "Go home" });
 
     await expect
       .element(button)
@@ -95,39 +78,20 @@ describe("BoardControlButton", () => {
   });
 });
 
-describe("BoardControlButton beside the message bar", () => {
-  test("draws a ring with non-text contrast instead of a fill in dark mode", async () => {
-    const { fill, ringWidth, ringContrast } = await measureRoundButton("dark");
+describe("BoardControlButton shapes", () => {
+  test.each([
+    { mode: "light", disabled: false },
+    { mode: "light", disabled: true },
+    { mode: "dark", disabled: false },
+    { mode: "dark", disabled: true },
+  ] as const)(
+    "fills the round button as the pill in $mode mode, disabled: $disabled",
+    async ({ mode, disabled }) => {
+      const round = await measureFill("round", mode, disabled);
+      const pill = await measureFill("pill", mode, disabled);
 
-    expect(fill).toBe(TRANSPARENT);
-    expect(ringWidth).not.toBe(NO_RING);
-    expect(ringContrast).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
-  });
-
-  test("dims the ring with its icon when disabled in dark mode", async () => {
-    const { fill, iconColor, ringColor, ringWidth } = await measureRoundButton(
-      "dark",
-      { disabled: true },
-    );
-
-    expect(fill).toBe(TRANSPARENT);
-    expect(ringWidth).not.toBe(NO_RING);
-    expect(ringColor).toBe(iconColor);
-  });
-
-  test("keeps the fill of a button with its own color in dark mode", async () => {
-    const { fill, ringWidth } = await measureRoundButton("dark", {
-      color: "primary",
-    });
-
-    expect(fill).not.toBe(TRANSPARENT);
-    expect(ringWidth).toBe(NO_RING);
-  });
-
-  test("keeps its fill and has no ring in light mode", async () => {
-    const { fill, ringWidth } = await measureRoundButton("light");
-
-    expect(fill).not.toBe(TRANSPARENT);
-    expect(ringWidth).toBe(NO_RING);
-  });
+      expect(round).not.toBe(TRANSPARENT);
+      expect(round).toBe(pill);
+    },
+  );
 });
