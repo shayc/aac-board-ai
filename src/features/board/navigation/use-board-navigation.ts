@@ -16,10 +16,10 @@ export function useBoardNavigation(
 ): UseBoardNavigationReturn {
   const navigate = useNavigate();
   const location = useLocation();
-  const { boardSetId, goToBoard } = useBoardRoute();
+  const { boardSetId, boardId, goToBoard } = useBoardRoute();
 
   const canGoBack = readCanGoBack(location.state);
-  const canGoHome = Boolean(rootBoardId);
+  const canGoHome = Boolean(rootBoardId) && boardId !== rootBoardId;
 
   function goBack() {
     if (!canGoBack) {

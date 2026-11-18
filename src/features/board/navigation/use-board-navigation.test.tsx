@@ -92,6 +92,12 @@ describe("useBoardNavigation", () => {
       expect(result.current.nav.canGoHome).toBe(true);
     });
 
+    test("is false on the root board", async () => {
+      const { result } = await setup({ pathname: "/sets/set-1/boards/root-1" });
+
+      expect(result.current.nav.canGoHome).toBe(false);
+    });
+
     test("is false when the root board is unknown", async () => {
       const { result } = await setup({ hasRootBoard: false });
 
