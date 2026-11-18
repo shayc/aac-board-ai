@@ -33,8 +33,8 @@ const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word's ring.
 const MESSAGE_PADDING = 3;
 
-// The light scheme's primary fades into the bar's grey dark-mode ground; this
-// one passes 3:1 on it.
+// The light scheme's primary only just clears 3:1 on the bar's grey dark-mode
+// ground; this one keeps a clear margin.
 const DARK_GROUND_PRIMARY = { main: "#0a4154", mainChannel: "10 65 84" };
 
 export interface MessageBarProps {
