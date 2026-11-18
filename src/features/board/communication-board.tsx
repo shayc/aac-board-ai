@@ -1,6 +1,7 @@
 import type { Board, BoardButton } from "@features/library";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
@@ -22,7 +23,10 @@ import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps } from "./scanning/scan-targets";
-import { ScanningScope } from "./scanning/scanning-scope";
+import {
+  SCAN_GROUP_RADIUS_PROPERTY,
+  ScanningScope,
+} from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { MessageSuggestions } from "./suggestions/message-suggestions";
@@ -139,7 +143,7 @@ export function CommunicationBoard({
               {...scanGroupProps}
               direction="row"
               spacing={2}
-              sx={{ alignItems: "center" }}
+              sx={[pillRowSx, { alignItems: "center" }]}
             >
               {!areControlsBelowGrid && navigationButtons}
 
@@ -158,7 +162,7 @@ export function CommunicationBoard({
             <Stack
               {...scanGroupProps}
               direction="row"
-              sx={{ "&:empty": { display: "none" } }}
+              sx={[pillRowSx, { "&:empty": { display: "none" } }]}
             >
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
@@ -184,22 +188,30 @@ export function CommunicationBoard({
           </Box>
 
           {areControlsBelowGrid && (
-            <Stack
-              {...scanGroupProps}
-              direction="row"
-              spacing={2}
+            <Box
               sx={(theme) => ({
-                justifyContent: "space-between",
                 px: PAGE_MARGIN,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
-              {navigationButtons}
-              {playButton}
-            </Stack>
+              <Stack
+                {...scanGroupProps}
+                direction="row"
+                spacing={2}
+                sx={[pillRowSx, { justifyContent: "space-between" }]}
+              >
+                {navigationButtons}
+                {playButton}
+              </Stack>
+            </Box>
           )}
         </Stack>
       </ScanningScope>
     </DirectionalThemeProvider>
   );
+}
+
+// The scan highlight outlines the whole row, so it rounds like the row's controls.
+function pillRowSx(theme: Theme) {
+  return { [SCAN_GROUP_RADIUS_PROPERTY]: theme.vars.shape.borderRadiusFull };
 }
