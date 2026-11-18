@@ -86,8 +86,8 @@ export function SuggestionBar({
       )}
 
       <PendingPill
-        // The first phrase moves the pill along the row, so it waits again
-        // before showing there instead of jumping across at full strength.
+        // The pill moves when the first phrase arrives and when the phrases
+        // clear, so it waits again instead of jumping there at full strength.
         key={hasPhrases ? "after-phrases" : "alone"}
         isVisible={status.kind === "pending"}
       />

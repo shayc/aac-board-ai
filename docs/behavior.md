@@ -234,11 +234,11 @@ While a source is still answering, the
 [suggestion bar](../src/features/board/suggestions/suggestion-bar.tsx) shows a
 softly filled pill of three dots after the phrases, where the next one will
 land, and each phrase fades in as it arrives. The pill waits a little longer
-than a first phrase usually takes before it fades in, and waits again once the
-first phrase has moved it along the row, so quick answers never flash it. The dots
-pulse in opacity only, so nothing beside the grid moves, and hold still when
-the system asks for reduced motion. The pill leaves at once when the last
-source answers.
+than a first phrase usually takes before it fades in, so quick answers never
+flash it. It waits again whenever the first phrase arrives or the phrases
+clear, since either moves it along the row. The dots pulse in opacity only, so
+nothing beside the grid moves, and hold still when the system asks for reduced
+motion. The pill leaves at once when the last source answers.
 
 The message changes only when a phrase is selected, and selecting a phrase
 does not play it. The phrases are a labelled group, not a live region, because
