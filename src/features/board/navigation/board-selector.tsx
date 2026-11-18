@@ -194,9 +194,9 @@ function BoardSearch({
             },
           }}
           sx={(theme) => ({
-            borderBottom: `1px solid ${theme.vars.palette.divider}`,
             px: 2,
             py: 1,
+            borderBottom: `1px solid ${theme.vars.palette.divider}`,
           })}
         />
       )}

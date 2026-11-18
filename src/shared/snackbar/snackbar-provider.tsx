@@ -110,40 +110,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   );
 }
 
-function isUrgent(severity: SnackbarSeverity) {
-  return severity === "error" || severity === "warning";
-}
-
-function defaultDurationMs(severity: SnackbarSeverity): number | null {
-  return isUrgent(severity) ? null : DEFAULT_DURATION_MS;
-}
-
-function snackbarSx(theme: Theme) {
-  return {
-    [theme.breakpoints.down("sm")]: {
-      right: safeAreaGutter(theme.spacing(1), "right"),
-      left: safeAreaGutter(theme.spacing(1), "left"),
-    },
-  };
-}
-
-function alertSx(theme: Theme, severity: SnackbarSeverity) {
-  return {
-    width: "100%",
-    color: theme.vars.palette.SnackbarContent.color,
-    backgroundColor: theme.vars.palette.SnackbarContent.bg,
-    boxShadow: theme.vars.shadows[6],
-    // The snackbar surface inverts the color scheme, so its icon takes the
-    // other scheme's severity color to keep contrast.
-    [`& .${alertClasses.icon}`]: {
-      color: theme.colorSchemes.dark?.palette[severity].main,
-      ...theme.applyStyles("dark", {
-        color: theme.colorSchemes.light?.palette[severity].main,
-      }),
-    },
-  };
-}
-
 function snackbarReducer(
   state: SnackbarState,
   action: SnackbarAction,
@@ -179,4 +145,38 @@ function snackbarReducer(
     default:
       return assertNever(action);
   }
+}
+
+function defaultDurationMs(severity: SnackbarSeverity): number | null {
+  return isUrgent(severity) ? null : DEFAULT_DURATION_MS;
+}
+
+function isUrgent(severity: SnackbarSeverity) {
+  return severity === "error" || severity === "warning";
+}
+
+function snackbarSx(theme: Theme) {
+  return {
+    [theme.breakpoints.down("sm")]: {
+      right: safeAreaGutter(theme.spacing(1), "right"),
+      left: safeAreaGutter(theme.spacing(1), "left"),
+    },
+  };
+}
+
+function alertSx(theme: Theme, severity: SnackbarSeverity) {
+  return {
+    width: "100%",
+    color: theme.vars.palette.SnackbarContent.color,
+    backgroundColor: theme.vars.palette.SnackbarContent.bg,
+    boxShadow: theme.vars.shadows[6],
+    // The snackbar surface inverts the color scheme, so its icon takes the
+    // other scheme's severity color to keep contrast.
+    [`& .${alertClasses.icon}`]: {
+      color: theme.colorSchemes.dark?.palette[severity].main,
+      ...theme.applyStyles("dark", {
+        color: theme.colorSchemes.light?.palette[severity].main,
+      }),
+    },
+  };
 }

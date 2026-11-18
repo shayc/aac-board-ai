@@ -41,17 +41,6 @@ export const SPEECH_VOLUME: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
-  const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
-
-  return {
-    voiceURIs: parseVoiceURIs(stored.voiceURIs),
-    rate: parseClampedNumber(stored.rate, SPEECH_RATE),
-    pitch: parseClampedNumber(stored.pitch, SPEECH_PITCH),
-    volume: parseClampedNumber(stored.volume, SPEECH_VOLUME),
-  };
-}
-
 function parseVoiceURIs(raw: unknown): VoiceURIsByLanguage {
   if (!isRecord(raw)) {
     return {};
@@ -62,6 +51,17 @@ function parseVoiceURIs(raw: unknown): VoiceURIsByLanguage {
       (entry): entry is [string, string] => typeof entry[1] === "string",
     ),
   );
+}
+
+export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
+  const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
+
+  return {
+    voiceURIs: parseVoiceURIs(stored.voiceURIs),
+    rate: parseClampedNumber(stored.rate, SPEECH_RATE),
+    pitch: parseClampedNumber(stored.pitch, SPEECH_PITCH),
+    volume: parseClampedNumber(stored.volume, SPEECH_VOLUME),
+  };
 }
 
 function groupVoicesByLanguage(

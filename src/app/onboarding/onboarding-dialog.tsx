@@ -198,11 +198,11 @@ function HighlightItem({ Icon, title, description }: HighlightItemProps) {
       <ListItemText
         primary={title}
         secondary={description}
-        sx={{ my: 0 }}
         slotProps={{
           primary: { sx: { fontWeight: "fontWeightBold" } },
           secondary: { variant: "body1", sx: { textWrap: "balance" } },
         }}
+        sx={{ my: 0 }}
       />
     </ListItem>
   );

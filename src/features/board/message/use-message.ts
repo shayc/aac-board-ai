@@ -99,6 +99,14 @@ export function useMessage(
     return editFrom(markPlayed(current, false), edits);
   }
 
+  function setPlayed(hasPlayed: boolean) {
+    const current = messageRef.current;
+    const next = markPlayed(current, hasPlayed);
+    if (next !== current) {
+      commit(next);
+    }
+  }
+
   // Only a playback that reaches the end of the unchanged message counts, so a
   // replay that is under way or was stopped leaves the message open for more.
   // Edits that follow (such as a tile's ":clear") wait for it, keeping the
@@ -129,14 +137,6 @@ export function useMessage(
     const hasCompleted = await playMessage(echoed.parts);
     if (hasCompleted) {
       applyIfUnchanged(echoed, editsAfterPlay);
-    }
-  }
-
-  function setPlayed(hasPlayed: boolean) {
-    const current = messageRef.current;
-    const next = markPlayed(current, hasPlayed);
-    if (next !== current) {
-      commit(next);
     }
   }
 
