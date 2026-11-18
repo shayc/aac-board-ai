@@ -983,7 +983,7 @@ describe("CommunicationBoard", () => {
         .toHaveFocus();
     });
 
-    test("resets navigation history when Home is clicked from Home", async () => {
+    test("disables Home on the home board and keeps Back", async () => {
       const screen = await renderCommunicationBoard(
         TWO_BUTTON_BOARD,
         [
@@ -995,12 +995,10 @@ describe("CommunicationBoard", () => {
         "test-board",
       );
       const back = screen.getByRole("button", { name: "Go back" });
+      const home = screen.getByRole("button", { name: "Go to main board" });
 
+      await expect.element(home).toHaveAttribute("aria-disabled", "true");
       await expect.element(back).not.toHaveAttribute("aria-disabled");
-
-      await screen.getByRole("button", { name: "Go to main board" }).click();
-
-      await expect.element(back).toHaveAttribute("aria-disabled", "true");
     });
   });
 
