@@ -25,12 +25,12 @@ function keepScreenAwake(): (() => void) | undefined {
       return;
     }
 
-    let lock: WakeLockSentinel;
-    try {
-      lock = await navigator.wakeLock.request("screen");
-    } catch {
-      // The browser refuses while the page is hidden or the battery is low.
-      // The screen then follows the device's auto-lock setting.
+    // The browser refuses while the page is hidden or the battery is low.
+    // The screen then follows the device's auto-lock setting.
+    const lock = await navigator.wakeLock
+      .request("screen")
+      .catch(() => undefined);
+    if (lock === undefined) {
       return;
     }
 
