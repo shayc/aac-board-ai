@@ -37,7 +37,7 @@
       "selectors": ["count"],
       "match": {
         "count=1": "বোর্ড ফাইল আমদানি করা যায়নি",
-        "count=*": "বোর্ড ফাইলগুলি আমদানি করা যায়নি"
+        "count=*": "বোর্ড ফাইলগুলো আমদানি করা যায়নি"
       }
     }
   ],
@@ -48,12 +48,12 @@
       "selectors": ["count"],
       "match": {
         "count=1": "বোর্ড ফাইল আমদানি করার জন্য খুব বড়",
-        "count=*": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়"
+        "count=*": "বোর্ড ফাইলগুলো আমদানি করার জন্য খুব বড়"
       }
     }
   ],
   "libraryImportPartiallyFailedBoardFiles": "কিছু বোর্ড ফাইল আমদানি করা যায়নি ({total}-এর মধ্যে {failed})",
-  "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
+  "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল এখানে ছাড়ুন",
   "libraryInfo": "তথ্য",
   "libraryExport": "রপ্তানি করুন",
   "libraryDelete": "মুছুন",
@@ -61,7 +61,7 @@
   "libraryClose": "লাইব্রেরি বন্ধ করুন",
   "libraryMoreOptions": "আরও বিকল্প",
   "libraryMoreOptionsFor": "{name}-এর জন্য আরও বিকল্প",
-  "libraryDownload": "ডাউনলোড",
+  "libraryDownload": "ডাউনলোড করুন",
   "libraryDownloadBoardSet": "{name} ডাউনলোড করুন",
   "libraryDownloadedBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হয়েছে",
   "libraryDownloadFailed": "বোর্ড সেট \"{name}\" ডাউনলোড করা যায়নি",
@@ -70,7 +70,7 @@
   "libraryImportingStatus": "আমদানি করা হচ্ছে…",
   "libraryCancelDownload": "ডাউনলোড বাতিল করুন",
   "libraryCancelDownloadBoardSet": "{name} ডাউনলোড বাতিল করুন",
-  "libraryByAuthor": "লিখেছেন {author}",
+  "libraryByAuthor": "তৈরি করেছেন: {author}",
   "libraryGridDimensions": "{rows}×{columns} গ্রিড",
   "libraryDeleteConfirmTitle": "বোর্ড সেট মুছবেন?",
   "libraryDeleteIrreversible": "\"{name}\" মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
@@ -90,7 +90,7 @@
   "settingsSectionMessage": "বার্তা",
   "settingsSectionSuggestions": "পরামর্শ",
   "settingsSectionSwitchAccess": "সুইচ অ্যাক্সেস",
-  "settingsSectionAbout": "সম্পর্কে",
+  "settingsSectionAbout": "অ্যাপ সম্পর্কে",
   "themeLabel": "থিম",
   "themeSystem": "সিস্টেম",
   "themeLight": "লাইট",
@@ -138,8 +138,8 @@
   "navBack": "ফিরে যান",
   "navHome": "হোমে যান",
   "messageBackspace": "মুছুন",
-  "messageBackspaceLongPressHint": "বার্তা মুছতে চেপে ধরে রাখুন, অথবা {shortcut} চাপুন।",
-  "messageClear": "বার্তা মুছুন",
+  "messageBackspaceLongPressHint": "পুরো বার্তা মুছতে চেপে ধরে রাখুন, অথবা {shortcut} চাপুন।",
+  "messageClear": "পুরো বার্তা মুছুন",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
   "keyBackspace": "Backspace",
