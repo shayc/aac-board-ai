@@ -1,7 +1,6 @@
 import type { Board, BoardButton } from "@features/library";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
@@ -22,11 +21,8 @@ import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
-import { scanGroupProps } from "./scanning/scan-targets";
-import {
-  SCAN_GROUP_RADIUS_PROPERTY,
-  ScanningScope,
-} from "./scanning/scanning-scope";
+import { scanGroupProps, scanRowProps } from "./scanning/scan-targets";
+import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { MessageSuggestions } from "./suggestions/message-suggestions";
@@ -143,7 +139,7 @@ export function CommunicationBoard({
               {...scanGroupProps}
               direction="row"
               spacing={2}
-              sx={[pillRowSx, { alignItems: "center" }]}
+              sx={{ alignItems: "center" }}
             >
               {!areControlsBelowGrid && navigationButtons}
 
@@ -162,7 +158,7 @@ export function CommunicationBoard({
             <Stack
               {...scanGroupProps}
               direction="row"
-              sx={[pillRowSx, { "&:empty": { display: "none" } }]}
+              sx={{ "&:empty": { display: "none" } }}
             >
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
@@ -181,37 +177,29 @@ export function CommunicationBoard({
               aria-label={board.name || t(m.boardGridLabel)}
               items={board.buttons}
               order={board.grid.order}
-              rowProps={scanGroupProps}
+              rowProps={scanRowProps}
               getItemKey={(button) => `${board.id}/${button.id}`}
               renderItem={renderTile}
             />
           </Box>
 
           {areControlsBelowGrid && (
-            <Box
+            <Stack
+              {...scanGroupProps}
+              direction="row"
+              spacing={2}
               sx={(theme) => ({
+                justifyContent: "space-between",
                 px: PAGE_MARGIN,
                 pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
-              <Stack
-                {...scanGroupProps}
-                direction="row"
-                spacing={2}
-                sx={[pillRowSx, { justifyContent: "space-between" }]}
-              >
-                {navigationButtons}
-                {playButton}
-              </Stack>
-            </Box>
+              {navigationButtons}
+              {playButton}
+            </Stack>
           )}
         </Stack>
       </ScanningScope>
     </DirectionalThemeProvider>
   );
-}
-
-// The scan highlight outlines the whole row, so it rounds like the row's controls.
-function pillRowSx(theme: Theme) {
-  return { [SCAN_GROUP_RADIUS_PROPERTY]: theme.vars.shape.borderRadiusFull };
 }

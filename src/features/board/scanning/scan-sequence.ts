@@ -83,26 +83,6 @@ export function selectScan<Target>(
   return { kind: "moved", position: itemPosition(group, firstItem, 0) };
 }
 
-/**
- * What to highlight at a position. A group with one item is activated without
- * a step into it, so the highlight shows that item rather than the group.
- */
-export function scanHighlightTarget<Target>(
-  groups: readonly ScanGroup<Target>[],
-  position: ScanPosition<Target>,
-): Target {
-  if (position.level === "items") {
-    return position.item;
-  }
-
-  const group = groups[findGroupIndex(groups, position)];
-  if (position.level === "groups" && group?.items.length === 1) {
-    return group.items[0];
-  }
-
-  return position.container;
-}
-
 function nextGroupPosition<Target>(
   groups: readonly ScanGroup<Target>[],
   groupIndex: number,

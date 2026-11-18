@@ -351,11 +351,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   hands it. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
   from the DOM at every step, in document order, highlights the current group
-  or item with an attribute, and clicks the selected one. The highlight is one
-  outline around the element that carries the attribute, so a group shows as a
-  single outlined row rather than as many outlined buttons. A group with one
-  enabled button is selected without a step into it, so that button is
-  outlined instead of the group. The buttons being
+  or item with an attribute, and clicks the selected one. A highlighted group
+  outlines each of its enabled buttons, except a grid row (`scanRowProps`),
+  which shows one outline around the whole row. The buttons being
   scanned therefore need no scanning code, and disabled controls and empty
   groups drop out by themselves.
 - [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the

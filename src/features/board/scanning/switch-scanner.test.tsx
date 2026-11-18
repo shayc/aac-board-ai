@@ -12,7 +12,7 @@ import {
   EMPTY_MESSAGE_REVIEW,
   renderCommunicationBoard,
 } from "../testing/render-communication-board";
-import { SCAN_HIGHLIGHT_SELECTOR, scanGroupProps } from "./scan-targets";
+import { SCAN_HIGHLIGHTED_ITEM_SELECTOR, scanGroupProps } from "./scan-targets";
 import {
   setScanIntervalMs,
   setScanMethod,
@@ -104,12 +104,9 @@ function appendToBody<TagName extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-/** The buttons a select would reach: the highlighted one, or all in the highlighted group. */
 function highlightedNames(): string[] {
   return Array.from(
-    document.querySelectorAll(
-      `:is(button, [role='button']):not(:disabled, [aria-disabled='true']):is(${SCAN_HIGHLIGHT_SELECTOR}, ${SCAN_HIGHLIGHT_SELECTOR} *)`,
-    ),
+    document.querySelectorAll(SCAN_HIGHLIGHTED_ITEM_SELECTOR),
     (target) => target.getAttribute("aria-label") ?? target.textContent,
   );
 }
@@ -548,18 +545,15 @@ describe("switch scanning", () => {
 
     test("highlights a button that becomes enabled in the highlighted group", async () => {
       const screen = await renderWithProviders(navigationGroupTree(false));
-      const home = screen.getByRole("button", { name: "home" }).element();
+      const back = screen.getByRole("button", { name: "back" }).element();
 
       await pressSwitch("Space");
       await expect.poll(highlightedNames).toEqual(["home"]);
 
-      // A select would activate the group's only button, so it alone is outlined.
-      expect(getComputedStyle(home).outlineStyle).toBe("solid");
-
       await screen.rerender(navigationGroupTree(true));
 
       await expect.poll(highlightedNames).toEqual(["back", "home"]);
-      expect(getComputedStyle(home).outlineStyle).not.toBe("solid");
+      expect(getComputedStyle(back).outlineStyle).toBe("solid");
     });
 
     test("keeps the first row highlighted when another board replaces its tiles", async () => {
