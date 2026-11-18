@@ -20,8 +20,8 @@ const pendingPulse = keyframes`
 `;
 
 // A first phrase mostly arrives within about 600ms, so a shorter wait would
-// flash the pill just before the phrase takes its place.
-const PENDING_PILL_DELAY_MS = 700;
+// flash the dots just before the phrase takes its place.
+const PENDING_DOTS_DELAY_MS = 700;
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;
@@ -85,9 +85,9 @@ export function SuggestionBar({
       )}
 
       {status.kind === "pending" && (
-        <PendingPill
-          // The pill moves when the first phrase arrives and when the phrases
-          // clear, so it waits again instead of jumping there at full strength.
+        <PendingDots
+          // The dots move when the first phrase arrives and when the phrases
+          // clear, so they wait again instead of jumping there at full strength.
           key={hasPhrases ? "after-phrases" : "alone"}
         />
       )}
@@ -95,9 +95,10 @@ export function SuggestionBar({
   );
 }
 
-// Rendered only while pending, so it leaves at once: the last phrase lands in
-// the same render and would push a fading pill past it.
-function PendingPill() {
+// Rendered only while pending, so they leave at once: the last phrase lands in
+// the same render and would push fading dots past it. No fill or outline:
+// a shape around the dots reads as one more chip to tap.
+function PendingDots() {
   return (
     <Box
       data-testid="suggestions-pending"
@@ -105,27 +106,24 @@ function PendingPill() {
         display: "flex",
         flexShrink: 0,
         alignItems: "center",
-        alignSelf: "stretch",
         gap: 0.75,
-        paddingInline: 2,
-        borderRadius: theme.vars.shape.borderRadiusFull,
-        bgcolor: "action.hover",
+        paddingInline: 1.5,
         // Stays clear through the delay, then fades in.
-        animation: `${fadeIn} ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeOut} ${PENDING_PILL_DELAY_MS}ms backwards`,
+        animation: `${fadeIn} ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeOut} ${PENDING_DOTS_DELAY_MS}ms backwards`,
       })}
     >
-      <PendingPillDot delayMs={0} />
-      <PendingPillDot delayMs={150} />
-      <PendingPillDot delayMs={300} />
+      <PendingDot delayMs={0} />
+      <PendingDot delayMs={150} />
+      <PendingDot delayMs={300} />
     </Box>
   );
 }
 
-interface PendingPillDotProps {
+interface PendingDotProps {
   delayMs: number;
 }
 
-function PendingPillDot({ delayMs }: PendingPillDotProps) {
+function PendingDot({ delayMs }: PendingDotProps) {
   return (
     <Box
       sx={{
