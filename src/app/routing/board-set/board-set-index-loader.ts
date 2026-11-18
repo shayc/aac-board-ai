@@ -1,6 +1,6 @@
 import { getBoardSetRecord, rootBoardPath } from "@features/library";
 import { type LoaderFunctionArgs, redirect } from "react-router";
-import { routeErrorCodes, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../route-error";
 
 export async function boardSetIndexLoader({
   params,
@@ -8,7 +8,7 @@ export async function boardSetIndexLoader({
   const { boardSetId } = params;
   const boardSet = boardSetId ? await getBoardSetRecord(boardSetId) : undefined;
   if (!boardSet) {
-    throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
+    throw routeErrorResponse(ROUTE_ERROR_CODES.boardSetNotFound);
   }
 
   return redirect(rootBoardPath(boardSet));

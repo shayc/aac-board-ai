@@ -154,7 +154,7 @@ function scrollContainerSx(theme: Theme) {
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
-    // Keep the focus ring inside the bar's clipped overflow.
+    // An inset ring stays inside the bar's clipped overflow.
     "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
   };
 }

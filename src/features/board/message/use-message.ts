@@ -27,7 +27,11 @@ export interface UseMessageReturn {
   isWordOpen: boolean;
   text: string;
   apply: (edits: readonly MessageEdit[]) => MessageEditOutcome;
-  applyIfUnchanged: (since: Message, edits: readonly MessageEdit[]) => void;
+  /** Returns the edited message, or undefined when the edits were dropped. */
+  applyIfUnchanged: (
+    since: Message,
+    edits: readonly MessageEdit[],
+  ) => Message | undefined;
   play: (editsAfterPlay?: readonly MessageEdit[]) => Promise<void>;
   replaceWithText: (input: string, language: string | undefined) => void;
   backspace: () => void;
@@ -40,24 +44,24 @@ export function useMessage(
   initialMessage: Message = EMPTY_MESSAGE,
 ): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
-  const [state, setRenderedState] = useState(initialMessage);
-  const stateRef = useRef(state);
+  const [message, setRenderedMessage] = useState(initialMessage);
+  const messageRef = useRef(message);
   const undoStackRef = useRef<Message[]>([]);
-  const text = state.parts.map((part) => part.label).join(" ");
+  const text = message.parts.map((part) => part.label).join(" ");
 
   // The setting is read each time the message is edited, so turning it off
   // releases a message that was already played.
   function readMessage() {
     return shouldClearAfterPlayback
-      ? stateRef.current
-      : markPlayed(stateRef.current, false);
+      ? messageRef.current
+      : markPlayed(messageRef.current, false);
   }
 
   // Saved on every change rather than when the page hides: a mobile system can
   // end a page in the background without warning.
   function commit(next: Message) {
-    stateRef.current = next;
-    setRenderedState(next);
+    messageRef.current = next;
+    setRenderedMessage(next);
 
     const isKept = isKeptOnDevice(next, shouldClearAfterPlayback);
     saveMessageDraft(isKept ? next : EMPTY_MESSAGE);
@@ -65,9 +69,9 @@ export function useMessage(
 
   // Marking the message played is not a step to undo, so it goes through
   // `commit`.
-  function commitStep(next: Message) {
+  function commitUndoable(next: Message) {
     const undoStack = undoStackRef.current;
-    undoStack.push(stateRef.current);
+    undoStack.push(messageRef.current);
     if (undoStack.length > UNDO_LIMIT) {
       undoStack.shift();
     }
@@ -75,10 +79,10 @@ export function useMessage(
     commit(next);
   }
 
-  function commitEdits(from: Message, edits: readonly MessageEdit[]) {
-    const edited = applyEdits(from, edits);
-    if (edited !== from) {
-      commitStep(edited);
+  function editFrom(base: Message, edits: readonly MessageEdit[]) {
+    const edited = applyEdits(base, edits);
+    if (edited !== base) {
+      commitUndoable(edited);
     }
 
     return edited;
@@ -86,7 +90,7 @@ export function useMessage(
 
   function apply(edits: readonly MessageEdit[]): MessageEditOutcome {
     const current = readMessage();
-    const edited = commitEdits(current, edits);
+    const edited = editFrom(current, edits);
 
     return { edited, hasChanged: edited !== current };
   }
@@ -95,12 +99,12 @@ export function useMessage(
   // once it has played, instead of starting a new message, and are dropped if
   // its content changed since.
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
-    const current = stateRef.current;
+    const current = messageRef.current;
     if (!hasSameContent(current, since)) {
       return undefined;
     }
 
-    return commitEdits(markPlayed(current, false), edits);
+    return editFrom(markPlayed(current, false), edits);
   }
 
   // Only a playback that reaches the end of the unchanged message counts, so a
@@ -110,33 +114,32 @@ export function useMessage(
   async function play(editsAfterPlay: readonly MessageEdit[] = []) {
     // Playback starts first, so one that cannot start leaves the message as
     // it was.
-    const completion = playMessage(stateRef.current.parts);
-    const playing = setPlayed(false);
+    const completion = playMessage(messageRef.current.parts);
+    setPlayed(false);
+    const playingMessage = messageRef.current;
 
     const hasCompleted = await completion;
     if (!hasCompleted) {
       return;
     }
 
-    const edited = applyIfUnchanged(playing, editsAfterPlay);
-    if (edited && hasSameContent(edited, playing)) {
+    const edited = applyIfUnchanged(playingMessage, editsAfterPlay);
+    if (edited && hasSameContent(edited, playingMessage)) {
       setPlayed(true);
     }
   }
 
-  function setPlayed(hasPlayed: boolean): Message {
-    const current = stateRef.current;
+  function setPlayed(hasPlayed: boolean) {
+    const current = messageRef.current;
     const next = markPlayed(current, hasPlayed);
     if (next !== current) {
       commit(next);
     }
-
-    return next;
   }
 
   function replaceWithText(input: string, language: string | undefined) {
     const words = input.match(/\S+/g) ?? [];
-    commitStep({
+    commitUndoable({
       parts: words.map((word) => createTextPart(word, language)),
       isWordOpen: words.length > 0,
       hasPlayed: false,
@@ -163,8 +166,8 @@ export function useMessage(
   }
 
   return {
-    parts: state.parts,
-    isWordOpen: state.isWordOpen,
+    parts: message.parts,
+    isWordOpen: message.isWordOpen,
     text,
     apply,
     applyIfUnchanged,

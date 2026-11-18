@@ -1,10 +1,11 @@
 import { m } from "@paraglide/messages.js";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
+import { assertNever } from "@shared/utils/assert-never";
 import { useRouteError } from "react-router";
 import {
   getRouteErrorCode,
+  ROUTE_ERROR_CODES,
   type RouteErrorCode,
-  routeErrorCodes,
 } from "./route-error";
 import { RouteErrorPage } from "./route-error-page";
 
@@ -26,11 +27,13 @@ function getErrorTitle(error: unknown, t: Translate): string {
 
 function translateRouteError(code: RouteErrorCode, t: Translate): string {
   switch (code) {
-    case routeErrorCodes.boardNotFound:
+    case ROUTE_ERROR_CODES.boardNotFound:
       return t(m.errorBoardNotFound);
-    case routeErrorCodes.boardSetNotFound:
+    case ROUTE_ERROR_CODES.boardSetNotFound:
       return t(m.errorBoardSetNotFound);
-    case routeErrorCodes.boardFileURLImportFailed:
+    case ROUTE_ERROR_CODES.boardFileURLImportFailed:
       return t(m.errorBoardFileURLImportFailed);
+    default:
+      return assertNever(code);
   }
 }

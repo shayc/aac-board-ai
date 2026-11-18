@@ -1,7 +1,7 @@
 import { buttonClasses } from "@mui/material/Button";
 
 /**
- * Preserve keyboard focus when a button disables itself after activation.
+ * A button that disables itself after activation keeps keyboard focus this way.
  * Callers must ignore activation while aria-disabled.
  */
 export function focusableDisabledProps(

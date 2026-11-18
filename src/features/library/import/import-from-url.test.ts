@@ -9,7 +9,7 @@ import {
 } from "../testing";
 import {
   importBoardFileFromURL,
-  MAX_BOARD_DOWNLOAD_BYTES,
+  MAX_BOARD_FILE_DOWNLOAD_BYTES,
 } from "./import-from-url";
 
 function opaqueRedirectResponse(): Response {
@@ -111,7 +111,7 @@ describe("importBoardFileFromURL", () => {
 
     await expect(
       importBoardFileFromURL("https://example.com/missing.obz"),
-    ).rejects.toThrow("Failed to fetch board: HTTP 404");
+    ).rejects.toThrow("Failed to fetch board file: HTTP 404");
   });
 
   test("rejects a redirecting URL without following it or importing", async () => {
@@ -150,7 +150,7 @@ describe("importBoardFileFromURL", () => {
     let cancelled = false;
     const endlessBody = new ReadableStream<Uint8Array>({
       pull(controller) {
-        controller.enqueue(new Uint8Array(MAX_BOARD_DOWNLOAD_BYTES / 4));
+        controller.enqueue(new Uint8Array(MAX_BOARD_FILE_DOWNLOAD_BYTES / 4));
       },
       cancel() {
         cancelled = true;
@@ -184,7 +184,9 @@ describe("importBoardFileFromURL", () => {
     );
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(body, {
-        headers: { "content-length": String(MAX_BOARD_DOWNLOAD_BYTES + 1) },
+        headers: {
+          "content-length": String(MAX_BOARD_FILE_DOWNLOAD_BYTES + 1),
+        },
       }),
     );
 

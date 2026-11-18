@@ -48,8 +48,8 @@ export async function checkSuggestionLanguageSupport(
   language: string,
 ): Promise<SuggestionLanguageSupport> {
   const [isProofreaderAvailable, isRewriterAvailable] = await Promise.all([
-    isEngineAvailable("Proofreader", proofreaderLanguageOptions(language)),
-    isEngineAvailable("Rewriter", rewriterLanguageOptions(language)),
+    probeEngine("Proofreader", proofreaderLanguageOptions(language)),
+    probeEngine("Rewriter", rewriterLanguageOptions(language)),
   ]);
   if (isRewriterAvailable) {
     return "custom-instructions";
@@ -60,12 +60,13 @@ export async function checkSuggestionLanguageSupport(
 
   // Probing without languages tells a missing language apart from a device
   // that cannot run the models at all.
-  const isDeviceCapable = await isAnyEngineAvailable();
+  const isDeviceCapable = await probeAnyEngine();
 
   return isDeviceCapable ? "language-unavailable" : "device-unavailable";
 }
 
-async function isEngineAvailable(
+/** Resolves to whether the device can run the engine with these options. */
+async function probeEngine(
   engine: SuggestionEngine,
   options?: AvailabilityOptionsMap[SuggestionEngine],
 ): Promise<boolean> {
@@ -76,9 +77,9 @@ async function isEngineAvailable(
   return (await checkAvailability(engine, options)) !== "unavailable";
 }
 
-async function isAnyEngineAvailable(): Promise<boolean> {
+async function probeAnyEngine(): Promise<boolean> {
   const availabilities = await Promise.all(
-    SUGGESTION_ENGINES.map((engine) => isEngineAvailable(engine)),
+    SUGGESTION_ENGINES.map((engine) => probeEngine(engine)),
   );
 
   return availabilities.includes(true);

@@ -1,6 +1,6 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { beforeEach, describe, expect, test } from "vitest";
-import { createBoardSet, deleteBoardSet } from "../board-sets/board-sets-store";
+import { addBoardSet, deleteBoardSet } from "../board-sets/board-sets-store";
 import { makeAssetInput, makeBoardSetInput, resetBoardsDB } from "../testing";
 import { findAssetKey, getAssetURL } from "./asset-urls";
 
@@ -8,7 +8,7 @@ const SET_ID = "asset-url-set";
 const ASSET_PATH = "notes/hello.txt";
 
 function seedAsset(content: string, boardSetId = SET_ID): Promise<void> {
-  return createBoardSet(
+  return addBoardSet(
     makeBoardSetInput({
       id: boardSetId,
       assets: [makeAssetInput(ASSET_PATH, content)],

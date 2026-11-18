@@ -160,7 +160,7 @@ describe("PlayButton", () => {
       <PlayButton
         shortcutLabels={SHORTCUT_LABELS}
         isPlaying
-        variant="boardControl"
+        shape="pill"
         {...createHandlers()}
       />,
     );

@@ -98,7 +98,7 @@ export async function closeBoardsDB(): Promise<void> {
 
 /**
  * Synchronous request failures need an explicit abort to roll back earlier writes.
- * Await both promises to handle idb's eager tx.done rejection.
+ * Both promises are awaited to handle idb's eager tx.done rejection.
  * `write` must await each request before issuing the next so an abort cannot
  * leave a pending request with an unhandled rejection.
  */

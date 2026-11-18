@@ -22,7 +22,7 @@ export function BoardSetInfoDialog({
 }: BoardSetInfoDialogProps) {
   const t = useTranslate();
   const shownBoardSet = useLastNonNull(boardSet);
-  const facts = shownBoardSet ? buildFacts(t, shownBoardSet) : [];
+  const facts = shownBoardSet ? buildFacts(shownBoardSet, t) : [];
 
   return (
     <Dialog open={boardSet !== null} onClose={onClose} fullWidth maxWidth="sm">
@@ -87,7 +87,7 @@ function FactLine({ facts }: FactLineProps) {
   );
 }
 
-function buildFacts(t: Translate, boardSet: BoardSetRecord): string[] {
+function buildFacts(boardSet: BoardSetRecord, t: Translate): string[] {
   const facts: string[] = [];
 
   if (boardSet.gridRows && boardSet.gridColumns) {

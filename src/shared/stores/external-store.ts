@@ -1,12 +1,14 @@
 import { useSyncExternalStore } from "react";
 
-export interface ExternalStore<T> {
+export interface ExternalStore<State> {
   subscribe: (listener: () => void) => () => void;
-  getSnapshot: () => T;
-  setState: (next: T) => void;
+  getSnapshot: () => State;
+  setState: (next: State) => void;
 }
 
-export function createExternalStore<T>(initialState: T): ExternalStore<T> {
+export function createExternalStore<State>(
+  initialState: State,
+): ExternalStore<State> {
   let state = initialState;
   const listeners = new Set<() => void>();
 
@@ -28,7 +30,7 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
     return state;
   }
 
-  function setState(next: T) {
+  function setState(next: State) {
     state = next;
     emit();
   }
@@ -36,24 +38,27 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
   return { subscribe, getSnapshot, setState };
 }
 
-export function patchState<T extends object>(
-  store: Pick<ExternalStore<T>, "getSnapshot" | "setState">,
-  patch: Partial<T>,
+export function patchState<State extends object>(
+  store: Pick<ExternalStore<State>, "getSnapshot" | "setState">,
+  patch: Partial<State>,
 ): void {
   store.setState({ ...store.getSnapshot(), ...patch });
 }
 
-type SubscribableStore<T> = Pick<ExternalStore<T>, "subscribe" | "getSnapshot">;
+type SubscribableStore<State> = Pick<
+  ExternalStore<State>,
+  "subscribe" | "getSnapshot"
+>;
 
-export function useExternalStore<T>(store: SubscribableStore<T>): T;
-export function useExternalStore<T, Selected>(
-  store: SubscribableStore<T>,
-  select: (state: T) => Selected,
+export function useExternalStore<State>(store: SubscribableStore<State>): State;
+export function useExternalStore<State, Selected>(
+  store: SubscribableStore<State>,
+  select: (state: State) => Selected,
 ): Selected;
-export function useExternalStore<T, Selected>(
-  store: SubscribableStore<T>,
-  select?: (state: T) => Selected,
-): T | Selected {
+export function useExternalStore<State, Selected>(
+  store: SubscribableStore<State>,
+  select?: (state: State) => Selected,
+): State | Selected {
   return useSyncExternalStore(store.subscribe, () => {
     const state = store.getSnapshot();
 

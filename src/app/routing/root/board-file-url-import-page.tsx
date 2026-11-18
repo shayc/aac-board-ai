@@ -5,14 +5,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
+import { isolateBidi } from "@shared/language/bidi-isolate";
 import { useTranslate } from "@shared/language/use-translate";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
 import type { rootIndexLoader } from "./root-index-loader";
-
-const FIRST_STRONG_ISOLATE = "\u2068";
-const POP_DIRECTIONAL_ISOLATE = "\u2069";
 
 export function BoardFileURLImportPage() {
   const { boardFileHost } = useLoaderData<typeof rootIndexLoader>();
@@ -20,7 +18,7 @@ export function BoardFileURLImportPage() {
   const navigate = useNavigate();
   const t = useTranslate();
   const descriptionId = useId();
-  // Guard against duplicate taps before the router updates navigation state.
+  // A second tap can land before the router updates its navigation state.
   const [hasAnswered, setHasAnswered] = useState(false);
 
   if (hasAnswered) {
@@ -34,7 +32,7 @@ export function BoardFileURLImportPage() {
 
   function confirmImport() {
     setHasAnswered(true);
-    // Replace the link's history entry so Back doesn't offer the import again.
+    // Replacing the link's history entry stops Back from offering the import again.
     void submit(null, { method: "post", replace: true });
   }
 
@@ -64,9 +62,4 @@ export function BoardFileURLImportPage() {
       </Dialog>
     </>
   );
-}
-
-// FSI/PDI preserve host order in RTL translations, including digit-led hosts.
-function isolateBidi(text: string): string {
-  return `${FIRST_STRONG_ISOLATE}${text}${POP_DIRECTIONAL_ISOLATE}`;
 }

@@ -4,6 +4,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { assertNever } from "@shared/utils/assert-never";
 import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -30,7 +31,7 @@ type SnackbarAction =
   | { type: "close" }
   | { type: "exited" };
 
-const initialState: SnackbarState = {
+const INITIAL_STATE: SnackbarState = {
   queue: [],
   current: undefined,
   open: false,
@@ -42,7 +43,7 @@ interface SnackbarProviderProps {
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
-  const [state, dispatch] = useReducer(snackbarReducer, initialState);
+  const [state, dispatch] = useReducer(snackbarReducer, INITIAL_STATE);
   const nextKeyRef = useRef(0);
 
   function showSnackbar(options: SnackbarOptions) {
@@ -90,7 +91,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open={state.open}
         onClose={handleClose}
         autoHideDuration={autoHideDurationMs}
-        // Keep persistent errors clear of the board's bottom controls.
+        // At the top, persistent errors stay clear of the board's bottom controls.
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
         sx={snackbarSx}
@@ -100,7 +101,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           closeText={t(m.close)}
           severity={severity}
           onClose={handleClose}
-          sx={(theme) => createAlertSx(theme, severity)}
+          sx={(theme) => alertSx(theme, severity)}
         >
           {message}
         </Alert>
@@ -126,7 +127,7 @@ function snackbarSx(theme: Theme) {
   };
 }
 
-function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
+function alertSx(theme: Theme, severity: SnackbarSeverity) {
   return {
     width: "100%",
     color: theme.vars.palette.SnackbarContent.color,
@@ -174,5 +175,8 @@ function snackbarReducer(
 
       return { ...state, current: undefined };
     }
+
+    default:
+      return assertNever(action);
   }
 }

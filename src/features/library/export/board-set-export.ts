@@ -23,7 +23,7 @@ export async function boardSetToOBZ({
   rootBoardId,
 }: Pick<BoardSetRecord, "id" | "rootBoardId">): Promise<Blob> {
   const records = await listBoardRecords(id);
-  const assets = await loadStoredAssets(
+  const assets = await readStoredAssets(
     id,
     records.map((record) => record.obf),
   );
@@ -44,7 +44,7 @@ function saveFile(file: Blob, fileName: string): void {
   URL.revokeObjectURL(url);
 }
 
-async function loadStoredAssets(
+async function readStoredAssets(
   boardSetId: string,
   boards: readonly OBFBoard[],
 ): Promise<Map<string, Uint8Array>> {
@@ -66,8 +66,8 @@ async function loadStoredAssets(
 }
 
 /**
- * Archive paths must match stored entry names. Clear missing paths to allow
- * consumers to fall back to embedded media or remote URLs.
+ * Archive paths must match stored entry names. A missing path is cleared, so
+ * consumers fall back to embedded media or remote URLs.
  */
 function withPackagedMedia(
   board: OBFBoard,

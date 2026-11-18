@@ -11,7 +11,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { type MouseEvent, useId } from "react";
 
-const themeOptions = [
+const THEME_OPTIONS = [
   { value: "system", message: m.themeSystem, Icon: DesktopWindowsOutlinedIcon },
   { value: "light", message: m.themeLight, Icon: LightModeOutlinedIcon },
   { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
@@ -29,7 +29,7 @@ const optionSx = {
   hyphens: "auto",
 } as const;
 
-type ThemeMode = (typeof themeOptions)[number]["value"];
+type ThemeMode = (typeof THEME_OPTIONS)[number]["value"];
 
 export function ThemeSettings() {
   const t = useTranslate();
@@ -61,7 +61,7 @@ export function ThemeSettings() {
         onChange={handleChange}
         sx={{ mt: 1 }}
       >
-        {themeOptions.map(({ value, message, Icon }) => (
+        {THEME_OPTIONS.map(({ value, message, Icon }) => (
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
             {mode === value ? <CheckIcon /> : <Icon />}

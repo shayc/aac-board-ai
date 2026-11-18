@@ -25,7 +25,8 @@ export async function expectNoA11yViolations(
   target: Element,
   { reviewedIncomplete = [], ...options }: A11yCheckOptions = {},
 ) {
-  // Wait for final contrast colors; infinite spinners and paused animations never finish.
+  // Contrast is judged on final colors; infinite spinners and paused animations
+  // never finish.
   const endingAnimations = target
     .getAnimations({ subtree: true })
     .filter(

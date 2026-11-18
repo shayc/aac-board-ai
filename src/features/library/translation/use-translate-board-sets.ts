@@ -27,15 +27,15 @@ export function useTranslateBoardSets({
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  // Read the latest callback when a pass finishes, not the one it started with.
-  const reportTranslated = useEffectEvent((boardSetId: string) => {
+  // A pass that finishes calls the latest callback, not the one it started with.
+  const notifyTranslated = useEffectEvent((boardSetId: string) => {
     onBoardSetTranslated(boardSetId);
   });
 
   const translate = useEffectEvent((options: TranslationPassOptions) =>
     translateBoardSets(activeFirst(boardSets, activeBoardSetId), language, {
       ...options,
-      onTranslated: (boardSetId) => reportTranslated(boardSetId),
+      onTranslated: (boardSetId) => notifyTranslated(boardSetId),
     }),
   );
 
