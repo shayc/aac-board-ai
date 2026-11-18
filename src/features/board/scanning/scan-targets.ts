@@ -16,6 +16,14 @@ export const SCAN_HIGHLIGHTED_ITEM_SELECTOR = `${ITEM_SELECTOR}:is([${HIGHLIGHT_
 
 export const SCAN_HIGHLIGHTED_ROW_SELECTOR = `[${GROUP_ATTRIBUTE}='row'][${HIGHLIGHT_ATTRIBUTE}]`;
 
+// The highlight is an outline, so it reaches past the edge of what it marks.
+// Whatever clips a scanned control, such as a scroll container, has to leave
+// that much room around it.
+export const SCAN_OUTLINE_WIDTH_PX = 4;
+export const SCAN_OUTLINE_OFFSET_PX = 2;
+export const SCAN_OUTLINE_REACH_PX =
+  SCAN_OUTLINE_WIDTH_PX + SCAN_OUTLINE_OFFSET_PX;
+
 export function listScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
   const groups: ScanGroup<HTMLElement>[] = [];
 

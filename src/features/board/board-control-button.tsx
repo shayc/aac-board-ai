@@ -5,10 +5,11 @@ import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import { CONTROL_ICON_SIZE, CONTROL_SIZES } from "./board-control-sizes";
+import { MIN_CELL_WIDTH_PX } from "./grid/grid-layout";
 
 const SHAPE_SX = {
-  // The grid's narrowest tile width; three plus their gaps fill a 320px phone.
-  pill: { width: 88 },
+  // The grid's narrowest tile; three plus their gaps fill a 320px phone.
+  pill: { width: MIN_CELL_WIDTH_PX },
   // One icon: no side padding, and as wide as the message bar's controls.
   round: (theme: Theme) => ({
     width: CONTROL_SIZES.large,

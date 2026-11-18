@@ -31,7 +31,7 @@ function word(label: string): MessageEdit[] {
 
 async function setup(
   seed: readonly MessageEdit[] = [],
-  { hasPlayed = false, language = "en", shouldPlayTiles = true } = {},
+  { hasPlayed = false, boardLanguage = "en", shouldPlayTiles = true } = {},
 ) {
   const playback = {
     playMessage: vi.fn<PlayMessage>(() => Promise.resolve(true)),
@@ -84,7 +84,7 @@ async function setup(
       message,
       playback: { playPart: playback.playPart, stop: playback.stop },
       navigation,
-      language,
+      boardLanguage,
       shouldPlayTiles,
     }),
     playback,
@@ -187,7 +187,9 @@ describe("createButtonActivator", () => {
   });
 
   test("gives tiles and spelled words the board's language", async () => {
-    const { activateButton, readParts } = await setup([], { language: "es" });
+    const { activateButton, readParts } = await setup([], {
+      boardLanguage: "es",
+    });
 
     activateButton({ id: "btn", label: "hola", actions: [] });
     activateButton(SPELL_A);

@@ -14,26 +14,26 @@ import {
 interface UseTranslateBoardSetsOptions {
   /** The set on screen is translated first, so it never waits behind the rest. */
   activeBoardSetId: string | undefined;
-  onBoardSetTranslated: (boardSetId: string) => void;
+  onBoardsTranslated: (boardSetId: string) => void;
 }
 
 export function useTranslateBoardSets({
   activeBoardSetId,
-  onBoardSetTranslated,
+  onBoardsTranslated,
 }: UseTranslateBoardSetsOptions): void {
   const { language } = useCommunicationLanguage();
   const { boardSets, isLoading } = useBoardSets();
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  const notifyTranslated = useEffectEvent((boardSetId: string) => {
-    onBoardSetTranslated(boardSetId);
+  const notifyBoardsTranslated = useEffectEvent((boardSetId: string) => {
+    onBoardsTranslated(boardSetId);
   });
 
   const translate = useEffectEvent((options: TranslationPassOptions) =>
     translateBoardSets(activeFirst(boardSets, activeBoardSetId), language, {
       ...options,
-      onTranslated: (boardSetId) => notifyTranslated(boardSetId),
+      onBoardsTranslated: (boardSetId) => notifyBoardsTranslated(boardSetId),
     }),
   );
 

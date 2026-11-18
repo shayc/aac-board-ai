@@ -16,7 +16,8 @@ export interface TranslationPassOptions {
 }
 
 interface TranslateBoardSetsOptions extends TranslationPassOptions {
-  onTranslated: (boardSetId: string) => void;
+  /** Called for each set whose boards gained translations. */
+  onBoardsTranslated: (boardSetId: string) => void;
 }
 
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
@@ -25,7 +26,7 @@ type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
-  { signal, onTranslating, onTranslated }: TranslateBoardSetsOptions,
+  { signal, onTranslating, onBoardsTranslated }: TranslateBoardSetsOptions,
 ): Promise<void> {
   for (const boardSet of boardSets) {
     if (signal.aborted) {
@@ -36,12 +37,12 @@ export async function translateBoardSets(
       continue;
     }
 
-    const isTranslated = await translateBoardSet(boardSet, language, {
+    const hasTranslatedBoards = await translateBoardSet(boardSet, language, {
       signal,
       onTranslating,
     });
-    if (isTranslated) {
-      onTranslated(boardSet.id);
+    if (hasTranslatedBoards) {
+      onBoardsTranslated(boardSet.id);
     }
   }
 }
@@ -55,6 +56,7 @@ function isBoardSetInLanguage(
   return boardSet.translatedNames?.[language] !== undefined;
 }
 
+/** Resolves to whether the set's boards gained translations. */
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
@@ -99,7 +101,9 @@ async function translateBoardSet(
     ),
   });
 
-  return true;
+  // A set that only gained its name, such as one already in the language,
+  // shows the same boards as before, so nothing that shows them has to reload.
+  return boardsMissingLanguage.length > 0;
 }
 
 async function listBoards(boardSetId: string): Promise<Board[]> {
