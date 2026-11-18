@@ -59,10 +59,8 @@ function ClearableBackspace() {
   );
 }
 
-// The button has no fill at rest, so the icon and ring are measured against
-// the bar it sits on.
-async function measureContrasts(mode: ColorMode, disabled: boolean) {
-  const screen = await renderInColorMode(
+function barWithBackspace(disabled: boolean) {
+  return (
     <MessageBar
       parts={[]}
       isWordOpen={false}
@@ -75,26 +73,31 @@ async function measureContrasts(mode: ColorMode, disabled: boolean) {
           disabled={disabled}
         />
       }
-    />,
-    mode,
+    />
   );
+}
+
+// The icon and ring are measured against the button's fill over the bar.
+async function measureContrasts(mode: ColorMode, disabled: boolean) {
+  const screen = await renderInColorMode(barWithBackspace(disabled), mode);
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
 
   const bar = button.parentElement;
   assertDefined(bar);
   const barColor = getComputedStyle(bar).backgroundColor;
+  const fillColor = getComputedStyle(button).backgroundColor;
   const iconColor = getComputedStyle(button).color;
   const ring = button.querySelector("circle");
   assertDefined(ring);
   const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  const ground = paint(barColor);
+  const ground = paint(barColor, fillColor);
 
   return {
-    icon: contrastRatio(paint(barColor, iconColor), ground),
-    ring: contrastRatio(paint(barColor, ringColor), ground),
+    icon: contrastRatio(paint(barColor, fillColor, iconColor), ground),
+    ring: contrastRatio(paint(barColor, fillColor, ringColor), ground),
   };
 }
 
@@ -309,37 +312,25 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  // Play is the bar's only filled shape; backspace shows a fill only as
-  // feedback that the pointer is on it.
-  test("has no fill until the pointer is on it", async () => {
-    const screen = await renderWithProviders(
-      <MessageBar
-        parts={[]}
-        isWordOpen={false}
-        activePartId={null}
-        areImagesVisible
-        endAction={
-          <BackspaceButton
-            shortcutLabels={SHORTCUT_LABELS}
-            {...createHandlers()}
-          />
-        }
-      />,
-    );
+  // A disabled icon button loses its fill by MUI's default; backspace keeps it.
+  test("keeps its fill while disabled and darkens it under the pointer", async () => {
+    const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" });
     const readFill = () => getComputedStyle(button.element()).backgroundColor;
+    await expect.poll(readFill).not.toBe(TRANSPARENT);
+    const restFill = readFill();
 
-    await screen.getByRole("list", { name: "Message" }).hover();
+    await screen.rerender(barWithBackspace(true));
 
-    await expect.poll(readFill).toBe(TRANSPARENT);
+    await expect.poll(readFill).toBe(restFill);
 
+    await screen.rerender(barWithBackspace(false));
     await button.hover();
 
-    await expect.poll(readFill).not.toBe(TRANSPARENT);
+    await expect.poll(readFill).not.toBe(restFill);
   });
 
-  // Nothing at rest marks the touch target's edge, so the hold ring must, and
-  // the same gap on three sides keeps it parallel to the bar's rounded end.
+  // The hold ring traces the touch target's edge, and the same gap on three sides keeps it parallel to the bar's rounded end.
   test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(
       <MessageBar

@@ -465,10 +465,11 @@ button, so the row has one large button at each end. Its icon is backspace's
 size, a step lighter than play's, so play stays the main action.
 In dark mode it has a ring and no fill (see [Theming](#theming)).
 Backspace and the play button sit inside the bar at its end, play last and
-backspace a step smaller beside it. Backspace is a bare icon with no fill at
-rest, so play is the only filled shape in the bar; its touch target is the
-whole button, which the hold ring traces. Suggestions have the row below to
-themselves, and without them the grid starts under the message bar. Below `sm`
+backspace a step smaller beside it. Backspace has a light tonal fill, as MUI
+gives a filled default chip, so play stays the bar's one solid shape; the fill
+stays when backspace is off, and the hold ring traces its edge. Suggestions
+have the row below to themselves, and without them the grid starts under the
+message bar. Below `sm`
 the home and play buttons move under the grid as two pills of one width, home
 at the start and play at the far end, with the room that is left between them.
 Backspace stays in the message bar at full size, and the spacing tightens, as

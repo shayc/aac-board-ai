@@ -88,17 +88,17 @@ export function BackspaceButton({
   );
 }
 
-// The icon has no fill at rest, so play is the only filled shape in the bar;
-// the touch target stays as large as the button. With the bar's inset, a large
-// button sits on the bar's rounded end, the same distance from its top, bottom
-// and end.
+// A tonal fill, as MUI gives a filled default Chip, lighter than play's so play
+// stays the main action. The bar's light scheme resolves the action tokens in
+// both themes. With the bar's inset, a large button sits on the bar's rounded
+// end, the same distance from its top, bottom and end.
 //
-// The bar stays light in dark mode, so hovering tints it darker in both themes;
-// its grey ground there is a step darker than white, so the disabled icon needs
-// more weight to read as clearly as it does in light mode.
+// MUI clears a disabled icon button's fill; it stays so the button keeps its
+// place beside play's tinted disc. The bar's grey ground in dark mode is a step
+// darker than white, so the disabled icon needs more weight to read as clearly.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const targetSize = BUTTON_SIZES[size];
-  const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
+  const { action } = theme.vars.palette;
 
   return {
     flexShrink: 0,
@@ -106,9 +106,17 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     height: targetSize,
     fontSize: CONTROL_ICON_SIZE,
     color: "text.primary",
+    [`&, &.${iconButtonClasses.disabled}`]: {
+      backgroundColor: action.selected,
+    },
     // A tap leaves hover stuck on a touch screen.
     "&:hover": {
-      "@media (hover: hover)": { backgroundColor: hoverColor },
+      "@media (hover: hover)": {
+        backgroundColor: theme.alpha(
+          action.selected,
+          `${action.selectedOpacity} + ${action.hoverOpacity}`,
+        ),
+      },
     },
     ...theme.applyStyles("dark", {
       [`&.${iconButtonClasses.disabled}`]: {
