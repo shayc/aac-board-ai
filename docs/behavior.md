@@ -353,7 +353,9 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   from the DOM at every step, in document order, highlights the current group
   or item with an attribute, and clicks the selected one. The highlight is one
   outline around the element that carries the attribute, so a group shows as a
-  single outlined row rather than as many outlined buttons. The buttons being
+  single outlined row rather than as many outlined buttons. A group with one
+  enabled button is selected without a step into it, so that button is
+  outlined instead of the group. The buttons being
   scanned therefore need no scanning code, and disabled controls and empty
   groups drop out by themselves.
 - [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the

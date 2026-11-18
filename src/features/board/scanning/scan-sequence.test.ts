@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   advanceScan,
   type ScanGroup,
+  scanHighlightTarget,
   type ScanPosition,
   selectScan,
   startScan,
@@ -181,5 +182,24 @@ describe("selectScan", () => {
       kind: "moved",
       position: atItem("row 2", "more"),
     });
+  });
+});
+
+describe("scanHighlightTarget", () => {
+  test("highlights the group while its items are not being scanned", () => {
+    expect(scanHighlightTarget(GROUPS, atGroup("row 1"))).toBe("row 1");
+    expect(scanHighlightTarget(GROUPS, atExit("row 1"))).toBe("row 1");
+  });
+
+  test("highlights the scanned item", () => {
+    expect(scanHighlightTarget(GROUPS, atItem("row 1", "no"))).toBe("no");
+  });
+
+  test("highlights the only item of a group, which a select activates", () => {
+    expect(scanHighlightTarget(GROUPS, atGroup("play"))).toBe("play button");
+  });
+
+  test("highlights the group when it is gone", () => {
+    expect(scanHighlightTarget(GROUPS, atGroup("row 9"))).toBe("row 9");
   });
 });

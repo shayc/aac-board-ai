@@ -548,13 +548,18 @@ describe("switch scanning", () => {
 
     test("highlights a button that becomes enabled in the highlighted group", async () => {
       const screen = await renderWithProviders(navigationGroupTree(false));
+      const home = screen.getByRole("button", { name: "home" }).element();
 
       await pressSwitch("Space");
       await expect.poll(highlightedNames).toEqual(["home"]);
 
+      // A select would activate the group's only button, so it alone is outlined.
+      expect(getComputedStyle(home).outlineStyle).toBe("solid");
+
       await screen.rerender(navigationGroupTree(true));
 
       await expect.poll(highlightedNames).toEqual(["back", "home"]);
+      expect(getComputedStyle(home).outlineStyle).not.toBe("solid");
     });
 
     test("keeps the first row highlighted when another board replaces its tiles", async () => {

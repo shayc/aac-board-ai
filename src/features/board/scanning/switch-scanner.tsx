@@ -2,6 +2,7 @@ import { type RefObject, useEffect, useEffectEvent, useState } from "react";
 import { flushSync } from "react-dom";
 import {
   advanceScan,
+  scanHighlightTarget,
   type ScanPosition,
   selectScan,
   startScan,
@@ -102,17 +103,31 @@ export function SwitchScanner({
       return;
     }
 
-    const target =
-      position.level === "items" ? position.item : position.container;
-    const removeHighlight = highlightScanTarget(target);
+    let target = scanHighlightTarget(listScanGroups(scope), position);
+    let removeHighlight = highlightScanTarget(target);
     scrollScanTargetIntoView(target);
 
     const observer = new MutationObserver(() => {
+      const groups = listScanGroups(scope);
+      const currentTarget = scanHighlightTarget(groups, position);
+      if (currentTarget !== target) {
+        removeHighlight();
+        target = currentTarget;
+        removeHighlight = highlightScanTarget(target);
+
+        return;
+      }
+
       if (!target.isConnected) {
-        setPosition(startScan(listScanGroups(scope)));
+        setPosition(startScan(groups));
       }
     });
-    observer.observe(scope, { childList: true, subtree: true });
+    // Enabling or disabling a button changes how many items its group has.
+    observer.observe(scope, {
+      childList: true,
+      subtree: true,
+      attributeFilter: ["disabled", "aria-disabled"],
+    });
 
     return () => {
       observer.disconnect();
