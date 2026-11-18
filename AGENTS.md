@@ -57,6 +57,20 @@
 
 Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers what tooling can't check. Apply it to code you write or touch, not to untouched files.
 
+### Craftsmanship
+
+Treat code as an interface for human understanding.
+
+- Optimize for conceptual simplicity, coherence, and effortless reading.
+- Use precise, concise, glanceable names with consistent domain vocabulary.
+- Minimize indirection, mental translation, and unnecessary concepts.
+- Prefer direct, idiomatic solutions over cleverness or speculative abstraction.
+- Preserve good design; refactor only for meaningful improvement.
+
+Optimize total comprehension cost, not line count. Style conventions
+serve clarity, not the reverse. Never sacrifice correctness,
+accessibility, offline reliability, or privacy for elegance.
+
 ### Layout & Control Flow
 
 - Order a file as imports → module constants → types and props → the main export → private helpers in the order they are called, each with its own types directly above it. Store modules (`*-preferences-store`, `speech-store`, `board-sets-store`, `board-set-downloads`) keep helpers above the exports that use them.
@@ -86,7 +100,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 
 ### Abstraction & Data Flow
 
-- Keep each function at one level of abstraction: low-level mechanics live in named helpers; the body reads as a summary of what happens.
+- Keep functions at a coherent level of abstraction; extract helpers when they improve comprehension.
 - Prefer the smallest meaningful input a component or function needs; don't pass large objects solely to access one leaf property.
 - Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
 - Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@paraglide/*`).
