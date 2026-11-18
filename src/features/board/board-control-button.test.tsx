@@ -29,7 +29,7 @@ describe("BoardControlButton", () => {
     const button = screen.getByRole("button", { name: "Go back" });
 
     await expect.element(button).toHaveStyle({
-      width: "72px",
+      width: "88px",
       marginTop: "8px",
       marginBottom: "16px",
     });

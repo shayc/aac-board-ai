@@ -437,21 +437,17 @@ describe("CommunicationBoard", () => {
   });
 
   describe("phone controls", () => {
-    // Twice a 72px pill fits beside back and home from 344px up. The narrowest
-    // phones, and larger ones with display zoom, are 320px wide.
-    test.each([
-      { width: 375, playWidth: 144, name: "twice as wide as back or home" },
-      {
-        width: 320,
-        playWidth: 120,
-        name: "as wide as the room back and home leave",
-      },
-    ])(
-      "makes play $name on a $width px wide phone",
-      async ({ width, playWidth }) => {
+    // The narrowest phones, and larger ones with display zoom, are 320px wide.
+    test.each([{ width: 375 }, { width: 320 }])(
+      "makes back, home and play equally wide, with play at the far end, on a $width px wide phone",
+      async ({ width }) => {
         await setTestViewport(width, 755);
         const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
+        const back = screen
+          .getByRole("button", { name: "Go back" })
+          .element()
+          .getBoundingClientRect();
         const home = screen
           .getByRole("button", { name: "Go to main board" })
           .element()
@@ -461,7 +457,10 @@ describe("CommunicationBoard", () => {
           .element()
           .getBoundingClientRect();
 
-        expect(play.width).toBeCloseTo(playWidth, 0);
+        expect(back.width).toBeCloseTo(88, 0);
+        expect(home.width).toBeCloseTo(88, 0);
+        expect(play.width).toBeCloseTo(88, 0);
+        expect(back.left).toBeCloseTo(16, 0);
         expect(play.right).toBeCloseTo(width - 16, 0);
         expect(play.left - home.right).toBeGreaterThanOrEqual(16 - 0.5);
       },
