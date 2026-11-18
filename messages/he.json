@@ -120,7 +120,7 @@
   "scanningEnabled": "הפעלת סריקה באמצעות מתג",
   "scanningMethod": "שיטת סריקה",
   "scanningMethodAuto": "סריקה אוטומטית",
-  "scanningMethodStep": "סריקה ידנית (שני מתגים)",
+  "scanningMethodStep": "סריקה ידנית",
   "scanningMethodAutoHint": "לחצו על רווח או Enter כדי להתחיל בסריקה או לבחור פריט. הסריקה מושהית אחרי שני סבבים.",
   "scanningMethodStepHint": "לחצו על רווח כדי לעבור לפריט הבא ועל Enter כדי לבחור בו.",
   "scanningInterval": "זמן לכל פריט",
