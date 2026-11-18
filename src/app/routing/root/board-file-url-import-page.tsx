@@ -5,14 +5,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
+import { isolateBidi } from "@shared/language/bidi-isolate";
 import { useTranslate } from "@shared/language/use-translate";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
 import type { rootIndexLoader } from "./root-index-loader";
-
-const FIRST_STRONG_ISOLATE = "\u2068";
-const POP_DIRECTIONAL_ISOLATE = "\u2069";
 
 export function BoardFileURLImportPage() {
   const { boardFileHost } = useLoaderData<typeof rootIndexLoader>();
@@ -27,12 +25,12 @@ export function BoardFileURLImportPage() {
     return <LoadingState />;
   }
 
-  function cancel() {
+  function handleCancel() {
     setHasAnswered(true);
     void navigate("/", { replace: true });
   }
 
-  function confirmImport() {
+  function handleConfirm() {
     setHasAnswered(true);
     // Replace the link's history entry so Back doesn't offer the import again.
     void submit(null, { method: "post", replace: true });
@@ -41,7 +39,7 @@ export function BoardFileURLImportPage() {
   return (
     <>
       <title>{t(m.boardFileURLImportTitle)}</title>
-      <Dialog aria-describedby={descriptionId} open onClose={cancel}>
+      <Dialog aria-describedby={descriptionId} open onClose={handleCancel}>
         <DialogTitle>{t(m.boardFileURLImportTitle)}</DialogTitle>
 
         <DialogContent>
@@ -56,17 +54,14 @@ export function BoardFileURLImportPage() {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={cancel}>{t(m.boardFileURLImportCancel)}</Button>
-          <Button onClick={confirmImport}>
+          <Button onClick={handleCancel}>
+            {t(m.boardFileURLImportCancel)}
+          </Button>
+          <Button onClick={handleConfirm}>
             {t(m.boardFileURLImportConfirm)}
           </Button>
         </DialogActions>
       </Dialog>
     </>
   );
-}
-
-// FSI/PDI preserve host order in RTL translations, including digit-led hosts.
-function isolateBidi(text: string): string {
-  return `${FIRST_STRONG_ISOLATE}${text}${POP_DIRECTIONAL_ISOLATE}`;
 }

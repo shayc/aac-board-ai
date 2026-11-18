@@ -12,6 +12,7 @@ import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
+import { assertNever } from "@shared/utils/assert-never";
 import { useId } from "react";
 import type { DownloadPhase } from "../catalog/board-set-downloads";
 import { useBoardSetDownload } from "../catalog/use-board-set-download";
@@ -187,6 +188,8 @@ function describeDownloadPhase(
       return describeDownloadProgress(phase, t, locale);
     case "importing":
       return t(m.libraryImportingStatus);
+    default:
+      return assertNever(phase);
   }
 }
 

@@ -99,7 +99,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      variant={areControlsBelowGrid ? "boardControl" : "prominent"}
+      shape={areControlsBelowGrid ? "pill" : "round"}
       shortcutLabels={shortcutLabels}
       onPlay={() => void message.play()}
       onStop={playback.stop}

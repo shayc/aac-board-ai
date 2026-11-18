@@ -22,7 +22,7 @@ export function BoardSetInfoDialog({
 }: BoardSetInfoDialogProps) {
   const t = useTranslate();
   const shownBoardSet = useLastNonNull(boardSet);
-  const facts = shownBoardSet ? buildFacts(t, shownBoardSet) : [];
+  const facts = shownBoardSet ? buildFacts(shownBoardSet, t) : [];
 
   return (
     <Dialog open={boardSet !== null} onClose={onClose} fullWidth maxWidth="sm">
@@ -62,6 +62,25 @@ export function BoardSetInfoDialog({
   );
 }
 
+function buildFacts(boardSet: BoardSetRecord, t: Translate): string[] {
+  const facts: string[] = [];
+
+  if (boardSet.gridRows && boardSet.gridColumns) {
+    facts.push(
+      t(m.libraryGridDimensions, {
+        rows: boardSet.gridRows,
+        columns: boardSet.gridColumns,
+      }),
+    );
+  }
+
+  if (boardSet.license) {
+    facts.push(boardSet.license);
+  }
+
+  return facts;
+}
+
 interface FactLineProps {
   facts: string[];
 }
@@ -85,23 +104,4 @@ function FactLine({ facts }: FactLineProps) {
       ))}
     </Stack>
   );
-}
-
-function buildFacts(t: Translate, boardSet: BoardSetRecord): string[] {
-  const facts: string[] = [];
-
-  if (boardSet.gridRows && boardSet.gridColumns) {
-    facts.push(
-      t(m.libraryGridDimensions, {
-        rows: boardSet.gridRows,
-        columns: boardSet.gridColumns,
-      }),
-    );
-  }
-
-  if (boardSet.license) {
-    facts.push(boardSet.license);
-  }
-
-  return facts;
 }

@@ -3,7 +3,7 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
-import { routeErrorCodes, routeErrorResponse } from "./route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "./route-error";
 import { createErrorPageRouter } from "./testing/create-error-page-router";
 
 function renderWithLoader(loader: () => unknown) {
@@ -57,7 +57,7 @@ describe("RouteErrorBoundary", () => {
 
   test("retranslates a loader error that is already being displayed", async () => {
     const screen = await renderWithLoader(() => {
-      throw routeErrorResponse(routeErrorCodes.boardNotFound);
+      throw routeErrorResponse(ROUTE_ERROR_CODES.boardNotFound);
     });
 
     await expect.element(screen.getByText("Board not found")).toBeVisible();
@@ -70,7 +70,7 @@ describe("RouteErrorBoundary", () => {
 
   test("distinguishes a missing board set from a missing board", async () => {
     const screen = await renderWithLoader(() => {
-      throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
+      throw routeErrorResponse(ROUTE_ERROR_CODES.boardSetNotFound);
     });
 
     await expect.element(screen.getByText("Board set not found")).toBeVisible();

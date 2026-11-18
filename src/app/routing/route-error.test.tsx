@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router/dom";
 import { describe, expect, test } from "vitest";
 import {
   reportRouteError,
-  routeErrorCodes,
+  ROUTE_ERROR_CODES,
   routeErrorResponse,
 } from "./route-error";
 import { createErrorPageRouter } from "./testing/create-error-page-router";
@@ -56,7 +56,7 @@ describe("reportRouteError", () => {
 
     const screen = await renderWithRoute({
       loader: () => {
-        throw routeErrorResponse(routeErrorCodes.boardNotFound);
+        throw routeErrorResponse(ROUTE_ERROR_CODES.boardNotFound);
       },
     });
 

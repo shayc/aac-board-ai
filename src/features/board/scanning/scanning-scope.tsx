@@ -9,6 +9,9 @@ import {
 import { useScanningPreferences } from "./scanning-preferences-store";
 import { SwitchScanner } from "./switch-scanner";
 
+// A highlighted row is outlined once, in place of each button inside it.
+const OUTLINED_SELECTOR = `:is(${SCAN_HIGHLIGHTED_ROW_SELECTOR}, ${SCAN_HIGHLIGHTED_ITEM_SELECTOR}:not(${SCAN_HIGHLIGHTED_ROW_SELECTOR} *))`;
+
 interface ScanningScopeProps {
   children: ReactNode;
 }
@@ -32,9 +35,6 @@ export function ScanningScope({ children }: ScanningScopeProps) {
     </Box>
   );
 }
-
-// A highlighted row is outlined once, in place of each button inside it.
-const OUTLINED_SELECTOR = `:is(${SCAN_HIGHLIGHTED_ROW_SELECTOR}, ${SCAN_HIGHLIGHTED_ITEM_SELECTOR}:not(${SCAN_HIGHLIGHTED_ROW_SELECTOR} *))`;
 
 function scopeSx(theme: Theme) {
   return {

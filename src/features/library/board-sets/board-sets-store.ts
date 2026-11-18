@@ -59,7 +59,7 @@ export function useBoardSets(): BoardSetsSnapshot {
   return useExternalStore(boardSetsStore);
 }
 
-export async function createBoardSet(input: BoardSetInput): Promise<void> {
+export async function addBoardSet(input: BoardSetInput): Promise<void> {
   await insertBoardSetRecords(input);
   requestPersistentStorage();
   await syncBoardSets();

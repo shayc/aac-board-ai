@@ -22,7 +22,7 @@ export async function loadStoredBoard(
   signal?.throwIfAborted();
 
   const [assetURLByPath, storedBoardIds] = await Promise.all([
-    resolveAssetURLs(key.boardSetId, obfBoard),
+    readAssetURLs(key.boardSetId, obfBoard),
     listBoardIds(key.boardSetId),
   ]);
   signal?.throwIfAborted();
@@ -42,7 +42,7 @@ async function readOBFBoard(key: BoardKey): Promise<OBFBoard> {
   return record.obf;
 }
 
-async function resolveAssetURLs(
+async function readAssetURLs(
   boardSetId: string,
   obfBoard: OBFBoard,
 ): Promise<Map<string, string>> {

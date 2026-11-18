@@ -4,7 +4,7 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { createBoardSet } from "../board-sets/board-sets-store";
+import { addBoardSet } from "../board-sets/board-sets-store";
 import { obfToBoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 import {
   type AssetInput,
@@ -66,7 +66,7 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   // A file named only by its extension has no stem to name the set after.
   const fallbackName = stripBoardFileExtension(file.name) || baseId;
   const content = buildBoardSetContent(loadedBoard, fallbackName);
-  const id = await createBoardSetWithFreeId(baseId, content);
+  const id = await addBoardSetWithFreeId(baseId, content);
 
   return { id, rootBoardId: content.rootBoardId };
 }
@@ -118,7 +118,7 @@ export function deriveBoardSetId(fileName: string): string {
   return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
 }
 
-async function createBoardSetWithFreeId(
+async function addBoardSetWithFreeId(
   baseId: string,
   content: BoardSetContent,
 ): Promise<string> {
@@ -126,7 +126,7 @@ async function createBoardSetWithFreeId(
     const id = buildBoardSetIdCandidate(baseId, candidateNumber);
 
     try {
-      await createBoardSet({ ...content, id });
+      await addBoardSet({ ...content, id });
 
       return id;
     } catch (error) {

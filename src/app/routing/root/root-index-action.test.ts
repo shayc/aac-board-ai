@@ -59,7 +59,7 @@ describe("rootIndexAction", () => {
     ).rejects.toMatchObject(localizedImportFailure);
 
     expect(reportedErrors).toEqual([
-      new Error("Failed to fetch board: HTTP 404"),
+      new Error("Failed to fetch board file: HTTP 404"),
     ]);
   });
 

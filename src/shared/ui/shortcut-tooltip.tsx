@@ -1,12 +1,8 @@
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { isolateLTR } from "@shared/language/bidi-isolate";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactElement } from "react";
-
-// Key symbols such as ⌘ and ⌫ have no direction of their own, so a
-// right-to-left interface would reverse them without a left-to-right isolate.
-const LEFT_TO_RIGHT_ISOLATE = "\u2066";
-const POP_DIRECTIONAL_ISOLATE = "\u2069";
 
 interface ShortcutTooltipProps {
   action: string;
@@ -25,13 +21,12 @@ export function ShortcutTooltip({
   children,
 }: ShortcutTooltipProps) {
   const t = useTranslate();
-  const isolatedKeys = `${LEFT_TO_RIGHT_ISOLATE}${keys}${POP_DIRECTIONAL_ISOLATE}`;
 
   return (
     <Tooltip
       // A string title keeps the control's own name; an element title would
       // make MUI label the control by the tooltip while it is open.
-      title={t(m.shortcutTooltip, { action, shortcut: isolatedKeys })}
+      title={t(m.shortcutTooltip, { action, shortcut: isolateLTR(keys) })}
       placement="top"
       disableHoverListener
       disableTouchListener

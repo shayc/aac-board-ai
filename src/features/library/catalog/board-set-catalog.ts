@@ -23,7 +23,7 @@ export const starterBoardSet = catalogBoardSet({
   fileName: "first-words.obz",
 });
 
-const boardSetCatalog: readonly CatalogBoardSet[] = [
+const BOARD_SET_CATALOG: readonly CatalogBoardSet[] = [
   starterBoardSet,
   catalogBoardSet({ name: "Quick Core 24", fileName: "quick-core-24.obz" }),
   catalogBoardSet({ name: "Quick Core 60", fileName: "quick-core-60.obz" }),
@@ -34,5 +34,5 @@ export function listDownloadableBoardSets(
 ): CatalogBoardSet[] {
   const storedIds = new Set(storedBoardSets.map((boardSet) => boardSet.id));
 
-  return boardSetCatalog.filter((boardSet) => !storedIds.has(boardSet.id));
+  return BOARD_SET_CATALOG.filter((boardSet) => !storedIds.has(boardSet.id));
 }
