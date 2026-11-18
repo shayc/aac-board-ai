@@ -14,3 +14,9 @@ export function useEndSide() {
 
   return direction === "rtl" ? "left" : "right";
 }
+
+export function useStartSide() {
+  const { direction } = useTheme();
+
+  return direction === "rtl" ? "right" : "left";
+}

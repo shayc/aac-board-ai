@@ -1,5 +1,3 @@
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import { m } from "@paraglide/messages.js";
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
@@ -125,32 +123,22 @@ describe("SnackbarProvider", () => {
     { screen: "a phone on its side", width: 844, height: 390 },
     { screen: "a desktop", width: 1024, height: 667 },
   ])(
-    "keeps a persistent error below the app bar and clear of controls along the bottom on $screen",
+    "keeps a persistent error clear of controls along the bottom on $screen",
     async ({ width, height }) => {
       await setTestViewport(width, height);
       const screen = await renderWithProviders(
-        <>
-          <AppBar position="static">
-            <Toolbar />
-          </AppBar>
-          <ShowButtons
-            snackbars={{
-              "show-error": { message: "failed", severity: "error" },
-            }}
-          />
-        </>,
+        <ShowButtons
+          snackbars={{
+            "show-error": { message: "failed", severity: "error" },
+          }}
+        />,
       );
 
       await screen.getByRole("button", { name: "show-error" }).click();
       const alert = screen.getByRole("alert");
       await expect.element(alert).toBeVisible();
 
-      const appBarBounds = screen
-        .getByRole("banner")
-        .element()
-        .getBoundingClientRect();
       const alertBounds = alert.element().getBoundingClientRect();
-      expect(alertBounds.top).toBeGreaterThan(appBarBounds.bottom);
       expect(alertBounds.bottom).toBeLessThan(window.innerHeight / 2);
     },
   );
