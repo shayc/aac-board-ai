@@ -129,15 +129,10 @@ export function createPlaybackCoordinator(
     store.setState({ status: "idle" });
   }
 
-  function dispose() {
-    interrupt();
-  }
-
   return {
     subscribe: store.subscribe,
     getSnapshot: store.getSnapshot,
     play,
     stop,
-    dispose,
   };
 }

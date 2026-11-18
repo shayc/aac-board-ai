@@ -16,7 +16,7 @@ export function PlaybackProvider({
     createPlaybackCoordinator(getSpeechParameters),
   );
 
-  useEffect(() => () => coordinator.dispose(), [coordinator]);
+  useEffect(() => () => coordinator.stop(), [coordinator]);
 
   return <PlaybackContext value={coordinator}>{children}</PlaybackContext>;
 }
