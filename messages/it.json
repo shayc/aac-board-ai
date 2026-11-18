@@ -53,7 +53,7 @@
     }
   ],
   "libraryImportPartiallyFailedBoardFiles": "Impossibile importare alcuni file di tabelle ({failed} di {total})",
-  "libraryDropToImport": "Rilascia i file delle tabelle per importare",
+  "libraryDropToImport": "Rilascia i file di tabelle per importarli",
   "libraryInfo": "Info",
   "libraryExport": "Esporta",
   "libraryDelete": "Elimina",
@@ -120,7 +120,7 @@
   "scanningEnabled": "Attiva la scansione con sensore",
   "scanningMethod": "Metodo di scansione",
   "scanningMethodAuto": "Scansione automatica",
-  "scanningMethodStep": "Scansione passo-passo",
+  "scanningMethodStep": "Scansione passo passo",
   "scanningMethodAutoHint": "Premi Spazio o Invio per avviare la scansione e per selezionare. La scansione va in pausa dopo due passaggi.",
   "scanningMethodStepHint": "Premi Spazio per passare all’elemento successivo e Invio per selezionarlo.",
   "scanningInterval": "Intervallo di scansione",
