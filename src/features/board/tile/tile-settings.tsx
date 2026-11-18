@@ -63,7 +63,6 @@ export function TileSettings() {
         min={TILE_BRIGHTNESS.min}
         max={TILE_BRIGHTNESS.max}
         step={BRIGHTNESS_STEP}
-        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
 
@@ -74,7 +73,6 @@ export function TileSettings() {
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
         step={SATURATION_STEP}
-        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>

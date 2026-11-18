@@ -41,7 +41,6 @@ describe("TileSettings", () => {
     await expect
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "100%");
-    await expect.element(screen.getByText("100%")).not.toBeInTheDocument();
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
@@ -125,6 +124,7 @@ describe("TileSettings", () => {
     await expect
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "90%");
+    await expect.element(screen.getByText("90%")).toBeVisible();
 
     expect(readStoredPreferences("tile-preferences")).toMatchObject({
       saturation: valueNow,
@@ -142,6 +142,7 @@ describe("TileSettings", () => {
     await expect
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "97%");
+    await expect.element(screen.getByText("97%")).toBeVisible();
 
     expect(readStoredPreferences("tile-preferences")).toMatchObject({
       brightness: 0.97,

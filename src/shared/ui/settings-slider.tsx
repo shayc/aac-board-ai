@@ -11,8 +11,6 @@ interface SettingsSliderProps {
   max: number;
   step: number;
   normalValue?: number;
-  // Assistive technology still announces the value.
-  isValueHidden?: boolean;
   formatValue: (value: number) => string;
 }
 
@@ -24,7 +22,6 @@ export function SettingsSlider({
   max,
   step,
   normalValue,
-  isValueHidden = false,
   formatValue,
 }: SettingsSliderProps) {
   const labelId = useId();
@@ -36,14 +33,12 @@ export function SettingsSlider({
         sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 2 }}
       >
         <Typography id={labelId}>{label}</Typography>
-        {!isValueHidden && (
-          <Typography
-            variant="body2"
-            sx={{ color: "text.secondary", fontWeight: "fontWeightBold" }}
-          >
-            {formatValue(value)}
-          </Typography>
-        )}
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", fontWeight: "fontWeightBold" }}
+        >
+          {formatValue(value)}
+        </Typography>
       </Stack>
 
       <Slider
