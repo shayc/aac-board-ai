@@ -81,9 +81,8 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{
           transition: {
-            // A touch screen would raise its keyboard over the list the person
-            // came to read, so only a device with a mouse starts in the search
-            // field.
+            // On a touch screen, focusing the field would raise the keyboard
+            // over the list.
             onEntering: () => {
               if (hasFinePointer) {
                 searchFieldRef.current?.focus();

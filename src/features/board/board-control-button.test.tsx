@@ -96,8 +96,6 @@ describe("BoardControlButton", () => {
 });
 
 describe("BoardControlButton beside the message bar", () => {
-  // The bar stays light in dark mode, so it is the row's only filled surface
-  // there; the ring is then the button's only edge.
   test("draws a ring with non-text contrast instead of a fill in dark mode", async () => {
     const { fill, ringWidth, ringContrast } = await measureRoundButton("dark");
 

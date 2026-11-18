@@ -25,8 +25,7 @@ export interface BoardRecord {
 export interface AssetRecord {
   readonly boardSetId: string;
   readonly path: string;
-  // Bytes rather than a Blob: WebKit refuses to store Blobs in ephemeral
-  // sessions.
+  // Bytes, not a Blob: WebKit refuses to store Blobs in ephemeral sessions.
   readonly bytes: ArrayBuffer;
   readonly type: string;
 }

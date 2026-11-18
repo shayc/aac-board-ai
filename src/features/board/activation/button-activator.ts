@@ -10,7 +10,6 @@ interface ButtonActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "play" | "echo">;
   playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
-  /** The language the board's text is in, when known. */
   boardLanguage: string | undefined;
   shouldPlayTiles: boolean;
 }
@@ -50,8 +49,7 @@ export function createButtonActivator({
     });
 
     message.apply([{ kind: "tile", part }]);
-    // A silent tile interrupts playback just as a played one does, so selecting
-    // a tile while the message speaks stops it whatever the setting.
+    // A silent tile still interrupts a message that is playing.
     if (!shouldPlayTiles) {
       playback.stop();
 

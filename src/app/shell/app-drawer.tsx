@@ -70,9 +70,8 @@ export function AppDrawer({
   );
 }
 
-// Without the dimming, the dark drawer is the page's own color and its shadow
-// does not show, so a line marks where it ends. The RTL stylis plugin mirrors
-// the side with the drawer anchor.
+// With no dimming, the dark drawer matches the page and its shadow does not
+// show, so a border marks its edge. The RTL stylis plugin mirrors the side.
 function innerEdgeSx(anchor: "left" | "right") {
   const innerBorder = anchor === "left" ? "borderRight" : "borderLeft";
 

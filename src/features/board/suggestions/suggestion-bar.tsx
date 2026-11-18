@@ -21,8 +21,7 @@ const pendingPulse = keyframes`
   30% { opacity: 1; }
 `;
 
-// A first phrase mostly arrives within about 600ms, so a shorter wait would
-// flash the dots just before the phrase takes its place.
+// A first phrase mostly arrives within 600ms; a shorter wait flashes the dots.
 const PENDING_DOTS_DELAY_MS = 700;
 
 // Room for the widest outline a chip gets, the scan highlight. A scroll
@@ -126,7 +125,6 @@ function PendingDots() {
         alignItems: "center",
         gap: 0.75,
         paddingInline: 1.5,
-        // Stays clear through the delay, then fades in.
         animation: `${fadeIn} ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeOut} ${PENDING_DOTS_DELAY_MS}ms backwards`,
       })}
     >

@@ -88,14 +88,9 @@ export function BackspaceButton({
   );
 }
 
-// The icon has no fill at rest, so play is the only filled shape in the bar;
-// the touch target stays as large as the button. With the bar's inset, a large
-// button sits on the bar's rounded end, the same distance from its top, bottom
-// and end.
-//
-// The bar stays light in dark mode, so hovering tints it darker in both themes;
-// its grey ground there is a step darker than white, so the disabled icon needs
-// more weight to read as clearly as it does in light mode.
+// No fill at rest, so play is the bar's only filled shape. The bar stays light
+// in dark mode, so hover darkens in both themes, and its dark-mode grey needs a
+// heavier disabled icon.
 function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   const targetSize = BUTTON_SIZES[size];
   const hoverColor = theme.alpha(theme.palette.common.black, 0.08);
@@ -118,9 +113,8 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
   } as const;
 }
 
-// The "auto" size stretches the ring over the whole button, so a hold shows
-// the edge of the touch target. The fill waits out the delay so a quick tap
-// never shows it.
+// The "auto" size stretches the ring over the whole touch target. The fill
+// waits out the delay so a quick tap never shows it.
 function ringSx(isHolding: boolean) {
   const fillTransition = `stroke-dashoffset ${RING_FILL_MS}ms linear ${RING_DELAY_MS}ms`;
 

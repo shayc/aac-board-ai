@@ -178,8 +178,6 @@ describe("PlayButton", () => {
 });
 
 describe("PlayButton in an empty message bar", () => {
-  // Play is the bar's main action, so even disabled it must not read weaker
-  // than the backspace beside it.
   test.each(["light", "dark"] as const)(
     "keeps its disabled glyph at least as visible as backspace's in %s mode",
     async (mode) => {

@@ -26,8 +26,7 @@ export function routeErrorResponse(code: RouteErrorCode) {
   return data(payload, { status: STATUS_BY_CODE[code] });
 }
 
-// The error page shows only a title, so an error no loader anticipated is
-// reported here or it leaves no trace of what went wrong.
+// The error page shows only a title, so an unexpected error is reported here.
 export function reportRouteError(error: unknown): void {
   if (getRouteErrorCode(error)) {
     return;
@@ -36,7 +35,6 @@ export function reportRouteError(error: unknown): void {
   reportError(error);
 }
 
-/** The code of an error the error page explains, or undefined for any other. */
 export function getRouteErrorCode(error: unknown): RouteErrorCode | undefined {
   if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
     return error.data.code;

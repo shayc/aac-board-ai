@@ -46,8 +46,7 @@ async function readAssetURLs(
   boardSetId: string,
   obfBoard: OBFBoard,
 ): Promise<Map<string, string>> {
-  // A board missing one picture or sound is still usable; failing the
-  // whole load would leave the user with no board at all.
+  // A board missing a picture or sound is still usable; don't fail the load.
   const { values: assetURLEntries, errors } = await settleAll(
     Array.from(
       collectMediaPaths([obfBoard]),

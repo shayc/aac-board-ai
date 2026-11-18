@@ -17,7 +17,6 @@ export async function listBoardSummaries(
   const records = await listBoardRecords(boardSetId);
 
   return records.map(({ id, obf }) => {
-    // A board without a name is still listed, under its ID.
     const name = nonBlankText(obf.name) ?? id;
 
     return {

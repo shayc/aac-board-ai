@@ -21,7 +21,6 @@ const PLAY_ICON_SIZE = 36;
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  /** Round in the message bar; a pill in the row of board controls. */
   shape?: BoardControlShape;
   shortcutLabels: Pick<BoardShortcutLabels, "play" | "stop">;
   onPlay: () => void;

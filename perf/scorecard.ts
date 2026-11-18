@@ -2,7 +2,6 @@ import type { Budget, Unit } from "./budgets.ts";
 import type { JourneyResult } from "./results.ts";
 import { median } from "./stats.ts";
 
-/** One stray sample in every five is tolerated before a row changes state. */
 const SAMPLES_PER_TOLERATED_STRAY = 5;
 
 const STATES = ["over", "watch", "ok"] as const;

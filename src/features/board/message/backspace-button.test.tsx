@@ -59,8 +59,7 @@ function ClearableBackspace() {
   );
 }
 
-// The button has no fill at rest, so the icon and ring are measured against
-// the bar it sits on.
+// No fill at rest, so the icon and ring are measured against the bar.
 async function measureContrasts(mode: ColorMode, disabled: boolean) {
   const screen = await renderInColorMode(
     <MessageBar
@@ -309,8 +308,6 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  // Play is the bar's only filled shape; backspace shows a fill only as
-  // feedback that the pointer is on it.
   test("has no fill until the pointer is on it", async () => {
     const screen = await renderWithProviders(
       <MessageBar
@@ -338,8 +335,6 @@ describe("BackspaceButton in the message bar", () => {
     await expect.poll(readFill).not.toBe(TRANSPARENT);
   });
 
-  // Nothing at rest marks the touch target's edge, so the hold ring must, and
-  // the same gap on three sides keeps it parallel to the bar's rounded end.
   test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
     const screen = await renderWithProviders(
       <MessageBar

@@ -44,8 +44,7 @@ function keepScreenAwake(): (() => void) | undefined {
     heldLock = lock;
   }
 
-  // The browser releases the lock whenever the page is hidden and never
-  // restores it.
+  // The browser drops the lock when the page hides and never restores it.
   function handleVisibilityChange() {
     if (document.visibilityState === "visible") {
       void requestLock();

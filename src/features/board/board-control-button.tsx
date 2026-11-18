@@ -8,11 +8,9 @@ import { CONTROL_ICON_SIZE, CONTROL_SIZES } from "./board-control-sizes";
 import { MIN_CELL_WIDTH_PX } from "./grid/grid-layout";
 
 const SHAPE_SX = {
-  // As wide as the grid's narrowest tile. Three of them and the gaps between
-  // them fill the narrowest phone, 320px wide.
+  // The grid's narrowest tile; three plus their gaps fill a 320px phone.
   pill: { width: MIN_CELL_WIDTH_PX },
-  // It holds one icon, so the button's side padding gives way to the fixed
-  // width, which matches the message bar's controls at the row's other end.
+  // One icon: no side padding, and as wide as the message bar's controls.
   round: (theme: Theme) => ({
     width: CONTROL_SIZES.large,
     height: CONTROL_SIZES.large,
@@ -61,10 +59,8 @@ export function BoardControlButton({
   );
 }
 
-// The message bar stays light in dark mode, so beside it a dark fill clashes
-// and a light one outshines the board. A ring leaves the bar as the row's only
-// surface and still draws the button's edge, which someone dwelling on it with
-// eye gaze rests on.
+// The bar stays light in dark mode: beside it a dark fill clashes and a light
+// one outshines the board. A ring still draws the edge eye-gaze users dwell on.
 function ringSx(theme: Theme) {
   return {
     border: `1px solid ${theme.vars.palette.outline}`,
@@ -76,8 +72,7 @@ function ringSx(theme: Theme) {
     "@media (hover: hover)": {
       "&:hover": { backgroundColor: theme.vars.palette.action.hover },
     },
-    // As dim as its icon, so a button that is off still shows where it is;
-    // hovering it must not tint it.
+    // Stays visible when disabled, as dim as its icon; hover must not tint it.
     [`&.${buttonClasses.disabled}`]: {
       borderColor: "currentColor",
       backgroundColor: "transparent",

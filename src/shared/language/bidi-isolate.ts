@@ -3,9 +3,8 @@ const FIRST_STRONG_ISOLATE = "⁨";
 const POP_DIRECTIONAL_ISOLATE = "⁩";
 
 /**
- * Keeps text of unknown direction, such as a host name, in its own order
- * inside a sentence of either direction, including text that starts with a
- * digit.
+ * Keeps text of unknown direction, such as a host name or text that starts
+ * with a digit, in its own order inside a sentence of either direction.
  */
 export function isolateBidi(text: string): string {
   return `${FIRST_STRONG_ISOLATE}${text}${POP_DIRECTIONAL_ISOLATE}`;

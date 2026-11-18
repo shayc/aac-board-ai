@@ -108,8 +108,7 @@ export class JourneySample {
 
 /**
  * Measures every build once per round, after one discarded warm-up sample
- * each. A comparison pairs its two builds within a round to reduce bias from
- * machine drift.
+ * each. A comparison pairs its builds within a round against machine drift.
  */
 export async function measureJourney(
   browser: Browser,
