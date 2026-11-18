@@ -371,11 +371,11 @@ describe("CommunicationBoard", () => {
         wholeRows: 2,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
-        // Fills the compact bar inside its inset, as backspace does.
+        // Fills the compact bar inside its inset.
         playHeight: 64,
         // Past the 64px home button and a 16px gap.
         messageBarStart: 16 + 64 + 16,
-        // As tall as backspace, 64px, with the bar's 8px inset and 1px border.
+        // As tall as play, 64px, with the bar's 8px inset and 1px border.
         messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {
@@ -471,6 +471,27 @@ describe("CommunicationBoard", () => {
 
         expect(home).toBe(backspace);
         expect(backspace).toBeLessThan(play);
+      },
+    );
+
+    test.each([
+      { name: "a tablet", width: 1024, height: 704 },
+      { name: "a phone on its side", width: 874, height: 354 },
+    ])(
+      "keeps backspace a step smaller than play on $name",
+      async ({ width, height }) => {
+        await setTestViewport(width, height);
+        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+        await expect.element(screen.getByRole("grid")).toBeVisible();
+
+        const widthOf = (name: string) =>
+          screen.getByRole("button", { name }).element().getBoundingClientRect()
+            .width;
+
+        expect(widthOf("Backspace") / widthOf("Speak message")).toBeCloseTo(
+          0.8,
+          1,
+        );
       },
     );
   });

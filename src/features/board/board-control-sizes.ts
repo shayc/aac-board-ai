@@ -1,7 +1,8 @@
 // Play and the controls level with it are large. Medium is a step smaller, so
 // play stays the main action of the message row; a short landscape screen has
-// no height for the extra step and drops every control to it.
-export const CONTROL_SIZES = { medium: 64, large: 80 } as const;
+// no height for the extra step and drops every control to it, and backspace to
+// small, MUI's large icon button, to keep the step below play.
+export const CONTROL_SIZES = { small: 52, medium: 64, large: 80 } as const;
 
 // One icon size for every control, round or pill, medium or large: Material 3's
 // icon for an 80px button. Only round play is heavier, to stay the row's main

@@ -7,6 +7,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
@@ -104,6 +105,10 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     flexShrink: 0,
     width: targetSize,
     height: targetSize,
+    [shortLandscape(theme)]: {
+      width: CONTROL_SIZES.small,
+      height: CONTROL_SIZES.small,
+    },
     fontSize: CONTROL_ICON_SIZE,
     color: "text.primary",
     [`&, &.${iconButtonClasses.disabled}`]: {

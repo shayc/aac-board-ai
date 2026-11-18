@@ -482,9 +482,10 @@ what such a screen lacks, so:
 - The controls keep their places from above `sm`, whatever the width.
 - The spacing tightens as it does below `sm`.
 - The app bar and the other toolbars take their shortest height.
-- The message bar drops to a compact height, as tall as backspace and its
-  inset, with smaller symbols, and play shrinks to backspace's size to fit it.
-  The home button shrinks with play.
+- The message bar drops to a compact height, 64px and its inset, with smaller
+  symbols, and play and the home button shrink to fit it. Backspace shrinks a
+  step further, to 52px, so it stays smaller than play as it is on larger
+  screens.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 
