@@ -100,14 +100,8 @@ function disabledSx(theme: Theme) {
   };
 }
 
-// The usual tint turns grey on the bar's grey dark-mode ground and is lost
-// beside backspace; the lighter primary keeps its hue.
+// The bar's dark-mode grey is a step darker than white, which mutes the tint;
+// a heavier glyph keeps play at least as visible as the backspace beside it.
 function disabledOnDarkBarSx(theme: Theme) {
-  return {
-    color: theme.alpha(theme.vars.palette.primary.main, 0.6),
-    backgroundColor: theme.alpha(
-      theme.vars.palette.primary.light,
-      theme.vars.palette.action.disabledOpacity,
-    ),
-  };
+  return { color: theme.alpha(theme.vars.palette.primary.main, 0.6) };
 }

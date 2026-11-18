@@ -36,10 +36,6 @@ const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word's ring.
 const MESSAGE_PADDING = 3;
 
-// The light scheme's primary only just clears 3:1 on the bar's grey dark-mode
-// ground; this one keeps a clear margin.
-const DARK_GROUND_PRIMARY = { main: "#0a4154", mainChannel: "10 65 84" };
-
 export interface MessageBarProps {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
@@ -142,14 +138,10 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    // A full grey 400 glares against the dark page; symbols still need a light
-    // ground.
-    ...theme.applyStyles("dark", {
-      // Rings and controls inside the bar read the primary color from these.
-      "--mui-palette-primary-main": DARK_GROUND_PRIMARY.main,
-      "--mui-palette-primary-mainChannel": DARK_GROUND_PRIMARY.mainChannel,
-      bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
-    }),
+    // Symbols need a light ground in both themes. In dark mode, white would
+    // outshine the board, while a mid grey reads as disabled; grey 300 is as
+    // light as the board's pastel tiles.
+    ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[300] }),
     [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
 }
