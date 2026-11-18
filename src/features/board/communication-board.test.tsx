@@ -19,7 +19,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { userEvent } from "vitest/browser";
+import { type Locator, userEvent } from "vitest/browser";
 import { CommunicationBoard } from "./communication-board";
 import { restoreMessageDraft } from "./message/message-draft";
 import {
@@ -449,6 +449,30 @@ describe("CommunicationBoard", () => {
         });
         expect(atEnd.lastRowToEdgeBelow).toBeCloseTo(pageMargin, 0);
         expect(atEnd.topHint).toBeCloseTo(overflowHint, 0);
+      },
+    );
+  });
+
+  describe("message row icons", () => {
+    test.each([
+      { name: "a tablet", width: 1024, height: 703 },
+      { name: "a wide, short desktop window", width: 1440, height: 531 },
+    ])(
+      "gives back and home backspace's icon, lighter than play's, on $name",
+      async ({ width, height }) => {
+        await setTestViewport(width, height);
+        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+        await expect.element(screen.getByRole("grid")).toBeVisible();
+
+        const button = (name: string) => screen.getByRole("button", { name });
+        const back = iconSize(button("Go back"));
+        const home = iconSize(button("Go to main board"));
+        const backspace = iconSize(button("Backspace"));
+        const play = iconSize(button("Play message"));
+
+        expect(back).toBe(backspace);
+        expect(home).toBe(backspace);
+        expect(backspace).toBeLessThan(play);
       },
     );
   });
@@ -1138,6 +1162,13 @@ describe("CommunicationBoard", () => {
     );
   });
 });
+
+function iconSize(button: Locator): number {
+  const icon = button.element().querySelector("svg");
+  assertDefined(icon);
+
+  return icon.getBoundingClientRect().width;
+}
 
 function getMessageItems(
   screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,

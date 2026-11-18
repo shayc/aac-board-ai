@@ -16,6 +16,7 @@ import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels
 import {
   MESSAGE_ACTION_SIZE,
   MESSAGE_ACTION_SIZE_PROPERTY,
+  MESSAGE_SECONDARY_ACTION_ICON_SIZE,
   MESSAGE_SECONDARY_ACTION_SIZE,
 } from "./message-bar";
 
@@ -25,7 +26,6 @@ const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 // MUI draws the ring in a 44-unit box, so on the 80px button this is a 4px
 // stroke; MUI's default would outweigh the icon's lines.
 const RING_THICKNESS = 2.2;
-const ICON_SIZE = 28;
 
 const BUTTON_SIZES = {
   medium: MESSAGE_SECONDARY_ACTION_SIZE,
@@ -105,7 +105,7 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     flexShrink: 0,
     width: targetSize,
     height: targetSize,
-    fontSize: ICON_SIZE,
+    fontSize: MESSAGE_SECONDARY_ACTION_ICON_SIZE,
     color: "text.primary",
     // A tap leaves hover stuck on a touch screen.
     "&:hover": {

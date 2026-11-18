@@ -5,8 +5,8 @@ import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
 import {
-  MESSAGE_ACTION_ICON_SIZE,
   MESSAGE_ACTION_SIZE,
+  MESSAGE_SECONDARY_ACTION_ICON_SIZE,
   MESSAGE_SECONDARY_ACTION_SIZE,
 } from "./message/message-bar";
 
@@ -21,7 +21,9 @@ const SHAPE_SX = {
     width: MESSAGE_ACTION_SIZE,
     height: MESSAGE_ACTION_SIZE,
     px: 0,
-    [`& .${svgIconClasses.root}`]: { fontSize: MESSAGE_ACTION_ICON_SIZE },
+    [`& .${svgIconClasses.root}`]: {
+      fontSize: MESSAGE_SECONDARY_ACTION_ICON_SIZE,
+    },
     [shortLandscape(theme)]: {
       width: MESSAGE_SECONDARY_ACTION_SIZE,
       height: MESSAGE_SECONDARY_ACTION_SIZE,
