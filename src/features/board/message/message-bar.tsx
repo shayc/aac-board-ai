@@ -1,5 +1,6 @@
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import { typographyClasses } from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
@@ -19,9 +20,10 @@ const BAR_SIZES = {
 } as const;
 
 const BAR_INSET = 1;
-// Clears the bar's rounded end, which would clip the first word's ring.
+// Clears the bar's rounded end, which would clip the first word.
 const MESSAGE_PADDING = 3;
 const PART_INLINE_PADDING = 1;
+const ACTIVE_PART_ANCHOR = "--active-message-part";
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -86,7 +88,7 @@ export function MessageBar({
         // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
-        sx={scrollContainerSx}
+        sx={[scrollContainerSx, activePartId !== null && activePartFillSx]}
       >
         {parts.map((part) => (
           <MessagePartItem
@@ -148,6 +150,9 @@ function barSizeProperties({ control, symbol }: BarSize) {
 
 function scrollContainerSx(theme: Theme) {
   return {
+    position: "relative",
+    // Keeps the active part's fill behind the labels but above the bar.
+    isolation: "isolate",
     flexGrow: 1,
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
@@ -158,6 +163,29 @@ function scrollContainerSx(theme: Theme) {
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
     // Keep the focus ring inside the bar's clipped overflow.
     "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
+  };
+}
+
+function activePartFillSx(theme: Theme) {
+  const blockOutset = theme.spacing(0.25);
+  const inlineOutset = theme.spacing(PART_INLINE_PADDING);
+
+  return {
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      zIndex: -1,
+      positionAnchor: ACTIVE_PART_ANCHOR,
+      top: `calc(anchor(top) - ${blockOutset})`,
+      bottom: `calc(anchor(bottom) - ${blockOutset})`,
+      left: `calc(anchor(left) - ${inlineOutset})`,
+      right: `calc(anchor(right) - ${inlineOutset})`,
+      borderRadius: theme.vars.shape.borderRadiusFull,
+      bgcolor: "primary.main",
+      // Forced-colors mode drops the fill but paints a transparent outline.
+      outline: "2px solid transparent",
+      pointerEvents: "none",
+    },
   };
 }
 
@@ -186,12 +214,10 @@ function MessagePartItem({
       sx={(theme) => ({
         py: 0.5,
         px: PART_INLINE_PADDING,
-        borderRadius: theme.vars.shape.borderRadiusSm,
-        outline: isActive
-          ? `2px solid ${theme.vars.palette.primary.main}`
-          : "none",
-        // Clear of the bar's edges, which the word's box reaches.
-        outlineOffset: -4,
+        [`& .${typographyClasses.root}`]: {
+          anchorName: isActive ? ACTIVE_PART_ANCHOR : "none",
+          color: isActive ? theme.vars.palette.primary.contrastText : undefined,
+        },
         // Forced-colors mode repaints backgrounds, so draw the caret as a border.
         ...(caretPosition && {
           "&::after": {
