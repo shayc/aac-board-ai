@@ -479,8 +479,8 @@ describe("Tile", () => {
   });
 
   test.each([
-    { size: "a small tile", width: 96, height: 96, fontSize: "14px" },
-    { size: "a wide, short tile", width: 460, height: 120, fontSize: "14px" },
+    { size: "a small tile", width: 96, height: 96, fontSize: "16px" },
+    { size: "a wide, short tile", width: 460, height: 120, fontSize: "16px" },
     { size: "a mid-sized tile", width: 224, height: 174, fontSize: "18px" },
     { size: "a large tile", width: 460, height: 260, fontSize: "20px" },
   ])(
