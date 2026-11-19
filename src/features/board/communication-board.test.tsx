@@ -793,7 +793,7 @@ describe("CommunicationBoard", () => {
       });
     });
 
-    test("outlines each message part at its speech boundary", async () => {
+    test("highlights each message part at its speech boundary", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
@@ -803,16 +803,20 @@ describe("CommunicationBoard", () => {
 
       const utterance = lastUtterance(speech.speak);
       reachUtteranceBoundary(utterance, 0);
-      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
+      await expect
+        .poll(() => highlightedMessageParts(screen))
+        .toEqual(["hello"]);
 
       reachUtteranceBoundary(utterance, "hello world".indexOf("world"));
-      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["world"]);
+      await expect
+        .poll(() => highlightedMessageParts(screen))
+        .toEqual(["world"]);
 
       endUtterance(utterance);
-      await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
+      await expect.poll(() => highlightedMessageParts(screen)).toEqual([]);
     });
 
-    test("leaves multiple message parts unoutlined when speech sends no boundaries", async () => {
+    test("leaves multiple message parts unhighlighted when speech sends no boundaries", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
@@ -823,29 +827,31 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
-      expect(outlinedMessageParts(screen)).toEqual([]);
+      expect(highlightedMessageParts(screen)).toEqual([]);
 
       endUtterance(lastUtterance(speech.speak));
       await expect
         .element(screen.getByRole("button", { name: "Speak message" }))
         .toBeVisible();
-      expect(outlinedMessageParts(screen)).toEqual([]);
+      expect(highlightedMessageParts(screen)).toEqual([]);
     });
 
-    test("outlines a single message part when speech sends no boundaries", async () => {
+    test("highlights a single message part when speech sends no boundaries", async () => {
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
       await screen.getByRole("button", { name: "hello" }).click();
       preventSpeechEnd(speech.speak);
       await screen.getByRole("button", { name: "Speak message" }).click();
 
-      await expect.poll(() => outlinedMessageParts(screen)).toEqual(["hello"]);
+      await expect
+        .poll(() => highlightedMessageParts(screen))
+        .toEqual(["hello"]);
 
       endUtterance(lastUtterance(speech.speak));
-      await expect.poll(() => outlinedMessageParts(screen)).toEqual([]);
+      await expect.poll(() => highlightedMessageParts(screen)).toEqual([]);
     });
 
-    test("outlines no message part while playing when highlighting is off", async () => {
+    test("highlights no message part while playing when highlighting is off", async () => {
       setMessageHighlightingEnabled(false);
       const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
@@ -856,7 +862,7 @@ describe("CommunicationBoard", () => {
       await expect
         .element(screen.getByRole("button", { name: "Stop speaking" }))
         .toBeVisible();
-      expect(outlinedMessageParts(screen)).toEqual([]);
+      expect(highlightedMessageParts(screen)).toEqual([]);
     });
 
     test("ends the spelled word with an image-only Space tile", async () => {
@@ -1221,12 +1227,16 @@ function getMessageItems(
   return screen.getByRole("list", { name: "Message" }).getByRole("listitem");
 }
 
-function outlinedMessageParts(
+function highlightedMessageParts(
   screen: Awaited<ReturnType<typeof renderCommunicationBoard>>,
 ): (string | null)[] {
   return getMessageItems(screen)
     .elements()
-    .filter((part) => getComputedStyle(part).outlineStyle === "solid")
+    .filter((part) =>
+      Array.from(part.querySelectorAll("*")).some(
+        (element) => getComputedStyle(element).anchorName !== "none",
+      ),
+    )
     .map((part) => part.textContent);
 }
 
