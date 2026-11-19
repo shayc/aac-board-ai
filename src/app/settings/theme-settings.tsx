@@ -1,21 +1,21 @@
+import CheckIcon from "@material-symbols/svg-600/rounded/check.svg?react";
+import DarkModeIcon from "@material-symbols/svg-600/rounded/dark_mode.svg?react";
+import DesktopWindowsIcon from "@material-symbols/svg-600/rounded/desktop_windows.svg?react";
+import LightModeIcon from "@material-symbols/svg-600/rounded/light_mode.svg?react";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useColorScheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
-import CheckIcon from "@phosphor-icons/core/bold/check-bold.svg?react";
-import MonitorIcon from "@phosphor-icons/core/bold/monitor-bold.svg?react";
-import MoonIcon from "@phosphor-icons/core/bold/moon-bold.svg?react";
-import SunIcon from "@phosphor-icons/core/bold/sun-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { type MouseEvent, useId } from "react";
 
 const THEME_OPTIONS = [
-  { value: "system", message: m.themeSystem, icon: MonitorIcon },
-  { value: "light", message: m.themeLight, icon: SunIcon },
-  { value: "dark", message: m.themeDark, icon: MoonIcon },
+  { value: "system", message: m.themeSystem, icon: DesktopWindowsIcon },
+  { value: "light", message: m.themeLight, icon: LightModeIcon },
+  { value: "dark", message: m.themeDark, icon: DarkModeIcon },
 ] as const;
 
 // Side by side, icon and name overflow a phone's drawer in most languages.
@@ -65,9 +65,9 @@ export function ThemeSettings() {
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
             {mode === value ? (
-              <PhosphorIcon icon={CheckIcon} data-testid="theme-check" />
+              <Icon svg={CheckIcon} data-testid="theme-check" />
             ) : (
-              <PhosphorIcon icon={icon} />
+              <Icon svg={icon} />
             )}
             {t(message)}
           </ToggleButton>

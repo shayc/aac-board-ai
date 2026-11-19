@@ -1,11 +1,11 @@
+import DownloadIcon from "@material-symbols/svg-600/rounded/download.svg?react";
 import Backdrop from "@mui/material/Backdrop";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import FileArrowDownIcon from "@phosphor-icons/core/bold/file-arrow-down-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 
 interface BoardFileDropOverlayProps {
   open: boolean;
@@ -42,11 +42,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             borderRadius: theme.vars.shape.borderRadiusLg,
           })}
         >
-          <PhosphorIcon
-            icon={FileArrowDownIcon}
-            color="primary"
-            sx={{ fontSize: 56 }}
-          />
+          <Icon svg={DownloadIcon} color="primary" sx={{ fontSize: 56 }} />
           <Typography component="p" variant="h6">
             {t(m.libraryDropToImport)}
           </Typography>

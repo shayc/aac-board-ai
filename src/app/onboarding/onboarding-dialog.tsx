@@ -1,4 +1,8 @@
 import { areSuggestionsSupported } from "@features/board";
+import LockIcon from "@material-symbols/svg-600/rounded/lock.svg?react";
+import RecordVoiceOverIcon from "@material-symbols/svg-600/rounded/record_voice_over.svg?react";
+import StarShineIcon from "@material-symbols/svg-600/rounded/star_shine.svg?react";
+import TranslateIcon from "@material-symbols/svg-600/rounded/translate.svg?react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -15,13 +19,9 @@ import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
-import LockIcon from "@phosphor-icons/core/bold/lock-bold.svg?react";
-import SparkleIcon from "@phosphor-icons/core/bold/sparkle-bold.svg?react";
-import TranslateIcon from "@phosphor-icons/core/bold/translate-bold.svg?react";
-import UserSoundIcon from "@phosphor-icons/core/bold/user-sound-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { PhosphorIcon, type PhosphorSvg } from "@shared/ui/phosphor-icon";
+import { Icon, type IconSvg } from "@shared/ui/icon";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -31,7 +31,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  icon: PhosphorSvg;
+  icon: IconSvg;
   title: string;
   description: string;
 }
@@ -44,7 +44,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        icon: SparkleIcon,
+        icon: StarShineIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
@@ -60,7 +60,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      icon: UserSoundIcon,
+      icon: RecordVoiceOverIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
@@ -192,7 +192,7 @@ function HighlightItem({ icon, title, description }: HighlightItemProps) {
           fontSize: "36px",
         }}
       >
-        <PhosphorIcon icon={icon} color="primary" fontSize="inherit" />
+        <Icon svg={icon} color="primary" fontSize="inherit" />
       </ListItemIcon>
 
       <ListItemText

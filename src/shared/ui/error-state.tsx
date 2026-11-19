@@ -1,11 +1,11 @@
+import ErrorIcon from "@material-symbols/svg-600/rounded/error.svg?react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import WarningCircleIcon from "@phosphor-icons/core/bold/warning-circle-bold.svg?react";
 import type { ElementType, ReactNode } from "react";
-import { PhosphorIcon } from "./phosphor-icon";
+import { Icon } from "./icon";
 
-const defaultIcon = <PhosphorIcon icon={WarningCircleIcon} />;
+const defaultIcon = <Icon svg={ErrorIcon} />;
 
 interface ErrorStateProps {
   icon?: ReactNode;

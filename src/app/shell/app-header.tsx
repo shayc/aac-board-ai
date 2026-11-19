@@ -3,6 +3,8 @@ import {
   type boardSetLoader,
 } from "@app/routing/board-set/board-set-loader";
 import { BoardSelector } from "@features/board";
+import SettingsIcon from "@material-symbols/svg-600/rounded/settings.svg?react";
+import ViewSidebarIcon from "@material-symbols/svg-600/rounded/view_sidebar.svg?react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -10,13 +12,11 @@ import type { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import GearIcon from "@phosphor-icons/core/bold/gear-bold.svg?react";
-import SidebarSimpleIcon from "@phosphor-icons/core/bold/sidebar-simple-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForRTL } from "@shared/theme/rtl";
+import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { useRouteLoaderData } from "react-router";
 
 interface AppHeaderProps {
@@ -51,7 +51,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
             onClick={onOpenLibrary}
             sx={{ justifySelf: "start" }}
           >
-            <PhosphorIcon icon={SidebarSimpleIcon} sx={flipForRTL} />
+            <Icon svg={ViewSidebarIcon} sx={flipForLTR} />
           </IconButton>
         </Tooltip>
 
@@ -66,7 +66,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
             onClick={onOpenSettings}
             sx={{ justifySelf: "end" }}
           >
-            <PhosphorIcon icon={GearIcon} />
+            <Icon svg={SettingsIcon} />
           </IconButton>
         </Tooltip>
       </Toolbar>

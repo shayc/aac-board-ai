@@ -1,15 +1,15 @@
+import BackspaceIcon from "@material-symbols/svg-600/rounded/backspace.svg?react";
 import CircularProgress, {
   circularProgressClasses,
 } from "@mui/material/CircularProgress";
 import IconButton, { iconButtonClasses } from "@mui/material/IconButton";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
-import BackspaceIcon from "@phosphor-icons/core/bold/backspace-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -75,7 +75,7 @@ export function BackspaceButton({
         aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
         sx={(theme) => backspaceSx(theme, size)}
       >
-        <PhosphorIcon icon={BackspaceIcon} fontSize="inherit" sx={flipForRTL} />
+        <Icon svg={BackspaceIcon} fontSize="inherit" sx={flipForRTL} />
 
         <CircularProgress
           aria-hidden

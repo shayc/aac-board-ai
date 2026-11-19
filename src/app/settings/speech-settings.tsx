@@ -1,10 +1,10 @@
+import PlayArrowIcon from "@material-symbols/svg-600/rounded/play_arrow-fill.svg?react";
 import IconButton from "@mui/material/IconButton";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import PlayIcon from "@phosphor-icons/core/fill/play-fill.svg?react";
 import {
   useCommunicationLanguage,
   useUILocale,
@@ -23,7 +23,7 @@ import {
   useSpeechVoice,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { SettingsSelect } from "@shared/ui/settings-select";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 
@@ -131,7 +131,7 @@ function VoiceSelect() {
             aria-label={t(m.speechPreviewVoice)}
             onClick={handlePreviewVoice}
           >
-            <PhosphorIcon icon={PlayIcon} />
+            <Icon svg={PlayArrowIcon} />
           </IconButton>
         </Tooltip>
       }

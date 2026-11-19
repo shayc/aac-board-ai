@@ -1,9 +1,9 @@
+import StarShineIcon from "@material-symbols/svg-600/rounded/star_shine-fill.svg?react";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import SparkleIcon from "@phosphor-icons/core/fill/sparkle-fill.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
@@ -26,7 +26,7 @@ export function SuggestionStatusNotice({
     case "not-enabled":
       return (
         <Chip
-          icon={<PhosphorIcon icon={SparkleIcon} />}
+          icon={<Icon svg={StarShineIcon} />}
           label={t(m.suggestionsEnable)}
           color="primary"
           variant="outlined"

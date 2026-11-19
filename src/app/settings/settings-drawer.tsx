@@ -10,12 +10,12 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import GithubLogoIcon from "@phosphor-icons/core/fill/github-logo-fill.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { type ReactNode, useId } from "react";
 import { version } from "../../../package.json";
+import GitHubIcon from "./github-mark.svg?react";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
 import { ThemeSettings } from "./theme-settings";
@@ -72,8 +72,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               variant="body2"
               sx={{ alignSelf: "flex-start" }}
             >
-              <PhosphorIcon
-                icon={GithubLogoIcon}
+              <Icon
+                svg={GitHubIcon}
                 fontSize="small"
                 sx={{ mr: 1, verticalAlign: "text-bottom" }}
               />

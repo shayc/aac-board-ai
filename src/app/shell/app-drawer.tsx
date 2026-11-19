@@ -1,15 +1,15 @@
+import CloseIcon from "@material-symbols/svg-600/rounded/close.svg?react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import XIcon from "@phosphor-icons/core/bold/x-bold.svg?react";
 import { useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { ErrorState } from "@shared/ui/error-state";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { type ReactNode, useState } from "react";
 
 const DRAWER_BASE_WIDTH = "320px";
@@ -121,7 +121,7 @@ function AppDrawerContent({
             edge="end"
             onClick={onClose}
           >
-            <PhosphorIcon icon={XIcon} />
+            <Icon svg={CloseIcon} />
           </IconButton>
         </Tooltip>
       </Toolbar>

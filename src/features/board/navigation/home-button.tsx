@@ -1,7 +1,7 @@
+import HomeIcon from "@material-symbols/svg-600/rounded/home.svg?react";
 import { m } from "@paraglide/messages.js";
-import HouseIcon from "@phosphor-icons/core/bold/house-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import {
   BoardControlButton,
   type BoardControlShape,
@@ -23,7 +23,7 @@ export function HomeButton({ disabled, shape, onClick }: HomeButtonProps) {
       shape={shape}
       onClick={onClick}
     >
-      <PhosphorIcon icon={HouseIcon} />
+      <Icon svg={HomeIcon} />
     </BoardControlButton>
   );
 }

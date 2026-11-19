@@ -1,11 +1,11 @@
+import DownloadingIcon from "@material-symbols/svg-600/rounded/downloading.svg?react";
+import TranslateIcon from "@material-symbols/svg-600/rounded/translate.svg?react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import ArrowCircleDownIcon from "@phosphor-icons/core/bold/arrow-circle-down-bold.svg?react";
-import TranslateIcon from "@phosphor-icons/core/bold/translate-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
 import { useIsTranslatingBoards } from "./board-translation-coordinator";
@@ -19,7 +19,7 @@ export function BoardTranslationNotice() {
   if (progress !== null) {
     return (
       <TranslationStatusAlert
-        icon={<PhosphorIcon icon={ArrowCircleDownIcon} fontSize="inherit" />}
+        icon={<Icon svg={DownloadingIcon} fontSize="inherit" />}
         title={t(m.languageDownloading)}
         description={t(m.modelDownloadProgress, {
           progress: Math.round(progress * 100),
@@ -31,7 +31,7 @@ export function BoardTranslationNotice() {
   if (isTranslating) {
     return (
       <TranslationStatusAlert
-        icon={<PhosphorIcon icon={TranslateIcon} fontSize="inherit" />}
+        icon={<Icon svg={TranslateIcon} fontSize="inherit" />}
         title={t(m.languageTranslating)}
       />
     );

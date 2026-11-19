@@ -1,14 +1,14 @@
+import DeleteIcon from "@material-symbols/svg-600/rounded/delete.svg?react";
+import DownloadIcon from "@material-symbols/svg-600/rounded/download.svg?react";
+import InfoIcon from "@material-symbols/svg-600/rounded/info.svg?react";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { m } from "@paraglide/messages.js";
-import DownloadSimpleIcon from "@phosphor-icons/core/bold/download-simple-bold.svg?react";
-import InfoIcon from "@phosphor-icons/core/bold/info-bold.svg?react";
-import TrashIcon from "@phosphor-icons/core/bold/trash-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 
 interface BoardSetMenuProps {
   id: string;
@@ -38,14 +38,14 @@ export function BoardSetMenu({
     >
       <MenuItem onClick={onShowInfo}>
         <ListItemIcon>
-          <PhosphorIcon icon={InfoIcon} fontSize="small" />
+          <Icon svg={InfoIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryInfo)}</ListItemText>
       </MenuItem>
 
       <MenuItem onClick={onExport}>
         <ListItemIcon>
-          <PhosphorIcon icon={DownloadSimpleIcon} fontSize="small" />
+          <Icon svg={DownloadIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryExport)}</ListItemText>
       </MenuItem>
@@ -54,7 +54,7 @@ export function BoardSetMenu({
 
       <MenuItem onClick={onRequestDelete} sx={{ color: "error.main" }}>
         <ListItemIcon sx={{ color: "inherit" }}>
-          <PhosphorIcon icon={TrashIcon} fontSize="small" />
+          <Icon svg={DeleteIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryDelete)}</ListItemText>
       </MenuItem>

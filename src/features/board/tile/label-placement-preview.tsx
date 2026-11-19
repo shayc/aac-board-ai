@@ -1,7 +1,7 @@
+import ImageIcon from "@material-symbols/svg-600/rounded/image.svg?react";
 import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
-import ImageIcon from "@phosphor-icons/core/bold/image-bold.svg?react";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import type { TileLabelPlacement } from "./tile-preferences-store";
 
 interface LabelPlacementPreviewProps {
@@ -54,8 +54,8 @@ export function LabelPlacementPreview({
           textAlign: "center",
         }}
       >
-        <PhosphorIcon
-          icon={ImageIcon}
+        <Icon
+          svg={ImageIcon}
           sx={{
             alignSelf: "center",
             flexShrink: 0,

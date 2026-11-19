@@ -1,3 +1,4 @@
+import MoreVertIcon from "@material-symbols/svg-600/rounded/more_vert.svg?react";
 import IconButton from "@mui/material/IconButton";
 import ListItem, { listItemClasses } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -5,10 +6,9 @@ import ListItemText from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import DotsThreeVerticalIcon from "@phosphor-icons/core/bold/dots-three-vertical-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { Icon } from "@shared/ui/icon";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 
@@ -54,7 +54,7 @@ export function BoardSetListItem({
             onClick={(event) => onMenuOpen(event.currentTarget)}
             sx={{ border: "none" }}
           >
-            <PhosphorIcon icon={DotsThreeVerticalIcon} />
+            <Icon svg={MoreVertIcon} />
           </IconButton>
         </Tooltip>
       }
