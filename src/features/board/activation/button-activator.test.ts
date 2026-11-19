@@ -21,7 +21,7 @@ const SPELL_A: BoardButton = {
   actions: [{ kind: "spell", text: "a" }],
 };
 
-function tilePart(label: string): MessageEdit {
+function tileEdit(label: string): MessageEdit {
   return { kind: "tile", part: createTilePart({ label, language: "en" }) };
 }
 
@@ -309,7 +309,7 @@ describe("createButtonActivator", () => {
 
   test("keeps the message played when an edit after play changes nothing", async () => {
     const { activateButton, readLabels, holdMessagePlayback } = await setup([
-      tilePart("hi"),
+      tileEdit("hi"),
     ]);
     const settlePlayback = holdMessagePlayback();
 
@@ -376,7 +376,7 @@ describe("createButtonActivator", () => {
 
   test("counts the message as played for a space that changes nothing, followed by play", async () => {
     const { activateButton, playback, readLabels, playbackSettled } =
-      await setup([tilePart("hello")]);
+      await setup([tileEdit("hello")]);
 
     activateButton({
       id: "btn",
@@ -391,7 +391,7 @@ describe("createButtonActivator", () => {
   });
 
   describe("after the message has played", () => {
-    const PLAYED_PARTS = [tilePart("hello"), tilePart("world")];
+    const PLAYED_EDITS = [tileEdit("hello"), tileEdit("world")];
 
     test.each<{ description: string; button: BoardButton; labels: string[] }>([
       {
@@ -414,7 +414,7 @@ describe("createButtonActivator", () => {
         labels: ["a"],
       },
     ])("starts a new message with $description", async ({ button, labels }) => {
-      const { activateButton, readLabels } = await setup(PLAYED_PARTS, {
+      const { activateButton, readLabels } = await setup(PLAYED_EDITS, {
         hasPlayed: true,
       });
 
@@ -424,7 +424,7 @@ describe("createButtonActivator", () => {
     });
 
     test("edits the played message with backspace", async () => {
-      const { activateButton, readLabels } = await setup(PLAYED_PARTS, {
+      const { activateButton, readLabels } = await setup(PLAYED_EDITS, {
         hasPlayed: true,
       });
 
@@ -438,7 +438,7 @@ describe("createButtonActivator", () => {
     });
 
     test("leaves the played message as it is for a space", async () => {
-      const { activateButton, readLabels } = await setup(PLAYED_PARTS, {
+      const { activateButton, readLabels } = await setup(PLAYED_EDITS, {
         hasPlayed: true,
       });
 
@@ -450,7 +450,7 @@ describe("createButtonActivator", () => {
 
     test("speaks the message again for a space followed by play", async () => {
       const { activateButton, playback, readParts } = await setup(
-        PLAYED_PARTS,
+        PLAYED_EDITS,
         { hasPlayed: true },
       );
       const parts = await readParts();
@@ -468,7 +468,7 @@ describe("createButtonActivator", () => {
     // played message each time it is edited, which must not count as a change.
     test("replays a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
-      const { activateButton, playback } = await setup(PLAYED_PARTS, {
+      const { activateButton, playback } = await setup(PLAYED_EDITS, {
         hasPlayed: true,
       });
 
