@@ -29,9 +29,8 @@ export const TILE_SATURATION: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-// 70% is the lowest level at which symbols and labels were visually checked.
 export const TILE_BRIGHTNESS: ClampedNumberOptions = {
-  min: 0.7,
+  min: 0.5,
   max: 1,
   defaultValue: 1,
 };
