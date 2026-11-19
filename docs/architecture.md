@@ -370,7 +370,8 @@ full.
   whole. A text part is a word that was spelled or taken from a suggestion, and
   backspace removes one character at a time. Spelling extends the last text part
   until a space or another tile closes the word; the first backspace on a closed
-  word reopens it. The message bar marks the open word with a caret.
+  word reopens it. During spelling, the message bar shows a caret at the end of
+  an open word or after the space that follows a closed word.
 - **Message draft** — the message being composed, saved on the device on every
   change so it survives a reload or an app restart. The board opens with it.
 - **Page margin** — the space between the screen's edges and the board's

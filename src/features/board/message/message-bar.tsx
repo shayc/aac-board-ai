@@ -21,6 +21,7 @@ const BAR_SIZES = {
 const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word's ring.
 const MESSAGE_PADDING = 3;
+const PART_INLINE_PADDING = 1;
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -56,7 +57,7 @@ export function MessageBar({
 
   useLayoutEffect(() => {
     scrollPartIntoView(scrollContainerRef.current?.lastElementChild, "end");
-  }, [parts]);
+  }, [parts, isWordOpen]);
 
   // Declared after the newest-part scroll so it wins when an edit starts
   // playback in the same render, as a spelling tile's echo does.
@@ -66,7 +67,9 @@ export function MessageBar({
     }
   }, [activePartId]);
 
-  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
+  const lastPart = parts.at(-1);
+  const caretPartId = lastPart?.kind === "text" ? lastPart.id : undefined;
+  const caretPosition = isWordOpen ? "word-end" : "next-word";
 
   return (
     <Stack
@@ -92,7 +95,7 @@ export function MessageBar({
             language={part.language}
             imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
             isActive={part.id === activePartId}
-            isOpen={part.id === openPartId}
+            caretPosition={part.id === caretPartId ? caretPosition : undefined}
             isImageVisible={areImagesVisible}
           />
         ))}
@@ -163,7 +166,7 @@ interface MessagePartItemProps {
   language: string | undefined;
   imageSrc?: string;
   isActive: boolean;
-  isOpen: boolean;
+  caretPosition: "word-end" | "next-word" | undefined;
   isImageVisible: boolean;
 }
 
@@ -172,7 +175,7 @@ function MessagePartItem({
   language,
   imageSrc,
   isActive,
-  isOpen,
+  caretPosition,
   isImageVisible,
 }: MessagePartItemProps) {
   return (
@@ -182,22 +185,23 @@ function MessagePartItem({
       direction="row"
       sx={(theme) => ({
         py: 0.5,
-        px: 1,
+        px: PART_INLINE_PADDING,
         borderRadius: theme.vars.shape.borderRadiusSm,
         outline: isActive
           ? `2px solid ${theme.vars.palette.primary.main}`
           : "none",
         // Clear of the bar's edges, which the word's box reaches.
         outlineOffset: -4,
-        // A caret marks the open word, so closing or reopening it shows. A
-        // border, because forced-colors mode repaints backgrounds.
-        ...(isOpen && {
+        // Forced-colors mode repaints backgrounds, so draw the caret as a border.
+        ...(caretPosition && {
           "&::after": {
             content: '""',
             alignSelf: "center",
             // As tall as the line of the word it follows.
             height: "1.2em",
-            marginInlineStart: theme.spacing(0.5),
+            marginInlineStart: theme.spacing(
+              caretPosition === "next-word" ? PART_INLINE_PADDING * 2 : 0.5,
+            ),
             fontSize: theme.typography.h5.fontSize,
             borderInlineStart: "2px solid currentColor",
           },

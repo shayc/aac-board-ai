@@ -173,28 +173,48 @@ describe("MessageBar", () => {
     expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
   });
 
-  test.each([
-    { isWordOpen: true, caret: '""' },
-    { isWordOpen: false, caret: "none" },
-  ])(
-    "marks the last word with a caret only while it is open (open: $isWordOpen)",
-    async ({ isWordOpen, caret }) => {
-      const parts: MessagePart[] = [
-        { kind: "text", id: "a", label: "I", language: "en" },
-        { kind: "text", id: "b", label: "want", language: "en" },
-      ];
+  test("moves the caret past the space when the last text word closes", async () => {
+    const parts: MessagePart[] = [
+      { kind: "text", id: "a", label: "I", language: "en" },
+      { kind: "text", id: "b", label: "want", language: "en" },
+    ];
+    const props = createProps({ parts });
+    const screen = await renderWithProviders(
+      <MessageBar {...props} isWordOpen />,
+    );
+    const items = screen.getByRole("listitem");
+    const openCaret = getComputedStyle(items.last().element(), "::after");
 
-      const screen = await renderWithProviders(
-        <MessageBar {...createProps({ parts, isWordOpen })} />,
-      );
-      const items = screen.getByRole("listitem").elements();
-      const carets = items.map(
-        (item) => getComputedStyle(item, "::after").content,
-      );
+    expect(openCaret.content).toBe('""');
+    const wordEndGap = Number.parseFloat(openCaret.marginInlineStart);
 
-      expect(carets).toEqual(["none", caret]);
-    },
-  );
+    await screen.rerender(<MessageBar {...props} />);
+
+    const closedCaret = getComputedStyle(items.last().element(), "::after");
+    expect(closedCaret.content).toBe('""');
+    expect(Number.parseFloat(closedCaret.marginInlineStart)).toBeGreaterThan(
+      wordEndGap,
+    );
+    expect(getComputedStyle(items.first().element(), "::after").content).toBe(
+      "none",
+    );
+  });
+
+  test("shows no spelling caret when the last part is a tile", async () => {
+    const parts: MessagePart[] = [
+      { kind: "text", id: "a", label: "I", language: "en" },
+      { kind: "tile", id: "b", label: "want", language: "en" },
+    ];
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts })} />,
+    );
+
+    const carets = screen
+      .getByRole("listitem")
+      .elements()
+      .map((item) => getComputedStyle(item, "::after").content);
+    expect(carets).toEqual(["none", "none"]);
+  });
 
   test("exposes the message as a named list of its parts", async () => {
     const parts: MessagePart[] = [
