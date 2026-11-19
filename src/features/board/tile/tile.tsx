@@ -1,4 +1,4 @@
-import type { BoardButton } from "@features/library";
+import type { BoardAction, BoardButton } from "@features/library";
 import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
@@ -24,10 +24,7 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
   const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
-  const actionName = getActionName(button, t);
-  const ariaLabel = button.label
-    ? undefined
-    : (actionName ?? button.vocalization);
+  const nameProps = getTileNameProps(button, language, t);
   const isFolder = Boolean(button.linkedBoardId);
   const colorStyle = tileColorStyle({
     backgroundColor: button.backgroundColor,
@@ -42,10 +39,8 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
 
   return (
     <Button
-      aria-label={ariaLabel}
+      {...nameProps}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
-      // A generated name inherits the document's UI language.
-      lang={actionName === undefined ? language : undefined}
       tabIndex={tabIndex}
       style={colorStyle}
       onClick={() => onActivate(button)}
@@ -61,12 +56,33 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
   );
 }
 
-function getActionName(button: BoardButton, t: Translate): string | undefined {
-  if (button.label || button.vocalization || button.linkedBoardId) {
-    return undefined;
+function getTileNameProps(
+  button: BoardButton,
+  language: string | undefined,
+  t: Translate,
+) {
+  if (button.label) {
+    return { lang: language };
   }
 
-  const supportedActions = button.actions.filter(
+  if (button.vocalization || button.linkedBoardId) {
+    return { "aria-label": button.vocalization, lang: language };
+  }
+
+  const actionName = getActionName(button.actions, t);
+  if (actionName === undefined) {
+    return { lang: language };
+  }
+
+  // A generated name inherits the document's UI language.
+  return { "aria-label": actionName };
+}
+
+function getActionName(
+  actions: readonly BoardAction[],
+  t: Translate,
+): string | undefined {
+  const supportedActions = actions.filter(
     (action) => action.kind !== "unsupported",
   );
   const [action] = supportedActions;
