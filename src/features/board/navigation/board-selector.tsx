@@ -192,6 +192,8 @@ function BoardSearch({
             },
           }}
           sx={{
+            // Spans the popover inside its margin, where inline-flex would
+            // shrink to the placeholder and full width would overflow.
             display: "flex",
             m: 1,
             // Lines the search icon up with the option labels below.

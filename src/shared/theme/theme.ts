@@ -409,6 +409,8 @@ const themeOptions = {
         root: ({ theme }) => ({
           marginInline: 4,
           borderRadius: theme.vars.shape.borderRadiusSm,
+          // MUI drops the 48px row from the sm breakpoint up, tablets included.
+          "@media (pointer: coarse)": { minHeight: 48 },
         }),
       },
     },
@@ -426,13 +428,16 @@ const themeOptions = {
           borderRadius: theme.vars.shape.borderRadiusSm,
         }),
         listbox: ({ theme }) => ({
-          // MUI drops the 48px row from the sm breakpoint up, tablets included.
+          // Touch-sized rows, as for MuiMenuItem.
           "@media (pointer: coarse)": {
             [`& .${autocompleteClasses.option}`]: { minHeight: 48 },
           },
-          // MUI turns a highlighted selected option grey on touch screens,
-          // where it would look like any other highlighted option.
+          // Undoes MUI's highlight reset, which shares this query.
           "@media (hover: none)": {
+            // The match that Enter picks after typing must stay visible.
+            [`& .${autocompleteClasses.option}.${autocompleteClasses.focused}`]:
+              { backgroundColor: theme.vars.palette.action.hover },
+            // The selected option stays tinted, where MUI would turn it grey.
             [`& .${autocompleteClasses.option}[aria-selected="true"].${autocompleteClasses.focused}`]:
               {
                 backgroundColor: theme.alpha(
