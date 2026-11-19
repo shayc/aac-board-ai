@@ -4,7 +4,7 @@ import CircularProgress, {
 import IconButton, { iconButtonClasses } from "@mui/material/IconButton";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
-import { BackspaceIcon } from "@phosphor-icons/react/dist/csr/Backspace";
+import BackspaceIcon from "@phosphor-icons/core/bold/backspace-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { shortLandscape } from "@shared/theme/short-landscape";

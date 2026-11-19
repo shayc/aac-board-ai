@@ -10,7 +10,7 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { GithubLogoIcon } from "@phosphor-icons/react/dist/csr/GithubLogo";
+import GithubLogoIcon from "@phosphor-icons/core/fill/github-logo-fill.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
@@ -74,7 +74,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             >
               <PhosphorIcon
                 icon={GithubLogoIcon}
-                weight="fill"
                 fontSize="small"
                 sx={{ mr: 1, verticalAlign: "text-bottom" }}
               />

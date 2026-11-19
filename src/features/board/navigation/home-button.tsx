@@ -1,5 +1,5 @@
 import { m } from "@paraglide/messages.js";
-import { HouseIcon } from "@phosphor-icons/react/dist/csr/House";
+import HouseIcon from "@phosphor-icons/core/bold/house-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import {

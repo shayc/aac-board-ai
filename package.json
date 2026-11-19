@@ -27,7 +27,7 @@
     "@mui/material": "^9.5.0",
     "@mui/stylis-plugin-rtl": "^9.5.0",
     "@mui/utils": "^9.5.0",
-    "@phosphor-icons/react": "^2.1.10",
+    "@phosphor-icons/core": "^2.1.1",
     "@shayc/open-board-format": "^2.0.0",
     "@shayc/react-built-in-ai": "^0.12.1",
     "idb": "^8.0.4",
@@ -60,6 +60,7 @@
     "oxlint-tsgolint": "^7.0.2007",
     "typescript": "^7.0.2",
     "vite": "^8.3.8",
+    "vite-plugin-svgr": "^5.2.0",
     "vitest": "^5.1.1",
     "vitest-browser-react": "^2.3.0"
   },

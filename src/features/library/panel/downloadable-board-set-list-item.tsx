@@ -7,8 +7,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import { DownloadSimpleIcon } from "@phosphor-icons/react/dist/csr/DownloadSimple";
-import { StopIcon } from "@phosphor-icons/react/dist/csr/Stop";
+import DownloadSimpleIcon from "@phosphor-icons/core/bold/download-simple-bold.svg?react";
+import StopIcon from "@phosphor-icons/core/fill/stop-fill.svg?react";
 import { useUILocale } from "@shared/language/language-store";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
@@ -135,7 +135,6 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
       {!isImporting && (
         <PhosphorIcon
           icon={StopIcon}
-          weight="fill"
           sx={{ position: "absolute", inset: 0, margin: "auto", fontSize: 14 }}
         />
       )}

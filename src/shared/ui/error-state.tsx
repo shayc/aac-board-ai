@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { WarningCircleIcon } from "@phosphor-icons/react/dist/csr/WarningCircle";
+import WarningCircleIcon from "@phosphor-icons/core/bold/warning-circle-bold.svg?react";
 import type { ElementType, ReactNode } from "react";
 import { PhosphorIcon } from "./phosphor-icon";
 

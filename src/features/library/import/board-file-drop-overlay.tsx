@@ -3,7 +3,7 @@ import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { FileArrowDownIcon } from "@phosphor-icons/react/dist/csr/FileArrowDown";
+import FileArrowDownIcon from "@phosphor-icons/core/bold/file-arrow-down-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 

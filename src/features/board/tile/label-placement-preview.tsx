@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
-import { ImageIcon } from "@phosphor-icons/react/dist/csr/Image";
+import ImageIcon from "@phosphor-icons/core/bold/image-bold.svg?react";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import type { TileLabelPlacement } from "./tile-preferences-store";
 

@@ -2,8 +2,8 @@ import { buttonClasses } from "@mui/material/Button";
 import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
-import { PlayIcon } from "@phosphor-icons/react/dist/csr/Play";
-import { StopIcon } from "@phosphor-icons/react/dist/csr/Stop";
+import PlayIcon from "@phosphor-icons/core/fill/play-fill.svg?react";
+import StopIcon from "@phosphor-icons/core/fill/stop-fill.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
@@ -57,7 +57,7 @@ export function PlayButton({
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
           })}
         >
-          <PhosphorIcon icon={icon} weight="fill" />
+          <PhosphorIcon icon={icon} />
         </BoardControlButton>
       </ShortcutTooltip>
     );
@@ -82,11 +82,7 @@ export function PlayButton({
           },
         })}
       >
-        <PhosphorIcon
-          icon={icon}
-          weight="fill"
-          sx={{ fontSize: PLAY_ICON_SIZE }}
-        />
+        <PhosphorIcon icon={icon} sx={{ fontSize: PLAY_ICON_SIZE }} />
       </Fab>
     </ShortcutTooltip>
   );

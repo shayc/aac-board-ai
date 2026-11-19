@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { XIcon } from "@phosphor-icons/react/dist/csr/X";
+import XIcon from "@phosphor-icons/core/bold/x-bold.svg?react";
 import { useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";

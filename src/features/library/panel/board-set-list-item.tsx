@@ -5,7 +5,7 @@ import ListItemText from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import { DotsThreeVerticalIcon } from "@phosphor-icons/react/dist/csr/DotsThreeVertical";
+import DotsThreeVerticalIcon from "@phosphor-icons/core/bold/dots-three-vertical-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";

@@ -4,10 +4,10 @@ import { useColorScheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
-import { CheckIcon } from "@phosphor-icons/react/dist/csr/Check";
-import { MonitorIcon } from "@phosphor-icons/react/dist/csr/Monitor";
-import { MoonIcon } from "@phosphor-icons/react/dist/csr/Moon";
-import { SunIcon } from "@phosphor-icons/react/dist/csr/Sun";
+import CheckIcon from "@phosphor-icons/core/bold/check-bold.svg?react";
+import MonitorIcon from "@phosphor-icons/core/bold/monitor-bold.svg?react";
+import MoonIcon from "@phosphor-icons/core/bold/moon-bold.svg?react";
+import SunIcon from "@phosphor-icons/core/bold/sun-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { type MouseEvent, useId } from "react";
@@ -64,7 +64,11 @@ export function ThemeSettings() {
         {THEME_OPTIONS.map(({ value, message, icon }) => (
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
-            <PhosphorIcon icon={mode === value ? CheckIcon : icon} />
+            {mode === value ? (
+              <PhosphorIcon icon={CheckIcon} data-testid="theme-check" />
+            ) : (
+              <PhosphorIcon icon={icon} />
+            )}
             {t(message)}
           </ToggleButton>
         ))}

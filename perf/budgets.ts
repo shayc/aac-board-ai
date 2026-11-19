@@ -29,7 +29,7 @@ export const BUDGETS: Budget[] = [
     unit: "ms",
     limit: 1000,
   },
-  { name: "jsShipped", label: "JS shipped (gzip)", unit: "kB", limit: 430 },
+  { name: "jsShipped", label: "JS shipped (gzip)", unit: "kB", limit: 420 },
   {
     name: "importBoardSet",
     label: "import Quick Core 60",

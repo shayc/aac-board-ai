@@ -15,14 +15,13 @@ import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
-import { LockIcon } from "@phosphor-icons/react/dist/csr/Lock";
-import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
-import { TranslateIcon } from "@phosphor-icons/react/dist/csr/Translate";
-import { UserSoundIcon } from "@phosphor-icons/react/dist/csr/UserSound";
-import type { Icon } from "@phosphor-icons/react/lib";
+import LockIcon from "@phosphor-icons/core/bold/lock-bold.svg?react";
+import SparkleIcon from "@phosphor-icons/core/bold/sparkle-bold.svg?react";
+import TranslateIcon from "@phosphor-icons/core/bold/translate-bold.svg?react";
+import UserSoundIcon from "@phosphor-icons/core/bold/user-sound-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { PhosphorIcon } from "@shared/ui/phosphor-icon";
+import { PhosphorIcon, type PhosphorSvg } from "@shared/ui/phosphor-icon";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -32,7 +31,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  icon: Icon;
+  icon: PhosphorSvg;
   title: string;
   description: string;
 }

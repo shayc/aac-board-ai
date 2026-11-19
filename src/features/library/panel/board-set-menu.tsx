@@ -4,9 +4,9 @@ import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { m } from "@paraglide/messages.js";
-import { DownloadSimpleIcon } from "@phosphor-icons/react/dist/csr/DownloadSimple";
-import { InfoIcon } from "@phosphor-icons/react/dist/csr/Info";
-import { TrashIcon } from "@phosphor-icons/react/dist/csr/Trash";
+import DownloadSimpleIcon from "@phosphor-icons/core/bold/download-simple-bold.svg?react";
+import InfoIcon from "@phosphor-icons/core/bold/info-bold.svg?react";
+import TrashIcon from "@phosphor-icons/core/bold/trash-bold.svg?react";
 import { useTranslate } from "@shared/language/use-translate";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 

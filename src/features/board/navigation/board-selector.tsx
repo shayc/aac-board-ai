@@ -8,8 +8,8 @@ import type { PopperProps } from "@mui/material/Popper";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import { CaretDownIcon } from "@phosphor-icons/react/dist/csr/CaretDown";
-import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/csr/MagnifyingGlass";
+import MagnifyingGlassIcon from "@phosphor-icons/core/bold/magnifying-glass-bold.svg?react";
+import CaretDownIcon from "@phosphor-icons/core/fill/caret-down-fill.svg?react";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { PhosphorIcon } from "@shared/ui/phosphor-icon";
@@ -52,9 +52,7 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           color="inherit"
-          endIcon={
-            <PhosphorIcon icon={CaretDownIcon} weight="fill" color="action" />
-          }
+          endIcon={<PhosphorIcon icon={CaretDownIcon} color="action" />}
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",

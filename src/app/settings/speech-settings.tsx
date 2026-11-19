@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import { PlayIcon } from "@phosphor-icons/react/dist/csr/Play";
+import PlayIcon from "@phosphor-icons/core/fill/play-fill.svg?react";
 import {
   useCommunicationLanguage,
   useUILocale,
@@ -131,7 +131,7 @@ function VoiceSelect() {
             aria-label={t(m.speechPreviewVoice)}
             onClick={handlePreviewVoice}
           >
-            <PhosphorIcon icon={PlayIcon} weight="fill" />
+            <PhosphorIcon icon={PlayIcon} />
           </IconButton>
         </Tooltip>
       }
