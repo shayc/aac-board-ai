@@ -290,6 +290,11 @@ instead of checking translation progress themselves.
 Reusable field controls live in `shared/ui/` so features do not depend on the
 app layer.
 
+Icons are Material Symbols Rounded at weight 600. Import each one as
+`@material-symbols/svg-600/rounded/<name>.svg?react` and render it through
+[`MaterialIcon`](../src/shared/ui/material-icon.tsx), which gives it MUI's
+sizes and colors.
+
 Closing or unmounting settings does not delete preferences. Removing a feature
 requires an explicit decision about retaining or deleting its persisted
 preferences.

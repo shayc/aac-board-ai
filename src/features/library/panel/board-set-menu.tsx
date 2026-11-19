@@ -1,5 +1,5 @@
 import DeleteIcon from "@material-symbols/svg-600/rounded/delete.svg?react";
-import DownloadIcon from "@material-symbols/svg-600/rounded/download.svg?react";
+import FileExportIcon from "@material-symbols/svg-600/rounded/file_export.svg?react";
 import InfoIcon from "@material-symbols/svg-600/rounded/info.svg?react";
 import Divider from "@mui/material/Divider";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -45,7 +45,7 @@ export function BoardSetMenu({
 
       <MenuItem onClick={onExport}>
         <ListItemIcon>
-          <MaterialIcon svg={DownloadIcon} fontSize="small" />
+          <MaterialIcon svg={FileExportIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryExport)}</ListItemText>
       </MenuItem>
