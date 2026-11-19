@@ -9,7 +9,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -75,7 +75,7 @@ export function BackspaceButton({
         aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
         sx={(theme) => backspaceSx(theme, size)}
       >
-        <Icon svg={BackspaceIcon} fontSize="inherit" sx={flipForRTL} />
+        <MaterialIcon svg={BackspaceIcon} fontSize="inherit" sx={flipForRTL} />
 
         <CircularProgress
           aria-hidden

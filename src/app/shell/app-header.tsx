@@ -16,7 +16,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { useRouteLoaderData } from "react-router";
 
 interface AppHeaderProps {
@@ -51,7 +51,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
             onClick={onOpenLibrary}
             sx={{ justifySelf: "start" }}
           >
-            <Icon svg={ViewSidebarIcon} sx={flipForLTR} />
+            <MaterialIcon svg={ViewSidebarIcon} sx={flipForLTR} />
           </IconButton>
         </Tooltip>
 
@@ -66,7 +66,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
             onClick={onOpenSettings}
             sx={{ justifySelf: "end" }}
           >
-            <Icon svg={SettingsIcon} />
+            <MaterialIcon svg={SettingsIcon} />
           </IconButton>
         </Tooltip>
       </Toolbar>

@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
@@ -26,7 +26,7 @@ export function SuggestionStatusNotice({
     case "not-enabled":
       return (
         <Chip
-          icon={<Icon svg={StarShineIcon} />}
+          icon={<MaterialIcon svg={StarShineIcon} />}
           label={t(m.suggestionsEnable)}
           color="primary"
           variant="outlined"

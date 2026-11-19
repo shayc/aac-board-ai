@@ -10,8 +10,8 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
-import { Icon } from "@shared/ui/icon";
 import { LoadingState } from "@shared/ui/loading-state";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useActiveBoardSetId } from "../board-paths";
@@ -101,7 +101,7 @@ export function BoardSetLibrary() {
         <ListItem disablePadding>
           <ListItemButton onClick={() => void pickAndImport()}>
             <ListItemIcon>
-              <Icon svg={LibraryAddIcon} />
+              <MaterialIcon svg={LibraryAddIcon} />
             </ListItemIcon>
             <ListItemText primary={t(m.libraryImportBoardFiles)} />
           </ListItemButton>

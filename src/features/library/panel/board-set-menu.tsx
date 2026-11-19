@@ -8,7 +8,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 
 interface BoardSetMenuProps {
   id: string;
@@ -38,14 +38,14 @@ export function BoardSetMenu({
     >
       <MenuItem onClick={onShowInfo}>
         <ListItemIcon>
-          <Icon svg={InfoIcon} fontSize="small" />
+          <MaterialIcon svg={InfoIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryInfo)}</ListItemText>
       </MenuItem>
 
       <MenuItem onClick={onExport}>
         <ListItemIcon>
-          <Icon svg={DownloadIcon} fontSize="small" />
+          <MaterialIcon svg={DownloadIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryExport)}</ListItemText>
       </MenuItem>
@@ -54,7 +54,7 @@ export function BoardSetMenu({
 
       <MenuItem onClick={onRequestDelete} sx={{ color: "error.main" }}>
         <ListItemIcon sx={{ color: "inherit" }}>
-          <Icon svg={DeleteIcon} fontSize="small" />
+          <MaterialIcon svg={DeleteIcon} fontSize="small" />
         </ListItemIcon>
         <ListItemText>{t(m.libraryDelete)}</ListItemText>
       </MenuItem>

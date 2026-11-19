@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { ElementType, ReactNode } from "react";
-import { Icon } from "./icon";
+import { MaterialIcon } from "./material-icon";
 
-const defaultIcon = <Icon svg={ErrorIcon} />;
+const defaultIcon = <MaterialIcon svg={ErrorIcon} />;
 
 interface ErrorStateProps {
   icon?: ReactNode;

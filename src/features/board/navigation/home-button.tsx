@@ -1,7 +1,7 @@
 import HomeIcon from "@material-symbols/svg-600/rounded/home.svg?react";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import {
   BoardControlButton,
   type BoardControlShape,
@@ -23,7 +23,7 @@ export function HomeButton({ disabled, shape, onClick }: HomeButtonProps) {
       shape={shape}
       onClick={onClick}
     >
-      <Icon svg={HomeIcon} />
+      <MaterialIcon svg={HomeIcon} />
     </BoardControlButton>
   );
 }

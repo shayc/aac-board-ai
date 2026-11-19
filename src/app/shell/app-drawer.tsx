@@ -9,7 +9,7 @@ import { useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { ErrorState } from "@shared/ui/error-state";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { type ReactNode, useState } from "react";
 
 const DRAWER_BASE_WIDTH = "320px";
@@ -121,7 +121,7 @@ function AppDrawerContent({
             edge="end"
             onClick={onClose}
           >
-            <Icon svg={CloseIcon} />
+            <MaterialIcon svg={CloseIcon} />
           </IconButton>
         </Tooltip>
       </Toolbar>

@@ -21,7 +21,7 @@ import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { Icon, type IconSvg } from "@shared/ui/icon";
+import { type IconSVG, MaterialIcon } from "@shared/ui/material-icon";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -31,7 +31,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  icon: IconSvg;
+  icon: IconSVG;
   title: string;
   description: string;
 }
@@ -192,7 +192,7 @@ function HighlightItem({ icon, title, description }: HighlightItemProps) {
           fontSize: "36px",
         }}
       >
-        <Icon svg={icon} color="primary" fontSize="inherit" />
+        <MaterialIcon svg={icon} color="primary" fontSize="inherit" />
       </ListItemIcon>
 
       <ListItemText

@@ -6,7 +6,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import {
   BoardControlButton,
@@ -57,7 +57,7 @@ export function PlayButton({
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
           })}
         >
-          <Icon svg={icon} />
+          <MaterialIcon svg={icon} />
         </BoardControlButton>
       </ShortcutTooltip>
     );
@@ -82,7 +82,7 @@ export function PlayButton({
           },
         })}
       >
-        <Icon svg={icon} sx={{ fontSize: PLAY_ICON_SIZE }} />
+        <MaterialIcon svg={icon} sx={{ fontSize: PLAY_ICON_SIZE }} />
       </Fab>
     </ShortcutTooltip>
   );

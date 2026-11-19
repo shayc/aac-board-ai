@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 
@@ -54,7 +54,7 @@ export function BoardSetListItem({
             onClick={(event) => onMenuOpen(event.currentTarget)}
             sx={{ border: "none" }}
           >
-            <Icon svg={MoreVertIcon} />
+            <MaterialIcon svg={MoreVertIcon} />
           </IconButton>
         </Tooltip>
       }

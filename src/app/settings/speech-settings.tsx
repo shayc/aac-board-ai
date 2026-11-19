@@ -23,7 +23,7 @@ import {
   useSpeechVoice,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { SettingsSelect } from "@shared/ui/settings-select";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 
@@ -131,7 +131,7 @@ function VoiceSelect() {
             aria-label={t(m.speechPreviewVoice)}
             onClick={handlePreviewVoice}
           >
-            <Icon svg={PlayArrowIcon} />
+            <MaterialIcon svg={PlayArrowIcon} />
           </IconButton>
         </Tooltip>
       }

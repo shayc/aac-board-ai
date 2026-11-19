@@ -9,7 +9,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { type MouseEvent, useId } from "react";
 
 const THEME_OPTIONS = [
@@ -65,9 +65,9 @@ export function ThemeSettings() {
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
             {mode === value ? (
-              <Icon svg={CheckIcon} data-testid="theme-check" />
+              <MaterialIcon svg={CheckIcon} data-testid="theme-check" />
             ) : (
-              <Icon svg={icon} />
+              <MaterialIcon svg={icon} />
             )}
             {t(message)}
           </ToggleButton>

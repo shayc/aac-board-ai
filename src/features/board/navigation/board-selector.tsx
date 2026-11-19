@@ -12,7 +12,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 import { type ReactNode, type Ref, useRef, useState } from "react";
 import { useBoardRoute } from "./use-board-route";
 
@@ -52,7 +52,7 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           color="inherit"
-          endIcon={<Icon svg={ArrowDropDownIcon} color="action" />}
+          endIcon={<MaterialIcon svg={ArrowDropDownIcon} color="action" />}
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
@@ -184,7 +184,7 @@ function BoardSearch({
           fullWidth
           startAdornment={
             <InputAdornment position="start">
-              <Icon svg={SearchIcon} />
+              <MaterialIcon svg={SearchIcon} />
             </InputAdornment>
           }
           slotProps={{

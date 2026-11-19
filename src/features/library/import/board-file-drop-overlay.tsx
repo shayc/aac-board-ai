@@ -5,7 +5,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { Icon } from "@shared/ui/icon";
+import { MaterialIcon } from "@shared/ui/material-icon";
 
 interface BoardFileDropOverlayProps {
   open: boolean;
@@ -42,7 +42,11 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             borderRadius: theme.vars.shape.borderRadiusLg,
           })}
         >
-          <Icon svg={DownloadIcon} color="primary" sx={{ fontSize: 56 }} />
+          <MaterialIcon
+            svg={DownloadIcon}
+            color="primary"
+            sx={{ fontSize: 56 }}
+          />
           <Typography component="p" variant="h6">
             {t(m.libraryDropToImport)}
           </Typography>
