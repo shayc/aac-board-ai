@@ -1,4 +1,3 @@
-import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -6,11 +5,13 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
+import { StackPlusIcon } from "@phosphor-icons/react/dist/csr/StackPlus";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useActiveBoardSetId } from "../board-paths";
@@ -100,7 +101,7 @@ export function BoardSetLibrary() {
         <ListItem disablePadding>
           <ListItemButton onClick={() => void pickAndImport()}>
             <ListItemIcon>
-              <LibraryAddOutlinedIcon />
+              <PhosphorIcon icon={StackPlusIcon} />
             </ListItemIcon>
             <ListItemText primary={t(m.libraryImportBoardFiles)} />
           </ListItemButton>

@@ -1,6 +1,7 @@
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
+import { ImageIcon } from "@phosphor-icons/react/dist/csr/Image";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import type { TileLabelPlacement } from "./tile-preferences-store";
 
 interface LabelPlacementPreviewProps {
@@ -53,7 +54,8 @@ export function LabelPlacementPreview({
           textAlign: "center",
         }}
       >
-        <ImageOutlinedIcon
+        <PhosphorIcon
+          icon={ImageIcon}
           sx={{
             alignSelf: "center",
             flexShrink: 0,

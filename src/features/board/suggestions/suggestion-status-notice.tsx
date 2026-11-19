@@ -1,8 +1,9 @@
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
 import { useTranslate } from "@shared/language/use-translate";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
@@ -25,7 +26,7 @@ export function SuggestionStatusNotice({
     case "not-enabled":
       return (
         <Chip
-          icon={<AutoAwesomeIcon />}
+          icon={<PhosphorIcon icon={SparkleIcon} weight="fill" />}
           label={t(m.suggestionsEnable)}
           color="primary"
           variant="outlined"

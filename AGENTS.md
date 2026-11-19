@@ -95,7 +95,7 @@ accessibility, offline reliability, or privacy for elegance.
 - Module constants that never change are `UPPER_SNAKE_CASE`, tables included (`UNDO_LIMIT`, `ROUTE_ERROR_CODES`). Values made by a call, and objects passed whole to JSX or a library (props, `sx`, routes, theme options), stay camelCase (`languageStore`, `scanRowProps`, `appRoutes`).
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
 - Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
-- Write acronyms in uppercase (`boardURL`, `getUILocale`, `flipForLTR`) except at the start of a camelCase name (`url`, `uiLocale`) or where a library or platform API spells them otherwise (`CssBaseline`). `Id` is an abbreviation, not an acronym (`boardSetId`).
+- Write acronyms in uppercase (`boardURL`, `getUILocale`, `flipForRTL`) except at the start of a camelCase name (`url`, `uiLocale`) or where a library or platform API spells them otherwise (`CssBaseline`). `Id` is an abbreviation, not an acronym (`boardSetId`).
 
 ### Abstraction & Data Flow
 

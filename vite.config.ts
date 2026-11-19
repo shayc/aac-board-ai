@@ -108,10 +108,10 @@ export default defineConfig({
     include: [
       "@emotion/cache",
       "@emotion/react",
-      "@mui/icons-material/*",
       "@mui/material/*",
       "@mui/stylis-plugin-rtl",
       "@mui/utils/*",
+      "@phosphor-icons/react/dist/csr/*",
       "react-dom/client",
       "react-router/dom",
       "stylis",

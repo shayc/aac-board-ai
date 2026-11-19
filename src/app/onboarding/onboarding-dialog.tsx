@@ -1,8 +1,4 @@
 import { areSuggestionsSupported } from "@features/board";
-import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import RecordVoiceOverOutlinedIcon from "@mui/icons-material/RecordVoiceOverOutlined";
-import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -16,12 +12,17 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText, { listItemTextClasses } from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
-import type SvgIcon from "@mui/material/SvgIcon";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
+import { LockIcon } from "@phosphor-icons/react/dist/csr/Lock";
+import { SparkleIcon } from "@phosphor-icons/react/dist/csr/Sparkle";
+import { TranslateIcon } from "@phosphor-icons/react/dist/csr/Translate";
+import { UserSoundIcon } from "@phosphor-icons/react/dist/csr/UserSound";
+import type { Icon } from "@phosphor-icons/react/lib";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -31,7 +32,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  Icon: typeof SvgIcon;
+  icon: Icon;
   title: string;
   description: string;
 }
@@ -44,13 +45,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        Icon: AutoAwesomeOutlinedIcon,
+        icon: SparkleIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
     : {
         id: "language",
-        Icon: TranslateOutlinedIcon,
+        icon: TranslateIcon,
         title: t(m.onboardingLanguageTitle),
         description: t(m.onboardingLanguageDescription, {
           count: locales.length,
@@ -60,14 +61,14 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      Icon: RecordVoiceOverOutlinedIcon,
+      icon: UserSoundIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
     suggestionsOrLanguageHighlight,
     {
       id: "free-private",
-      Icon: LockOutlinedIcon,
+      icon: LockIcon,
       title: t(m.onboardingFreePrivateTitle),
       description: t(m.onboardingFreePrivateDescription),
     },
@@ -111,10 +112,10 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
               pl: 2,
             }}
           >
-            {highlights.map(({ id, Icon, title, description }) => (
+            {highlights.map(({ id, icon, title, description }) => (
               <HighlightItem
                 key={id}
-                Icon={Icon}
+                icon={icon}
                 title={title}
                 description={description}
               />
@@ -176,7 +177,7 @@ function actionsSx(theme: Theme) {
 
 type HighlightItemProps = Omit<Highlight, "id">;
 
-function HighlightItem({ Icon, title, description }: HighlightItemProps) {
+function HighlightItem({ icon, title, description }: HighlightItemProps) {
   return (
     <ListItem
       disableGutters
@@ -192,7 +193,7 @@ function HighlightItem({ Icon, title, description }: HighlightItemProps) {
           fontSize: "36px",
         }}
       >
-        <Icon color="primary" fontSize="inherit" />
+        <PhosphorIcon icon={icon} color="primary" fontSize="inherit" />
       </ListItemIcon>
 
       <ListItemText

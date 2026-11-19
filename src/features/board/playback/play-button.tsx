@@ -1,11 +1,12 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
 import { buttonClasses } from "@mui/material/Button";
 import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
+import { PlayIcon } from "@phosphor-icons/react/dist/csr/Play";
+import { StopIcon } from "@phosphor-icons/react/dist/csr/Stop";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import {
   BoardControlButton,
@@ -41,7 +42,7 @@ export function PlayButton({
   const shortcutKeys = shortcutLabels[shortcut];
   const ariaKeyShortcuts = BOARD_SHORTCUT_ARIA_KEYS[shortcut];
   const handleClick = isPlaying ? onStop : onPlay;
-  const Icon = isPlaying ? StopIcon : PlayArrowIcon;
+  const icon = isPlaying ? StopIcon : PlayIcon;
 
   if (shape === "pill") {
     return (
@@ -56,7 +57,7 @@ export function PlayButton({
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
           })}
         >
-          <Icon />
+          <PhosphorIcon icon={icon} weight="fill" />
         </BoardControlButton>
       </ShortcutTooltip>
     );
@@ -81,7 +82,11 @@ export function PlayButton({
           },
         })}
       >
-        <Icon sx={{ fontSize: PLAY_ICON_SIZE }} />
+        <PhosphorIcon
+          icon={icon}
+          weight="fill"
+          sx={{ fontSize: PLAY_ICON_SIZE }}
+        />
       </Fab>
     </ShortcutTooltip>
   );

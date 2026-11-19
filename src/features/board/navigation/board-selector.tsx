@@ -1,8 +1,6 @@
 import type { BoardSummary } from "@features/library";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
-import Button, { buttonClasses } from "@mui/material/Button";
+import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputBase from "@mui/material/InputBase";
 import Popover from "@mui/material/Popover";
@@ -10,8 +8,11 @@ import type { PopperProps } from "@mui/material/Popper";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
+import { CaretDownIcon } from "@phosphor-icons/react/dist/csr/CaretDown";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/csr/MagnifyingGlass";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { type ReactNode, type Ref, useRef, useState } from "react";
 import { useBoardRoute } from "./use-board-route";
 
@@ -51,21 +52,16 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           color="inherit"
-          endIcon={<ArrowDropDownIcon color="action" />}
+          endIcon={
+            <PhosphorIcon icon={CaretDownIcon} weight="fill" color="action" />
+          }
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
-            // As tall as the icon buttons beside it. The triangle carries its
-            // own space, so the end side needs less padding.
+            // As tall as the icon buttons beside it.
             py: 1,
-            pl: 2.5,
-            pr: 1.5,
+            px: 2.5,
             font: "inherit",
-            [`& .${buttonClasses.endIcon}`]: { margin: 0 },
-            // Button shrinks its icons to 20px. The header's icons are 24px.
-            [`& .${buttonClasses.endIcon} > *:nth-of-type(1)`]: {
-              fontSize: 24,
-            },
           }}
         >
           <Typography component="span" variant="inherit" noWrap>
@@ -183,7 +179,7 @@ function BoardSearch({
           fullWidth
           startAdornment={
             <InputAdornment position="start">
-              <SearchIcon />
+              <PhosphorIcon icon={MagnifyingGlassIcon} />
             </InputAdornment>
           }
           slotProps={{

@@ -1,4 +1,3 @@
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import ListItem, { listItemClasses } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -6,8 +5,10 @@ import ListItemText from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { DotsThreeVerticalIcon } from "@phosphor-icons/react/dist/csr/DotsThreeVertical";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 
@@ -53,7 +54,7 @@ export function BoardSetListItem({
             onClick={(event) => onMenuOpen(event.currentTarget)}
             sx={{ border: "none" }}
           >
-            <MoreVertIcon />
+            <PhosphorIcon icon={DotsThreeVerticalIcon} />
           </IconButton>
         </Tooltip>
       }

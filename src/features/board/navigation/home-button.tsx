@@ -1,6 +1,7 @@
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { m } from "@paraglide/messages.js";
+import { HouseIcon } from "@phosphor-icons/react/dist/csr/House";
 import { useTranslate } from "@shared/language/use-translate";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import {
   BoardControlButton,
   type BoardControlShape,
@@ -22,7 +23,7 @@ export function HomeButton({ disabled, shape, onClick }: HomeButtonProps) {
       shape={shape}
       onClick={onClick}
     >
-      <HomeOutlinedIcon />
+      <PhosphorIcon icon={HouseIcon} />
     </BoardControlButton>
   );
 }

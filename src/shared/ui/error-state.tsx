@@ -1,10 +1,11 @@
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { WarningCircleIcon } from "@phosphor-icons/react/dist/csr/WarningCircle";
 import type { ElementType, ReactNode } from "react";
+import { PhosphorIcon } from "./phosphor-icon";
 
-const defaultIcon = <ErrorOutlineIcon />;
+const defaultIcon = <PhosphorIcon icon={WarningCircleIcon} />;
 
 interface ErrorStateProps {
   icon?: ReactNode;

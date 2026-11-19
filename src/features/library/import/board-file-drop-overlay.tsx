@@ -1,10 +1,11 @@
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import Backdrop from "@mui/material/Backdrop";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { FileArrowDownIcon } from "@phosphor-icons/react/dist/csr/FileArrowDown";
 import { useTranslate } from "@shared/language/use-translate";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 
 interface BoardFileDropOverlayProps {
   open: boolean;
@@ -41,7 +42,11 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             borderRadius: theme.vars.shape.borderRadiusLg,
           })}
         >
-          <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />
+          <PhosphorIcon
+            icon={FileArrowDownIcon}
+            color="primary"
+            sx={{ fontSize: 56 }}
+          />
           <Typography component="p" variant="h6">
             {t(m.libraryDropToImport)}
           </Typography>

@@ -24,10 +24,10 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@mui/icons-material": "^9.5.0",
     "@mui/material": "^9.5.0",
     "@mui/stylis-plugin-rtl": "^9.5.0",
     "@mui/utils": "^9.5.0",
+    "@phosphor-icons/react": "^2.1.10",
     "@shayc/open-board-format": "^2.0.0",
     "@shayc/react-built-in-ai": "^0.12.1",
     "idb": "^8.0.4",

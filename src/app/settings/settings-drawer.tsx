@@ -5,14 +5,15 @@ import {
   SuggestionSettings,
   TileSettings,
 } from "@features/board";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { GithubLogoIcon } from "@phosphor-icons/react/dist/csr/GithubLogo";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { type ReactNode, useId } from "react";
 import { version } from "../../../package.json";
 import { LanguageSettings } from "./language-settings";
@@ -71,7 +72,9 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               variant="body2"
               sx={{ alignSelf: "flex-start" }}
             >
-              <GitHubIcon
+              <PhosphorIcon
+                icon={GithubLogoIcon}
+                weight="fill"
                 fontSize="small"
                 sx={{ mr: 1, verticalAlign: "text-bottom" }}
               />

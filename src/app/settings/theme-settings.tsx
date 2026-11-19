@@ -1,20 +1,21 @@
-import CheckIcon from "@mui/icons-material/Check";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlined";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useColorScheme } from "@mui/material/styles";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
+import { CheckIcon } from "@phosphor-icons/react/dist/csr/Check";
+import { MonitorIcon } from "@phosphor-icons/react/dist/csr/Monitor";
+import { MoonIcon } from "@phosphor-icons/react/dist/csr/Moon";
+import { SunIcon } from "@phosphor-icons/react/dist/csr/Sun";
 import { useTranslate } from "@shared/language/use-translate";
+import { PhosphorIcon } from "@shared/ui/phosphor-icon";
 import { type MouseEvent, useId } from "react";
 
 const THEME_OPTIONS = [
-  { value: "system", message: m.themeSystem, Icon: DesktopWindowsOutlinedIcon },
-  { value: "light", message: m.themeLight, Icon: LightModeOutlinedIcon },
-  { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
+  { value: "system", message: m.themeSystem, icon: MonitorIcon },
+  { value: "light", message: m.themeLight, icon: SunIcon },
+  { value: "dark", message: m.themeDark, icon: MoonIcon },
 ] as const;
 
 // Side by side, icon and name overflow a phone's drawer in most languages.
@@ -60,10 +61,10 @@ export function ThemeSettings() {
         onChange={handleChange}
         sx={{ mt: 1 }}
       >
-        {THEME_OPTIONS.map(({ value, message, Icon }) => (
+        {THEME_OPTIONS.map(({ value, message, icon }) => (
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
-            {mode === value ? <CheckIcon /> : <Icon />}
+            <PhosphorIcon icon={mode === value ? CheckIcon : icon} />
             {t(message)}
           </ToggleButton>
         ))}
