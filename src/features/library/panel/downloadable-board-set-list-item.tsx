@@ -1,5 +1,3 @@
-import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import StopRoundedIcon from "@mui/icons-material/StopRounded";
 import Box from "@mui/material/Box";
 import CircularProgress, {
   circularProgressClasses,
@@ -12,6 +10,7 @@ import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
+import { DownloadIcon, StopFilledIcon } from "@shared/ui/icons";
 import { assertNever } from "@shared/utils/assert-never";
 import { useId } from "react";
 import type { DownloadPhase } from "../catalog/board-set-downloads";
@@ -112,7 +111,7 @@ interface DownloadButtonIconProps {
 
 function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
   if (!phase) {
-    return <DownloadOutlinedIcon />;
+    return <DownloadIcon />;
   }
 
   const isImporting = phase.kind === "importing";
@@ -132,7 +131,7 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
       />
 
       {!isImporting && (
-        <StopRoundedIcon
+        <StopFilledIcon
           sx={{ position: "absolute", inset: 0, margin: "auto", fontSize: 14 }}
         />
       )}

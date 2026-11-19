@@ -1,4 +1,3 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import IconButton from "@mui/material/IconButton";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
@@ -23,6 +22,7 @@ import {
   useSpeechVoice,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { PlayArrowFilledIcon } from "@shared/ui/icons";
 import { SettingsSelect } from "@shared/ui/settings-select";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 
@@ -130,7 +130,7 @@ function VoiceSelect() {
             aria-label={t(m.speechPreviewVoice)}
             onClick={handlePreviewVoice}
           >
-            <PlayArrowIcon />
+            <PlayArrowFilledIcon />
           </IconButton>
         </Tooltip>
       }

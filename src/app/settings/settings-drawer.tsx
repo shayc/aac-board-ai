@@ -5,7 +5,6 @@ import {
   SuggestionSettings,
   TileSettings,
 } from "@features/board";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
@@ -71,10 +70,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               variant="body2"
               sx={{ alignSelf: "flex-start" }}
             >
-              <GitHubIcon
-                fontSize="small"
-                sx={{ mr: 1, verticalAlign: "text-bottom" }}
-              />
               {t(m.aboutSourceCode)}
             </ExternalLink>
 

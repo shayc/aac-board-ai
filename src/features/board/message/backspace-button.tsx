@@ -1,4 +1,3 @@
-import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import CircularProgress, {
   circularProgressClasses,
 } from "@mui/material/CircularProgress";
@@ -9,6 +8,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { BackspaceIcon } from "@shared/ui/icons";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -74,7 +74,7 @@ export function BackspaceButton({
         aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
         sx={(theme) => backspaceSx(theme, size)}
       >
-        <BackspaceOutlinedIcon fontSize="inherit" sx={flipForRTL} />
+        <BackspaceIcon fontSize="inherit" sx={flipForRTL} />
 
         <CircularProgress
           aria-hidden

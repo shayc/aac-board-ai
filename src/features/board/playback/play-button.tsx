@@ -1,11 +1,10 @@
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
 import { buttonClasses } from "@mui/material/Button";
 import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
+import { PlayArrowFilledIcon, StopFilledIcon } from "@shared/ui/icons";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import {
   BoardControlButton,
@@ -41,7 +40,7 @@ export function PlayButton({
   const shortcutKeys = shortcutLabels[shortcut];
   const ariaKeyShortcuts = BOARD_SHORTCUT_ARIA_KEYS[shortcut];
   const handleClick = isPlaying ? onStop : onPlay;
-  const Icon = isPlaying ? StopIcon : PlayArrowIcon;
+  const Icon = isPlaying ? StopFilledIcon : PlayArrowFilledIcon;
 
   if (shape === "pill") {
     return (

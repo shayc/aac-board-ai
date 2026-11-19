@@ -1,6 +1,6 @@
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { HomeIcon } from "@shared/ui/icons";
 import {
   BoardControlButton,
   type BoardControlShape,
@@ -22,7 +22,7 @@ export function HomeButton({ disabled, shape, onClick }: HomeButtonProps) {
       shape={shape}
       onClick={onClick}
     >
-      <HomeOutlinedIcon />
+      <HomeIcon />
     </BoardControlButton>
   );
 }

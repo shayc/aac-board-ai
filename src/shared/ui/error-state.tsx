@@ -1,10 +1,10 @@
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { ElementType, ReactNode } from "react";
+import { ErrorIcon } from "./icons";
 
-const defaultIcon = <ErrorOutlineIcon />;
+const defaultIcon = <ErrorIcon />;
 
 interface ErrorStateProps {
   icon?: ReactNode;

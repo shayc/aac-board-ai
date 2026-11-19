@@ -1,8 +1,4 @@
 import { areSuggestionsSupported } from "@features/board";
-import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import RecordVoiceOverOutlinedIcon from "@mui/icons-material/RecordVoiceOverOutlined";
-import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -22,6 +18,12 @@ import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
+import {
+  LockIcon,
+  RecordVoiceOverIcon,
+  StarShineIcon,
+  TranslateIcon,
+} from "@shared/ui/icons";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -44,13 +46,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        Icon: AutoAwesomeOutlinedIcon,
+        Icon: StarShineIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
     : {
         id: "language",
-        Icon: TranslateOutlinedIcon,
+        Icon: TranslateIcon,
         title: t(m.onboardingLanguageTitle),
         description: t(m.onboardingLanguageDescription, {
           count: locales.length,
@@ -60,14 +62,14 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      Icon: RecordVoiceOverOutlinedIcon,
+      Icon: RecordVoiceOverIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
     suggestionsOrLanguageHighlight,
     {
       id: "free-private",
-      Icon: LockOutlinedIcon,
+      Icon: LockIcon,
       title: t(m.onboardingFreePrivateTitle),
       description: t(m.onboardingFreePrivateDescription),
     },

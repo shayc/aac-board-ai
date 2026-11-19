@@ -1,4 +1,3 @@
-import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -9,6 +8,7 @@ import { useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { ErrorState } from "@shared/ui/error-state";
+import { CloseIcon } from "@shared/ui/icons";
 import { type ReactNode, useState } from "react";
 
 const DRAWER_BASE_WIDTH = "320px";

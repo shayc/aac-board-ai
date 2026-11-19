@@ -1,6 +1,4 @@
 import type { BoardSummary } from "@features/library";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button, { buttonClasses } from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -12,6 +10,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
+import { ArrowDropDownIcon, SearchIcon } from "@shared/ui/icons";
 import { type ReactNode, type Ref, useRef, useState } from "react";
 import { useBoardRoute } from "./use-board-route";
 

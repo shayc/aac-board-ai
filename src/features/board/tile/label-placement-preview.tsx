@@ -1,6 +1,6 @@
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
+import { ImageIcon } from "@shared/ui/icons";
 import type { TileLabelPlacement } from "./tile-preferences-store";
 
 interface LabelPlacementPreviewProps {
@@ -53,7 +53,7 @@ export function LabelPlacementPreview({
           textAlign: "center",
         }}
       >
-        <ImageOutlinedIcon
+        <ImageIcon
           sx={{
             alignSelf: "center",
             flexShrink: 0,

@@ -290,6 +290,11 @@ instead of checking translation progress themselves.
 Reusable field controls live in `shared/ui/` so features do not depend on the
 app layer.
 
+Icons are Material Symbols Rounded at the default weight and the 24px optical
+size, kept as MUI icon components in
+[`shared/ui/icons.tsx`](../src/shared/ui/icons.tsx). Add a missing icon there
+instead of importing another icon package.
+
 Closing or unmounting settings does not delete preferences. Removing a feature
 requires an explicit decision about retaining or deleting its persisted
 preferences.
