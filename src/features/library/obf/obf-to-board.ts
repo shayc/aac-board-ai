@@ -92,10 +92,10 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   const rawActions =
     obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 
-  return rawActions.map(parseAction).filter((action) => action !== undefined);
+  return rawActions.map(parseAction);
 }
 
-function parseAction(raw: string): BoardAction | undefined {
+function parseAction(raw: string): BoardAction {
   if (raw.startsWith("+")) {
     return { kind: "spell", text: raw.slice(1).trim() };
   }
@@ -112,7 +112,7 @@ function parseAction(raw: string): BoardAction | undefined {
     case ":speak":
       return { kind: "play" };
     default:
-      return undefined;
+      return { kind: "unsupported", raw };
   }
 }
 
