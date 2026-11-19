@@ -151,6 +151,7 @@ function barSizeProperties({ control, symbol }: BarSize) {
 function scrollContainerSx(theme: Theme) {
   return {
     position: "relative",
+    // Keeps the active part's fill behind the labels but above the bar.
     isolation: "isolate",
     flexGrow: 1,
     alignSelf: "stretch",
@@ -181,6 +182,7 @@ function activePartFillSx(theme: Theme) {
       right: `calc(anchor(right) - ${inlineOutset})`,
       borderRadius: theme.vars.shape.borderRadiusFull,
       bgcolor: "primary.main",
+      // Forced-colors mode drops the fill but paints a transparent outline.
       outline: "2px solid transparent",
       pointerEvents: "none",
     },
