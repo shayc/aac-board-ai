@@ -2,8 +2,9 @@ import type { BoardButton } from "@features/library";
 import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
-import { useTranslate } from "@shared/language/use-translate";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
+import { assertNever } from "@shared/utils/assert-never";
 import type { CSSProperties } from "react";
 import {
   AACSymbol,
@@ -23,7 +24,10 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
   const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
-  const ariaLabel = button.label ? undefined : button.vocalization;
+  const actionName = getActionName(button, t);
+  const ariaLabel = button.label
+    ? undefined
+    : (actionName ?? button.vocalization);
   const isFolder = Boolean(button.linkedBoardId);
   const colorStyle = tileColorStyle({
     backgroundColor: button.backgroundColor,
@@ -40,8 +44,8 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
     <Button
       aria-label={ariaLabel}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
-      // The description is UI text, but the name is what must be pronounced right.
-      lang={language}
+      // A generated name inherits the document's UI language.
+      lang={actionName === undefined ? language : undefined}
       tabIndex={tabIndex}
       style={colorStyle}
       onClick={() => onActivate(button)}
@@ -55,6 +59,37 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
       />
     </Button>
   );
+}
+
+function getActionName(button: BoardButton, t: Translate): string | undefined {
+  if (button.label || button.vocalization || button.linkedBoardId) {
+    return undefined;
+  }
+
+  const supportedActions = button.actions.filter(
+    (action) => action.kind !== "unsupported",
+  );
+  const [action] = supportedActions;
+  if (!action || supportedActions.length !== 1) {
+    return undefined;
+  }
+
+  switch (action.kind) {
+    case "space":
+      return t(m.tileSpace);
+    case "backspace":
+      return t(m.messageBackspace);
+    case "clear":
+      return t(m.messageClear);
+    case "home":
+      return t(m.navHome);
+    case "play":
+      return t(m.messagePlay);
+    case "spell":
+      return undefined;
+    default:
+      return assertNever(action);
+  }
 }
 
 type TileColorStyle = CSSProperties & {

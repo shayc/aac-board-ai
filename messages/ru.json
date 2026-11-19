@@ -117,6 +117,7 @@
   "tileLabelBottom": "Снизу",
   "tileLabelHidden": "Скрыты",
   "tileOpensBoard": "Открывает доску",
+  "tileSpace": "Пробел",
   "scanningEnabled": "Включить сканирование переключателем",
   "scanningMethod": "Метод сканирования",
   "scanningMethodAuto": "Автоматическое сканирование",
