@@ -12,10 +12,8 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
-import { Icon } from "@shared/ui/icon";
 import { type ReactNode, useId } from "react";
 import { version } from "../../../package.json";
-import GitHubIcon from "./github-mark.svg?react";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
 import { ThemeSettings } from "./theme-settings";
@@ -72,11 +70,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               variant="body2"
               sx={{ alignSelf: "flex-start" }}
             >
-              <Icon
-                svg={GitHubIcon}
-                fontSize="small"
-                sx={{ mr: 1, verticalAlign: "text-bottom" }}
-              />
               {t(m.aboutSourceCode)}
             </ExternalLink>
 
