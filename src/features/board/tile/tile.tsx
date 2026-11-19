@@ -160,7 +160,7 @@ function tileSx(theme: Theme) {
   const borderColor = dim("var(--tile-border-color, transparent)");
   // The shorter side decides, so a wide but short tile keeps its label small
   // and leaves the height to the symbol.
-  const labelFontSize = `clamp(${theme.typography.body2.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
+  const labelFontSize = `clamp(${theme.typography.body1.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
 
   return {
     [SYMBOL_LABEL_FONT_SIZE_PROPERTY]: labelFontSize,
