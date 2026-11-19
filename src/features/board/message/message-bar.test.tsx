@@ -57,6 +57,17 @@ function getScrollContainer(container: Element): HTMLElement {
   return scroller;
 }
 
+// The fill is a pseudo-element, so its resolved insets locate it.
+function fillBounds(scroller: HTMLElement): { left: number; right: number } {
+  const fill = getComputedStyle(scroller, "::after");
+  const scrollerBounds = scroller.getBoundingClientRect();
+
+  return {
+    left: scrollerBounds.left + Number.parseFloat(fill.left),
+    right: scrollerBounds.right - Number.parseFloat(fill.right),
+  };
+}
+
 describe("MessageBar", () => {
   test("renders a label for each tile and text part", async () => {
     const parts: MessagePart[] = [
@@ -293,6 +304,32 @@ describe("MessageBar", () => {
 
     await expect.element(screen.getByText("I")).toBeVisible();
     expect(screen.container.querySelectorAll("img")).toHaveLength(1);
+  });
+
+  test("fills behind the active part's label", async () => {
+    const parts: MessagePart[] = [
+      { kind: "text", id: "a", label: "I", language: "en" },
+      {
+        kind: "tile",
+        id: "b",
+        label: "want",
+        language: "en",
+        imageSrc: TEST_IMAGE_SRC,
+      },
+    ];
+
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts, activePartId: "b" })} />,
+    );
+
+    const scroller = getScrollContainer(screen.container);
+    const activePart = scroller.children[1];
+    assertDefined(activePart);
+    const fill = fillBounds(scroller);
+    const partBounds = activePart.getBoundingClientRect();
+    expect(fill.left).toBeGreaterThanOrEqual(partBounds.left - 1);
+    expect(fill.right).toBeLessThanOrEqual(partBounds.right + 1);
+    expect(fill.right - fill.left).toBeGreaterThan(0);
   });
 
   describe("scroll-into-view", () => {

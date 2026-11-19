@@ -166,8 +166,8 @@ function scrollContainerSx(theme: Theme) {
   };
 }
 
-// The fill sits outside the part, which clips its label, so anchor positioning
-// places it. It moves without a transition: white text over a fill still in
+// The fill sits outside the symbol, which clips its label, so anchor
+// positioning places it. It moves without a transition: white text over a fill still in
 // flight is unreadable at speech speed.
 function activePartFillSx(theme: Theme) {
   const blockOutset = theme.spacing(0.25);
@@ -219,7 +219,7 @@ function MessagePartItem({
         py: 0.5,
         px: PART_INLINE_PADDING,
         // The label anchors the fill, which keeps it behind the word and clear
-        // of the symbol and the spelling caret.
+        // of the image and the spelling caret.
         [`& .${typographyClasses.root}`]: {
           anchorName: isActive ? ACTIVE_PART_ANCHOR : "none",
           color: isActive ? theme.vars.palette.primary.contrastText : undefined,
