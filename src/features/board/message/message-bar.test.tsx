@@ -1,3 +1,4 @@
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
@@ -305,31 +306,35 @@ describe("MessageBar", () => {
     expect(screen.container.querySelectorAll("img")).toHaveLength(1);
   });
 
-  test("fills behind the active part's label", async () => {
-    const parts: MessagePart[] = [
-      { kind: "text", id: "a", label: "I", language: "en" },
-      {
-        kind: "tile",
-        id: "b",
-        label: "want",
-        language: "en",
-        imageSrc: TEST_IMAGE_SRC,
-      },
-    ];
+  test.for(["en", "he"])(
+    "fills behind the active part's label in %s",
+    async (language) => {
+      setCommunicationLanguage(language);
+      const parts: MessagePart[] = [
+        { kind: "text", id: "a", label: "I", language: "en" },
+        {
+          kind: "tile",
+          id: "b",
+          label: "want",
+          language: "en",
+          imageSrc: TEST_IMAGE_SRC,
+        },
+      ];
 
-    const screen = await renderWithProviders(
-      <MessageBar {...createProps({ parts, activePartId: "b" })} />,
-    );
+      const screen = await renderWithProviders(
+        <MessageBar {...createProps({ parts, activePartId: "b" })} />,
+      );
 
-    const scroller = getScrollContainer(screen.container);
-    const activePart = scroller.children[1];
-    assertDefined(activePart);
-    const fill = fillBounds(scroller);
-    const partBounds = activePart.getBoundingClientRect();
-    expect(fill.left).toBeGreaterThanOrEqual(partBounds.left - 1);
-    expect(fill.right).toBeLessThanOrEqual(partBounds.right + 1);
-    expect(fill.right - fill.left).toBeGreaterThan(0);
-  });
+      const scroller = getScrollContainer(screen.container);
+      const activePart = scroller.children[1];
+      assertDefined(activePart);
+      const fill = fillBounds(scroller);
+      const partBounds = activePart.getBoundingClientRect();
+      expect(fill.left).toBeGreaterThanOrEqual(partBounds.left - 1);
+      expect(fill.right).toBeLessThanOrEqual(partBounds.right + 1);
+      expect(fill.right - fill.left).toBeGreaterThan(0);
+    },
+  );
 
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {

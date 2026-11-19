@@ -178,8 +178,10 @@ function activePartFillSx(theme: Theme) {
       positionAnchor: ACTIVE_PART_ANCHOR,
       top: `calc(anchor(top) - ${blockOutset})`,
       bottom: `calc(anchor(bottom) - ${blockOutset})`,
-      left: `calc(anchor(left) - ${inlineOutset})`,
-      right: `calc(anchor(right) - ${inlineOutset})`,
+      // Logical insets, since the RTL stylis plugin flips `left` and `right`
+      // but not the `anchor()` sides inside them.
+      insetInlineStart: `calc(anchor(start) - ${inlineOutset})`,
+      insetInlineEnd: `calc(anchor(end) - ${inlineOutset})`,
       borderRadius: theme.vars.shape.borderRadiusFull,
       bgcolor: "primary.main",
       // Forced-colors mode drops the fill but paints a transparent outline.
