@@ -363,8 +363,8 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: true,
         // Inset toward the thumb, twice the page margin.
         playEnd: 32,
-        // The shared 28px icon and the pill's 12px padding.
-        playHeight: 28 + 2 * 12,
+        // The shared 32px icon and the pill's 12px padding.
+        playHeight: 32 + 2 * 12,
         messageBarStart: 16,
         // As tall as backspace, 80px, with the bar's 8px inset and 1px border.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
@@ -459,65 +459,26 @@ describe("CommunicationBoard", () => {
         expect(atEnd.topHint).toBeCloseTo(overflowHint, 0);
       },
     );
-  });
 
-  describe("message row icons", () => {
-    test.each([
-      { name: "a tablet", width: 1024, height: 703 },
-      { name: "a desktop window", width: 1440, height: 900 },
-    ])(
-      "gives home backspace's icon, lighter than play's, on $name",
-      async ({ width, height }) => {
+    test.each(LAYOUT_CASES)(
+      "uses consistent control icons and a full-size backspace on $name",
+      async ({ width, height, isPlayBelowGrid }) => {
         await setTestViewport(width, height);
         const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
         await expect.element(screen.getByRole("grid")).toBeVisible();
 
-        const button = (name: string) => screen.getByRole("button", { name });
-        const home = iconSize(button("Go home"));
-        const backspace = iconSize(button("Backspace"));
-        const play = iconSize(button("Speak message"));
+        const home = screen.getByRole("button", { name: "Go home" });
+        const backspace = screen.getByRole("button", { name: "Backspace" });
+        const play = screen.getByRole("button", { name: "Speak message" });
+        const backspaceSize = backspace.element().getBoundingClientRect();
+        const playSize = play.element().getBoundingClientRect();
 
-        expect(home).toBe(backspace);
-        expect(backspace).toBeLessThan(play);
-      },
-    );
-
-    test.each([
-      { name: "a phone on its side", width: 874, height: 354 },
-      { name: "a wide, short desktop window", width: 1440, height: 531 },
-    ])(
-      "gives the smaller backspace the app bar's icon size on $name",
-      async ({ width, height }) => {
-        await setTestViewport(width, height);
-        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
-        await expect.element(screen.getByRole("grid")).toBeVisible();
-
-        const button = (name: string) => screen.getByRole("button", { name });
-        const home = iconSize(button("Go home"));
-        const backspace = iconSize(button("Backspace"));
-
-        expect(backspace).toBe(24);
-        expect(backspace).toBeLessThan(home);
-      },
-    );
-
-    test.each([
-      { name: "a tablet", width: 1024, height: 704 },
-      { name: "a phone on its side", width: 874, height: 354 },
-    ])(
-      "keeps backspace a step smaller than play on $name",
-      async ({ width, height }) => {
-        await setTestViewport(width, height);
-        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
-        await expect.element(screen.getByRole("grid")).toBeVisible();
-
-        const widthOf = (name: string) =>
-          screen.getByRole("button", { name }).element().getBoundingClientRect()
-            .width;
-
-        expect(widthOf("Backspace") / widthOf("Speak message")).toBeCloseTo(
-          0.8,
-          1,
+        expect([iconSize(home), iconSize(backspace), iconSize(play)]).toEqual([
+          32, 32, 32,
+        ]);
+        expect(backspaceSize.width).toBe(isPlayBelowGrid ? 80 : playSize.width);
+        expect(backspaceSize.height).toBe(
+          isPlayBelowGrid ? 80 : playSize.height,
         );
       },
     );

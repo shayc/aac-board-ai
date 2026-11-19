@@ -10,12 +10,12 @@ import {
   BoardControlButton,
   type BoardControlShape,
 } from "../board-control-button";
-import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
+import {
+  CONTROL_ICON_SIZE,
+  MESSAGE_CONTROL_SIZE,
+} from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
-
-const PLAY_SIZE = `var(${CONTROL_SIZE_PROPERTY}, ${CONTROL_SIZES.large}px)`;
-const PLAY_ICON_SIZE = 36;
 
 interface PlayButtonProps {
   disabled?: boolean;
@@ -71,8 +71,8 @@ export function PlayButton({
         onClick={disabled ? undefined : handleClick}
         sx={(theme) => ({
           flexShrink: 0,
-          width: PLAY_SIZE,
-          height: PLAY_SIZE,
+          width: MESSAGE_CONTROL_SIZE,
+          height: MESSAGE_CONTROL_SIZE,
           [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
           [`&.${fabClasses.disabled}`]: {
             ...disabledSx(theme),
@@ -80,7 +80,7 @@ export function PlayButton({
           },
         })}
       >
-        <Icon sx={{ fontSize: PLAY_ICON_SIZE }} />
+        <Icon sx={{ fontSize: CONTROL_ICON_SIZE }} />
       </Fab>
     </ShortcutTooltip>
   );
@@ -101,8 +101,7 @@ function disabledSx(theme: Theme) {
   };
 }
 
-// The bar's dark-mode grey is a step darker than white, which mutes the tint;
-// a heavier glyph keeps play at least as visible as the backspace beside it.
+// The bar's dark-mode grey mutes the tint, so play needs more contrast here.
 function disabledOnDarkBarSx(theme: Theme) {
   return { color: theme.alpha(theme.vars.palette.primary.main, 0.6) };
 }

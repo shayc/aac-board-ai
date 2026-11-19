@@ -462,21 +462,18 @@ them the same in everything but size:
 ### Screen sizes
 
 Layout turns on one width breakpoint, `sm`. Above it the home button sits in
-the message bar's row, before the bar, as a round button the size of its play
-button, so the row has one large button at each end. Its icon is backspace's
-size, a step lighter than play's, so play stays the main action, except where
-backspace shrinks on a short landscape screen.
-Backspace and the play button sit inside the bar at its end, play last and
-backspace a step smaller beside it. Backspace has a light tonal fill, as MUI
-gives a filled default chip, so play stays the bar's one solid shape; the fill
-stays when backspace is off, and the hold ring traces its edge. Suggestions
+the message bar's row, before the bar. The round home, backspace, and play
+buttons are 80px across. Backspace and play sit inside the bar at its end,
+with play last. All three controls use 32px icons in every layout.
+Backspace uses the light tonal fill of a filled MUI chip, and play's primary
+fill emphasizes the action. The tonal fill stays when backspace is off, and
+the hold ring traces its edge. Suggestions
 have the row below to themselves, and without them the grid starts under the
 message bar. Below `sm`
 the home and play buttons move under the grid as two pills of one width, with
-backspace's icon size, home at the start and play at the far end, with the room
-that is left between them. The row is inset twice the page margin, 32px, so the
-thumb reaches both without stretching. Below it is the page margin or the home
-indicator's inset, whichever is larger, as iOS's own bars sit.
+home at the start and play at the far end. The row is inset 32px, twice the
+page margin, so the thumb reaches both without stretching. Below it is the page
+margin or the home indicator's inset, whichever is larger, as in iOS's own bars.
 Backspace stays in the message bar at full size, and the spacing tightens, as
 [Board spacing](#board-spacing) describes.
 
@@ -491,9 +488,7 @@ what such a screen lacks, so:
   width up: iOS hides the status bar there, so the toolbar's own height is the
   only room above them.
 - The message bar drops to a compact height, 64px and its inset, with smaller
-  symbols, and play and the home button shrink to fit it. Backspace shrinks a
-  step further, to 52px, so it stays smaller than play as it is on larger
-  screens, and its icon to MUI's default 24px, as in the app bar.
+  symbols. Home, backspace, and play are all 64px across.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 
