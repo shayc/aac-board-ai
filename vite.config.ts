@@ -26,23 +26,7 @@ export default defineConfig({
   plugins: [
     themeColorHtmlPlugin,
     react({ compiler: { panicThreshold: "all_errors" } }),
-    svgr({
-      svgrOptions: {
-        dimensions: false,
-        plugins: ["@svgr/plugin-svgo", "@svgr/plugin-jsx"],
-        // Material Symbols draw on a 960-unit grid, so whole units are
-        // 1/40 px at 24 px.
-        svgoConfig: {
-          floatPrecision: 0,
-          plugins: [
-            {
-              name: "preset-default",
-              params: { overrides: { removeViewBox: false } },
-            },
-          ],
-        },
-      },
-    }),
+    svgr({ svgrOptions: { dimensions: false } }),
     paraglideVitePlugin({
       project: "./project.inlang",
       outputStructure: "message-modules",
