@@ -1,7 +1,3 @@
-import CheckIcon from "@material-symbols/svg-600/rounded/check.svg?react";
-import DarkModeIcon from "@material-symbols/svg-600/rounded/dark_mode.svg?react";
-import DesktopWindowsIcon from "@material-symbols/svg-600/rounded/desktop_windows.svg?react";
-import LightModeIcon from "@material-symbols/svg-600/rounded/light_mode.svg?react";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useColorScheme } from "@mui/material/styles";
@@ -9,13 +5,18 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import {
+  CheckIcon,
+  DarkModeIcon,
+  DesktopWindowsIcon,
+  LightModeIcon,
+} from "@shared/ui/icons";
 import { type MouseEvent, useId } from "react";
 
 const THEME_OPTIONS = [
-  { value: "system", message: m.themeSystem, icon: DesktopWindowsIcon },
-  { value: "light", message: m.themeLight, icon: LightModeIcon },
-  { value: "dark", message: m.themeDark, icon: DarkModeIcon },
+  { value: "system", message: m.themeSystem, Icon: DesktopWindowsIcon },
+  { value: "light", message: m.themeLight, Icon: LightModeIcon },
+  { value: "dark", message: m.themeDark, Icon: DarkModeIcon },
 ] as const;
 
 // Side by side, icon and name overflow a phone's drawer in most languages.
@@ -61,14 +62,10 @@ export function ThemeSettings() {
         onChange={handleChange}
         sx={{ mt: 1 }}
       >
-        {THEME_OPTIONS.map(({ value, message, icon }) => (
+        {THEME_OPTIONS.map(({ value, message, Icon }) => (
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
-            {mode === value ? (
-              <MaterialIcon svg={CheckIcon} data-testid="theme-check" />
-            ) : (
-              <MaterialIcon svg={icon} />
-            )}
+            {mode === value ? <CheckIcon /> : <Icon />}
             {t(message)}
           </ToggleButton>
         ))}

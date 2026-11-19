@@ -1,7 +1,6 @@
-import ImageIcon from "@material-symbols/svg-600/rounded/image.svg?react";
 import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { ImageIcon } from "@shared/ui/icons";
 import type { TileLabelPlacement } from "./tile-preferences-store";
 
 interface LabelPlacementPreviewProps {
@@ -54,8 +53,7 @@ export function LabelPlacementPreview({
           textAlign: "center",
         }}
       >
-        <MaterialIcon
-          svg={ImageIcon}
+        <ImageIcon
           sx={{
             alignSelf: "center",
             flexShrink: 0,

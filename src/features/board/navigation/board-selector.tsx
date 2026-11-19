@@ -1,6 +1,4 @@
 import type { BoardSummary } from "@features/library";
-import ArrowDropDownIcon from "@material-symbols/svg-600/rounded/arrow_drop_down.svg?react";
-import SearchIcon from "@material-symbols/svg-600/rounded/search.svg?react";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button, { buttonClasses } from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -12,7 +10,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { ArrowDropDownIcon, SearchIcon } from "@shared/ui/icons";
 import { type ReactNode, type Ref, useRef, useState } from "react";
 import { useBoardRoute } from "./use-board-route";
 
@@ -52,7 +50,7 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           color="inherit"
-          endIcon={<MaterialIcon svg={ArrowDropDownIcon} color="action" />}
+          endIcon={<ArrowDropDownIcon color="action" />}
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
@@ -184,7 +182,7 @@ function BoardSearch({
           fullWidth
           startAdornment={
             <InputAdornment position="start">
-              <MaterialIcon svg={SearchIcon} />
+              <SearchIcon />
             </InputAdornment>
           }
           slotProps={{

@@ -53,14 +53,14 @@ describe("ThemeSettings", () => {
     }
 
     await expect
-      .element(firstDarkButton.getByTestId("theme-check"))
+      .element(firstDarkButton.getByTestId("CheckIcon"))
       .toBeInTheDocument();
     await expect
       .element(
         themeGroups
           .first()
           .getByRole("button", { name: "System" })
-          .getByTestId("theme-check"),
+          .getByTestId("CheckIcon"),
       )
       .not.toBeInTheDocument();
 

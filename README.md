@@ -115,4 +115,6 @@ Three short files show how a selected tile becomes part of a spoken message:
 
 First Words symbols are from [Mulberry Symbols](https://mulberrysymbols.org), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
+App icons are [Material Symbols](https://fonts.google.com/icons) by Google, licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
 The Quick Core board sets are by [OpenAAC](https://www.openaac.org) and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

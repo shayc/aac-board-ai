@@ -1,4 +1,3 @@
-import MoreVertIcon from "@material-symbols/svg-600/rounded/more_vert.svg?react";
 import IconButton from "@mui/material/IconButton";
 import ListItem, { listItemClasses } from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -8,7 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { MoreVertIcon } from "@shared/ui/icons";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router";
 
@@ -54,7 +53,7 @@ export function BoardSetListItem({
             onClick={(event) => onMenuOpen(event.currentTarget)}
             sx={{ border: "none" }}
           >
-            <MaterialIcon svg={MoreVertIcon} />
+            <MoreVertIcon />
           </IconButton>
         </Tooltip>
       }

@@ -3,7 +3,6 @@ import { VitePWA } from "@unplugin-pwa/vite";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import type { Plugin } from "vite";
-import svgr from "vite-plugin-svgr";
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import { BOARD_FILE_EXTENSIONS_BY_MIME_TYPE } from "./src/features/library/import/board-file-formats.ts";
 import {
@@ -26,7 +25,6 @@ export default defineConfig({
   plugins: [
     themeColorHtmlPlugin,
     react({ compiler: { panicThreshold: "all_errors" } }),
-    svgr({ svgrOptions: { dimensions: false } }),
     paraglideVitePlugin({
       project: "./project.inlang",
       outputStructure: "message-modules",

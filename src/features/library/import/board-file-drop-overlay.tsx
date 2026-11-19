@@ -1,11 +1,10 @@
-import DownloadIcon from "@material-symbols/svg-600/rounded/download.svg?react";
 import Backdrop from "@mui/material/Backdrop";
 import Grow from "@mui/material/Grow";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { DownloadIcon } from "@shared/ui/icons";
 
 interface BoardFileDropOverlayProps {
   open: boolean;
@@ -42,11 +41,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             borderRadius: theme.vars.shape.borderRadiusLg,
           })}
         >
-          <MaterialIcon
-            svg={DownloadIcon}
-            color="primary"
-            sx={{ fontSize: 56 }}
-          />
+          <DownloadIcon color="primary" sx={{ fontSize: 56 }} />
           <Typography component="p" variant="h6">
             {t(m.libraryDropToImport)}
           </Typography>

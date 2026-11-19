@@ -1,12 +1,10 @@
-import PlayArrowIcon from "@material-symbols/svg-600/rounded/play_arrow-fill.svg?react";
-import StopIcon from "@material-symbols/svg-600/rounded/stop-fill.svg?react";
 import { buttonClasses } from "@mui/material/Button";
 import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { PlayArrowFilledIcon, StopFilledIcon } from "@shared/ui/icons";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import {
   BoardControlButton,
@@ -42,7 +40,7 @@ export function PlayButton({
   const shortcutKeys = shortcutLabels[shortcut];
   const ariaKeyShortcuts = BOARD_SHORTCUT_ARIA_KEYS[shortcut];
   const handleClick = isPlaying ? onStop : onPlay;
-  const icon = isPlaying ? StopIcon : PlayArrowIcon;
+  const Icon = isPlaying ? StopFilledIcon : PlayArrowFilledIcon;
 
   if (shape === "pill") {
     return (
@@ -57,7 +55,7 @@ export function PlayButton({
             [`&.${buttonClasses.disabled}`]: disabledSx(theme),
           })}
         >
-          <MaterialIcon svg={icon} />
+          <Icon />
         </BoardControlButton>
       </ShortcutTooltip>
     );
@@ -82,7 +80,7 @@ export function PlayButton({
           },
         })}
       >
-        <MaterialIcon svg={icon} sx={{ fontSize: PLAY_ICON_SIZE }} />
+        <Icon sx={{ fontSize: PLAY_ICON_SIZE }} />
       </Fab>
     </ShortcutTooltip>
   );

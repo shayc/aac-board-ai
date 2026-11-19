@@ -1,8 +1,4 @@
 import { areSuggestionsSupported } from "@features/board";
-import LockIcon from "@material-symbols/svg-600/rounded/lock.svg?react";
-import RecordVoiceOverIcon from "@material-symbols/svg-600/rounded/record_voice_over.svg?react";
-import StarShineIcon from "@material-symbols/svg-600/rounded/star_shine.svg?react";
-import TranslateIcon from "@material-symbols/svg-600/rounded/translate.svg?react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -16,12 +12,18 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText, { listItemTextClasses } from "@mui/material/ListItemText";
 import type { Theme } from "@mui/material/styles";
+import type SvgIcon from "@mui/material/SvgIcon";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
-import { type IconSVG, MaterialIcon } from "@shared/ui/material-icon";
+import {
+  LockIcon,
+  RecordVoiceOverIcon,
+  StarShineIcon,
+  TranslateIcon,
+} from "@shared/ui/icons";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -31,7 +33,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  icon: IconSVG;
+  Icon: typeof SvgIcon;
   title: string;
   description: string;
 }
@@ -44,13 +46,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        icon: StarShineIcon,
+        Icon: StarShineIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
     : {
         id: "language",
-        icon: TranslateIcon,
+        Icon: TranslateIcon,
         title: t(m.onboardingLanguageTitle),
         description: t(m.onboardingLanguageDescription, {
           count: locales.length,
@@ -60,14 +62,14 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      icon: RecordVoiceOverIcon,
+      Icon: RecordVoiceOverIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
     suggestionsOrLanguageHighlight,
     {
       id: "free-private",
-      icon: LockIcon,
+      Icon: LockIcon,
       title: t(m.onboardingFreePrivateTitle),
       description: t(m.onboardingFreePrivateDescription),
     },
@@ -111,10 +113,10 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
               pl: 2,
             }}
           >
-            {highlights.map(({ id, icon, title, description }) => (
+            {highlights.map(({ id, Icon, title, description }) => (
               <HighlightItem
                 key={id}
-                icon={icon}
+                Icon={Icon}
                 title={title}
                 description={description}
               />
@@ -176,7 +178,7 @@ function actionsSx(theme: Theme) {
 
 type HighlightItemProps = Omit<Highlight, "id">;
 
-function HighlightItem({ icon, title, description }: HighlightItemProps) {
+function HighlightItem({ Icon, title, description }: HighlightItemProps) {
   return (
     <ListItem
       disableGutters
@@ -192,7 +194,7 @@ function HighlightItem({ icon, title, description }: HighlightItemProps) {
           fontSize: "36px",
         }}
       >
-        <MaterialIcon svg={icon} color="primary" fontSize="inherit" />
+        <Icon color="primary" fontSize="inherit" />
       </ListItemIcon>
 
       <ListItemText

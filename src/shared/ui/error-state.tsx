@@ -1,11 +1,10 @@
-import ErrorIcon from "@material-symbols/svg-600/rounded/error.svg?react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { ElementType, ReactNode } from "react";
-import { MaterialIcon } from "./material-icon";
+import { ErrorIcon } from "./icons";
 
-const defaultIcon = <MaterialIcon svg={ErrorIcon} />;
+const defaultIcon = <ErrorIcon />;
 
 interface ErrorStateProps {
   icon?: ReactNode;

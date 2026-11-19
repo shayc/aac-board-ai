@@ -1,11 +1,9 @@
-import DownloadingIcon from "@material-symbols/svg-600/rounded/downloading.svg?react";
-import TranslateIcon from "@material-symbols/svg-600/rounded/translate.svg?react";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { DownloadingIcon, TranslateIcon } from "@shared/ui/icons";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
 import { useIsTranslatingBoards } from "./board-translation-coordinator";
@@ -19,7 +17,7 @@ export function BoardTranslationNotice() {
   if (progress !== null) {
     return (
       <TranslationStatusAlert
-        icon={<MaterialIcon svg={DownloadingIcon} fontSize="inherit" />}
+        icon={<DownloadingIcon fontSize="inherit" />}
         title={t(m.languageDownloading)}
         description={t(m.modelDownloadProgress, {
           progress: Math.round(progress * 100),
@@ -31,7 +29,7 @@ export function BoardTranslationNotice() {
   if (isTranslating) {
     return (
       <TranslationStatusAlert
-        icon={<MaterialIcon svg={TranslateIcon} fontSize="inherit" />}
+        icon={<TranslateIcon fontSize="inherit" />}
         title={t(m.languageTranslating)}
       />
     );

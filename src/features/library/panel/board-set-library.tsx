@@ -1,4 +1,3 @@
-import LibraryAddIcon from "@material-symbols/svg-600/rounded/library_add.svg?react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,8 +9,8 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
+import { LibraryAddIcon } from "@shared/ui/icons";
 import { LoadingState } from "@shared/ui/loading-state";
-import { MaterialIcon } from "@shared/ui/material-icon";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useActiveBoardSetId } from "../board-paths";
@@ -101,7 +100,7 @@ export function BoardSetLibrary() {
         <ListItem disablePadding>
           <ListItemButton onClick={() => void pickAndImport()}>
             <ListItemIcon>
-              <MaterialIcon svg={LibraryAddIcon} />
+              <LibraryAddIcon />
             </ListItemIcon>
             <ListItemText primary={t(m.libraryImportBoardFiles)} />
           </ListItemButton>

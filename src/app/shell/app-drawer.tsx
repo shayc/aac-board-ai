@@ -1,4 +1,3 @@
-import CloseIcon from "@material-symbols/svg-600/rounded/close.svg?react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -9,7 +8,7 @@ import { useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { ErrorState } from "@shared/ui/error-state";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { CloseIcon } from "@shared/ui/icons";
 import { type ReactNode, useState } from "react";
 
 const DRAWER_BASE_WIDTH = "320px";
@@ -121,7 +120,7 @@ function AppDrawerContent({
             edge="end"
             onClick={onClose}
           >
-            <MaterialIcon svg={CloseIcon} />
+            <CloseIcon />
           </IconButton>
         </Tooltip>
       </Toolbar>

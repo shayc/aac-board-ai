@@ -1,9 +1,8 @@
-import StarShineIcon from "@material-symbols/svg-600/rounded/star_shine-fill.svg?react";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { MaterialIcon } from "@shared/ui/material-icon";
+import { StarShineFilledIcon } from "@shared/ui/icons";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
@@ -26,7 +25,7 @@ export function SuggestionStatusNotice({
     case "not-enabled":
       return (
         <Chip
-          icon={<MaterialIcon svg={StarShineIcon} />}
+          icon={<StarShineFilledIcon />}
           label={t(m.suggestionsEnable)}
           color="primary"
           variant="outlined"
