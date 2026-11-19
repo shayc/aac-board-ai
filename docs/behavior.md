@@ -483,8 +483,9 @@ what such a screen lacks, so:
 
 - The controls keep their places from above `sm`, whatever the width.
 - The spacing tightens as it does below `sm`.
-- The app bar and the drawers' toolbars keep their full height: iOS hides the
-  status bar there, so the toolbar's own height is the only room above them.
+- The app bar and the drawers' toolbars keep MUI's heights, 64px from the `sm`
+  width up: iOS hides the status bar there, so the toolbar's own height is the
+  only room above them.
 - The message bar drops to a compact height, 64px and its inset, with smaller
   symbols, and play and the home button shrink to fit it. Backspace shrinks a
   step further, to 52px, so it stays smaller than play as it is on larger
