@@ -56,7 +56,12 @@ const KEYBOARD_BOARD: OBFBoard = {
     { id: "word", label: "the" },
     { id: "letter-c", label: "C", action: "+c" },
     { id: "letter-a", label: "A", action: "+a" },
-    { id: "space", label: "space", action: ":space" },
+    {
+      id: "space",
+      label: " ",
+      image_id: "space-symbol",
+      actions: [":space", ":shift"],
+    },
     { id: "sp1", label: " shift", action: ":shift" },
   ],
   grid: {
@@ -64,6 +69,7 @@ const KEYBOARD_BOARD: OBFBoard = {
     columns: 5,
     order: [["word", "letter-c", "letter-a", "space", "sp1"]],
   },
+  images: [{ id: "space-symbol", data: TEST_IMAGE_SRC }],
 };
 
 const SPEAK_THEN_CLEAR_BOARD: OBFBoard = {
@@ -853,26 +859,31 @@ describe("CommunicationBoard", () => {
       expect(outlinedMessageParts(screen)).toEqual([]);
     });
 
-    test("spells a new word after a word tile and closes it with space", async () => {
+    test("ends the spelled word with an image-only Space tile", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
       const messageItems = getMessageItems(screen);
+      const space = screen.getByRole("button", { name: "Space", exact: true });
 
       await screen.getByRole("button", { name: "the" }).click();
       await screen.getByRole("button", { name: "C", exact: true }).click();
       await screen.getByRole("button", { name: "A", exact: true }).click();
-      await screen.getByRole("button", { name: "space" }).click();
-      await screen.getByRole("button", { name: "the" }).click();
+      await space.click();
+      await screen.getByRole("button", { name: "C", exact: true }).click();
 
+      expect(space.element().textContent).toBe("");
+      expect(space.element().querySelector("img")?.getAttribute("src")).toBe(
+        TEST_IMAGE_SRC,
+      );
       await expect.element(messageItems).toHaveLength(3);
       await expect.element(messageItems.nth(0)).toHaveTextContent("the");
       await expect.element(messageItems.nth(1)).toHaveTextContent("ca");
-      await expect.element(messageItems.nth(2)).toHaveTextContent("the");
+      await expect.element(messageItems.nth(2)).toHaveTextContent("c");
     });
 
     test("leaves the message empty when space is pressed first", async () => {
       const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
 
-      await screen.getByRole("button", { name: "space" }).click();
+      await screen.getByRole("button", { name: "Space", exact: true }).click();
 
       await expect.element(getMessageItems(screen)).toHaveLength(0);
       await expect
@@ -1064,6 +1075,20 @@ describe("CommunicationBoard", () => {
   });
 
   describe("label and image preferences", () => {
+    test("names an unlabeled command in the UI language on a board in another language", async () => {
+      setCommunicationLanguage("fr");
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+      const space = screen.getByRole("button", { name: "Espace", exact: true });
+
+      await expect.element(space).toBeVisible();
+      expect(space.element().closest("[lang]")?.getAttribute("lang")).toBe(
+        "fr",
+      );
+      await expect
+        .element(screen.getByRole("button", { name: "the", exact: true }))
+        .toHaveAttribute("lang", "en");
+    });
+
     test("hides tile labels visually without removing accessible names", async () => {
       setTileLabelPlacement("hidden");
 

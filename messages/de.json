@@ -117,6 +117,7 @@
   "tileLabelBottom": "Unten",
   "tileLabelHidden": "Ausgeblendet",
   "tileOpensBoard": "Öffnet Tafel",
+  "tileSpace": "Leertaste",
   "scanningEnabled": "Scanning mit Taster aktivieren",
   "scanningMethod": "Scanning-Methode",
   "scanningMethodAuto": "Automatisches Scanning",

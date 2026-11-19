@@ -175,6 +175,9 @@ how the message changes:
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles run their supported actions.
    The board keeps unsupported commands and skips them on activation.
+   A tile with no label, vocalization, or board link takes its accessible name
+   from a single supported command such as `:space` or `:speak`. Spelling tiles
+   and tiles with multiple supported actions need an authored name.
    The [glossary](architecture.md#glossary) says how spelling, a space, and backspace change a
    message part.
    With the message setting "Speak symbols when added" off, a tile stays
@@ -410,11 +413,10 @@ follow the UI locale, so a communication language without a catalog keeps both
 on the fallback locale its UI text is shown in. The communication board sets its
 own `dir` from the communication language, so a right-to-left language without
 a catalog still gets a right-to-left board under a left-to-right app shell.
-Tiles carry the `lang` of the language the board is shown in, message parts
-carry their own language, and suggestions carry the communication language, so
-assistive technology pronounces them correctly whatever the UI locale is. A
-board whose file declares no language carries no `lang` and inherits the
-document's.
+Tiles with authored names carry the `lang` of the language the board is shown
+in. Generated command names inherit the document's UI language, as do tiles on
+boards whose files declare no language. Message parts carry their own language,
+and suggestions carry the communication language.
 
 The app and board each use
 [`DirectionalThemeProvider`](../src/shared/theme/directional-theme-provider.tsx)
