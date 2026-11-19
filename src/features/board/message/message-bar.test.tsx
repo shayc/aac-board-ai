@@ -57,7 +57,6 @@ function getScrollContainer(container: Element): HTMLElement {
   return scroller;
 }
 
-// The fill is a pseudo-element, so its resolved insets locate it.
 function fillBounds(scroller: HTMLElement): { left: number; right: number } {
   const fill = getComputedStyle(scroller, "::after");
   const scrollerBounds = scroller.getBoundingClientRect();
