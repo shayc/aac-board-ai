@@ -281,7 +281,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.actions).toEqual([{ kind: "play" }]);
     });
 
-    test("maps built-in and spell actions in order and drops unknown actions", () => {
+    test("maps actions in order and preserves the original strings for unsupported actions", () => {
       const obfBoard = boardWithButton({
         id: "btn-1",
         label: "Spell",
@@ -304,8 +304,11 @@ describe("obfToBoard", () => {
         { kind: "space" },
         { kind: "backspace" },
         { kind: "spell", text: "ing" },
+        { kind: "unsupported", raw: ":unknown" },
         { kind: "clear" },
+        { kind: "unsupported", raw: "" },
         { kind: "home" },
+        { kind: "unsupported", raw: "hello" },
         { kind: "play" },
       ]);
     });

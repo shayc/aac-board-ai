@@ -34,7 +34,8 @@ export type BoardAction =
   | { readonly kind: "clear" }
   | { readonly kind: "home" }
   | { readonly kind: "play" }
-  | { readonly kind: "spell"; readonly text: string };
+  | { readonly kind: "spell"; readonly text: string }
+  | { readonly kind: "unsupported"; readonly raw: string };
 
 export type StringTranslations = ReadonlyMap<string, string>;
 

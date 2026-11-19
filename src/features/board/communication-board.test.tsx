@@ -57,11 +57,12 @@ const KEYBOARD_BOARD: OBFBoard = {
     { id: "letter-c", label: "C", action: "+c" },
     { id: "letter-a", label: "A", action: "+a" },
     { id: "space", label: "space", action: ":space" },
+    { id: "sp1", label: " shift", action: ":shift" },
   ],
   grid: {
     rows: 1,
-    columns: 4,
-    order: [["word", "letter-c", "letter-a", "space"]],
+    columns: 5,
+    order: [["word", "letter-c", "letter-a", "space", "sp1"]],
   },
 };
 
@@ -564,6 +565,18 @@ describe("CommunicationBoard", () => {
         expect(speech.spokenTexts()).toEqual(["hi"]);
       });
       expect(audio.play).not.toHaveBeenCalled();
+    });
+
+    test("leaves the message untouched and silent when a tile's command is unsupported", async () => {
+      const screen = await renderCommunicationBoard(KEYBOARD_BOARD);
+      const messageItems = getMessageItems(screen);
+
+      await screen.getByRole("button", { name: "the" }).click();
+      await screen.getByRole("button", { name: "shift" }).click();
+
+      await expect.element(messageItems).toHaveLength(1);
+      await expect.element(messageItems).toHaveTextContent("the");
+      expect(speech.spokenTexts()).toEqual(["the"]);
     });
 
     test("adds a tile to the message silently when tiles are not played, and plays it with the message", async () => {

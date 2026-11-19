@@ -118,6 +118,7 @@ function toMessageEdits(
         return action;
       case "home":
       case "play":
+      case "unsupported":
         return [];
       default:
         return assertNever(action);

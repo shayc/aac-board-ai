@@ -209,7 +209,7 @@ describe("createButtonActivator", () => {
     expect(navigation.goHome).toHaveBeenCalledOnce();
   });
 
-  test("applies an edit-only sequence in order without playing", async () => {
+  test("applies supported edits in order and skips unsupported actions", async () => {
     const { activateButton, playback, readLabels } = await setup([
       ...word("hello"),
       ...word("world"),
@@ -220,6 +220,7 @@ describe("createButtonActivator", () => {
       label: "",
       actions: [
         { kind: "backspace" },
+        { kind: "unsupported", raw: ":shift" },
         { kind: "backspace" },
         { kind: "spell", text: "d" },
         { kind: "space" },

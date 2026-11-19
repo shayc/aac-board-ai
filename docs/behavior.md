@@ -173,7 +173,8 @@ coordinates navigation and playback, and hands message edits to
 how the message changes:
 
 1. A tile linking to another board navigates immediately. A tile without actions
-   appends a message part and plays it. Other tiles apply their actions in order.
+   appends a message part and plays it. Other tiles run their supported actions.
+   The board keeps unsupported commands and skips them on activation.
    The [glossary](architecture.md#glossary) says how spelling, a space, and backspace change a
    message part.
    With the message setting "Speak symbols when added" off, a tile stays
