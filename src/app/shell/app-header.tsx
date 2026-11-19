@@ -29,7 +29,15 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
     useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.boards;
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={(theme) => ({
+        // iOS hides the status bar on a phone on its side, leaving no top inset.
+        [shortLandscape(theme)]: {
+          pt: safeAreaGutter(theme.spacing(2), "top"),
+        },
+      })}
+    >
       <Toolbar
         disableGutters
         sx={(theme) => ({

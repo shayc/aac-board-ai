@@ -471,7 +471,8 @@ message bar. Below `sm`
 the home and play buttons move under the grid as two pills of one width, with
 backspace's icon size, home at the start and play at the far end, with the room
 that is left between them. The row is inset twice the page margin, 32px, so the
-thumb reaches both without stretching.
+thumb reaches both without stretching. Below it is the page margin or the home
+indicator's inset, whichever is larger, as iOS's own bars sit.
 Backspace stays in the message bar at full size, and the spacing tightens, as
 [Board spacing](#board-spacing) describes.
 
@@ -483,6 +484,8 @@ what such a screen lacks, so:
 - The controls keep their places from above `sm`, whatever the width.
 - The spacing tightens as it does below `sm`.
 - The app bar and the other toolbars take their shortest height.
+- The app bar sits one page margin, 16px, below the top edge, where iOS hides
+  the status bar and leaves no inset.
 - The message bar drops to a compact height, 64px and its inset, with smaller
   symbols, and play and the home button shrink to fit it. Backspace shrinks a
   step further, to 52px, so it stays smaller than play as it is on larger
