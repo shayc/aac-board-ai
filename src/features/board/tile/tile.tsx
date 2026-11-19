@@ -177,12 +177,8 @@ function tileSx(theme: Theme) {
     backgroundColor: background,
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadiusSm,
-    boxShadow: theme.vars.shadows[2],
-    // Bright tiles need a crisper edge on the light board; states keep their lift.
-    ...theme.applyStyles("light", {
-      boxShadow:
-        "0 0 0 1px rgb(16 24 40 / 0.12), 0 1px 2px rgb(16 24 40 / 0.09)",
-    }),
+    // Deeper resting shadows blur into the gutters and muddy tile edges.
+    boxShadow: theme.vars.shadows[1],
     // A press tints the tile's own background; the theme's overlay is hidden.
     "&::before": {
       display: "none",
