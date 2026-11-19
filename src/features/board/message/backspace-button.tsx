@@ -6,7 +6,6 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
-import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { BackspaceIcon } from "@shared/ui/icons";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
@@ -14,9 +13,7 @@ import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 import {
   CONTROL_ICON_SIZE,
-  CONTROL_SIZE_PROPERTY,
-  CONTROL_SIZES,
-  SMALL_CONTROL_ICON_SIZE,
+  MESSAGE_CONTROL_SIZE,
 } from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
@@ -28,16 +25,8 @@ const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 // stroke; MUI's default would outweigh the icon's lines.
 const RING_THICKNESS = 2.2;
 
-const BUTTON_SIZES = {
-  medium: CONTROL_SIZES.medium,
-  large: `var(${CONTROL_SIZE_PROPERTY}, ${CONTROL_SIZES.large}px)`,
-} as const;
-
-type BackspaceButtonSize = keyof typeof BUTTON_SIZES;
-
 interface BackspaceButtonProps {
   disabled?: boolean;
-  size?: BackspaceButtonSize;
   shortcutLabels: Pick<BoardShortcutLabels, "clear" | "spokenClear">;
   onPress: () => void;
   onLongPress: () => void;
@@ -45,7 +34,6 @@ interface BackspaceButtonProps {
 
 export function BackspaceButton({
   disabled = false,
-  size = "large",
   shortcutLabels,
   onPress,
   onLongPress,
@@ -72,7 +60,7 @@ export function BackspaceButton({
         {...focusableDisabledProps(disabled)}
         aria-label={t(m.messageBackspace)}
         aria-keyshortcuts={BOARD_SHORTCUT_ARIA_KEYS.backspace}
-        sx={(theme) => backspaceSx(theme, size)}
+        sx={backspaceSx}
       >
         <BackspaceIcon fontSize="inherit" sx={flipForRTL} />
 
@@ -94,20 +82,14 @@ export function BackspaceButton({
 // scheme resolves the action tokens in both themes. MUI clears a disabled icon
 // button's fill; it stays to keep the button's shape, and the dark-mode bar's
 // grey needs a heavier disabled icon.
-function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
-  const targetSize = BUTTON_SIZES[size];
+function backspaceSx(theme: Theme) {
   const { action } = theme.vars.palette;
 
   return {
     flexShrink: 0,
-    width: targetSize,
-    height: targetSize,
+    width: MESSAGE_CONTROL_SIZE,
+    height: MESSAGE_CONTROL_SIZE,
     fontSize: CONTROL_ICON_SIZE,
-    [shortLandscape(theme)]: {
-      width: CONTROL_SIZES.small,
-      height: CONTROL_SIZES.small,
-      fontSize: SMALL_CONTROL_ICON_SIZE,
-    },
     color: "text.primary",
     [`&, &.${iconButtonClasses.disabled}`]: {
       backgroundColor: action.selected,
