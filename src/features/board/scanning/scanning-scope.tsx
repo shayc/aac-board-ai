@@ -48,7 +48,7 @@ function scopeSx(theme: Theme) {
     },
     // The outline follows the radius, so the row's corners match its tiles'.
     [`& ${SCAN_HIGHLIGHTED_ROW_SELECTOR}`]: {
-      borderRadius: theme.vars.shape.borderRadius,
+      borderRadius: theme.vars.shape.borderRadiusSm,
     },
     // Two outlined controls would leave it unclear which one a switch selects.
     [`&:has(${OUTLINED_SELECTOR}) :is(.${buttonBaseClasses.focusVisible}, :focus-visible):not(${OUTLINED_SELECTOR})`]:

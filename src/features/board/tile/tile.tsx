@@ -176,7 +176,7 @@ function tileSx(theme: Theme) {
     color: `contrast-color(${background})`,
     backgroundColor: background,
     border: `4px solid ${borderColor}`,
-    borderRadius: theme.vars.shape.borderRadius,
+    borderRadius: theme.vars.shape.borderRadiusSm,
     boxShadow: theme.vars.shadows[2],
     // A press tints the tile's own background; the theme's overlay is hidden.
     "&::before": {
