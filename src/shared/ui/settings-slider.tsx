@@ -12,6 +12,8 @@ interface SettingsSliderProps {
   step: number;
   normalValue?: number;
   formatValue: (value: number) => string;
+  minLabel: string;
+  maxLabel: string;
 }
 
 export function SettingsSlider({
@@ -23,6 +25,8 @@ export function SettingsSlider({
   step,
   normalValue,
   formatValue,
+  minLabel,
+  maxLabel,
 }: SettingsSliderProps) {
   const labelId = useId();
 
@@ -51,6 +55,18 @@ export function SettingsSlider({
         step={step}
         marks={normalValue === undefined ? false : [{ value: normalValue }]}
       />
+
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+          gap: 2,
+          color: "text.secondary",
+        }}
+      >
+        <Typography variant="caption">{minLabel}</Typography>
+        <Typography variant="caption">{maxLabel}</Typography>
+      </Stack>
     </Stack>
   );
 }

@@ -46,6 +46,18 @@ describe("SpeechSettings", () => {
       .toBeInTheDocument();
   });
 
+  test("labels the ends of each speech slider", async () => {
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
+
+    const screen = await renderWithProviders(<SpeechSettings />);
+
+    for (const label of ["Slow", "Fast", "Low", "High", "Quiet", "Loud"]) {
+      await expect
+        .element(screen.getByText(label, { exact: true }))
+        .toBeVisible();
+    }
+  });
+
   test("groups voices under locale subheaders when multiple locales exist", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },

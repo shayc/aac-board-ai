@@ -59,6 +59,8 @@ export function ScanningSettings() {
           max={SCAN_INTERVAL_MS.max}
           step={100}
           formatValue={(value) => secondsFormat.format(value / MS_PER_SECOND)}
+          minLabel={t(m.scanningIntervalShort)}
+          maxLabel={t(m.scanningIntervalLong)}
         />
       )}
     </>

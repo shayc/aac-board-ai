@@ -52,6 +52,8 @@ export function SpeechSettings() {
         step={0.1}
         normalValue={SPEECH_RATE.defaultValue}
         formatValue={(value) => `${multiplierFormat.format(value)}×`}
+        minLabel={t(m.speechRateSlow)}
+        maxLabel={t(m.speechRateFast)}
       />
 
       <SettingsSlider
@@ -63,6 +65,8 @@ export function SpeechSettings() {
         step={0.1}
         normalValue={SPEECH_PITCH.defaultValue}
         formatValue={(value) => percentFormat.format(value)}
+        minLabel={t(m.speechPitchLow)}
+        maxLabel={t(m.speechPitchHigh)}
       />
 
       <SettingsSlider
@@ -73,6 +77,8 @@ export function SpeechSettings() {
         max={SPEECH_VOLUME.max}
         step={0.1}
         formatValue={(value) => percentFormat.format(value)}
+        minLabel={t(m.speechVolumeQuiet)}
+        maxLabel={t(m.speechVolumeLoud)}
       />
     </Stack>
   );

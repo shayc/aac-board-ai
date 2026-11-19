@@ -63,6 +63,8 @@ export function TileSettings() {
         max={TILE_BRIGHTNESS.max}
         step={BRIGHTNESS_STEP}
         formatValue={(value) => percentFormat.format(value)}
+        minLabel={t(m.tileBrightnessDim)}
+        maxLabel={t(m.tileBrightnessBright)}
       />
 
       <SettingsSlider
@@ -73,6 +75,8 @@ export function TileSettings() {
         max={TILE_SATURATION.max}
         step={SATURATION_STEP}
         formatValue={(value) => percentFormat.format(value)}
+        minLabel={t(m.tileSaturationMuted)}
+        maxLabel={t(m.tileSaturationVivid)}
       />
     </Stack>
   );
