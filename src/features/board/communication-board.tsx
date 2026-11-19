@@ -6,7 +6,10 @@ import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
-import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import {
+  overlappingSafeAreaGutter,
+  safeAreaInset,
+} from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
@@ -190,7 +193,10 @@ export function CommunicationBoard({
               sx={(theme) => ({
                 justifyContent: "space-between",
                 px: BOTTOM_CONTROLS_INSET,
-                pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
+                pb: overlappingSafeAreaGutter(
+                  theme.spacing(PAGE_MARGIN.xs),
+                  "bottom",
+                ),
               })}
             >
               {homeButton}
