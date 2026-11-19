@@ -3,16 +3,19 @@ import type { ComponentType, SVGProps } from "react";
 
 export type IconSvg = ComponentType<SVGProps<SVGSVGElement>>;
 
+// An SVG component draws its own children, so SvgIcon's titleAccess would be
+// dropped; name the control instead.
 interface IconProps extends Omit<
   SvgIconProps,
-  "children" | "component" | "inheritViewBox" | "viewBox"
+  "children" | "component" | "inheritViewBox" | "titleAccess" | "viewBox"
 > {
   svg: IconSvg;
 }
 
-// Icons are Material Symbols Rounded at weight 600, imported one file each as
-// `@material-symbols/svg-600/rounded/<name>.svg?react`; lighter weights thin
-// out on the board's controls, and `-fill` files draw solid shapes such as play.
+// Icons are Material Symbols Rounded, one file each from
+// `@material-symbols/svg-600/rounded/<name>.svg?react`. The package draws at
+// the 48px optical size, so weight 600 keeps lines as heavy as Material's at
+// 20–36px; `-fill` files draw solid shapes such as play.
 export function Icon({ svg, ...props }: IconProps) {
   return <SvgIcon {...props} component={svg} inheritViewBox />;
 }

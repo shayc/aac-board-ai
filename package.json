@@ -41,6 +41,7 @@
   "devDependencies": {
     "@inlang/paraglide-js": "^3.2.2",
     "@playwright/test": "^1.65.1",
+    "@svgr/plugin-svgo": "^8.1.0",
     "@types/dom-chromium-ai": "^0.0.18",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
