@@ -53,16 +53,11 @@ describe("AppShell", () => {
   });
 
   test.each([
-    {
-      screen: "a phone on its side",
-      width: 844,
-      height: 390,
-      appBarHeight: 48,
-    },
-    { screen: "a tablet", width: 844, height: 1100, appBarHeight: 64 },
+    { screen: "a phone on its side", width: 844, height: 390 },
+    { screen: "a tablet", width: 844, height: 1100 },
   ])(
-    "sizes the app bar to the height of $screen",
-    async ({ width, height, appBarHeight }) => {
+    "gives the app bar its full height on $screen",
+    async ({ width, height }) => {
       await setTestViewport(width, height);
       const screen = await renderAppShellPastOnboarding();
 
@@ -70,7 +65,7 @@ describe("AppShell", () => {
         .getByRole("banner")
         .element()
         .getBoundingClientRect();
-      expect(bounds.height).toBeCloseTo(appBarHeight, 0);
+      expect(bounds.height).toBeCloseTo(64, 0);
     },
   );
 
