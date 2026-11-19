@@ -7,5 +7,9 @@ export const CONTROL_SIZES = { small: 52, medium: 64, large: 80 } as const;
 // pill; only round play is heavier.
 export const CONTROL_ICON_SIZE = 28;
 
+// MUI's default icon size, as in the app bar, for the small control: 28px
+// would crowd a 52px button.
+export const SMALL_CONTROL_ICON_SIZE = 24;
+
 // Set by the message bar, so its largest control cannot outgrow it.
 export const CONTROL_SIZE_PROPERTY = "--control-size";

@@ -457,7 +457,7 @@ describe("CommunicationBoard", () => {
   describe("message row icons", () => {
     test.each([
       { name: "a tablet", width: 1024, height: 703 },
-      { name: "a wide, short desktop window", width: 1440, height: 531 },
+      { name: "a desktop window", width: 1440, height: 900 },
     ])(
       "gives home backspace's icon, lighter than play's, on $name",
       async ({ width, height }) => {
@@ -472,6 +472,25 @@ describe("CommunicationBoard", () => {
 
         expect(home).toBe(backspace);
         expect(backspace).toBeLessThan(play);
+      },
+    );
+
+    test.each([
+      { name: "a phone on its side", width: 874, height: 354 },
+      { name: "a wide, short desktop window", width: 1440, height: 531 },
+    ])(
+      "gives the smaller backspace the app bar's icon size on $name",
+      async ({ width, height }) => {
+        await setTestViewport(width, height);
+        const screen = await renderCommunicationBoard(LARGE_GRID_BOARD);
+        await expect.element(screen.getByRole("grid")).toBeVisible();
+
+        const button = (name: string) => screen.getByRole("button", { name });
+        const home = iconSize(button("Go home"));
+        const backspace = iconSize(button("Backspace"));
+
+        expect(backspace).toBe(24);
+        expect(backspace).toBeLessThan(home);
       },
     );
 

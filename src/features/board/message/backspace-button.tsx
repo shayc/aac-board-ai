@@ -16,6 +16,7 @@ import {
   CONTROL_ICON_SIZE,
   CONTROL_SIZE_PROPERTY,
   CONTROL_SIZES,
+  SMALL_CONTROL_ICON_SIZE,
 } from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
@@ -101,11 +102,12 @@ function backspaceSx(theme: Theme, size: BackspaceButtonSize) {
     flexShrink: 0,
     width: targetSize,
     height: targetSize,
+    fontSize: CONTROL_ICON_SIZE,
     [shortLandscape(theme)]: {
       width: CONTROL_SIZES.small,
       height: CONTROL_SIZES.small,
+      fontSize: SMALL_CONTROL_ICON_SIZE,
     },
-    fontSize: CONTROL_ICON_SIZE,
     color: "text.primary",
     [`&, &.${iconButtonClasses.disabled}`]: {
       backgroundColor: action.selected,

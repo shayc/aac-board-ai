@@ -4,7 +4,8 @@ export function safeAreaInset(side: SafeAreaSide): string {
   return `env(safe-area-inset-${side})`;
 }
 
-// Added: beside a notch or island, content keeps its gutter past the inset.
+// For an inset that hardware fills, such as a notch or island: the gutter
+// starts past it.
 export function safeAreaGutter(
   base: string | number,
   side: SafeAreaSide,
@@ -12,9 +13,9 @@ export function safeAreaGutter(
   return `calc(${toLength(base)} + ${safeAreaInset(side)})`;
 }
 
-// The larger of the two: the home indicator's inset is already margin enough,
-// as iOS's own bars sit inside it.
-export function overlappingSafeAreaGutter(
+// For an inset that only a gesture area fills, such as the home indicator:
+// content may sit inside it, as iOS's own bars do.
+export function maxSafeAreaGutter(
   base: string | number,
   side: SafeAreaSide,
 ): string {

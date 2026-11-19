@@ -3,6 +3,7 @@ import { drawerClasses } from "@mui/material/Drawer";
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { setTestViewport } from "@shared/testing/viewport";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { AppDrawer } from "./app-drawer";
@@ -137,6 +138,18 @@ describe("AppDrawer", () => {
       );
     },
   );
+
+  test("gives its header the app bar's full height on a phone on its side", async () => {
+    await setTestViewport(844, 390);
+    const screen = await renderWithProviders(renderDrawer(true));
+
+    const bounds = screen
+      .getByRole("heading", { name: "Panel" })
+      .element()
+      .closest("header")
+      ?.getBoundingClientRect();
+    expect(bounds?.height).toBeCloseTo(64, 0);
+  });
 
   test("has no accessibility violations when its content fails to render", async () => {
     const screen = await renderWithProviders(

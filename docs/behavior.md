@@ -461,7 +461,8 @@ them the same in everything but size:
 Layout turns on one width breakpoint, `sm`. Above it the home button sits in
 the message bar's row, before the bar, as a round button the size of its play
 button, so the row has one large button at each end. Its icon is backspace's
-size, a step lighter than play's, so play stays the main action.
+size, a step lighter than play's, so play stays the main action, except where
+backspace shrinks on a short landscape screen.
 Backspace and the play button sit inside the bar at its end, play last and
 backspace a step smaller beside it. Backspace has a light tonal fill, as MUI
 gives a filled default chip, so play stays the bar's one solid shape; the fill
@@ -483,12 +484,13 @@ what such a screen lacks, so:
 
 - The controls keep their places from above `sm`, whatever the width.
 - The spacing tightens as it does below `sm`.
-- The app bar and the drawers' toolbars keep their full height: iOS hides the
-  status bar there, so the toolbar's own height is the only room above them.
+- The app bar and the drawers' toolbars keep MUI's heights, 64px from the `sm`
+  width up: iOS hides the status bar there, so the toolbar's own height is the
+  only room above them.
 - The message bar drops to a compact height, 64px and its inset, with smaller
   symbols, and play and the home button shrink to fit it. Backspace shrinks a
   step further, to 52px, so it stays smaller than play as it is on larger
-  screens.
+  screens, and its icon to MUI's default 24px, as in the app bar.
 - The [welcome dialog](../src/app/onboarding/onboarding-dialog.tsx) stays
   full-screen with its action in view.
 
