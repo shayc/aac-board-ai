@@ -1,3 +1,4 @@
+import { autocompleteClasses } from "@mui/material/Autocomplete";
 import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { red } from "@mui/material/colors";
@@ -423,6 +424,27 @@ const themeOptions = {
         option: ({ theme }) => ({
           marginInline: 4,
           borderRadius: theme.vars.shape.borderRadiusSm,
+        }),
+        listbox: ({ theme }) => ({
+          // MUI drops the 48px row from the sm breakpoint up, tablets included.
+          "@media (pointer: coarse)": {
+            [`& .${autocompleteClasses.option}`]: { minHeight: 48 },
+          },
+          // MUI turns a highlighted selected option grey on touch screens,
+          // where it would look like any other highlighted option.
+          "@media (hover: none)": {
+            [`& .${autocompleteClasses.option}[aria-selected="true"].${autocompleteClasses.focused}`]:
+              {
+                backgroundColor: theme.alpha(
+                  theme.vars.palette.primary.main,
+                  theme.vars.palette.action.selectedOpacity,
+                ),
+              },
+          },
+          // The keyboard ring alone marks the option, as in lists and menus.
+          // MUI also gives it the hover fill.
+          [`& .${autocompleteClasses.option}.${autocompleteClasses.focusVisible}:not([aria-selected="true"])`]:
+            { backgroundColor: "transparent" },
         }),
       },
     },

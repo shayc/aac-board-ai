@@ -115,6 +115,23 @@ describe("BoardSelector", () => {
       .toHaveAttribute("aria-selected", "true");
   });
 
+  test("marks only the current board with a check", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("button", { name: "Home" }).click();
+
+    await expect
+      .element(
+        screen.getByRole("option", { name: "Home" }).getByTestId("CheckIcon"),
+      )
+      .toBeInTheDocument();
+    await expect
+      .element(
+        screen.getByRole("option", { name: "Food" }).getByTestId("CheckIcon"),
+      )
+      .not.toBeInTheDocument();
+  });
+
   test("navigates and closes the popup when a board is clicked", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 
