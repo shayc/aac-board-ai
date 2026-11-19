@@ -47,7 +47,6 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           <IconButton
             aria-label={t(m.libraryOpen)}
             size="large"
-            edge="start"
             onClick={onOpenLibrary}
             sx={{ justifySelf: "start" }}
           >
@@ -63,7 +62,6 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           <IconButton
             aria-label={t(m.settingsOpen)}
             size="large"
-            edge="end"
             onClick={onOpenSettings}
             sx={{ justifySelf: "end" }}
           >
