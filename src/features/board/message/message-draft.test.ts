@@ -192,6 +192,55 @@ describe("message draft", () => {
     expect(reportedErrors).toEqual([]);
   });
 
+  test("restores the words and reports the cause when a source board cannot be read", async () => {
+    const reportedErrors = collectReportedErrors();
+    await resetBoardsDB();
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [
+        createTilePart({
+          label: "hello",
+          language: "en",
+          imageSrc: EMBEDDED_IMAGE,
+          source: EMBEDDED_SOURCE,
+        }),
+      ],
+    });
+    onTestFinished(await makeBoardsDBUnreadable());
+
+    const restored = await restoreMessageDraft();
+
+    expect(restored.parts).toMatchObject([
+      { label: "hello", imageSrc: undefined },
+    ]);
+    expect(reportedErrors.map(String)).toEqual([
+      expect.stringContaining(
+        "Failed to read source boards of the message draft: ",
+      ),
+    ]);
+  });
+
+  test("keeps embedded media and drops a linked URL when only the compact draft fits", async () => {
+    await resetBoardsDB();
+    await seedBoardSets([
+      { id: "embedded-set", rootBoardId: "home", boards: [EMBEDDED_BOARD] },
+    ]);
+    saveMessageDraft(MESSAGE);
+    fillLocalStorage(8192);
+    const tile = createTilePart({
+      label: "hello",
+      language: "en",
+      imageSrc: EMBEDDED_IMAGE,
+      source: EMBEDDED_SOURCE,
+    });
+    const soundSrc = `https://example.com/sound?token=${"x".repeat(65536)}`;
+
+    saveMessageDraft({ ...MESSAGE, parts: [{ ...tile, soundSrc }] });
+
+    const restored = await restoreMessageDraft();
+    expect(restored.parts).toEqual([{ ...tile, soundSrc: EMBEDDED_SOUND }]);
+  });
+
   test("restores the latest words when only the compact draft fits", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage(8192);

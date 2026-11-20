@@ -35,6 +35,10 @@ interface SavedTilePart extends TilePart {
 
 type SavedPart = TextPart | SavedTilePart;
 
+interface SavedDraft extends Omit<Message, "parts"> {
+  readonly parts: readonly SavedPart[];
+}
+
 export function saveMessageDraft(message: Message): void {
   if (message.parts.length === 0) {
     removeMessageDraft();
@@ -42,14 +46,14 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const draft = { ...message, parts: message.parts.map(toSavedPart) };
-
-  if (trySaveDraft(draft)) {
+  const parts = message.parts.map(toSavedPart);
+  if (trySaveDraft({ ...message, parts })) {
     return;
   }
 
-  const compact = { ...message, parts: message.parts.map(withoutMedia) };
-  if (!trySaveDraft(compact)) {
+  // Only a linked URL can be long; keys to stored media stay.
+  const compactParts = parts.map(withoutLinkedMedia);
+  if (!trySaveDraft({ ...message, parts: compactParts })) {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
   }
@@ -137,7 +141,7 @@ function isEmbedded(src: string | undefined): boolean {
   return src !== undefined && /^data:/i.test(src);
 }
 
-function trySaveDraft(draft: Message): boolean {
+function trySaveDraft(draft: SavedDraft): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
 
@@ -147,14 +151,12 @@ function trySaveDraft(draft: Message): boolean {
   }
 }
 
-function withoutMedia(part: MessagePart): MessagePart {
+function withoutLinkedMedia(part: SavedPart): SavedPart {
   if (part.kind === "text") {
     return part;
   }
 
-  const { kind, id, label, language, vocalization } = part;
-
-  return { kind, id, label, language, vocalization };
+  return { ...part, imageSrc: undefined, soundSrc: undefined };
 }
 
 function readSavedDraft(): unknown {

@@ -110,8 +110,9 @@ it is left out, since it could only come back broken. A picture or sound
 embedded in a board file as a data URL is too large to save with every part, so
 the draft keeps the button the part came from and reads the media back from
 that board on restore; the part comes back without it when the board is gone.
-If the full draft exceeds the storage quota, saving retries without media
-references, preserving the ordered words, their languages and vocalizations.
+If the draft exceeds the storage quota, saving retries without linked picture
+and sound URLs, the only part that can be long, and keeps the words and the
+keys to stored media.
 The undo history is not saved.
 
 While a board is open,
@@ -306,8 +307,9 @@ sit in loaders, stores, hooks and components alike.
 - **Library:** a failed list load, catalog download, export or delete is
   reported beside its message.
 - **Stored pictures and sounds:** a board opens, and a message draft is
-  restored, without the assets that can't be read. Each reports its failed
-  reads together as one error. An asset that was never stored is not a failure.
+  restored, without the assets and source boards that can't be read. Each
+  reports its failed reads together as one error. An asset that was never
+  stored, or a source board that is gone, is not a failure.
 - **Translation:** a failed pass is reported, as described in
   [Translate board sets](#translate-board-sets).
 
