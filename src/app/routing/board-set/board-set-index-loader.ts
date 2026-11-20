@@ -1,6 +1,6 @@
 import { getBoardSetRecord, rootBoardPath } from "@features/library";
 import { type LoaderFunctionArgs, redirect } from "react-router";
-import { ROUTE_ERROR_CODES, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../errors/route-error";
 
 export async function boardSetIndexLoader({
   params,

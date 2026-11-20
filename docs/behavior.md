@@ -150,7 +150,7 @@ one already in the communication language, has the same boards as before and is
 not revalidated. Other sets are not revalidated either: that would re-run a
 `?board=` link import still in flight. The library knows nothing about route
 loaders; the app owns that decision in
-[`useRevalidateBoardSet`](../src/app/routing/use-revalidate-board-set.ts). A set the
+[`useRevalidateBoardSet`](../src/app/routing/board-set/use-revalidate-board-set.ts). A set the
 translator fails on, for example because a model download needs a user
 gesture, stays in its source language until the next run. A storage or other
 error ends the pass and is reported, and passes queued behind it still run.
@@ -289,7 +289,7 @@ gives no reason either way. The code that catches an error and stops it from
 travelling further is the code that reports it, which is why the reports below
 sit in loaders, stores, hooks and components alike.
 
-- **Routes:** [`reportRouteError`](../src/app/routing/route-error.ts) reports
+- **Routes:** [`reportRouteError`](../src/app/routing/errors/route-error.ts) reports
   loader, action and render errors that reach the error page, except the ones
   the page explains with its own title: board not found and board set not
   found.
@@ -343,10 +343,10 @@ The header's
 [board selector](../src/features/board/navigation/board-selector.tsx) is the
 page heading: a button showing the current board's name. It opens a popup with
 a search field fixed above the set's boards, which scroll beneath it with the
-current board selected. The search field starts empty and takes focus on open
-only on a device with a mouse, so a touch screen does not raise its keyboard
-over the list. Choosing a board or pressing Escape closes the popup and returns
-focus to the heading.
+current board selected and marked with a check. The search field starts empty
+and takes focus on open only on a device with a mouse, so a touch screen does
+not raise its keyboard over the list. Choosing a board or pressing Escape closes
+the popup and returns focus to the heading.
 
 Undo steps back through a bounded history of changes to the message. There is
 no redo, and nothing in the interface names undo yet.

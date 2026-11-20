@@ -1,6 +1,6 @@
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
-import { useRevalidateBoardSet } from "@app/routing/use-revalidate-board-set";
+import { useRevalidateBoardSet } from "@app/routing/board-set/use-revalidate-board-set";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,

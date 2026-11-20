@@ -385,7 +385,7 @@ describe("BoardSetLibrary", () => {
     });
 
     test("marks the button unavailable while a downloaded board set imports", async () => {
-      const starterBoardBytes = await fetch("/first-words.obz").then(
+      const starterBoardBytes = await fetch("/boards/first-words.obz").then(
         (response) => response.bytes(),
       );
       const download = stubStreamingDownload({
@@ -410,7 +410,7 @@ describe("BoardSetLibrary", () => {
     });
 
     test("focuses a download's entry when it finishes after reopening the library", async () => {
-      const starterBoardBytes = await fetch("/first-words.obz").then(
+      const starterBoardBytes = await fetch("/boards/first-words.obz").then(
         (response) => response.bytes(),
       );
       const download = stubStreamingDownload({

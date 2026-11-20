@@ -18,7 +18,7 @@ import { localizedImportFailure } from "../testing/localized-import-failure";
 import { routeArgs } from "../testing/route-args";
 import { rootIndexLoader } from "./root-index-loader";
 
-const DEFAULT_BOARD_PATH = "/first-words.obz";
+const DEFAULT_BOARD_PATH = "/boards/first-words.obz";
 
 function callLoader(searchParams = "", signal?: AbortSignal) {
   return rootIndexLoader(
