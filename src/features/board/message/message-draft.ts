@@ -35,7 +35,7 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  // Embedded pictures and sounds are what fill storage; the words fit without them.
+  // Embedded pictures and sounds are most of a draft's size; the words outrank them.
   if (writeDraft({ ...message, parts: parts.map(withoutEmbeddedMedia) })) {
     return;
   }
