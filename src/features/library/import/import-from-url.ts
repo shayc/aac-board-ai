@@ -138,12 +138,10 @@ function assertWithinSizeCap(
   total: number | undefined,
   response: Response,
 ): void {
-  if (total === undefined || total <= MAX_BOARD_FILE_DOWNLOAD_BYTES) {
-    return;
+  if (total !== undefined && total > MAX_BOARD_FILE_DOWNLOAD_BYTES) {
+    void response.body?.cancel();
+    throw downloadTooLargeError();
   }
-
-  void response.body?.cancel();
-  throw downloadTooLargeError();
 }
 
 // The declared size can be missing or wrong, so the cap counts received bytes.

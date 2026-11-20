@@ -43,15 +43,9 @@ export async function restoreMessageDraft(): Promise<Message> {
     return EMPTY_MESSAGE;
   }
 
-  const savedParts: SavedPart[] = [];
-
-  for (const raw of saved.parts) {
-    const part = parseSavedPart(raw);
-    if (part) {
-      savedParts.push(part);
-    }
-  }
-
+  const savedParts = saved.parts
+    .map(parseSavedPart)
+    .filter((part) => part !== undefined);
   if (savedParts.length === 0) {
     return EMPTY_MESSAGE;
   }

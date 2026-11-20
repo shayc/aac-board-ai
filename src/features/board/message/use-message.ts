@@ -54,8 +54,9 @@ export function useMessage(
     messageRef.current = next;
     setRenderedMessage(next);
 
-    const isKept = isKeptOnDevice(next, shouldClearAfterPlayback);
-    saveMessageDraft(isKept ? next : EMPTY_MESSAGE);
+    // A played message due to be replaced is not kept for the next person to see.
+    const isDueToBeReplaced = next.hasPlayed && shouldClearAfterPlayback;
+    saveMessageDraft(isDueToBeReplaced ? EMPTY_MESSAGE : next);
   }
 
   // Marking the message played is not a step to undo, so it uses `commit`.
@@ -172,12 +173,4 @@ export function useMessage(
     clear,
     undo,
   };
-}
-
-// A played message due to be replaced is not kept for the next person to see.
-function isKeptOnDevice(
-  message: Message,
-  shouldClearAfterPlayback: boolean,
-): boolean {
-  return !(message.hasPlayed && shouldClearAfterPlayback);
 }
