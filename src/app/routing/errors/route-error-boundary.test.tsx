@@ -3,8 +3,8 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
+import { createErrorPageRouter } from "../testing/create-error-page-router";
 import { ROUTE_ERROR_CODES, routeErrorResponse } from "./route-error";
-import { createErrorPageRouter } from "./testing/create-error-page-router";
 
 function renderWithLoader(loader: () => unknown) {
   const router = createErrorPageRouter({ loader });

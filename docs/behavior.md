@@ -150,7 +150,7 @@ one already in the communication language, has the same boards as before and is
 not revalidated. Other sets are not revalidated either: that would re-run a
 `?board=` link import still in flight. The library knows nothing about route
 loaders; the app owns that decision in
-[`useRevalidateBoardSet`](../src/app/routing/use-revalidate-board-set.ts). A set the
+[`useRevalidateBoardSet`](../src/app/routing/board-set/use-revalidate-board-set.ts). A set the
 translator fails on, for example because a model download needs a user
 gesture, stays in its source language until the next run. A storage or other
 error ends the pass and is reported, and passes queued behind it still run.
@@ -289,7 +289,7 @@ gives no reason either way. The code that catches an error and stops it from
 travelling further is the code that reports it, which is why the reports below
 sit in loaders, stores, hooks and components alike.
 
-- **Routes:** [`reportRouteError`](../src/app/routing/route-error.ts) reports
+- **Routes:** [`reportRouteError`](../src/app/routing/errors/route-error.ts) reports
   loader, action and render errors that reach the error page, except the ones
   the page explains with its own title: board not found and board set not
   found.

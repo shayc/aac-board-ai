@@ -5,7 +5,7 @@ import {
   loadStoredBoard,
 } from "@features/library";
 import type { LoaderFunctionArgs } from "react-router";
-import { ROUTE_ERROR_CODES, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../errors/route-error";
 
 export interface BoardRouteData {
   board: Board;

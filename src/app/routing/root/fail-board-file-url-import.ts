@@ -1,4 +1,4 @@
-import { ROUTE_ERROR_CODES, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../errors/route-error";
 
 /**
  * Ends a `?board=` navigation on the "import failed" page. That page names no

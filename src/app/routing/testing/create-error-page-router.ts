@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { createMemoryRouter, type RouteObject } from "react-router";
-import { RouteErrorBoundary } from "../route-error-boundary";
+import { RouteErrorBoundary } from "../errors/route-error-boundary";
 
 export function createErrorPageRouter({
   loader,
