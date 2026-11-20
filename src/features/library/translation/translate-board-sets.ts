@@ -16,7 +16,6 @@ export interface TranslationPassOptions {
 }
 
 interface TranslateBoardSetsOptions extends TranslationPassOptions {
-  /** Called for each set whose boards gained translations. */
   onBoardsTranslated: (boardSetId: string) => void;
 }
 

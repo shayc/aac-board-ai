@@ -7,7 +7,6 @@ const ENABLED_BY_DEFAULT: axe.RuleObject = {
   "target-size": { enabled: true },
 };
 
-/** An incomplete axe result a person has checked and judged acceptable. */
 export interface ReviewedIncomplete {
   rule: string;
   /** The bracketed cause a failure report prints, e.g. "aria-required-children". */

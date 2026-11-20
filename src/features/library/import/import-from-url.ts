@@ -86,7 +86,6 @@ export async function importBoardFileFromURL(
     type: blob.type || "application/octet-stream",
   });
 
-  // Once local importing starts, let its atomic write finish even if navigation changes.
   return importBoardFile(file);
 }
 
