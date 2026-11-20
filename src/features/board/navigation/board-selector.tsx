@@ -159,6 +159,7 @@ function BoardSearch({
           onClose();
         }
       }}
+      size="small"
       disableClearable
       forcePopupIcon={false}
       autoHighlight
@@ -175,13 +176,13 @@ function BoardSearch({
       getOptionLabel={(option) => option.name}
       getOptionKey={(option) => option.id}
       isOptionEqualToValue={(option, selected) => option.id === selected.id}
-      renderInput={({ slotProps }) => (
+      renderInput={({ slotProps, size, fullWidth }) => (
         <OutlinedInput
-          ref={slotProps.input.ref}
+          {...slotProps.input}
           inputRef={searchFieldRef}
           placeholder={t(m.boardSelectorSearch)}
-          size="small"
-          fullWidth
+          size={size}
+          fullWidth={fullWidth}
           startAdornment={
             <InputAdornment position="start">
               <SearchIcon />

@@ -439,7 +439,7 @@ const themeOptions = {
             [`&.${autocompleteClasses.focusVisible}`]: {
               backgroundColor: "transparent",
             },
-            // Stays tinted on touch screens too, where MUI turns it grey.
+            // The selected option keeps its tint, which MUI turns grey on touch.
             [`&[aria-selected="true"].${autocompleteClasses.focused}`]: {
               backgroundColor: theme.alpha(
                 theme.vars.palette.primary.main,
