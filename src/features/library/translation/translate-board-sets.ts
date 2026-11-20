@@ -101,7 +101,8 @@ async function translateBoardSet(
     ),
   });
 
-  // False when only the name was translated: the boards are unchanged.
+  // False when only the name was translated: the boards are unchanged,
+  // so nothing showing them needs to reload.
   return boardsMissingLanguage.length > 0;
 }
 

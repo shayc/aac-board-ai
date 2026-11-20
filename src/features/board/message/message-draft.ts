@@ -90,7 +90,7 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
-// A blob: URL dies with the page; restoring it would show a broken image.
+// A blob: URL dies with the page, so it would come back broken.
 function toSavedSrc(src: string | undefined): string | undefined {
   return src?.startsWith("blob:") ? undefined : src;
 }

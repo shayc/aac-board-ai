@@ -42,8 +42,8 @@ export function useMessage(
   const undoStackRef = useRef<Message[]>([]);
   const text = message.parts.map((part) => part.label).join(" ");
 
-  // Edits start here. With clear-after-playback off, a played message
-  // reopens, so the next tile adds to it.
+  // Checks the setting at edit time, so turning it off reopens a played
+  // message and the next tile adds to it.
   function readEditableMessage() {
     return shouldClearAfterPlayback
       ? messageRef.current
@@ -85,7 +85,8 @@ export function useMessage(
     return editFrom(current, edits) !== current;
   }
 
-  // Applies edits queued against `since`; drops them if the message changed.
+  // Applies edits queued against `since`, even after it played.
+  // Drops them if the message changed meanwhile.
   function applyIfUnchanged(since: Message, edits: readonly MessageEdit[]) {
     const current = messageRef.current;
     if (!hasSameContent(current, since)) {
@@ -123,7 +124,7 @@ export function useMessage(
     }
   }
 
-  // Tile feedback, such as a word being spelled.
+  // Tile feedback, such as a word being spelled; the message stays open.
   // `editsAfterPlay` wait as they do in `play`.
   async function echo(editsAfterPlay: readonly MessageEdit[]) {
     const echoed = messageRef.current;
