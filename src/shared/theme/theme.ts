@@ -1,3 +1,4 @@
+import { autocompleteClasses } from "@mui/material/Autocomplete";
 import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { red } from "@mui/material/colors";
@@ -408,6 +409,9 @@ const themeOptions = {
         root: ({ theme }) => ({
           marginInline: 4,
           borderRadius: theme.vars.shape.borderRadiusSm,
+          // MUI drops the 48px touch row from the sm breakpoint up, so tablets
+          // would get desktop rows. The Autocomplete option below matches.
+          "@media (pointer: coarse)": { minHeight: 48 },
         }),
       },
     },
@@ -420,9 +424,29 @@ const themeOptions = {
         },
       },
       styleOverrides: {
-        option: ({ theme }) => ({
-          marginInline: 4,
-          borderRadius: theme.vars.shape.borderRadiusSm,
+        // Styles options from the listbox, where MUI styles them, so that
+        // these rules come after MUI's.
+        listbox: ({ theme }) => ({
+          [`& .${autocompleteClasses.option}`]: {
+            marginInline: 4,
+            borderRadius: theme.vars.shape.borderRadiusSm,
+            "@media (pointer: coarse)": { minHeight: 48 },
+            // Enter picks the highlighted option, so it shows on every device.
+            [`&.${autocompleteClasses.focused}`]: {
+              backgroundColor: theme.vars.palette.action.selected,
+            },
+            // The keyboard ring alone marks the option, as in lists and menus.
+            [`&.${autocompleteClasses.focusVisible}`]: {
+              backgroundColor: "transparent",
+            },
+            // The selected option keeps its tint, which MUI turns grey on touch.
+            [`&[aria-selected="true"].${autocompleteClasses.focused}`]: {
+              backgroundColor: theme.alpha(
+                theme.vars.palette.primary.main,
+                `${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}`,
+              ),
+            },
+          },
         }),
       },
     },

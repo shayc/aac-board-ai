@@ -2,7 +2,7 @@ import type { BoardSummary } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button, { buttonClasses } from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
-import InputBase from "@mui/material/InputBase";
+import OutlinedInput from "@mui/material/OutlinedInput";
 import Popover from "@mui/material/Popover";
 import type { PopperProps } from "@mui/material/Popper";
 import Typography from "@mui/material/Typography";
@@ -10,7 +10,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
-import { ArrowDropDownIcon, SearchIcon } from "@shared/ui/icons";
+import { ArrowDropDownIcon, CheckIcon, SearchIcon } from "@shared/ui/icons";
 import { type ReactNode, type Ref, useRef, useState } from "react";
 import { useBoardRoute } from "./use-board-route";
 
@@ -159,7 +159,9 @@ function BoardSearch({
           onClose();
         }
       }}
+      size="small"
       disableClearable
+      forcePopupIcon={false}
       autoHighlight
       slots={{ popper: InlineList }}
       slotProps={{
@@ -174,12 +176,13 @@ function BoardSearch({
       getOptionLabel={(option) => option.name}
       getOptionKey={(option) => option.id}
       isOptionEqualToValue={(option, selected) => option.id === selected.id}
-      renderInput={({ slotProps }) => (
-        <InputBase
-          ref={slotProps.input.ref}
+      renderInput={({ slotProps, size, fullWidth }) => (
+        <OutlinedInput
+          {...slotProps.input}
           inputRef={searchFieldRef}
           placeholder={t(m.boardSelectorSearch)}
-          fullWidth
+          size={size}
+          fullWidth={fullWidth}
           startAdornment={
             <InputAdornment position="start">
               <SearchIcon />
@@ -191,13 +194,16 @@ function BoardSearch({
               "aria-label": t(m.boardSelectorSearch),
             },
           }}
-          sx={(theme) => ({
-            px: 2,
-            py: 1,
-            borderBottom: `1px solid ${theme.vars.palette.divider}`,
-          })}
         />
       )}
+      renderOption={({ key, ...optionProps }, option, { selected }) => (
+        <li key={key} {...optionProps}>
+          <Typography sx={{ flex: 1 }}>{option.name}</Typography>
+
+          {selected && <CheckIcon fontSize="small" sx={{ ml: 1 }} />}
+        </li>
+      )}
+      sx={{ p: 1 }}
     />
   );
 }
