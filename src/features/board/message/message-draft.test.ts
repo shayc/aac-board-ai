@@ -8,6 +8,7 @@ import {
 } from "@features/library/testing";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
+import { fillLocalStorage } from "@shared/testing/fill-local-storage";
 import { describe, expect, onTestFinished, test } from "vitest";
 import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
@@ -203,17 +204,3 @@ describe("message draft", () => {
     expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
   });
 });
-
-function fillLocalStorage() {
-  let chunk = "x".repeat(1024 * 1024);
-  let index = 0;
-
-  while (chunk.length > 0) {
-    try {
-      localStorage.setItem(`filler-${index}`, chunk);
-      index += 1;
-    } catch {
-      chunk = chunk.slice(0, Math.floor(chunk.length / 2));
-    }
-  }
-}

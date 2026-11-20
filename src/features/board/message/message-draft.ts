@@ -124,13 +124,14 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
 
 // An object URL with no stored asset behind it would come back broken.
 function toSavedSrc(src: string | undefined): string | undefined {
-  return src === undefined || isEmbedded(src) || src.startsWith("blob:")
+  return src === undefined || isEmbedded(src) || /^blob:/i.test(src)
     ? undefined
     : src;
 }
 
+// A URL's scheme is case-insensitive.
 function isEmbedded(src: string | undefined): boolean {
-  return src?.startsWith("data:") ?? false;
+  return src !== undefined && /^data:/i.test(src);
 }
 
 function readSavedDraft(): unknown {
