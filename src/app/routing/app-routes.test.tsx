@@ -11,6 +11,7 @@ import {
   DEFAULT_LANGUAGE,
   setCommunicationLanguage,
 } from "@shared/language/language-store";
+import { fillLocalStorage } from "@shared/testing/fill-local-storage";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
@@ -250,7 +251,7 @@ describe("app flow", () => {
 
   test("reloads every occurrence of a large embedded symbol from one saved copy", async () => {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><!--${"x".repeat(128 * 1024)}--></svg>`;
-    const imageSrc = `data:image/svg+xml;base64,${btoa(svg)}`;
+    const imageSrc = `DATA:image/svg+xml;base64,${btoa(svg)}`;
     await seedBoardSets([
       {
         id: "embedded-set",
@@ -267,6 +268,7 @@ describe("app flow", () => {
     ]);
     const first = await renderApp();
     await first.screen.getByRole("button", { name: "Continue" }).click();
+    fillLocalStorage(imageSrc.length + 8192);
     const hello = first.screen.getByRole("button", { name: "hello" });
     await hello.click();
     await hello.click();
@@ -285,9 +287,6 @@ describe("app flow", () => {
         true,
       );
     }
-    expect(localStorage.getItem("message-draft")?.split(imageSrc)).toHaveLength(
-      2,
-    );
   });
 
   test("?board= link that collides with an existing board set keeps both", async () => {

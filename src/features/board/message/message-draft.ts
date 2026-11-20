@@ -116,8 +116,8 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
 
 // An object URL with no stored asset behind it would come back broken.
 function toSavedSrc(src: string | undefined, media: Map<string, number>) {
-  if (!src?.startsWith("data:")) {
-    return src?.startsWith("blob:") ? undefined : src;
+  if (src === undefined || /^blob:/i.test(src)) {
+    return undefined;
   }
 
   const existing = media.get(src);

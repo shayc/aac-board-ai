@@ -7,6 +7,7 @@ import {
 } from "@features/library/testing";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
+import { fillLocalStorage } from "@shared/testing/fill-local-storage";
 import { describe, expect, onTestFinished, test } from "vitest";
 import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
@@ -35,6 +36,12 @@ const MESSAGE: Message = {
 describe("message draft", () => {
   test("restores the saved message", async () => {
     saveMessageDraft(MESSAGE);
+
+    expect(await restoreMessageDraft()).toEqual(MESSAGE);
+  });
+
+  test("restores inline media from a draft saved before media references", async () => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(MESSAGE));
 
     expect(await restoreMessageDraft()).toEqual(MESSAGE);
   });
@@ -125,9 +132,7 @@ describe("message draft", () => {
 
   test("keeps the latest words and speech when embedded media exceeds quota", async () => {
     saveMessageDraft(MESSAGE);
-    localStorage.setItem("reserve", "x".repeat(8192));
-    fillLocalStorage();
-    localStorage.removeItem("reserve");
+    fillLocalStorage(8192);
 
     const tile = createTilePart({
       label: "eau",
@@ -160,17 +165,3 @@ describe("message draft", () => {
     expect(await restoreMessageDraft()).toBe(EMPTY_MESSAGE);
   });
 });
-
-function fillLocalStorage() {
-  let chunk = "x".repeat(1024 * 1024);
-  let index = 0;
-
-  while (chunk.length > 0) {
-    try {
-      localStorage.setItem(`filler-${index}`, chunk);
-      index += 1;
-    } catch {
-      chunk = chunk.slice(0, Math.floor(chunk.length / 2));
-    }
-  }
-}
