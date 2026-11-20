@@ -198,9 +198,7 @@ function BoardSearch({
       )}
       renderOption={({ key, ...optionProps }, option, { selected }) => (
         <li key={key} {...optionProps}>
-          <Typography noWrap sx={{ flex: 1 }}>
-            {option.name}
-          </Typography>
+          <Typography sx={{ flex: 1 }}>{option.name}</Typography>
 
           {selected && <CheckIcon fontSize="small" sx={{ ml: 1 }} />}
         </li>
