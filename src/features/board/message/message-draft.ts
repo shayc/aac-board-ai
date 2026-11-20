@@ -44,9 +44,12 @@ export function saveMessageDraft(message: Message): void {
 
   const draft = { ...message, parts: message.parts.map(toSavedPart) };
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  } catch {
+  if (trySaveDraft(draft)) {
+    return;
+  }
+
+  const compact = { ...message, parts: message.parts.map(withoutMedia) };
+  if (!trySaveDraft(compact)) {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
   }
@@ -132,6 +135,26 @@ function toSavedSrc(src: string | undefined): string | undefined {
 // A URL's scheme is case-insensitive.
 function isEmbedded(src: string | undefined): boolean {
   return src !== undefined && /^data:/i.test(src);
+}
+
+function trySaveDraft(draft: Message): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function withoutMedia(part: MessagePart): MessagePart {
+  if (part.kind === "text") {
+    return part;
+  }
+
+  const { kind, id, label, language, vocalization } = part;
+
+  return { kind, id, label, language, vocalization };
 }
 
 function readSavedDraft(): unknown {

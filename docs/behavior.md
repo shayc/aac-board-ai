@@ -110,6 +110,8 @@ it is left out, since it could only come back broken. A picture or sound
 embedded in a board file as a data URL is too large to save with every part, so
 the draft keeps the button the part came from and reads the media back from
 that board on restore; the part comes back without it when the board is gone.
+If the full draft exceeds the storage quota, saving retries without media
+references, preserving the ordered words, their languages and vocalizations.
 The undo history is not saved.
 
 While a board is open,

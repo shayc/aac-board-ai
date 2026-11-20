@@ -192,6 +192,23 @@ describe("message draft", () => {
     expect(reportedErrors).toEqual([]);
   });
 
+  test("restores the latest words when only the compact draft fits", async () => {
+    saveMessageDraft(MESSAGE);
+    fillLocalStorage(8192);
+    const tile = createTilePart({
+      label: "eau",
+      language: "fr",
+      vocalization: "de l’eau",
+    });
+    const text = createTextPart("please", "en");
+    const message = { parts: [tile, text], isWordOpen: true, hasPlayed: false };
+    const imageSrc = `https://example.com/image?token=${"x".repeat(65536)}`;
+
+    saveMessageDraft({ ...message, parts: [{ ...tile, imageSrc }, text] });
+
+    expect(await restoreMessageDraft()).toEqual(message);
+  });
+
   test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();
