@@ -248,6 +248,48 @@ describe("app flow", () => {
     expect(await response.text()).toBe("recording");
   });
 
+  test("reloads every occurrence of a large embedded symbol from one saved copy", async () => {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"><!--${"x".repeat(128 * 1024)}--></svg>`;
+    const imageSrc = `data:image/svg+xml;base64,${btoa(svg)}`;
+    await seedBoardSets([
+      {
+        id: "embedded-set",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            buttons: [{ id: "hello", label: "hello", image_id: "symbol" }],
+            images: [{ id: "symbol", data: imageSrc }],
+            grid: { rows: 1, columns: 1, order: [["hello"]] },
+          }),
+        ],
+      },
+    ]);
+    const first = await renderApp();
+    await first.screen.getByRole("button", { name: "Continue" }).click();
+    const hello = first.screen.getByRole("button", { name: "hello" });
+    await hello.click();
+    await hello.click();
+    await hello.click();
+    await first.screen.unmount();
+
+    const { screen } = await renderApp();
+    const parts = screen
+      .getByRole("list", { name: "Message" })
+      .getByRole("listitem");
+
+    await expect.element(parts).toHaveLength(3);
+    for (const part of parts.elements()) {
+      expect(part.textContent).toBe("hello");
+      expect(part.querySelector("img")?.getAttribute("src") === imageSrc).toBe(
+        true,
+      );
+    }
+    expect(localStorage.getItem("message-draft")?.split(imageSrc)).toHaveLength(
+      2,
+    );
+  });
+
   test("?board= link that collides with an existing board set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 

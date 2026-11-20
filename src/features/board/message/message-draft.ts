@@ -26,10 +26,25 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const draft = { ...message, parts: message.parts.map(toSavedPart) };
+  const media = new Map<string, number>();
+  const parts = message.parts.map((part) => toSavedPart(part, media));
 
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ ...message, parts, media: [...media.keys()] }),
+    );
+
+    return;
+  } catch {
+    // Embedded media can exceed the storage quota even with just one copy.
+  }
+
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ ...message, parts: message.parts.map(withoutMedia) }),
+    );
   } catch {
     // An older draft must not come back in place of this one.
     removeMessageDraft();
@@ -43,10 +58,13 @@ export async function restoreMessageDraft(): Promise<Message> {
     return EMPTY_MESSAGE;
   }
 
+  const media: readonly unknown[] = Array.isArray(saved.media)
+    ? saved.media
+    : [];
   const savedParts: SavedPart[] = [];
 
   for (const raw of saved.parts) {
-    const part = parseSavedPart(raw);
+    const part = parseSavedPart(raw, media);
     if (part) {
       savedParts.push(part);
     }
@@ -75,7 +93,7 @@ function removeMessageDraft() {
   }
 }
 
-function toSavedPart(part: MessagePart): SavedPart {
+function toSavedPart(part: MessagePart, media: Map<string, number>) {
   if (part.kind === "text") {
     return part;
   }
@@ -85,8 +103,8 @@ function toSavedPart(part: MessagePart): SavedPart {
 
   return {
     ...part,
-    imageSrc: imageAssetKey ? undefined : toSavedSrc(part.imageSrc),
-    soundSrc: soundAssetKey ? undefined : toSavedSrc(part.soundSrc),
+    imageSrc: imageAssetKey ? undefined : toSavedSrc(part.imageSrc, media),
+    soundSrc: soundAssetKey ? undefined : toSavedSrc(part.soundSrc, media),
     imageAssetKey,
     soundAssetKey,
   };
@@ -97,8 +115,30 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
 }
 
 // An object URL with no stored asset behind it would come back broken.
-function toSavedSrc(src: string | undefined): string | undefined {
-  return src?.startsWith("blob:") ? undefined : src;
+function toSavedSrc(src: string | undefined, media: Map<string, number>) {
+  if (!src?.startsWith("data:")) {
+    return src?.startsWith("blob:") ? undefined : src;
+  }
+
+  const existing = media.get(src);
+  if (existing !== undefined) {
+    return existing;
+  }
+
+  const index = media.size;
+  media.set(src, index);
+
+  return index;
+}
+
+function withoutMedia(part: MessagePart): MessagePart {
+  if (part.kind === "text") {
+    return part;
+  }
+
+  const { kind, id, label, language, vocalization } = part;
+
+  return { kind, id, label, language, vocalization };
 }
 
 function readSavedDraft(): unknown {
@@ -111,7 +151,10 @@ function readSavedDraft(): unknown {
   }
 }
 
-function parseSavedPart(raw: unknown): SavedPart | undefined {
+function parseSavedPart(
+  raw: unknown,
+  media: readonly unknown[],
+): SavedPart | undefined {
   if (
     !isRecord(raw) ||
     typeof raw.id !== "string" ||
@@ -137,11 +180,15 @@ function parseSavedPart(raw: unknown): SavedPart | undefined {
     label,
     language,
     vocalization: parseOptionalString(raw.vocalization),
-    imageSrc: parseOptionalString(raw.imageSrc),
-    soundSrc: parseOptionalString(raw.soundSrc),
+    imageSrc: parseSavedSrc(raw.imageSrc, media),
+    soundSrc: parseSavedSrc(raw.soundSrc, media),
     imageAssetKey: parseAssetKey(raw.imageAssetKey),
     soundAssetKey: parseAssetKey(raw.soundAssetKey),
   };
+}
+
+function parseSavedSrc(value: unknown, media: readonly unknown[]) {
+  return parseOptionalString(typeof value === "number" ? media[value] : value);
 }
 
 function parseAssetKey(value: unknown): AssetKey | undefined {

@@ -102,7 +102,10 @@ warning. It uses localStorage rather than sessionStorage, because an installed
 app can restart from scratch after time in the background. A stored asset's
 object URL ends with the page, so the
 [draft](../src/features/board/message/message-draft.ts) keeps the asset's key in
-its place and creates the URL again on restore. `boardLoader` restores the
+its place and creates the URL again on restore. Repeated parts share one saved
+copy of each embedded picture or recording. If the draft exceeds the storage
+quota, the app retries without media, keeping the words in order with their
+languages and vocalizations. `boardLoader` restores the
 draft alongside the board, so the board opens with it, symbols included, and
 no edit can come before it. A message that played to its end is not kept when
 the next symbol would replace it, and an object URL with no stored asset behind

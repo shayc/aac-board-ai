@@ -123,6 +123,31 @@ describe("message draft", () => {
     ]);
   });
 
+  test("keeps the latest words and speech when embedded media exceeds quota", async () => {
+    saveMessageDraft(MESSAGE);
+    localStorage.setItem("reserve", "x".repeat(8192));
+    fillLocalStorage();
+    localStorage.removeItem("reserve");
+
+    const tile = createTilePart({
+      label: "eau",
+      vocalization: "de l’eau",
+      language: "fr",
+    });
+    const text = createTextPart("please", "en");
+    const message = { parts: [tile, text], isWordOpen: true, hasPlayed: false };
+
+    saveMessageDraft({
+      ...message,
+      parts: [
+        { ...tile, soundSrc: "data:audio/wav;base64," + "A".repeat(65536) },
+        text,
+      ],
+    });
+
+    expect(await restoreMessageDraft()).toEqual(message);
+  });
+
   test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();
