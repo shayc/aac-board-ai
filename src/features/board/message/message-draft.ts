@@ -7,8 +7,8 @@ import { settleAll } from "@shared/utils/settle-all";
 import { EMPTY_MESSAGE } from "./message-transforms";
 import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
 
-// localStorage, not sessionStorage: an installed app can restart from scratch
-// in the background, and a message composed ahead of time must survive that.
+// localStorage, not sessionStorage: an installed app can restart in the
+// background, and the draft must survive it.
 const STORAGE_KEY = "message-draft";
 
 // A stored asset's URL dies with the page, so a tile part saves its asset key.
@@ -51,7 +51,7 @@ export async function restoreMessageDraft(): Promise<Message> {
   }
 
   const assetURLByKey = await readAssetURLs(savedParts);
-  const parts = savedParts.map((part) => restorePart(part, assetURLByKey));
+  const parts = savedParts.map((part) => fromSavedPart(part, assetURLByKey));
 
   return {
     parts,
@@ -90,7 +90,7 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
-// An object URL with no stored asset behind it would come back broken.
+// A blob: URL dies with the page; restoring it would show a broken image.
 function toSavedSrc(src: string | undefined): string | undefined {
   return src?.startsWith("blob:") ? undefined : src;
 }
@@ -150,8 +150,8 @@ function parseAssetKey(value: unknown): AssetKey | undefined {
   return { boardSetId: value.boardSetId, path: value.path };
 }
 
-// A part keeps its words without a picture or sound that can't be read. The
-// map is keyed by each part's own key object, which restorePart looks up again.
+// An asset that fails to load is skipped; its part keeps the label.
+// Keyed by object identity: fromSavedPart looks up the same key objects.
 async function readAssetURLs(
   parts: readonly SavedPart[],
 ): Promise<Map<AssetKey, string | undefined>> {
@@ -181,7 +181,7 @@ function assetKeysOf(part: SavedPart): AssetKey[] {
   );
 }
 
-function restorePart(
+function fromSavedPart(
   part: SavedPart,
   assetURLByKey: ReadonlyMap<AssetKey, string | undefined>,
 ): MessagePart {

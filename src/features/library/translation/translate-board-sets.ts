@@ -47,8 +47,8 @@ export async function translateBoardSets(
   }
 }
 
-// The name and all board translations commit atomically, making it a completion marker.
-// The set's locale describes only its root board.
+// A translated name marks the whole set done: name and boards save together.
+// The set's locale can't tell; it describes only the root board.
 function isBoardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,
@@ -101,8 +101,7 @@ async function translateBoardSet(
     ),
   });
 
-  // A set that only gained its name, such as one already in the language,
-  // shows the same boards as before, so nothing that shows them has to reload.
+  // False when only the name was translated: the boards are unchanged.
   return boardsMissingLanguage.length > 0;
 }
 
