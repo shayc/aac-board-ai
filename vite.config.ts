@@ -31,7 +31,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["board.svg", "first-words.obz"],
+      includeAssets: ["board.svg", "boards/first-words.obz"],
       swType: "classic",
       generateSW: {
         cleanupOutdatedCaches: true,

@@ -3,12 +3,12 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import type { RouteObject } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test } from "vitest";
+import { createErrorPageRouter } from "../testing/create-error-page-router";
 import {
   reportRouteError,
   ROUTE_ERROR_CODES,
   routeErrorResponse,
 } from "./route-error";
-import { createErrorPageRouter } from "./testing/create-error-page-router";
 
 function renderWithRoute(route: Pick<RouteObject, "loader" | "Component">) {
   const router = createErrorPageRouter(route);

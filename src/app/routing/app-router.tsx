@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { appRoutes } from "./app-routes";
-import { reportRouteError } from "./route-error";
+import { reportRouteError } from "./errors/route-error";
 
 const router = createBrowserRouter(appRoutes);
 

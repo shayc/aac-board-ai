@@ -9,11 +9,11 @@ import {
   BOARD_SET_ROUTE_ID,
   boardSetLoader,
 } from "./board-set/board-set-loader";
-import { NotFound } from "./not-found";
+import { NotFound } from "./errors/not-found";
+import { RouteErrorBoundary } from "./errors/route-error-boundary";
 import { BoardFileURLImportPage } from "./root/board-file-url-import-page";
 import { rootIndexAction } from "./root/root-index-action";
 import { rootIndexLoader } from "./root/root-index-loader";
-import { RouteErrorBoundary } from "./route-error-boundary";
 
 export const appRoutes: RouteObject[] = [
   {

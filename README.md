@@ -14,7 +14,7 @@
 
 On supported desktop browsers, the app uses the browser’s built-in, on-device AI models to proofread messages, suggest more complete phrasing, and translate board content. No API key or cloud AI service is required, and core communication works without AI.
 
-![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
+![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](docs/demo.gif)
 
 ## From tiles to a sentence
 

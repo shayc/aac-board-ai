@@ -13,7 +13,7 @@ function catalogBoardSet({
   name: string;
   fileName: string;
 }): CatalogBoardSet {
-  const url = `${import.meta.env.BASE_URL}${fileName}`;
+  const url = `${import.meta.env.BASE_URL}boards/${fileName}`;
 
   return { id: deriveBoardSetIdFromURL(url), name, url };
 }
