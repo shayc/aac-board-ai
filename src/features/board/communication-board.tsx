@@ -1,4 +1,8 @@
-import type { Board, BoardButton } from "@features/library";
+import {
+  type Board,
+  type BoardButton,
+  useActiveBoardSetId,
+} from "@features/library";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -55,6 +59,7 @@ export function CommunicationBoard({
   const message = useMessage(playback.playMessage, initialMessage);
   const { shouldPlayTiles } = useMessagePreferences();
   const navigation = useBoardNavigation(rootBoardId);
+  const boardSetId = useActiveBoardSetId();
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
@@ -69,6 +74,7 @@ export function CommunicationBoard({
     },
     playback: { playPart: playback.playPart, stop: playback.stop },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
+    boardKey: boardSetId ? { boardSetId, boardId: board.id } : undefined,
     boardLanguage,
     shouldPlayTiles,
   });

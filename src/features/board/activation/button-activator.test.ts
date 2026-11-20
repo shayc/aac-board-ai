@@ -84,6 +84,7 @@ async function setup(
       message,
       playback: { playPart: playback.playPart, stop: playback.stop },
       navigation,
+      boardKey: { boardSetId: "set-1", boardId: "board-1" },
       boardLanguage,
       shouldPlayTiles,
     }),
@@ -137,6 +138,7 @@ describe("createButtonActivator", () => {
       vocalization: "ring the bell",
       imageSrc: "bell.png",
       soundSrc: "bell.mp3",
+      source: { boardSetId: "set-1", boardId: "board-1", buttonId: "btn" },
     });
     expect(appended.id).toBeTruthy();
     expect(appended.id).not.toBe("btn");

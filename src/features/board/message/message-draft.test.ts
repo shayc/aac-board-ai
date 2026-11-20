@@ -2,6 +2,7 @@ import { getAssetURL } from "@features/library";
 import {
   loadTestImageAsset,
   makeBoardsDBUnreadable,
+  makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
@@ -14,7 +15,7 @@ import {
   createTilePart,
   EMPTY_MESSAGE,
 } from "./message-transforms";
-import type { Message } from "./message-types";
+import type { ButtonKey, Message } from "./message-types";
 
 const STORAGE_KEY = "message-draft";
 
@@ -30,6 +31,25 @@ const MESSAGE: Message = {
   ],
   isWordOpen: true,
   hasPlayed: false,
+};
+
+const EMBEDDED_IMAGE = "data:image/png;base64,AAA";
+const EMBEDDED_SOUND = "data:audio/mp3;base64,BBB";
+
+const EMBEDDED_BOARD = makeOBFBoard({
+  id: "home",
+  buttons: [
+    { id: "btn-1", label: "hello", image_id: "img-1", sound_id: "snd-1" },
+  ],
+  grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+  images: [{ id: "img-1", data: EMBEDDED_IMAGE }],
+  sounds: [{ id: "snd-1", data: EMBEDDED_SOUND }],
+});
+
+const EMBEDDED_SOURCE: ButtonKey = {
+  boardSetId: "embedded-set",
+  boardId: "home",
+  buttonId: "btn-1",
 };
 
 describe("message draft", () => {
@@ -123,40 +143,52 @@ describe("message draft", () => {
     ]);
   });
 
-  test("saves the words without embedded pictures and sounds when the full draft does not fit", async () => {
-    const embeddedTile = createTilePart({
-      label: "hello",
-      language: "en",
-      vocalization: "hi there",
-      imageSrc: `data:image/png;base64,${"A".repeat(256 * 1024)}`,
-      soundSrc: `data:audio/mpeg;base64,${"A".repeat(256 * 1024)}`,
-    });
-    const linkedTile = createTilePart({
-      label: "world",
-      language: "en",
-      imageSrc: "https://example.com/world.png",
-    });
-    // The older draft holds the room the words need once storage is full.
-    saveMessageDraft({
-      ...MESSAGE,
-      parts: [createTextPart("a".repeat(1024), "en")],
-    });
-    fillLocalStorage();
-
-    saveMessageDraft({
-      parts: [embeddedTile, linkedTile],
-      isWordOpen: false,
-      hasPlayed: true,
-    });
-
-    expect(await restoreMessageDraft()).toEqual({
+  test("restores embedded pictures and sounds from the source board without saving them", async () => {
+    await resetBoardsDB();
+    await seedBoardSets([
+      { id: "embedded-set", rootBoardId: "home", boards: [EMBEDDED_BOARD] },
+    ]);
+    const message: Message = {
       parts: [
-        { ...embeddedTile, imageSrc: undefined, soundSrc: undefined },
-        linkedTile,
+        createTilePart({
+          label: "hello",
+          language: "en",
+          imageSrc: EMBEDDED_IMAGE,
+          soundSrc: EMBEDDED_SOUND,
+          source: EMBEDDED_SOURCE,
+        }),
       ],
       isWordOpen: false,
-      hasPlayed: true,
+      hasPlayed: false,
+    };
+
+    saveMessageDraft(message);
+
+    expect(localStorage.getItem(STORAGE_KEY)).not.toContain("data:");
+    expect(await restoreMessageDraft()).toEqual(message);
+  });
+
+  test("restores the words when the source board of embedded media is gone", async () => {
+    const reportedErrors = collectReportedErrors();
+    await resetBoardsDB();
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [
+        createTilePart({
+          label: "hello",
+          language: "en",
+          imageSrc: EMBEDDED_IMAGE,
+          source: EMBEDDED_SOURCE,
+        }),
+      ],
     });
+
+    const restored = await restoreMessageDraft();
+
+    expect(restored.parts).toMatchObject([
+      { label: "hello", imageSrc: undefined },
+    ]);
+    expect(reportedErrors).toEqual([]);
   });
 
   test("removes an older draft when a newer one does not fit", async () => {

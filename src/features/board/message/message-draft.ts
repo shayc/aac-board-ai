@@ -1,27 +1,39 @@
-import { type AssetKey, findAssetKey, getAssetURL } from "@features/library";
+import {
+  type AssetKey,
+  type Board,
+  type BoardButton,
+  type BoardKey,
+  BoardNotFoundError,
+  findAssetKey,
+  getAssetURL,
+  loadStoredBoard,
+} from "@features/library";
 import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import { parseOptionalString } from "@shared/utils/parse-optional-string";
 import { reportErrorsTogether } from "@shared/utils/report-errors-together";
 import { settleAll } from "@shared/utils/settle-all";
 import { EMPTY_MESSAGE } from "./message-transforms";
-import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
+import type {
+  ButtonKey,
+  Message,
+  MessagePart,
+  TextPart,
+  TilePart,
+} from "./message-types";
 
 // localStorage, not sessionStorage: an installed app can restart from scratch
 // in the background, and a message composed ahead of time must survive that.
 const STORAGE_KEY = "message-draft";
 
 // A stored asset's URL dies with the page, so a tile part saves its asset key.
+// Embedded media is too large to save, so it is read back from the part's source.
 interface SavedTilePart extends TilePart {
   readonly imageAssetKey?: AssetKey;
   readonly soundAssetKey?: AssetKey;
 }
 
 type SavedPart = TextPart | SavedTilePart;
-
-interface SavedDraft extends Omit<Message, "parts"> {
-  readonly parts: readonly SavedPart[];
-}
 
 export function saveMessageDraft(message: Message): void {
   if (message.parts.length === 0) {
@@ -30,18 +42,14 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const parts = message.parts.map(toSavedPart);
-  if (writeDraft({ ...message, parts })) {
-    return;
-  }
+  const draft = { ...message, parts: message.parts.map(toSavedPart) };
 
-  // Embedded pictures and sounds are most of a draft's size; the words outrank them.
-  if (writeDraft({ ...message, parts: parts.map(withoutEmbeddedMedia) })) {
-    return;
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+  } catch {
+    // An older draft must not come back in place of this one.
+    removeMessageDraft();
   }
-
-  // An older draft must not come back in place of this one.
-  removeMessageDraft();
 }
 
 /** Never rejects: the board opens whether or not the draft can be read. */
@@ -64,8 +72,13 @@ export async function restoreMessageDraft(): Promise<Message> {
     return EMPTY_MESSAGE;
   }
 
-  const assetURLByKey = await readAssetURLs(savedParts);
-  const parts = savedParts.map((part) => restorePart(part, assetURLByKey));
+  const [assetURLByKey, sourceBoardByPath] = await Promise.all([
+    readAssetURLs(savedParts),
+    readSourceBoards(savedParts),
+  ]);
+  const parts = savedParts.map((part) =>
+    restorePart(part, assetURLByKey, sourceBoardByPath),
+  );
 
   return {
     parts,
@@ -95,6 +108,11 @@ function toSavedPart(part: MessagePart): SavedPart {
     ...part,
     imageSrc: imageAssetKey ? undefined : toSavedSrc(part.imageSrc),
     soundSrc: soundAssetKey ? undefined : toSavedSrc(part.soundSrc),
+    // Reading a source costs a board load, so only embedded media saves it.
+    source:
+      isEmbedded(part.imageSrc) || isEmbedded(part.soundSrc)
+        ? part.source
+        : undefined,
     imageAssetKey,
     soundAssetKey,
   };
@@ -106,33 +124,13 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
 
 // An object URL with no stored asset behind it would come back broken.
 function toSavedSrc(src: string | undefined): string | undefined {
-  return src?.startsWith("blob:") ? undefined : src;
+  return src === undefined || isEmbedded(src) || src.startsWith("blob:")
+    ? undefined
+    : src;
 }
 
-function writeDraft(draft: SavedDraft): boolean {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-function withoutEmbeddedMedia(part: SavedPart): SavedPart {
-  if (part.kind === "text") {
-    return part;
-  }
-
-  return {
-    ...part,
-    imageSrc: withoutDataURL(part.imageSrc),
-    soundSrc: withoutDataURL(part.soundSrc),
-  };
-}
-
-function withoutDataURL(src: string | undefined): string | undefined {
-  return src?.startsWith("data:") ? undefined : src;
+function isEmbedded(src: string | undefined): boolean {
+  return src?.startsWith("data:") ?? false;
 }
 
 function readSavedDraft(): unknown {
@@ -175,6 +173,7 @@ function parseSavedPart(raw: unknown): SavedPart | undefined {
     soundSrc: parseOptionalString(raw.soundSrc),
     imageAssetKey: parseAssetKey(raw.imageAssetKey),
     soundAssetKey: parseAssetKey(raw.soundAssetKey),
+    source: parseButtonKey(raw.source),
   };
 }
 
@@ -211,6 +210,23 @@ async function readAssetURLs(
   return new Map(assetURLEntries);
 }
 
+function parseButtonKey(value: unknown): ButtonKey | undefined {
+  if (
+    !isRecord(value) ||
+    typeof value.boardSetId !== "string" ||
+    typeof value.boardId !== "string" ||
+    typeof value.buttonId !== "string"
+  ) {
+    return undefined;
+  }
+
+  return {
+    boardSetId: value.boardSetId,
+    boardId: value.boardId,
+    buttonId: value.buttonId,
+  };
+}
+
 function assetKeysOf(part: SavedPart): AssetKey[] {
   if (part.kind === "text") {
     return [];
@@ -221,9 +237,52 @@ function assetKeysOf(part: SavedPart): AssetKey[] {
   );
 }
 
+// A part keeps its words when its source board is gone or can't be read.
+async function readSourceBoards(
+  parts: readonly SavedPart[],
+): Promise<Map<string, Board | undefined>> {
+  const boardKeyByPath = new Map<string, BoardKey>();
+
+  for (const part of parts) {
+    if (part.kind === "tile" && part.source) {
+      boardKeyByPath.set(sourceBoardPath(part.source), part.source);
+    }
+  }
+
+  const { values: boardEntries, errors } = await settleAll(
+    Array.from(
+      boardKeyByPath,
+      async ([path, key]) => [path, await loadSourceBoard(key)] as const,
+    ),
+  );
+  reportErrorsTogether(
+    errors,
+    "Failed to read source boards of the message draft",
+  );
+
+  return new Map(boardEntries);
+}
+
+function sourceBoardPath({ boardSetId, boardId }: BoardKey): string {
+  return JSON.stringify([boardSetId, boardId]);
+}
+
+async function loadSourceBoard(key: BoardKey): Promise<Board | undefined> {
+  try {
+    return await loadStoredBoard(key);
+  } catch (error) {
+    if (error instanceof BoardNotFoundError) {
+      return undefined;
+    }
+
+    throw error;
+  }
+}
+
 function restorePart(
   part: SavedPart,
   assetURLByKey: ReadonlyMap<AssetKey, string | undefined>,
+  sourceBoardByPath: ReadonlyMap<string, Board | undefined>,
 ): MessagePart {
   if (part.kind === "text") {
     return part;
@@ -232,10 +291,24 @@ function restorePart(
   const { imageAssetKey, soundAssetKey, ...tilePart } = part;
   const imageURL = imageAssetKey && assetURLByKey.get(imageAssetKey);
   const soundURL = soundAssetKey && assetURLByKey.get(soundAssetKey);
+  const sourceButton = findSourceButton(tilePart.source, sourceBoardByPath);
 
   return {
     ...tilePart,
-    imageSrc: imageURL ?? tilePart.imageSrc,
-    soundSrc: soundURL ?? tilePart.soundSrc,
+    imageSrc: imageURL ?? tilePart.imageSrc ?? sourceButton?.imageSrc,
+    soundSrc: soundURL ?? tilePart.soundSrc ?? sourceButton?.soundSrc,
   };
+}
+
+function findSourceButton(
+  source: ButtonKey | undefined,
+  sourceBoardByPath: ReadonlyMap<string, Board | undefined>,
+): BoardButton | undefined {
+  if (!source) {
+    return undefined;
+  }
+
+  return sourceBoardByPath
+    .get(sourceBoardPath(source))
+    ?.buttons.find((button) => button.id === source.buttonId);
 }

@@ -1,4 +1,8 @@
-import { obfToBoard } from "@features/library/testing";
+import {
+  obfToBoard,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/library/testing";
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
@@ -598,6 +602,33 @@ describe("CommunicationBoard", () => {
   });
 
   describe("message draft", () => {
+    test("restores a tile's embedded picture from its stored board without saving it", async () => {
+      const board: OBFBoard = {
+        ...TWO_BUTTON_BOARD,
+        buttons: [{ id: "btn-1", label: "hello", image_id: "img-1" }],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        images: [{ id: "img-1", data: TEST_IMAGE_SRC }],
+      };
+      await resetBoardsDB();
+      await seedBoardSets([
+        { id: "set-1", rootBoardId: board.id, boards: [board] },
+      ]);
+      const screen = await renderCommunicationBoard(board, [
+        `/sets/set-1/boards/${board.id}`,
+      ]);
+
+      await screen.getByRole("button", { name: "hello", exact: true }).click();
+
+      await vi.waitFor(() => {
+        expect(localStorage.getItem("message-draft")).toContain("hello");
+      });
+      expect(localStorage.getItem("message-draft")).not.toContain("data:");
+      const restoredMessage = await restoreMessageDraft();
+      expect(restoredMessage.parts).toMatchObject([
+        { label: "hello", imageSrc: TEST_IMAGE_SRC },
+      ]);
+    });
+
     test("keeps an edit made after a board closed mid-speech", async () => {
       preventSpeechEnd(speech.speak);
       const screen = await render(closableBoardTree({ isOpen: true }));

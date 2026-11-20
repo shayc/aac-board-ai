@@ -1,4 +1,4 @@
-import type { BoardAction, BoardButton } from "@features/library";
+import type { BoardAction, BoardButton, BoardKey } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
 import { createTilePart } from "../message/message-transforms";
 import type { MessageEdit } from "../message/message-types";
@@ -10,6 +10,7 @@ interface ButtonActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "play" | "echo">;
   playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
+  boardKey: BoardKey | undefined;
   boardLanguage: string | undefined;
   shouldPlayTiles: boolean;
 }
@@ -20,6 +21,7 @@ export function createButtonActivator({
   message,
   playback,
   navigation,
+  boardKey,
   boardLanguage,
   shouldPlayTiles,
 }: ButtonActivatorOptions): ButtonActivator {
@@ -46,6 +48,7 @@ export function createButtonActivator({
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
       language: boardLanguage,
+      source: boardKey && { ...boardKey, buttonId: button.id },
     });
 
     message.apply([{ kind: "tile", part }]);

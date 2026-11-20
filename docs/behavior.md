@@ -106,10 +106,11 @@ its place and creates the URL again on restore. `boardLoader` restores the
 draft alongside the board, so the board opens with it, symbols included, and
 no edit can come before it. A message that played to its end is not kept when
 the next symbol would replace it, and an object URL with no stored asset behind
-it is left out, since it could only come back broken. When storage is too full
-for the draft, it is saved without the pictures and sounds embedded in it as
-data URLs, so the words, their order, language and vocalizations survive; if
-that does not fit either, no draft is kept. The undo history is not saved.
+it is left out, since it could only come back broken. A picture or sound
+embedded in a board file as a data URL is too large to save with every part, so
+the draft keeps the button the part came from and reads the media back from
+that board on restore; the part comes back without it when the board is gone.
+The undo history is not saved.
 
 While a board is open,
 [`useScreenWakeLock`](../src/shared/hooks/use-screen-wake-lock.ts) holds a

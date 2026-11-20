@@ -32,4 +32,4 @@ export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
 export type { BoardSummary } from "./board-sets/list-board-summaries";
 export type { AssetKey } from "./storage/asset-urls";
-export type { Board, BoardAction, BoardButton } from "./board-types";
+export type { Board, BoardAction, BoardButton, BoardKey } from "./board-types";

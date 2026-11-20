@@ -1,3 +1,9 @@
+import type { BoardKey } from "@features/library";
+
+export interface ButtonKey extends BoardKey {
+  readonly buttonId: string;
+}
+
 export interface TilePart {
   readonly kind: "tile";
   readonly id: string;
@@ -6,6 +12,8 @@ export interface TilePart {
   readonly vocalization?: string;
   readonly imageSrc?: string;
   readonly soundSrc?: string;
+  /** The button the part was composed from, when it came from a stored board. */
+  readonly source?: ButtonKey;
 }
 
 export interface TextPart {
