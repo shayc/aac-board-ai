@@ -11,7 +11,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForLTR } from "@shared/theme/rtl";
+import { flipForLTR, useEndSide, useStartSide } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { SettingsIcon, ViewSidebarIcon } from "@shared/ui/icons";
@@ -24,6 +24,8 @@ interface AppHeaderProps {
 
 export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   const t = useTranslate();
+  const startSide = useStartSide();
+  const endSide = useEndSide();
   const boards =
     useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.boards;
 
@@ -42,7 +44,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           [shortLandscape(theme)]: toolbarGutters(theme, 2),
         })}
       >
-        <Tooltip title={t(m.libraryOpen)}>
+        <Tooltip title={t(m.libraryOpen)} placement={endSide}>
           <IconButton
             aria-label={t(m.libraryOpen)}
             size="large"
@@ -57,7 +59,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           {boards && <BoardSelector boards={boards} />}
         </Box>
 
-        <Tooltip title={t(m.settingsOpen)}>
+        <Tooltip title={t(m.settingsOpen)} placement={startSide}>
           <IconButton
             aria-label={t(m.settingsOpen)}
             size="large"
