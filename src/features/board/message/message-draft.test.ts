@@ -123,6 +123,42 @@ describe("message draft", () => {
     ]);
   });
 
+  test("saves the words without embedded pictures and sounds when the full draft does not fit", async () => {
+    const embeddedTile = createTilePart({
+      label: "hello",
+      language: "en",
+      vocalization: "hi there",
+      imageSrc: `data:image/png;base64,${"A".repeat(256 * 1024)}`,
+      soundSrc: `data:audio/mpeg;base64,${"A".repeat(256 * 1024)}`,
+    });
+    const linkedTile = createTilePart({
+      label: "world",
+      language: "en",
+      imageSrc: "https://example.com/world.png",
+    });
+    // The older draft holds the room the words need once storage is full.
+    saveMessageDraft({
+      ...MESSAGE,
+      parts: [createTextPart("a".repeat(1024), "en")],
+    });
+    fillLocalStorage();
+
+    saveMessageDraft({
+      parts: [embeddedTile, linkedTile],
+      isWordOpen: false,
+      hasPlayed: true,
+    });
+
+    expect(await restoreMessageDraft()).toEqual({
+      parts: [
+        { ...embeddedTile, imageSrc: undefined, soundSrc: undefined },
+        linkedTile,
+      ],
+      isWordOpen: false,
+      hasPlayed: true,
+    });
+  });
+
   test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();

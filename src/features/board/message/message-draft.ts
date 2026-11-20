@@ -19,6 +19,10 @@ interface SavedTilePart extends TilePart {
 
 type SavedPart = TextPart | SavedTilePart;
 
+interface SavedDraft extends Omit<Message, "parts"> {
+  readonly parts: readonly SavedPart[];
+}
+
 export function saveMessageDraft(message: Message): void {
   if (message.parts.length === 0) {
     removeMessageDraft();
@@ -26,14 +30,18 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const draft = { ...message, parts: message.parts.map(toSavedPart) };
-
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-  } catch {
-    // An older draft must not come back in place of this one.
-    removeMessageDraft();
+  const parts = message.parts.map(toSavedPart);
+  if (writeDraft({ ...message, parts })) {
+    return;
   }
+
+  // Embedded pictures and sounds are what fill storage; the words fit without them.
+  if (writeDraft({ ...message, parts: parts.map(withoutEmbeddedMedia) })) {
+    return;
+  }
+
+  // An older draft must not come back in place of this one.
+  removeMessageDraft();
 }
 
 /** Never rejects: the board opens whether or not the draft can be read. */
@@ -99,6 +107,32 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
 // An object URL with no stored asset behind it would come back broken.
 function toSavedSrc(src: string | undefined): string | undefined {
   return src?.startsWith("blob:") ? undefined : src;
+}
+
+function writeDraft(draft: SavedDraft): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function withoutEmbeddedMedia(part: SavedPart): SavedPart {
+  if (part.kind === "text") {
+    return part;
+  }
+
+  return {
+    ...part,
+    imageSrc: withoutDataURL(part.imageSrc),
+    soundSrc: withoutDataURL(part.soundSrc),
+  };
+}
+
+function withoutDataURL(src: string | undefined): string | undefined {
+  return src?.startsWith("data:") ? undefined : src;
 }
 
 function readSavedDraft(): unknown {
