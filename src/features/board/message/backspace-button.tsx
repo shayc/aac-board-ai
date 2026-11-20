@@ -94,13 +94,14 @@ function backspaceSx(theme: Theme) {
     [`&, &.${iconButtonClasses.disabled}`]: {
       backgroundColor: action.selected,
     },
-    // A tap leaves hover stuck on a touch screen.
     "&:hover": {
-      "@media (hover: hover)": {
-        backgroundColor: theme.alpha(
-          action.selected,
-          `${action.selectedOpacity} + ${action.hoverOpacity}`,
-        ),
+      backgroundColor: theme.alpha(
+        action.selected,
+        `${action.selectedOpacity} + ${action.hoverOpacity}`,
+      ),
+      // A tap leaves hover stuck on a touch screen, where MUI clears the fill.
+      "@media (hover: none)": {
+        backgroundColor: action.selected,
       },
     },
     ...theme.applyStyles("dark", {
