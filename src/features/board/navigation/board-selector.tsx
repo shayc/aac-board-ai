@@ -160,6 +160,7 @@ function BoardSearch({
         }
       }}
       disableClearable
+      forcePopupIcon={false}
       autoHighlight
       slots={{ popper: InlineList }}
       slotProps={{
@@ -180,6 +181,7 @@ function BoardSearch({
           inputRef={searchFieldRef}
           placeholder={t(m.boardSelectorSearch)}
           size="small"
+          fullWidth
           startAdornment={
             <InputAdornment position="start">
               <SearchIcon />
@@ -190,14 +192,6 @@ function BoardSearch({
               ...slotProps.htmlInput,
               "aria-label": t(m.boardSelectorSearch),
             },
-          }}
-          sx={{
-            // Spans the popover inside its margin, where inline-flex would
-            // shrink to the placeholder and full width would overflow.
-            display: "flex",
-            m: 1,
-            // Lines the search icon up with the option labels below.
-            pl: 1.5,
           }}
         />
       )}
@@ -210,6 +204,7 @@ function BoardSearch({
           {selected && <CheckIcon fontSize="small" sx={{ ml: 1 }} />}
         </li>
       )}
+      sx={{ p: 1 }}
     />
   );
 }

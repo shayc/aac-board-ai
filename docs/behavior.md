@@ -343,9 +343,9 @@ The header's
 [board selector](../src/features/board/navigation/board-selector.tsx) is the
 page heading: a button showing the current board's name. It opens a popup with
 a search field fixed above the set's boards, which scroll beneath it with the
-current board selected and marked with a check. The search field starts empty and takes focus on open
-only on a device with a mouse, so a touch screen does not raise its keyboard
-over the list. Choosing a board or pressing Escape closes the popup and returns
+current board selected and marked with a check. The search field starts empty
+and takes focus on open only on a device with a mouse, so a touch screen does
+not raise its keyboard over the list. Choosing a board or pressing Escape closes the popup and returns
 focus to the heading.
 
 Undo steps back through a bounded history of changes to the message. There is

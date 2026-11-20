@@ -409,7 +409,8 @@ const themeOptions = {
         root: ({ theme }) => ({
           marginInline: 4,
           borderRadius: theme.vars.shape.borderRadiusSm,
-          // MUI drops the 48px row from the sm breakpoint up, tablets included.
+          // MUI drops the 48px touch row from the sm breakpoint up, so tablets
+          // would get desktop rows. The Autocomplete option below matches.
           "@media (pointer: coarse)": { minHeight: 48 },
         }),
       },
@@ -423,33 +424,29 @@ const themeOptions = {
         },
       },
       styleOverrides: {
-        option: ({ theme }) => ({
-          marginInline: 4,
-          borderRadius: theme.vars.shape.borderRadiusSm,
-        }),
+        // Styles options from the listbox, where MUI styles them, so that
+        // these rules come after MUI's.
         listbox: ({ theme }) => ({
-          // Touch-sized rows, as for MuiMenuItem.
-          "@media (pointer: coarse)": {
-            [`& .${autocompleteClasses.option}`]: { minHeight: 48 },
+          [`& .${autocompleteClasses.option}`]: {
+            marginInline: 4,
+            borderRadius: theme.vars.shape.borderRadiusSm,
+            "@media (pointer: coarse)": { minHeight: 48 },
+            // Enter picks the highlighted option, so it shows on every device.
+            [`&.${autocompleteClasses.focused}`]: {
+              backgroundColor: theme.vars.palette.action.selected,
+            },
+            // The keyboard ring alone marks the option, as in lists and menus.
+            [`&.${autocompleteClasses.focusVisible}`]: {
+              backgroundColor: "transparent",
+            },
+            // Stays tinted on touch screens too, where MUI turns it grey.
+            [`&[aria-selected="true"].${autocompleteClasses.focused}`]: {
+              backgroundColor: theme.alpha(
+                theme.vars.palette.primary.main,
+                `${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}`,
+              ),
+            },
           },
-          // Undoes MUI's highlight reset, which shares this query.
-          "@media (hover: none)": {
-            // The match that Enter picks after typing must stay visible.
-            [`& .${autocompleteClasses.option}.${autocompleteClasses.focused}`]:
-              { backgroundColor: theme.vars.palette.action.hover },
-            // The selected option stays tinted, where MUI would turn it grey.
-            [`& .${autocompleteClasses.option}[aria-selected="true"].${autocompleteClasses.focused}`]:
-              {
-                backgroundColor: theme.alpha(
-                  theme.vars.palette.primary.main,
-                  theme.vars.palette.action.selectedOpacity,
-                ),
-              },
-          },
-          // The keyboard ring alone marks the option, as in lists and menus.
-          // MUI also gives it the hover fill.
-          [`& .${autocompleteClasses.option}.${autocompleteClasses.focusVisible}:not([aria-selected="true"])`]:
-            { backgroundColor: "transparent" },
         }),
       },
     },
