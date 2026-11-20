@@ -96,9 +96,10 @@ function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
   return src === undefined ? undefined : findAssetKey(src);
 }
 
-// An object URL with no stored asset behind it would come back broken.
+// An object URL with no stored asset behind it would come back broken, and
+// embedded media in every part would fill storage and cost the whole draft.
 function toSavedSrc(src: string | undefined): string | undefined {
-  return src?.startsWith("blob:") ? undefined : src;
+  return src !== undefined && /^(blob|data):/i.test(src) ? undefined : src;
 }
 
 function readSavedDraft(): unknown {

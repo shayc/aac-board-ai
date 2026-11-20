@@ -106,7 +106,10 @@ its place and creates the URL again on restore. `boardLoader` restores the
 draft alongside the board, so the board opens with it, symbols included, and
 no edit can come before it. A message that played to its end is not kept when
 the next symbol would replace it, and an object URL with no stored asset behind
-it is left out, since it could only come back broken. The undo history is not saved.
+it is left out, since it could only come back broken. A picture or sound
+embedded in a board file as a data URL is left out too: saved with every part
+it would fill storage and cost the whole draft, so such a part comes back with
+its words only. The undo history is not saved.
 
 While a board is open,
 [`useScreenWakeLock`](../src/shared/hooks/use-screen-wake-lock.ts) holds a

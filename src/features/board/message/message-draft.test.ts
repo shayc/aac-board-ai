@@ -123,6 +123,35 @@ describe("message draft", () => {
     ]);
   });
 
+  test("saves the words without embedded media, which would not fit", async () => {
+    const tile = createTilePart({
+      label: "hello",
+      language: "en",
+      vocalization: "hi there",
+    });
+    saveMessageDraft(MESSAGE);
+    fillLocalStorage();
+
+    saveMessageDraft({
+      parts: [
+        {
+          ...tile,
+          imageSrc: `data:image/png;base64,${"A".repeat(256 * 1024)}`,
+          // A URL's scheme is case-insensitive.
+          soundSrc: `DATA:audio/mpeg;base64,${"A".repeat(256 * 1024)}`,
+        },
+      ],
+      isWordOpen: false,
+      hasPlayed: true,
+    });
+
+    expect(await restoreMessageDraft()).toEqual({
+      parts: [tile],
+      isWordOpen: false,
+      hasPlayed: true,
+    });
+  });
+
   test("removes an older draft when a newer one does not fit", async () => {
     saveMessageDraft(MESSAGE);
     fillLocalStorage();
