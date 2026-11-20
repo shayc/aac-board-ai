@@ -379,7 +379,6 @@ describe("CommunicationBoard", () => {
         wholeRows: 2,
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
-        // Fills the compact bar inside its inset.
         playHeight: 64,
         // Past the 64px home button and a 16px gap.
         messageBarStart: 16 + 64 + 16,
@@ -409,7 +408,6 @@ describe("CommunicationBoard", () => {
         overflowHint: 16,
         wholeRows: 5,
         isPlayBelowGrid: false,
-        // Inside the bar, past its 8px inset and 1px border.
         playEnd: 24 + 8 + 1,
         playHeight: 80,
         // Home grows to play's 80px where the bar has room for it.

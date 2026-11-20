@@ -58,7 +58,6 @@ describe("BoardSetInfoDialog", () => {
   });
 
   test("keeps showing the board set while the dialog closes", async () => {
-    // Fake timers hold the exit transition, so the closing dialog can be inspected.
     vi.useFakeTimers();
     onTestFinished(() => {
       vi.useRealTimers();

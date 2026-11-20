@@ -12,9 +12,7 @@ const ICON_SX = {
 };
 
 const SHAPE_SX = {
-  // The grid's narrowest tile.
   pill: { width: MIN_CELL_WIDTH_PX, ...ICON_SX },
-  // One icon: no side padding, and as wide as the message bar's controls.
   round: (theme: Theme) => ({
     width: CONTROL_SIZES.large,
     height: CONTROL_SIZES.large,

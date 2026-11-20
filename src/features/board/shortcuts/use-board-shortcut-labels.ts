@@ -10,7 +10,6 @@ export interface BoardShortcutLabels {
   stop: string;
 }
 
-/** Labels for the keys that `resolveBoardShortcut` accepts. */
 export function useBoardShortcutLabels(): BoardShortcutLabels {
   const t = useTranslate();
 

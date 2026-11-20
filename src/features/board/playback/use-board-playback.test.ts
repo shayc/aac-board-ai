@@ -57,7 +57,7 @@ describe("useBoardPlayback", () => {
     expect(result.current.isMessagePlaying).toBe(true);
     expect(result.current.activePartId).toBeNull();
 
-    fireBoundary?.(2); // "want" begins at offset 2 in "i want"
+    fireBoundary?.(2);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
     expect(result.current.activePartId).toBe("2");
