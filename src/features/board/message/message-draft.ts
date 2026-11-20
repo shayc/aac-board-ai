@@ -27,7 +27,7 @@ import type {
 const STORAGE_KEY = "message-draft";
 
 // A stored asset's URL dies with the page, so a tile part saves its asset key.
-// Embedded media is too large to save, so it is read back from the part's source.
+// Embedded media is too large to save, so it is read back from its source.
 interface SavedTilePart extends TilePart {
   readonly imageAssetKey?: AssetKey;
   readonly soundAssetKey?: AssetKey;
@@ -35,8 +35,10 @@ interface SavedTilePart extends TilePart {
 
 type SavedPart = TextPart | SavedTilePart;
 
-interface SavedDraft extends Omit<Message, "parts"> {
-  readonly parts: readonly SavedPart[];
+interface SavedMedia {
+  readonly src?: string;
+  readonly assetKey?: AssetKey;
+  readonly source?: ButtonKey;
 }
 
 export function saveMessageDraft(message: Message): void {
@@ -46,17 +48,22 @@ export function saveMessageDraft(message: Message): void {
     return;
   }
 
-  const parts = message.parts.map(toSavedPart);
-  if (trySaveDraft({ ...message, parts })) {
+  if (trySaveDraft(message, toSavedPart)) {
     return;
   }
 
-  // Only a linked URL can be long; keys to stored media stay.
-  const compactParts = parts.map(withoutLinkedMedia);
-  if (!trySaveDraft({ ...message, parts: compactParts })) {
-    // An older draft must not come back in place of this one.
-    removeMessageDraft();
+  // A linked URL can be long, and its source stands in for it.
+  if (trySaveDraft(message, toCompactPart)) {
+    return;
   }
+
+  // The words outrank their pictures and sounds.
+  if (trySaveDraft(message, withoutMedia)) {
+    return;
+  }
+
+  // An older draft must not come back in place of this one.
+  removeMessageDraft();
 }
 
 /** Never rejects: the board opens whether or not the draft can be read. */
@@ -103,45 +110,12 @@ function removeMessageDraft() {
   }
 }
 
-function toSavedPart(part: MessagePart): SavedPart {
-  if (part.kind === "text") {
-    return part;
-  }
+function trySaveDraft(
+  message: Message,
+  toPart: (part: MessagePart) => SavedPart,
+): boolean {
+  const draft = { ...message, parts: message.parts.map(toPart) };
 
-  const imageAssetKey = findAssetKeyOf(part.imageSrc);
-  const soundAssetKey = findAssetKeyOf(part.soundSrc);
-
-  return {
-    ...part,
-    imageSrc: imageAssetKey ? undefined : toSavedSrc(part.imageSrc),
-    soundSrc: soundAssetKey ? undefined : toSavedSrc(part.soundSrc),
-    // Reading a source costs a board load, so only embedded media saves it.
-    source:
-      isEmbedded(part.imageSrc) || isEmbedded(part.soundSrc)
-        ? part.source
-        : undefined,
-    imageAssetKey,
-    soundAssetKey,
-  };
-}
-
-function findAssetKeyOf(src: string | undefined): AssetKey | undefined {
-  return src === undefined ? undefined : findAssetKey(src);
-}
-
-// An object URL with no stored asset behind it would come back broken.
-function toSavedSrc(src: string | undefined): string | undefined {
-  return src === undefined || isEmbedded(src) || /^blob:/i.test(src)
-    ? undefined
-    : src;
-}
-
-// A URL's scheme is case-insensitive.
-function isEmbedded(src: string | undefined): boolean {
-  return src !== undefined && /^data:/i.test(src);
-}
-
-function trySaveDraft(draft: SavedDraft): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
 
@@ -151,12 +125,76 @@ function trySaveDraft(draft: SavedDraft): boolean {
   }
 }
 
-function withoutLinkedMedia(part: SavedPart): SavedPart {
+function toSavedPart(part: MessagePart): SavedPart {
+  return savePart(part, { shouldSaveLinkedURLs: true });
+}
+
+function toCompactPart(part: MessagePart): SavedPart {
+  return savePart(part, { shouldSaveLinkedURLs: false });
+}
+
+function savePart(
+  part: MessagePart,
+  { shouldSaveLinkedURLs }: { shouldSaveLinkedURLs: boolean },
+): SavedPart {
   if (part.kind === "text") {
     return part;
   }
 
-  return { ...part, imageSrc: undefined, soundSrc: undefined };
+  const image = toSavedMedia(
+    part.imageSrc,
+    part.imageSource,
+    shouldSaveLinkedURLs,
+  );
+  const sound = toSavedMedia(
+    part.soundSrc,
+    part.soundSource,
+    shouldSaveLinkedURLs,
+  );
+
+  return {
+    ...part,
+    imageSrc: image.src,
+    soundSrc: sound.src,
+    imageAssetKey: image.assetKey,
+    soundAssetKey: sound.assetKey,
+    imageSource: image.source,
+    soundSource: sound.source,
+  };
+}
+
+// Reading a source costs a board load, so it is saved only for media that
+// nothing else brings back: embedded, missing, or an object URL with no asset.
+function toSavedMedia(
+  src: string | undefined,
+  source: ButtonKey | undefined,
+  shouldSaveLinkedURLs: boolean,
+): SavedMedia {
+  const assetKey = src === undefined ? undefined : findAssetKey(src);
+  if (assetKey) {
+    return { assetKey };
+  }
+
+  if (shouldSaveLinkedURLs && src !== undefined && isLinked(src)) {
+    return { src };
+  }
+
+  return { source };
+}
+
+// A URL's scheme is case-insensitive.
+function isLinked(src: string): boolean {
+  return !/^(data|blob):/i.test(src);
+}
+
+function withoutMedia(part: MessagePart): SavedPart {
+  if (part.kind === "text") {
+    return part;
+  }
+
+  const { kind, id, label, language, vocalization } = part;
+
+  return { kind, id, label, language, vocalization };
 }
 
 function readSavedDraft(): unknown {
@@ -199,7 +237,8 @@ function parseSavedPart(raw: unknown): SavedPart | undefined {
     soundSrc: parseOptionalString(raw.soundSrc),
     imageAssetKey: parseAssetKey(raw.imageAssetKey),
     soundAssetKey: parseAssetKey(raw.soundAssetKey),
-    source: parseButtonKey(raw.source),
+    imageSource: parseButtonKey(raw.imageSource),
+    soundSource: parseButtonKey(raw.soundSource),
   };
 }
 
@@ -269,10 +308,8 @@ async function readSourceBoards(
 ): Promise<Map<string, Board | undefined>> {
   const boardKeyByPath = new Map<string, BoardKey>();
 
-  for (const part of parts) {
-    if (part.kind === "tile" && part.source) {
-      boardKeyByPath.set(sourceBoardPath(part.source), part.source);
-    }
+  for (const source of parts.flatMap(sourcesOf)) {
+    boardKeyByPath.set(sourceBoardPath(source), source);
   }
 
   const { values: boardEntries, errors } = await settleAll(
@@ -287,6 +324,16 @@ async function readSourceBoards(
   );
 
   return new Map(boardEntries);
+}
+
+function sourcesOf(part: SavedPart): ButtonKey[] {
+  if (part.kind === "text") {
+    return [];
+  }
+
+  return [part.imageSource, part.soundSource].filter(
+    (source) => source !== undefined,
+  );
 }
 
 function sourceBoardPath({ boardSetId, boardId }: BoardKey): string {
@@ -317,12 +364,13 @@ function restorePart(
   const { imageAssetKey, soundAssetKey, ...tilePart } = part;
   const imageURL = imageAssetKey && assetURLByKey.get(imageAssetKey);
   const soundURL = soundAssetKey && assetURLByKey.get(soundAssetKey);
-  const sourceButton = findSourceButton(tilePart.source, sourceBoardByPath);
+  const imageButton = findSourceButton(tilePart.imageSource, sourceBoardByPath);
+  const soundButton = findSourceButton(tilePart.soundSource, sourceBoardByPath);
 
   return {
     ...tilePart,
-    imageSrc: imageURL ?? tilePart.imageSrc ?? sourceButton?.imageSrc,
-    soundSrc: soundURL ?? tilePart.soundSrc ?? sourceButton?.soundSrc,
+    imageSrc: imageURL ?? tilePart.imageSrc ?? imageButton?.imageSrc,
+    soundSrc: soundURL ?? tilePart.soundSrc ?? soundButton?.soundSrc,
   };
 }
 

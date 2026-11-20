@@ -108,11 +108,12 @@ no edit can come before it. A message that played to its end is not kept when
 the next symbol would replace it, and an object URL with no stored asset behind
 it is left out, since it could only come back broken. A picture or sound
 embedded in a board file as a data URL is too large to save with every part, so
-the draft keeps the button the part came from and reads the media back from
-that board on restore; the part comes back without it when the board is gone.
-If the draft exceeds the storage quota, saving retries without linked picture
-and sound URLs, the only part that can be long, and keeps the words and the
-keys to stored media.
+a part keeps the button each came from, and the draft reads that picture or
+sound back from the board on restore, and nothing else from the button. The
+part comes back without it while the board is gone or unreadable and gets it
+back once the board can be read again. If the draft exceeds the storage quota,
+saving retries with linked URLs replaced by their source buttons, then with the
+words alone: their order, languages and vocalizations.
 The undo history is not saved.
 
 While a board is open,

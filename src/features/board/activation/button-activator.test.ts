@@ -138,7 +138,8 @@ describe("createButtonActivator", () => {
       vocalization: "ring the bell",
       imageSrc: "bell.png",
       soundSrc: "bell.mp3",
-      source: { boardSetId: "set-1", boardId: "board-1", buttonId: "btn" },
+      imageSource: { boardSetId: "set-1", boardId: "board-1", buttonId: "btn" },
+      soundSource: { boardSetId: "set-1", boardId: "board-1", buttonId: "btn" },
     });
     expect(appended.id).toBeTruthy();
     expect(appended.id).not.toBe("btn");

@@ -42,13 +42,15 @@ export function createButtonActivator({
   }
 
   function composeAndPlayButton(button: BoardButton) {
+    const source = boardKey && { ...boardKey, buttonId: button.id };
     const part = createTilePart({
       label: button.label,
       vocalization: button.vocalization,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
       language: boardLanguage,
-      source: boardKey && { ...boardKey, buttonId: button.id },
+      imageSource: button.imageSrc ? source : undefined,
+      soundSource: button.soundSrc ? source : undefined,
     });
 
     message.apply([{ kind: "tile", part }]);

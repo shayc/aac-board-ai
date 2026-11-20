@@ -12,8 +12,10 @@ export interface TilePart {
   readonly vocalization?: string;
   readonly imageSrc?: string;
   readonly soundSrc?: string;
-  /** The button the part was composed from, when it came from a stored board. */
-  readonly source?: ButtonKey;
+  /** The stored button the picture came from; it outlives a picture that could not be read. */
+  readonly imageSource?: ButtonKey;
+  /** The stored button the sound came from; it outlives a sound that could not be read. */
+  readonly soundSource?: ButtonKey;
 }
 
 export interface TextPart {
