@@ -4,7 +4,7 @@ import {
   type ImportedBoardSet,
 } from "./board-file-import";
 
-export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
+export const MAX_BOARD_FILE_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
 type BoardFileURLErrorCode =
   | "unsupported-scheme"
@@ -28,7 +28,7 @@ export function parseBoardFileURL(url: string): URL {
   if (!isAllowedBoardFileURL(resolved)) {
     throw new BoardFileURLError(
       "unsupported-scheme",
-      `Unsupported board URL scheme: ${resolved.protocol}`,
+      `Unsupported board file URL scheme: ${resolved.protocol}`,
     );
   }
 
@@ -67,7 +67,7 @@ export interface DownloadProgress {
   total?: number;
 }
 
-interface ImportBoardFileFromURLOptions {
+interface ImportFromURLOptions {
   signal?: AbortSignal;
   onProgress?: (progress: DownloadProgress) => void;
   onImportStart?: () => void;
@@ -75,38 +75,34 @@ interface ImportBoardFileFromURLOptions {
 
 export async function importBoardFileFromURL(
   url: string,
-  { signal, onProgress, onImportStart }: ImportBoardFileFromURLOptions = {},
+  { signal, onProgress, onImportStart }: ImportFromURLOptions = {},
 ): Promise<ImportedBoardSet> {
-  const boardURL = parseBoardFileURL(url);
-  const blob = await downloadBoardFile(boardURL, { signal, onProgress });
+  const boardFileURL = parseBoardFileURL(url);
+  const blob = await downloadBoardFile(boardFileURL, { signal, onProgress });
   signal?.throwIfAborted();
   onImportStart?.();
 
-  const file = new File([blob], deriveFileName(boardURL), {
+  const file = new File([blob], deriveFileName(boardFileURL), {
     type: blob.type || "application/octet-stream",
   });
 
-  // Once local importing starts, let its atomic write finish even if navigation changes.
   return importBoardFile(file);
 }
 
 async function downloadBoardFile(
   url: URL,
-  {
-    signal,
-    onProgress,
-  }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
+  { signal, onProgress }: Pick<ImportFromURLOptions, "signal" | "onProgress">,
 ): Promise<Blob> {
   const response = await fetch(url, { signal, redirect: "manual" });
   if (response.type === "opaqueredirect") {
     throw new BoardFileURLError(
       "redirect",
-      `Board URL on ${url.host} answered with a redirect`,
+      `Board file URL on ${url.host} answered with a redirect`,
     );
   }
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch board: HTTP ${response.status}`);
+    throw new Error(`Failed to fetch board file: HTTP ${response.status}`);
   }
 
   const total = expectedDownloadBytes(response.headers);
@@ -117,25 +113,9 @@ async function downloadBoardFile(
     return response.blob();
   }
 
-  const chunks: BlobPart[] = [];
-  let receivedBytes = 0;
-  onProgress?.({ loaded: receivedBytes, total });
-
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) {
-      break;
-    }
-
-    receivedBytes += value.byteLength;
-    if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
-      await reader.cancel();
-      throw downloadTooLargeError();
-    }
-
-    chunks.push(value);
-    onProgress?.({ loaded: receivedBytes, total });
-  }
+  const chunks = await readWithinSizeCap(reader, (loaded) =>
+    onProgress?.({ loaded, total }),
+  );
 
   return new Blob(chunks, {
     type: response.headers.get("content-type") ?? "",
@@ -157,17 +137,41 @@ function assertWithinSizeCap(
   total: number | undefined,
   response: Response,
 ): void {
-  if (total === undefined || total <= MAX_BOARD_DOWNLOAD_BYTES) {
-    return;
+  if (total !== undefined && total > MAX_BOARD_FILE_DOWNLOAD_BYTES) {
+    void response.body?.cancel();
+    throw downloadTooLargeError();
   }
+}
 
-  void response.body?.cancel();
-  throw downloadTooLargeError();
+// The declared size can be missing or wrong, so the cap counts received bytes.
+async function readWithinSizeCap(
+  reader: ReadableStreamDefaultReader<Uint8Array<ArrayBuffer>>,
+  onReceived: (receivedBytes: number) => void,
+): Promise<BlobPart[]> {
+  const chunks: BlobPart[] = [];
+  let receivedBytes = 0;
+  onReceived(receivedBytes);
+
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) {
+      return chunks;
+    }
+
+    receivedBytes += value.byteLength;
+    if (receivedBytes > MAX_BOARD_FILE_DOWNLOAD_BYTES) {
+      await reader.cancel();
+      throw downloadTooLargeError();
+    }
+
+    chunks.push(value);
+    onReceived(receivedBytes);
+  }
 }
 
 function downloadTooLargeError(): BoardFileURLError {
   return new BoardFileURLError(
     "download-too-large",
-    `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
+    `Board file download exceeded ${MAX_BOARD_FILE_DOWNLOAD_BYTES} bytes`,
   );
 }

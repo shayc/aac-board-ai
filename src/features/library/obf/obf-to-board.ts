@@ -1,15 +1,9 @@
 import { normalizeLocale } from "@shared/language/locale";
-import type {
-  OBFBoard,
-  OBFButton,
-  OBFGrid,
-  OBFMedia,
-} from "@shayc/open-board-format";
+import type { OBFBoard, OBFButton, OBFMedia } from "@shayc/open-board-format";
 import type {
   Board,
   BoardAction,
   BoardButton,
-  BoardGrid,
   TranslationsByLocale,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
@@ -28,7 +22,7 @@ export function obfToBoard(
     buttons: obfBoard.buttons.map((obfButton) =>
       obfToBoardButton(obfButton, imageSrcById, soundSrcById),
     ),
-    grid: obfToBoardGrid(obfBoard.grid),
+    grid: { order: obfBoard.grid.order },
     translationsByLocale: obfToTranslationsByLocale(obfBoard.strings),
   };
 }
@@ -98,10 +92,10 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   const rawActions =
     obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 
-  return rawActions.map(parseAction).filter((action) => action !== undefined);
+  return rawActions.map(parseAction);
 }
 
-function parseAction(raw: string): BoardAction | undefined {
+function parseAction(raw: string): BoardAction {
   if (raw.startsWith("+")) {
     return { kind: "spell", text: raw.slice(1).trim() };
   }
@@ -118,16 +112,8 @@ function parseAction(raw: string): BoardAction | undefined {
     case ":speak":
       return { kind: "play" };
     default:
-      return undefined;
+      return { kind: "unsupported", raw };
   }
-}
-
-function obfToBoardGrid(obfGrid: OBFGrid): BoardGrid {
-  return {
-    rows: obfGrid.rows,
-    columns: obfGrid.columns,
-    order: obfGrid.order,
-  };
 }
 
 export function obfToTranslationsByLocale(

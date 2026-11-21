@@ -26,7 +26,10 @@ interface UseGridFocusReturn {
   tabStopPosition: GridPosition;
 }
 
-export function useGridFocus(grid: GridCells): UseGridFocusReturn {
+export function useGridFocus<Item extends object>(
+  grid: GridCells<Item>,
+  getItemKey: (item: Item) => string,
+): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),
@@ -62,9 +65,9 @@ export function useGridFocus(grid: GridCells): UseGridFocusReturn {
     tabStop?.focus();
   });
 
-  // A focused tile drops focus to the body only when it unmounts, which takes
-  // a change in which tile sits where; the grid array itself is new each render.
-  const arrangementKey = gridArrangementKey(grid);
+  // A focused item unmounts, dropping focus to the body, only when the cells'
+  // keys change. The grid array itself is new each render.
+  const arrangementKey = gridArrangementKey(grid, getItemKey);
   const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {
     if (previousArrangementKeyRef.current === arrangementKey) {

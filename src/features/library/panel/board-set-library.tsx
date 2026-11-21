@@ -1,4 +1,3 @@
-import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,10 +9,11 @@ import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
+import { LibraryAddIcon } from "@shared/ui/icons";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
-import { useMatch, useNavigate } from "react-router";
-import { BOARD_SET_SEGMENT } from "../board-paths";
+import { useNavigate } from "react-router";
+import { useActiveBoardSetId } from "../board-paths";
 import { boardSetInLanguage } from "../board-sets/board-in-language";
 import { deleteBoardSet, useBoardSets } from "../board-sets/board-sets-store";
 import { listDownloadableBoardSets } from "../catalog/board-set-catalog";
@@ -26,10 +26,7 @@ import { BoardSetList } from "./board-set-list";
 
 export function BoardSetLibrary() {
   const t = useTranslate();
-  const activeBoardSetId = useMatch({
-    path: `/${BOARD_SET_SEGMENT}`,
-    end: false,
-  })?.params.boardSetId;
+  const activeBoardSetId = useActiveBoardSetId();
   const { language } = useCommunicationLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
@@ -49,14 +46,15 @@ export function BoardSetLibrary() {
       return;
     }
 
-    const { id, name } = deleteTarget;
+    const { id } = deleteTarget;
     setDeleteTarget(null);
 
     try {
       await deleteBoardSet(id);
-    } catch {
+    } catch (error) {
+      reportError(error);
       showSnackbar({
-        message: (t) => t(m.libraryDeleteFailed, { name }),
+        message: (t) => t(m.libraryDeleteFailed),
         severity: "error",
       });
 
@@ -71,9 +69,10 @@ export function BoardSetLibrary() {
   async function handleExport(boardSet: BoardSetRecord) {
     try {
       await exportBoardSet(boardSet);
-    } catch {
+    } catch (error) {
+      reportError(error);
       showSnackbar({
-        message: (t) => t(m.libraryExportFailed, { name: boardSet.name }),
+        message: (t) => t(m.libraryExportFailed),
         severity: "error",
       });
     }
@@ -101,7 +100,7 @@ export function BoardSetLibrary() {
         <ListItem disablePadding>
           <ListItemButton onClick={() => void pickAndImport()}>
             <ListItemIcon>
-              <LibraryAddOutlinedIcon />
+              <LibraryAddIcon />
             </ListItemIcon>
             <ListItemText primary={t(m.libraryImportBoardFiles)} />
           </ListItemButton>

@@ -2,11 +2,10 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Chargement…",
   "close": "Fermer",
-  "opensInNewTab": "(s'ouvre dans un nouvel onglet)",
+  "opensInNewTab": "(s’ouvre dans un nouvel onglet)",
   "boardGridLabel": "Tableau de communication",
   "boardSelectorLabel": "Tableau",
-  "boardSelectorOpen": "Ouvrir la liste des tableaux",
-  "boardSelectorClose": "Fermer la liste des tableaux",
+  "boardSelectorSearch": "Rechercher des tableaux",
   "boardSelectorNoOptions": "Aucun tableau correspondant",
   "libraryLoading": "Chargement des ensembles de tableaux…",
   "libraryLoadFailed": "Impossible de charger la bibliothèque",
@@ -14,39 +13,54 @@
   "libraryBoardSets": "Ensembles de tableaux",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importation du fichier de tableau…",
-        "countPlural=*": "Importation des fichiers de tableaux…"
+        "count=1": "Importation du fichier de tableau…",
+        "count=*": "Importation des fichiers de tableaux…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Ensemble de tableaux importé",
-        "countPlural=*": "Ensembles de tableaux importés"
+        "count=1": "Ensemble de tableaux importé",
+        "count=*": "Ensembles de tableaux importés"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Impossible d'importer le fichier de tableau « {fileName} »",
-  "libraryImportFailedBoardFiles": "Impossible d'importer les fichiers de tableaux",
-  "libraryImportNotBoardFile": "« {fileName} » n'est pas un fichier de tableau",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Impossible d’importer le fichier de tableau",
+        "count=*": "Impossible d’importer les fichiers de tableaux"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Seuls les fichiers de tableaux peuvent être importés",
-  "libraryImportTooLargeBoardFile": "Le fichier de tableau « {fileName} » est trop volumineux pour être importé",
-  "libraryImportTooLargeBoardFiles": "Les fichiers de tableaux sont trop volumineux pour être importés",
-  "libraryImportPartiallyFailedBoardFiles": "Impossible d'importer certains fichiers de tableaux ({failed} sur {total})",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Le fichier de tableau est trop volumineux pour être importé",
+        "count=*": "Les fichiers de tableaux sont trop volumineux pour être importés"
+      }
+    }
+  ],
+  "libraryImportPartiallyFailedBoardFiles": "Impossible d’importer certains fichiers de tableaux ({failed} sur {total})",
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
   "libraryInfo": "Infos",
   "libraryExport": "Exporter",
   "libraryDelete": "Supprimer",
   "libraryCancel": "Annuler",
   "libraryClose": "Fermer la bibliothèque",
-  "libraryMoreOptions": "Plus d'options",
-  "libraryMoreOptionsFor": "Plus d'options pour {name}",
+  "libraryMoreOptions": "Plus d’options",
+  "libraryMoreOptionsFor": "Plus d’options pour {name}",
   "libraryDownload": "Télécharger",
   "libraryDownloadBoardSet": "Télécharger {name}",
   "libraryDownloadedBoardSet": "Ensemble de tableaux « {name} » téléchargé",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Grille {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Supprimer l’ensemble de tableaux ?",
   "libraryDeleteIrreversible": "L’ensemble de tableaux « {name} » sera supprimé. Cette action est irréversible.",
-  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux « {name} »",
-  "libraryExportFailed": "Impossible d’exporter l’ensemble de tableaux « {name} »",
+  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux",
+  "libraryExportFailed": "Impossible d’exporter l’ensemble de tableaux",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",
   "aboutSourceCode": "Code source",
@@ -91,9 +105,10 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Écouter la voix",
   "speechPreviewSample": "Bonjour, voici ma voix !",
+  "messagePlayTiles": "Dire les symboles dès leur ajout",
   "messageImages": "Afficher les images",
-  "messageHighlight": "Surligner pendant la lecture vocale",
-  "messageClearAfterSpeaking": "Effacer après la lecture vocale",
+  "messageHighlight": "Surligner pendant que le message est dit",
+  "messageClearAfterPlaying": "Effacer une fois le message dit",
   "tileSaturation": "Intensité des couleurs",
   "tileBrightness": "Luminosité",
   "tileBorders": "Afficher les bordures",
@@ -102,26 +117,26 @@
   "tileLabelBottom": "En bas",
   "tileLabelHidden": "Masqués",
   "tileOpensBoard": "Ouvre un tableau",
+  "tileSpace": "Espace",
   "scanningEnabled": "Activer le balayage par contacteur",
   "scanningMethod": "Méthode de balayage",
-  "scanningMethodAuto": "Automatique",
-  "scanningMethodStep": "Balayage pas à pas à deux contacteurs",
+  "scanningMethodAuto": "Balayage automatique",
+  "scanningMethodStep": "Balayage pas à pas",
   "scanningMethodAutoHint": "Appuyez sur Espace ou Entrée pour lancer le balayage et pour sélectionner. Le balayage se met en pause après deux passages.",
   "scanningMethodStepHint": "Appuyez sur Espace pour passer à l’élément suivant et sur Entrée pour le sélectionner.",
   "scanningInterval": "Intervalle de balayage",
   "suggestionsCustomInstructions": "Instructions personnalisées",
-  "suggestionsCustomInstructionsPlaceholder": "Utilise des phrases courtes et des mots courants",
+  "suggestionsCustomInstructionsPlaceholder": "Utiliser des phrases courtes et des mots courants",
   "suggestionsCustomInstructionsHelper": "Décrivez comment les suggestions doivent être formulées.",
   "suggestionsUnsupported": "Les suggestions ne sont pas disponibles dans ce navigateur.",
   "suggestionsCustomInstructionsUnsupported": "Les instructions personnalisées ne sont pas disponibles dans ce navigateur.",
   "suggestionsEnableHelp": "Comment activer les suggestions",
   "suggestionsEnable": "Activer les suggestions",
-  "suggestionsDownloading": "Téléchargement du modèle d'IA…",
+  "suggestionsDownloading": "Téléchargement du modèle d’IA…",
   "suggestionsLanguageUnavailable": "Les suggestions ne sont pas disponibles dans cette langue.",
   "suggestionsFailed": "Impossible d’obtenir des suggestions",
   "suggestionsLabel": "Suggestions",
-  "navBack": "Retour",
-  "navHome": "Aller au tableau principal",
+  "navHome": "Aller à l’accueil",
   "messageBackspace": "Effacer",
   "messageBackspaceLongPressHint": "Maintenez appuyé ou appuyez sur {shortcut} pour effacer le message.",
   "messageClear": "Effacer le message",
@@ -132,9 +147,9 @@
   "keyEscape": "Échap",
   "keyCommand": "Commande",
   "keyAppleDelete": "Supprimer",
-  "messagePlay": "Lire le message",
+  "messagePlay": "Dire le message",
   "messageStop": "Arrêter le message",
-  "playbackFailed": "Impossible de lire le son",
+  "playbackFailed": "Impossible de parler",
   "messageLabel": "Message",
   "onboardingContinue": "Continuer",
   "onboardingTitle": "Bienvenue dans AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Dites-en plus en moins d’appuis",
   "onboardingSuggestionsDescription": "L’IA transforme quelques symboles en phrase complète. C’est vous qui choisissez ce qui est dit.",
   "onboardingLanguageTitle": "Dans votre langue",
-  "onboardingLanguageDescription": "Utilisez l’application dans l’une des {count} langues proposées.",
+  "onboardingLanguageDescription": "Utilisez l’application dans l’une des {count} langues disponibles.",
   "onboardingFreePrivateTitle": "Gratuit et confidentiel",
   "onboardingFreePrivateDescription": "Aucun compte, aucune publicité, aucun suivi. Fonctionne hors ligne.",
   "errorGenericTitle": "Impossible de charger la page",
   "errorPageNotFound": "Page introuvable",
-  "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
-  "errorBoardURLImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
-  "boardLinkImportTitle": "Importer le fichier de tableau depuis le lien ?",
-  "boardLinkImportDescription": "Ce lien importe un fichier de tableau depuis {host}. Ne l’importez que si vous faites confiance à la personne qui vous a envoyé le lien.",
-  "boardLinkImport": "Importer",
-  "boardLinkCancel": "Annuler"
+  "errorBoardFileURLImportFailed": "Impossible d’importer le fichier de tableau depuis le lien",
+  "boardFileURLImportTitle": "Importer le fichier de tableau depuis le lien ?",
+  "boardFileURLImportDescription": "Ce lien importe un fichier de tableau depuis {host}. Ne l’importez que si vous faites confiance à la personne qui vous a envoyé le lien.",
+  "boardFileURLImportConfirm": "Importer",
+  "boardFileURLImportCancel": "Annuler"
 }

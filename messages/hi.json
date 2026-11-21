@@ -5,8 +5,7 @@
   "opensInNewTab": "(नए टैब में खुलता है)",
   "boardGridLabel": "संचार बोर्ड",
   "boardSelectorLabel": "बोर्ड",
-  "boardSelectorOpen": "बोर्ड की सूची खोलें",
-  "boardSelectorClose": "बोर्ड की सूची बंद करें",
+  "boardSelectorSearch": "बोर्ड खोजें",
   "boardSelectorNoOptions": "कोई मेल खाता बोर्ड नहीं मिला",
   "libraryLoading": "बोर्ड सेट लोड हो रहे हैं…",
   "libraryLoadFailed": "लाइब्रेरी लोड नहीं हो सकी",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "बोर्ड सेट",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड फ़ाइल आयात हो रही है…",
-        "countPlural=*": "बोर्ड फ़ाइलें आयात हो रही हैं…"
+        "count=1": "बोर्ड फ़ाइल आयात हो रही है…",
+        "count=*": "बोर्ड फ़ाइलें आयात हो रही हैं…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "बोर्ड सेट आयात हो गया",
-        "countPlural=*": "बोर्ड सेट आयात हो गए"
+        "count=1": "बोर्ड सेट आयात हो गया",
+        "count=*": "बोर्ड सेट आयात हो गए"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "बोर्ड फ़ाइल \"{fileName}\" आयात नहीं की जा सकी",
-  "libraryImportFailedBoardFiles": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं",
-  "libraryImportNotBoardFile": "\"{fileName}\" बोर्ड फ़ाइल नहीं है",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "बोर्ड फ़ाइल आयात नहीं की जा सकी",
+        "count=*": "बोर्ड फ़ाइलें आयात नहीं की जा सकीं"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "केवल बोर्ड फ़ाइलें आयात की जा सकती हैं",
-  "libraryImportTooLargeBoardFile": "बोर्ड फ़ाइल \"{fileName}\" आयात करने के लिए बहुत बड़ी है",
-  "libraryImportTooLargeBoardFiles": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "बोर्ड फ़ाइल आयात करने के लिए बहुत बड़ी है",
+        "count=*": "बोर्ड फ़ाइलें आयात करने के लिए बहुत बड़ी हैं"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "कुछ बोर्ड फ़ाइलें आयात नहीं की जा सकीं ({total} में से {failed})",
-  "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",
+  "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें यहाँ छोड़ें",
   "libraryInfo": "जानकारी",
   "libraryExport": "निर्यात करें",
   "libraryDelete": "हटाएँ",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "{rows}×{columns} ग्रिड",
   "libraryDeleteConfirmTitle": "बोर्ड सेट हटाएँ?",
   "libraryDeleteIrreversible": "\"{name}\" हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।",
-  "libraryDeleteFailed": "बोर्ड सेट \"{name}\" को हटाया नहीं जा सका",
-  "libraryExportFailed": "बोर्ड सेट \"{name}\" निर्यात नहीं किया जा सका",
+  "libraryDeleteFailed": "बोर्ड सेट हटाया नहीं जा सका",
+  "libraryExportFailed": "बोर्ड सेट निर्यात नहीं किया जा सका",
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",
   "aboutSourceCode": "सोर्स कोड",
@@ -76,7 +90,7 @@
   "settingsSectionMessage": "संदेश",
   "settingsSectionSuggestions": "सुझाव",
   "settingsSectionSwitchAccess": "स्विच एक्सेस",
-  "settingsSectionAbout": "जानकारी",
+  "settingsSectionAbout": "ऐप के बारे में",
   "themeLabel": "थीम",
   "themeSystem": "सिस्टम",
   "themeLight": "लाइट",
@@ -91,21 +105,23 @@
   "speechVolume": "वॉल्यूम",
   "speechPreviewVoice": "आवाज़ सुनें",
   "speechPreviewSample": "नमस्ते, यह मेरी आवाज़ है!",
-  "messageImages": "चित्र दिखाएं",
+  "messagePlayTiles": "प्रतीक जोड़ते समय बोलें",
+  "messageImages": "चित्र दिखाएँ",
   "messageHighlight": "बोलते समय हाइलाइट करें",
-  "messageClearAfterSpeaking": "बोलने के बाद साफ़ करें",
+  "messageClearAfterPlaying": "बोलने के बाद साफ़ करें",
   "tileSaturation": "रंग की तीव्रता",
   "tileBrightness": "चमक",
-  "tileBorders": "सीमाएँ दिखाएं",
+  "tileBorders": "बॉर्डर दिखाएँ",
   "tileLabelPlacement": "लेबल",
   "tileLabelTop": "ऊपर",
   "tileLabelBottom": "नीचे",
   "tileLabelHidden": "छिपे हुए",
   "tileOpensBoard": "बोर्ड खोलता है",
+  "tileSpace": "स्पेस",
   "scanningEnabled": "स्विच स्कैनिंग चालू करें",
   "scanningMethod": "स्कैन विधि",
-  "scanningMethodAuto": "स्वचालित",
-  "scanningMethodStep": "दो-स्विच चरण-दर-चरण स्कैनिंग",
+  "scanningMethodAuto": "स्वचालित स्कैनिंग",
+  "scanningMethodStep": "चरण-दर-चरण स्कैनिंग",
   "scanningMethodAutoHint": "स्कैनिंग शुरू करने और चुनने के लिए Space या Enter दबाएँ। दो चक्करों के बाद स्कैनिंग रुक जाती है।",
   "scanningMethodStepHint": "अगले आइटम पर जाने के लिए Space और उसे चुनने के लिए Enter दबाएँ।",
   "scanningInterval": "स्कैन अंतराल",
@@ -120,9 +136,8 @@
   "suggestionsLanguageUnavailable": "इस भाषा में सुझाव उपलब्ध नहीं हैं।",
   "suggestionsFailed": "सुझाव नहीं मिल सके",
   "suggestionsLabel": "सुझाव",
-  "navBack": "वापस जाएँ",
-  "navHome": "मुख्य बोर्ड पर जाएँ",
-  "messageBackspace": "मिटाएं",
+  "navHome": "होम पर जाएँ",
+  "messageBackspace": "मिटाएँ",
   "messageBackspaceLongPressHint": "संदेश साफ़ करने के लिए दबाकर रखें, या {shortcut} दबाएँ।",
   "messageClear": "संदेश साफ़ करें",
   "shortcutTooltip": "{action} ({shortcut})",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "संदेश चलाएँ",
-  "messageStop": "संदेश रोकें",
-  "playbackFailed": "ध्वनि नहीं चल सकी",
+  "messagePlay": "संदेश बोलें",
+  "messageStop": "बोलना रोकें",
+  "playbackFailed": "बोला नहीं जा सका",
   "messageLabel": "संदेश",
   "onboardingContinue": "जारी रखें",
   "onboardingTitle": "AAC Board AI में आपका स्वागत है",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "न कोई खाता, न विज्ञापन, न ट्रैकिंग। ऑफ़लाइन काम करता है।",
   "errorGenericTitle": "पृष्ठ लोड नहीं हो सका",
   "errorPageNotFound": "पृष्ठ नहीं मिला",
-  "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "errorBoardURLImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
-  "boardLinkImportTitle": "लिंक से बोर्ड फ़ाइल आयात करें?",
-  "boardLinkImportDescription": "यह लिंक {host} से एक बोर्ड फ़ाइल आयात करता है। इसे तभी आयात करें जब आपको लिंक भेजने वाले पर भरोसा हो।",
-  "boardLinkImport": "आयात करें",
-  "boardLinkCancel": "रद्द करें"
+  "errorBoardFileURLImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
+  "boardFileURLImportTitle": "लिंक से बोर्ड फ़ाइल आयात करें?",
+  "boardFileURLImportDescription": "यह लिंक {host} से एक बोर्ड फ़ाइल आयात करता है। इसे तभी आयात करें जब आपको लिंक भेजने वाले पर भरोसा हो।",
+  "boardFileURLImportConfirm": "आयात करें",
+  "boardFileURLImportCancel": "रद्द करें"
 }

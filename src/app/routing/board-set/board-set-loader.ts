@@ -4,7 +4,7 @@ import {
   listBoardSummaries,
 } from "@features/library";
 import type { LoaderFunctionArgs } from "react-router";
-import { routeErrorCodes, routeErrorResponse } from "../route-error";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../errors/route-error";
 
 export const BOARD_SET_ROUTE_ID = "board-set";
 
@@ -19,7 +19,7 @@ export async function boardSetLoader({
 }: LoaderFunctionArgs): Promise<BoardSetRouteData> {
   const { boardSetId } = params;
   if (!boardSetId) {
-    throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
+    throw routeErrorResponse(ROUTE_ERROR_CODES.boardSetNotFound);
   }
 
   const [boardSet, boards] = await Promise.all([

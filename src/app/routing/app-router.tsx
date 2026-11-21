@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { appRoutes } from "./app-routes";
+import { reportRouteError } from "./errors/route-error";
 
 const router = createBrowserRouter(appRoutes);
 
 export function AppRouter() {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} onError={reportRouteError} />;
 }

@@ -52,10 +52,18 @@ beforeEach(async () => {
 });
 
 describe("BoardSelector", () => {
+  test("shows the current board as the page heading", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await expect
+      .element(screen.getByRole("heading", { level: 1, name: "Home" }))
+      .toBeVisible();
+  });
+
   test("has no accessibility violations with the popup open", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
-    await screen.getByRole("combobox").click();
+    await screen.getByRole("button", { name: "Home" }).click();
     await expect
       .element(screen.getByRole("option", { name: "Home" }))
       .toBeVisible();
@@ -63,25 +71,41 @@ describe("BoardSelector", () => {
     await expectNoA11yViolations(document.body, {
       // Axe's region rule flags the popup portaled outside the app's landmarks.
       rules: { region: { enabled: false } },
+      reviewedIncomplete: [
+        {
+          rule: "aria-hidden-focus",
+          cause: "focusable-modal-open",
+          selector: "body > [aria-hidden='true']",
+          reason:
+            "The popup hides the page behind it and traps focus, so the page's controls cannot be reached.",
+        },
+      ],
     });
   });
 
-  test("names the list of boards in the open popup", async () => {
+  test("names the popup, its search field and its list of boards", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
-    await screen.getByRole("combobox").click();
+    await screen.getByRole("button", { name: "Home" }).click();
 
+    await expect
+      .element(screen.getByRole("dialog", { name: "Board" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("combobox", { name: "Search boards" }))
+      .toBeVisible();
     const listbox = screen.getByRole("listbox", { name: "Board" });
     await expect.element(listbox).toBeVisible();
     // A reference to a missing label would fall back to aria-label unnoticed.
     await expect.element(listbox).not.toHaveAttribute("aria-labelledby");
   });
 
-  test("opens the popup with boards listed alphabetically and the current board selected", async () => {
+  test("opens the popup with an empty search field, boards listed alphabetically and the current board selected", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
-    await screen.getByRole("combobox").click();
+    await screen.getByRole("button", { name: "Home" }).click();
 
+    await expect.element(screen.getByRole("combobox")).toHaveValue("");
     const items = screen.getByRole("option");
     await expect.element(items.first()).toHaveTextContent("Animals");
     await expect.element(items.nth(1)).toHaveTextContent("Food");
@@ -91,23 +115,50 @@ describe("BoardSelector", () => {
       .toHaveAttribute("aria-selected", "true");
   });
 
-  test("navigates, enables Back, and closes the popup when a board is clicked", async () => {
+  test("marks only the current board with a check", async () => {
+    const { screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("button", { name: "Home" }).click();
+
+    await expect
+      .element(
+        screen.getByRole("option", { name: "Home" }).getByTestId("CheckIcon"),
+      )
+      .toBeInTheDocument();
+    await expect
+      .element(
+        screen.getByRole("option", { name: "Food" }).getByTestId("CheckIcon"),
+      )
+      .not.toBeInTheDocument();
+  });
+
+  test("navigates and closes the popup when a board is clicked", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 
-    await screen.getByRole("combobox").click();
+    await screen.getByRole("button", { name: "Home" }).click();
     await screen.getByRole("option", { name: "Animals" }).click();
 
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
-    expect(router.state.location.state).toEqual({ canGoBack: true });
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
     await expect
-      .element(screen.getByRole("option", { name: "Animals" }))
-      .not.toBeInTheDocument();
-    await expect.element(screen.getByRole("combobox")).toHaveValue("Animals");
+      .element(screen.getByRole("heading", { level: 1, name: "Animals" }))
+      .toBeVisible();
+  });
+
+  test("closes the popup when the current board is clicked", async () => {
+    const { router, screen } = await renderSelector("set-1", "root");
+
+    await screen.getByRole("button", { name: "Home" }).click();
+    await screen.getByRole("option", { name: "Home" }).click();
+
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
   });
 
   test("navigates with arrow keys and Enter", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 
+    await screen.getByRole("button", { name: "Home" }).click();
     await screen.getByRole("combobox").click();
     await userEvent.keyboard("{ArrowDown}{Enter}");
 
@@ -117,6 +168,7 @@ describe("BoardSelector", () => {
   test("filters while typing and selects the first match with Enter", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
 
+    await screen.getByRole("button", { name: "Home" }).click();
     await screen.getByRole("combobox").fill("ani");
 
     await expect
@@ -131,15 +183,14 @@ describe("BoardSelector", () => {
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
   });
 
-  test("updates popup labels and empty results when the locale changes", async () => {
+  test("updates the search label and empty results when the locale changes", async () => {
     const { screen } = await renderSelector("set-1", "root");
 
-    await screen.getByRole("button", { name: "Open board list" }).click();
-    await screen.getByRole("combobox", { name: "Board" }).fill("no-match");
+    await screen.getByRole("button", { name: "Home" }).click();
+    await screen
+      .getByRole("combobox", { name: "Search boards" })
+      .fill("no-match");
 
-    await expect
-      .element(screen.getByRole("button", { name: "Close board list" }))
-      .toBeVisible();
     await expect.element(screen.getByText("No matching boards")).toBeVisible();
 
     setCommunicationLanguage("he");
@@ -147,27 +198,26 @@ describe("BoardSelector", () => {
     await expect
       .element(screen.getByText("לא נמצאו לוחות תואמים"))
       .toBeVisible();
-    await screen.getByRole("button", { name: "סגירת רשימת הלוחות" }).click();
-
     await expect
-      .element(screen.getByRole("button", { name: "פתיחת רשימת הלוחות" }))
+      .element(screen.getByRole("combobox", { name: "חיפוש לוחות" }))
       .toBeVisible();
   });
 
-  test("closes the popup on Escape and restores the current board name on blur", async () => {
+  test("closes the popup on Escape, returns focus to the heading button and forgets the search", async () => {
     const { router, screen } = await renderSelector("set-1", "root");
+    const button = screen.getByRole("button", { name: "Home" });
 
+    await button.click();
     await screen.getByRole("combobox").fill("ani");
     await userEvent.keyboard("{Escape}");
 
-    await expect
-      .element(screen.getByRole("option", { name: "Animals" }))
-      .not.toBeInTheDocument();
-
-    await userEvent.tab();
-
-    await expect.element(screen.getByRole("combobox")).toHaveValue("Home");
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+    await expect.element(button).toHaveFocus();
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
+
+    await button.click();
+
+    await expect.element(screen.getByRole("combobox")).toHaveValue("");
   });
 
   test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
@@ -192,9 +242,8 @@ describe("BoardSelector", () => {
 
     const { screen } = await renderSelector("set-2", "root");
 
-    await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
+    await screen.getByRole("button", { name: "Inicio" }).click();
 
-    await screen.getByRole("combobox").click();
     await expect
       .element(screen.getByRole("option", { name: "Animals" }))
       .toBeInTheDocument();
@@ -222,7 +271,7 @@ describe("BoardSelector", () => {
     const { screen } = await renderSelector("set-2", "root");
 
     await expect
-      .element(screen.getByRole("combobox"))
-      .toHaveValue("constructor");
+      .element(screen.getByRole("button", { name: "constructor" }))
+      .toBeVisible();
   });
 });

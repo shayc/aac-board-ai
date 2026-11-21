@@ -5,7 +5,6 @@ import {
   SuggestionSettings,
   TileSettings,
 } from "@features/board";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
@@ -35,6 +34,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       open={open}
       onClose={onClose}
       anchor="right"
+      // Tile settings are judged against the board behind the drawer.
+      hasInvisibleBackdrop
     >
       <Stack divider={<Divider />} spacing={3} sx={{ px: 3, pb: 3 }}>
         <SettingsSection title={t(m.settingsSectionAppearance)}>
@@ -69,10 +70,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               variant="body2"
               sx={{ alignSelf: "flex-start" }}
             >
-              <GitHubIcon
-                fontSize="small"
-                sx={{ mr: 1, verticalAlign: "text-bottom" }}
-              />
               {t(m.aboutSourceCode)}
             </ExternalLink>
 

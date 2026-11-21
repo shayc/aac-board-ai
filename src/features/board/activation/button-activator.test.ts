@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setMessageClearAfterPlayback } from "../message/message-preferences-store";
 import { createTilePart } from "../message/message-transforms";
-import type { MessageEdit } from "../message/message-types";
+import type { MessageEdit, PlayMessage } from "../message/message-types";
 import { useMessage } from "../message/use-message";
 import { createButtonActivator } from "./button-activator";
 
@@ -31,33 +31,25 @@ function word(label: string): MessageEdit[] {
 
 async function setup(
   seed: readonly MessageEdit[] = [],
-  { hasPlayed = false, language = "en" } = {},
+  { hasPlayed = false, boardLanguage = "en", shouldPlayTiles = true } = {},
 ) {
-  const { result, rerender } = await renderHook(() => useMessage());
-  const message = result.current;
-  message.apply(seed);
-  if (hasPlayed) {
-    const completion = Promise.resolve(true);
-    message.trackPlayback(completion);
-    await completion;
-  }
-
-  // Like the board's playback, playing the message reports it to the message
-  // so it can be marked played.
   const playback = {
-    playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() => {
-      const completion = Promise.resolve(true);
-      message.trackPlayback(completion);
-
-      return completion;
-    }),
-    echoMessage: vi.fn<ActivationOptions["playback"]["echoMessage"]>(() =>
-      Promise.resolve(true),
-    ),
+    playMessage: vi.fn<PlayMessage>(() => Promise.resolve(true)),
     playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
       Promise.resolve(),
     ),
+    stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
   };
+  const { result, rerender } = await renderHook(() =>
+    useMessage(playback.playMessage),
+  );
+  const message = result.current;
+  message.apply(seed);
+  if (hasPlayed) {
+    await message.play();
+    playback.playMessage.mockClear();
+  }
+
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
 
   async function readParts() {
@@ -72,31 +64,34 @@ async function setup(
     return parts.map((part) => part.label);
   }
 
+  // Rerendering runs everything that waited for a resolved playback.
+  async function playbackSettled() {
+    await rerender();
+  }
+
   function holdMessagePlayback() {
     const { promise, resolve } = Promise.withResolvers<boolean>();
-    playback.playMessage.mockImplementation(() => {
-      message.trackPlayback(promise);
-
-      return promise;
-    });
+    playback.playMessage.mockImplementation(() => promise);
 
     return async (hasCompleted: boolean) => {
       resolve(hasCompleted);
-      await promise;
+      await playbackSettled();
     };
   }
 
   return {
     activateButton: createButtonActivator({
       message,
-      playback,
+      playback: { playPart: playback.playPart, stop: playback.stop },
       navigation,
-      language,
+      boardLanguage,
+      shouldPlayTiles,
     }),
     playback,
     navigation,
     readParts,
     readLabels,
+    playbackSettled,
     holdMessagePlayback,
   };
 }
@@ -149,8 +144,52 @@ describe("createButtonActivator", () => {
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
+  test("appends a button without actions silently, stopping playback, when tiles are not played", async () => {
+    const { activateButton, playback, readLabels } = await setup([], {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({ id: "btn", label: "bell", actions: [] });
+
+    expect(await readLabels()).toEqual(["bell"]);
+    expect(playback.playPart).not.toHaveBeenCalled();
+    expect(playback.stop).toHaveBeenCalledOnce();
+  });
+
+  test("spells without echoing, stopping playback, when tiles are not played", async () => {
+    const { activateButton, playback, readLabels } = await setup([], {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [
+        { kind: "spell", text: "a" },
+        { kind: "play" },
+        { kind: "clear" },
+      ],
+    });
+
+    expect(await readLabels()).toEqual([]);
+    expect(playback.playMessage).not.toHaveBeenCalled();
+    expect(playback.stop).toHaveBeenCalledOnce();
+  });
+
+  test("still plays the message for a play action when tiles are not played", async () => {
+    const { activateButton, playback } = await setup(word("hi"), {
+      shouldPlayTiles: false,
+    });
+
+    activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
+
+    expect(playback.playMessage).toHaveBeenCalledOnce();
+  });
+
   test("gives tiles and spelled words the board's language", async () => {
-    const { activateButton, readParts } = await setup([], { language: "es" });
+    const { activateButton, readParts } = await setup([], {
+      boardLanguage: "es",
+    });
 
     activateButton({ id: "btn", label: "hola", actions: [] });
     activateButton(SPELL_A);
@@ -170,7 +209,7 @@ describe("createButtonActivator", () => {
     expect(navigation.goHome).toHaveBeenCalledOnce();
   });
 
-  test("applies an edit-only sequence in order without playing", async () => {
+  test("applies supported edits in order and skips unsupported actions", async () => {
     const { activateButton, playback, readLabels } = await setup([
       ...word("hello"),
       ...word("world"),
@@ -181,6 +220,7 @@ describe("createButtonActivator", () => {
       label: "",
       actions: [
         { kind: "backspace" },
+        { kind: "unsupported", raw: ":shift" },
         { kind: "backspace" },
         { kind: "spell", text: "d" },
         { kind: "space" },
@@ -209,13 +249,26 @@ describe("createButtonActivator", () => {
       actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
     });
 
-    const partsToPlay = playback.echoMessage.mock.calls[0]?.[0];
+    const partsToPlay = playback.playMessage.mock.calls[0]?.[0];
     assertDefined(partsToPlay);
 
     const parts = await readParts();
     expect(parts.map((part) => part.label)).toEqual(["s"]);
     expect(partsToPlay).toBe(parts);
-    expect(playback.playMessage).not.toHaveBeenCalled();
+  });
+
+  test("keeps adding to a message once its echo has played", async () => {
+    const { activateButton, readLabels, playbackSettled } = await setup();
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
+    });
+    await playbackSettled();
+    activateButton(SPELL_A);
+
+    expect(await readLabels()).toEqual(["sa"]);
   });
 
   test("plays the current message as it stands when play is the only action", async () => {
@@ -225,7 +278,6 @@ describe("createButtonActivator", () => {
     activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
 
     expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(parts);
-    expect(playback.echoMessage).not.toHaveBeenCalled();
   });
 
   test("holds edits after play until playback completes, then applies them", async () => {
@@ -289,7 +341,7 @@ describe("createButtonActivator", () => {
   });
 
   test("closes the word being spelled when space follows play", async () => {
-    const { activateButton, playback, readLabels } = await setup();
+    const { activateButton, readLabels, playbackSettled } = await setup();
 
     activateButton({
       id: "btn",
@@ -300,9 +352,7 @@ describe("createButtonActivator", () => {
         { kind: "space" },
       ],
     });
-    const echo = playback.echoMessage.mock.results[0];
-    assertDefined(echo);
-    await echo.value;
+    await playbackSettled();
     activateButton({
       id: "btn",
       label: "",
@@ -324,17 +374,20 @@ describe("createButtonActivator", () => {
     expect(await readLabels()).toEqual(["hi"]);
   });
 
-  test("speaks the message for a space that changes nothing, followed by play", async () => {
-    const { activateButton, playback } = await setup([tilePart("hello")]);
+  test("counts the message as played for a space that changes nothing, followed by play", async () => {
+    const { activateButton, playback, readLabels, playbackSettled } =
+      await setup([tilePart("hello")]);
 
     activateButton({
       id: "btn",
       label: "",
       actions: [{ kind: "space" }, { kind: "play" }],
     });
+    await playbackSettled();
+    activateButton(SPELL_A);
 
     expect(playback.playMessage).toHaveBeenCalledOnce();
-    expect(playback.echoMessage).not.toHaveBeenCalled();
+    expect(await readLabels()).toEqual(["a"]);
   });
 
   describe("after the message has played", () => {
@@ -409,12 +462,11 @@ describe("createButtonActivator", () => {
       });
 
       expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(parts);
-      expect(playback.echoMessage).not.toHaveBeenCalled();
     });
 
-    // While clearing after speaking is off, the message hook releases a
+    // While clearing after playing is off, the message hook releases a
     // played message each time it is edited, which must not count as a change.
-    test("replays a played message when clearing after speaking is off", async () => {
+    test("replays a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
       const { activateButton, playback } = await setup(PLAYED_PARTS, {
         hasPlayed: true,
@@ -423,7 +475,6 @@ describe("createButtonActivator", () => {
       activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
 
       expect(playback.playMessage).toHaveBeenCalledOnce();
-      expect(playback.echoMessage).not.toHaveBeenCalled();
     });
   });
 });

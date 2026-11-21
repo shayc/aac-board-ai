@@ -1,14 +1,74 @@
+import { assertDefined } from "@shared/testing/assert-defined";
+import { contrastRatio, paint } from "@shared/testing/contrast";
+import {
+  type ColorMode,
+  renderInColorMode,
+} from "@shared/testing/render-in-color-mode";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { BackspaceButton } from "../message/backspace-button";
+import { MessageBar } from "../message/message-bar";
 import { PlayButton } from "./play-button";
 
 const SHORTCUT_LABELS = { play: "⌘↩", stop: "Esc" };
+const BACKSPACE_SHORTCUT_LABELS = {
+  clear: "⌘⌫",
+  spokenClear: "Command+Delete",
+};
 
 function createHandlers() {
   return {
     onPlay: vi.fn(),
     onStop: vi.fn(),
+  };
+}
+
+// Measures each disabled glyph where it is seen: play's over its own tint,
+// backspace's straight on the bar, both against the bar.
+async function measureDisabledGlyphContrasts(mode: ColorMode) {
+  const screen = await renderInColorMode(
+    <MessageBar
+      parts={[]}
+      isWordOpen={false}
+      activePartId={null}
+      areImagesVisible
+      endAction={
+        <>
+          <BackspaceButton
+            disabled
+            shortcutLabels={BACKSPACE_SHORTCUT_LABELS}
+            onPress={vi.fn()}
+            onLongPress={vi.fn()}
+          />
+          <PlayButton
+            disabled
+            isPlaying={false}
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+          />
+        </>
+      }
+    />,
+    mode,
+  );
+
+  const play = screen.getByRole("button", { name: "Speak message" }).element();
+  const backspace = screen.getByRole("button", { name: "Backspace" }).element();
+
+  const bar = play.parentElement;
+  assertDefined(bar);
+  const barColor = getComputedStyle(bar).backgroundColor;
+  const playStyle = getComputedStyle(play);
+  const playGlyph = paint(barColor, playStyle.backgroundColor, playStyle.color);
+  const backspaceGlyph = paint(barColor, getComputedStyle(backspace).color);
+  await screen.unmount();
+
+  const ground = paint(barColor);
+
+  return {
+    play: contrastRatio(playGlyph, ground),
+    backspace: contrastRatio(backspaceGlyph, ground),
   };
 }
 
@@ -24,7 +84,7 @@ describe("PlayButton", () => {
       />,
     );
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     expect(handlers.onPlay).toHaveBeenCalledTimes(1);
     expect(handlers.onStop).not.toHaveBeenCalled();
@@ -37,7 +97,7 @@ describe("PlayButton", () => {
       <PlayButton shortcutLabels={SHORTCUT_LABELS} isPlaying {...handlers} />,
     );
 
-    await screen.getByRole("button", { name: "Stop message" }).click();
+    await screen.getByRole("button", { name: "Stop speaking" }).click();
 
     expect(handlers.onStop).toHaveBeenCalledTimes(1);
     expect(handlers.onPlay).not.toHaveBeenCalled();
@@ -52,7 +112,7 @@ describe("PlayButton", () => {
         {...handlers}
       />,
     );
-    const play = screen.getByRole("button", { name: "Play message" });
+    const play = screen.getByRole("button", { name: "Speak message" });
     play.element().focus();
     await expect.element(play).toHaveFocus();
 
@@ -81,13 +141,15 @@ describe("PlayButton", () => {
         {...createHandlers()}
       />,
     );
-    const play = screen.getByRole("button", { name: "Play message" });
+    const play = screen.getByRole("button", { name: "Speak message" });
 
     await userEvent.tab();
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
-    expect(tooltip.element().textContent).toBe("Play message (\u2066⌘↩\u2069)");
+    expect(tooltip.element().textContent).toBe(
+      "Speak message (\u2066⌘↩\u2069)",
+    );
     await expect
       .element(play)
       .toHaveAttribute("aria-keyshortcuts", "Meta+Enter Control+Enter");
@@ -98,19 +160,30 @@ describe("PlayButton", () => {
       <PlayButton
         shortcutLabels={SHORTCUT_LABELS}
         isPlaying
-        variant="boardControl"
+        shape="pill"
         {...createHandlers()}
       />,
     );
-    const stop = screen.getByRole("button", { name: "Stop message" });
+    const stop = screen.getByRole("button", { name: "Stop speaking" });
 
     await userEvent.tab();
 
     const tooltip = screen.getByRole("tooltip");
     await expect.element(tooltip).toBeInTheDocument();
     expect(tooltip.element().textContent).toBe(
-      "Stop message (\u2066Esc\u2069)",
+      "Stop speaking (\u2066Esc\u2069)",
     );
     await expect.element(stop).toHaveAttribute("aria-keyshortcuts", "Escape");
   });
+});
+
+describe("PlayButton in an empty message bar", () => {
+  test.each(["light", "dark"] as const)(
+    "keeps its disabled glyph at least as visible as backspace's in %s mode",
+    async (mode) => {
+      const { play, backspace } = await measureDisabledGlyphContrasts(mode);
+
+      expect(play).toBeGreaterThanOrEqual(backspace);
+    },
+  );
 });

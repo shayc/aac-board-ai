@@ -13,7 +13,6 @@ import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
 
-// Expected dimensions for the test viewport below sm.
 const PADDING_PX = { columns: 16, rows: 12 };
 const OVERFLOW_HINT_PX = 8;
 const GAP_PX = 8;

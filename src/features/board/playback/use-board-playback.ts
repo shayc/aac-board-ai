@@ -1,39 +1,50 @@
 import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
-import type { PlaybackRequest } from "@shared/playback/playback-types";
+import type {
+  PlaybackRequest,
+  PlaybackState,
+} from "@shared/playback/playback-types";
 import {
   useActiveCue,
   useIsPlaying,
   usePlayback,
 } from "@shared/playback/use-playback";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import type { MessagePart } from "../message/message-types";
+import { useEffect } from "react";
+import type { MessagePart, PlayMessage } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
 const MESSAGE_OWNER = "board-message";
 const TILE_OWNER = "board-tile";
-
-interface UseBoardPlaybackOptions {
-  onMessagePlayback?: (completion: Promise<boolean>) => void;
-}
+const BOARD_OWNERS: ReadonlySet<string> = new Set([MESSAGE_OWNER, TILE_OWNER]);
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /** Plays the message without reporting it as played, for tiles that play each word as it is spelled. */
-  echoMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
-  /** Resolves to whether the message played to its end. */
-  playMessage: (parts: readonly MessagePart[]) => Promise<boolean>;
+  /**
+   * Only plays: `useMessage`'s `play` runs it and decides whether the message
+   * counts as played.
+   */
+  playMessage: PlayMessage;
   playPart: (part: MessagePart) => Promise<void>;
   stop: () => void;
 }
 
-export function useBoardPlayback({
-  onMessagePlayback,
-}: UseBoardPlaybackOptions = {}): UseBoardPlaybackReturn {
+export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
-  const { language: communicationLanguage } = useCommunicationLanguage();
+  const { language } = useCommunicationLanguage();
   const { showSnackbar } = useSnackbar();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
+
+  // Playback outlives the board, so a closing board stops its own; a message
+  // it finished later would be saved as played over the next board's draft.
+  useEffect(
+    () => () => {
+      if (isBoardPlayback(playback.getSnapshot())) {
+        playback.stop();
+      }
+    },
+    [playback],
+  );
 
   // AAC users depend on knowing their speech output failed, so a failure is
   // reported here, once, instead of being left to each caller.
@@ -51,30 +62,22 @@ export function useBoardPlayback({
     return outcome === "completed";
   }
 
-  function echoMessage(parts: readonly MessagePart[]) {
+  function playMessage(parts: readonly MessagePart[]) {
     return playAndReportFailure({
       owner: MESSAGE_OWNER,
-      steps: planPlayback(parts, communicationLanguage),
+      steps: planPlayback(parts, language),
     });
-  }
-
-  function playMessage(parts: readonly MessagePart[]) {
-    const completion = echoMessage(parts);
-    onMessagePlayback?.(completion);
-
-    return completion;
   }
 
   async function playPart(part: MessagePart) {
     await playAndReportFailure({
       owner: TILE_OWNER,
-      steps: planPlayback([part], communicationLanguage),
+      steps: planPlayback([part], language),
     });
   }
 
   return {
     isMessagePlaying,
-    echoMessage,
     playMessage,
     playPart,
     stop: playback.stop,
@@ -83,4 +86,8 @@ export function useBoardPlayback({
 
 export function useActiveMessagePartId(): string | null {
   return useActiveCue(MESSAGE_OWNER);
+}
+
+function isBoardPlayback(state: PlaybackState): boolean {
+  return state.status === "playing" && BOARD_OWNERS.has(state.owner);
 }

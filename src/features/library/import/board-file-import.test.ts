@@ -57,7 +57,7 @@ describe("importBoardFile", () => {
     });
     assertDefined(storedBoard);
 
-    expect(storedBoard.name).toBe(board.name ?? board.id);
+    expect(storedBoard.obf.name).toBe(board.name);
     expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
@@ -172,6 +172,17 @@ describe("importBoardFile", () => {
     const importedBoardSet = await importBoardFile(extensionOnlyFile);
 
     expect(importedBoardSet.id).toBe("imported-board");
+  });
+
+  test("names the board set by its ID when neither the root board nor the file has a name", async () => {
+    const board = makeOBFBoard({ id: "root", name: undefined });
+    const extensionOnlyFile = new File([JSON.stringify(board)], ".obf", {
+      type: "application/json",
+    });
+
+    await importBoardFile(extensionOnlyFile);
+
+    expect((await listBoardSetRecords())[0]?.name).toBe("imported-board");
   });
 
   test("names the board set after its file when the root board name is blank", async () => {

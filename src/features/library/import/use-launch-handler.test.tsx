@@ -1,5 +1,5 @@
 import { renderWithProviders } from "@shared/testing/render-with-providers";
-import { MemoryRouter, useLocation } from "react-router";
+import { MemoryRouter, useLocation, useNavigationType } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { rootBoardPath } from "../board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
@@ -9,12 +9,20 @@ import {
   SAMPLE_BOARD_SET_ID,
   SAMPLE_OBF_FILE,
 } from "../testing";
-import { useImportBoardFilesOnLaunch } from "./use-import-board-files-on-launch";
+import { useLaunchHandler } from "./use-launch-handler";
 
 function LaunchHarness() {
-  useImportBoardFilesOnLaunch();
+  useLaunchHandler();
 
-  return <div data-testid="path">{useLocation().pathname}</div>;
+  const { pathname, search } = useLocation();
+  const navigationType = useNavigationType();
+
+  return (
+    <>
+      <div data-testid="path">{pathname + search}</div>
+      <div data-testid="navigation-type">{navigationType}</div>
+    </>
+  );
 }
 
 function stubLaunchQueue() {
@@ -31,6 +39,8 @@ function stubLaunchQueue() {
   return {
     getConsumerInstallCount: () => consumerInstallCount,
     launch: (...files: FileSystemFileHandle[]) => consumer?.({ files }),
+    launchLink: (path: string) =>
+      consumer?.({ files: [], targetURL: `${window.location.origin}${path}` }),
   };
 }
 
@@ -45,15 +55,15 @@ function inaccessibleFileHandle(name: string): FileSystemFileHandle {
   } as FileSystemFileHandle;
 }
 
-function renderLaunchHandler() {
+function renderLaunchHandler(initialPath = "/") {
   return renderWithProviders(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[initialPath]}>
       <LaunchHarness />
     </MemoryRouter>,
   );
 }
 
-describe("useImportBoardFilesOnLaunch", () => {
+describe("useLaunchHandler", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -96,7 +106,7 @@ describe("useImportBoardFilesOnLaunch", () => {
     );
   });
 
-  test("names a launched file that isn't a board file", async () => {
+  test("reports a launched file that isn't a board file", async () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
 
@@ -104,7 +114,7 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"notes.txt" isn\'t a board file');
+      .toHaveTextContent("Only board files can be imported");
     expect(await listBoardSetRecords()).toHaveLength(0);
   });
 
@@ -118,12 +128,16 @@ describe("useImportBoardFilesOnLaunch", () => {
     );
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "board.obz"');
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
-  test("names an unreadable launched file that isn't a board file", async () => {
+  test("reports an unreadable launched file that isn't a board file", async () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
 
@@ -131,7 +145,7 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"notes.txt" isn\'t a board file');
+      .toHaveTextContent("Only board files can be imported");
   });
 
   test("reports a file that can no longer be opened", async () => {
@@ -141,8 +155,12 @@ describe("useImportBoardFilesOnLaunch", () => {
     launchQueue.launch(inaccessibleFileHandle("board.obz"));
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "board.obz"');
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
   });
 
   test("reports several files that can no longer be opened", async () => {
@@ -157,5 +175,42 @@ describe("useImportBoardFilesOnLaunch", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Couldn't import board files");
+  });
+
+  test("opens a launched link in the window that is already open", async () => {
+    const launchQueue = stubLaunchQueue();
+    const screen = await renderLaunchHandler("/sets/core/boards/home");
+
+    launchQueue.launchLink("/?board=https://example.com/board.obz");
+
+    await expect
+      .element(screen.getByTestId("path"))
+      .toHaveTextContent("/?board=https://example.com/board.obz");
+  });
+
+  test("stays on the current board when launched from the app's icon", async () => {
+    const launchQueue = stubLaunchQueue();
+    const screen = await renderLaunchHandler("/sets/core/boards/home");
+
+    launchQueue.launchLink("/");
+    launchQueue.launch(fileHandle(new File([""], "notes.txt")));
+
+    await expect.element(screen.getByRole("alert")).toBeVisible();
+    await expect
+      .element(screen.getByTestId("path"))
+      .toHaveTextContent("/sets/core/boards/home");
+  });
+
+  test("doesn't reopen the page a launch already shows", async () => {
+    const launchQueue = stubLaunchQueue();
+    const screen = await renderLaunchHandler("/sets/core/boards/home");
+
+    launchQueue.launchLink("/sets/core/boards/home");
+    launchQueue.launch(fileHandle(new File([""], "notes.txt")));
+
+    await expect.element(screen.getByRole("alert")).toBeVisible();
+    await expect
+      .element(screen.getByTestId("navigation-type"))
+      .toHaveTextContent("POP");
   });
 });

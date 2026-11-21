@@ -1,5 +1,4 @@
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
-import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import {
   deriveSuggestionStatus,
@@ -7,30 +6,37 @@ import {
 } from "./derive-suggestion-status";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
-import { isEngineUsable, SUGGESTION_ENGINES } from "./suggestion-support";
+import {
+  isAvailableEngineStatus,
+  SUGGESTION_ENGINES,
+} from "./suggestion-support";
 import { useContinuationSource } from "./use-continuation-source";
 import { useProofreaderSource } from "./use-proofreader-source";
 import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
-interface ContinuationContext {
+interface UseMessageSuggestionsOptions {
+  messageText: string;
+  language: string;
   vocabulary: readonly string[];
   isWordOpen: boolean;
 }
 
 interface UseMessageSuggestionsReturn {
   isAvailable: boolean;
-  status: SuggestionStatus;
   phrases: readonly string[];
+  status: SuggestionStatus;
   continuations: readonly (readonly string[])[];
   enable: () => void;
 }
 
-export function useMessageSuggestions(
-  messageText: string,
-  { vocabulary, isWordOpen }: ContinuationContext,
-): UseMessageSuggestionsReturn {
+export function useMessageSuggestions({
+  messageText,
+  language,
+  vocabulary,
+  isWordOpen,
+}: UseMessageSuggestionsOptions): UseMessageSuggestionsReturn {
   const text = messageText.trim();
 
   const { customInstructions } = useSuggestionPreferences();
@@ -39,7 +45,6 @@ export function useMessageSuggestions(
     CUSTOM_INSTRUCTIONS_DEBOUNCE_MS,
   );
 
-  const { language } = useCommunicationLanguage();
   const proofreaderSource = useProofreaderSource({ text, language });
   const rewriterSource = useRewriterSource({
     text,
@@ -63,15 +68,15 @@ export function useMessageSuggestions(
 
   const hasText = text !== "";
   const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
+  const allSources = [...sources, continuationSource];
+  const isAvailable = allSources.some(({ engineStatus }) =>
+    isAvailableEngineStatus(engineStatus),
+  );
   const phrases = selectSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),
   );
   const { continuations } = continuationSource;
-  const allSources = [...sources, continuationSource];
-  const isAvailable = allSources.some(({ engineStatus }) =>
-    isEngineUsable(engineStatus),
-  );
   const status = deriveSuggestionStatus({
     sources: allSources,
     downloadProgress,
@@ -87,8 +92,8 @@ export function useMessageSuggestions(
 
   return {
     isAvailable,
-    status,
     phrases,
+    status,
     continuations,
     enable,
   };

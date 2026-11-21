@@ -1,7 +1,3 @@
-import CheckIcon from "@mui/icons-material/Check";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import DesktopWindowsOutlinedIcon from "@mui/icons-material/DesktopWindowsOutlined";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { useColorScheme } from "@mui/material/styles";
@@ -9,16 +5,21 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import {
+  CheckIcon,
+  DarkModeIcon,
+  DesktopWindowsIcon,
+  LightModeIcon,
+} from "@shared/ui/icons";
 import { type MouseEvent, useId } from "react";
 
-const themeOptions = [
-  { value: "system", message: m.themeSystem, Icon: DesktopWindowsOutlinedIcon },
-  { value: "light", message: m.themeLight, Icon: LightModeOutlinedIcon },
-  { value: "dark", message: m.themeDark, Icon: DarkModeOutlinedIcon },
+const THEME_OPTIONS = [
+  { value: "system", message: m.themeSystem, Icon: DesktopWindowsIcon },
+  { value: "light", message: m.themeLight, Icon: LightModeIcon },
+  { value: "dark", message: m.themeDark, Icon: DarkModeIcon },
 ] as const;
 
-// Side by side, the icons and names overflow a phone's drawer in most
-// languages, so each option stacks them in an equal share of the width.
+// Side by side, icon and name overflow a phone's drawer in most languages.
 const optionSx = {
   flex: "1 1 0",
   flexDirection: "column",
@@ -29,7 +30,7 @@ const optionSx = {
   hyphens: "auto",
 } as const;
 
-type ThemeMode = (typeof themeOptions)[number]["value"];
+type ThemeMode = (typeof THEME_OPTIONS)[number]["value"];
 
 export function ThemeSettings() {
   const t = useTranslate();
@@ -61,7 +62,7 @@ export function ThemeSettings() {
         onChange={handleChange}
         sx={{ mt: 1 }}
       >
-        {themeOptions.map(({ value, message, Icon }) => (
+        {THEME_OPTIONS.map(({ value, message, Icon }) => (
           <ToggleButton key={value} value={value} sx={optionSx}>
             {/* The checkmark shows the selection without relying on color. */}
             {mode === value ? <CheckIcon /> : <Icon />}

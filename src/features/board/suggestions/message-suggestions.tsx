@@ -31,7 +31,9 @@ export function MessageSuggestions({
     boardLanguage,
     rootBoardId,
   });
-  const suggestions = useMessageSuggestions(messageText, {
+  const suggestions = useMessageSuggestions({
+    messageText,
+    language,
     vocabulary: nearbyVocabulary.words,
     isWordOpen,
   });

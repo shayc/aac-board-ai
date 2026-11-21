@@ -5,8 +5,7 @@
   "opensInNewTab": "(เปิดในแท็บใหม่)",
   "boardGridLabel": "บอร์ดสื่อสาร",
   "boardSelectorLabel": "บอร์ด",
-  "boardSelectorOpen": "เปิดรายการบอร์ด",
-  "boardSelectorClose": "ปิดรายการบอร์ด",
+  "boardSelectorSearch": "ค้นหาบอร์ด",
   "boardSelectorNoOptions": "ไม่พบบอร์ดที่ตรงกัน",
   "libraryLoading": "กำลังโหลดชุดบอร์ด…",
   "libraryLoadFailed": "ไม่สามารถโหลดคลังได้",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "ชุดบอร์ด",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "กำลังนำเข้าไฟล์บอร์ด…",
-        "countPlural=*": "กำลังนำเข้าไฟล์บอร์ด…"
+        "count=1": "กำลังนำเข้าไฟล์บอร์ด…",
+        "count=*": "กำลังนำเข้าไฟล์บอร์ด…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "นำเข้าชุดบอร์ดแล้ว",
-        "countPlural=*": "นำเข้าชุดบอร์ดแล้ว"
+        "count=1": "นำเข้าชุดบอร์ดแล้ว",
+        "count=*": "นำเข้าชุดบอร์ดแล้ว"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "นำเข้าไฟล์บอร์ด \"{fileName}\" ไม่สำเร็จ",
-  "libraryImportFailedBoardFiles": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
-  "libraryImportNotBoardFile": "\"{fileName}\" ไม่ใช่ไฟล์บอร์ด",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
+        "count=*": "นำเข้าไฟล์บอร์ดไม่สำเร็จ"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "นำเข้าได้เฉพาะไฟล์บอร์ดเท่านั้น",
-  "libraryImportTooLargeBoardFile": "ไฟล์บอร์ด \"{fileName}\" มีขนาดใหญ่เกินไปที่จะนำเข้า",
-  "libraryImportTooLargeBoardFiles": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+        "count=*": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "นำเข้าไฟล์บอร์ดบางไฟล์ไม่สำเร็จ ({failed} จาก {total})",
-  "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
+  "libraryDropToImport": "วางไฟล์บอร์ดที่นี่เพื่อนำเข้า",
   "libraryInfo": "ข้อมูล",
   "libraryExport": "ส่งออก",
   "libraryDelete": "ลบ",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "ตาราง {rows}×{columns}",
   "libraryDeleteConfirmTitle": "ลบชุดบอร์ดไหม",
   "libraryDeleteIrreversible": "\"{name}\" จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
-  "libraryDeleteFailed": "ลบชุดบอร์ด \"{name}\" ไม่สำเร็จ",
-  "libraryExportFailed": "ส่งออกชุดบอร์ด \"{name}\" ไม่สำเร็จ",
+  "libraryDeleteFailed": "ลบชุดบอร์ดไม่สำเร็จ",
+  "libraryExportFailed": "ส่งออกชุดบอร์ดไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
   "aboutSourceCode": "ซอร์สโค้ด",
@@ -88,12 +102,13 @@
   "speechVoice": "เสียง",
   "speechRate": "อัตราการพูด",
   "speechPitch": "ระดับเสียงสูงต่ำ",
-  "speechVolume": "ความดัง",
+  "speechVolume": "ระดับความดัง",
   "speechPreviewVoice": "ฟังเสียงตัวอย่าง",
   "speechPreviewSample": "สวัสดี นี่คือเสียงของฉัน!",
+  "messagePlayTiles": "พูดสัญลักษณ์เมื่อเพิ่ม",
   "messageImages": "แสดงรูปภาพ",
   "messageHighlight": "ไฮไลต์ขณะพูด",
-  "messageClearAfterSpeaking": "ล้างหลังจากพูด",
+  "messageClearAfterPlaying": "ล้างหลังจากพูด",
   "tileSaturation": "ความเข้มของสี",
   "tileBrightness": "ความสว่าง",
   "tileBorders": "แสดงขอบ",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "ด้านล่าง",
   "tileLabelHidden": "ซ่อน",
   "tileOpensBoard": "เปิดบอร์ด",
+  "tileSpace": "เว้นวรรค",
   "scanningEnabled": "เปิดใช้การสแกนด้วยสวิตช์",
   "scanningMethod": "วิธีการสแกน",
-  "scanningMethodAuto": "อัตโนมัติ",
-  "scanningMethodStep": "การสแกนทีละขั้นด้วยสองสวิตช์",
+  "scanningMethodAuto": "การสแกนอัตโนมัติ",
+  "scanningMethodStep": "การสแกนทีละขั้น",
   "scanningMethodAutoHint": "กด Space หรือ Enter เพื่อเริ่มการสแกนและเพื่อเลือก การสแกนจะหยุดชั่วคราวหลังจากวนครบสองรอบ",
   "scanningMethodStepHint": "กด Space เพื่อไปยังรายการถัดไป และกด Enter เพื่อเลือกรายการนั้น",
   "scanningInterval": "ช่วงเวลาการสแกน",
@@ -117,11 +133,10 @@
   "suggestionsEnableHelp": "วิธีเปิดใช้คำแนะนำ",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI…",
-  "suggestionsLanguageUnavailable": "ไม่สามารถใช้คำแนะนำในภาษานี้ได้",
+  "suggestionsLanguageUnavailable": "ภาษานี้ไม่รองรับคำแนะนำ",
   "suggestionsFailed": "ไม่สามารถรับคำแนะนำได้",
   "suggestionsLabel": "คำแนะนำ",
-  "navBack": "กลับ",
-  "navHome": "ไปที่บอร์ดหลัก",
+  "navHome": "ไปที่หน้าแรก",
   "messageBackspace": "ลบ",
   "messageBackspaceLongPressHint": "กดค้าง หรือกด {shortcut} เพื่อล้างข้อความ",
   "messageClear": "ล้างข้อความ",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "เล่นข้อความ",
-  "messageStop": "หยุดข้อความ",
-  "playbackFailed": "ไม่สามารถเล่นเสียงได้",
+  "messagePlay": "พูดข้อความ",
+  "messageStop": "หยุดพูด",
+  "playbackFailed": "ไม่สามารถพูดได้",
   "messageLabel": "ข้อความ",
   "onboardingContinue": "ดำเนินการต่อ",
   "onboardingTitle": "ยินดีต้อนรับสู่ AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "ไม่มีบัญชี ไม่มีโฆษณา ไม่มีการติดตาม ใช้งานแบบออฟไลน์ได้",
   "errorGenericTitle": "ไม่สามารถโหลดหน้านี้ได้",
   "errorPageNotFound": "ไม่พบหน้านี้",
-  "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบชุดบอร์ด",
-  "errorBoardURLImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ",
-  "boardLinkImportTitle": "นำเข้าไฟล์บอร์ดจากลิงก์ไหม",
-  "boardLinkImportDescription": "ลิงก์นี้จะนำเข้าไฟล์บอร์ดจาก {host} นำเข้าเฉพาะเมื่อคุณไว้ใจผู้ที่ส่งลิงก์มาเท่านั้น",
-  "boardLinkImport": "นำเข้า",
-  "boardLinkCancel": "ยกเลิก"
+  "errorBoardFileURLImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ",
+  "boardFileURLImportTitle": "นำเข้าไฟล์บอร์ดจากลิงก์ไหม",
+  "boardFileURLImportDescription": "ลิงก์นี้จะนำเข้าไฟล์บอร์ดจาก {host} นำเข้าเฉพาะเมื่อคุณไว้ใจผู้ที่ส่งลิงก์มาเท่านั้น",
+  "boardFileURLImportConfirm": "นำเข้า",
+  "boardFileURLImportCancel": "ยกเลิก"
 }

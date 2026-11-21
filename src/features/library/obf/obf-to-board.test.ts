@@ -25,8 +25,6 @@ describe("obfToBoard", () => {
     expect(board.buttons).toHaveLength(1);
     expect(board.buttons[0]?.id).toBe("btn-1");
     expect(board.buttons[0]?.actions).toEqual([]);
-    expect(board.grid.rows).toBe(1);
-    expect(board.grid.columns).toBe(1);
     expect(board.grid.order).toEqual([["btn-1"]]);
   });
 
@@ -95,8 +93,6 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.grid).toEqual({
-        rows: 2,
-        columns: 2,
         order: [
           ["btn-1", null],
           [null, "btn-2"],
@@ -285,7 +281,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.actions).toEqual([{ kind: "play" }]);
     });
 
-    test("maps built-in and spell actions in order and drops unknown actions", () => {
+    test("maps actions in order and preserves the original strings for unsupported actions", () => {
       const obfBoard = boardWithButton({
         id: "btn-1",
         label: "Spell",
@@ -308,8 +304,11 @@ describe("obfToBoard", () => {
         { kind: "space" },
         { kind: "backspace" },
         { kind: "spell", text: "ing" },
+        { kind: "unsupported", raw: ":unknown" },
         { kind: "clear" },
+        { kind: "unsupported", raw: "" },
         { kind: "home" },
+        { kind: "unsupported", raw: "hello" },
         { kind: "play" },
       ]);
     });

@@ -5,8 +5,7 @@
   "opensInNewTab": "(dibuka di tab baru)",
   "boardGridLabel": "Papan komunikasi",
   "boardSelectorLabel": "Papan",
-  "boardSelectorOpen": "Buka daftar papan",
-  "boardSelectorClose": "Tutup daftar papan",
+  "boardSelectorSearch": "Cari papan",
   "boardSelectorNoOptions": "Tidak ada papan yang cocok",
   "libraryLoading": "Memuat set papan…",
   "libraryLoadFailed": "Tidak dapat memuat pustaka",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Set papan",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Mengimpor berkas papan…",
-        "countPlural=*": "Mengimpor berkas papan…"
+        "count=1": "Mengimpor berkas papan…",
+        "count=*": "Mengimpor berkas papan…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set papan diimpor",
-        "countPlural=*": "Set papan diimpor"
+        "count=1": "Set papan diimpor",
+        "count=*": "Set papan diimpor"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tidak dapat mengimpor berkas papan \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Tidak dapat mengimpor berkas papan",
-  "libraryImportNotBoardFile": "\"{fileName}\" bukan berkas papan",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tidak dapat mengimpor berkas papan",
+        "count=*": "Tidak dapat mengimpor berkas papan"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Hanya berkas papan yang dapat diimpor",
-  "libraryImportTooLargeBoardFile": "Berkas papan \"{fileName}\" terlalu besar untuk diimpor",
-  "libraryImportTooLargeBoardFiles": "Berkas papan terlalu besar untuk diimpor",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Berkas papan terlalu besar untuk diimpor",
+        "count=*": "Berkas papan terlalu besar untuk diimpor"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Tidak dapat mengimpor beberapa berkas papan ({failed} dari {total})",
-  "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
+  "libraryDropToImport": "Lepaskan berkas papan di sini untuk mengimpor",
   "libraryInfo": "Info",
   "libraryExport": "Ekspor",
   "libraryDelete": "Hapus",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Kisi {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Hapus set papan?",
   "libraryDeleteIrreversible": "\"{name}\" akan dihapus. Tindakan ini tidak dapat dibatalkan.",
-  "libraryDeleteFailed": "Tidak dapat menghapus set papan \"{name}\"",
-  "libraryExportFailed": "Tidak dapat mengekspor set papan \"{name}\"",
+  "libraryDeleteFailed": "Tidak dapat menghapus set papan",
+  "libraryExportFailed": "Tidak dapat mengekspor set papan",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",
   "aboutSourceCode": "Kode sumber",
@@ -87,13 +101,14 @@
   "languageTranslating": "Menerjemahkan papan…",
   "speechVoice": "Suara",
   "speechRate": "Kecepatan bicara",
-  "speechPitch": "Nada",
+  "speechPitch": "Tinggi nada",
   "speechVolume": "Volume",
   "speechPreviewVoice": "Dengarkan suara",
   "speechPreviewSample": "Hai, ini suara saya!",
+  "messagePlayTiles": "Ucapkan simbol saat ditambahkan",
   "messageImages": "Tampilkan gambar",
-  "messageHighlight": "Sorot saat berbicara",
-  "messageClearAfterSpeaking": "Hapus setelah berbicara",
+  "messageHighlight": "Sorot saat diucapkan",
+  "messageClearAfterPlaying": "Kosongkan setelah diucapkan",
   "tileSaturation": "Intensitas warna",
   "tileBrightness": "Kecerahan",
   "tileBorders": "Tampilkan batas",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Bawah",
   "tileLabelHidden": "Tersembunyi",
   "tileOpensBoard": "Membuka papan",
+  "tileSpace": "Spasi",
   "scanningEnabled": "Aktifkan pemindaian sakelar",
   "scanningMethod": "Metode pemindaian",
-  "scanningMethodAuto": "Otomatis",
-  "scanningMethodStep": "Pemindaian bertahap dengan dua sakelar",
+  "scanningMethodAuto": "Pemindaian otomatis",
+  "scanningMethodStep": "Pemindaian bertahap",
   "scanningMethodAutoHint": "Tekan Spasi atau Enter untuk memulai pemindaian dan untuk memilih. Pemindaian dijeda setelah dua putaran.",
   "scanningMethodStepHint": "Tekan Spasi untuk pindah ke item berikutnya dan Enter untuk memilihnya.",
   "scanningInterval": "Interval pemindaian",
@@ -120,11 +136,10 @@
   "suggestionsLanguageUnavailable": "Saran tidak tersedia dalam bahasa ini.",
   "suggestionsFailed": "Tidak dapat mengambil saran",
   "suggestionsLabel": "Saran",
-  "navBack": "Kembali",
-  "navHome": "Ke papan utama",
+  "navHome": "Ke beranda",
   "messageBackspace": "Hapus",
-  "messageBackspaceLongPressHint": "Tekan dan tahan, atau tekan {shortcut}, untuk menghapus pesan.",
-  "messageClear": "Hapus pesan",
+  "messageBackspaceLongPressHint": "Tekan dan tahan, atau tekan {shortcut}, untuk mengosongkan pesan.",
+  "messageClear": "Kosongkan pesan",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
   "keyBackspace": "Backspace",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Putar pesan",
-  "messageStop": "Hentikan pesan",
-  "playbackFailed": "Tidak dapat memutar suara",
+  "messagePlay": "Ucapkan pesan",
+  "messageStop": "Hentikan ucapan",
+  "playbackFailed": "Tidak dapat mengucapkan",
   "messageLabel": "Pesan",
   "onboardingContinue": "Lanjutkan",
   "onboardingTitle": "Selamat datang di AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Tanpa akun, tanpa iklan, tanpa pelacakan. Bisa dipakai offline.",
   "errorGenericTitle": "Tidak dapat memuat halaman",
   "errorPageNotFound": "Halaman tidak ditemukan",
-  "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "errorBoardURLImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
-  "boardLinkImportTitle": "Impor berkas papan dari tautan?",
-  "boardLinkImportDescription": "Tautan ini mengimpor berkas papan dari {host}. Impor hanya jika kamu memercayai pengirim tautan.",
-  "boardLinkImport": "Impor",
-  "boardLinkCancel": "Batal"
+  "errorBoardFileURLImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
+  "boardFileURLImportTitle": "Impor berkas papan dari tautan?",
+  "boardFileURLImportDescription": "Tautan ini mengimpor berkas papan dari {host}. Impor hanya jika kamu memercayai pengirim tautan.",
+  "boardFileURLImportConfirm": "Impor",
+  "boardFileURLImportCancel": "Batal"
 }

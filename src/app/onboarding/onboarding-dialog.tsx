@@ -1,8 +1,4 @@
 import { areSuggestionsSupported } from "@features/board";
-import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import RecordVoiceOverOutlinedIcon from "@mui/icons-material/RecordVoiceOverOutlined";
-import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -21,6 +17,13 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
+import { shortLandscape } from "@shared/theme/short-landscape";
+import {
+  LockIcon,
+  RecordVoiceOverIcon,
+  StarShineIcon,
+  TranslateIcon,
+} from "@shared/ui/icons";
 import { AppIcon } from "./app-icon";
 
 interface OnboardingDialogProps {
@@ -37,19 +40,19 @@ interface Highlight {
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const t = useTranslate();
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        Icon: AutoAwesomeOutlinedIcon,
+        Icon: StarShineIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
     : {
         id: "language",
-        Icon: TranslateOutlinedIcon,
+        Icon: TranslateIcon,
         title: t(m.onboardingLanguageTitle),
         description: t(m.onboardingLanguageDescription, {
           count: locales.length,
@@ -59,14 +62,14 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      Icon: RecordVoiceOverOutlinedIcon,
+      Icon: RecordVoiceOverIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
     suggestionsOrLanguageHighlight,
     {
       id: "free-private",
-      Icon: LockOutlinedIcon,
+      Icon: LockIcon,
       title: t(m.onboardingFreePrivateTitle),
       description: t(m.onboardingFreePrivateDescription),
     },
@@ -76,7 +79,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      fullScreen={isSmallScreen || isShortLandscape}
+      fullScreen={isNarrowScreen || isShortLandscape}
       fullWidth
       maxWidth="xs"
     >
@@ -129,15 +132,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       </DialogActions>
     </Dialog>
   );
-}
-
-// A width breakpoint cannot see a screen that is wide but short, such as a
-// phone on its side. The `sm` value keeps the threshold on the theme's scale.
-// Portrait screens are excluded so a small upright phone keeps its own layout.
-function shortLandscape(theme: Theme): string {
-  const maxHeight = theme.breakpoints.values.sm - 0.05;
-
-  return `@media (orientation: landscape) and (max-height:${maxHeight}px)`;
 }
 
 function introductionSx(theme: Theme) {
@@ -206,11 +200,11 @@ function HighlightItem({ Icon, title, description }: HighlightItemProps) {
       <ListItemText
         primary={title}
         secondary={description}
-        sx={{ my: 0 }}
         slotProps={{
           primary: { sx: { fontWeight: "fontWeightBold" } },
           secondary: { variant: "body1", sx: { textWrap: "balance" } },
         }}
+        sx={{ my: 0 }}
       />
     </ListItem>
   );

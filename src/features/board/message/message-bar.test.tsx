@@ -1,7 +1,9 @@
+import { setCommunicationLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
+import { setTestViewport } from "@shared/testing/viewport";
 import type { ReactNode } from "react";
 import { describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -54,6 +56,16 @@ function getScrollContainer(container: Element): HTMLElement {
   assertDefined(scroller);
 
   return scroller;
+}
+
+function fillBounds(scroller: HTMLElement): { left: number; right: number } {
+  const fill = getComputedStyle(scroller, "::after");
+  const scrollerBounds = scroller.getBoundingClientRect();
+
+  return {
+    left: scrollerBounds.left + Number.parseFloat(fill.left),
+    right: scrollerBounds.right - Number.parseFloat(fill.right),
+  };
 }
 
 describe("MessageBar", () => {
@@ -124,6 +136,30 @@ describe("MessageBar", () => {
     expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
   });
 
+  test.each([
+    { screen: "a phone", width: 375, height: 667, symbolSize: 64 },
+    { screen: "a phone on its side", width: 844, height: 390, symbolSize: 48 },
+    { screen: "a tablet", width: 1024, height: 768, symbolSize: 64 },
+  ])(
+    "sizes a symbol to leave its label in view on $screen",
+    async ({ width, height, symbolSize }) => {
+      await setTestViewport(width, height);
+      const screen = await renderWithProviders(
+        <MessageBar {...createProps({ parts: SCROLL_PARTS.slice(0, 1) })} />,
+      );
+      const label = screen.getByText("Part 1");
+      await expect.element(label).toBeVisible();
+      const symbol = screen.container.querySelector("img");
+      assertDefined(symbol);
+      const scroller = getScrollContainer(screen.container);
+
+      expect(symbol.getBoundingClientRect().height).toBe(symbolSize);
+      expect(label.element().getBoundingClientRect().bottom).toBeLessThan(
+        scroller.getBoundingClientRect().bottom,
+      );
+    },
+  );
+
   test("keeps its height when the message outgrows the bar", async () => {
     const props = createProps();
     const screen = await renderWithProviders(
@@ -148,28 +184,48 @@ describe("MessageBar", () => {
     expect(bar.getBoundingClientRect().height).toBe(emptyHeight);
   });
 
-  test.each([
-    { isWordOpen: true, caret: '""' },
-    { isWordOpen: false, caret: "none" },
-  ])(
-    "marks the last word with a caret only while it is open (open: $isWordOpen)",
-    async ({ isWordOpen, caret }) => {
-      const parts: MessagePart[] = [
-        { kind: "text", id: "a", label: "I", language: "en" },
-        { kind: "text", id: "b", label: "want", language: "en" },
-      ];
+  test("moves the caret past the space when the last text word closes", async () => {
+    const parts: MessagePart[] = [
+      { kind: "text", id: "a", label: "I", language: "en" },
+      { kind: "text", id: "b", label: "want", language: "en" },
+    ];
+    const props = createProps({ parts });
+    const screen = await renderWithProviders(
+      <MessageBar {...props} isWordOpen />,
+    );
+    const items = screen.getByRole("listitem");
+    const openCaret = getComputedStyle(items.last().element(), "::after");
 
-      const screen = await renderWithProviders(
-        <MessageBar {...createProps({ parts, isWordOpen })} />,
-      );
-      const items = screen.getByRole("listitem").elements();
-      const carets = items.map(
-        (item) => getComputedStyle(item, "::after").content,
-      );
+    expect(openCaret.content).toBe('""');
+    const wordEndGap = Number.parseFloat(openCaret.marginInlineStart);
 
-      expect(carets).toEqual(["none", caret]);
-    },
-  );
+    await screen.rerender(<MessageBar {...props} />);
+
+    const closedCaret = getComputedStyle(items.last().element(), "::after");
+    expect(closedCaret.content).toBe('""');
+    expect(Number.parseFloat(closedCaret.marginInlineStart)).toBeGreaterThan(
+      wordEndGap,
+    );
+    expect(getComputedStyle(items.first().element(), "::after").content).toBe(
+      "none",
+    );
+  });
+
+  test("shows no spelling caret when the last part is a tile", async () => {
+    const parts: MessagePart[] = [
+      { kind: "text", id: "a", label: "I", language: "en" },
+      { kind: "tile", id: "b", label: "want", language: "en" },
+    ];
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts })} />,
+    );
+
+    const carets = screen
+      .getByRole("listitem")
+      .elements()
+      .map((item) => getComputedStyle(item, "::after").content);
+    expect(carets).toEqual(["none", "none"]);
+  });
 
   test("exposes the message as a named list of its parts", async () => {
     const parts: MessagePart[] = [
@@ -249,6 +305,36 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("I")).toBeVisible();
     expect(screen.container.querySelectorAll("img")).toHaveLength(1);
   });
+
+  test.for(["en", "he"])(
+    "fills behind the active part's label in %s",
+    async (language) => {
+      setCommunicationLanguage(language);
+      const parts: MessagePart[] = [
+        { kind: "text", id: "a", label: "I", language: "en" },
+        {
+          kind: "tile",
+          id: "b",
+          label: "want",
+          language: "en",
+          imageSrc: TEST_IMAGE_SRC,
+        },
+      ];
+
+      const screen = await renderWithProviders(
+        <MessageBar {...createProps({ parts, activePartId: "b" })} />,
+      );
+
+      const scroller = getScrollContainer(screen.container);
+      const activePart = scroller.children[1];
+      assertDefined(activePart);
+      const fill = fillBounds(scroller);
+      const partBounds = activePart.getBoundingClientRect();
+      expect(fill.left).toBeGreaterThanOrEqual(partBounds.left - 1);
+      expect(fill.right).toBeLessThanOrEqual(partBounds.right + 1);
+      expect(fill.right - fill.left).toBeGreaterThan(0);
+    },
+  );
 
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {

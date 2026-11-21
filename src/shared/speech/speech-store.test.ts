@@ -6,14 +6,14 @@ import {
   parseSpeechPreferences,
   setSpeechPitch,
   setSpeechRate,
-  setSpeechVoiceURI,
+  setSpeechVoice,
   setSpeechVolume,
 } from "./speech-store";
 
 describe("parseSpeechPreferences", () => {
   test("uses defaults when the preferences are absent", () => {
     expect(parseSpeechPreferences(undefined)).toEqual({
-      voiceURI: null,
+      voiceURIs: {},
       rate: 1,
       pitch: 1,
       volume: 1,
@@ -23,13 +23,13 @@ describe("parseSpeechPreferences", () => {
   test("keeps valid stored values", () => {
     expect(
       parseSpeechPreferences({
-        voiceURI: "voice-1",
+        voiceURIs: { en: "voice-1", he: "he-voice" },
         rate: 1.2,
         pitch: 0.8,
         volume: 0.6,
       }),
     ).toEqual({
-      voiceURI: "voice-1",
+      voiceURIs: { en: "voice-1", he: "he-voice" },
       rate: 1.2,
       pitch: 0.8,
       volume: 0.6,
@@ -39,17 +39,25 @@ describe("parseSpeechPreferences", () => {
   test("ignores invalid stored values", () => {
     expect(
       parseSpeechPreferences({
-        voiceURI: false,
+        voiceURIs: "voice-1",
         rate: "fast",
         pitch: NaN,
         volume: null,
       }),
     ).toEqual({
-      voiceURI: null,
+      voiceURIs: {},
       rate: 1,
       pitch: 1,
       volume: 1,
     });
+  });
+
+  test("drops saved voices that are not voice URIs", () => {
+    expect(
+      parseSpeechPreferences({
+        voiceURIs: { en: "voice-1", he: 7, fr: null },
+      }).voiceURIs,
+    ).toEqual({ en: "voice-1" });
   });
 
   test.each([
@@ -77,7 +85,7 @@ describe("getSpeechParameters", () => {
   });
 
   test("combines the saved voice, rate, pitch, and volume", () => {
-    setSpeechVoiceURI("voice-2");
+    setSpeechVoice("en", "voice-2");
     setSpeechRate(1.5);
     setSpeechPitch(0.5);
     setSpeechVolume(0.25);
@@ -90,22 +98,30 @@ describe("getSpeechParameters", () => {
     });
   });
 
-  test("gives each language its own voice and keeps the saved voice for the language it speaks", () => {
-    setSpeechVoiceURI("voice-2");
+  test("keeps a saved voice for each language", () => {
+    setSpeechVoice("en", "voice-2");
+    setSpeechVoice("he", "he-voice");
+
+    expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-2");
+    expect(getSpeechParameters("he").voice?.voiceURI).toBe("he-voice");
+  });
+
+  test("falls back to a voice of the language when none is saved for it", () => {
+    setSpeechVoice("en", "voice-2");
 
     expect(getSpeechParameters("he").voice?.voiceURI).toBe("he-voice");
-    expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-2");
   });
 
   test("follows the given language, not the communication language", () => {
     setCommunicationLanguage("he");
-    setSpeechVoiceURI("he-voice");
+    setSpeechVoice("he", "he-voice");
+    setSpeechVoice("en", "voice-2");
 
-    expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-1");
+    expect(getSpeechParameters("en").voice?.voiceURI).toBe("voice-2");
   });
 
   test("leaves the voice to the browser when the language has no voices", () => {
-    setSpeechVoiceURI("voice-2");
+    setSpeechVoice("en", "voice-2");
 
     expect(getSpeechParameters("fr").voice).toBeNull();
   });

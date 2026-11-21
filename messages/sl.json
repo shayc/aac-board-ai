@@ -5,8 +5,7 @@
   "opensInNewTab": "(odpre se v novem zavihku)",
   "boardGridLabel": "Komunikacijska tabla",
   "boardSelectorLabel": "Tabla",
-  "boardSelectorOpen": "Odpri seznam tabel",
-  "boardSelectorClose": "Zapri seznam tabel",
+  "boardSelectorSearch": "Išči table",
   "boardSelectorNoOptions": "Ni ujemajočih se tabel",
   "libraryLoading": "Nalaganje kompletov tabel…",
   "libraryLoadFailed": "Knjižnice ni bilo mogoče naložiti",
@@ -14,30 +13,45 @@
   "libraryBoardSets": "Kompleti tabel",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Uvažanje datoteke table…",
-        "countPlural=*": "Uvažanje datotek tabel…"
+        "count=1": "Uvažanje datoteke table…",
+        "count=*": "Uvažanje datotek tabel…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Komplet tabel uvožen",
-        "countPlural=*": "Kompleti tabel uvoženi"
+        "count=1": "Komplet tabel uvožen",
+        "count=*": "Kompleti tabel uvoženi"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Datoteke table »{fileName}« ni bilo mogoče uvoziti",
-  "libraryImportFailedBoardFiles": "Datotek tabel ni bilo mogoče uvoziti",
-  "libraryImportNotBoardFile": "»{fileName}« ni datoteka table",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteke table ni bilo mogoče uvoziti",
+        "count=*": "Datotek tabel ni bilo mogoče uvoziti"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Uvoziti je mogoče samo datoteke tabel",
-  "libraryImportTooLargeBoardFile": "Datoteka table »{fileName}« je prevelika za uvoz",
-  "libraryImportTooLargeBoardFiles": "Datoteke tabel so prevelike za uvoz",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteka table je prevelika za uvoz",
+        "count=*": "Datoteke tabel so prevelike za uvoz"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Nekaterih datotek tabel ni bilo mogoče uvoziti ({failed} od {total})",
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Mreža {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Izbrišem komplet tabel?",
   "libraryDeleteIrreversible": "Komplet tabel »{name}« bo izbrisan. Tega dejanja ni mogoče razveljaviti.",
-  "libraryDeleteFailed": "Kompleta tabel »{name}« ni bilo mogoče izbrisati",
-  "libraryExportFailed": "Kompleta tabel »{name}« ni bilo mogoče izvoziti",
+  "libraryDeleteFailed": "Kompleta tabel ni bilo mogoče izbrisati",
+  "libraryExportFailed": "Kompleta tabel ni bilo mogoče izvoziti",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",
   "aboutSourceCode": "Izvorna koda",
@@ -87,13 +101,14 @@
   "languageTranslating": "Prevajanje tabel…",
   "speechVoice": "Glas",
   "speechRate": "Hitrost govora",
-  "speechPitch": "Višina",
+  "speechPitch": "Višina glasu",
   "speechVolume": "Glasnost",
   "speechPreviewVoice": "Poslušaj glas",
   "speechPreviewSample": "Živjo, to je moj glas!",
+  "messagePlayTiles": "Izgovori simbole ob dodajanju",
   "messageImages": "Prikaži slike",
   "messageHighlight": "Označi med govorom",
-  "messageClearAfterSpeaking": "Izbriši po govoru",
+  "messageClearAfterPlaying": "Izbriši po izgovoru",
   "tileSaturation": "Intenzivnost barve",
   "tileBrightness": "Svetlost",
   "tileBorders": "Prikaži obrobe",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Spodaj",
   "tileLabelHidden": "Skrite",
   "tileOpensBoard": "Odpre tablo",
+  "tileSpace": "Preslednica",
   "scanningEnabled": "Vklopi skeniranje s stikalom",
   "scanningMethod": "Način skeniranja",
-  "scanningMethodAuto": "Samodejno",
-  "scanningMethodStep": "Koračno skeniranje z dvema stikaloma",
+  "scanningMethodAuto": "Samodejno skeniranje",
+  "scanningMethodStep": "Koračno skeniranje",
   "scanningMethodAutoHint": "Pritisnite preslednico ali Enter, da začnete skeniranje in da izberete. Skeniranje se po dveh prehodih začasno ustavi.",
   "scanningMethodStepHint": "Pritisnite preslednico za pomik na naslednji element in Enter, da ga izberete.",
   "scanningInterval": "Interval skeniranja",
@@ -114,14 +130,13 @@
   "suggestionsCustomInstructionsHelper": "Opišite, kako naj bodo predlogi ubesedeni.",
   "suggestionsUnsupported": "Predlogi v tem brskalniku niso na voljo.",
   "suggestionsCustomInstructionsUnsupported": "Navodila po meri v tem brskalniku niso na voljo.",
-  "suggestionsEnableHelp": "Kako omogočiti predloge",
+  "suggestionsEnableHelp": "Kako vklopiti predloge",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI…",
   "suggestionsLanguageUnavailable": "Predlogi v tem jeziku niso na voljo.",
   "suggestionsFailed": "Predlogov ni bilo mogoče pridobiti",
   "suggestionsLabel": "Predlogi",
-  "navBack": "Nazaj",
-  "navHome": "Pojdi na glavno tablo",
+  "navHome": "Pojdi domov",
   "messageBackspace": "Briši",
   "messageBackspaceLongPressHint": "Pridržite ali pritisnite {shortcut} za izbris sporočila.",
   "messageClear": "Izbriši sporočilo",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Predvajaj sporočilo",
-  "messageStop": "Ustavi sporočilo",
-  "playbackFailed": "Zvoka ni bilo mogoče predvajati",
+  "messagePlay": "Izgovori sporočilo",
+  "messageStop": "Ustavi govor",
+  "playbackFailed": "Izgovor ni uspel",
   "messageLabel": "Sporočilo",
   "onboardingContinue": "Nadaljuj",
   "onboardingTitle": "Dobrodošli v AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Povejte več z manj dotiki",
   "onboardingSuggestionsDescription": "Umetna inteligenca nekaj simbolov spremeni v celo poved. Vi izberete, kaj bo izrečeno.",
   "onboardingLanguageTitle": "V vašem jeziku",
-  "onboardingLanguageDescription": "Aplikacijo uporabljajte v katerem koli od razpoložljivih jezikov ({count}).",
+  "onboardingLanguageDescription": "Aplikacijo uporabljajte v katerem koli od {count} jezikov.",
   "onboardingFreePrivateTitle": "Brezplačno in zasebno",
   "onboardingFreePrivateDescription": "Brez računa, brez oglasov, brez sledenja. Deluje brez povezave.",
   "errorGenericTitle": "Strani ni bilo mogoče naložiti",
   "errorPageNotFound": "Strani ni mogoče najti",
-  "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "errorBoardURLImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
-  "boardLinkImportTitle": "Želite uvoziti datoteko table s povezave?",
-  "boardLinkImportDescription": "Ta povezava uvozi datoteko table z {host}. Uvozite jo le, če zaupate pošiljatelju povezave.",
-  "boardLinkImport": "Uvozi",
-  "boardLinkCancel": "Prekliči"
+  "errorBoardFileURLImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
+  "boardFileURLImportTitle": "Uvozim datoteko table s povezave?",
+  "boardFileURLImportDescription": "Ta povezava uvozi datoteko table z {host}. Uvozite jo le, če zaupate pošiljatelju povezave.",
+  "boardFileURLImportConfirm": "Uvozi",
+  "boardFileURLImportCancel": "Prekliči"
 }

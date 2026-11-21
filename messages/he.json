@@ -5,8 +5,7 @@
   "opensInNewTab": "(נפתח בכרטיסייה חדשה)",
   "boardGridLabel": "לוח תקשורת",
   "boardSelectorLabel": "לוח",
-  "boardSelectorOpen": "פתיחת רשימת הלוחות",
-  "boardSelectorClose": "סגירת רשימת הלוחות",
+  "boardSelectorSearch": "חיפוש לוחות",
   "boardSelectorNoOptions": "לא נמצאו לוחות תואמים",
   "libraryLoading": "טעינת ערכות לוחות…",
   "libraryLoadFailed": "לא ניתן לטעון את הספרייה",
@@ -14,30 +13,45 @@
   "libraryBoardSets": "ערכות לוחות",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ייבוא קובץ לוח…",
-        "countPlural=*": "ייבוא קובצי לוחות…"
+        "count=1": "ייבוא קובץ לוח…",
+        "count=*": "ייבוא קובצי לוחות…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ערכת הלוחות יובאה בהצלחה",
-        "countPlural=*": "ערכות הלוחות יובאו בהצלחה"
+        "count=1": "ערכת הלוחות יובאה בהצלחה",
+        "count=*": "ערכות הלוחות יובאו בהצלחה"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "ייבוא קובץ הלוח \"{fileName}\" נכשל",
-  "libraryImportFailedBoardFiles": "ייבוא קובצי הלוחות נכשל",
-  "libraryImportNotBoardFile": "\"{fileName}\" אינו קובץ לוח",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "ייבוא קובץ הלוח נכשל",
+        "count=*": "ייבוא קובצי הלוחות נכשל"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "אפשר לייבא רק קובצי לוחות",
-  "libraryImportTooLargeBoardFile": "קובץ הלוח \"{fileName}\" גדול מדי לייבוא",
-  "libraryImportTooLargeBoardFiles": "קובצי הלוחות גדולים מדי לייבוא",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "קובץ הלוח גדול מדי לייבוא",
+        "count=*": "קובצי הלוחות גדולים מדי לייבוא"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "ייבוא חלק מקובצי הלוחות נכשל ({failed} מתוך {total})",
   "libraryDropToImport": "גררו לכאן קובצי לוחות כדי לייבא אותם",
   "libraryInfo": "מידע",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "רשת {rows}×{columns}",
   "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות?",
   "libraryDeleteIrreversible": "ערכת הלוחות \"{name}\" תימחק. לא ניתן לבטל זאת.",
-  "libraryDeleteFailed": "מחיקת ערכת הלוחות \"{name}\" נכשלה",
-  "libraryExportFailed": "ייצוא ערכת הלוחות \"{name}\" נכשל",
+  "libraryDeleteFailed": "מחיקת ערכת הלוחות נכשלה",
+  "libraryExportFailed": "ייצוא ערכת הלוחות נכשל",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת הספרייה",
   "aboutSourceCode": "קוד המקור",
@@ -91,9 +105,10 @@
   "speechVolume": "עוצמת הקול",
   "speechPreviewVoice": "השמעת הקול לדוגמה",
   "speechPreviewSample": "שלום, זה הקול שלי!",
+  "messagePlayTiles": "הקראת סמלים בזמן הוספתם",
   "messageImages": "הצגת תמונות במסר",
-  "messageHighlight": "הדגשה בזמן ההשמעה",
-  "messageClearAfterSpeaking": "ניקוי המסר אחרי ההשמעה",
+  "messageHighlight": "הדגשה בזמן ההקראה",
+  "messageClearAfterPlaying": "ניקוי המסר אחרי ההקראה",
   "tileSaturation": "עוצמת הצבעים",
   "tileBrightness": "בהירות",
   "tileBorders": "הצגת מסגרות",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "למטה",
   "tileLabelHidden": "ללא כיתוב",
   "tileOpensBoard": "פותח לוח",
+  "tileSpace": "רווח",
   "scanningEnabled": "הפעלת סריקה באמצעות מתג",
   "scanningMethod": "שיטת סריקה",
   "scanningMethodAuto": "סריקה אוטומטית",
-  "scanningMethodStep": "סריקה ידנית (שני מתגים)",
+  "scanningMethodStep": "סריקה ידנית",
   "scanningMethodAutoHint": "לחצו על רווח או Enter כדי להתחיל בסריקה או לבחור פריט. הסריקה מושהית אחרי שני סבבים.",
   "scanningMethodStepHint": "לחצו על רווח כדי לעבור לפריט הבא ועל Enter כדי לבחור בו.",
   "scanningInterval": "זמן לכל פריט",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "ההצעות אינן זמינות בשפה הזו.",
   "suggestionsFailed": "לא ניתן לקבל הצעות",
   "suggestionsLabel": "הצעות",
-  "navBack": "חזרה",
-  "navHome": "ללוח הראשי",
+  "navHome": "חזרה לעמוד הבית",
   "messageBackspace": "מחיקה לאחור",
   "messageBackspaceLongPressHint": "לחצו לחיצה ארוכה, או הקישו {shortcut}, כדי לנקות את המסר.",
   "messageClear": "ניקוי המסר",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "השמעת המסר",
-  "messageStop": "עצירת השמעת המסר",
-  "playbackFailed": "לא ניתן להשמיע את הצליל",
+  "messagePlay": "הקראת המסר",
+  "messageStop": "עצירת ההקראה",
+  "playbackFailed": "לא ניתן להקריא",
   "messageLabel": "מסר",
   "onboardingContinue": "המשך",
   "onboardingTitle": "ברוכים הבאים ל-AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "בלי חשבון, בלי פרסומות, בלי מעקב. עובד במצב לא מקוון.",
   "errorGenericTitle": "לא ניתן לטעון את הדף",
   "errorPageNotFound": "הדף לא נמצא",
-  "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
-  "boardLinkImportTitle": "לייבא את קובץ הלוח מהקישור?",
-  "boardLinkImportDescription": "הקישור הזה מייבא קובץ לוח מ־{host}. יש לייבא אותו רק אם סומכים על מי ששלח את הקישור.",
-  "boardLinkImport": "ייבוא",
-  "boardLinkCancel": "ביטול"
+  "errorBoardFileURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
+  "boardFileURLImportTitle": "לייבא את קובץ הלוח מהקישור?",
+  "boardFileURLImportDescription": "הקישור הזה מייבא קובץ לוח מ־{host}. יש לייבא אותו רק אם סומכים על מי ששלח את הקישור.",
+  "boardFileURLImportConfirm": "ייבוא",
+  "boardFileURLImportCancel": "ביטול"
 }

@@ -135,7 +135,7 @@ describe("useBoardFileDrop", () => {
     expect(isDefaultAllowed).toBe(true);
   });
 
-  test("names a dropped file that isn't a board file", async () => {
+  test("reports a dropped file that isn't a board file", async () => {
     const { zone, screen } = await renderDropZone();
     const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
 
@@ -143,7 +143,7 @@ describe("useBoardFileDrop", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"manual.pdf" isn\'t a board file');
+      .toHaveTextContent("Only board files can be imported");
   });
 
   test("imports a dropped board file and opens it", async () => {
@@ -174,8 +174,12 @@ describe("useBoardFileDrop", () => {
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile, corruptFile));
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
+      .element(
+        screen
+          .getByRole("alert")
+          .getByText("Couldn't import board file", { exact: true }),
+      )
+      .toBeVisible();
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
         id: SAMPLE_BOARD_SET_ID,

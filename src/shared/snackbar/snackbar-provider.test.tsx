@@ -1,5 +1,3 @@
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import { m } from "@paraglide/messages.js";
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
@@ -14,7 +12,7 @@ const LONG_DURATION_MS = 60_000;
 function ShowButtons({
   snackbars,
 }: {
-  snackbars: Record<string, SnackbarOptions | string>;
+  snackbars: Record<string, SnackbarOptions>;
 }) {
   const { showSnackbar } = useSnackbar();
 
@@ -34,13 +32,15 @@ function ShowButtons({
   );
 }
 
-function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
+function renderSnackbars(snackbars: Record<string, SnackbarOptions>) {
   return renderWithProviders(<ShowButtons snackbars={snackbars} />);
 }
 
 describe("SnackbarProvider", () => {
   test("has no accessibility violations while a message shows", async () => {
-    const screen = await renderSnackbars({ "show-saved": "Saved" });
+    const screen = await renderSnackbars({
+      "show-saved": { message: "Saved" },
+    });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
@@ -95,7 +95,9 @@ describe("SnackbarProvider", () => {
   });
 
   test("shows a plain-string message", async () => {
-    const screen = await renderSnackbars({ "show-saved": "Saved" });
+    const screen = await renderSnackbars({
+      "show-saved": { message: "Saved" },
+    });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
 
@@ -121,35 +123,26 @@ describe("SnackbarProvider", () => {
 
   test.each([
     { screen: "a phone", width: 375, height: 667 },
-    { screen: "a phone on its side", width: 568, height: 320 },
+    { screen: "a small phone on its side", width: 568, height: 320 },
+    { screen: "a phone on its side", width: 844, height: 390 },
     { screen: "a desktop", width: 1024, height: 667 },
   ])(
-    "keeps a persistent error below the app bar and clear of controls along the bottom on $screen",
+    "keeps a persistent error clear of controls along the bottom on $screen",
     async ({ width, height }) => {
       await setTestViewport(width, height);
       const screen = await renderWithProviders(
-        <>
-          <AppBar position="static">
-            <Toolbar />
-          </AppBar>
-          <ShowButtons
-            snackbars={{
-              "show-error": { message: "failed", severity: "error" },
-            }}
-          />
-        </>,
+        <ShowButtons
+          snackbars={{
+            "show-error": { message: "failed", severity: "error" },
+          }}
+        />,
       );
 
       await screen.getByRole("button", { name: "show-error" }).click();
       const alert = screen.getByRole("alert");
       await expect.element(alert).toBeVisible();
 
-      const appBarBounds = screen
-        .getByRole("banner")
-        .element()
-        .getBoundingClientRect();
       const alertBounds = alert.element().getBoundingClientRect();
-      expect(alertBounds.top).toBeGreaterThan(appBarBounds.bottom);
       expect(alertBounds.bottom).toBeLessThan(window.innerHeight / 2);
     },
   );
@@ -167,7 +160,9 @@ describe("SnackbarProvider", () => {
     });
 
     test("hides an informational message on its own", async () => {
-      const screen = await renderSnackbars({ "show-saved": "Saved" });
+      const screen = await renderSnackbars({
+        "show-saved": { message: "Saved" },
+      });
 
       await screen.getByRole("button", { name: "show-saved" }).click();
       await expect

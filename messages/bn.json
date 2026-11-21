@@ -5,8 +5,7 @@
   "opensInNewTab": "(নতুন ট্যাবে খোলে)",
   "boardGridLabel": "যোগাযোগ বোর্ড",
   "boardSelectorLabel": "বোর্ড",
-  "boardSelectorOpen": "বোর্ডের তালিকা খুলুন",
-  "boardSelectorClose": "বোর্ডের তালিকা বন্ধ করুন",
+  "boardSelectorSearch": "বোর্ড খুঁজুন",
   "boardSelectorNoOptions": "মিলে যায় এমন কোনো বোর্ড নেই",
   "libraryLoading": "বোর্ড সেট লোড হচ্ছে…",
   "libraryLoadFailed": "লাইব্রেরি লোড করা যায়নি",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "বোর্ড সেট",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "বোর্ড ফাইল আমদানি করা হচ্ছে…",
-        "countPlural=*": "বোর্ড ফাইল আমদানি করা হচ্ছে…"
+        "count=1": "বোর্ড ফাইল আমদানি করা হচ্ছে…",
+        "count=*": "বোর্ড ফাইল আমদানি করা হচ্ছে…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "বোর্ড সেট আমদানি করা হয়েছে",
-        "countPlural=*": "বোর্ড সেট আমদানি করা হয়েছে"
+        "count=1": "বোর্ড সেট আমদানি করা হয়েছে",
+        "count=*": "বোর্ড সেট আমদানি করা হয়েছে"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "বোর্ড ফাইল \"{fileName}\" আমদানি করা যায়নি",
-  "libraryImportFailedBoardFiles": "বোর্ড ফাইলগুলি আমদানি করা যায়নি",
-  "libraryImportNotBoardFile": "\"{fileName}\" কোনো বোর্ড ফাইল নয়",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "বোর্ড ফাইল আমদানি করা যায়নি",
+        "count=*": "বোর্ড ফাইলগুলো আমদানি করা যায়নি"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "শুধু বোর্ড ফাইল আমদানি করা যায়",
-  "libraryImportTooLargeBoardFile": "বোর্ড ফাইল \"{fileName}\" আমদানি করার জন্য খুব বড়",
-  "libraryImportTooLargeBoardFiles": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "বোর্ড ফাইল আমদানি করার জন্য খুব বড়",
+        "count=*": "বোর্ড ফাইলগুলো আমদানি করার জন্য খুব বড়"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "কিছু বোর্ড ফাইল আমদানি করা যায়নি ({total}-এর মধ্যে {failed})",
-  "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
+  "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল এখানে ছাড়ুন",
   "libraryInfo": "তথ্য",
   "libraryExport": "রপ্তানি করুন",
   "libraryDelete": "মুছুন",
@@ -47,7 +61,7 @@
   "libraryClose": "লাইব্রেরি বন্ধ করুন",
   "libraryMoreOptions": "আরও বিকল্প",
   "libraryMoreOptionsFor": "{name}-এর জন্য আরও বিকল্প",
-  "libraryDownload": "ডাউনলোড",
+  "libraryDownload": "ডাউনলোড করুন",
   "libraryDownloadBoardSet": "{name} ডাউনলোড করুন",
   "libraryDownloadedBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হয়েছে",
   "libraryDownloadFailed": "বোর্ড সেট \"{name}\" ডাউনলোড করা যায়নি",
@@ -56,12 +70,12 @@
   "libraryImportingStatus": "আমদানি করা হচ্ছে…",
   "libraryCancelDownload": "ডাউনলোড বাতিল করুন",
   "libraryCancelDownloadBoardSet": "{name} ডাউনলোড বাতিল করুন",
-  "libraryByAuthor": "লিখেছেন {author}",
+  "libraryByAuthor": "তৈরি করেছেন: {author}",
   "libraryGridDimensions": "{rows}×{columns} গ্রিড",
   "libraryDeleteConfirmTitle": "বোর্ড সেট মুছবেন?",
   "libraryDeleteIrreversible": "\"{name}\" মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
-  "libraryDeleteFailed": "বোর্ড সেট \"{name}\" মোছা যায়নি",
-  "libraryExportFailed": "বোর্ড সেট \"{name}\" রপ্তানি করা যায়নি",
+  "libraryDeleteFailed": "বোর্ড সেট মোছা যায়নি",
+  "libraryExportFailed": "বোর্ড সেট রপ্তানি করা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",
   "aboutSourceCode": "সোর্স কোড",
@@ -76,7 +90,7 @@
   "settingsSectionMessage": "বার্তা",
   "settingsSectionSuggestions": "পরামর্শ",
   "settingsSectionSwitchAccess": "সুইচ অ্যাক্সেস",
-  "settingsSectionAbout": "সম্পর্কে",
+  "settingsSectionAbout": "অ্যাপ সম্পর্কে",
   "themeLabel": "থিম",
   "themeSystem": "সিস্টেম",
   "themeLight": "লাইট",
@@ -91,9 +105,10 @@
   "speechVolume": "ভলিউম",
   "speechPreviewVoice": "কণ্ঠস্বর শুনুন",
   "speechPreviewSample": "হ্যালো, এটা আমার কণ্ঠস্বর!",
+  "messagePlayTiles": "প্রতীক যোগ করার সময় বলুন",
   "messageImages": "ছবি দেখান",
   "messageHighlight": "বলার সময় হাইলাইট করুন",
-  "messageClearAfterSpeaking": "বলার পরে মুছুন",
+  "messageClearAfterPlaying": "বলার পরে মুছুন",
   "tileSaturation": "রঙের তীব্রতা",
   "tileBrightness": "উজ্জ্বলতা",
   "tileBorders": "সীমানা দেখান",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "নিচে",
   "tileLabelHidden": "লুকানো",
   "tileOpensBoard": "বোর্ড খোলে",
+  "tileSpace": "স্পেস",
   "scanningEnabled": "সুইচ স্ক্যানিং চালু করুন",
   "scanningMethod": "স্ক্যান পদ্ধতি",
-  "scanningMethodAuto": "স্বয়ংক্রিয়",
-  "scanningMethodStep": "দুই সুইচে ধাপে ধাপে স্ক্যানিং",
+  "scanningMethodAuto": "স্বয়ংক্রিয় স্ক্যানিং",
+  "scanningMethodStep": "ধাপে ধাপে স্ক্যানিং",
   "scanningMethodAutoHint": "স্ক্যানিং শুরু করতে এবং নির্বাচন করতে Space বা Enter চাপুন। দুইবার ঘুরে আসার পর স্ক্যানিং থেমে যায়।",
   "scanningMethodStepHint": "পরের আইটেমে যেতে Space এবং সেটি নির্বাচন করতে Enter চাপুন।",
   "scanningInterval": "স্ক্যানের বিরতি",
@@ -120,11 +136,10 @@
   "suggestionsLanguageUnavailable": "এই ভাষায় পরামর্শ উপলভ্য নয়।",
   "suggestionsFailed": "পরামর্শ পাওয়া যায়নি",
   "suggestionsLabel": "পরামর্শ",
-  "navBack": "ফিরে যান",
-  "navHome": "মূল বোর্ডে যান",
+  "navHome": "হোমে যান",
   "messageBackspace": "মুছুন",
-  "messageBackspaceLongPressHint": "বার্তা মুছতে চেপে ধরে রাখুন, অথবা {shortcut} চাপুন।",
-  "messageClear": "বার্তা মুছুন",
+  "messageBackspaceLongPressHint": "পুরো বার্তা মুছতে চেপে ধরে রাখুন, অথবা {shortcut} চাপুন।",
+  "messageClear": "পুরো বার্তা মুছুন",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
   "keyBackspace": "Backspace",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "বার্তা চালান",
-  "messageStop": "বার্তা থামান",
-  "playbackFailed": "শব্দ চালানো যায়নি",
+  "messagePlay": "বার্তা বলুন",
+  "messageStop": "বলা থামান",
+  "playbackFailed": "বলা যায়নি",
   "messageLabel": "বার্তা",
   "onboardingContinue": "চালিয়ে যান",
   "onboardingTitle": "AAC Board AI-তে স্বাগতম",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "কোনো অ্যাকাউন্ট, বিজ্ঞাপন বা ট্র্যাকিং নেই। অফলাইনে কাজ করে।",
   "errorGenericTitle": "এই পৃষ্ঠাটি লোড করা যায়নি",
   "errorPageNotFound": "পৃষ্ঠাটি পাওয়া যায়নি",
-  "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি",
-  "errorBoardURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি",
-  "boardLinkImportTitle": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করবেন?",
-  "boardLinkImportDescription": "এই লিঙ্কটি {host} থেকে একটি বোর্ড ফাইল আমদানি করে। লিঙ্কটি যিনি পাঠিয়েছেন তাঁকে বিশ্বাস করলে তবেই আমদানি করুন।",
-  "boardLinkImport": "আমদানি করুন",
-  "boardLinkCancel": "বাতিল করুন"
+  "errorBoardFileURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি",
+  "boardFileURLImportTitle": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করবেন?",
+  "boardFileURLImportDescription": "এই লিঙ্কটি {host} থেকে একটি বোর্ড ফাইল আমদানি করে। লিঙ্কটি যিনি পাঠিয়েছেন তাঁকে বিশ্বাস করলে তবেই আমদানি করুন।",
+  "boardFileURLImportConfirm": "আমদানি করুন",
+  "boardFileURLImportCancel": "বাতিল করুন"
 }

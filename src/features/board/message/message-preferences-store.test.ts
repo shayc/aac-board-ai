@@ -2,11 +2,12 @@ import { describe, expect, test } from "vitest";
 import { parseMessagePreferences } from "./message-preferences-store";
 
 describe("parseMessagePreferences", () => {
-  test("shows images, highlights while speaking, and clears after speaking when absent", () => {
+  test("plays symbols, shows images, highlights while playing, and clears after playing when absent", () => {
     expect(parseMessagePreferences(undefined)).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,
       shouldClearAfterPlayback: true,
+      shouldPlayTiles: true,
     });
   });
 
@@ -16,11 +17,13 @@ describe("parseMessagePreferences", () => {
         areImagesVisible: "no",
         isHighlightingEnabled: "yes",
         shouldClearAfterPlayback: 0,
+        shouldPlayTiles: null,
       }),
     ).toEqual({
       areImagesVisible: true,
       isHighlightingEnabled: true,
       shouldClearAfterPlayback: true,
+      shouldPlayTiles: true,
     });
   });
 
@@ -30,11 +33,13 @@ describe("parseMessagePreferences", () => {
         areImagesVisible: false,
         isHighlightingEnabled: false,
         shouldClearAfterPlayback: false,
+        shouldPlayTiles: false,
       }),
     ).toEqual({
       areImagesVisible: false,
       isHighlightingEnabled: false,
       shouldClearAfterPlayback: false,
+      shouldPlayTiles: false,
     });
   });
 });

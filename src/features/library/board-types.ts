@@ -13,8 +13,6 @@ export interface Board {
 }
 
 export interface BoardGrid {
-  readonly rows: number;
-  readonly columns: number;
   readonly order: readonly (readonly (string | null)[])[];
 }
 
@@ -36,7 +34,8 @@ export type BoardAction =
   | { readonly kind: "clear" }
   | { readonly kind: "home" }
   | { readonly kind: "play" }
-  | { readonly kind: "spell"; readonly text: string };
+  | { readonly kind: "spell"; readonly text: string }
+  | { readonly kind: "unsupported"; readonly raw: string };
 
 export type StringTranslations = ReadonlyMap<string, string>;
 

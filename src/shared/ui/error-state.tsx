@@ -1,20 +1,22 @@
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import type { ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
+import { ErrorIcon } from "./icons";
 
-const defaultIcon = <ErrorOutlineIcon />;
+const defaultIcon = <ErrorIcon />;
 
 interface ErrorStateProps {
   icon?: ReactNode;
   title: string;
+  titleComponent?: ElementType;
   action?: ReactNode;
 }
 
 export function ErrorState({
   icon = defaultIcon,
   title,
+  titleComponent = "p",
   action,
 }: ErrorStateProps) {
   return (
@@ -44,7 +46,7 @@ export function ErrorState({
       )}
 
       <Typography
-        component="p"
+        component={titleComponent}
         variant="h5"
         sx={{ my: 1, fontWeight: "fontWeightBold" }}
       >

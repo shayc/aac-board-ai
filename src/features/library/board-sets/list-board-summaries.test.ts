@@ -36,6 +36,22 @@ describe("listBoardSummaries", () => {
     ]);
   });
 
+  test.each([undefined, "", "  "])(
+    "lists a board whose name is %j under its ID",
+    async (name) => {
+      await insertBoardSetRecords(
+        makeBoardSetInput({
+          rootBoardId: "a",
+          boards: [makeOBFBoard({ id: "a", name })],
+        }),
+      );
+
+      const [summary] = await listBoardSummaries("set-1");
+
+      expect(summary?.name).toBe("a");
+    },
+  );
+
   test("takes a name from the first locale of a language, as the board itself does", async () => {
     await insertBoardSetRecords(
       makeBoardSetInput({

@@ -339,10 +339,16 @@ describe("PlaybackProvider", () => {
 
     await screen.getByRole("button", { name: "Play" }).click();
     await expect.element(screen.getByText("Playing")).toBeInTheDocument();
+    await expect
+      .element(screen.getByText("Active cue: none"))
+      .toBeInTheDocument();
+
+    const utterance = lastUtterance(speech.speak);
+    reachUtteranceBoundary(utterance, 0);
     await expect.element(screen.getByText("Active cue: 1")).toBeInTheDocument();
     const commitsWhilePlaying = { ...commits };
 
-    reachUtteranceBoundary(lastUtterance(speech.speak), 6);
+    reachUtteranceBoundary(utterance, 6);
     await expect.element(screen.getByText("Active cue: 2")).toBeInTheDocument();
 
     expect(commitsWhilePlaying.controls).toBe(1);

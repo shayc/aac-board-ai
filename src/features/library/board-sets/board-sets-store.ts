@@ -13,6 +13,7 @@ import {
   listBoardSetRecords,
   updateBoardSetTranslations,
 } from "../storage/board-set-storage";
+import { requestPersistentStorage } from "../storage/request-persistent-storage";
 
 export interface BoardSetsSnapshot {
   boardSets: readonly BoardSetRecord[];
@@ -35,6 +36,7 @@ export async function refreshBoardSets(): Promise<void> {
     revokeAssetURLsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
   } catch (error) {
+    reportError(error);
     patchState(boardSetsStore, {
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),
@@ -57,8 +59,9 @@ export function useBoardSets(): BoardSetsSnapshot {
   return useExternalStore(boardSetsStore);
 }
 
-export async function createBoardSet(input: BoardSetInput): Promise<void> {
+export async function addBoardSet(input: BoardSetInput): Promise<void> {
   await insertBoardSetRecords(input);
+  requestPersistentStorage();
   await syncBoardSets();
 }
 

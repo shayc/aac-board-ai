@@ -5,39 +5,53 @@
   "opensInNewTab": "(새 탭에서 열림)",
   "boardGridLabel": "의사소통 보드",
   "boardSelectorLabel": "보드",
-  "boardSelectorOpen": "보드 목록 열기",
-  "boardSelectorClose": "보드 목록 닫기",
-  "boardSelectorNoOptions": "일치하는 보드 없음",
+  "boardSelectorSearch": "보드 검색",
+  "boardSelectorNoOptions": "일치하는 보드가 없습니다",
   "libraryLoading": "보드 세트를 불러오는 중…",
   "libraryLoadFailed": "라이브러리를 불러올 수 없습니다",
   "libraryImportBoardFiles": "보드 파일 가져오기",
   "libraryBoardSets": "보드 세트",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "보드 파일을 가져오는 중…",
-        "countPlural=*": "보드 파일을 가져오는 중…"
+        "count=1": "보드 파일을 가져오는 중…",
+        "count=*": "보드 파일을 가져오는 중…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "보드 세트를 가져왔습니다",
-        "countPlural=*": "보드 세트를 가져왔습니다"
+        "count=1": "보드 세트를 가져왔습니다",
+        "count=*": "보드 세트를 가져왔습니다"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "보드 파일 \"{fileName}\"을(를) 가져올 수 없습니다",
-  "libraryImportFailedBoardFiles": "보드 파일을 가져올 수 없습니다",
-  "libraryImportNotBoardFile": "\"{fileName}\"은(는) 보드 파일이 아닙니다",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "보드 파일을 가져올 수 없습니다",
+        "count=*": "보드 파일을 가져올 수 없습니다"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "보드 파일만 가져올 수 있습니다",
-  "libraryImportTooLargeBoardFile": "보드 파일 \"{fileName}\"이(가) 너무 커서 가져올 수 없습니다",
-  "libraryImportTooLargeBoardFiles": "보드 파일이 너무 커서 가져올 수 없습니다",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "보드 파일이 너무 커서 가져올 수 없습니다",
+        "count=*": "보드 파일이 너무 커서 가져올 수 없습니다"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "일부 보드 파일을 가져올 수 없습니다({failed} / {total})",
   "libraryDropToImport": "가져오려면 보드 파일을 놓으세요",
   "libraryInfo": "정보",
@@ -49,8 +63,8 @@
   "libraryMoreOptionsFor": "{name}의 옵션 더 보기",
   "libraryDownload": "다운로드",
   "libraryDownloadBoardSet": "{name} 다운로드",
-  "libraryDownloadedBoardSet": "보드 세트 \"{name}\"을(를) 다운로드했습니다",
-  "libraryDownloadFailed": "보드 세트 \"{name}\"을(를) 다운로드할 수 없습니다",
+  "libraryDownloadedBoardSet": "\"{name}\" 보드 세트를 다운로드했습니다",
+  "libraryDownloadFailed": "\"{name}\" 보드 세트를 다운로드할 수 없습니다",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "다운로드 중…",
   "libraryImportingStatus": "가져오는 중…",
@@ -59,9 +73,9 @@
   "libraryByAuthor": "작성자: {author}",
   "libraryGridDimensions": "{rows}×{columns} 그리드",
   "libraryDeleteConfirmTitle": "보드 세트를 삭제하시겠어요?",
-  "libraryDeleteIrreversible": "\"{name}\"이(가) 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
-  "libraryDeleteFailed": "보드 세트 \"{name}\"을(를) 삭제할 수 없습니다",
-  "libraryExportFailed": "보드 세트 \"{name}\"을(를) 내보낼 수 없습니다",
+  "libraryDeleteIrreversible": "\"{name}\" 보드 세트가 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+  "libraryDeleteFailed": "보드 세트를 삭제할 수 없습니다",
+  "libraryExportFailed": "보드 세트를 내보낼 수 없습니다",
   "libraryTitle": "라이브러리",
   "libraryOpen": "라이브러리 열기",
   "aboutSourceCode": "소스 코드",
@@ -76,7 +90,7 @@
   "settingsSectionMessage": "메시지",
   "settingsSectionSuggestions": "제안",
   "settingsSectionSwitchAccess": "스위치 제어",
-  "settingsSectionAbout": "정보",
+  "settingsSectionAbout": "앱 정보",
   "themeLabel": "테마",
   "themeSystem": "시스템",
   "themeLight": "밝게",
@@ -91,9 +105,10 @@
   "speechVolume": "볼륨",
   "speechPreviewVoice": "음성 미리 듣기",
   "speechPreviewSample": "안녕하세요, 제 목소리예요!",
+  "messagePlayTiles": "추가할 때 상징 말하기",
   "messageImages": "이미지 표시",
   "messageHighlight": "말하는 동안 강조 표시",
-  "messageClearAfterSpeaking": "말한 후 지우기",
+  "messageClearAfterPlaying": "말한 후 지우기",
   "tileSaturation": "색상 강도",
   "tileBrightness": "밝기",
   "tileBorders": "테두리 표시",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "하단",
   "tileLabelHidden": "숨김",
   "tileOpensBoard": "보드를 엽니다",
+  "tileSpace": "스페이스",
   "scanningEnabled": "스위치 스캔 사용",
   "scanningMethod": "스캔 방식",
-  "scanningMethodAuto": "자동",
-  "scanningMethodStep": "2스위치 단계별 스캔",
+  "scanningMethodAuto": "자동 스캔",
+  "scanningMethodStep": "단계별 스캔",
   "scanningMethodAutoHint": "스페이스 또는 Enter 키를 눌러 스캔을 시작하고 선택하세요. 두 바퀴를 돌면 스캔이 일시 중지됩니다.",
   "scanningMethodStepHint": "스페이스 키로 다음 항목으로 이동하고 Enter 키로 선택하세요.",
   "scanningInterval": "스캔 간격",
@@ -114,14 +130,13 @@
   "suggestionsCustomInstructionsHelper": "제안을 어떤 표현으로 만들지 설명해 주세요.",
   "suggestionsUnsupported": "이 브라우저에서는 제안 기능을 사용할 수 없습니다.",
   "suggestionsCustomInstructionsUnsupported": "이 브라우저에서는 맞춤 지침을 사용할 수 없습니다.",
-  "suggestionsEnableHelp": "제안 기능을 활성화하는 방법",
+  "suggestionsEnableHelp": "제안 켜는 방법",
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중…",
   "suggestionsLanguageUnavailable": "이 언어에서는 제안 기능을 사용할 수 없습니다.",
   "suggestionsFailed": "제안을 가져올 수 없습니다",
   "suggestionsLabel": "제안",
-  "navBack": "뒤로",
-  "navHome": "메인 보드로 이동",
+  "navHome": "홈으로",
   "messageBackspace": "지우기",
   "messageBackspaceLongPressHint": "누른 상태를 유지하거나 {shortcut} 키를 누르면 메시지가 지워집니다.",
   "messageClear": "메시지 지우기",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "메시지 재생",
-  "messageStop": "메시지 중지",
-  "playbackFailed": "소리를 재생할 수 없습니다",
+  "messagePlay": "메시지 말하기",
+  "messageStop": "말하기 중지",
+  "playbackFailed": "말할 수 없습니다",
   "messageLabel": "메시지",
   "onboardingContinue": "계속",
   "onboardingTitle": "AAC Board AI에 오신 것을 환영합니다",
@@ -147,13 +162,12 @@
   "onboardingFreePrivateTitle": "무료, 개인정보 보호",
   "onboardingFreePrivateDescription": "계정 없음, 광고 없음, 추적 없음. 오프라인에서 작동합니다.",
   "errorGenericTitle": "페이지를 불러올 수 없습니다",
-  "errorPageNotFound": "페이지를 찾을 수 없음",
-  "errorGoHome": "홈으로",
-  "errorBoardNotFound": "보드를 찾을 수 없음",
-  "errorBoardSetNotFound": "보드 세트를 찾을 수 없음",
-  "errorBoardURLImportFailed": "링크에서 보드 파일을 가져올 수 없습니다",
-  "boardLinkImportTitle": "링크에서 보드 파일을 가져올까요?",
-  "boardLinkImportDescription": "이 링크는 {host}에서 보드 파일을 가져옵니다. 링크를 보낸 사람을 신뢰할 수 있을 때만 가져오세요.",
-  "boardLinkImport": "가져오기",
-  "boardLinkCancel": "취소"
+  "errorPageNotFound": "페이지를 찾을 수 없습니다",
+  "errorBoardNotFound": "보드를 찾을 수 없습니다",
+  "errorBoardSetNotFound": "보드 세트를 찾을 수 없습니다",
+  "errorBoardFileURLImportFailed": "링크에서 보드 파일을 가져올 수 없습니다",
+  "boardFileURLImportTitle": "링크에서 보드 파일을 가져올까요?",
+  "boardFileURLImportDescription": "이 링크는 {host}에서 보드 파일을 가져옵니다. 링크를 보낸 사람을 신뢰할 수 있을 때만 가져오세요.",
+  "boardFileURLImportConfirm": "가져오기",
+  "boardFileURLImportCancel": "취소"
 }

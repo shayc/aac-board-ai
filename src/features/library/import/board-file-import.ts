@@ -4,8 +4,8 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { createBoardSet } from "../board-sets/board-sets-store";
-import { nonBlankText } from "../non-blank-text";
+import { addBoardSet } from "../board-sets/board-sets-store";
+import { obfToBoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 import {
   type AssetInput,
   BoardSetAlreadyExistsError,
@@ -19,14 +19,14 @@ export interface ImportedBoardSet {
   rootBoardId: string;
 }
 
-export interface BoardFileImportFailure {
+export interface ImportFailure {
   fileName: string;
   error: unknown;
 }
 
-export interface BoardFilesImportOutcome {
+export interface ImportOutcome {
   importedBoardSets: ImportedBoardSet[];
-  failures: BoardFileImportFailure[];
+  failures: ImportFailure[];
 }
 
 type BoardSetContent = Omit<BoardSetInput, "id">;
@@ -43,9 +43,9 @@ export const BOARD_FILE_IMPORT_LIMITS: UnzipLimits = {
 
 export async function importEachBoardFile(
   files: readonly File[],
-): Promise<BoardFilesImportOutcome> {
+): Promise<ImportOutcome> {
   const importedBoardSets: ImportedBoardSet[] = [];
-  const failures: BoardFileImportFailure[] = [];
+  const failures: ImportFailure[] = [];
 
   for (const file of files) {
     try {
@@ -62,36 +62,25 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loadedBoard = await loadBoard(file, {
     limits: BOARD_FILE_IMPORT_LIMITS,
   });
-  const content = buildBoardSetContent(loadedBoard, file.name);
   const baseId = deriveBoardSetId(file.name);
+  // A file named only by its extension has no stem to name the set after.
+  const fallbackName = stripBoardFileExtension(file.name) || baseId;
+  const content = buildBoardSetContent(loadedBoard, fallbackName);
+  const id = await addBoardSetWithFreeId(baseId, content);
 
-  for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const id = buildBoardSetIdCandidate(baseId, candidateNumber);
-
-    try {
-      await createBoardSet({ ...content, id });
-
-      return { id, rootBoardId: content.rootBoardId };
-    } catch (error) {
-      if (!(error instanceof BoardSetAlreadyExistsError)) {
-        throw error;
-      }
-    }
-  }
+  return { id, rootBoardId: content.rootBoardId };
 }
 
 function buildBoardSetContent(
   loadedBoard: LoadedBoard,
-  fileName: string,
+  fallbackName: string,
 ): BoardSetContent {
-  const fileStem = stripBoardFileExtension(fileName);
-
   if (loadedBoard.format === "obf") {
     const { board } = loadedBoard;
 
     return {
+      ...obfToBoardSetMetadata(board, fallbackName),
       rootBoardId: board.id,
-      name: nonBlankText(board.name) ?? fileStem,
       boards: [board],
       assets: [],
     };
@@ -100,8 +89,8 @@ function buildBoardSetContent(
   const { boards, rootBoard, resources } = loadedBoard.archive;
 
   return {
+    ...obfToBoardSetMetadata(rootBoard, fallbackName),
     rootBoardId: rootBoard.id,
-    name: nonBlankText(rootBoard.name) ?? fileStem,
     boards: [...boards.values()],
     assets: buildAssetInputs(resources),
   };
@@ -127,6 +116,25 @@ export function deriveBoardSetId(fileName: string): string {
   const stem = stripBoardFileExtension(fileName).toLowerCase();
 
   return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
+}
+
+async function addBoardSetWithFreeId(
+  baseId: string,
+  content: BoardSetContent,
+): Promise<string> {
+  for (let candidateNumber = 1; ; candidateNumber += 1) {
+    const id = buildBoardSetIdCandidate(baseId, candidateNumber);
+
+    try {
+      await addBoardSet({ ...content, id });
+
+      return id;
+    } catch (error) {
+      if (!(error instanceof BoardSetAlreadyExistsError)) {
+        throw error;
+      }
+    }
+  }
 }
 
 function buildBoardSetIdCandidate(baseId: string, candidateNumber: number) {

@@ -7,18 +7,16 @@ import {
   reachUtteranceBoundary,
   stubSpeech,
 } from "@shared/testing/stub-speech";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { page } from "vitest/browser";
 import type { MessagePart } from "../message/message-types";
 import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
-type PlaybackOptions = Parameters<typeof useBoardPlayback>[0];
-
-function renderPlayback(options?: PlaybackOptions) {
+function renderPlayback() {
   return renderHook(
     () => ({
-      ...useBoardPlayback(options),
+      ...useBoardPlayback(),
       activePartId: useActiveMessagePartId(),
     }),
     { wrapper: AppProviders },
@@ -57,9 +55,9 @@ describe("useBoardPlayback", () => {
     const playPromise = result.current.playMessage(parts);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBe("1");
+    expect(result.current.activePartId).toBeNull();
 
-    fireBoundary?.(2); // "want" begins at offset 2 in "i want"
+    fireBoundary?.(2);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
     expect(result.current.activePartId).toBe("2");
@@ -258,7 +256,7 @@ describe("useBoardPlayback", () => {
     expect(result.current.isMessagePlaying).toBe(false);
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -275,7 +273,7 @@ describe("useBoardPlayback", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -299,7 +297,7 @@ describe("useBoardPlayback", () => {
     expect(speech.spokenTexts()).toEqual(["before"]);
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -316,7 +314,7 @@ describe("useBoardPlayback", () => {
     });
     await rerender();
 
-    expect(speech.spokenTexts()).toEqual(["dog"]);
+    expect(speech.spokenTexts()).toEqual(["Dog"]);
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
@@ -340,7 +338,7 @@ describe("useBoardPlayback", () => {
     ).resolves.toBe(true);
     await rerender();
 
-    expect(speech.spokenTexts()).toEqual(["before", "dog", "after"]);
+    expect(speech.spokenTexts()).toEqual(["before", "Dog", "after"]);
     expect(page.getByRole("alert").elements()).toHaveLength(0);
   });
 
@@ -358,7 +356,7 @@ describe("useBoardPlayback", () => {
         soundSrc: "bark.mp3",
       },
     ]);
-    await expect.poll(() => speech.spokenTexts()).toEqual(["dog"]);
+    await expect.poll(() => speech.spokenTexts()).toEqual(["Dog"]);
     await rerender();
 
     expect(result.current.activePartId).toBe("1");
@@ -382,7 +380,7 @@ describe("useBoardPlayback", () => {
 
     await expect
       .element(page.getByRole("alert"))
-      .toHaveTextContent("Couldn't play sound");
+      .toHaveTextContent("Couldn't speak");
     expect(page.getByRole("alert").elements()).toHaveLength(1);
   });
 
@@ -412,34 +410,5 @@ describe("useBoardPlayback", () => {
     await rerender();
 
     expect(page.getByRole("alert").elements()).toHaveLength(0);
-  });
-
-  test("reports a played message with its completion", async () => {
-    const onMessagePlayback =
-      vi.fn<NonNullable<NonNullable<PlaybackOptions>["onMessagePlayback"]>>();
-    const parts: MessagePart[] = [
-      { kind: "tile", id: "1", label: "hi", language: "en" },
-    ];
-    const { result } = await renderPlayback({ onMessagePlayback });
-
-    await result.current.playMessage(parts);
-
-    expect(onMessagePlayback).toHaveBeenCalledOnce();
-    const [completion] = onMessagePlayback.mock.calls[0] ?? [];
-    await expect(completion).resolves.toBe(true);
-  });
-
-  test("plays an echoed message without reporting it", async () => {
-    const onMessagePlayback = vi.fn();
-    const { result } = await renderPlayback({ onMessagePlayback });
-
-    await expect(
-      result.current.echoMessage([
-        { kind: "tile", id: "1", label: "hi", language: "en" },
-      ]),
-    ).resolves.toBe(true);
-
-    expect(speech.spokenTexts()).toEqual(["hi"]);
-    expect(onMessagePlayback).not.toHaveBeenCalled();
   });
 });

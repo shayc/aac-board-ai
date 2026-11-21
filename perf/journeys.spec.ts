@@ -148,8 +148,8 @@ test("tileInteraction", async ({ browser }) => {
       await tapToGrid(
         sample,
         probe,
-        "backToGrid",
-        page.getByRole("button", { name: "Go back" }),
+        "homeToGrid",
+        page.getByRole("button", { name: "Go home" }),
         CORE_BOARD,
       );
     });

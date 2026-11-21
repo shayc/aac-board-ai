@@ -5,8 +5,7 @@
   "opensInNewTab": "(ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",
   "boardGridLabel": "ಸಂವಹನ ಬೋರ್ಡ್",
   "boardSelectorLabel": "ಬೋರ್ಡ್",
-  "boardSelectorOpen": "ಬೋರ್ಡ್‌ಗಳ ಪಟ್ಟಿಯನ್ನು ತೆರೆಯಿರಿ",
-  "boardSelectorClose": "ಬೋರ್ಡ್‌ಗಳ ಪಟ್ಟಿಯನ್ನು ಮುಚ್ಚಿ",
+  "boardSelectorSearch": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಹುಡುಕಿ",
   "boardSelectorNoOptions": "ಹೊಂದಿಕೆಯಾಗುವ ಬೋರ್ಡ್‌ಗಳಿಲ್ಲ",
   "libraryLoading": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…",
   "libraryLoadFailed": "ಲೈಬ್ರರಿಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
@@ -14,37 +13,52 @@
   "libraryBoardSets": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
-        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
+        "count=1": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
+        "count=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಸೆಟ್ ಆಮದಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಆಮದಾಗಿವೆ"
+        "count=1": "ಬೋರ್ಡ್ ಸೆಟ್ ಆಮದಾಗಿದೆ",
+        "count=*": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಆಮದಾಗಿವೆ"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "ಬೋರ್ಡ್ ಫೈಲ್ \"{fileName}\" ಅನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "libraryImportFailedBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "libraryImportNotBoardFile": "\"{fileName}\" ಬೋರ್ಡ್ ಫೈಲ್ ಅಲ್ಲ",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+        "count=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಮಾತ್ರ ಆಮದು ಮಾಡಬಹುದು",
-  "libraryImportTooLargeBoardFile": "ಬೋರ್ಡ್ ಫೈಲ್ \"{fileName}\" ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
-  "libraryImportTooLargeBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
+        "count=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "ಕೆಲವು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ ({total} ರಲ್ಲಿ {failed})",
-  "libraryDropToImport": "ಆಮದು ಮಾಡಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಬಿಡಿ",
+  "libraryDropToImport": "ಆಮದು ಮಾಡಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಇಲ್ಲಿ ಬಿಡಿ",
   "libraryInfo": "ಮಾಹಿತಿ",
   "libraryExport": "ರಫ್ತು ಮಾಡಿ",
   "libraryDelete": "ಅಳಿಸಿ",
   "libraryCancel": "ರದ್ದುಮಾಡಿ",
-  "libraryClose": "ಗ್ರಂಥಾಲಯವನ್ನು ಮುಚ್ಚಿ",
+  "libraryClose": "ಲೈಬ್ರರಿಯನ್ನು ಮುಚ್ಚಿ",
   "libraryMoreOptions": "ಹೆಚ್ಚಿನ ಆಯ್ಕೆಗಳು",
   "libraryMoreOptionsFor": "{name} ಗಾಗಿ ಹೆಚ್ಚಿನ ಆಯ್ಕೆಗಳು",
   "libraryDownload": "ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
@@ -56,14 +70,14 @@
   "libraryImportingStatus": "ಆಮದು ಆಗುತ್ತಿದೆ…",
   "libraryCancelDownload": "ಡೌನ್‌ಲೋಡ್ ರದ್ದುಮಾಡಿ",
   "libraryCancelDownloadBoardSet": "{name} ಡೌನ್‌ಲೋಡ್ ರದ್ದುಮಾಡಿ",
-  "libraryByAuthor": "ಲೇಖಕ: {author}",
+  "libraryByAuthor": "ರಚನೆಕಾರ: {author}",
   "libraryGridDimensions": "{rows}×{columns} ಗ್ರಿಡ್",
   "libraryDeleteConfirmTitle": "ಬೋರ್ಡ್ ಸೆಟ್ ಅನ್ನು ಅಳಿಸುವುದೇ?",
   "libraryDeleteIrreversible": "\"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
-  "libraryDeleteFailed": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
-  "libraryExportFailed": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ರಫ್ತು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "libraryTitle": "ಗ್ರಂಥಾಲಯ",
-  "libraryOpen": "ಗ್ರಂಥಾಲಯವನ್ನು ತೆರೆಯಿರಿ",
+  "libraryDeleteFailed": "ಬೋರ್ಡ್ ಸೆಟ್ ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
+  "libraryExportFailed": "ಬೋರ್ಡ್ ಸೆಟ್ ಅನ್ನು ರಫ್ತು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "libraryTitle": "ಲೈಬ್ರರಿ",
+  "libraryOpen": "ಲೈಬ್ರರಿಯನ್ನು ತೆರೆಯಿರಿ",
   "aboutSourceCode": "ಮೂಲ ಕೋಡ್",
   "aboutVersion": "ಆವೃತ್ತಿ {version}",
   "settingsTitle": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
@@ -76,7 +90,7 @@
   "settingsSectionMessage": "ಸಂದೇಶ",
   "settingsSectionSuggestions": "ಸಲಹೆಗಳು",
   "settingsSectionSwitchAccess": "ಸ್ವಿಚ್ ಪ್ರವೇಶ",
-  "settingsSectionAbout": "ಬಗ್ಗೆ",
+  "settingsSectionAbout": "ಆ್ಯಪ್ ಬಗ್ಗೆ",
   "themeLabel": "ಥೀಮ್",
   "themeSystem": "ಸಿಸ್ಟಂ",
   "themeLight": "ಲೈಟ್",
@@ -91,21 +105,23 @@
   "speechVolume": "ಧ್ವನಿ ಪ್ರಮಾಣ",
   "speechPreviewVoice": "ಧ್ವನಿಯನ್ನು ಕೇಳಿ",
   "speechPreviewSample": "ನಮಸ್ಕಾರ, ಇದು ನನ್ನ ಧ್ವನಿ!",
+  "messagePlayTiles": "ಚಿಹ್ನೆಗಳನ್ನು ಸೇರಿಸುವಾಗ ಹೇಳಿ",
   "messageImages": "ಚಿತ್ರಗಳನ್ನು ತೋರಿಸಿ",
-  "messageHighlight": "ಮಾತನಾಡುವಾಗ ಹೈಲೈಟ್ ಮಾಡಿ",
-  "messageClearAfterSpeaking": "ಮಾತನಾಡಿದ ನಂತರ ತೆರವುಗೊಳಿಸಿ",
+  "messageHighlight": "ಹೇಳುವಾಗ ಹೈಲೈಟ್ ಮಾಡಿ",
+  "messageClearAfterPlaying": "ಹೇಳಿದ ನಂತರ ತೆರವುಗೊಳಿಸಿ",
   "tileSaturation": "ಬಣ್ಣದ ತೀವ್ರತೆ",
   "tileBrightness": "ಹೊಳಪು",
-  "tileBorders": "ಗಡಿಗಳನ್ನು ತೋರಿಸಿ",
+  "tileBorders": "ಅಂಚುಗಳನ್ನು ತೋರಿಸಿ",
   "tileLabelPlacement": "ಲೇಬಲ್‌ಗಳು",
   "tileLabelTop": "ಮೇಲೆ",
   "tileLabelBottom": "ಕೆಳಗೆ",
   "tileLabelHidden": "ಮರೆಮಾಡಲಾಗಿದೆ",
   "tileOpensBoard": "ಬೋರ್ಡ್ ತೆರೆಯುತ್ತದೆ",
+  "tileSpace": "ಸ್ಪೇಸ್",
   "scanningEnabled": "ಸ್ವಿಚ್ ಸ್ಕ್ಯಾನಿಂಗ್ ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "scanningMethod": "ಸ್ಕ್ಯಾನ್ ವಿಧಾನ",
-  "scanningMethodAuto": "ಸ್ವಯಂಚಾಲಿತ",
-  "scanningMethodStep": "ಎರಡು-ಸ್ವಿಚ್ ಹಂತ ಹಂತದ ಸ್ಕ್ಯಾನಿಂಗ್",
+  "scanningMethodAuto": "ಸ್ವಯಂಚಾಲಿತ ಸ್ಕ್ಯಾನಿಂಗ್",
+  "scanningMethodStep": "ಹಂತ ಹಂತದ ಸ್ಕ್ಯಾನಿಂಗ್",
   "scanningMethodAutoHint": "ಸ್ಕ್ಯಾನಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ಮತ್ತು ಆಯ್ಕೆ ಮಾಡಲು Space ಅಥವಾ Enter ಒತ್ತಿ. ಎರಡು ಸುತ್ತುಗಳ ನಂತರ ಸ್ಕ್ಯಾನಿಂಗ್ ವಿರಮಿಸುತ್ತದೆ.",
   "scanningMethodStepHint": "ಮುಂದಿನ ಅಂಶಕ್ಕೆ ಹೋಗಲು Space ಮತ್ತು ಅದನ್ನು ಆಯ್ಕೆ ಮಾಡಲು Enter ಒತ್ತಿ.",
   "scanningInterval": "ಸ್ಕ್ಯಾನ್ ಅಂತರ",
@@ -120,10 +136,9 @@
   "suggestionsLanguageUnavailable": "ಈ ಭಾಷೆಯಲ್ಲಿ ಸಲಹೆಗಳು ಲಭ್ಯವಿಲ್ಲ.",
   "suggestionsFailed": "ಸಲಹೆಗಳನ್ನು ಪಡೆಯಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "suggestionsLabel": "ಸಲಹೆಗಳು",
-  "navBack": "ಹಿಂದಕ್ಕೆ",
-  "navHome": "ಮುಖ್ಯ ಬೋರ್ಡ್‌ಗೆ ಹೋಗಿ",
-  "messageBackspace": "ಅಳಿಸು",
-  "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ, ಅಥವಾ {shortcut} ಒತ್ತಿರಿ.",
+  "navHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
+  "messageBackspace": "ಅಳಿಸಿ",
+  "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ಒತ್ತಿ ಹಿಡಿಯಿರಿ, ಅಥವಾ {shortcut} ಒತ್ತಿ.",
   "messageClear": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಿ",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "ಸಂದೇಶವನ್ನು ಪ್ಲೇ ಮಾಡಿ",
-  "messageStop": "ಸಂದೇಶವನ್ನು ನಿಲ್ಲಿಸಿ",
-  "playbackFailed": "ಧ್ವನಿಯನ್ನು ಪ್ಲೇ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
+  "messagePlay": "ಸಂದೇಶವನ್ನು ಹೇಳಿ",
+  "messageStop": "ಹೇಳುವುದನ್ನು ನಿಲ್ಲಿಸಿ",
+  "playbackFailed": "ಹೇಳಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "messageLabel": "ಸಂದೇಶ",
   "onboardingContinue": "ಮುಂದುವರಿಸಿ",
   "onboardingTitle": "AAC Board AI ಗೆ ಸ್ವಾಗತ",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "ಖಾತೆ ಇಲ್ಲ, ಜಾಹೀರಾತುಗಳಿಲ್ಲ, ಟ್ರ್ಯಾಕಿಂಗ್ ಇಲ್ಲ. ಆಫ್‌ಲೈನ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತದೆ.",
   "errorGenericTitle": "ಪುಟವನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "errorPageNotFound": "ಪುಟ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardURLImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "boardLinkImportTitle": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಬೇಕೆ?",
-  "boardLinkImportDescription": "ಈ ಲಿಂಕ್ {host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡುತ್ತದೆ. ಲಿಂಕ್ ಕಳುಹಿಸಿದವರನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಆಮದು ಮಾಡಿ.",
-  "boardLinkImport": "ಆಮದು ಮಾಡಿ",
-  "boardLinkCancel": "ರದ್ದುಮಾಡಿ"
+  "errorBoardFileURLImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "boardFileURLImportTitle": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಬೇಕೆ?",
+  "boardFileURLImportDescription": "ಈ ಲಿಂಕ್ {host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಅನ್ನು ಆಮದು ಮಾಡುತ್ತದೆ. ಲಿಂಕ್ ಕಳುಹಿಸಿದವರನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಆಮದು ಮಾಡಿ.",
+  "boardFileURLImportConfirm": "ಆಮದು ಮಾಡಿ",
+  "boardFileURLImportCancel": "ರದ್ದುಮಾಡಿ"
 }

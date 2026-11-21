@@ -1,9 +1,10 @@
-import type { BoardButton } from "@features/library";
+import type { BoardAction, BoardButton } from "@features/library";
 import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
-import { useTranslate } from "@shared/language/use-translate";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
+import { assertNever } from "@shared/utils/assert-never";
 import type { CSSProperties } from "react";
 import {
   AACSymbol,
@@ -23,7 +24,7 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
   const { saturation, brightness, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
-  const ariaLabel = button.label ? undefined : button.vocalization;
+  const nameProps = getTileNameProps(button, language, t);
   const isFolder = Boolean(button.linkedBoardId);
   const colorStyle = tileColorStyle({
     backgroundColor: button.backgroundColor,
@@ -38,10 +39,8 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
 
   return (
     <Button
-      aria-label={ariaLabel}
+      {...nameProps}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
-      // The description is UI text, but the name is what must be pronounced right.
-      lang={language}
       tabIndex={tabIndex}
       style={colorStyle}
       onClick={() => onActivate(button)}
@@ -55,6 +54,58 @@ export function Tile({ button, language, tabIndex, onActivate }: TileProps) {
       />
     </Button>
   );
+}
+
+function getTileNameProps(
+  button: BoardButton,
+  language: string | undefined,
+  t: Translate,
+) {
+  if (button.label) {
+    return { lang: language };
+  }
+
+  if (button.vocalization || button.linkedBoardId) {
+    return { "aria-label": button.vocalization, lang: language };
+  }
+
+  const actionName = getActionName(button.actions, t);
+  if (actionName === undefined) {
+    return { lang: language };
+  }
+
+  // A generated name inherits the document's UI language.
+  return { "aria-label": actionName };
+}
+
+function getActionName(
+  actions: readonly BoardAction[],
+  t: Translate,
+): string | undefined {
+  const supportedActions = actions.filter(
+    (action) => action.kind !== "unsupported",
+  );
+  const [action] = supportedActions;
+  if (!action || supportedActions.length !== 1) {
+    return undefined;
+  }
+
+  switch (action.kind) {
+    case "space":
+      return t(m.tileSpace);
+    case "backspace":
+      return t(m.messageBackspace);
+    case "clear":
+      return t(m.messageClear);
+    case "home":
+      return t(m.navHome);
+    case "play":
+      return t(m.messagePlay);
+    case "spell":
+      return undefined;
+    default:
+      return assertNever(action);
+  }
 }
 
 type TileColorStyle = CSSProperties & {
@@ -90,6 +141,8 @@ function tileColorStyle({
   };
 }
 
+// contrast-color() ignores alpha, so a see-through color would get the wrong
+// label color. White is the surface OBF boards are authored against.
 function flattenOntoWhite(color: string): string {
   return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
 }
@@ -107,7 +160,7 @@ function tileSx(theme: Theme) {
   const borderColor = dim("var(--tile-border-color, transparent)");
   // The shorter side decides, so a wide but short tile keeps its label small
   // and leaves the height to the symbol.
-  const labelFontSize = `clamp(${theme.typography.body2.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
+  const labelFontSize = `clamp(${theme.typography.body1.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
 
   return {
     [SYMBOL_LABEL_FONT_SIZE_PROPERTY]: labelFontSize,
@@ -123,8 +176,10 @@ function tileSx(theme: Theme) {
     color: `contrast-color(${background})`,
     backgroundColor: background,
     border: `4px solid ${borderColor}`,
-    borderRadius: theme.vars.shape.borderRadius,
-    boxShadow: theme.vars.shadows[2],
+    borderRadius: theme.vars.shape.borderRadiusSm,
+    // Deeper resting shadows blur into the gutters and muddy tile edges.
+    boxShadow: theme.vars.shadows[1],
+    // A press tints the tile's own background; the theme's overlay is hidden.
     "&::before": {
       display: "none",
     },

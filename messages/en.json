@@ -5,8 +5,7 @@
   "opensInNewTab": "(opens in new tab)",
   "boardGridLabel": "Communication board",
   "boardSelectorLabel": "Board",
-  "boardSelectorOpen": "Open board list",
-  "boardSelectorClose": "Close board list",
+  "boardSelectorSearch": "Search boards",
   "boardSelectorNoOptions": "No matching boards",
   "libraryLoading": "Loading board sets…",
   "libraryLoadFailed": "Couldn't load library",
@@ -14,30 +13,45 @@
   "libraryBoardSets": "Board sets",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importing board file…",
-        "countPlural=*": "Importing board files…"
+        "count=1": "Importing board file…",
+        "count=*": "Importing board files…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Board set imported",
-        "countPlural=*": "Board sets imported"
+        "count=1": "Board set imported",
+        "count=*": "Board sets imported"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Couldn't import board file \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Couldn't import board files",
-  "libraryImportNotBoardFile": "\"{fileName}\" isn't a board file",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Couldn't import board file",
+        "count=*": "Couldn't import board files"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Only board files can be imported",
-  "libraryImportTooLargeBoardFile": "Board file \"{fileName}\" is too large to import",
-  "libraryImportTooLargeBoardFiles": "Board files are too large to import",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Board file is too large to import",
+        "count=*": "Board files are too large to import"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Couldn't import some board files ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "{rows}×{columns} grid",
   "libraryDeleteConfirmTitle": "Delete board set?",
   "libraryDeleteIrreversible": "\"{name}\" will be deleted. This cannot be undone.",
-  "libraryDeleteFailed": "Couldn't delete board set \"{name}\"",
-  "libraryExportFailed": "Couldn't export board set \"{name}\"",
+  "libraryDeleteFailed": "Couldn't delete board set",
+  "libraryExportFailed": "Couldn't export board set",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",
   "aboutSourceCode": "Source code",
@@ -91,9 +105,10 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Preview voice",
   "speechPreviewSample": "Hi, this is my voice!",
+  "messagePlayTiles": "Speak symbols when added",
   "messageImages": "Show images",
   "messageHighlight": "Highlight while speaking",
-  "messageClearAfterSpeaking": "Clear after speaking",
+  "messageClearAfterPlaying": "Clear after speaking",
   "tileSaturation": "Color intensity",
   "tileBrightness": "Brightness",
   "tileBorders": "Show borders",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Bottom",
   "tileLabelHidden": "Hidden",
   "tileOpensBoard": "Opens board",
+  "tileSpace": "Space",
   "scanningEnabled": "Enable switch scanning",
   "scanningMethod": "Scan method",
-  "scanningMethodAuto": "Automatic",
-  "scanningMethodStep": "Two-switch step scanning",
+  "scanningMethodAuto": "Automatic scanning",
+  "scanningMethodStep": "Step scanning",
   "scanningMethodAutoHint": "Press Space or Enter to start scanning and to select. Scanning pauses after two passes.",
   "scanningMethodStepHint": "Press Space to move to the next item and Enter to select it.",
   "scanningInterval": "Scan interval",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "Suggestions are unavailable in this language.",
   "suggestionsFailed": "Couldn't get suggestions",
   "suggestionsLabel": "Suggestions",
-  "navBack": "Go back",
-  "navHome": "Go to main board",
+  "navHome": "Go home",
   "messageBackspace": "Backspace",
   "messageBackspaceLongPressHint": "Hold, or press {shortcut}, to clear the message.",
   "messageClear": "Clear message",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Play message",
-  "messageStop": "Stop message",
-  "playbackFailed": "Couldn't play sound",
+  "messagePlay": "Speak message",
+  "messageStop": "Stop speaking",
+  "playbackFailed": "Couldn't speak",
   "messageLabel": "Message",
   "onboardingContinue": "Continue",
   "onboardingTitle": "Welcome to AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "No account, ads or tracking. Works offline.",
   "errorGenericTitle": "Couldn't load this page",
   "errorPageNotFound": "Page not found",
-  "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
-  "errorBoardURLImportFailed": "Couldn't import board file from link",
-  "boardLinkImportTitle": "Import board file from link?",
-  "boardLinkImportDescription": "This link imports a board file from {host}. Import it only if you trust whoever sent the link.",
-  "boardLinkImport": "Import",
-  "boardLinkCancel": "Cancel"
+  "errorBoardFileURLImportFailed": "Couldn't import board file from link",
+  "boardFileURLImportTitle": "Import board file from link?",
+  "boardFileURLImportDescription": "This link imports a board file from {host}. Import it only if you trust whoever sent the link.",
+  "boardFileURLImportConfirm": "Import",
+  "boardFileURLImportCancel": "Cancel"
 }

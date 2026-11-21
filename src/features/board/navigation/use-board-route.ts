@@ -17,9 +17,7 @@ export function useBoardRoute(): UseBoardRouteReturn {
       return;
     }
 
-    void navigate(boardPath({ boardSetId, boardId: targetBoardId }), {
-      state: { canGoBack: true },
-    });
+    void navigate(boardPath({ boardSetId, boardId: targetBoardId }));
   }
 
   return { boardSetId, boardId, goToBoard };

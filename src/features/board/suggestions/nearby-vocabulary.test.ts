@@ -10,7 +10,7 @@ function makeBoard(
   return {
     id,
     name: id,
-    grid: { rows: order.length, columns: order[0]?.length ?? 0, order },
+    grid: { order },
     buttons,
     translationsByLocale: new Map(),
   };

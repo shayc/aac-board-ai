@@ -5,8 +5,7 @@
   "opensInNewTab": "(åbner i nyt faneblad)",
   "boardGridLabel": "Kommunikationstavle",
   "boardSelectorLabel": "Tavle",
-  "boardSelectorOpen": "Åbn listen over tavler",
-  "boardSelectorClose": "Luk listen over tavler",
+  "boardSelectorSearch": "Søg i tavler",
   "boardSelectorNoOptions": "Ingen matchende tavler",
   "libraryLoading": "Indlæser tavlesæt…",
   "libraryLoadFailed": "Biblioteket kunne ikke indlæses",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Tavlesæt",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importerer tavlefil…",
-        "countPlural=*": "Importerer tavlefiler…"
+        "count=1": "Importerer tavlefil…",
+        "count=*": "Importerer tavlefiler…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tavlesæt importeret",
-        "countPlural=*": "Tavlesæt importeret"
+        "count=1": "Tavlesæt importeret",
+        "count=*": "Tavlesæt importeret"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tavlefilen \"{fileName}\" kunne ikke importeres",
-  "libraryImportFailedBoardFiles": "Tavlefilerne kunne ikke importeres",
-  "libraryImportNotBoardFile": "\"{fileName}\" er ikke en tavlefil",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tavlefilen kunne ikke importeres",
+        "count=*": "Tavlefilerne kunne ikke importeres"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Kun tavlefiler kan importeres",
-  "libraryImportTooLargeBoardFile": "Tavlefilen \"{fileName}\" er for stor til at blive importeret",
-  "libraryImportTooLargeBoardFiles": "Tavlefilerne er for store til at blive importeret",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tavlefilen er for stor til at blive importeret",
+        "count=*": "Tavlefilerne er for store til at blive importeret"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Nogle tavlefiler kunne ikke importeres ({failed} af {total})",
-  "libraryDropToImport": "Slip tavlefiler for at importere",
+  "libraryDropToImport": "Slip tavlefiler her for at importere dem",
   "libraryInfo": "Info",
   "libraryExport": "Eksportér",
   "libraryDelete": "Slet",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Gitter {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Slet tavlesættet?",
   "libraryDeleteIrreversible": "\"{name}\" vil blive slettet. Dette kan ikke fortrydes.",
-  "libraryDeleteFailed": "Tavlesættet \"{name}\" kunne ikke slettes",
-  "libraryExportFailed": "Tavlesættet \"{name}\" kunne ikke eksporteres",
+  "libraryDeleteFailed": "Tavlesættet kunne ikke slettes",
+  "libraryExportFailed": "Tavlesættet kunne ikke eksporteres",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Åbn biblioteket",
   "aboutSourceCode": "Kildekode",
@@ -75,7 +89,7 @@
   "settingsSectionBoard": "Tavle",
   "settingsSectionMessage": "Besked",
   "settingsSectionSuggestions": "Forslag",
-  "settingsSectionSwitchAccess": "Kontakttilgang",
+  "settingsSectionSwitchAccess": "Kontaktstyring",
   "settingsSectionAbout": "Om",
   "themeLabel": "Tema",
   "themeSystem": "System",
@@ -83,7 +97,7 @@
   "themeDark": "Mørkt",
   "languageLabel": "Sprog",
   "languageDownloading": "Downloader oversættelsesmodel…",
-  "modelDownloadProgress": "{progress}% færdig",
+  "modelDownloadProgress": "{progress} % færdig",
   "languageTranslating": "Oversætter tavler…",
   "speechVoice": "Stemme",
   "speechRate": "Talehastighed",
@@ -91,9 +105,10 @@
   "speechVolume": "Lydstyrke",
   "speechPreviewVoice": "Lyt til stemmen",
   "speechPreviewSample": "Hej, det er min stemme!",
+  "messagePlayTiles": "Læs symboler op, når de tilføjes",
   "messageImages": "Vis billeder",
-  "messageHighlight": "Fremhæv under tale",
-  "messageClearAfterSpeaking": "Ryd efter tale",
+  "messageHighlight": "Fremhæv under oplæsning",
+  "messageClearAfterPlaying": "Ryd efter oplæsning",
   "tileSaturation": "Farveintensitet",
   "tileBrightness": "Lysstyrke",
   "tileBorders": "Vis kanter",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Nederst",
   "tileLabelHidden": "Skjulte",
   "tileOpensBoard": "Åbner tavle",
-  "scanningEnabled": "Slå kontaktscanning til",
+  "tileSpace": "Mellemrum",
+  "scanningEnabled": "Slå scanning med kontakt til",
   "scanningMethod": "Scanningsmetode",
-  "scanningMethodAuto": "Automatisk",
-  "scanningMethodStep": "Trinvis scanning med to kontakter",
+  "scanningMethodAuto": "Automatisk scanning",
+  "scanningMethodStep": "Trinvis scanning",
   "scanningMethodAutoHint": "Tryk på mellemrum eller Enter for at starte scanningen og for at vælge. Scanningen holder pause efter to gennemløb.",
   "scanningMethodStepHint": "Tryk på mellemrum for at gå til næste element og på Enter for at vælge det.",
   "scanningInterval": "Scanningsinterval",
@@ -114,27 +130,26 @@
   "suggestionsCustomInstructionsHelper": "Beskriv, hvordan forslagene skal formuleres.",
   "suggestionsUnsupported": "Forslag er ikke tilgængelige i denne browser.",
   "suggestionsCustomInstructionsUnsupported": "Tilpassede instruktioner er ikke tilgængelige i denne browser.",
-  "suggestionsEnableHelp": "Sådan aktiverer du forslag",
+  "suggestionsEnableHelp": "Sådan slår du forslag til",
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model…",
   "suggestionsLanguageUnavailable": "Forslag er ikke tilgængelige på dette sprog.",
   "suggestionsFailed": "Forslag kunne ikke hentes",
   "suggestionsLabel": "Forslag",
-  "navBack": "Tilbage",
-  "navHome": "Gå til hovedtavlen",
+  "navHome": "Gå til start",
   "messageBackspace": "Slet",
   "messageBackspaceLongPressHint": "Hold nede, eller tryk på {shortcut}, for at rydde beskeden.",
   "messageClear": "Ryd besked",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
-  "keyBackspace": "Tilbage",
+  "keyBackspace": "Backspace",
   "keyEnter": "Enter",
   "keyEscape": "Esc",
   "keyCommand": "Kommando",
   "keyAppleDelete": "Slet",
-  "messagePlay": "Afspil besked",
-  "messageStop": "Stop besked",
-  "playbackFailed": "Lyden kunne ikke afspilles",
+  "messagePlay": "Læs besked op",
+  "messageStop": "Stop oplæsning",
+  "playbackFailed": "Kunne ikke læse op",
   "messageLabel": "Besked",
   "onboardingContinue": "Fortsæt",
   "onboardingTitle": "Velkommen til AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Ingen konto, ingen reklamer, ingen sporing. Virker offline.",
   "errorGenericTitle": "Siden kunne ikke indlæses",
   "errorPageNotFound": "Siden blev ikke fundet",
-  "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
-  "errorBoardURLImportFailed": "Tavlefilen kunne ikke importeres fra linket",
-  "boardLinkImportTitle": "Importér tavlefil fra linket?",
-  "boardLinkImportDescription": "Dette link importerer en tavlefil fra {host}. Importér den kun, hvis du har tillid til den, der sendte linket.",
-  "boardLinkImport": "Importér",
-  "boardLinkCancel": "Annullér"
+  "errorBoardFileURLImportFailed": "Tavlefilen kunne ikke importeres fra linket",
+  "boardFileURLImportTitle": "Importér tavlefil fra linket?",
+  "boardFileURLImportDescription": "Dette link importerer en tavlefil fra {host}. Importér den kun, hvis du har tillid til den, der sendte linket.",
+  "boardFileURLImportConfirm": "Importér",
+  "boardFileURLImportCancel": "Annullér"
 }

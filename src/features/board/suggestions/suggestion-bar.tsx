@@ -1,10 +1,39 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { keyframes, type SxProps, type Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import type { FocusEvent } from "react";
+import { SCAN_OUTLINE_REACH_PX } from "../scanning/scan-targets";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
+
+// A keyframe, not a transition: the theme owns the chip's transitions for
+// press feedback, and a keyframe starts over each time its element mounts.
+const fadeIn = keyframes`
+  from { opacity: 0; }
+`;
+
+// Opacity only, so nothing beside the grid moves or changes size.
+const pendingPulse = keyframes`
+  0%, 60%, 100% { opacity: 0.5; }
+  30% { opacity: 1; }
+`;
+
+// A first phrase mostly arrives within 600ms; a shorter wait flashes the dots.
+const PENDING_DOTS_DELAY_MS = 700;
+
+// Room for the widest outline a chip gets, the scan highlight. A scroll
+// container clips at its padding edge.
+const OUTLINE_CLEARANCE = `${SCAN_OUTLINE_REACH_PX}px`;
+
+const chipSx: SxProps<Theme> = (theme) => ({
+  animation: `${fadeIn} ${theme.transitions.duration.shortest}ms ${theme.transitions.easing.easeOut}`,
+  "@media (prefers-reduced-motion: reduce)": {
+    animation: "none",
+  },
+});
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;
@@ -38,49 +67,117 @@ export function SuggestionBar({
       sx={{
         flex: "1",
         alignItems: "center",
+        minWidth: 0,
         minHeight: 48,
         gap: 2,
-        overflow: "hidden",
       }}
     >
       <SuggestionStatusNotice status={status} onEnable={onEnable} />
 
-      <Box
-        // A live region would interrupt the tile's spoken feedback.
-        role={hasSuggestions ? "group" : undefined}
-        aria-label={hasSuggestions ? t(m.suggestionsLabel) : undefined}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          height: "100%",
-          gap: 2,
-          marginInlineEnd: "auto",
-          overflowX: "auto",
-        }}
-      >
-        {continuations.map((words) => {
-          const addedText = words.join(" ");
+      {hasSuggestions && (
+        <Box
+          // A live region would interrupt the tile's spoken feedback.
+          role="group"
+          aria-label={t(m.suggestionsLabel)}
+          onFocus={revealKeyboardFocusedChip}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 2,
+            // The margin takes the padding back, so the row keeps its size.
+            p: OUTLINE_CLEARANCE,
+            m: `-${OUTLINE_CLEARANCE}`,
+            overflowX: "auto",
+            scrollPaddingInline: OUTLINE_CLEARANCE,
+          }}
+        >
+          {continuations.map((words) => {
+            const addedText = words.join(" ");
 
-          return (
+            return (
+              <Chip
+                key={`continuation/${addedText}`}
+                lang={language}
+                label={`${messageText} ${addedText}`}
+                variant="outlined"
+                onClick={() => onContinuationSelect(words)}
+                sx={chipSx}
+              />
+            );
+          })}
+
+          {phrases.map((phrase) => (
             <Chip
-              key={`continuation/${addedText}`}
+              key={phrase}
               lang={language}
-              label={`${messageText} ${addedText}`}
-              variant="outlined"
-              onClick={() => onContinuationSelect(words)}
+              label={phrase}
+              onClick={() => onPhraseSelect(phrase)}
+              sx={chipSx}
             />
-          );
-        })}
+          ))}
+        </Box>
+      )}
 
-        {phrases.map((phrase) => (
-          <Chip
-            key={phrase}
-            lang={language}
-            label={phrase}
-            onClick={() => onPhraseSelect(phrase)}
-          />
-        ))}
-      </Box>
+      {status.kind === "pending" && (
+        <PendingDots
+          // The dots move when the first suggestion arrives and when the
+          // suggestions clear, so they wait again instead of jumping there at
+          // full strength.
+          key={hasSuggestions ? "after-suggestions" : "alone"}
+        />
+      )}
     </Stack>
+  );
+}
+
+// Browsers leave a partly visible chip where it is on Tab, so its focus ring
+// stays cut off. A tapped chip shows no ring and stays put.
+function revealKeyboardFocusedChip({ target }: FocusEvent) {
+  if (target.matches(":focus-visible")) {
+    target.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
+}
+
+// Rendered only while pending, so they leave at once: the last phrase lands in
+// the same render and would push fading dots past it. No fill or outline:
+// a shape around the dots reads as one more chip to tap.
+function PendingDots() {
+  return (
+    <Box
+      data-testid="suggestions-pending"
+      sx={(theme) => ({
+        display: "flex",
+        flexShrink: 0,
+        alignItems: "center",
+        gap: 0.75,
+        paddingInline: 1.5,
+        animation: `${fadeIn} ${theme.transitions.duration.enteringScreen}ms ${theme.transitions.easing.easeOut} ${PENDING_DOTS_DELAY_MS}ms backwards`,
+      })}
+    >
+      <PendingDot delayMs={0} />
+      <PendingDot delayMs={150} />
+      <PendingDot delayMs={300} />
+    </Box>
+  );
+}
+
+interface PendingDotProps {
+  delayMs: number;
+}
+
+function PendingDot({ delayMs }: PendingDotProps) {
+  return (
+    <Box
+      sx={{
+        width: 6,
+        aspectRatio: "1",
+        borderRadius: "50%",
+        bgcolor: "text.secondary",
+        animation: `${pendingPulse} 1.4s ease-in-out ${delayMs}ms infinite`,
+        "@media (prefers-reduced-motion: reduce)": {
+          animation: "none",
+        },
+      }}
+    />
   );
 }

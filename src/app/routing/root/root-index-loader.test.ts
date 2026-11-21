@@ -4,6 +4,7 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/library/testing";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import {
   assert,
   beforeEach,
@@ -17,7 +18,7 @@ import { localizedImportFailure } from "../testing/localized-import-failure";
 import { routeArgs } from "../testing/route-args";
 import { rootIndexLoader } from "./root-index-loader";
 
-const DEFAULT_BOARD_PATH = "/first-words.obz";
+const DEFAULT_BOARD_PATH = "/boards/first-words.obz";
 
 function callLoader(searchParams = "", signal?: AbortSignal) {
   return rootIndexLoader(
@@ -37,26 +38,38 @@ describe("rootIndexLoader", () => {
       callLoader(
         `?board=${encodeURIComponent("https://boards.example/core.obz")}`,
       ),
-    ).resolves.toEqual({ boardHost: "boards.example" });
+    ).resolves.toEqual({ boardFileHost: "boards.example" });
 
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("throws a localized 400 for a hostless board URL before asking", async () => {
+  test("throws a localized 400 and reports the cause for a hostless board URL before asking", async () => {
+    const reportedErrors = collectReportedErrors();
+
     await expect(
       callLoader(
         `?board=${encodeURIComponent("data:application/zip;base64,UEsDBA==")}`,
       ),
     ).rejects.toMatchObject(localizedImportFailure);
+
+    expect(reportedErrors).toMatchObject([
+      { message: "Unsupported board file URL scheme: data:" },
+    ]);
   });
 
-  test("throws a localized 400 for an http: board URL on another host before asking", async () => {
+  test("throws a localized 400 and reports the cause for an http: board URL on another host before asking", async () => {
+    const reportedErrors = collectReportedErrors();
+
     await expect(
       callLoader(
         `?board=${encodeURIComponent("http://boards.example/core.obz")}`,
       ),
     ).rejects.toMatchObject(localizedImportFailure);
+
+    expect(reportedErrors).toMatchObject([
+      { message: "Unsupported board file URL scheme: http:" },
+    ]);
   });
 
   test("rejects with the navigation's own abort reason during the starter import", async () => {

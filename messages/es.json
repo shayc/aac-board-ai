@@ -5,8 +5,7 @@
   "opensInNewTab": "(se abre en una pestaña nueva)",
   "boardGridLabel": "Tablero de comunicación",
   "boardSelectorLabel": "Tablero",
-  "boardSelectorOpen": "Abrir lista de tableros",
-  "boardSelectorClose": "Cerrar lista de tableros",
+  "boardSelectorSearch": "Buscar tableros",
   "boardSelectorNoOptions": "No hay tableros coincidentes",
   "libraryLoading": "Cargando conjuntos de tableros…",
   "libraryLoadFailed": "No se pudo cargar la biblioteca",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Conjuntos de tableros",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importando archivo de tablero…",
-        "countPlural=*": "Importando archivos de tableros…"
+        "count=1": "Importando archivo de tablero…",
+        "count=*": "Importando archivos de tableros…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Conjunto de tableros importado",
-        "countPlural=*": "Conjuntos de tableros importados"
+        "count=1": "Conjunto de tableros importado",
+        "count=*": "Conjuntos de tableros importados"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "No se pudo importar el archivo de tablero \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "No se pudieron importar los archivos de tableros",
-  "libraryImportNotBoardFile": "\"{fileName}\" no es un archivo de tablero",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "No se pudo importar el archivo de tablero",
+        "count=*": "No se pudieron importar los archivos de tableros"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Solo se pueden importar archivos de tableros",
-  "libraryImportTooLargeBoardFile": "El archivo de tablero \"{fileName}\" es demasiado grande para importarlo",
-  "libraryImportTooLargeBoardFiles": "Los archivos de tableros son demasiado grandes para importarlos",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "El archivo de tablero es demasiado grande para importarlo",
+        "count=*": "Los archivos de tableros son demasiado grandes para importarlos"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "No se pudieron importar algunos archivos de tableros ({failed} de {total})",
-  "libraryDropToImport": "Suelta archivos de tableros para importar",
+  "libraryDropToImport": "Suelta archivos de tableros para importarlos",
   "libraryInfo": "Información",
   "libraryExport": "Exportar",
   "libraryDelete": "Eliminar",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Cuadrícula de {rows}×{columns}",
   "libraryDeleteConfirmTitle": "¿Eliminar el conjunto de tableros?",
   "libraryDeleteIrreversible": "Se eliminará \"{name}\". Esta acción no se puede deshacer.",
-  "libraryDeleteFailed": "No se pudo eliminar el conjunto de tableros \"{name}\"",
-  "libraryExportFailed": "No se pudo exportar el conjunto de tableros \"{name}\"",
+  "libraryDeleteFailed": "No se pudo eliminar el conjunto de tableros",
+  "libraryExportFailed": "No se pudo exportar el conjunto de tableros",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
   "aboutSourceCode": "Código fuente",
@@ -91,9 +105,10 @@
   "speechVolume": "Volumen",
   "speechPreviewVoice": "Escuchar la voz",
   "speechPreviewSample": "¡Hola, esta es mi voz!",
+  "messagePlayTiles": "Decir los símbolos al añadirlos",
   "messageImages": "Mostrar imágenes",
   "messageHighlight": "Resaltar al hablar",
-  "messageClearAfterSpeaking": "Borrar después de hablar",
+  "messageClearAfterPlaying": "Borrar después de hablar",
   "tileSaturation": "Intensidad de color",
   "tileBrightness": "Brillo",
   "tileBorders": "Mostrar bordes",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Abajo",
   "tileLabelHidden": "Ocultas",
   "tileOpensBoard": "Abre un tablero",
+  "tileSpace": "Espacio",
   "scanningEnabled": "Activar barrido con pulsador",
   "scanningMethod": "Método de barrido",
-  "scanningMethodAuto": "Automático",
-  "scanningMethodStep": "Barrido por pasos con dos pulsadores",
+  "scanningMethodAuto": "Barrido automático",
+  "scanningMethodStep": "Barrido paso a paso",
   "scanningMethodAutoHint": "Pulsa Espacio o Intro para iniciar el barrido y para seleccionar. El barrido se pausa tras dos pasadas.",
   "scanningMethodStepHint": "Pulsa Espacio para pasar al siguiente elemento e Intro para seleccionarlo.",
   "scanningInterval": "Intervalo de barrido",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "Las sugerencias no están disponibles en este idioma.",
   "suggestionsFailed": "No se pudieron obtener sugerencias",
   "suggestionsLabel": "Sugerencias",
-  "navBack": "Volver",
-  "navHome": "Ir al tablero principal",
+  "navHome": "Ir al inicio",
   "messageBackspace": "Borrar",
   "messageBackspaceLongPressHint": "Mantén pulsado o pulsa {shortcut} para borrar el mensaje.",
   "messageClear": "Borrar mensaje",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Comando",
   "keyAppleDelete": "Eliminar",
-  "messagePlay": "Reproducir mensaje",
-  "messageStop": "Detener mensaje",
-  "playbackFailed": "No se pudo reproducir el sonido",
+  "messagePlay": "Decir el mensaje",
+  "messageStop": "Dejar de hablar",
+  "playbackFailed": "No se pudo hablar",
   "messageLabel": "Mensaje",
   "onboardingContinue": "Continuar",
   "onboardingTitle": "Te damos la bienvenida a AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Sin cuenta, sin anuncios, sin seguimiento. Funciona sin conexión.",
   "errorGenericTitle": "No se pudo cargar la página",
   "errorPageNotFound": "Página no encontrada",
-  "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
-  "errorBoardURLImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
-  "boardLinkImportTitle": "¿Importar el archivo de tablero desde el enlace?",
-  "boardLinkImportDescription": "Este enlace importa un archivo de tablero desde {host}. Impórtalo solo si confías en quien te envió el enlace.",
-  "boardLinkImport": "Importar",
-  "boardLinkCancel": "Cancelar"
+  "errorBoardFileURLImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
+  "boardFileURLImportTitle": "¿Importar el archivo de tablero desde el enlace?",
+  "boardFileURLImportDescription": "Este enlace importa un archivo de tablero desde {host}. Impórtalo solo si confías en quien te envió el enlace.",
+  "boardFileURLImportConfirm": "Importar",
+  "boardFileURLImportCancel": "Cancelar"
 }

@@ -5,8 +5,7 @@
   "opensInNewTab": "(otvorí sa na novej karte)",
   "boardGridLabel": "Komunikačná tabuľka",
   "boardSelectorLabel": "Tabuľka",
-  "boardSelectorOpen": "Otvoriť zoznam tabuliek",
-  "boardSelectorClose": "Zavrieť zoznam tabuliek",
+  "boardSelectorSearch": "Hľadať tabuľky",
   "boardSelectorNoOptions": "Žiadne zodpovedajúce tabuľky",
   "libraryLoading": "Načítavajú sa súpravy tabuliek…",
   "libraryLoadFailed": "Knižnicu sa nepodarilo načítať",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Súpravy tabuliek",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importovanie súboru tabuľky…",
-        "countPlural=*": "Importovanie súborov tabuliek…"
+        "count=1": "Importovanie súboru tabuľky…",
+        "count=*": "Importovanie súborov tabuliek…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Súprava tabuliek importovaná",
-        "countPlural=*": "Súpravy tabuliek importované"
+        "count=1": "Súprava tabuliek importovaná",
+        "count=*": "Súpravy tabuliek importované"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Súbor tabuľky „{fileName}“ sa nepodarilo importovať",
-  "libraryImportFailedBoardFiles": "Súbory tabuliek sa nepodarilo importovať",
-  "libraryImportNotBoardFile": "„{fileName}“ nie je súbor tabuľky",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Súbor tabuľky sa nepodarilo importovať",
+        "count=*": "Súbory tabuliek sa nepodarilo importovať"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Importovať možno iba súbory tabuliek",
-  "libraryImportTooLargeBoardFile": "Súbor tabuľky „{fileName}“ je príliš veľký na import",
-  "libraryImportTooLargeBoardFiles": "Súbory tabuliek sú príliš veľké na import",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Súbor tabuľky je príliš veľký na import",
+        "count=*": "Súbory tabuliek sú príliš veľké na import"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Niektoré súbory tabuliek sa nepodarilo importovať ({failed} z {total})",
-  "libraryDropToImport": "Pustite súbory tabuliek na import",
+  "libraryDropToImport": "Presuňte sem súbory tabuliek na import",
   "libraryInfo": "Informácie",
   "libraryExport": "Exportovať",
   "libraryDelete": "Odstrániť",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Mriežka {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Odstrániť súpravu tabuliek?",
   "libraryDeleteIrreversible": "Súprava tabuliek „{name}“ bude odstránená. Túto akciu nie je možné vrátiť späť.",
-  "libraryDeleteFailed": "Súpravu tabuliek „{name}“ sa nepodarilo odstrániť",
-  "libraryExportFailed": "Súpravu tabuliek „{name}“ sa nepodarilo exportovať",
+  "libraryDeleteFailed": "Súpravu tabuliek sa nepodarilo odstrániť",
+  "libraryExportFailed": "Súpravu tabuliek sa nepodarilo exportovať",
   "libraryTitle": "Knižnica",
   "libraryOpen": "Otvoriť knižnicu",
   "aboutSourceCode": "Zdrojový kód",
@@ -87,25 +101,27 @@
   "languageTranslating": "Prekladanie tabuliek…",
   "speechVoice": "Hlas",
   "speechRate": "Rýchlosť reči",
-  "speechPitch": "Výška",
+  "speechPitch": "Výška hlasu",
   "speechVolume": "Hlasitosť",
   "speechPreviewVoice": "Vypočuť hlas",
   "speechPreviewSample": "Ahoj, toto je môj hlas!",
+  "messagePlayTiles": "Vyslovovať symboly pri pridaní",
   "messageImages": "Zobraziť obrázky",
   "messageHighlight": "Zvýrazňovať pri hovorení",
-  "messageClearAfterSpeaking": "Vymazať po hovorení",
+  "messageClearAfterPlaying": "Vymazať po vyslovení",
   "tileSaturation": "Intenzita farieb",
   "tileBrightness": "Jas",
   "tileBorders": "Zobraziť okraje",
-  "tileLabelPlacement": "Označenia",
+  "tileLabelPlacement": "Popisy",
   "tileLabelTop": "Hore",
   "tileLabelBottom": "Dole",
   "tileLabelHidden": "Skryté",
   "tileOpensBoard": "Otvorí tabuľku",
+  "tileSpace": "Medzerník",
   "scanningEnabled": "Zapnúť skenovanie spínačom",
   "scanningMethod": "Spôsob skenovania",
-  "scanningMethodAuto": "Automatické",
-  "scanningMethodStep": "Krokové skenovanie dvoma spínačmi",
+  "scanningMethodAuto": "Automatické skenovanie",
+  "scanningMethodStep": "Krokové skenovanie",
   "scanningMethodAutoHint": "Stlačením medzerníka alebo klávesu Enter spustíte skenovanie a vyberiete položku. Po dvoch prechodoch sa skenovanie pozastaví.",
   "scanningMethodStepHint": "Medzerníkom prejdete na ďalšiu položku a klávesom Enter ju vyberiete.",
   "scanningInterval": "Interval skenovania",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "Návrhy nie sú pre tento jazyk k dispozícii.",
   "suggestionsFailed": "Návrhy sa nepodarilo získať",
   "suggestionsLabel": "Návrhy",
-  "navBack": "Späť",
-  "navHome": "Prejsť na hlavnú tabuľku",
+  "navHome": "Prejsť domov",
   "messageBackspace": "Vymazať",
   "messageBackspaceLongPressHint": "Správu vymažete podržaním alebo stlačením {shortcut}.",
   "messageClear": "Vymazať správu",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Prehrať správu",
-  "messageStop": "Zastaviť správu",
-  "playbackFailed": "Zvuk sa nepodarilo prehrať",
+  "messagePlay": "Vysloviť správu",
+  "messageStop": "Zastaviť hovorenie",
+  "playbackFailed": "Nepodarilo sa vysloviť",
   "messageLabel": "Správa",
   "onboardingContinue": "Pokračovať",
   "onboardingTitle": "Vitajte v AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Povedzte viac s menším počtom ťuknutí",
   "onboardingSuggestionsDescription": "AI premení niekoľko symbolov na celú vetu. Vy rozhodujete, čo zaznie.",
   "onboardingLanguageTitle": "Vo vašom jazyku",
-  "onboardingLanguageDescription": "Používajte aplikáciu v ktoromkoľvek z dostupných jazykov ({count}).",
+  "onboardingLanguageDescription": "Používajte aplikáciu v ktoromkoľvek z {count} jazykov.",
   "onboardingFreePrivateTitle": "Zadarmo a súkromne",
   "onboardingFreePrivateDescription": "Bez účtu, bez reklám, bez sledovania. Funguje offline.",
   "errorGenericTitle": "Stránku sa nepodarilo načítať",
   "errorPageNotFound": "Stránka sa nenašla",
-  "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
-  "errorBoardURLImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
-  "boardLinkImportTitle": "Importovať súbor tabuľky z odkazu?",
-  "boardLinkImportDescription": "Tento odkaz importuje súbor tabuľky z {host}. Importujte ho, len ak dôverujete tomu, kto odkaz poslal.",
-  "boardLinkImport": "Importovať",
-  "boardLinkCancel": "Zrušiť"
+  "errorBoardFileURLImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
+  "boardFileURLImportTitle": "Importovať súbor tabuľky z odkazu?",
+  "boardFileURLImportDescription": "Tento odkaz importuje súbor tabuľky z {host}. Importujte ho, len ak dôverujete tomu, kto odkaz poslal.",
+  "boardFileURLImportConfirm": "Importovať",
+  "boardFileURLImportCancel": "Zrušiť"
 }

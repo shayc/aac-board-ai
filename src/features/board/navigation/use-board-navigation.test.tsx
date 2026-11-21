@@ -25,13 +25,11 @@ interface NavTestHook {
 
 interface SetupOptions {
   pathname?: string;
-  state?: unknown;
   hasRootBoard?: boolean;
 }
 
 function setup({
   pathname = DEFAULT_PATH,
-  state,
   hasRootBoard = true,
 }: SetupOptions = {}): Promise<RenderHookResult<NavTestHook, unknown>> {
   return renderHook(
@@ -42,7 +40,7 @@ function setup({
     }),
     {
       wrapper: ({ children }: { children: ReactNode }) => (
-        <MemoryRouter initialEntries={[{ pathname, state }]}>
+        <MemoryRouter initialEntries={[pathname]}>
           <Routes>
             <Route
               path="/sets/:boardSetId/boards/:boardId"
@@ -56,40 +54,17 @@ function setup({
 }
 
 describe("useBoardNavigation", () => {
-  describe("canGoBack", () => {
-    test("is false when the route has no board history", async () => {
-      const { result } = await setup();
-
-      expect(result.current.nav.canGoBack).toBe(false);
-    });
-
-    test("is true when a board navigation enables Back", async () => {
-      const { result } = await setup({
-        pathname: "/sets/set-1/boards/board-2",
-        state: { canGoBack: true },
-      });
-
-      expect(result.current.nav.canGoBack).toBe(true);
-    });
-
-    test.each([
-      null,
-      "history",
-      {},
-      { canGoBack: "true" },
-      { canGoBack: false },
-    ])("ignores disabled or malformed history state %j", async (state) => {
-      const { result } = await setup({ state });
-
-      expect(result.current.nav.canGoBack).toBe(false);
-    });
-  });
-
   describe("canGoHome", () => {
     test("is true when the root board is known", async () => {
       const { result } = await setup();
 
       expect(result.current.nav.canGoHome).toBe(true);
+    });
+
+    test("is false on the root board", async () => {
+      const { result } = await setup({ pathname: "/sets/set-1/boards/root-1" });
+
+      expect(result.current.nav.canGoHome).toBe(false);
     });
 
     test("is false when the root board is unknown", async () => {
@@ -100,7 +75,7 @@ describe("useBoardNavigation", () => {
   });
 
   describe("goToBoard", () => {
-    test("navigates and enables board Back", async () => {
+    test("navigates to the board", async () => {
       const { result, act } = await setup();
 
       await act(() => result.current.nav.goToBoard("board-2"));
@@ -108,80 +83,25 @@ describe("useBoardNavigation", () => {
       expect(result.current.location.pathname).toBe(
         "/sets/set-1/boards/board-2",
       );
-      expect(result.current.location.state).toEqual({ canGoBack: true });
     });
 
-    test("keeps Back enabled through successive board navigations", async () => {
-      const { result, act } = await setup({
-        pathname: "/sets/set-1/boards/board-2",
-        state: { canGoBack: true },
-      });
+    test.each(["", "board-1"])(
+      "ignores the board ID %j",
+      async (targetBoardId) => {
+        const { result, act } = await setup();
+        const { key } = result.current.location;
 
-      await act(() => result.current.nav.goToBoard("board-3"));
+        await act(() => result.current.nav.goToBoard(targetBoardId));
 
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-3",
-      );
-      expect(result.current.location.state).toEqual({
-        canGoBack: true,
-      });
-    });
-
-    test("ignores an empty board ID", async () => {
-      const { result, act } = await setup();
-
-      await act(() => result.current.nav.goToBoard(""));
-
-      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
-      expect(result.current.location.state).toBeNull();
-    });
-
-    test("ignores navigation to the current board", async () => {
-      const { result, act } = await setup();
-
-      await act(() => result.current.nav.goToBoard("board-1"));
-
-      expect(result.current.location.state).toBeNull();
-    });
-  });
-
-  describe("goBack", () => {
-    test("returns to the previous board after navigating forward", async () => {
-      const { result, act } = await setup();
-
-      await act(() => result.current.nav.goToBoard("board-2"));
-
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-2",
-      );
-
-      await act(() => result.current.nav.goBack());
-
-      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
-      expect(result.current.nav.canGoBack).toBe(false);
-
-      await act(() => result.current.navigate(1));
-
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-2",
-      );
-      expect(result.current.nav.canGoBack).toBe(true);
-    });
-
-    test("does nothing when the route has no board history", async () => {
-      const { result, act } = await setup();
-
-      await act(() => result.current.nav.goBack());
-
-      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
-    });
+        expect(result.current.location.key).toBe(key);
+      },
+    );
   });
 
   describe("goHome", () => {
-    test("navigates to the root board and disables board Back", async () => {
+    test("navigates to the root board", async () => {
       const { result, act } = await setup({
         pathname: "/sets/set-1/boards/board-2",
-        state: { canGoBack: true },
       });
 
       await act(() => result.current.nav.goHome());
@@ -189,13 +109,11 @@ describe("useBoardNavigation", () => {
       expect(result.current.location.pathname).toBe(
         "/sets/set-1/boards/root-1",
       );
-      expect(result.current.location.state).toEqual({ canGoBack: false });
     });
 
     test("replaces the current entry so browser back skips it", async () => {
       const { result, act } = await setup({
         pathname: "/sets/set-1/boards/board-2",
-        state: { canGoBack: true },
       });
 
       await act(() => result.current.nav.goToBoard("board-3"));

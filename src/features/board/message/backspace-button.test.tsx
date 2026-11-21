@@ -1,21 +1,25 @@
-import { useColorScheme } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
 import {
   contrastRatio,
   paint,
+  type Rgb,
   WCAG_NON_TEXT_CONTRAST,
   WCAG_TEXT_CONTRAST,
 } from "@shared/testing/contrast";
+import {
+  type ColorMode,
+  renderInColorMode,
+} from "@shared/testing/render-in-color-mode";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { useState } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { CONTROL_SIZES } from "../board-control-sizes";
 import { BackspaceButton } from "./backspace-button";
 import { MessageBar } from "./message-bar";
 
 const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
-
-type ColorMode = "light" | "dark";
+const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 function createHandlers() {
   return {
@@ -56,62 +60,50 @@ function ClearableBackspace() {
   );
 }
 
-// The disc is translucent, so the icon and ring are measured against the bar
-// it sits on.
-async function measureContrasts(mode: ColorMode, disabled: boolean) {
-  const screen = await renderWithProviders(
-    <>
-      <ColorModeSwitch mode={mode} />
-      <MessageBar
-        parts={[]}
-        isWordOpen={false}
-        activePartId={null}
-        areImagesVisible
-        endAction={
-          <BackspaceButton
-            shortcutLabels={SHORTCUT_LABELS}
-            {...createHandlers()}
-            disabled={disabled}
-          />
-        }
-      />
-    </>,
+function barWithBackspace(disabled: boolean) {
+  return (
+    <MessageBar
+      parts={[]}
+      isWordOpen={false}
+      activePartId={null}
+      areImagesVisible
+      endAction={
+        <BackspaceButton
+          shortcutLabels={SHORTCUT_LABELS}
+          {...createHandlers()}
+          disabled={disabled}
+        />
+      }
+    />
   );
-  await screen.getByRole("button", { name: `Use ${mode} mode` }).click();
-  await expect.poll(() => document.documentElement.className).toBe(mode);
+}
+
+// The icon and ring are measured against the button's fill over the bar.
+async function measureContrasts(mode: ColorMode, disabled: boolean) {
+  const screen = await renderInColorMode(barWithBackspace(disabled), mode);
 
   const button = screen.getByRole("button", { name: "Backspace" }).element();
-  // Switching modes animates the disc; measure where it settles.
-  await Promise.all(
-    button.getAnimations({ subtree: true }).map(({ finished }) => finished),
-  );
 
   const bar = button.parentElement;
   assertDefined(bar);
   const barColor = getComputedStyle(bar).backgroundColor;
-  const { backgroundColor: discColor, color: iconColor } =
-    getComputedStyle(button);
+  const fillColor = getComputedStyle(button).backgroundColor;
+  const iconColor = getComputedStyle(button).color;
   const ring = button.querySelector("circle");
   assertDefined(ring);
   const ringColor = getComputedStyle(ring).stroke;
   await screen.unmount();
 
-  const disc = paint(barColor, discColor);
+  const ground = paint(barColor, fillColor);
 
   return {
-    icon: contrastRatio(paint(barColor, discColor, iconColor), disc),
-    ring: contrastRatio(paint(barColor, discColor, ringColor), disc),
+    icon: contrastRatio(paint(barColor, fillColor, iconColor), ground),
+    ring: contrastRatio(paint(barColor, fillColor, ringColor), ground),
   };
 }
 
-function ColorModeSwitch({ mode }: { mode: ColorMode }) {
-  const { setMode } = useColorScheme();
-
-  return (
-    <button type="button" onClick={() => setMode(mode)}>
-      Use {mode} mode
-    </button>
-  );
+function brightness([red, green, blue]: Rgb) {
+  return red + green + blue;
 }
 
 describe("BackspaceButton", () => {
@@ -321,5 +313,51 @@ describe("BackspaceButton colors", () => {
     const { icon: dark } = await measureContrasts("dark", true);
 
     expect(dark).toBeGreaterThanOrEqual(light);
+  });
+});
+
+describe("BackspaceButton in the message bar", () => {
+  // A disabled icon button loses its fill by MUI's default; backspace keeps it.
+  test("keeps its fill while disabled and darkens it under the pointer", async () => {
+    const screen = await renderWithProviders(barWithBackspace(false));
+    const button = screen.getByRole("button", { name: "Backspace" });
+    const readFill = () => getComputedStyle(button.element()).backgroundColor;
+    const bar = button.element().parentElement;
+    assertDefined(bar);
+    const barColor = getComputedStyle(bar).backgroundColor;
+    const readShade = () => brightness(paint(barColor, readFill()));
+
+    await screen.getByRole("list", { name: "Message" }).hover();
+    await expect.poll(readFill).not.toBe(TRANSPARENT);
+    const restFill = readFill();
+    const restShade = readShade();
+
+    await screen.rerender(barWithBackspace(true));
+
+    await expect.poll(readFill).toBe(restFill);
+
+    await screen.rerender(barWithBackspace(false));
+    await button.hover();
+
+    await expect.poll(readShade).toBeLessThan(restShade);
+  });
+
+  test("traces its touch target with the ring, evenly inset in the bar's end", async () => {
+    const screen = await renderWithProviders(barWithBackspace(false));
+    const button = screen.getByRole("button", { name: "Backspace" }).element();
+    const bar = button.parentElement;
+    assertDefined(bar);
+    const ring = button.querySelector("[role=progressbar]");
+    assertDefined(ring);
+
+    const target = button.getBoundingClientRect();
+    const barEdges = bar.getBoundingClientRect();
+    const ringEdges = ring.getBoundingClientRect();
+    const gap = target.top - barEdges.top;
+
+    expect(target.width).toBe(CONTROL_SIZES.large);
+    expect(ringEdges.toJSON()).toEqual(target.toJSON());
+    expect(barEdges.bottom - target.bottom).toBeCloseTo(gap, 0);
+    expect(barEdges.right - target.right).toBeCloseTo(gap, 0);
   });
 });

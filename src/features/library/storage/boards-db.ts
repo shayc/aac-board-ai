@@ -1,39 +1,31 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { type DBSchema, type IDBPDatabase, openDB } from "idb";
+import type { BoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 
 const DB_NAME = "boards-db";
 const DB_VERSION = 1;
 
 export const MAX_ID_LENGTH = 255;
 
-export interface BoardSetRecord {
+export interface BoardSetRecord extends BoardSetMetadata {
   readonly id: string;
-  readonly name: string;
   readonly rootBoardId: string;
   readonly importedAt: number;
   readonly boardCount: number;
-  readonly author?: string;
-  readonly description?: string;
-  readonly license?: string;
-  readonly locale?: string;
   /** Keyed by language code. */
   readonly translatedNames?: Readonly<Record<string, string>>;
-  readonly gridRows?: number;
-  readonly gridColumns?: number;
 }
 
 export interface BoardRecord {
   readonly boardSetId: string;
   readonly id: string;
-  readonly name: string;
   readonly obf: OBFBoard;
 }
 
 export interface AssetRecord {
   readonly boardSetId: string;
   readonly path: string;
-  // Bytes rather than a Blob: WebKit refuses to store Blobs in ephemeral
-  // sessions.
+  // Bytes, not a Blob: WebKit refuses to store Blobs in ephemeral sessions.
   readonly bytes: ArrayBuffer;
   readonly type: string;
 }

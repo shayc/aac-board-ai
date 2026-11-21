@@ -1,15 +1,28 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { extractOBZ } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  onTestFinished,
+  test,
+  vi,
+} from "vitest";
 import type { RenderResult } from "vitest-browser-react";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { starterBoardSet } from "../catalog/board-set-catalog";
 import { cancelBoardSetDownload } from "../catalog/board-set-downloads";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
-import { resetBoardsDB, seedBoardSets } from "../testing";
+import {
+  makeBoardsDBUnreadable,
+  resetBoardsDB,
+  seedBoardSets,
+} from "../testing";
 import { BoardSetLibrary } from "./board-set-library";
 
 function renderBoardSetLibrary() {
@@ -123,7 +136,8 @@ describe("BoardSetLibrary", () => {
         .toBeInTheDocument();
     });
 
-    test("shows an error instead of the empty state when board sets cannot be retrieved", async () => {
+    test("shows an error instead of the empty state and reports the cause when board sets cannot be retrieved", async () => {
+      const reportedErrors = collectReportedErrors();
       const db = await getBoardsDB();
       db.close();
       await refreshBoardSets();
@@ -136,6 +150,8 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .not.toBeInTheDocument();
+      // The message is the browser's own wording, so only the name is stable.
+      expect(reportedErrors).toMatchObject([{ name: "InvalidStateError" }]);
     });
 
     test("hides catalog downloads for board sets that are already stored", async () => {
@@ -344,7 +360,8 @@ describe("BoardSetLibrary", () => {
       expect(await listBoardSetRecords()).toEqual([]);
     });
 
-    test("keeps the download action when a download fails", async () => {
+    test("keeps the download action and reports the cause when a download fails", async () => {
+      const reportedErrors = collectReportedErrors();
       vi.spyOn(globalThis, "fetch").mockResolvedValue(
         new Response(null, { status: 500 }),
       );
@@ -362,10 +379,13 @@ describe("BoardSetLibrary", () => {
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .toHaveFocus();
       expect(await listBoardSetRecords()).toEqual([]);
+      expect(reportedErrors).toMatchObject([
+        { message: "Failed to fetch board file: HTTP 500" },
+      ]);
     });
 
     test("marks the button unavailable while a downloaded board set imports", async () => {
-      const starterBoardBytes = await fetch("/first-words.obz").then(
+      const starterBoardBytes = await fetch("/boards/first-words.obz").then(
         (response) => response.bytes(),
       );
       const download = stubStreamingDownload({
@@ -390,7 +410,7 @@ describe("BoardSetLibrary", () => {
     });
 
     test("focuses a download's entry when it finishes after reopening the library", async () => {
-      const starterBoardBytes = await fetch("/first-words.obz").then(
+      const starterBoardBytes = await fetch("/boards/first-words.obz").then(
         (response) => response.bytes(),
       );
       const download = stubStreamingDownload({
@@ -496,7 +516,8 @@ describe("BoardSetLibrary", () => {
       expect(rootBoard.id).toBe("root");
     });
 
-    test("reports a board set that cannot be exported", async () => {
+    test("shows an error and reports the cause when a board set cannot be exported", async () => {
+      const reportedErrors = collectReportedErrors();
       await seedBoardSets([
         { id: "broken", rootBoardId: "root", name: "Broken" },
       ]);
@@ -512,8 +533,9 @@ describe("BoardSetLibrary", () => {
       await screen.getByRole("menuitem", { name: "Export" }).click();
 
       await expect
-        .element(screen.getByText('Couldn\'t export board set "Broken"'))
+        .element(screen.getByText("Couldn't export board set"))
         .toBeInTheDocument();
+      expect(reportedErrors).toMatchObject([{ name: "OBFError" }]);
     });
   });
 
@@ -538,6 +560,27 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("link", { name: "Animals" }))
         .not.toBeInTheDocument();
+    });
+
+    test("shows an error and reports the cause when a board set cannot be deleted", async () => {
+      const reportedErrors = collectReportedErrors();
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
+
+      const screen = await renderBoardSetLibrary();
+      onTestFinished(await makeBoardsDBUnreadable());
+
+      await screen
+        .getByRole("button", { name: "More options for Animals" })
+        .click();
+      await screen.getByRole("menuitem", { name: "Delete" }).click();
+      await screen.getByRole("button", { name: "Delete" }).click();
+
+      await expect
+        .element(screen.getByText("Couldn't delete board set"))
+        .toBeInTheDocument();
+      expect(reportedErrors).toMatchObject([{ name: "VersionError" }]);
     });
 
     test("keeps the board set when the delete dialog is cancelled", async () => {

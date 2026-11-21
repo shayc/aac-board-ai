@@ -14,7 +14,7 @@
 
 On supported desktop browsers, the app uses the browser’s built-in, on-device AI models to proofread messages, suggest more complete phrasing, and translate board content. No API key or cloud AI service is required, and core communication works without AI.
 
-![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
+![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](docs/demo.gif)
 
 ## From tiles to a sentence
 
@@ -29,7 +29,7 @@ Suggestions are optional and replace the original message only when accepted.
 ## Core features
 
 - Optional on-device AI suggestions and board translation
-- First Words and Quick Core starter boards
+- First Words and Quick Core board sets
 - Touch, keyboard navigation, and switch scanning with one or two switches
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL, and export board sets as `.obz` files
 - 35 interface languages, including right-to-left layouts
@@ -37,7 +37,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Privacy
 
-No accounts, backend, or tracking. Boards and settings are stored on the device. URL imports, remote media, and some online speech voices use the network.
+No accounts, backend, or tracking. Boards, settings, and the message being composed are stored on the device, so an unfinished message is still there when the app opens again. Once the whole message has been spoken, it is no longer kept, unless "Clear after speaking" is off. URL imports, remote media, and some online speech voices use the network.
 
 ## Limitations
 
@@ -93,7 +93,7 @@ Built with React 19, TypeScript, Vite, and MUI.
 
 The app uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) to parse OBF/OBZ files and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) to manage browser AI availability and sessions.
 
-See [docs/architecture.md](docs/architecture.md) for design decisions, data flow, and accessibility invariants.
+See [docs/architecture.md](docs/architecture.md) for invariants, data ownership, and module boundaries, and [docs/behavior.md](docs/behavior.md) for how each flow, accessibility rule, and layout rule works.
 
 ## Read the code
 
@@ -101,7 +101,7 @@ Three short files show how a selected tile becomes part of a spoken message:
 
 1. [`board-types.ts`](src/features/library/board-types.ts): the data. A `Board` is a grid of `BoardButton`s, the model both features share.
 2. [`communication-board.tsx`](src/features/board/communication-board.tsx): the board screen. It wires message, suggestions, playback and navigation together, and its imports are a table of contents for `features/board/`.
-3. [`button-activator.ts`](src/features/board/activation/button-activator.ts): what activating a tile does. It opens a linked board, adds to the message and plays it, or runs the tile's actions.
+3. [`button-activator.ts`](src/features/board/activation/button-activator.ts): what activating a tile does. It opens a linked board, adds to the message and plays it unless tiles are set to stay silent, or runs the tile's actions.
 
 [`board-page.tsx`](src/app/routing/board-set/board-page.tsx) is where a stored board reaches that screen. The [glossary](docs/architecture.md#glossary) settles what board, board set, tile, symbol and message mean.
 
@@ -115,4 +115,6 @@ Three short files show how a selected tile becomes part of a spoken message:
 
 First Words symbols are from [Mulberry Symbols](https://mulberrysymbols.org), licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
-The bundled Quick Core boards are by [OpenAAC](https://www.openaac.org) and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+App icons are [Material Symbols](https://fonts.google.com/icons) by Google, licensed under [Apache 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+
+The Quick Core board sets are by [OpenAAC](https://www.openaac.org) and are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

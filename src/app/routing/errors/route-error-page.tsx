@@ -16,9 +16,10 @@ export function RouteErrorPage({ title }: RouteErrorPageProps) {
       <title>{title}</title>
       <ErrorState
         title={title}
+        titleComponent="h1"
         action={
           <Button component={Link} to="/" variant="contained">
-            {t(m.errorGoHome)}
+            {t(m.navHome)}
           </Button>
         }
       />

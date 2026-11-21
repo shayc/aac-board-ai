@@ -5,8 +5,7 @@
   "opensInNewTab": "(otvara se u novoj kartici)",
   "boardGridLabel": "Komunikacijska ploča",
   "boardSelectorLabel": "Ploča",
-  "boardSelectorOpen": "Otvori popis ploča",
-  "boardSelectorClose": "Zatvori popis ploča",
+  "boardSelectorSearch": "Pretraži ploče",
   "boardSelectorNoOptions": "Nema odgovarajućih ploča",
   "libraryLoading": "Učitavanje skupova ploča…",
   "libraryLoadFailed": "Nije moguće učitati knjižnicu",
@@ -14,30 +13,45 @@
   "libraryBoardSets": "Skupovi ploča",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Uvoz datoteke ploče…",
-        "countPlural=*": "Uvoz datoteka ploča…"
+        "count=1": "Uvoz datoteke ploče…",
+        "count=*": "Uvoz datoteka ploča…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Skup ploča uvezen",
-        "countPlural=*": "Skupovi ploča uvezeni"
+        "count=1": "Skup ploča uvezen",
+        "count=*": "Skupovi ploča uvezeni"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Datoteku ploče „{fileName}” nije moguće uvesti",
-  "libraryImportFailedBoardFiles": "Datoteke ploča nije moguće uvesti",
-  "libraryImportNotBoardFile": "„{fileName}” nije datoteka ploče",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteku ploče nije moguće uvesti",
+        "count=*": "Datoteke ploča nije moguće uvesti"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Mogu se uvesti samo datoteke ploča",
-  "libraryImportTooLargeBoardFile": "Datoteka ploče „{fileName}” je prevelika za uvoz",
-  "libraryImportTooLargeBoardFiles": "Datoteke ploča su prevelike za uvoz",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Datoteka ploče je prevelika za uvoz",
+        "count=*": "Datoteke ploča su prevelike za uvoz"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
   "libraryDropToImport": "Ispustite datoteke ploča za uvoz",
   "libraryInfo": "Informacije",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Mreža {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Izbrisati skup ploča?",
   "libraryDeleteIrreversible": "Skup ploča „{name}” bit će izbrisan. Ovu radnju nije moguće poništiti.",
-  "libraryDeleteFailed": "Skup ploča „{name}” nije moguće izbrisati",
-  "libraryExportFailed": "Skup ploča „{name}” nije moguće izvesti",
+  "libraryDeleteFailed": "Skup ploča nije moguće izbrisati",
+  "libraryExportFailed": "Skup ploča nije moguće izvesti",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",
   "aboutSourceCode": "Izvorni kod",
@@ -75,7 +89,7 @@
   "settingsSectionBoard": "Ploča",
   "settingsSectionMessage": "Poruka",
   "settingsSectionSuggestions": "Prijedlozi",
-  "settingsSectionSwitchAccess": "Pristup prekidačem",
+  "settingsSectionSwitchAccess": "Pristup sklopkom",
   "settingsSectionAbout": "O aplikaciji",
   "themeLabel": "Tema",
   "themeSystem": "Sustav",
@@ -87,13 +101,14 @@
   "languageTranslating": "Prevođenje ploča…",
   "speechVoice": "Glas",
   "speechRate": "Brzina govora",
-  "speechPitch": "Visina",
+  "speechPitch": "Visina glasa",
   "speechVolume": "Glasnoća",
   "speechPreviewVoice": "Poslušaj glas",
   "speechPreviewSample": "Bok, ovo je moj glas!",
+  "messagePlayTiles": "Izgovaraj simbole pri dodavanju",
   "messageImages": "Prikaži slike",
-  "messageHighlight": "Isticanje tijekom govora",
-  "messageClearAfterSpeaking": "Brisanje nakon govora",
+  "messageHighlight": "Istakni tijekom govora",
+  "messageClearAfterPlaying": "Obriši nakon izgovora",
   "tileSaturation": "Intenzitet boje",
   "tileBrightness": "Svjetlina",
   "tileBorders": "Prikaži obrube",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Dolje",
   "tileLabelHidden": "Skrivene",
   "tileOpensBoard": "Otvara ploču",
-  "scanningEnabled": "Uključi skeniranje prekidačem",
+  "tileSpace": "Razmaknica",
+  "scanningEnabled": "Uključi skeniranje sklopkom",
   "scanningMethod": "Način skeniranja",
-  "scanningMethodAuto": "Automatski",
-  "scanningMethodStep": "Skeniranje korak po korak s dva prekidača",
+  "scanningMethodAuto": "Automatsko skeniranje",
+  "scanningMethodStep": "Skeniranje korak po korak",
   "scanningMethodAutoHint": "Pritisnite razmaknicu ili Enter za pokretanje skeniranja i za odabir. Skeniranje se pauzira nakon dva prolaza.",
   "scanningMethodStepHint": "Pritisnite razmaknicu za prelazak na sljedeću stavku, a Enter za njezin odabir.",
   "scanningInterval": "Interval skeniranja",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "Prijedlozi nisu dostupni za ovaj jezik.",
   "suggestionsFailed": "Nije moguće dohvatiti prijedloge",
   "suggestionsLabel": "Prijedlozi",
-  "navBack": "Natrag",
-  "navHome": "Idi na glavnu ploču",
+  "navHome": "Idi na početnu",
   "messageBackspace": "Obriši",
   "messageBackspaceLongPressHint": "Pritisnite i držite ili pritisnite {shortcut} za brisanje poruke.",
   "messageClear": "Obriši poruku",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Reproduciraj poruku",
-  "messageStop": "Zaustavi poruku",
-  "playbackFailed": "Nije moguće reproducirati zvuk",
+  "messagePlay": "Izgovori poruku",
+  "messageStop": "Zaustavi govor",
+  "playbackFailed": "Nije moguće izgovoriti",
   "messageLabel": "Poruka",
   "onboardingContinue": "Nastavi",
   "onboardingTitle": "Dobro došli u AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Recite više uz manje dodira",
   "onboardingSuggestionsDescription": "Umjetna inteligencija pretvara nekoliko simbola u cijelu rečenicu. Vi birate što će se reći.",
   "onboardingLanguageTitle": "Na vašem jeziku",
-  "onboardingLanguageDescription": "Koristite aplikaciju na bilo kojem od dostupnih jezika ({count}).",
+  "onboardingLanguageDescription": "Koristite aplikaciju na bilo kojem od {count} jezika.",
   "onboardingFreePrivateTitle": "Besplatno i privatno",
   "onboardingFreePrivateDescription": "Bez računa, bez oglasa, bez praćenja. Radi izvan mreže.",
   "errorGenericTitle": "Nije moguće učitati stranicu",
   "errorPageNotFound": "Stranica nije pronađena",
-  "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
   "errorBoardSetNotFound": "Skup ploča nije pronađen",
-  "errorBoardURLImportFailed": "Datoteku ploče nije moguće uvesti s poveznice",
-  "boardLinkImportTitle": "Uvesti datoteku ploče s poveznice?",
-  "boardLinkImportDescription": "Ova poveznica uvozi datoteku ploče s {host}. Uvezite je samo ako vjerujete osobi koja je poslala poveznicu.",
-  "boardLinkImport": "Uvezi",
-  "boardLinkCancel": "Odustani"
+  "errorBoardFileURLImportFailed": "Datoteku ploče nije moguće uvesti s poveznice",
+  "boardFileURLImportTitle": "Uvesti datoteku ploče s poveznice?",
+  "boardFileURLImportDescription": "Ova poveznica uvozi datoteku ploče s {host}. Uvezite je samo ako vjerujete osobi koja je poslala poveznicu.",
+  "boardFileURLImportConfirm": "Uvezi",
+  "boardFileURLImportCancel": "Odustani"
 }

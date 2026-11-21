@@ -23,7 +23,7 @@ export async function boardSetToOBZ({
   rootBoardId,
 }: Pick<BoardSetRecord, "id" | "rootBoardId">): Promise<Blob> {
   const records = await listBoardRecords(id);
-  const assets = await loadStoredAssets(
+  const assets = await readStoredAssets(
     id,
     records.map((record) => record.obf),
   );
@@ -39,12 +39,11 @@ function saveFile(file: Blob, fileName: string): void {
   link.download = fileName;
 
   link.click();
-  // The browser resolves the blob URL during the click, so the download
-  // survives the revoke.
+  // The click resolves the blob URL, so the download survives the revoke.
   URL.revokeObjectURL(url);
 }
 
-async function loadStoredAssets(
+async function readStoredAssets(
   boardSetId: string,
   boards: readonly OBFBoard[],
 ): Promise<Map<string, Uint8Array>> {

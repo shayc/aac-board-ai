@@ -5,8 +5,7 @@
   "opensInNewTab": "(se deschide într-o filă nouă)",
   "boardGridLabel": "Tablă de comunicare",
   "boardSelectorLabel": "Tablă",
-  "boardSelectorOpen": "Deschide lista de table",
-  "boardSelectorClose": "Închide lista de table",
+  "boardSelectorSearch": "Caută table",
   "boardSelectorNoOptions": "Nu există table corespunzătoare",
   "libraryLoading": "Se încarcă seturile de table…",
   "libraryLoadFailed": "Biblioteca nu a putut fi încărcată",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Seturi de table",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Se importă fișierul de tablă…",
-        "countPlural=*": "Se importă fișierele de table…"
+        "count=1": "Se importă fișierul de tablă…",
+        "count=*": "Se importă fișierele de table…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set de table importat",
-        "countPlural=*": "Seturi de table importate"
+        "count=1": "Set de table importat",
+        "count=*": "Seturi de table importate"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Fișierul de tablă „{fileName}” nu a putut fi importat",
-  "libraryImportFailedBoardFiles": "Fișierele de table nu au putut fi importate",
-  "libraryImportNotBoardFile": "„{fileName}” nu este un fișier de tablă",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Fișierul de tablă nu a putut fi importat",
+        "count=*": "Fișierele de table nu au putut fi importate"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Se pot importa doar fișiere de table",
-  "libraryImportTooLargeBoardFile": "Fișierul de tablă „{fileName}” este prea mare pentru a fi importat",
-  "libraryImportTooLargeBoardFiles": "Fișierele de table sunt prea mari pentru a fi importate",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Fișierul de tablă este prea mare pentru a fi importat",
+        "count=*": "Fișierele de table sunt prea mari pentru a fi importate"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Unele fișiere de table nu au putut fi importate ({failed} din {total})",
-  "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
+  "libraryDropToImport": "Plasează aici fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
   "libraryExport": "Exportă",
   "libraryDelete": "Șterge",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Grilă {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Ștergi setul de table?",
   "libraryDeleteIrreversible": "Setul de table „{name}” va fi șters. Această acțiune nu poate fi anulată.",
-  "libraryDeleteFailed": "Setul de table „{name}” nu a putut fi șters",
-  "libraryExportFailed": "Setul de table „{name}” nu a putut fi exportat",
+  "libraryDeleteFailed": "Setul de table nu a putut fi șters",
+  "libraryExportFailed": "Setul de table nu a putut fi exportat",
   "libraryTitle": "Bibliotecă",
   "libraryOpen": "Deschide biblioteca",
   "aboutSourceCode": "Cod sursă",
@@ -87,13 +101,14 @@
   "languageTranslating": "Se traduc tablele…",
   "speechVoice": "Voce",
   "speechRate": "Viteza vorbirii",
-  "speechPitch": "Înălțime",
+  "speechPitch": "Înălțimea vocii",
   "speechVolume": "Volum",
   "speechPreviewVoice": "Ascultă vocea",
   "speechPreviewSample": "Bună, aceasta este vocea mea!",
+  "messagePlayTiles": "Rostește simbolurile când sunt adăugate",
   "messageImages": "Afișează imaginile",
-  "messageHighlight": "Evidențiază în timpul vorbirii",
-  "messageClearAfterSpeaking": "Șterge după vorbire",
+  "messageHighlight": "Evidențiază în timpul rostirii",
+  "messageClearAfterPlaying": "Șterge după rostire",
   "tileSaturation": "Intensitatea culorii",
   "tileBrightness": "Luminozitate",
   "tileBorders": "Afișează marginile",
@@ -102,12 +117,13 @@
   "tileLabelBottom": "Jos",
   "tileLabelHidden": "Ascunse",
   "tileOpensBoard": "Deschide o tablă",
+  "tileSpace": "Spațiu",
   "scanningEnabled": "Activează scanarea cu comutator",
   "scanningMethod": "Metodă de scanare",
-  "scanningMethodAuto": "Automată",
-  "scanningMethodStep": "Scanare pas cu pas cu două comutatoare",
-  "scanningMethodAutoHint": "Apăsați Spațiu sau Enter pentru a porni scanarea și pentru a selecta. Scanarea se întrerupe după două treceri.",
-  "scanningMethodStepHint": "Apăsați Spațiu pentru a trece la elementul următor și Enter pentru a-l selecta.",
+  "scanningMethodAuto": "Scanare automată",
+  "scanningMethodStep": "Scanare pas cu pas",
+  "scanningMethodAutoHint": "Apasă Spațiu sau Enter pentru a porni scanarea și pentru a selecta. Scanarea se întrerupe după două treceri.",
+  "scanningMethodStepHint": "Apasă Spațiu pentru a trece la elementul următor și Enter pentru a-l selecta.",
   "scanningInterval": "Interval de scanare",
   "suggestionsCustomInstructions": "Instrucțiuni personalizate",
   "suggestionsCustomInstructionsPlaceholder": "Folosește propoziții scurte și cuvinte uzuale",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "Sugestiile nu sunt disponibile în această limbă.",
   "suggestionsFailed": "Sugestiile nu au putut fi obținute",
   "suggestionsLabel": "Sugestii",
-  "navBack": "Înapoi",
-  "navHome": "Mergi la tabla principală",
+  "navHome": "Mergi la pagina principală",
   "messageBackspace": "Șterge",
   "messageBackspaceLongPressHint": "Ține apăsat sau apasă {shortcut} pentru a șterge mesajul.",
   "messageClear": "Șterge mesajul",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Redă mesajul",
-  "messageStop": "Oprește mesajul",
-  "playbackFailed": "Sunetul nu a putut fi redat",
+  "messagePlay": "Rostește mesajul",
+  "messageStop": "Oprește rostirea",
+  "playbackFailed": "Nu s-a putut rosti",
   "messageLabel": "Mesaj",
   "onboardingContinue": "Continuă",
   "onboardingTitle": "Bun venit în AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Spune mai mult cu mai puține atingeri",
   "onboardingSuggestionsDescription": "AI transformă câteva simboluri într-o propoziție completă. Tu alegi ce se spune.",
   "onboardingLanguageTitle": "În limba ta",
-  "onboardingLanguageDescription": "Folosește aplicația în oricare dintre limbile disponibile ({count}).",
+  "onboardingLanguageDescription": "Folosește aplicația în oricare dintre cele {count} de limbi.",
   "onboardingFreePrivateTitle": "Gratuit și privat",
   "onboardingFreePrivateDescription": "Fără cont, fără reclame, fără urmărire. Funcționează offline.",
   "errorGenericTitle": "Pagina nu a putut fi încărcată",
   "errorPageNotFound": "Pagina nu a fost găsită",
-  "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "errorBoardURLImportFailed": "Fișierul de tablă nu a putut fi importat din link",
-  "boardLinkImportTitle": "Imporți fișierul de tablă din link?",
-  "boardLinkImportDescription": "Acest link importă un fișier de tablă de la {host}. Importă-l doar dacă ai încredere în persoana care a trimis linkul.",
-  "boardLinkImport": "Importă",
-  "boardLinkCancel": "Anulează"
+  "errorBoardFileURLImportFailed": "Fișierul de tablă nu a putut fi importat din link",
+  "boardFileURLImportTitle": "Imporți fișierul de tablă din link?",
+  "boardFileURLImportDescription": "Acest link importă un fișier de tablă de la {host}. Importă-l doar dacă ai încredere în persoana care a trimis linkul.",
+  "boardFileURLImportConfirm": "Importă",
+  "boardFileURLImportCancel": "Anulează"
 }

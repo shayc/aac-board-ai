@@ -3,9 +3,11 @@ import type {
   SpeechText,
 } from "@shared/speech/speech-synthesis";
 import {
+  endUtterance,
   failUtterance,
   lastUtterance,
   preventSpeechEnd,
+  reachUtteranceBoundary,
   stubSpeech,
 } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -117,5 +119,26 @@ describe("speak", () => {
 
       await expect(playback).rejects.toThrow("Speech failed: synthesis-failed");
     });
+  });
+
+  test("reports word boundaries, including unnamed ones, and ignores sentence boundaries", async () => {
+    const speech = stubSpeech();
+    preventSpeechEnd(speech.speak);
+    const onWordBoundary = vi.fn<(charIndex: number) => void>();
+    const playback = speak(
+      { text: "hello world", language: "en" },
+      parameters,
+      { onWordBoundary },
+    );
+    const utterance = lastUtterance(speech.speak);
+
+    reachUtteranceBoundary(utterance, 0, "sentence");
+    reachUtteranceBoundary(utterance, 6);
+    reachUtteranceBoundary(utterance, 8, "");
+
+    expect(onWordBoundary.mock.calls).toEqual([[6], [8]]);
+
+    endUtterance(utterance);
+    await playback;
   });
 });

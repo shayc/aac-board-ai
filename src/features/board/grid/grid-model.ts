@@ -1,6 +1,9 @@
 export type GridOrder = readonly (readonly (string | null)[])[];
 
-export type GridCells = readonly (readonly ({ id: string } | undefined)[])[];
+export type GridCells<Item extends object = object> = readonly (readonly (
+  | Item
+  | undefined
+)[])[];
 
 export interface GridPosition {
   row: number;
@@ -18,19 +21,17 @@ export function buildGrid<Item extends { id: string }>(
   );
 }
 
-export function gridArrangementKey(grid: GridCells): string {
-  return JSON.stringify(grid.map((row) => row.map((cell) => cell?.id ?? null)));
+export function gridArrangementKey<Item extends object>(
+  grid: GridCells<Item>,
+  getItemKey: (item: Item) => string,
+): string {
+  return JSON.stringify(
+    grid.map((row) => row.map((cell) => (cell ? getItemKey(cell) : null))),
+  );
 }
 
 export function findFirstOccupiedPosition(grid: GridCells): GridPosition {
-  for (const [row, cells] of grid.entries()) {
-    const column = cells.findIndex(Boolean);
-    if (column !== -1) {
-      return { row, column };
-    }
-  }
-
-  return { row: 0, column: 0 };
+  return listOccupiedPositions(grid)[0] ?? { row: 0, column: 0 };
 }
 
 export function listOccupiedPositions(grid: GridCells): GridPosition[] {

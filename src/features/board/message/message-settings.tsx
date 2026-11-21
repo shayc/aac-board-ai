@@ -5,16 +5,27 @@ import {
   setMessageClearAfterPlayback,
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
+  setMessagePlayTiles,
   useMessagePreferences,
 } from "./message-preferences-store";
 
 export function MessageSettings() {
   const t = useTranslate();
-  const { areImagesVisible, isHighlightingEnabled, shouldClearAfterPlayback } =
-    useMessagePreferences();
+  const {
+    areImagesVisible,
+    isHighlightingEnabled,
+    shouldClearAfterPlayback,
+    shouldPlayTiles,
+  } = useMessagePreferences();
 
   return (
     <>
+      <SettingsSwitch
+        label={t(m.messagePlayTiles)}
+        checked={shouldPlayTiles}
+        onChange={setMessagePlayTiles}
+      />
+
       <SettingsSwitch
         label={t(m.messageImages)}
         checked={areImagesVisible}
@@ -28,7 +39,7 @@ export function MessageSettings() {
       />
 
       <SettingsSwitch
-        label={t(m.messageClearAfterSpeaking)}
+        label={t(m.messageClearAfterPlaying)}
         checked={shouldClearAfterPlayback}
         onChange={setMessageClearAfterPlayback}
       />

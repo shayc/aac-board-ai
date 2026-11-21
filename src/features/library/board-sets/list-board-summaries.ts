@@ -1,5 +1,6 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { TranslationsByLocale } from "../board-types";
+import { nonBlankText } from "../non-blank-text";
 import { obfToTranslationsByLocale } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
 import { findStringTranslations } from "./board-in-language";
@@ -15,14 +16,18 @@ export async function listBoardSummaries(
 ): Promise<BoardSummary[]> {
   const records = await listBoardRecords(boardSetId);
 
-  return records.map(({ id, name, obf }) => ({
-    id,
-    name,
-    translatedNames: findTranslatedNames(
+  return records.map(({ id, obf }) => {
+    const name = nonBlankText(obf.name) ?? id;
+
+    return {
+      id,
       name,
-      obfToTranslationsByLocale(obf.strings),
-    ),
-  }));
+      translatedNames: findTranslatedNames(
+        name,
+        obfToTranslationsByLocale(obf.strings),
+      ),
+    };
+  });
 }
 
 function findTranslatedNames(

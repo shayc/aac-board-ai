@@ -1,11 +1,12 @@
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
-import { useRevalidateBoardSet } from "@app/routing/use-revalidate-board-set";
+import { useRevalidateBoardSet } from "@app/routing/board-set/use-revalidate-board-set";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
+  useActiveBoardSetId,
   useBoardFileDrop,
-  useImportBoardFilesOnLaunch,
+  useLaunchHandler,
   useTranslateBoardSets,
 } from "@features/library";
 import Box from "@mui/material/Box";
@@ -20,10 +21,14 @@ export function AppShell() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
+  const activeBoardSetId = useActiveBoardSetId();
   const revalidateBoardSet = useRevalidateBoardSet();
 
-  useImportBoardFilesOnLaunch();
-  useTranslateBoardSets({ onBoardSetTranslated: revalidateBoardSet });
+  useLaunchHandler();
+  useTranslateBoardSets({
+    activeBoardSetId,
+    onBoardsTranslated: revalidateBoardSet,
+  });
 
   return (
     <Box
@@ -35,7 +40,7 @@ export function AppShell() {
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
 
-      <Box component="main" sx={{ flex: 1, overflow: "auto" }}>
+      <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
         <Outlet />
       </Box>
 

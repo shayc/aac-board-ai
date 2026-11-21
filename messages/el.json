@@ -5,8 +5,7 @@
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",
   "boardGridLabel": "Πίνακας επικοινωνίας",
   "boardSelectorLabel": "Πίνακας",
-  "boardSelectorOpen": "Άνοιγμα λίστας πινάκων",
-  "boardSelectorClose": "Κλείσιμο λίστας πινάκων",
+  "boardSelectorSearch": "Αναζήτηση πινάκων",
   "boardSelectorNoOptions": "Δεν βρέθηκαν αντίστοιχοι πίνακες",
   "libraryLoading": "Φόρτωση συνόλων πινάκων…",
   "libraryLoadFailed": "Δεν ήταν δυνατή η φόρτωση της βιβλιοθήκης",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Σύνολα πινάκων",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Εισαγωγή αρχείου πίνακα…",
-        "countPlural=*": "Εισαγωγή αρχείων πινάκων…"
+        "count=1": "Εισαγωγή αρχείου πίνακα…",
+        "count=*": "Εισαγωγή αρχείων πινάκων…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Το σύνολο πινάκων εισήχθη",
-        "countPlural=*": "Τα σύνολα πινάκων εισήχθησαν"
+        "count=1": "Το σύνολο πινάκων εισήχθη",
+        "count=*": "Τα σύνολα πινάκων εισήχθησαν"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα «{fileName}»",
-  "libraryImportFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων",
-  "libraryImportNotBoardFile": "Το «{fileName}» δεν είναι αρχείο πίνακα",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα",
+        "count=*": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Μπορούν να εισαχθούν μόνο αρχεία πινάκων",
-  "libraryImportTooLargeBoardFile": "Το αρχείο πίνακα «{fileName}» είναι πολύ μεγάλο για εισαγωγή",
-  "libraryImportTooLargeBoardFiles": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Το αρχείο πίνακα είναι πολύ μεγάλο για εισαγωγή",
+        "count=*": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
-  "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
+  "libraryDropToImport": "Αφήστε εδώ αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",
   "libraryExport": "Εξαγωγή",
   "libraryDelete": "Διαγραφή",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Πλέγμα {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων;",
   "libraryDeleteIrreversible": "Το σύνολο πινάκων «{name}» θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-  "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων «{name}»",
-  "libraryExportFailed": "Δεν ήταν δυνατή η εξαγωγή του συνόλου πινάκων «{name}»",
+  "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων",
+  "libraryExportFailed": "Δεν ήταν δυνατή η εξαγωγή του συνόλου πινάκων",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",
   "aboutSourceCode": "Πηγαίος κώδικας",
@@ -87,13 +101,14 @@
   "languageTranslating": "Μετάφραση πινάκων…",
   "speechVoice": "Φωνή",
   "speechRate": "Ρυθμός ομιλίας",
-  "speechPitch": "Τόνος",
+  "speechPitch": "Τόνος φωνής",
   "speechVolume": "Ένταση",
   "speechPreviewVoice": "Ακρόαση φωνής",
   "speechPreviewSample": "Γεια, αυτή είναι η φωνή μου!",
+  "messagePlayTiles": "Εκφώνηση συμβόλων κατά την προσθήκη",
   "messageImages": "Εμφάνιση εικόνων",
-  "messageHighlight": "Επισήμανση κατά την ομιλία",
-  "messageClearAfterSpeaking": "Εκκαθάριση μετά την ομιλία",
+  "messageHighlight": "Επισήμανση κατά την εκφώνηση",
+  "messageClearAfterPlaying": "Εκκαθάριση μετά την εκφώνηση",
   "tileSaturation": "Ένταση χρώματος",
   "tileBrightness": "Φωτεινότητα",
   "tileBorders": "Εμφάνιση περιγράμματος",
@@ -102,26 +117,26 @@
   "tileLabelBottom": "Κάτω",
   "tileLabelHidden": "Κρυφές",
   "tileOpensBoard": "Ανοίγει πίνακα",
+  "tileSpace": "Διάστημα",
   "scanningEnabled": "Ενεργοποίηση σάρωσης με διακόπτη",
   "scanningMethod": "Μέθοδος σάρωσης",
-  "scanningMethodAuto": "Αυτόματη",
-  "scanningMethodStep": "Βηματική σάρωση με δύο διακόπτες",
+  "scanningMethodAuto": "Αυτόματη σάρωση",
+  "scanningMethodStep": "Βηματική σάρωση",
   "scanningMethodAutoHint": "Πατήστε Διάστημα ή Enter για να ξεκινήσει η σάρωση και για επιλογή. Η σάρωση σταματά προσωρινά μετά από δύο περάσματα.",
   "scanningMethodStepHint": "Πατήστε Διάστημα για μετάβαση στο επόμενο στοιχείο και Enter για να το επιλέξετε.",
   "scanningInterval": "Διάστημα σάρωσης",
   "suggestionsCustomInstructions": "Προσαρμοσμένες οδηγίες",
-  "suggestionsCustomInstructionsPlaceholder": "Χρησιμοποίησε σύντομες προτάσεις και καθημερινές λέξεις",
+  "suggestionsCustomInstructionsPlaceholder": "Χρησιμοποίησε σύντομες φράσεις και καθημερινές λέξεις",
   "suggestionsCustomInstructionsHelper": "Περιγράψτε πώς πρέπει να διατυπώνονται οι προτάσεις.",
   "suggestionsUnsupported": "Οι προτάσεις δεν είναι διαθέσιμες σε αυτό το πρόγραμμα περιήγησης.",
   "suggestionsCustomInstructionsUnsupported": "Οι προσαρμοσμένες οδηγίες δεν είναι διαθέσιμες σε αυτό το πρόγραμμα περιήγησης.",
   "suggestionsEnableHelp": "Πώς να ενεργοποιήσετε τις προτάσεις",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
-  "suggestionsDownloading": "Λήψη μοντέλου AI…",
+  "suggestionsDownloading": "Λήψη μοντέλου τεχνητής νοημοσύνης…",
   "suggestionsLanguageUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες για αυτήν τη γλώσσα.",
   "suggestionsFailed": "Δεν ήταν δυνατή η λήψη προτάσεων",
   "suggestionsLabel": "Προτάσεις",
-  "navBack": "Πίσω",
-  "navHome": "Μετάβαση στον κύριο πίνακα",
+  "navHome": "Μετάβαση στην αρχική",
   "messageBackspace": "Διαγραφή",
   "messageBackspaceLongPressHint": "Κρατήστε πατημένο ή πατήστε {shortcut} για εκκαθάριση του μηνύματος.",
   "messageClear": "Εκκαθάριση μηνύματος",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Αναπαραγωγή μηνύματος",
-  "messageStop": "Διακοπή μηνύματος",
-  "playbackFailed": "Δεν ήταν δυνατή η αναπαραγωγή ήχου",
+  "messagePlay": "Εκφώνηση μηνύματος",
+  "messageStop": "Διακοπή εκφώνησης",
+  "playbackFailed": "Δεν ήταν δυνατή η εκφώνηση",
   "messageLabel": "Μήνυμα",
   "onboardingContinue": "Συνέχεια",
   "onboardingTitle": "Καλώς ήρθατε στο AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Χωρίς λογαριασμό, χωρίς διαφημίσεις, χωρίς παρακολούθηση. Λειτουργεί εκτός σύνδεσης.",
   "errorGenericTitle": "Δεν ήταν δυνατή η φόρτωση της σελίδας",
   "errorPageNotFound": "Η σελίδα δεν βρέθηκε",
-  "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε",
-  "errorBoardURLImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο",
-  "boardLinkImportTitle": "Εισαγωγή αρχείου πίνακα από τον σύνδεσμο;",
-  "boardLinkImportDescription": "Αυτός ο σύνδεσμος εισάγει ένα αρχείο πίνακα από {host}. Κάντε εισαγωγή μόνο αν εμπιστεύεστε αυτόν που έστειλε τον σύνδεσμο.",
-  "boardLinkImport": "Εισαγωγή",
-  "boardLinkCancel": "Άκυρο"
+  "errorBoardFileURLImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο",
+  "boardFileURLImportTitle": "Εισαγωγή αρχείου πίνακα από τον σύνδεσμο;",
+  "boardFileURLImportDescription": "Αυτός ο σύνδεσμος εισάγει ένα αρχείο πίνακα από {host}. Κάντε εισαγωγή μόνο αν εμπιστεύεστε αυτόν που έστειλε τον σύνδεσμο.",
+  "boardFileURLImportConfirm": "Εισαγωγή",
+  "boardFileURLImportCancel": "Άκυρο"
 }

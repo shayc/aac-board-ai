@@ -5,8 +5,7 @@
   "opensInNewTab": "(yeni sekmede açılır)",
   "boardGridLabel": "İletişim panosu",
   "boardSelectorLabel": "Pano",
-  "boardSelectorOpen": "Pano listesini aç",
-  "boardSelectorClose": "Pano listesini kapat",
+  "boardSelectorSearch": "Pano ara",
   "boardSelectorNoOptions": "Eşleşen pano yok",
   "libraryLoading": "Pano setleri yükleniyor…",
   "libraryLoadFailed": "Kitaplık yüklenemedi",
@@ -14,30 +13,45 @@
   "libraryBoardSets": "Pano setleri",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Pano dosyası içe aktarılıyor…",
-        "countPlural=*": "Pano dosyaları içe aktarılıyor…"
+        "count=1": "Pano dosyası içe aktarılıyor…",
+        "count=*": "Pano dosyaları içe aktarılıyor…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Pano seti içe aktarıldı",
-        "countPlural=*": "Pano setleri içe aktarıldı"
+        "count=1": "Pano seti içe aktarıldı",
+        "count=*": "Pano setleri içe aktarıldı"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "\"{fileName}\" pano dosyası içe aktarılamadı",
-  "libraryImportFailedBoardFiles": "Pano dosyaları içe aktarılamadı",
-  "libraryImportNotBoardFile": "\"{fileName}\" bir pano dosyası değil",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Pano dosyası içe aktarılamadı",
+        "count=*": "Pano dosyaları içe aktarılamadı"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Yalnızca pano dosyaları içe aktarılabilir",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" pano dosyası içe aktarılamayacak kadar büyük",
-  "libraryImportTooLargeBoardFiles": "Pano dosyaları içe aktarılamayacak kadar büyük",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Pano dosyası içe aktarılamayacak kadar büyük",
+        "count=*": "Pano dosyaları içe aktarılamayacak kadar büyük"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Bazı pano dosyaları içe aktarılamadı ({failed} / {total})",
   "libraryDropToImport": "İçe aktarmak için pano dosyalarını bırakın",
   "libraryInfo": "Bilgi",
@@ -56,12 +70,12 @@
   "libraryImportingStatus": "İçe aktarılıyor…",
   "libraryCancelDownload": "İndirmeyi iptal et",
   "libraryCancelDownloadBoardSet": "İndirmeyi iptal et: {name}",
-  "libraryByAuthor": "{author} tarafından",
+  "libraryByAuthor": "Hazırlayan: {author}",
   "libraryGridDimensions": "{rows}×{columns} ızgara",
   "libraryDeleteConfirmTitle": "Pano seti silinsin mi?",
   "libraryDeleteIrreversible": "\"{name}\" silinecek. Bu işlem geri alınamaz.",
-  "libraryDeleteFailed": "\"{name}\" pano seti silinemedi",
-  "libraryExportFailed": "\"{name}\" pano seti dışa aktarılamadı",
+  "libraryDeleteFailed": "Pano seti silinemedi",
+  "libraryExportFailed": "Pano seti dışa aktarılamadı",
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
   "aboutSourceCode": "Kaynak kodu",
@@ -87,25 +101,27 @@
   "languageTranslating": "Panolar çevriliyor…",
   "speechVoice": "Ses",
   "speechRate": "Konuşma hızı",
-  "speechPitch": "Perde",
+  "speechPitch": "Ses perdesi",
   "speechVolume": "Ses düzeyi",
   "speechPreviewVoice": "Sesi dinle",
   "speechPreviewSample": "Merhaba, bu benim sesim!",
+  "messagePlayTiles": "Sembolleri eklenirken seslendir",
   "messageImages": "Görselleri göster",
-  "messageHighlight": "Konuşurken vurgula",
-  "messageClearAfterSpeaking": "Konuştuktan sonra temizle",
+  "messageHighlight": "Seslendirirken vurgula",
+  "messageClearAfterPlaying": "Seslendirdikten sonra temizle",
   "tileSaturation": "Renk yoğunluğu",
   "tileBrightness": "Parlaklık",
   "tileBorders": "Kenarlıkları göster",
   "tileLabelPlacement": "Etiketler",
-  "tileLabelTop": "Üst",
-  "tileLabelBottom": "Alt",
+  "tileLabelTop": "Üstte",
+  "tileLabelBottom": "Altta",
   "tileLabelHidden": "Gizli",
   "tileOpensBoard": "Pano açar",
-  "scanningEnabled": "Anahtarla taramayı etkinleştir",
+  "tileSpace": "Boşluk",
+  "scanningEnabled": "Anahtarla taramayı aç",
   "scanningMethod": "Tarama yöntemi",
-  "scanningMethodAuto": "Otomatik",
-  "scanningMethodStep": "İki anahtarlı adımlı tarama",
+  "scanningMethodAuto": "Otomatik tarama",
+  "scanningMethodStep": "Adımlı tarama",
   "scanningMethodAutoHint": "Taramayı başlatmak ve seçmek için Boşluk veya Enter tuşuna basın. Tarama iki turdan sonra duraklar.",
   "scanningMethodStepHint": "Sonraki öğeye geçmek için Boşluk, onu seçmek için Enter tuşuna basın.",
   "scanningInterval": "Tarama aralığı",
@@ -114,14 +130,13 @@
   "suggestionsCustomInstructionsHelper": "Önerilerin nasıl ifade edilmesi gerektiğini açıklayın.",
   "suggestionsUnsupported": "Öneriler bu tarayıcıda kullanılamıyor.",
   "suggestionsCustomInstructionsUnsupported": "Özel talimatlar bu tarayıcıda kullanılamıyor.",
-  "suggestionsEnableHelp": "Öneriler nasıl etkinleştirilir",
+  "suggestionsEnableHelp": "Öneriler nasıl açılır",
   "suggestionsEnable": "Önerileri aç",
-  "suggestionsDownloading": "Yapay zeka modeli indiriliyor…",
+  "suggestionsDownloading": "Yapay zekâ modeli indiriliyor…",
   "suggestionsLanguageUnavailable": "Öneriler bu dilde kullanılamıyor.",
   "suggestionsFailed": "Öneriler alınamadı",
   "suggestionsLabel": "Öneriler",
-  "navBack": "Geri",
-  "navHome": "Ana panoya git",
+  "navHome": "Ana sayfaya git",
   "messageBackspace": "Geri sil",
   "messageBackspaceLongPressHint": "Mesajı temizlemek için basılı tutun veya {shortcut} tuşlarına basın.",
   "messageClear": "Mesajı temizle",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Mesajı oynat",
-  "messageStop": "Mesajı durdur",
-  "playbackFailed": "Ses oynatılamadı",
+  "messagePlay": "Mesajı seslendir",
+  "messageStop": "Seslendirmeyi durdur",
+  "playbackFailed": "Seslendirilemedi",
   "messageLabel": "Mesaj",
   "onboardingContinue": "Devam et",
   "onboardingTitle": "AAC Board AI uygulamasına hoş geldiniz",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Hesap yok, reklam yok, takip yok. Çevrimdışı çalışır.",
   "errorGenericTitle": "Sayfa yüklenemedi",
   "errorPageNotFound": "Sayfa bulunamadı",
-  "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano seti bulunamadı",
-  "errorBoardURLImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı",
-  "boardLinkImportTitle": "Pano dosyası bağlantıdan içe aktarılsın mı?",
-  "boardLinkImportDescription": "Bu bağlantı {host} adresinden bir pano dosyası içe aktarır. Yalnızca bağlantıyı gönderen kişiye güveniyorsanız içe aktarın.",
-  "boardLinkImport": "İçe aktar",
-  "boardLinkCancel": "İptal"
+  "errorBoardFileURLImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı",
+  "boardFileURLImportTitle": "Pano dosyası bağlantıdan içe aktarılsın mı?",
+  "boardFileURLImportDescription": "Bu bağlantı {host} adresinden bir pano dosyası içe aktarır. Yalnızca bağlantıyı gönderen kişiye güveniyorsanız içe aktarın.",
+  "boardFileURLImportConfirm": "İçe aktar",
+  "boardFileURLImportCancel": "İptal"
 }

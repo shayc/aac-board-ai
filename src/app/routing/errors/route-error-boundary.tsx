@@ -1,10 +1,11 @@
 import { m } from "@paraglide/messages.js";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
-import { isRouteErrorResponse, useRouteError } from "react-router";
+import { assertNever } from "@shared/utils/assert-never";
+import { useRouteError } from "react-router";
 import {
-  isRouteErrorPayload,
+  getRouteErrorCode,
+  ROUTE_ERROR_CODES,
   type RouteErrorCode,
-  routeErrorCodes,
 } from "./route-error";
 import { RouteErrorPage } from "./route-error-page";
 
@@ -16,8 +17,9 @@ export function RouteErrorBoundary() {
 }
 
 function getErrorTitle(error: unknown, t: Translate): string {
-  if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
-    return translateRouteError(error.data.code, t);
+  const code = getRouteErrorCode(error);
+  if (code) {
+    return translateRouteError(code, t);
   }
 
   return t(m.errorGenericTitle);
@@ -25,11 +27,13 @@ function getErrorTitle(error: unknown, t: Translate): string {
 
 function translateRouteError(code: RouteErrorCode, t: Translate): string {
   switch (code) {
-    case routeErrorCodes.boardNotFound:
+    case ROUTE_ERROR_CODES.boardNotFound:
       return t(m.errorBoardNotFound);
-    case routeErrorCodes.boardSetNotFound:
+    case ROUTE_ERROR_CODES.boardSetNotFound:
       return t(m.errorBoardSetNotFound);
-    case routeErrorCodes.boardURLImportFailed:
-      return t(m.errorBoardURLImportFailed);
+    case ROUTE_ERROR_CODES.boardFileURLImportFailed:
+      return t(m.errorBoardFileURLImportFailed);
+    default:
+      return assertNever(code);
   }
 }

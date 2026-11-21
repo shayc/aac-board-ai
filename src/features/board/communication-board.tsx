@@ -6,19 +6,26 @@ import { m } from "@paraglide/messages.js";
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provider";
-import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { maxSafeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
 import { createButtonActivator } from "./activation/button-activator";
-import { PAGE_MARGIN, SCROLL_CLEARANCE } from "./board-spacing";
+import {
+  BOTTOM_CONTROLS_INSET,
+  PAGE_MARGIN,
+  SCROLL_CLEARANCE,
+} from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
+import { useMessagePreferences } from "./message/message-preferences-store";
+import type { Message } from "./message/message-types";
 import { useMessage } from "./message/use-message";
-import { NavigationButtons } from "./navigation/navigation-buttons";
+import { HomeButton } from "./navigation/home-button";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlayButton } from "./playback/play-button";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
-import { scanGroupProps } from "./scanning/scan-targets";
+import { scanGroupProps, scanRowProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
 import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -28,49 +35,58 @@ import { Tile } from "./tile/tile";
 interface CommunicationBoardProps {
   board: Board;
   /** The language the board's text is in, when known; it may not be the communication language. */
-  language: string | undefined;
+  boardLanguage: string | undefined;
   rootBoardId: string | undefined;
+  initialMessage?: Message;
 }
 
 export function CommunicationBoard({
   board,
-  language,
+  boardLanguage,
   rootBoardId,
+  initialMessage,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-  const communication = useCommunicationLanguage();
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const { language, direction } = useCommunicationLanguage();
+  const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isShortLandscape = useMediaQuery(shortLandscape);
 
-  const message = useMessage();
-  const playback = useBoardPlayback({
-    onMessagePlayback: message.trackPlayback,
-  });
+  const playback = useBoardPlayback();
+  const message = useMessage(playback.playMessage, initialMessage);
+  const { shouldPlayTiles } = useMessagePreferences();
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
+  // The members are picked one by one: each hook returns a new object when its
+  // state changes, `message` on every edit, and an activator built from the
+  // whole objects would change with them and re-render every tile on each tap.
   const activateButton = createButtonActivator({
     message: {
       apply: message.apply,
-      applyIfUnchanged: message.applyIfUnchanged,
+      play: message.play,
+      echo: message.echo,
     },
-    playback: {
-      playMessage: playback.playMessage,
-      echoMessage: playback.echoMessage,
-      playPart: playback.playPart,
-    },
+    playback: { playPart: playback.playPart, stop: playback.stop },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
-    language,
+    boardLanguage,
+    shouldPlayTiles,
   });
+
+  // A short landscape screen has width to spare and no height.
+  const areControlsBelowGrid = isNarrowScreen && !isShortLandscape;
+  const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
+  const scrollClearance = isShortLandscape
+    ? SCROLL_CLEARANCE.xs
+    : SCROLL_CLEARANCE;
 
   const hasMessage = message.parts.length > 0;
 
-  const navigationButtons = (
-    <NavigationButtons
-      canGoBack={navigation.canGoBack}
-      canGoHome={navigation.canGoHome}
-      onBack={navigation.goBack}
-      onHome={navigation.goHome}
+  const homeButton = (
+    <HomeButton
+      disabled={!navigation.canGoHome}
+      shape={areControlsBelowGrid ? "pill" : "round"}
+      onClick={navigation.goHome}
     />
   );
 
@@ -87,29 +103,28 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      variant={isSmallScreen ? "boardControl" : "prominent"}
+      shape={areControlsBelowGrid ? "pill" : "round"}
       shortcutLabels={shortcutLabels}
-      onPlay={() => void playback.playMessage(message.parts)}
+      onPlay={() => void message.play()}
       onStop={playback.stop}
     />
   );
 
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
     <Tile
-      key={`${board.id}/${button.id}`}
       button={button}
-      language={language}
+      language={boardLanguage}
       onActivate={activateButton}
       {...gridItemProps}
     />
   );
 
   return (
-    <DirectionalThemeProvider direction={communication.direction}>
+    <DirectionalThemeProvider direction={direction}>
       <ScanningScope>
         <Stack
           {...shortcuts.rootProps}
-          dir={communication.direction}
+          dir={direction}
           direction="column"
           sx={{
             height: "100%",
@@ -117,45 +132,42 @@ export function CommunicationBoard({
             pr: { sm: safeAreaInset("right") },
           }}
         >
-          <Stack
-            spacing={PAGE_MARGIN}
-            sx={{ pt: PAGE_MARGIN, px: PAGE_MARGIN }}
-          >
+          <Stack spacing={pageMargin} sx={{ pt: pageMargin, px: pageMargin }}>
             <Stack
               {...scanGroupProps}
               direction="row"
-              spacing={PAGE_MARGIN}
+              spacing={2}
               sx={{ alignItems: "center" }}
             >
-              <Box sx={{ flex: 1, minWidth: 0 }}>
-                <PlaybackMessageBar
-                  parts={message.parts}
-                  isWordOpen={message.isWordOpen}
-                  endAction={backspaceButton}
-                />
-              </Box>
+              {!areControlsBelowGrid && homeButton}
 
-              {!isSmallScreen && playButton}
+              <PlaybackMessageBar
+                parts={message.parts}
+                isWordOpen={message.isWordOpen}
+                endAction={
+                  <>
+                    {backspaceButton}
+                    {!areControlsBelowGrid && playButton}
+                  </>
+                }
+              />
             </Stack>
 
             <Stack
               {...scanGroupProps}
               direction="row"
-              spacing={2}
               sx={{ "&:empty": { display: "none" } }}
             >
-              {!isSmallScreen && navigationButtons}
-
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   board={board}
-                  boardLanguage={language}
+                  boardLanguage={boardLanguage}
                   rootBoardId={rootBoardId}
                   messageText={message.text}
                   isWordOpen={message.isWordOpen}
-                  language={communication.language}
+                  language={language}
                   onPhraseSelect={(phrase) =>
-                    message.replaceWithText(phrase, communication.language)
+                    message.replaceWithText(phrase, language)
                   }
                   onContinuationSelect={(parts) =>
                     message.apply(parts.map((part) => ({ kind: "tile", part })))
@@ -165,28 +177,29 @@ export function CommunicationBoard({
             </Stack>
           </Stack>
 
-          <Box sx={{ flex: 1, minHeight: 0, py: SCROLL_CLEARANCE }}>
+          <Box sx={{ flex: 1, minHeight: 0, py: scrollClearance }}>
             <Grid<BoardButton>
               aria-label={board.name || t(m.boardGridLabel)}
               items={board.buttons}
               order={board.grid.order}
-              rowProps={scanGroupProps}
+              rowProps={scanRowProps}
+              getItemKey={(button) => `${board.id}/${button.id}`}
               renderItem={renderTile}
             />
           </Box>
 
-          {isSmallScreen && (
+          {areControlsBelowGrid && (
             <Stack
               {...scanGroupProps}
               direction="row"
               spacing={2}
               sx={(theme) => ({
                 justifyContent: "space-between",
-                px: PAGE_MARGIN,
-                pb: safeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
+                px: BOTTOM_CONTROLS_INSET,
+                pb: maxSafeAreaGutter(theme.spacing(PAGE_MARGIN.xs), "bottom"),
               })}
             >
-              {navigationButtons}
+              {homeButton}
               {playButton}
             </Stack>
           )}

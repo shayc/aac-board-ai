@@ -1,5 +1,6 @@
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
+import { buttonBaseClasses } from "@mui/material/ButtonBase";
+import { ImageIcon } from "@shared/ui/icons";
 import type { TileLabelPlacement } from "./tile-preferences-store";
 
 interface LabelPlacementPreviewProps {
@@ -18,17 +19,27 @@ export function LabelPlacementPreview({
     <Box
       aria-hidden
       component="span"
-      sx={{
+      sx={(theme) => ({
         display: "block",
         width: 64,
         height: 54,
         p: 0.5,
         border: 2,
         borderColor: isSelected ? "primary.main" : "divider",
-        borderRadius: (theme) => theme.vars.shape.borderRadiusSm,
+        borderRadius: theme.vars.shape.borderRadiusSm,
         color: isSelected ? "primary.main" : "text.secondary",
         bgcolor: isSelected ? "action.selected" : "background.paper",
-      }}
+        // MUI rings a focused radio's first SVG, here the preview's picture.
+        // The preview takes the ring instead, so it follows the border.
+        [`.${buttonBaseClasses.focusVisible} > &`]: {
+          ...theme.focusVisible,
+          "& svg:first-of-type": {
+            borderRadius: 0,
+            outline: "none",
+            boxShadow: "none",
+          },
+        },
+      })}
     >
       <Box
         component="span"
@@ -42,7 +53,7 @@ export function LabelPlacementPreview({
           textAlign: "center",
         }}
       >
-        <ImageOutlinedIcon
+        <ImageIcon
           sx={{
             alignSelf: "center",
             flexShrink: 0,

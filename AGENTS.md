@@ -38,7 +38,7 @@
   - `library/`: stored board sets (storage, import, export, OBF mapping, translation)
 - `board` may import `library` through its public entry point; `library` imports no feature. Only `library/storage/` touches IndexedDB, and only `board/suggestions/` and `library/translation/` use built-in AI. Oxlint enforces all three.
 - `src/shared/`: shared code
-- See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure.
+- See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure, and [docs/behavior.md](docs/behavior.md) for how each flow, accessibility rule, and layout rule works.
 
 ## Testing Instructions
 
@@ -57,31 +57,49 @@
 
 Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers what tooling can't check. Apply it to code you write or touch, not to untouched files.
 
+### Craftsmanship
+
+Treat code as an interface for human understanding.
+
+- Optimize for conceptual simplicity, coherence, and effortless reading.
+- Use precise, concise, glanceable names with consistent domain vocabulary.
+- Minimize indirection, mental translation, and unnecessary concepts.
+- Prefer direct, idiomatic solutions over cleverness or speculative abstraction.
+- Preserve good design; refactor only for meaningful improvement.
+
+Optimize total comprehension cost, not line count. Style conventions
+serve clarity, not the reverse. Never sacrifice correctness,
+accessibility, offline reliability, or privacy for elegance.
+
 ### Layout & Control Flow
 
-- Order a file as imports → module constants → types and props → the main export → private helpers in the order they are called, each with its own types directly above it. Store modules (`*-preferences-store`, `board-sets-store`, `board-set-downloads`) keep helpers above the exports that use them.
+- Order a file as imports → module constants → types and props → the main export → private helpers in the order they are called, each with its own types directly above it. Store modules (`*-preferences-store`, `speech-store`, `board-sets-store`, `board-set-downloads`) keep helpers above the exports that use them.
 - Group related statements into paragraphs separated by single blank lines.
 - Keep a guard (or a test's `assertDefined`) directly under the value it tests. Put a blank line before a `return` or `continue` that follows other statements, between an accumulator and the loop that fills it, and between a test's act and assert steps.
 - Separate sibling JSX elements that each span several lines with a blank line.
 - In a component or hook, call hooks first, then derive values; a value that feeds a later hook stays with that hook. A hook's return type and returned object list members in the order they are defined.
 - Use early returns and guard clauses; keep the happy path at the left margin.
 - Extract dense conditionals and nested ternaries into named locals or helper functions.
+- End a `switch` over a union with a `default` that calls `assertNever`, so a new member fails the build.
 - Extract complex conditional JSX and nested mapping loops into sub-components.
-- Order JSX props as identity (`key`, `ref`) → semantics/accessibility → primary data/state → configuration → callbacks. Keep controlled prop pairs together even when that overrides the category order. Place spreads first or last according to precedence. Keep `sx` last and outside this ordering.
-- Within `sx`, order properties as custom properties → positioning → layout → sizing → spacing → overflow/scrolling → typography → visuals → interaction → motion → nested/conditional rules. Keep related properties together. Put broad shorthands before intentional specific overrides, and base declarations before conditional overrides. Don't alphabetize or add blank lines solely to separate categories.
+- Order JSX props and `sx` properties the way the nearest component does; `sx` goes last.
 
 ### Naming
 
 - Folders under `src/` are kebab-case.
 - Avoid vague filler words (`data`, `info`, `manager`) when a precise domain name is available, and avoid cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
-- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs, except conversions and pure value builders that read better as nouns (`obfToBoard`, `rootBoardPath`); React components use descriptive PascalCase nouns.
+- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`), except props that mirror a native or MUI prop (`open`, `disabled`); functions start with verbs, except conversions and pure value builders that read better as nouns (`obfToBoard`, `rootBoardPath`, `tileSx`); React components use descriptive PascalCase nouns.
+- Use one word for one idea: helpers that do the same job share a verb (`readAssetURLs`), and sibling components name the same choice with the same prop and values (`shape="pill"`).
+- `create` makes something that holds state or a new identity (`createExternalStore`, `createTilePart`); `build` assembles a value from its inputs (`buildSpeechStep`). Neither names a write to storage (`addBoardSet`).
+- Follow React's naming: inside a component a handler is `handle` + the event it answers (`handleClose`), and the prop that receives one is `on` + the event (`onClose`). A component's props type is `XProps`; a hook's options and return types are `UseXOptions` and `UseXReturn`.
+- Module constants that never change are `UPPER_SNAKE_CASE`, tables included (`UNDO_LIMIT`, `ROUTE_ERROR_CODES`). Values made by a call, and objects passed whole to JSX or a library (props, `sx`, routes, theme options), stay camelCase (`languageStore`, `scanRowProps`, `appRoutes`).
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
 - Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
 - Write acronyms in uppercase (`boardURL`, `getUILocale`, `flipForLTR`) except at the start of a camelCase name (`url`, `uiLocale`) or where a library or platform API spells them otherwise (`CssBaseline`). `Id` is an abbreviation, not an acronym (`boardSetId`).
 
 ### Abstraction & Data Flow
 
-- Keep each function at one level of abstraction: low-level mechanics live in named helpers; the body reads as a summary of what happens.
+- Keep functions at a coherent level of abstraction; extract helpers when they improve comprehension.
 - Prefer the smallest meaningful input a component or function needs; don't pass large objects solely to access one leaf property.
 - Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
 - Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@paraglide/*`).
@@ -106,6 +124,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - When starting new work without an existing task branch, create a branch from `main` using an intent-based prefix (`feat/`, `fix/`, `refactor/`). Never switch away from an existing task branch unless asked.
 - Keep changes closely scoped; avoid sweeping refactors or structural reformatting outside the task.
 - For code changes, verify with `npm run lint`, `npm test`, and `npm run build` before pushing or marking the task complete. For documentation-only changes, run only applicable formatting, link, or documentation checks.
+- Keep a pull request's title and description true to its final diff: after each round of changes, and always before merging, rewrite them to describe what the PR does now, not how it got there.
 - Follow existing module boundaries and adjacent file design patterns.
 
 ### Ask First

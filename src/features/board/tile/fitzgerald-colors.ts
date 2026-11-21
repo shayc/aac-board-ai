@@ -1,4 +1,4 @@
-export const fitzgeraldColors = {
+export const FITZGERALD_COLORS = {
   pronoun: "#f7ea9b",
   verb: "#bbedc4",
   describing: "#b8e1fa",

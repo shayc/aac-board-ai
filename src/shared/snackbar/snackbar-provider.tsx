@@ -1,9 +1,10 @@
 import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import type { CSSObject, Theme } from "@mui/material/styles";
+import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { assertNever } from "@shared/utils/assert-never";
 import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -30,7 +31,7 @@ type SnackbarAction =
   | { type: "close" }
   | { type: "exited" };
 
-const initialState: SnackbarState = {
+const INITIAL_STATE: SnackbarState = {
   queue: [],
   current: undefined,
   open: false,
@@ -42,15 +43,12 @@ interface SnackbarProviderProps {
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
-  const [state, dispatch] = useReducer(snackbarReducer, initialState);
+  const [state, dispatch] = useReducer(snackbarReducer, INITIAL_STATE);
   const nextKeyRef = useRef(0);
 
-  function showSnackbar(options: SnackbarOptions | string) {
-    const snackbarOptions: SnackbarOptions =
-      typeof options === "string" ? { message: options } : options;
-
+  function showSnackbar(options: SnackbarOptions) {
     const snackbar: QueuedSnackbar = {
-      ...snackbarOptions,
+      ...options,
       key: nextKeyRef.current++,
     };
 
@@ -101,74 +99,15 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           role={isUrgent(severity) ? "alert" : "status"}
           closeText={t(m.close)}
-          action={state.current?.action}
           severity={severity}
           onClose={handleClose}
-          sx={(theme) => createAlertSx(theme, severity)}
+          sx={(theme) => alertSx(theme, severity)}
         >
           {message}
         </Alert>
       </Snackbar>
     </SnackbarContext>
   );
-}
-
-function isUrgent(severity: SnackbarSeverity) {
-  return severity === "error" || severity === "warning";
-}
-
-function defaultDurationMs(severity: SnackbarSeverity): number | null {
-  return isUrgent(severity) ? null : DEFAULT_DURATION_MS;
-}
-
-function snackbarSx(theme: Theme) {
-  return {
-    // Sitting below the app bar keeps its controls reachable while a
-    // persistent error stays on screen.
-    ...toolbarOffset(theme, theme.spacing(1)),
-    [theme.breakpoints.down("sm")]: {
-      right: safeAreaGutter(theme.spacing(1), "right"),
-      left: safeAreaGutter(theme.spacing(1), "left"),
-    },
-  };
-}
-
-// MUI sizes a toolbar by breakpoint and orientation, so anything placed below
-// one follows the same rules instead of repeating its heights.
-function toolbarOffset(theme: Theme, gutter: string): CSSObject {
-  return heightsToOffsets(theme.mixins.toolbar, gutter);
-}
-
-function heightsToOffsets(styles: object, gutter: string): CSSObject {
-  const entries: [string, unknown][] = Object.entries(styles);
-  const rules: CSSObject = {};
-
-  for (const [key, value] of entries) {
-    if (key === "minHeight" && typeof value === "number") {
-      rules.top = `calc(${value}px + ${gutter})`;
-    } else if (typeof value === "object" && value !== null) {
-      rules[key] = heightsToOffsets(value, gutter);
-    }
-  }
-
-  return rules;
-}
-
-function createAlertSx(theme: Theme, severity: SnackbarSeverity) {
-  return {
-    width: "100%",
-    color: theme.vars.palette.SnackbarContent.color,
-    backgroundColor: theme.vars.palette.SnackbarContent.bg,
-    boxShadow: theme.vars.shadows[6],
-    // The snackbar surface inverts the color scheme, so its icon takes the
-    // other scheme's severity color to keep contrast.
-    [`& .${alertClasses.icon}`]: {
-      color: theme.colorSchemes.dark?.palette[severity].main,
-      ...theme.applyStyles("dark", {
-        color: theme.colorSchemes.light?.palette[severity].main,
-      }),
-    },
-  };
 }
 
 function snackbarReducer(
@@ -202,5 +141,42 @@ function snackbarReducer(
 
       return { ...state, current: undefined };
     }
+
+    default:
+      return assertNever(action);
   }
+}
+
+function defaultDurationMs(severity: SnackbarSeverity): number | null {
+  return isUrgent(severity) ? null : DEFAULT_DURATION_MS;
+}
+
+function isUrgent(severity: SnackbarSeverity) {
+  return severity === "error" || severity === "warning";
+}
+
+function snackbarSx(theme: Theme) {
+  return {
+    [theme.breakpoints.down("sm")]: {
+      right: safeAreaGutter(theme.spacing(1), "right"),
+      left: safeAreaGutter(theme.spacing(1), "left"),
+    },
+  };
+}
+
+function alertSx(theme: Theme, severity: SnackbarSeverity) {
+  return {
+    width: "100%",
+    color: theme.vars.palette.SnackbarContent.color,
+    backgroundColor: theme.vars.palette.SnackbarContent.bg,
+    boxShadow: theme.vars.shadows[6],
+    // The snackbar surface inverts the color scheme, so its icon takes the
+    // other scheme's severity color to keep contrast.
+    [`& .${alertClasses.icon}`]: {
+      color: theme.colorSchemes.dark?.palette[severity].main,
+      ...theme.applyStyles("dark", {
+        color: theme.colorSchemes.light?.palette[severity].main,
+      }),
+    },
+  };
 }

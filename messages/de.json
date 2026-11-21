@@ -5,8 +5,7 @@
   "opensInNewTab": "(öffnet in neuem Tab)",
   "boardGridLabel": "Kommunikationstafel",
   "boardSelectorLabel": "Tafel",
-  "boardSelectorOpen": "Tafelliste öffnen",
-  "boardSelectorClose": "Tafelliste schließen",
+  "boardSelectorSearch": "Tafeln durchsuchen",
   "boardSelectorNoOptions": "Keine passenden Tafeln",
   "libraryLoading": "Tafelsätze werden geladen…",
   "libraryLoadFailed": "Bibliothek konnte nicht geladen werden",
@@ -14,30 +13,45 @@
   "libraryBoardSets": "Tafelsätze",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafeldatei wird importiert…",
-        "countPlural=*": "Tafeldateien werden importiert…"
+        "count=1": "Tafeldatei wird importiert…",
+        "count=*": "Tafeldateien werden importiert…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Tafelsatz importiert",
-        "countPlural=*": "Tafelsätze importiert"
+        "count=1": "Tafelsatz importiert",
+        "count=*": "Tafelsätze importiert"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tafeldatei „{fileName}“ konnte nicht importiert werden",
-  "libraryImportFailedBoardFiles": "Tafeldateien konnten nicht importiert werden",
-  "libraryImportNotBoardFile": "„{fileName}“ ist keine Tafeldatei",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tafeldatei konnte nicht importiert werden",
+        "count=*": "Tafeldateien konnten nicht importiert werden"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Nur Tafeldateien können importiert werden",
-  "libraryImportTooLargeBoardFile": "Tafeldatei „{fileName}“ ist zu groß zum Importieren",
-  "libraryImportTooLargeBoardFiles": "Die Tafeldateien sind zu groß zum Importieren",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tafeldatei ist zu groß zum Importieren",
+        "count=*": "Die Tafeldateien sind zu groß zum Importieren"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Einige Tafeldateien konnten nicht importiert werden ({failed} von {total})",
   "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
   "libraryInfo": "Info",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Raster {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Tafelsatz löschen?",
   "libraryDeleteIrreversible": "„{name}“ wird gelöscht. Dies kann nicht rückgängig gemacht werden.",
-  "libraryDeleteFailed": "Tafelsatz „{name}“ konnte nicht gelöscht werden",
-  "libraryExportFailed": "Tafelsatz „{name}“ konnte nicht exportiert werden",
+  "libraryDeleteFailed": "Tafelsatz konnte nicht gelöscht werden",
+  "libraryExportFailed": "Tafelsatz konnte nicht exportiert werden",
   "libraryTitle": "Bibliothek",
   "libraryOpen": "Bibliothek öffnen",
   "aboutSourceCode": "Quellcode",
@@ -91,9 +105,10 @@
   "speechVolume": "Lautstärke",
   "speechPreviewVoice": "Stimme anhören",
   "speechPreviewSample": "Hallo, das ist meine Stimme!",
+  "messagePlayTiles": "Symbole beim Hinzufügen sprechen",
   "messageImages": "Bilder anzeigen",
   "messageHighlight": "Beim Sprechen hervorheben",
-  "messageClearAfterSpeaking": "Nach dem Sprechen löschen",
+  "messageClearAfterPlaying": "Nach dem Sprechen löschen",
   "tileSaturation": "Farbstärke",
   "tileBrightness": "Helligkeit",
   "tileBorders": "Rahmen anzeigen",
@@ -102,26 +117,26 @@
   "tileLabelBottom": "Unten",
   "tileLabelHidden": "Ausgeblendet",
   "tileOpensBoard": "Öffnet Tafel",
-  "scanningEnabled": "Tastenscanning aktivieren",
-  "scanningMethod": "Scanmethode",
-  "scanningMethodAuto": "Automatisch",
-  "scanningMethodStep": "Schrittweises Zwei-Tasten-Scanning",
-  "scanningMethodAutoHint": "Leertaste oder Eingabetaste drücken, um das Scannen zu starten und auszuwählen. Nach zwei Durchläufen pausiert das Scannen.",
+  "tileSpace": "Leertaste",
+  "scanningEnabled": "Scanning mit Taster aktivieren",
+  "scanningMethod": "Scanning-Methode",
+  "scanningMethodAuto": "Automatisches Scanning",
+  "scanningMethodStep": "Schrittweises Scanning",
+  "scanningMethodAutoHint": "Leertaste oder Eingabetaste drücken, um das Scanning zu starten und auszuwählen. Nach zwei Durchläufen pausiert das Scanning.",
   "scanningMethodStepHint": "Leertaste drücken, um zum nächsten Element zu wechseln, und Eingabetaste, um es auszuwählen.",
-  "scanningInterval": "Scanintervall",
+  "scanningInterval": "Scanning-Intervall",
   "suggestionsCustomInstructions": "Benutzerdefinierte Anweisungen",
   "suggestionsCustomInstructionsPlaceholder": "Verwende kurze Sätze und alltägliche Wörter",
   "suggestionsCustomInstructionsHelper": "Beschreibe, wie die Vorschläge formuliert sein sollen.",
   "suggestionsUnsupported": "Vorschläge sind in diesem Browser nicht verfügbar.",
   "suggestionsCustomInstructionsUnsupported": "Benutzerdefinierte Anweisungen sind in diesem Browser nicht verfügbar.",
-  "suggestionsEnableHelp": "So aktivieren Sie Vorschläge",
+  "suggestionsEnableHelp": "So aktivierst du Vorschläge",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen…",
   "suggestionsLanguageUnavailable": "Vorschläge sind für diese Sprache nicht verfügbar.",
   "suggestionsFailed": "Vorschläge konnten nicht abgerufen werden",
   "suggestionsLabel": "Vorschläge",
-  "navBack": "Zurück",
-  "navHome": "Zur Haupttafel",
+  "navHome": "Zur Startseite",
   "messageBackspace": "Löschen",
   "messageBackspaceLongPressHint": "Gedrückt halten oder {shortcut} drücken, um die Nachricht zu löschen.",
   "messageClear": "Nachricht löschen",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Befehlstaste",
   "keyAppleDelete": "Rückschritttaste",
-  "messagePlay": "Nachricht abspielen",
-  "messageStop": "Nachricht stoppen",
-  "playbackFailed": "Ton konnte nicht abgespielt werden",
+  "messagePlay": "Nachricht sprechen",
+  "messageStop": "Sprachausgabe stoppen",
+  "playbackFailed": "Sprachausgabe fehlgeschlagen",
   "messageLabel": "Nachricht",
   "onboardingContinue": "Weiter",
   "onboardingTitle": "Willkommen bei AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Sage mehr mit weniger Tippen",
   "onboardingSuggestionsDescription": "KI macht aus wenigen Symbolen einen ganzen Satz. Du entscheidest, was gesagt wird.",
   "onboardingLanguageTitle": "In deiner Sprache",
-  "onboardingLanguageDescription": "Nutze die App in jeder der {count} Sprachen.",
+  "onboardingLanguageDescription": "Nutze die App in einer von {count} Sprachen.",
   "onboardingFreePrivateTitle": "Kostenlos und privat",
   "onboardingFreePrivateDescription": "Kein Konto, keine Werbung, kein Tracking. Funktioniert offline.",
   "errorGenericTitle": "Seite konnte nicht geladen werden",
   "errorPageNotFound": "Seite nicht gefunden",
-  "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
-  "errorBoardURLImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
-  "boardLinkImportTitle": "Tafeldatei über den Link importieren?",
-  "boardLinkImportDescription": "Dieser Link importiert eine Tafeldatei von {host}. Importiere sie nur, wenn du der Person vertraust, die den Link gesendet hat.",
-  "boardLinkImport": "Importieren",
-  "boardLinkCancel": "Abbrechen"
+  "errorBoardFileURLImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
+  "boardFileURLImportTitle": "Tafeldatei über den Link importieren?",
+  "boardFileURLImportDescription": "Dieser Link importiert eine Tafeldatei von {host}. Importiere sie nur, wenn du der Person vertraust, die den Link gesendet hat.",
+  "boardFileURLImportConfirm": "Importieren",
+  "boardFileURLImportCancel": "Abbrechen"
 }

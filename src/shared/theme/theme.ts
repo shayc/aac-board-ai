@@ -1,3 +1,4 @@
+import { autocompleteClasses } from "@mui/material/Autocomplete";
 import { buttonClasses } from "@mui/material/Button";
 import { chipClasses } from "@mui/material/Chip";
 import { red } from "@mui/material/colors";
@@ -59,7 +60,7 @@ const grey = {
   A700: "#5e6167",
 };
 
-const outline = {
+const OUTLINE = {
   light: "rgba(0, 0, 0, 0.5)",
   dark: "rgba(255, 255, 255, 0.42)",
 };
@@ -79,7 +80,14 @@ function softShadow(elevation: number) {
 }
 
 // Sticky touch hover must preserve focused, error, and disabled outlines.
-const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
+const IDLE_TOUCH_HOVER_OUTLINE = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
+
+// The theme selects a scheme by class (`colorSchemeSelector` below), and MUI
+// names each class after its scheme. An element with this class gives itself
+// and its subtree the light scheme's `theme.vars`, whatever the theme mode.
+// `applyStyles("dark")` still applies there in dark mode: it matches the class
+// on the root.
+export const LIGHT_SCHEME_CLASS = "light";
 
 const themeOptions = {
   focusVisible: true,
@@ -99,30 +107,30 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: "#0b7468" },
+        primary: { main: "#14657e" },
         // MUI's default info blue would be the only blue in the app.
-        info: { main: "#0b7468" },
+        info: { main: "#14657e" },
         grey,
         background: { default: BACKGROUND_LIGHT, paper: "#ffffff" },
         Button: {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        outline: outline.light,
-        Chip: { defaultBorder: outline.light },
+        outline: OUTLINE.light,
+        Chip: { defaultBorder: OUTLINE.light },
         SnackbarContent: { bg: grey[900], color: grey[50] },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
     },
     dark: {
       palette: {
-        primary: { main: "#3fd0bd" },
-        info: { main: "#3fd0bd" },
+        primary: { main: "#72c4de" },
+        info: { main: "#72c4de" },
         grey,
         background: { default: BACKGROUND_DARK, paper: "#262930" },
         error: { main: red.A100 },
-        outline: outline.dark,
-        Chip: { defaultBorder: outline.dark },
+        outline: OUTLINE.dark,
+        Chip: { defaultBorder: OUTLINE.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
         action: {
           active: "rgba(255, 255, 255, 0.7)",
@@ -171,11 +179,6 @@ const themeOptions = {
       defaultProps: {
         color: "transparent",
         elevation: 0,
-      },
-      styleOverrides: {
-        root: ({ theme }) => ({
-          borderBottom: `1px solid ${theme.vars.palette.divider}`,
-        }),
       },
     },
     MuiToolbar: {
@@ -297,7 +300,21 @@ const themeOptions = {
     },
     MuiIconButton: {
       styleOverrides: {
-        root: ({ theme }) => buttonFeedbackTiming(theme),
+        root: ({ theme }) => ({
+          ...buttonFeedbackTiming(theme),
+          variants: [
+            {
+              props: { color: "default" },
+              // The icon's dimmer color would press fainter than a text
+              // button beside it, as in the header.
+              style: {
+                "&::before": {
+                  backgroundColor: theme.vars.palette.text.primary,
+                },
+              },
+            },
+          ],
+        }),
       },
     },
     MuiFab: {
@@ -310,7 +327,7 @@ const themeOptions = {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
           "@media (hover: none)": {
-            [idleTouchHoverOutline]: {
+            [IDLE_TOUCH_HOVER_OUTLINE]: {
               borderColor: theme.vars.palette.outline,
             },
           },
@@ -329,8 +346,7 @@ const themeOptions = {
     MuiChip: {
       styleOverrides: {
         clickable: ({ theme }) => ({
-          // Chips sit beside large buttons, so they share their height and
-          // label type.
+          // Beside large buttons, so chips share their height and label type.
           ...theme.typography.button,
           height: 48,
           borderRadius: theme.vars.shape.borderRadiusFull,
@@ -356,8 +372,7 @@ const themeOptions = {
             },
             {
               props: { variant: "filled", color: "default" },
-              // A quieter fill than the contained buttons keeps chips
-              // distinct from navigation.
+              // A quieter fill keeps chips distinct from navigation buttons.
               style: {
                 backgroundColor: theme.alpha(theme.palette.common.black, 0.06),
                 [`&:hover, &.${chipClasses.focusVisible}`]: {
@@ -394,6 +409,9 @@ const themeOptions = {
         root: ({ theme }) => ({
           marginInline: 4,
           borderRadius: theme.vars.shape.borderRadiusSm,
+          // MUI drops the 48px touch row from the sm breakpoint up, so tablets
+          // would get desktop rows. The Autocomplete option below matches.
+          "@media (pointer: coarse)": { minHeight: 48 },
         }),
       },
     },
@@ -406,9 +424,29 @@ const themeOptions = {
         },
       },
       styleOverrides: {
-        option: ({ theme }) => ({
-          marginInline: 4,
-          borderRadius: theme.vars.shape.borderRadiusSm,
+        // Styles options from the listbox, where MUI styles them, so that
+        // these rules come after MUI's.
+        listbox: ({ theme }) => ({
+          [`& .${autocompleteClasses.option}`]: {
+            marginInline: 4,
+            borderRadius: theme.vars.shape.borderRadiusSm,
+            "@media (pointer: coarse)": { minHeight: 48 },
+            // Enter picks the highlighted option, so it shows on every device.
+            [`&.${autocompleteClasses.focused}`]: {
+              backgroundColor: theme.vars.palette.action.selected,
+            },
+            // The keyboard ring alone marks the option, as in lists and menus.
+            [`&.${autocompleteClasses.focusVisible}`]: {
+              backgroundColor: "transparent",
+            },
+            // The selected option keeps its tint, which MUI turns grey on touch.
+            [`&[aria-selected="true"].${autocompleteClasses.focused}`]: {
+              backgroundColor: theme.alpha(
+                theme.vars.palette.primary.main,
+                `${theme.vars.palette.action.selectedOpacity} + ${theme.vars.palette.action.hoverOpacity}`,
+              ),
+            },
+          },
         }),
       },
     },
@@ -444,7 +482,7 @@ const themeOptions = {
           return {
             borderColor: theme.vars.palette.outline,
             [`&.${toggleButtonClasses.selected}`]: {
-              // Teal text on the stronger tint falls under 4.5:1.
+              // Primary-colored text on the stronger tint falls under 4.5:1.
               color: theme.vars.palette.text.primary,
               backgroundColor: selectedBackground,
               "&:hover": {

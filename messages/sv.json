@@ -1,45 +1,59 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "loading": "Laddar…",
+  "loading": "Läser in…",
   "close": "Stäng",
   "opensInNewTab": "(öppnas i en ny flik)",
   "boardGridLabel": "Kommunikationstavla",
   "boardSelectorLabel": "Tavla",
-  "boardSelectorOpen": "Öppna listan med tavlor",
-  "boardSelectorClose": "Stäng listan med tavlor",
+  "boardSelectorSearch": "Sök tavlor",
   "boardSelectorNoOptions": "Inga matchande tavlor",
-  "libraryLoading": "Laddar taveluppsättningar…",
+  "libraryLoading": "Läser in taveluppsättningar…",
   "libraryLoadFailed": "Det gick inte att läsa in biblioteket",
   "libraryImportBoardFiles": "Importera tavelfiler",
   "libraryBoardSets": "Taveluppsättningar",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importerar tavelfil…",
-        "countPlural=*": "Importerar tavelfiler…"
+        "count=1": "Importerar tavelfil…",
+        "count=*": "Importerar tavelfiler…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Taveluppsättning importerad",
-        "countPlural=*": "Taveluppsättningar importerade"
+        "count=1": "Taveluppsättning importerad",
+        "count=*": "Taveluppsättningar importerade"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Det gick inte att importera tavelfilen ”{fileName}”",
-  "libraryImportFailedBoardFiles": "Det gick inte att importera tavelfilerna",
-  "libraryImportNotBoardFile": "”{fileName}” är inte en tavelfil",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Det gick inte att importera tavelfilen",
+        "count=*": "Det gick inte att importera tavelfilerna"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Endast tavelfiler kan importeras",
-  "libraryImportTooLargeBoardFile": "Tavelfilen ”{fileName}” är för stor för att importeras",
-  "libraryImportTooLargeBoardFiles": "Tavelfilerna är för stora för att importeras",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tavelfilen är för stor för att importeras",
+        "count=*": "Tavelfilerna är för stora för att importeras"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Det gick inte att importera vissa tavelfiler ({failed} av {total})",
-  "libraryDropToImport": "Släpp tavelfiler för att importera",
+  "libraryDropToImport": "Släpp tavelfiler här för att importera dem",
   "libraryInfo": "Info",
   "libraryExport": "Exportera",
   "libraryDelete": "Ta bort",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Rutnät {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Ta bort taveluppsättningen?",
   "libraryDeleteIrreversible": "”{name}” kommer att tas bort. Den här åtgärden kan inte ångras.",
-  "libraryDeleteFailed": "Det gick inte att ta bort taveluppsättningen ”{name}”",
-  "libraryExportFailed": "Det gick inte att exportera taveluppsättningen ”{name}”",
+  "libraryDeleteFailed": "Det gick inte att ta bort taveluppsättningen",
+  "libraryExportFailed": "Det gick inte att exportera taveluppsättningen",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Öppna biblioteket",
   "aboutSourceCode": "Källkod",
@@ -82,8 +96,8 @@
   "themeLight": "Ljust",
   "themeDark": "Mörkt",
   "languageLabel": "Språk",
-  "languageDownloading": "Laddar ner översättningsmodell…",
-  "modelDownloadProgress": "{progress}% klart",
+  "languageDownloading": "Laddar ned översättningsmodell…",
+  "modelDownloadProgress": "{progress} % klart",
   "languageTranslating": "Översätter tavlor…",
   "speechVoice": "Röst",
   "speechRate": "Talhastighet",
@@ -91,9 +105,10 @@
   "speechVolume": "Volym",
   "speechPreviewVoice": "Lyssna på rösten",
   "speechPreviewSample": "Hej, det här är min röst!",
+  "messagePlayTiles": "Läs upp symboler när de läggs till",
   "messageImages": "Visa bilder",
-  "messageHighlight": "Markera under tal",
-  "messageClearAfterSpeaking": "Rensa efter tal",
+  "messageHighlight": "Markera under uppläsning",
+  "messageClearAfterPlaying": "Rensa efter uppläsning",
   "tileSaturation": "Färgintensitet",
   "tileBrightness": "Ljusstyrka",
   "tileBorders": "Visa kantlinjer",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Nederst",
   "tileLabelHidden": "Dolda",
   "tileOpensBoard": "Öppnar tavla",
-  "scanningEnabled": "Aktivera kontaktskanning",
+  "tileSpace": "Mellanslag",
+  "scanningEnabled": "Aktivera skanning med kontakt",
   "scanningMethod": "Skanningsmetod",
-  "scanningMethodAuto": "Automatisk",
-  "scanningMethodStep": "Stegvis skanning med två kontakter",
+  "scanningMethodAuto": "Automatisk skanning",
+  "scanningMethodStep": "Stegvis skanning",
   "scanningMethodAutoHint": "Tryck på mellanslag eller Enter för att starta skanningen och för att välja. Skanningen pausas efter två varv.",
   "scanningMethodStepHint": "Tryck på mellanslag för att gå till nästa objekt och på Enter för att välja det.",
   "scanningInterval": "Skanningsintervall",
@@ -116,12 +132,11 @@
   "suggestionsCustomInstructionsUnsupported": "Anpassade instruktioner är inte tillgängliga i den här webbläsaren.",
   "suggestionsEnableHelp": "Så aktiverar du förslag",
   "suggestionsEnable": "Aktivera förslag",
-  "suggestionsDownloading": "Laddar ner AI-modell…",
+  "suggestionsDownloading": "Laddar ned AI-modell…",
   "suggestionsLanguageUnavailable": "Förslag är inte tillgängliga på det här språket.",
   "suggestionsFailed": "Det gick inte att hämta förslag",
   "suggestionsLabel": "Förslag",
-  "navBack": "Tillbaka",
-  "navHome": "Till huvudtavlan",
+  "navHome": "Till startsidan",
   "messageBackspace": "Radera",
   "messageBackspaceLongPressHint": "Håll inne, eller tryck på {shortcut}, för att rensa meddelandet.",
   "messageClear": "Rensa meddelande",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Kommando",
   "keyAppleDelete": "Radera",
-  "messagePlay": "Spela upp meddelande",
-  "messageStop": "Stoppa meddelande",
-  "playbackFailed": "Det gick inte att spela upp ljudet",
+  "messagePlay": "Läs upp meddelande",
+  "messageStop": "Sluta läsa upp",
+  "playbackFailed": "Det gick inte att läsa upp",
   "messageLabel": "Meddelande",
   "onboardingContinue": "Fortsätt",
   "onboardingTitle": "Välkommen till AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Inget konto, ingen reklam, ingen spårning. Fungerar offline.",
   "errorGenericTitle": "Det gick inte att läsa in sidan",
   "errorPageNotFound": "Sidan hittades inte",
-  "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
-  "errorBoardURLImportFailed": "Det gick inte att importera tavelfilen från länken",
-  "boardLinkImportTitle": "Importera tavelfilen från länken?",
-  "boardLinkImportDescription": "Den här länken importerar en tavelfil från {host}. Importera den bara om du litar på den som skickade länken.",
-  "boardLinkImport": "Importera",
-  "boardLinkCancel": "Avbryt"
+  "errorBoardFileURLImportFailed": "Det gick inte att importera tavelfilen från länken",
+  "boardFileURLImportTitle": "Importera tavelfilen från länken?",
+  "boardFileURLImportDescription": "Den här länken importerar en tavelfil från {host}. Importera den bara om du litar på den som skickade länken.",
+  "boardFileURLImportConfirm": "Importera",
+  "boardFileURLImportCancel": "Avbryt"
 }

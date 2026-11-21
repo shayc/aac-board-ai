@@ -1,21 +1,29 @@
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import { typographyClasses } from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { shortLandscape } from "@shared/theme/short-landscape";
+import { LIGHT_SCHEME_CLASS } from "@shared/theme/theme";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import {
   AACSymbol,
   SYMBOL_IMAGE_SIZE_PROPERTY,
 } from "../aac-symbol/aac-symbol";
+import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
 import type { MessagePart } from "./message-types";
 
-// Imported symbols need a light background in both themes.
-const LIGHT_SCHEME_CLASS = "light";
-
-export const MESSAGE_ACTION_SIZE = 80;
-export const MESSAGE_ACTION_ICON_SIZE = 36;
+// A short landscape screen gets compact; smaller symbols leave room for labels.
+const BAR_SIZES = {
+  regular: { control: CONTROL_SIZES.large, symbol: 64 },
+  compact: { control: CONTROL_SIZES.medium, symbol: 48 },
+} as const;
 
 const BAR_INSET = 1;
+// Clears the bar's rounded end, which would clip the first word.
+const MESSAGE_PADDING = 3;
+const PART_INLINE_PADDING = 1;
+const ACTIVE_PART_ANCHOR = "--active-message-part";
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -51,7 +59,7 @@ export function MessageBar({
 
   useLayoutEffect(() => {
     scrollPartIntoView(scrollContainerRef.current?.lastElementChild, "end");
-  }, [parts]);
+  }, [parts, isWordOpen]);
 
   // Declared after the newest-part scroll so it wins when an edit starts
   // playback in the same render, as a spelling tile's echo does.
@@ -61,10 +69,17 @@ export function MessageBar({
     }
   }, [activePartId]);
 
-  const openPartId = isWordOpen ? parts.at(-1)?.id : undefined;
+  const lastPart = parts.at(-1);
+  const caretPartId = lastPart?.kind === "text" ? lastPart.id : undefined;
+  const caretPosition = isWordOpen ? "word-end" : "next-word";
 
   return (
-    <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
+    <Stack
+      // Imported symbols need a light background in both themes.
+      className={LIGHT_SCHEME_CLASS}
+      direction="row"
+      sx={messageBarSx}
+    >
       <Stack
         ref={scrollContainerRef}
         // A live region would repeat the tile's spoken feedback.
@@ -73,7 +88,7 @@ export function MessageBar({
         // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
-        sx={scrollContainerSx}
+        sx={[scrollContainerSx, activePartId !== null && activePartFillSx]}
       >
         {parts.map((part) => (
           <MessagePartItem
@@ -82,7 +97,7 @@ export function MessageBar({
             language={part.language}
             imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
             isActive={part.id === activePartId}
-            isOpen={part.id === openPartId}
+            caretPosition={part.id === caretPartId ? caretPosition : undefined}
             isImageVisible={areImagesVisible}
           />
         ))}
@@ -102,13 +117,14 @@ function scrollPartIntoView(
 
 function messageBarSx(theme: Theme) {
   return {
+    ...barSizeProperties(BAR_SIZES.regular),
+    flexGrow: 1,
     alignItems: "center",
     gap: 2,
     px: BAR_INSET,
     overflow: "hidden",
     color: "text.primary",
-    // Forced-colors mode paints this border, outlining the bar where its
-    // shadow and fill are removed.
+    // Forced-colors mode paints this border in place of the shadow and fill.
     border: 1,
     borderColor: "transparent",
     borderRadius: theme.vars.shape.borderRadiusFull,
@@ -116,21 +132,32 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    // A full grey 400 glares against the dark page; symbols still need a light
-    // ground.
-    ...theme.applyStyles("dark", {
-      bgcolor: `color-mix(in srgb, ${theme.vars.palette.grey[400]}, ${theme.vars.palette.grey[500]} 40%)`,
-    }),
+    // In dark mode white would outshine the board and mid grey reads as
+    // disabled; grey 300 is as light as the board's pastel tiles.
+    ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[300] }),
+    [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
+}
+
+type BarSize = (typeof BAR_SIZES)[keyof typeof BAR_SIZES];
+
+function barSizeProperties({ control, symbol }: BarSize) {
+  return {
+    [CONTROL_SIZE_PROPERTY]: `${control}px`,
+    [SYMBOL_IMAGE_SIZE_PROPERTY]: `${symbol}px`,
+  };
 }
 
 function scrollContainerSx(theme: Theme) {
   return {
+    position: "relative",
+    // Keeps the active part's fill behind the labels but above the bar.
+    isolation: "isolate",
     flexGrow: 1,
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
-    height: `calc(${MESSAGE_ACTION_SIZE}px + ${theme.spacing(BAR_INSET * 2)})`,
-    px: 2,
+    height: `calc(var(${CONTROL_SIZE_PROPERTY}) + ${theme.spacing(BAR_INSET * 2)})`,
+    px: MESSAGE_PADDING,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
@@ -139,12 +166,37 @@ function scrollContainerSx(theme: Theme) {
   };
 }
 
+function activePartFillSx(theme: Theme) {
+  const blockOutset = theme.spacing(0.25);
+  const inlineOutset = theme.spacing(PART_INLINE_PADDING);
+
+  return {
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      zIndex: -1,
+      positionAnchor: ACTIVE_PART_ANCHOR,
+      top: `calc(anchor(top) - ${blockOutset})`,
+      bottom: `calc(anchor(bottom) - ${blockOutset})`,
+      // Logical insets, since the RTL stylis plugin flips `left` and `right`
+      // but not the `anchor()` sides inside them.
+      insetInlineStart: `calc(anchor(start) - ${inlineOutset})`,
+      insetInlineEnd: `calc(anchor(end) - ${inlineOutset})`,
+      borderRadius: theme.vars.shape.borderRadiusFull,
+      bgcolor: "primary.main",
+      // Forced-colors mode drops the fill but paints a transparent outline.
+      outline: "2px solid transparent",
+      pointerEvents: "none",
+    },
+  };
+}
+
 interface MessagePartItemProps {
   label: string;
   language: string | undefined;
   imageSrc?: string;
   isActive: boolean;
-  isOpen: boolean;
+  caretPosition: "word-end" | "next-word" | undefined;
   isImageVisible: boolean;
 }
 
@@ -153,7 +205,7 @@ function MessagePartItem({
   language,
   imageSrc,
   isActive,
-  isOpen,
+  caretPosition,
   isImageVisible,
 }: MessagePartItemProps) {
   return (
@@ -162,21 +214,23 @@ function MessagePartItem({
       lang={language}
       direction="row"
       sx={(theme) => ({
-        [SYMBOL_IMAGE_SIZE_PROPERTY]: "64px",
         py: 0.5,
-        px: 1,
-        borderRadius: theme.vars.shape.borderRadius,
-        outline: isActive
-          ? `2px solid ${theme.vars.palette.primary.main}`
-          : "none",
-        outlineOffset: -2,
-        // A caret marks the word that spelling still extends, so a space or
-        // a backspace that only closes or reopens it has a visible result. It
-        // is a border because forced-colors mode repaints backgrounds.
-        ...(isOpen && {
+        px: PART_INLINE_PADDING,
+        [`& .${typographyClasses.root}`]: {
+          anchorName: isActive ? ACTIVE_PART_ANCHOR : "none",
+          color: isActive ? theme.vars.palette.primary.contrastText : undefined,
+        },
+        // Forced-colors mode repaints backgrounds, so draw the caret as a border.
+        ...(caretPosition && {
           "&::after": {
             content: '""',
-            marginInlineStart: "2px",
+            alignSelf: "center",
+            // As tall as the line of the word it follows.
+            height: "1.2em",
+            marginInlineStart: theme.spacing(
+              caretPosition === "next-word" ? PART_INLINE_PADDING * 2 : 0.5,
+            ),
+            fontSize: theme.typography.h5.fontSize,
             borderInlineStart: "2px solid currentColor",
           },
         }),

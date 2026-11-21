@@ -4,16 +4,16 @@ import { useNavigate } from "react-router";
 import { rootBoardPath } from "../board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
 import {
-  type BoardFileImportFailure,
   importEachBoardFile,
   type ImportedBoardSet,
+  type ImportFailure,
 } from "./board-file-import";
-import { summarizeImport, summarizeSkippedFiles } from "./summarize-import";
+import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   importAndOpen: (
     files: readonly File[],
-    readFailures?: readonly BoardFileImportFailure[],
+    readFailures?: readonly ImportFailure[],
   ) => Promise<void>;
   pickAndImport: () => Promise<void>;
 }
@@ -22,9 +22,9 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  async function importFiles(
+  async function importAndReport(
     files: readonly File[],
-    readFailures: readonly BoardFileImportFailure[],
+    readFailures: readonly ImportFailure[],
   ): Promise<ImportedBoardSet[]> {
     if (files.length === 0 && readFailures.length === 0) {
       return [];
@@ -34,14 +34,13 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const boardReadFailures = readFailures.filter(({ fileName }) =>
       hasBoardFileExtension(fileName),
     );
-    // Non-board files are named only when no board file was given, so a stray
-    // file never turns a successful import into an error.
+    // Non-board files are reported only when no board file was given, so a
+    // stray file never turns a successful import into an error.
     if (boardFiles.length === 0 && boardReadFailures.length === 0) {
-      const skippedFileNames = [
-        ...files.map(({ name }) => name),
-        ...readFailures.map(({ fileName }) => fileName),
-      ];
-      showSnackbar(summarizeSkippedFiles(skippedFileNames));
+      showSnackbar({
+        message: (t) => t(m.libraryImportNotBoardFiles),
+        severity: "error",
+      });
 
       return [];
     }
@@ -66,9 +65,9 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
   async function importAndOpen(
     files: readonly File[],
-    readFailures: readonly BoardFileImportFailure[] = [],
+    readFailures: readonly ImportFailure[] = [],
   ) {
-    const importedBoardSets = await importFiles(files, readFailures);
+    const importedBoardSets = await importAndReport(files, readFailures);
     const onlyBoardSet =
       importedBoardSets.length === 1 ? importedBoardSets[0] : undefined;
     if (!onlyBoardSet) {

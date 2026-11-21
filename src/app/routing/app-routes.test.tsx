@@ -15,6 +15,7 @@ import { renderWithProviders } from "@shared/testing/render-with-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
+import { stubWakeLock } from "@shared/testing/stub-wake-lock";
 import { textLeft } from "@shared/testing/text-position";
 import { setTestViewport } from "@shared/testing/viewport";
 import { createMemoryRouter } from "react-router";
@@ -129,7 +130,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "water" }).click();
     speech.speak.mockClear();
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["i want water"]);
@@ -155,7 +156,7 @@ describe("app flow", () => {
 
     await screen.getByRole("button", { name: "מים" }).click();
     speech.speak.mockClear();
-    await screen.getByRole("button", { name: "השמעת המסר" }).click();
+    await screen.getByRole("button", { name: "הקראת המסר" }).click();
 
     await vi.waitFor(() => {
       expect(speech.spokenTexts()).toEqual(["אני רוצה מים"]);
@@ -183,10 +184,10 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "cat" }).click();
     speech.speak.mockClear();
 
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["no way feline"]);
+      expect(speech.spokenTexts()).toEqual(["No way feline"]);
     });
   });
 
@@ -204,7 +205,7 @@ describe("app flow", () => {
       .toBeVisible();
 
     audio.play.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
+    await screen.getByRole("button", { name: "Speak message" }).click();
 
     await vi.waitFor(() => {
       expect(audio.play).toHaveBeenCalledTimes(1);
@@ -213,6 +214,35 @@ describe("app flow", () => {
     const element = audio.play.mock.contexts[0];
     assert(element instanceof HTMLAudioElement);
 
+    const response = await fetch(element.src);
+
+    expect(await response.text()).toBe("recording");
+  });
+
+  test("a message being composed comes back after a reload, recording included", async () => {
+    await seedRecordedAudioSet();
+    const first = await renderApp();
+    await first.screen.getByRole("button", { name: "Continue" }).click();
+    await first.screen.getByRole("button", { name: "hello" }).click();
+    await first.screen.unmount();
+    // Storing the set again revokes its URLs, as closing the page would.
+    await resetBoardsDB();
+    await seedRecordedAudioSet();
+
+    const { screen } = await renderApp();
+
+    await expect
+      .element(screen.getByRole("list", { name: "Message" }))
+      .toHaveTextContent("hello");
+
+    audio.play.mockClear();
+    await screen.getByRole("button", { name: "Speak message" }).click();
+
+    await vi.waitFor(() => {
+      expect(audio.play).toHaveBeenCalledTimes(1);
+    });
+    const element = audio.play.mock.contexts[0];
+    assert(element instanceof HTMLAudioElement);
     const response = await fetch(element.src);
 
     expect(await response.text()).toBe("recording");
@@ -423,26 +453,23 @@ describe("app flow", () => {
     expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSetData);
   });
 
-  test("choosing a board in the header's board list opens it and enables Back", async () => {
+  test("choosing a board in the header's board list opens it", async () => {
     await seedTwoBoardSet();
 
     const { screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    await screen.getByRole("combobox", { name: "Board" }).click();
+    await screen
+      .getByRole("heading", { level: 1, name: "Home" })
+      .getByRole("button")
+      .click();
     await screen.getByRole("option", { name: "Fruit" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Fruit" }))
       .toBeVisible();
     await expect
-      .element(screen.getByRole("combobox", { name: "Board" }))
-      .toHaveValue("Fruit");
-
-    await screen.getByRole("button", { name: "Go back" }).click();
-
-    await expect
-      .element(screen.getByRole("grid", { name: "Home" }))
+      .element(screen.getByRole("heading", { level: 1, name: "Fruit" }))
       .toBeVisible();
   });
 
@@ -468,11 +495,10 @@ describe("app flow", () => {
     await expect
       .element(screen.getByRole("button", { name: "[es] fruit" }))
       .toHaveAttribute("lang", "es");
-    await expect
-      .element(screen.getByRole("combobox", { name: "Tablero" }))
-      .toHaveValue("[es] Home");
-
-    await screen.getByRole("combobox", { name: "Tablero" }).click();
+    await screen
+      .getByRole("heading", { level: 1, name: "[es] Home" })
+      .getByRole("button")
+      .click();
     await expect
       .element(screen.getByRole("option", { name: "[es] Fruit" }))
       .toBeInTheDocument();
@@ -663,6 +689,24 @@ describe("app flow", () => {
       .element(screen.getByRole("combobox", { name: "Langue" }))
       .toBeVisible();
     await expect.element(notice).not.toBeInTheDocument();
+  });
+
+  test("the screen stays awake while a board is open, and no longer after leaving it", async () => {
+    const { locks } = stubWakeLock();
+    const { router, screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "First Words" }))
+      .toBeVisible();
+
+    await vi.waitFor(() => expect(locks).toHaveLength(1));
+    expect(locks[0]?.released).toBe(false);
+
+    await router.navigate("/nonexistent");
+
+    await expect.element(screen.getByText("Page not found")).toBeVisible();
+    expect(locks[0]?.released).toBe(true);
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {

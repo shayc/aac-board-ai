@@ -6,6 +6,11 @@ import { MessageSettings } from "./message-settings";
 describe("MessageSettings", () => {
   test.each([
     {
+      name: "Speak symbols when added",
+      preference: "shouldPlayTiles",
+      effect: "playing symbols when added",
+    },
+    {
       name: "Show images",
       preference: "areImagesVisible",
       effect: "images in the message bar",
@@ -13,12 +18,12 @@ describe("MessageSettings", () => {
     {
       name: "Highlight while speaking",
       preference: "isHighlightingEnabled",
-      effect: "highlighting while speaking",
+      effect: "highlighting while playing",
     },
     {
       name: "Clear after speaking",
       preference: "shouldClearAfterPlayback",
-      effect: "clearing after speaking",
+      effect: "clearing after playing",
     },
   ])(
     "turns off $effect and persists the choice",

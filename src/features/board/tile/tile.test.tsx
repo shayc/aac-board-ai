@@ -1,4 +1,4 @@
-import type { BoardButton } from "@features/library";
+import type { BoardAction, BoardButton } from "@features/library";
 import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
@@ -126,6 +126,68 @@ describe("Tile", () => {
     await expect.element(tile).toBeVisible();
     expect(tile.element().querySelector("img")?.getAttribute("alt")).toBe("");
   });
+
+  test.each<{ action: BoardAction; name: string }>([
+    { action: { kind: "space" }, name: "Space" },
+    { action: { kind: "backspace" }, name: "Backspace" },
+    { action: { kind: "clear" }, name: "Clear message" },
+    { action: { kind: "home" }, name: "Go home" },
+    { action: { kind: "play" }, name: "Speak message" },
+  ])("names an unlabeled $action.kind tile $name", async ({ action, name }) => {
+    const screen = await renderInTheme(
+      tileElement({ label: "", actions: [action] }),
+    );
+
+    await expect.element(screen.getByRole("button")).toHaveAccessibleName(name);
+  });
+
+  test.each<{ label: string; vocalization: string; name: string }>([
+    { label: "Speak now", vocalization: "Read aloud", name: "Speak now" },
+    { label: "", vocalization: "Read aloud", name: "Read aloud" },
+  ])(
+    "keeps the authored name $name on a command tile",
+    async ({ label, vocalization, name }) => {
+      const screen = await renderInTheme(
+        tileElement({ label, vocalization, actions: [{ kind: "play" }] }),
+      );
+
+      await expect
+        .element(screen.getByRole("button"))
+        .toHaveAccessibleName(name);
+    },
+  );
+
+  test.each<{ description: string; overrides: Partial<BoardButton> }>([
+    {
+      description: "only spelling",
+      overrides: { actions: [{ kind: "spell", text: "A" }] },
+    },
+    {
+      description: "only an unsupported action",
+      overrides: { actions: [{ kind: "unsupported", raw: ":shift" }] },
+    },
+    {
+      description: "two commands",
+      overrides: { actions: [{ kind: "play" }, { kind: "clear" }] },
+    },
+    {
+      description: "spelling and a command",
+      overrides: { actions: [{ kind: "spell", text: "A" }, { kind: "play" }] },
+    },
+    {
+      description: "a board link and a command",
+      overrides: { linkedBoardId: "animals", actions: [{ kind: "home" }] },
+    },
+  ])(
+    "keeps a tile with $description unnamed when it has no authored name",
+    async ({ overrides }) => {
+      const screen = await renderInTheme(
+        tileElement({ label: "", ...overrides }),
+      );
+
+      await expect.element(screen.getByRole("button")).toHaveAccessibleName("");
+    },
+  );
 
   test("describes folder tiles as opening a board and gives word tiles no description", async () => {
     const screen = await renderInTheme(
@@ -417,8 +479,8 @@ describe("Tile", () => {
   });
 
   test.each([
-    { size: "a small tile", width: 96, height: 96, fontSize: "14px" },
-    { size: "a wide, short tile", width: 460, height: 120, fontSize: "14px" },
+    { size: "a small tile", width: 96, height: 96, fontSize: "16px" },
+    { size: "a wide, short tile", width: 460, height: 120, fontSize: "16px" },
     { size: "a mid-sized tile", width: 224, height: 174, fontSize: "18px" },
     { size: "a large tile", width: 460, height: 260, fontSize: "20px" },
   ])(

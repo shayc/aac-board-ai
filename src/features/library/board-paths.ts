@@ -1,4 +1,4 @@
-import { generatePath, matchRoutes } from "react-router";
+import { generatePath, matchRoutes, useLocation } from "react-router";
 import type { BoardKey } from "./board-types";
 
 // The URL scheme lives in the library because the library links and redirects
@@ -12,6 +12,10 @@ export function boardSetIdFromPath(pathname: string): string | undefined {
     matchRoutes([{ path: `/${BOARD_SET_SEGMENT}/*` }], pathname) ?? [];
 
   return match?.params.boardSetId;
+}
+
+export function useActiveBoardSetId(): string | undefined {
+  return boardSetIdFromPath(useLocation().pathname);
 }
 
 export function boardPath({ boardSetId, boardId }: BoardKey): string {

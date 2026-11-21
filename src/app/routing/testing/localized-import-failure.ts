@@ -1,6 +1,6 @@
-import { routeErrorCodes } from "../route-error";
+import { ROUTE_ERROR_CODES } from "../errors/route-error";
 
 export const localizedImportFailure = {
-  data: { code: routeErrorCodes.boardURLImportFailed },
+  data: { code: ROUTE_ERROR_CODES.boardFileURLImportFailed },
   init: { status: 400 },
 };

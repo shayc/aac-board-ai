@@ -12,7 +12,7 @@ describe("planPlayback", () => {
   test("merges a run of tile and text parts into a single speech step", () => {
     const parts: MessagePart[] = [
       { kind: "tile", id: "1", label: "I", language: "en" },
-      { kind: "text", id: "2", label: "Want", language: "en" },
+      { kind: "text", id: "2", label: "want", language: "en" },
     ];
 
     const steps = planPlayback(parts, "en");
@@ -21,6 +21,23 @@ describe("planPlayback", () => {
 
     expect(step.text).toBe("i want");
     expect(step.cueAt?.(2)).toBe("2");
+  });
+
+  test("lowercases single-letter English parts and leaves other casing alone", () => {
+    const steps = planPlayback(
+      [
+        { kind: "tile", id: "1", label: "I", language: "en-US" },
+        { kind: "tile", id: "2", label: "A", language: undefined },
+        { kind: "tile", id: "3", label: "OK", language: "en-US" },
+        { kind: "tile", id: "4", label: "Я", language: "ru" },
+      ],
+      "en-US",
+    );
+
+    expect(steps).toMatchObject([
+      { kind: "speech", text: "i a OK", language: "en-US" },
+      { kind: "speech", text: "Я", language: "ru", cue: "4" },
+    ]);
   });
 
   test("starts a new speech step where the language changes", () => {
@@ -36,12 +53,9 @@ describe("planPlayback", () => {
 
     expect(steps).toMatchObject([
       { kind: "speech", text: "i want", language: "en" },
-      { kind: "speech", text: "מים", language: "he" },
-      { kind: "speech", text: "please", language: "en" },
+      { kind: "speech", text: "מים", language: "he", cue: "3" },
+      { kind: "speech", text: "please", language: "en", cue: "4" },
     ]);
-    expect(
-      steps.map((step) => step.kind === "speech" && step.cueAt?.(0)),
-    ).toEqual(["1", "3", "4"]);
   });
 
   test("speaks text in an unknown language in the same step as the communication language", () => {
@@ -73,8 +87,10 @@ describe("planPlayback", () => {
 
     expect(step.text).toBe("i want a cookie");
     expect(step.cueAt?.(0)).toBe("1");
+    expect(step.cueAt?.(1)).toBe("2");
     expect(step.cueAt?.(2)).toBe("2");
     expect(step.cueAt?.(7)).toBe("2");
+    expect(step.cueAt?.(8)).toBe("3");
     expect(step.cueAt?.(9)).toBe("3");
     expect(step.cueAt?.(99)).toBeNull();
   });
@@ -117,13 +133,13 @@ describe("planPlayback", () => {
         kind: "audio",
         cue: "1",
         src: "bark.mp3",
-        fallback: { text: "dog", language: "en" },
+        fallback: { text: "Dog", language: "en" },
       },
       {
         kind: "audio",
         cue: "2",
         src: "laugh.mp3",
-        fallback: { text: "very happy", language: "en" },
+        fallback: { text: "Very happy", language: "en" },
       },
     ]);
   });
@@ -143,7 +159,7 @@ describe("planPlayback", () => {
     );
 
     expect(steps).toMatchObject([
-      { kind: "audio", fallback: { text: "dog", language: "en" } },
+      { kind: "audio", fallback: { text: "Dog", language: "en" } },
     ]);
   });
 
@@ -202,7 +218,7 @@ describe("planPlayback", () => {
 
     const step = getOnlySpeechStep(steps);
 
-    expect(step.text).toBe("happy");
+    expect(step.text).toBe("Happy");
   });
 
   test("skips parts with no spoken text", () => {

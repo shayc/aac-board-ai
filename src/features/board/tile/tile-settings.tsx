@@ -1,4 +1,3 @@
-import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
@@ -63,7 +62,6 @@ export function TileSettings() {
         min={TILE_BRIGHTNESS.min}
         max={TILE_BRIGHTNESS.max}
         step={BRIGHTNESS_STEP}
-        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
 
@@ -74,7 +72,6 @@ export function TileSettings() {
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
         step={SATURATION_STEP}
-        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>
@@ -109,15 +106,8 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 function radioSx(theme: Theme) {
   return {
     p: 0.5,
-    borderRadius: theme.vars.shape.borderRadius,
-    [`&.${buttonBaseClasses.focusVisible}`]: {
-      ...theme.focusVisible,
-      // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
-      "& svg:first-of-type": {
-        borderRadius: 0,
-        outline: "none",
-        boxShadow: "none",
-      },
-    },
+    // Concentric with the preview's corners across the padding, so the hover
+    // and ripple halo runs parallel to its border.
+    borderRadius: `calc(${theme.vars.shape.borderRadiusSm} + ${theme.spacing(0.5)})`,
   };
 }

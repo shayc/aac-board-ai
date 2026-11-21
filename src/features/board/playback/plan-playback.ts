@@ -1,3 +1,4 @@
+import { getLanguageCode } from "@shared/language/locale";
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import type { SpeechText } from "@shared/speech/speech-synthesis";
 import type { MessagePart } from "../message/message-types";
@@ -20,13 +21,13 @@ export function planPlayback(
       return;
     }
 
-    steps.push(createSpeechStep(speechRun, firstPart.language));
+    steps.push(buildSpeechStep(speechRun, firstPart.language));
     speechRun = [];
   }
 
   for (const part of parts) {
-    const text = getSpokenText(part);
     const language = part.language ?? defaultLanguage;
+    const text = getSpokenText(part, language);
 
     if (part.kind === "tile" && part.soundSrc) {
       flushSpeech();
@@ -44,8 +45,7 @@ export function planPlayback(
       continue;
     }
 
-    // An utterance has one language and one voice, so a run ends where the
-    // language changes.
+    // An utterance has one language, so a run ends where the language changes.
     if (speechRun.at(-1)?.language !== language) {
       flushSpeech();
     }
@@ -60,21 +60,32 @@ export function planPlayback(
 
 interface PartSpan {
   id: string;
-  start: number;
   end: number;
 }
 
-function createSpeechStep(
+// A lone part stays highlighted for the whole utterance, while several parts
+// wait for word boundaries so a voice without them shows no stale highlight.
+function buildSpeechStep(
   parts: readonly SpeechPart[],
   language: string,
 ): SpeechStep {
+  const [firstPart] = parts;
+  if (firstPart && parts.length === 1) {
+    return {
+      kind: "speech",
+      text: firstPart.text,
+      language,
+      cue: firstPart.id,
+    };
+  }
+
   const chunks: string[] = [];
   const spans: PartSpan[] = [];
   let offset = 0;
 
   for (const part of parts) {
     chunks.push(part.text);
-    spans.push({ id: part.id, start: offset, end: offset + part.text.length });
+    spans.push({ id: part.id, end: offset + part.text.length });
     offset += part.text.length + 1;
   }
 
@@ -82,15 +93,19 @@ function createSpeechStep(
     kind: "speech",
     text: chunks.join(" "),
     language,
+    // A boundary on the space between parts belongs to the word after it.
     cueAt: (charIndex) =>
-      spans.find((span) => charIndex >= span.start && charIndex < span.end)
-        ?.id ?? null,
+      spans.find((span) => charIndex < span.end)?.id ?? null,
   };
 }
 
-function getSpokenText(part: MessagePart): string {
-  const text =
+// Keep Safari from speaking "I" as "Capital I".
+function getSpokenText(part: MessagePart, language: string): string {
+  const raw =
     part.kind === "tile" ? (part.vocalization ?? part.label) : part.label;
+  const text = raw.trim().replace(/\s+/g, " ");
 
-  return text.trim().replace(/\s+/g, " ").toLowerCase();
+  return text.length === 1 && getLanguageCode(language) === "en"
+    ? text.toLowerCase()
+    : text;
 }

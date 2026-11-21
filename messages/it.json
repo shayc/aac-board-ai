@@ -5,8 +5,7 @@
   "opensInNewTab": "(si apre in una nuova scheda)",
   "boardGridLabel": "Tabella di comunicazione",
   "boardSelectorLabel": "Tabella",
-  "boardSelectorOpen": "Apri l'elenco delle tabelle",
-  "boardSelectorClose": "Chiudi l'elenco delle tabelle",
+  "boardSelectorSearch": "Cerca tabelle",
   "boardSelectorNoOptions": "Nessuna tabella corrispondente",
   "libraryLoading": "Caricamento set di tabelle…",
   "libraryLoadFailed": "Impossibile caricare la libreria",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Set di tabelle",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importazione file di tabella…",
-        "countPlural=*": "Importazione file di tabelle…"
+        "count=1": "Importazione file di tabella…",
+        "count=*": "Importazione file di tabelle…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Set di tabelle importato",
-        "countPlural=*": "Set di tabelle importati"
+        "count=1": "Set di tabelle importato",
+        "count=*": "Set di tabelle importati"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Impossibile importare il file di tabella \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Impossibile importare i file di tabelle",
-  "libraryImportNotBoardFile": "\"{fileName}\" non è un file di tabella",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Impossibile importare il file di tabella",
+        "count=*": "Impossibile importare i file di tabelle"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Si possono importare solo file di tabelle",
-  "libraryImportTooLargeBoardFile": "Il file di tabella \"{fileName}\" è troppo grande per essere importato",
-  "libraryImportTooLargeBoardFiles": "I file di tabelle sono troppo grandi per essere importati",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Il file di tabella è troppo grande per essere importato",
+        "count=*": "I file di tabelle sono troppo grandi per essere importati"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Impossibile importare alcuni file di tabelle ({failed} di {total})",
-  "libraryDropToImport": "Rilascia i file delle tabelle per importare",
+  "libraryDropToImport": "Rilascia i file di tabelle per importarli",
   "libraryInfo": "Info",
   "libraryExport": "Esporta",
   "libraryDelete": "Elimina",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Griglia {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Eliminare il set di tabelle?",
   "libraryDeleteIrreversible": "Il set di tabelle \"{name}\" verrà eliminato. Questa azione non può essere annullata.",
-  "libraryDeleteFailed": "Impossibile eliminare il set di tabelle \"{name}\"",
-  "libraryExportFailed": "Impossibile esportare il set di tabelle \"{name}\"",
+  "libraryDeleteFailed": "Impossibile eliminare il set di tabelle",
+  "libraryExportFailed": "Impossibile esportare il set di tabelle",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",
   "aboutSourceCode": "Codice sorgente",
@@ -91,9 +105,10 @@
   "speechVolume": "Volume",
   "speechPreviewVoice": "Ascolta la voce",
   "speechPreviewSample": "Ciao, questa è la mia voce!",
+  "messagePlayTiles": "Pronuncia i simboli quando vengono aggiunti",
   "messageImages": "Mostra le immagini",
-  "messageHighlight": "Evidenzia durante la lettura",
-  "messageClearAfterSpeaking": "Cancella dopo la lettura",
+  "messageHighlight": "Evidenzia durante la pronuncia",
+  "messageClearAfterPlaying": "Cancella dopo la pronuncia",
   "tileSaturation": "Intensità del colore",
   "tileBrightness": "Luminosità",
   "tileBorders": "Mostra i bordi",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "In basso",
   "tileLabelHidden": "Nascoste",
   "tileOpensBoard": "Apre una tabella",
+  "tileSpace": "Spazio",
   "scanningEnabled": "Attiva la scansione con sensore",
   "scanningMethod": "Metodo di scansione",
-  "scanningMethodAuto": "Automatica",
-  "scanningMethodStep": "Scansione passo-passo con due sensori",
+  "scanningMethodAuto": "Scansione automatica",
+  "scanningMethodStep": "Scansione passo passo",
   "scanningMethodAutoHint": "Premi Spazio o Invio per avviare la scansione e per selezionare. La scansione va in pausa dopo due passaggi.",
   "scanningMethodStepHint": "Premi Spazio per passare all’elemento successivo e Invio per selezionarlo.",
   "scanningInterval": "Intervallo di scansione",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "I suggerimenti non sono disponibili in questa lingua.",
   "suggestionsFailed": "Impossibile ottenere suggerimenti",
   "suggestionsLabel": "Suggerimenti",
-  "navBack": "Indietro",
-  "navHome": "Vai alla tabella principale",
+  "navHome": "Vai alla home",
   "messageBackspace": "Cancella",
   "messageBackspaceLongPressHint": "Tieni premuto o premi {shortcut} per cancellare il messaggio.",
   "messageClear": "Cancella messaggio",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Comando",
   "keyAppleDelete": "Elimina",
-  "messagePlay": "Riproduci messaggio",
-  "messageStop": "Interrompi messaggio",
-  "playbackFailed": "Impossibile riprodurre il suono",
+  "messagePlay": "Pronuncia il messaggio",
+  "messageStop": "Smetti di parlare",
+  "playbackFailed": "Impossibile pronunciare",
   "messageLabel": "Messaggio",
   "onboardingContinue": "Continua",
   "onboardingTitle": "Ti diamo il benvenuto in AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Nessun account, nessuna pubblicità, nessun tracciamento. Funziona offline.",
   "errorGenericTitle": "Impossibile caricare la pagina",
   "errorPageNotFound": "Pagina non trovata",
-  "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
-  "errorBoardURLImportFailed": "Impossibile importare il file di tabella dal link",
-  "boardLinkImportTitle": "Importare il file di tabella dal link?",
-  "boardLinkImportDescription": "Questo link importa un file di tabella da {host}. Importalo solo se ti fidi di chi ti ha inviato il link.",
-  "boardLinkImport": "Importa",
-  "boardLinkCancel": "Annulla"
+  "errorBoardFileURLImportFailed": "Impossibile importare il file di tabella dal link",
+  "boardFileURLImportTitle": "Importare il file di tabella dal link?",
+  "boardFileURLImportDescription": "Questo link importa un file di tabella da {host}. Importalo solo se ti fidi di chi ti ha inviato il link.",
+  "boardFileURLImportConfirm": "Importa",
+  "boardFileURLImportCancel": "Annulla"
 }

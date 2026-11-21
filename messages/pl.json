@@ -5,8 +5,7 @@
   "opensInNewTab": "(otwiera się w nowej karcie)",
   "boardGridLabel": "Tablica komunikacyjna",
   "boardSelectorLabel": "Tablica",
-  "boardSelectorOpen": "Otwórz listę tablic",
-  "boardSelectorClose": "Zamknij listę tablic",
+  "boardSelectorSearch": "Szukaj tablic",
   "boardSelectorNoOptions": "Brak pasujących tablic",
   "libraryLoading": "Ładowanie zestawów tablic…",
   "libraryLoadFailed": "Nie udało się wczytać biblioteki",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Zestawy tablic",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Importowanie pliku tablicy…",
-        "countPlural=*": "Importowanie plików tablic…"
+        "count=1": "Importowanie pliku tablicy…",
+        "count=*": "Importowanie plików tablic…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Zaimportowano zestaw tablic",
-        "countPlural=*": "Zaimportowano zestawy tablic"
+        "count=1": "Zaimportowano zestaw tablic",
+        "count=*": "Zaimportowano zestawy tablic"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Nie udało się zaimportować pliku tablicy „{fileName}”",
-  "libraryImportFailedBoardFiles": "Nie udało się zaimportować plików tablic",
-  "libraryImportNotBoardFile": "„{fileName}” nie jest plikiem tablicy",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Nie udało się zaimportować pliku tablicy",
+        "count=*": "Nie udało się zaimportować plików tablic"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Można importować tylko pliki tablic",
-  "libraryImportTooLargeBoardFile": "Plik tablicy „{fileName}” jest zbyt duży, aby go zaimportować",
-  "libraryImportTooLargeBoardFiles": "Pliki tablic są zbyt duże, aby je zaimportować",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Plik tablicy jest zbyt duży, aby go zaimportować",
+        "count=*": "Pliki tablic są zbyt duże, aby je zaimportować"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Nie udało się zaimportować niektórych plików tablic ({failed} z {total})",
-  "libraryDropToImport": "Upuść pliki tablic, aby zaimportować",
+  "libraryDropToImport": "Upuść pliki tablic, aby je zaimportować",
   "libraryInfo": "Informacje",
   "libraryExport": "Eksportuj",
   "libraryDelete": "Usuń",
@@ -60,8 +74,8 @@
   "libraryGridDimensions": "Siatka {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Usunąć zestaw tablic?",
   "libraryDeleteIrreversible": "Zestaw tablic „{name}” zostanie usunięty. Tej operacji nie można cofnąć.",
-  "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic „{name}”",
-  "libraryExportFailed": "Nie udało się wyeksportować zestawu tablic „{name}”",
+  "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic",
+  "libraryExportFailed": "Nie udało się wyeksportować zestawu tablic",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",
   "aboutSourceCode": "Kod źródłowy",
@@ -87,13 +101,14 @@
   "languageTranslating": "Tłumaczenie tablic…",
   "speechVoice": "Głos",
   "speechRate": "Tempo mowy",
-  "speechPitch": "Wysokość",
+  "speechPitch": "Wysokość głosu",
   "speechVolume": "Głośność",
   "speechPreviewVoice": "Posłuchaj głosu",
   "speechPreviewSample": "Cześć, to mój głos!",
+  "messagePlayTiles": "Wypowiadaj symbole po dodaniu",
   "messageImages": "Pokaż obrazy",
   "messageHighlight": "Podświetlaj podczas mówienia",
-  "messageClearAfterSpeaking": "Czyść po mówieniu",
+  "messageClearAfterPlaying": "Czyść po wypowiedzeniu",
   "tileSaturation": "Intensywność kolorów",
   "tileBrightness": "Jasność",
   "tileBorders": "Pokaż obramowania",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "U dołu",
   "tileLabelHidden": "Ukryte",
   "tileOpensBoard": "Otwiera tablicę",
+  "tileSpace": "Spacja",
   "scanningEnabled": "Włącz skanowanie przełącznikiem",
   "scanningMethod": "Metoda skanowania",
-  "scanningMethodAuto": "Automatyczna",
-  "scanningMethodStep": "Skanowanie krokowe dwoma przełącznikami",
+  "scanningMethodAuto": "Skanowanie automatyczne",
+  "scanningMethodStep": "Skanowanie krokowe",
   "scanningMethodAutoHint": "Naciśnij spację lub Enter, aby rozpocząć skanowanie i aby wybrać. Skanowanie wstrzymuje się po dwóch przebiegach.",
   "scanningMethodStepHint": "Naciśnij spację, aby przejść do następnego elementu, i Enter, aby go wybrać.",
   "scanningInterval": "Interwał skanowania",
@@ -120,8 +136,7 @@
   "suggestionsLanguageUnavailable": "Sugestie są niedostępne w tym języku.",
   "suggestionsFailed": "Nie udało się pobrać sugestii",
   "suggestionsLabel": "Sugestie",
-  "navBack": "Wstecz",
-  "navHome": "Przejdź do głównej tablicy",
+  "navHome": "Przejdź do strony głównej",
   "messageBackspace": "Usuń",
   "messageBackspaceLongPressHint": "Naciśnij i przytrzymaj albo naciśnij {shortcut}, aby wyczyścić wiadomość.",
   "messageClear": "Wyczyść wiadomość",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Odtwórz wiadomość",
-  "messageStop": "Zatrzymaj wiadomość",
-  "playbackFailed": "Nie udało się odtworzyć dźwięku",
+  "messagePlay": "Wypowiedz wiadomość",
+  "messageStop": "Zatrzymaj mówienie",
+  "playbackFailed": "Nie udało się wypowiedzieć",
   "messageLabel": "Wiadomość",
   "onboardingContinue": "Kontynuuj",
   "onboardingTitle": "Witamy w AAC Board AI",
@@ -143,17 +158,16 @@
   "onboardingSuggestionsTitle": "Powiedz więcej mniejszą liczbą dotknięć",
   "onboardingSuggestionsDescription": "AI zamienia kilka symboli w pełne zdanie. To Ty decydujesz, co zostanie powiedziane.",
   "onboardingLanguageTitle": "W Twoim języku",
-  "onboardingLanguageDescription": "Korzystaj z aplikacji w dowolnym z dostępnych języków ({count}).",
+  "onboardingLanguageDescription": "Korzystaj z aplikacji w jednym z {count} języków.",
   "onboardingFreePrivateTitle": "Bezpłatnie i prywatnie",
   "onboardingFreePrivateDescription": "Bez konta, bez reklam, bez śledzenia. Działa offline.",
   "errorGenericTitle": "Nie udało się wczytać strony",
   "errorPageNotFound": "Nie znaleziono strony",
-  "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "errorBoardURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
-  "boardLinkImportTitle": "Zaimportować plik tablicy z linku?",
-  "boardLinkImportDescription": "Ten link importuje plik tablicy z {host}. Importuj go tylko wtedy, gdy ufasz osobie, która wysłała link.",
-  "boardLinkImport": "Importuj",
-  "boardLinkCancel": "Anuluj"
+  "errorBoardFileURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
+  "boardFileURLImportTitle": "Zaimportować plik tablicy z linku?",
+  "boardFileURLImportDescription": "Ten link importuje plik tablicy z {host}. Importuj go tylko wtedy, gdy ufasz osobie, która wysłała link.",
+  "boardFileURLImportConfirm": "Importuj",
+  "boardFileURLImportCancel": "Anuluj"
 }

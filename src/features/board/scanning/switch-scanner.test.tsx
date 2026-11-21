@@ -1,6 +1,7 @@
 import Dialog from "@mui/material/Dialog";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { stubRewriter } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { setTestViewport } from "@shared/testing/viewport";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -21,7 +22,7 @@ import {
 import { ScanningScope } from "./scanning-scope";
 
 const SCAN_INTERVAL_MS = 1000;
-// Play sits under the grid below the sm breakpoint and after the message bar
+// Play sits under the grid below the sm breakpoint and inside the message bar
 // above it, which changes the scan order.
 const PHONE_WIDTH = 375;
 const TABLET_WIDTH = 1024;
@@ -169,16 +170,22 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
     });
 
-    test("outlines the highlighted tiles", async () => {
+    test("outlines the highlighted row, then the highlighted tile", async () => {
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
       const yes = screen.getByRole("button", { name: "yes" }).element();
-      const more = screen.getByRole("button", { name: "more" }).element();
+      const row = screen.getByRole("row").first().element();
 
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
+      expect(getComputedStyle(row).outlineStyle).toBe("solid");
+      expect(getComputedStyle(yes).outlineStyle).not.toBe("solid");
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      expect(getComputedStyle(row).outlineStyle).not.toBe("solid");
       expect(getComputedStyle(yes).outlineStyle).toBe("solid");
-      expect(getComputedStyle(more).outlineStyle).not.toBe("solid");
     });
 
     test("moves to the next row after each scan interval", async () => {
@@ -328,7 +335,7 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
       await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
+      await expect.poll(highlightedNames).toEqual(["Speak message"]);
 
       await pressSwitch();
 
@@ -346,13 +353,13 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect
         .poll(highlightedNames)
-        .toEqual(["Backspace", "Play message"]);
+        .toEqual(["Backspace", "Speak message"]);
 
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["Backspace"]);
 
       await advanceScanInterval();
-      await expect.poll(highlightedNames).toEqual(["Play message"]);
+      await expect.poll(highlightedNames).toEqual(["Speak message"]);
 
       await pressSwitch();
 
@@ -464,6 +471,34 @@ describe("switch scanning", () => {
     beforeEach(() => {
       setScanningEnabled(true);
       setScanMethod("step");
+    });
+
+    test("keeps the full scan outline visible around a suggested phrase", async () => {
+      stubRewriter(() => "Yes, please.");
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+      await screen.getByRole("button", { name: "yes" }).click();
+      const phrase = screen.getByRole("button", { name: "Yes, please." });
+      await expect.element(phrase).toBeVisible();
+
+      await pressSwitch();
+      await pressSwitch();
+
+      await expect.element(phrase).toHaveStyle({ outlineStyle: "solid" });
+      const { outlineWidth, outlineOffset } = getComputedStyle(
+        phrase.element(),
+      );
+      const outlineReach = parseFloat(outlineWidth) + parseFloat(outlineOffset);
+      const chip = phrase.element().getBoundingClientRect();
+      const scroller = screen
+        .getByRole("group", { name: "Suggestions" })
+        .element()
+        .getBoundingClientRect();
+      expect(chip.left - scroller.left).toBeGreaterThanOrEqual(outlineReach);
+      expect(scroller.right - chip.right).toBeGreaterThanOrEqual(outlineReach);
+      expect(chip.top - scroller.top).toBeGreaterThanOrEqual(outlineReach);
+      expect(scroller.bottom - chip.bottom).toBeGreaterThanOrEqual(
+        outlineReach,
+      );
     });
 
     test("has no accessibility violations while a row is highlighted", async () => {

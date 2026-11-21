@@ -5,8 +5,7 @@
   "opensInNewTab": "(mở trong tab mới)",
   "boardGridLabel": "Bảng giao tiếp",
   "boardSelectorLabel": "Bảng",
-  "boardSelectorOpen": "Mở danh sách bảng",
-  "boardSelectorClose": "Đóng danh sách bảng",
+  "boardSelectorSearch": "Tìm bảng",
   "boardSelectorNoOptions": "Không có bảng phù hợp",
   "libraryLoading": "Đang tải các bộ bảng…",
   "libraryLoadFailed": "Không thể tải thư viện",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "Bộ bảng",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Đang nhập tệp bảng…",
-        "countPlural=*": "Đang nhập các tệp bảng…"
+        "count=1": "Đang nhập tệp bảng…",
+        "count=*": "Đang nhập các tệp bảng…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "Đã nhập bộ bảng",
-        "countPlural=*": "Đã nhập các bộ bảng"
+        "count=1": "Đã nhập bộ bảng",
+        "count=*": "Đã nhập các bộ bảng"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Không thể nhập tệp bảng \"{fileName}\"",
-  "libraryImportFailedBoardFiles": "Không thể nhập các tệp bảng",
-  "libraryImportNotBoardFile": "\"{fileName}\" không phải là tệp bảng",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Không thể nhập tệp bảng",
+        "count=*": "Không thể nhập các tệp bảng"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "Chỉ có thể nhập tệp bảng",
-  "libraryImportTooLargeBoardFile": "Tệp bảng \"{fileName}\" quá lớn để nhập",
-  "libraryImportTooLargeBoardFiles": "Các tệp bảng quá lớn để nhập",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "Tệp bảng quá lớn để nhập",
+        "count=*": "Các tệp bảng quá lớn để nhập"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "Không thể nhập một số tệp bảng ({failed} / {total})",
-  "libraryDropToImport": "Thả tệp bảng để nhập",
+  "libraryDropToImport": "Thả tệp bảng vào đây để nhập",
   "libraryInfo": "Thông tin",
   "libraryExport": "Xuất",
   "libraryDelete": "Xóa",
@@ -56,12 +70,12 @@
   "libraryImportingStatus": "Đang nhập…",
   "libraryCancelDownload": "Hủy tải xuống",
   "libraryCancelDownloadBoardSet": "Hủy tải xuống {name}",
-  "libraryByAuthor": "Bởi {author}",
+  "libraryByAuthor": "Tác giả: {author}",
   "libraryGridDimensions": "Lưới {rows}×{columns}",
   "libraryDeleteConfirmTitle": "Xóa bộ bảng?",
   "libraryDeleteIrreversible": "\"{name}\" sẽ bị xóa. Không thể hoàn tác hành động này.",
-  "libraryDeleteFailed": "Không thể xóa bộ bảng \"{name}\"",
-  "libraryExportFailed": "Không thể xuất bộ bảng \"{name}\"",
+  "libraryDeleteFailed": "Không thể xóa bộ bảng",
+  "libraryExportFailed": "Không thể xuất bộ bảng",
   "libraryTitle": "Thư viện",
   "libraryOpen": "Mở thư viện",
   "aboutSourceCode": "Mã nguồn",
@@ -91,9 +105,10 @@
   "speechVolume": "Âm lượng",
   "speechPreviewVoice": "Nghe thử giọng nói",
   "speechPreviewSample": "Xin chào, đây là giọng nói của tôi!",
+  "messagePlayTiles": "Đọc biểu tượng khi thêm vào",
   "messageImages": "Hiển thị hình ảnh",
-  "messageHighlight": "Đánh dấu khi đọc",
-  "messageClearAfterSpeaking": "Xóa sau khi đọc",
+  "messageHighlight": "Tô sáng khi đọc",
+  "messageClearAfterPlaying": "Xóa sau khi đọc",
   "tileSaturation": "Cường độ màu",
   "tileBrightness": "Độ sáng",
   "tileBorders": "Hiển thị viền",
@@ -102,10 +117,11 @@
   "tileLabelBottom": "Dưới",
   "tileLabelHidden": "Ẩn",
   "tileOpensBoard": "Mở bảng",
+  "tileSpace": "Phím cách",
   "scanningEnabled": "Bật quét bằng công tắc",
   "scanningMethod": "Phương thức quét",
-  "scanningMethodAuto": "Tự động",
-  "scanningMethodStep": "Quét từng bước bằng hai công tắc",
+  "scanningMethodAuto": "Quét tự động",
+  "scanningMethodStep": "Quét từng bước",
   "scanningMethodAutoHint": "Nhấn phím cách hoặc Enter để bắt đầu quét và để chọn. Việc quét tạm dừng sau hai lượt.",
   "scanningMethodStepHint": "Nhấn phím cách để chuyển sang mục tiếp theo và Enter để chọn mục đó.",
   "scanningInterval": "Khoảng quét",
@@ -116,15 +132,14 @@
   "suggestionsCustomInstructionsUnsupported": "Hướng dẫn tùy chỉnh không khả dụng trên trình duyệt này.",
   "suggestionsEnableHelp": "Cách bật gợi ý",
   "suggestionsEnable": "Bật gợi ý",
-  "suggestionsDownloading": "Đang tải mô hình AI xuống…",
+  "suggestionsDownloading": "Đang tải xuống mô hình AI…",
   "suggestionsLanguageUnavailable": "Gợi ý không khả dụng cho ngôn ngữ này.",
   "suggestionsFailed": "Không thể lấy gợi ý",
   "suggestionsLabel": "Gợi ý",
-  "navBack": "Quay lại",
-  "navHome": "Đến bảng chính",
+  "navHome": "Về trang chủ",
   "messageBackspace": "Xóa",
-  "messageBackspaceLongPressHint": "Nhấn giữ hoặc nhấn {shortcut} để xóa tin nhắn.",
-  "messageClear": "Xóa tin nhắn",
+  "messageBackspaceLongPressHint": "Nhấn giữ hoặc nhấn {shortcut} để xóa toàn bộ tin nhắn.",
+  "messageClear": "Xóa toàn bộ tin nhắn",
   "shortcutTooltip": "{action} ({shortcut})",
   "keyControl": "Ctrl",
   "keyBackspace": "Backspace",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "Phát tin nhắn",
-  "messageStop": "Dừng tin nhắn",
-  "playbackFailed": "Không thể phát âm thanh",
+  "messagePlay": "Đọc tin nhắn",
+  "messageStop": "Dừng đọc",
+  "playbackFailed": "Không thể đọc",
   "messageLabel": "Tin nhắn",
   "onboardingContinue": "Tiếp tục",
   "onboardingTitle": "Chào mừng bạn đến với AAC Board AI",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "Không tài khoản, không quảng cáo, không theo dõi. Hoạt động ngoại tuyến.",
   "errorGenericTitle": "Không thể tải trang",
   "errorPageNotFound": "Không tìm thấy trang",
-  "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
-  "errorBoardURLImportFailed": "Không thể nhập tệp bảng từ liên kết",
-  "boardLinkImportTitle": "Nhập tệp bảng từ liên kết?",
-  "boardLinkImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
-  "boardLinkImport": "Nhập",
-  "boardLinkCancel": "Hủy"
+  "errorBoardFileURLImportFailed": "Không thể nhập tệp bảng từ liên kết",
+  "boardFileURLImportTitle": "Nhập tệp bảng từ liên kết?",
+  "boardFileURLImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
+  "boardFileURLImportConfirm": "Nhập",
+  "boardFileURLImportCancel": "Hủy"
 }

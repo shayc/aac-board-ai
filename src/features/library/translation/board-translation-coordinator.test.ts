@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, onTestFinished, test } from "vitest";
+import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
+import { afterEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import {
   queueBoardTranslationPass,
@@ -109,13 +110,7 @@ describe("board translation coordinator", () => {
   });
 
   test("reports a failed pass and still runs the pass queued behind it", async () => {
-    const reportedErrors: unknown[] = [];
-    const recordError = (event: ErrorEvent) => {
-      event.preventDefault();
-      reportedErrors.push(event.error);
-    };
-    window.addEventListener("error", recordError);
-    onTestFinished(() => window.removeEventListener("error", recordError));
+    const reportedErrors = collectReportedErrors();
     const failure = new Error("storage failure");
     const next = holdPass();
 

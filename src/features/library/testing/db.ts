@@ -1,5 +1,6 @@
 import { deleteDB, openDB } from "idb";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
+import { obfToBoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 import {
   type BoardSetInput,
   insertBoardSetRecords,
@@ -59,11 +60,15 @@ export async function countStoredBoardContent(boardSetId: string): Promise<{
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
-  for (const { boards, assets = [], ...record } of records) {
+  for (const { assets = [], ...record } of records) {
+    const boards = record.boards ?? [makeOBFBoard({ id: record.rootBoardId })];
+    const rootBoard = boards.find((board) => board.id === record.rootBoardId);
+
     await insertBoardSetRecords({
+      ...(rootBoard && obfToBoardSetMetadata(rootBoard, record.id)),
       name: record.id,
       ...record,
-      boards: boards ?? [makeOBFBoard({ id: record.rootBoardId })],
+      boards,
       assets,
     });
   }

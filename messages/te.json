@@ -3,10 +3,9 @@
   "loading": "లోడ్ అవుతోంది…",
   "close": "మూసివేయి",
   "opensInNewTab": "(కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",
-  "boardGridLabel": "సంభాషణ బోర్డు",
+  "boardGridLabel": "కమ్యూనికేషన్ బోర్డు",
   "boardSelectorLabel": "బోర్డు",
-  "boardSelectorOpen": "బోర్డుల జాబితాను తెరువు",
-  "boardSelectorClose": "బోర్డుల జాబితాను మూసివేయి",
+  "boardSelectorSearch": "బోర్డులను వెతుకు",
   "boardSelectorNoOptions": "సరిపోలే బోర్డులు లేవు",
   "libraryLoading": "బోర్డు సెట్లు లోడ్ అవుతున్నాయి…",
   "libraryLoadFailed": "లైబ్రరీని లోడ్ చేయడం సాధ్యపడలేదు",
@@ -14,32 +13,47 @@
   "libraryBoardSets": "బోర్డు సెట్లు",
   "libraryImportingBoardFiles": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి అవుతోంది…",
-        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి అవుతున్నాయి…"
+        "count=1": "బోర్డు ఫైల్ దిగుమతి అవుతోంది…",
+        "count=*": "బోర్డు ఫైళ్లు దిగుమతి అవుతున్నాయి…"
       }
     }
   ],
   "libraryImportedBoardSets": [
     {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
+      "declarations": ["input count"],
+      "selectors": ["count"],
       "match": {
-        "countPlural=one": "బోర్డు సెట్ దిగుమతి చేయబడింది",
-        "countPlural=*": "బోర్డు సెట్లు దిగుమతి చేయబడ్డాయి"
+        "count=1": "బోర్డు సెట్ దిగుమతి అయింది",
+        "count=*": "బోర్డు సెట్లు దిగుమతి అయ్యాయి"
       }
     }
   ],
-  "libraryImportFailedBoardFile": "బోర్డు ఫైల్ \"{fileName}\"ను దిగుమతి చేయలేకపోయాం",
-  "libraryImportFailedBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం",
-  "libraryImportNotBoardFile": "\"{fileName}\" బోర్డు ఫైల్ కాదు",
+  "libraryImportFailedBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
+        "count=*": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం"
+      }
+    }
+  ],
   "libraryImportNotBoardFiles": "బోర్డు ఫైళ్లను మాత్రమే దిగుమతి చేయవచ్చు",
-  "libraryImportTooLargeBoardFile": "బోర్డు ఫైల్ \"{fileName}\" దిగుమతి చేయడానికి చాలా పెద్దది",
-  "libraryImportTooLargeBoardFiles": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి",
+  "libraryImportTooLargeBoardFiles": [
+    {
+      "declarations": ["input count"],
+      "selectors": ["count"],
+      "match": {
+        "count=1": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దది",
+        "count=*": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి"
+      }
+    }
+  ],
   "libraryImportPartiallyFailedBoardFiles": "కొన్ని బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం ({total}లో {failed})",
-  "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను వదలండి",
+  "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను ఇక్కడ వదలండి",
   "libraryInfo": "సమాచారం",
   "libraryExport": "ఎగుమతి చేయి",
   "libraryDelete": "తొలగించు",
@@ -56,12 +70,12 @@
   "libraryImportingStatus": "దిగుమతి అవుతోంది…",
   "libraryCancelDownload": "డౌన్‌లోడ్‌ను రద్దు చేయి",
   "libraryCancelDownloadBoardSet": "{name} డౌన్‌లోడ్‌ను రద్దు చేయి",
-  "libraryByAuthor": "రచయిత: {author}",
+  "libraryByAuthor": "రూపకర్త: {author}",
   "libraryGridDimensions": "{rows}×{columns} గ్రిడ్",
   "libraryDeleteConfirmTitle": "బోర్డు సెట్‌ను తొలగించాలా?",
   "libraryDeleteIrreversible": "\"{name}\" తొలగించబడుతుంది. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
-  "libraryDeleteFailed": "బోర్డు సెట్ \"{name}\"ను తొలగించలేకపోయాం",
-  "libraryExportFailed": "బోర్డు సెట్ \"{name}\"ను ఎగుమతి చేయలేకపోయాం",
+  "libraryDeleteFailed": "బోర్డు సెట్‌ను తొలగించలేకపోయాం",
+  "libraryExportFailed": "బోర్డు సెట్‌ను ఎగుమతి చేయలేకపోయాం",
   "libraryTitle": "లైబ్రరీ",
   "libraryOpen": "లైబ్రరీని తెరువు",
   "aboutSourceCode": "సోర్స్ కోడ్",
@@ -76,7 +90,7 @@
   "settingsSectionMessage": "సందేశం",
   "settingsSectionSuggestions": "సూచనలు",
   "settingsSectionSwitchAccess": "స్విచ్ యాక్సెస్",
-  "settingsSectionAbout": "గురించి",
+  "settingsSectionAbout": "యాప్ గురించి",
   "themeLabel": "థీమ్",
   "themeSystem": "సిస్టమ్",
   "themeLight": "లైట్",
@@ -91,37 +105,38 @@
   "speechVolume": "వాల్యూమ్",
   "speechPreviewVoice": "వాయిస్ విను",
   "speechPreviewSample": "హాయ్, ఇది నా వాయిస్!",
+  "messagePlayTiles": "చిహ్నాలను జోడించేటప్పుడు పలుకు",
   "messageImages": "చిత్రాలను చూపించు",
-  "messageHighlight": "మాట్లాడుతున్నప్పుడు హైలైట్ చేయి",
-  "messageClearAfterSpeaking": "మాట్లాడిన తర్వాత క్లియర్ చేయి",
+  "messageHighlight": "పలుకుతున్నప్పుడు హైలైట్ చేయి",
+  "messageClearAfterPlaying": "పలికిన తర్వాత క్లియర్ చేయి",
   "tileSaturation": "రంగు తీవ్రత",
   "tileBrightness": "ప్రకాశం",
-  "tileBorders": "సరిహద్దులను చూపించు",
+  "tileBorders": "అంచులను చూపించు",
   "tileLabelPlacement": "లేబుల్‌లు",
   "tileLabelTop": "పైన",
   "tileLabelBottom": "కింద",
   "tileLabelHidden": "దాచినవి",
   "tileOpensBoard": "బోర్డును తెరుస్తుంది",
-  "scanningEnabled": "స్విచ్ స్కానింగ్‌ను ప్రారంభించండి",
+  "tileSpace": "స్పేస్",
+  "scanningEnabled": "స్విచ్ స్కానింగ్‌ను ఆన్ చేయి",
   "scanningMethod": "స్కాన్ పద్ధతి",
-  "scanningMethodAuto": "స్వయంచాలక",
-  "scanningMethodStep": "రెండు-స్విచ్ దశలవారీ స్కానింగ్",
+  "scanningMethodAuto": "స్వయంచాలక స్కానింగ్",
+  "scanningMethodStep": "దశలవారీ స్కానింగ్",
   "scanningMethodAutoHint": "స్కానింగ్‌ను ప్రారంభించడానికి మరియు ఎంచుకోవడానికి Space లేదా Enter నొక్కండి. రెండు చుట్ల తర్వాత స్కానింగ్ పాజ్ అవుతుంది.",
   "scanningMethodStepHint": "తదుపరి అంశానికి వెళ్లడానికి Space, దాన్ని ఎంచుకోవడానికి Enter నొక్కండి.",
   "scanningInterval": "స్కాన్ విరామం",
-  "suggestionsCustomInstructions": "అనుకూల సూచనలు",
+  "suggestionsCustomInstructions": "అనుకూల నిర్దేశాలు",
   "suggestionsCustomInstructionsPlaceholder": "చిన్న వాక్యాలు, రోజువారీ పదాలు ఉపయోగించండి",
   "suggestionsCustomInstructionsHelper": "సూచనలను ఎలా రాయాలో వివరించండి.",
   "suggestionsUnsupported": "ఈ బ్రౌజర్‌లో సూచనలు అందుబాటులో లేవు.",
-  "suggestionsCustomInstructionsUnsupported": "ఈ బ్రౌజర్‌లో అనుకూల సూచనలు అందుబాటులో లేవు.",
-  "suggestionsEnableHelp": "సూచనలను ప్రారంభించడం ఎలా",
-  "suggestionsEnable": "సూచనలను ప్రారంభించండి",
+  "suggestionsCustomInstructionsUnsupported": "ఈ బ్రౌజర్‌లో అనుకూల నిర్దేశాలు అందుబాటులో లేవు.",
+  "suggestionsEnableHelp": "సూచనలను ఆన్ చేయడం ఎలా",
+  "suggestionsEnable": "సూచనలను ఆన్ చేయి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది…",
   "suggestionsLanguageUnavailable": "ఈ భాషలో సూచనలు అందుబాటులో లేవు.",
   "suggestionsFailed": "సూచనలను పొందడం సాధ్యపడలేదు",
   "suggestionsLabel": "సూచనలు",
-  "navBack": "వెనుకకు",
-  "navHome": "ప్రధాన బోర్డుకు వెళ్లు",
+  "navHome": "హోమ్‌కు వెళ్లు",
   "messageBackspace": "తుడిచివేయి",
   "messageBackspaceLongPressHint": "సందేశాన్ని క్లియర్ చేయడానికి నొక్కి ఉంచండి, లేదా {shortcut} నొక్కండి.",
   "messageClear": "సందేశాన్ని క్లియర్ చేయి",
@@ -132,9 +147,9 @@
   "keyEscape": "Esc",
   "keyCommand": "Command",
   "keyAppleDelete": "Delete",
-  "messagePlay": "సందేశాన్ని ప్లే చేయి",
-  "messageStop": "సందేశాన్ని ఆపు",
-  "playbackFailed": "ధ్వనిని ప్లే చేయడం సాధ్యపడలేదు",
+  "messagePlay": "సందేశాన్ని పలుకు",
+  "messageStop": "పలకడం ఆపు",
+  "playbackFailed": "పలకడం సాధ్యపడలేదు",
   "messageLabel": "సందేశం",
   "onboardingContinue": "కొనసాగించు",
   "onboardingTitle": "AAC Board AIకి స్వాగతం",
@@ -148,12 +163,11 @@
   "onboardingFreePrivateDescription": "ఖాతా లేదు, ప్రకటనలు లేవు, ట్రాకింగ్ లేదు. ఆఫ్‌లైన్‌లో పనిచేస్తుంది.",
   "errorGenericTitle": "పేజీని లోడ్ చేయడం సాధ్యపడలేదు",
   "errorPageNotFound": "పేజీ కనుగొనబడలేదు",
-  "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు",
-  "errorBoardURLImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
-  "boardLinkImportTitle": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయాలా?",
-  "boardLinkImportDescription": "ఈ లింక్ {host} నుండి బోర్డు ఫైల్‌ను దిగుమతి చేస్తుంది. లింక్ పంపినవారిని మీరు నమ్మితేనే దిగుమతి చేయండి.",
-  "boardLinkImport": "దిగుమతి చేయి",
-  "boardLinkCancel": "రద్దు చేయి"
+  "errorBoardFileURLImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
+  "boardFileURLImportTitle": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయాలా?",
+  "boardFileURLImportDescription": "ఈ లింక్ {host} నుండి బోర్డు ఫైల్‌ను దిగుమతి చేస్తుంది. లింక్ పంపినవారిని మీరు నమ్మితేనే దిగుమతి చేయండి.",
+  "boardFileURLImportConfirm": "దిగుమతి చేయి",
+  "boardFileURLImportCancel": "రద్దు చేయి"
 }

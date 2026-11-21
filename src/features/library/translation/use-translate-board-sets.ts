@@ -1,7 +1,5 @@
 import { useCommunicationLanguage } from "@shared/language/language-store";
 import { useEffect, useEffectEvent } from "react";
-import { useLocation } from "react-router";
-import { boardSetIdFromPath } from "../board-paths";
 import { useBoardSets } from "../board-sets/board-sets-store";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import {
@@ -14,33 +12,29 @@ import {
 } from "./translate-board-sets";
 
 interface UseTranslateBoardSetsOptions {
-  /** Called after a set's translations are saved, so whatever shows it can reload. */
-  onBoardSetTranslated: (boardSetId: string) => void;
+  /** The set on screen is translated first, so it never waits behind the rest. */
+  activeBoardSetId: string | undefined;
+  onBoardsTranslated: (boardSetId: string) => void;
 }
 
 export function useTranslateBoardSets({
-  onBoardSetTranslated,
+  activeBoardSetId,
+  onBoardsTranslated,
 }: UseTranslateBoardSetsOptions): void {
   const { language } = useCommunicationLanguage();
   const { boardSets, isLoading } = useBoardSets();
-  const { pathname } = useLocation();
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
 
-  // Read the latest callback when a pass finishes, not the one it started with.
-  const reportTranslated = useEffectEvent((boardSetId: string) => {
-    onBoardSetTranslated(boardSetId);
+  const notifyBoardsTranslated = useEffectEvent((boardSetId: string) => {
+    onBoardsTranslated(boardSetId);
   });
 
   const translate = useEffectEvent((options: TranslationPassOptions) =>
-    translateBoardSets(
-      activeFirst(boardSets, boardSetIdFromPath(pathname)),
-      language,
-      {
-        ...options,
-        onTranslated: (boardSetId) => reportTranslated(boardSetId),
-      },
-    ),
+    translateBoardSets(activeFirst(boardSets, activeBoardSetId), language, {
+      ...options,
+      onBoardsTranslated: (boardSetId) => notifyBoardsTranslated(boardSetId),
+    }),
   );
 
   useEffect(() => {
