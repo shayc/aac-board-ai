@@ -1,0 +1,17 @@
+# script-src 'self' also binds the blob: documents made from imported assets.
+# img-src, media-src, connect-src https: boards reference remote symbols and
+#   sounds, ?board= links import from any host, and the service worker caches
+#   remote images.
+# worker-src blob: unzipping inflates a board set's large entries in blob:
+#   workers; without it those sets fail to import.
+# style-src 'unsafe-inline': Emotion injects <style> tags at runtime, and a
+#   static host cannot issue nonces.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=(), display-capture=()
+  X-Frame-Options: DENY
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin

@@ -24,3 +24,5 @@ project.inlang/cache/
 
 # Claude Code worktrees
 .claude/worktrees/
+
+.wrangler/

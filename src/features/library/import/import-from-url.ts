@@ -35,7 +35,7 @@ export function parseBoardFileURL(url: string): URL {
   return resolved;
 }
 
-// Matches the CSP connect-src ('self' https:) in netlify.toml.
+// Matches the CSP connect-src ('self' https:) in public/_headers.
 function isAllowedBoardFileURL(url: URL): boolean {
   return (
     url.protocol === "https:" ||
