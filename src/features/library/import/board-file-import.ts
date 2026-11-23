@@ -47,7 +47,6 @@ export async function importEachBoardFile(
   const importedBoardSets: ImportedBoardSet[] = [];
   const failures: ImportFailure[] = [];
 
-  // One at a time, so a failing file does not block the rest.
   for (const file of files) {
     try {
       importedBoardSets.push(await importBoardFile(file));

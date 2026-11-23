@@ -26,8 +26,7 @@ function keepScreenAwake(): (() => void) | undefined {
       return;
     }
 
-    // A refusal, on low battery for example, leaves the screen to the device's
-    // auto-lock.
+    // Refused, on low battery for example: the device's auto-lock applies.
     const lock = await navigator.wakeLock
       .request("screen")
       .catch(() => undefined);
