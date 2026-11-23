@@ -1,8 +1,10 @@
 import Button, { type ButtonProps } from "@mui/material/Button";
+import type { Theme } from "@mui/material/styles";
 import { svgIconClasses } from "@mui/material/SvgIcon";
+import { shortLandscape } from "@shared/theme/short-landscape";
 import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { mergeSx } from "@shared/ui/merge-sx";
-import { CONTROL_ICON_SIZE, CONTROL_SIZE } from "./board-control-sizes";
+import { CONTROL_ICON_SIZE, CONTROL_SIZES } from "./board-control-sizes";
 import { MIN_CELL_WIDTH_PX } from "./grid/grid-layout";
 
 const ICON_SX = {
@@ -11,7 +13,16 @@ const ICON_SX = {
 
 const SHAPE_SX = {
   pill: { width: MIN_CELL_WIDTH_PX, ...ICON_SX },
-  round: { width: CONTROL_SIZE, height: CONTROL_SIZE, px: 0, ...ICON_SX },
+  round: (theme: Theme) => ({
+    width: CONTROL_SIZES.large,
+    height: CONTROL_SIZES.large,
+    px: 0,
+    ...ICON_SX,
+    [shortLandscape(theme)]: {
+      width: CONTROL_SIZES.medium,
+      height: CONTROL_SIZES.medium,
+    },
+  }),
 };
 
 export type BoardControlShape = keyof typeof SHAPE_SX;

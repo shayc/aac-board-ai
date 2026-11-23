@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { Fragment, type ReactNode } from "react";
-import { buildGridCells, type GridOrder } from "./grid-cells";
+import { buildGrid, type GridOrder } from "./grid-cells";
 import {
   gridCellSx,
   gridContentSx,
@@ -35,13 +35,13 @@ export function Grid<Item extends { id: string }>({
   getItemKey = getItemId,
   renderItem,
 }: GridProps<Item>) {
-  const cells = buildGridCells(items, order);
+  const grid = buildGrid(items, order);
   const { rootRef, rootProps, tabStopPosition } = useGridFocus(
-    cells,
+    grid,
     getItemKey,
   );
-  const rowCount = cells.length;
-  const columnCount = cells[0]?.length ?? 0;
+  const rowCount = grid.length;
+  const columnCount = grid[0]?.length ?? 0;
 
   return (
     <Box sx={gridViewportSx}>
@@ -53,7 +53,7 @@ export function Grid<Item extends { id: string }>({
         direction="column"
         sx={(theme) => gridContentSx(theme, { rowCount, columnCount })}
       >
-        {cells.map((row, rowIndex) => (
+        {grid.map((row, rowIndex) => (
           <GridRow
             key={rowIndex}
             items={row}

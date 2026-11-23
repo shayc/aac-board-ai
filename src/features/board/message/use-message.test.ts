@@ -11,18 +11,18 @@ import { renderHook } from "vitest-browser-react";
 import { createTilePart, EMPTY_MESSAGE, type TilePart } from "./message";
 import { restoreMessageDraft } from "./message-draft";
 import { setMessageClearAfterPlayback } from "./message-preferences-store";
-import { type PlayParts, useMessage } from "./use-message";
+import { type PlayMessage, useMessage } from "./use-message";
 
 const MEDIA_BOARD_SET_ID = "media-set";
 const IMAGE_PATH = "images/hello.png";
 const SOUND_PATH = "sounds/hello.wav";
 const REMOTE_SOUND_SRC = "https://example.com/hello.mp3";
 
-const playParts = vi.fn<PlayParts>();
+const playMessage = vi.fn<PlayMessage>();
 
 describe("useMessage", () => {
   beforeEach(() => {
-    playParts.mockReset().mockResolvedValue(true);
+    playMessage.mockReset().mockResolvedValue(true);
   });
 
   test.each([
@@ -48,7 +48,9 @@ describe("useMessage", () => {
       labels: ["a", "well-being", "U.S.A.", "day"],
     },
   ])("$description", async ({ text, labels }) => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
 
     result.current.replaceWithText(text, "en");
     await rerender();
@@ -58,7 +60,9 @@ describe("useMessage", () => {
   });
 
   test("gives each word of the replacement text its language", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
 
     result.current.replaceWithText("más agua", "es");
     await rerender();
@@ -70,7 +74,9 @@ describe("useMessage", () => {
   });
 
   test("clears all existing parts when called with an empty string", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
 
     result.current.replaceWithText("existing", "en");
     await rerender();
@@ -82,7 +88,9 @@ describe("useMessage", () => {
   });
 
   test("applies each edit to the latest message before the next render", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -96,7 +104,9 @@ describe("useMessage", () => {
   });
 
   test("leaves the last suggested word open for spelling", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want", "en");
@@ -105,7 +115,9 @@ describe("useMessage", () => {
   });
 
   test("starts a new message once the message plays to its end", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -115,7 +127,9 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to a played message once it is edited", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -131,7 +145,9 @@ describe("useMessage", () => {
 
   test("keeps adding to a played message when clearing after playing is off", async () => {
     setMessageClearAfterPlayback(false);
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -145,7 +161,9 @@ describe("useMessage", () => {
   });
 
   test("releases a played message when clearing after playing is turned off", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
 
     result.current.replaceWithText("I want water", "en");
     await playToCompletion(result.current, true);
@@ -160,7 +178,9 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to the message when its playback did not complete", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -175,12 +195,14 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to a played message while it is playing again", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
     await playToCompletion(message, true);
-    playParts.mockReturnValueOnce(Promise.withResolvers<boolean>().promise);
+    playMessage.mockReturnValueOnce(Promise.withResolvers<boolean>().promise);
     void message.play();
 
     expect(await labelsAfterSpelling(result, rerender)).toEqual([
@@ -191,7 +213,9 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to the message when it changed while playing", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.replaceWithText("I want water", "en");
@@ -207,7 +231,9 @@ describe("useMessage", () => {
   });
 
   test("keeps adding to the message when its last word was reopened while playing", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
     const message = result.current;
 
     message.apply([
@@ -222,7 +248,7 @@ describe("useMessage", () => {
   });
 
   test("reports whether an edit changed the message", async () => {
-    const { result } = await renderHook(() => useMessage(playParts));
+    const { result } = await renderHook(() => useMessage(playMessage));
     const message = result.current;
 
     message.replaceWithText("hi", "en");
@@ -232,7 +258,9 @@ describe("useMessage", () => {
   });
 
   test("keeps a played message played through an edit that changes nothing", async () => {
-    const { result, rerender } = await renderHook(() => useMessage(playParts));
+    const { result, rerender } = await renderHook(() =>
+      useMessage(playMessage),
+    );
 
     result.current.replaceWithText("I want water", "en");
     await playToCompletion(result.current, true);
@@ -248,7 +276,7 @@ describe("useMessage", () => {
   describe("undo", () => {
     test("restores a cleared message", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       result.current.replaceWithText("I want water", "en");
@@ -261,7 +289,7 @@ describe("useMessage", () => {
 
     test("steps back through one change at a time", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       result.current.replaceWithText("hi", "en");
@@ -280,7 +308,7 @@ describe("useMessage", () => {
 
     test("restores a message that a suggestion replaced", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       result.current.replaceWithText("I want", "en");
@@ -293,7 +321,7 @@ describe("useMessage", () => {
 
     test("does not count playing the message as a change", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       result.current.replaceWithText("hi", "en");
@@ -307,7 +335,7 @@ describe("useMessage", () => {
 
     test("does not count clearing an empty message", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       result.current.replaceWithText("h", "en");
@@ -321,7 +349,7 @@ describe("useMessage", () => {
 
     test("keeps the last 100 changes", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       const changeCount = 101;
@@ -339,7 +367,7 @@ describe("useMessage", () => {
 
     test("opens a played message it brings back for more", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
       const message = result.current;
 
@@ -353,7 +381,7 @@ describe("useMessage", () => {
 
     test("leaves the message as it is with nothing to undo", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
 
       result.current.undo();
@@ -366,20 +394,20 @@ describe("useMessage", () => {
   describe("echo", () => {
     test("plays the message and leaves it open for more", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
 
       await message.echo([]);
 
-      expect(playParts).toHaveBeenCalledOnce();
+      expect(playMessage).toHaveBeenCalledOnce();
       expect(await labelsAfterSpelling(result, rerender)).toEqual(["hia"]);
     });
 
     test("applies the edits that follow once it has played", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
@@ -391,7 +419,7 @@ describe("useMessage", () => {
 
     test("continues a message that has played", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
@@ -404,7 +432,7 @@ describe("useMessage", () => {
 
     test("drops the edits when the message changed meanwhile", async () => {
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
@@ -417,9 +445,9 @@ describe("useMessage", () => {
     });
 
     test("drops the edits when it does not play to its end", async () => {
-      playParts.mockResolvedValue(false);
+      playMessage.mockResolvedValue(false);
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts),
+        useMessage(playMessage),
       );
       const message = result.current;
       message.apply([{ kind: "spell", text: "hi", language: "en" }]);
@@ -434,7 +462,7 @@ describe("useMessage", () => {
     beforeEach(resetBoardsDB);
 
     test("restores the message when it opens again", async () => {
-      const first = await renderHook(() => useMessage(playParts));
+      const first = await renderHook(() => useMessage(playMessage));
       first.result.current.replaceWithText("I want", "en");
       await first.rerender();
       const saved = first.result.current.parts;
@@ -442,14 +470,14 @@ describe("useMessage", () => {
 
       const restored = await restoreMessageDraft();
       const { result } = await renderHook(() =>
-        useMessage(playParts, restored),
+        useMessage(playMessage, restored),
       );
 
       expect(result.current.parts).toEqual(saved);
     });
 
     test("keeps no draft of a played message the next symbol replaces", async () => {
-      const { result } = await renderHook(() => useMessage(playParts));
+      const { result } = await renderHook(() => useMessage(playMessage));
       result.current.replaceWithText("I want", "en");
 
       await playToCompletion(result.current, true);
@@ -459,14 +487,14 @@ describe("useMessage", () => {
 
     test("restores a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
-      const first = await renderHook(() => useMessage(playParts));
+      const first = await renderHook(() => useMessage(playMessage));
       first.result.current.replaceWithText("I want", "en");
       await playToCompletion(first.result.current, true);
       await first.unmount();
 
       const restored = await restoreMessageDraft();
       const { result, rerender } = await renderHook(() =>
-        useMessage(playParts, restored),
+        useMessage(playMessage, restored),
       );
 
       expect(restored.hasPlayed).toBe(true);
@@ -477,7 +505,7 @@ describe("useMessage", () => {
     });
 
     test("saves no draft once the message is cleared", async () => {
-      const { result } = await renderHook(() => useMessage(playParts));
+      const { result } = await renderHook(() => useMessage(playMessage));
       result.current.replaceWithText("I want", "en");
 
       result.current.clear();
@@ -530,7 +558,7 @@ async function playToCompletion(
   message: ReturnType<typeof useMessage>,
   hasCompleted: boolean,
 ) {
-  playParts.mockResolvedValueOnce(hasCompleted);
+  playMessage.mockResolvedValueOnce(hasCompleted);
   await message.play();
 }
 
@@ -558,7 +586,7 @@ async function composeAndClose(media: {
   imageSrc?: string;
   soundSrc?: string;
 }) {
-  const { result, unmount } = await renderHook(() => useMessage(playParts));
+  const { result, unmount } = await renderHook(() => useMessage(playMessage));
   result.current.apply([
     {
       kind: "tile",
@@ -570,7 +598,7 @@ async function composeAndClose(media: {
 
 async function renderRestoredTilePart(): Promise<TilePart> {
   const restored = await restoreMessageDraft();
-  const { result } = await renderHook(() => useMessage(playParts, restored));
+  const { result } = await renderHook(() => useMessage(playMessage, restored));
   const part = result.current.parts[0];
   assert(part?.kind === "tile");
 

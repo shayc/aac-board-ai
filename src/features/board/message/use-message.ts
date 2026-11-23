@@ -15,7 +15,7 @@ import { useMessagePreferences } from "./message-preferences-store";
 const UNDO_LIMIT = 100;
 
 /** Plays the parts and resolves to whether they played to their end. */
-export type PlayParts = (parts: readonly MessagePart[]) => Promise<boolean>;
+export type PlayMessage = (parts: readonly MessagePart[]) => Promise<boolean>;
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];
@@ -33,7 +33,7 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(
-  playParts: PlayParts,
+  playMessage: PlayMessage,
   initialMessage: Message = EMPTY_MESSAGE,
 ): UseMessageReturn {
   const { shouldClearAfterPlayback } = useMessagePreferences();
@@ -104,7 +104,7 @@ export function useMessage(
   // Applying :clear early would hide the message while it is still playing.
   async function play(editsAfterPlay: readonly MessageEdit[] = []) {
     // Start first so a synchronous setup failure preserves the played flag.
-    const completion = playParts(messageRef.current.parts);
+    const completion = playMessage(messageRef.current.parts);
     setPlayed(false);
     const playingMessage = messageRef.current;
 
@@ -123,7 +123,7 @@ export function useMessage(
   async function echo(editsAfterPlay: readonly MessageEdit[]) {
     const echoed = messageRef.current;
 
-    const hasCompleted = await playParts(echoed.parts);
+    const hasCompleted = await playMessage(echoed.parts);
     if (hasCompleted) {
       applyIfUnchanged(echoed, editsAfterPlay);
     }

@@ -10,7 +10,7 @@ export interface GridPosition {
   column: number;
 }
 
-export function buildGridCells<Item extends { id: string }>(
+export function buildGrid<Item extends { id: string }>(
   items: readonly Item[],
   order: GridOrder,
 ): (Item | undefined)[][] {
@@ -21,24 +21,24 @@ export function buildGridCells<Item extends { id: string }>(
   );
 }
 
-export function gridCellsKey<Item extends object>(
-  cells: GridCells<Item>,
+export function gridArrangementKey<Item extends object>(
+  grid: GridCells<Item>,
   getItemKey: (item: Item) => string,
 ): string {
   return JSON.stringify(
-    cells.map((row) => row.map((cell) => (cell ? getItemKey(cell) : null))),
+    grid.map((row) => row.map((cell) => (cell ? getItemKey(cell) : null))),
   );
 }
 
-export function findFirstOccupiedPosition(cells: GridCells): GridPosition {
-  return listOccupiedPositions(cells)[0] ?? { row: 0, column: 0 };
+export function findFirstOccupiedPosition(grid: GridCells): GridPosition {
+  return listOccupiedPositions(grid)[0] ?? { row: 0, column: 0 };
 }
 
-export function listOccupiedPositions(cells: GridCells): GridPosition[] {
+export function listOccupiedPositions(grid: GridCells): GridPosition[] {
   const positions: GridPosition[] = [];
 
-  for (const [row, rowCells] of cells.entries()) {
-    for (const [column, cell] of rowCells.entries()) {
+  for (const [row, cells] of grid.entries()) {
+    for (const [column, cell] of cells.entries()) {
       if (cell) {
         positions.push({ row, column });
       }

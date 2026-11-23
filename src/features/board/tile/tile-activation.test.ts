@@ -4,7 +4,7 @@ import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { createTilePart, type MessageEdit } from "../message/message";
 import { setMessageClearAfterPlayback } from "../message/message-preferences-store";
-import { type PlayParts, useMessage } from "../message/use-message";
+import { type PlayMessage, useMessage } from "../message/use-message";
 import { createTileActivator } from "./tile-activation";
 
 type ActivationOptions = Parameters<typeof createTileActivator>[0];
@@ -33,20 +33,20 @@ async function setup(
   { hasPlayed = false, boardLanguage = "en", shouldPlayTiles = true } = {},
 ) {
   const playback = {
-    playParts: vi.fn<PlayParts>(() => Promise.resolve(true)),
+    playMessage: vi.fn<PlayMessage>(() => Promise.resolve(true)),
     playTile: vi.fn<ActivationOptions["playback"]["playTile"]>(() =>
       Promise.resolve(),
     ),
     stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
   };
   const { result, rerender } = await renderHook(() =>
-    useMessage(playback.playParts),
+    useMessage(playback.playMessage),
   );
   const message = result.current;
   message.apply(seed);
   if (hasPlayed) {
     await message.play();
-    playback.playParts.mockClear();
+    playback.playMessage.mockClear();
   }
 
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
@@ -69,7 +69,7 @@ async function setup(
 
   function holdMessagePlayback() {
     const { promise, resolve } = Promise.withResolvers<boolean>();
-    playback.playParts.mockImplementation(() => promise);
+    playback.playMessage.mockImplementation(() => promise);
 
     return async (hasCompleted: boolean) => {
       resolve(hasCompleted);
@@ -109,7 +109,7 @@ describe("createTileActivator", () => {
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(await readLabels()).toEqual(["hi"]);
-    expect(playback.playParts).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
     expect(playback.playTile).not.toHaveBeenCalled();
   });
 
@@ -139,7 +139,7 @@ describe("createTileActivator", () => {
     expect(appended.id).toBeTruthy();
     expect(appended.id).not.toBe("btn");
     expect(playback.playTile).toHaveBeenCalledExactlyOnceWith(appended);
-    expect(playback.playParts).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
   test("appends a button without actions silently, stopping playback, when tiles are not played", async () => {
@@ -170,7 +170,7 @@ describe("createTileActivator", () => {
     });
 
     expect(await readLabels()).toEqual([]);
-    expect(playback.playParts).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
     expect(playback.stop).toHaveBeenCalledOnce();
   });
 
@@ -181,7 +181,7 @@ describe("createTileActivator", () => {
 
     activateTile({ id: "btn", label: "", actions: [{ kind: "play" }] });
 
-    expect(playback.playParts).toHaveBeenCalledOnce();
+    expect(playback.playMessage).toHaveBeenCalledOnce();
   });
 
   test("gives tiles and spelled words the board's language", async () => {
@@ -227,7 +227,7 @@ describe("createTileActivator", () => {
     });
 
     expect(await readLabels()).toEqual(["hello", "world", "s"]);
-    expect(playback.playParts).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
   test("empties the message for a clear action", async () => {
@@ -247,7 +247,7 @@ describe("createTileActivator", () => {
       actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
     });
 
-    const partsToPlay = playback.playParts.mock.calls[0]?.[0];
+    const partsToPlay = playback.playMessage.mock.calls[0]?.[0];
     assertDefined(partsToPlay);
 
     const parts = await readParts();
@@ -275,7 +275,7 @@ describe("createTileActivator", () => {
 
     activateTile({ id: "btn", label: "", actions: [{ kind: "play" }] });
 
-    expect(playback.playParts).toHaveBeenCalledExactlyOnceWith(parts);
+    expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(parts);
   });
 
   test("holds edits after play until playback completes, then applies them", async () => {
@@ -385,7 +385,7 @@ describe("createTileActivator", () => {
     await playbackSettled();
     activateTile(SPELL_A);
 
-    expect(playback.playParts).toHaveBeenCalledOnce();
+    expect(playback.playMessage).toHaveBeenCalledOnce();
     expect(await readLabels()).toEqual(["a"]);
   });
 
@@ -459,7 +459,7 @@ describe("createTileActivator", () => {
         actions: [{ kind: "space" }, { kind: "play" }],
       });
 
-      expect(playback.playParts).toHaveBeenCalledExactlyOnceWith(parts);
+      expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(parts);
     });
 
     // Clearing the played flag alone must still let the same message replay.
@@ -471,7 +471,7 @@ describe("createTileActivator", () => {
 
       activateTile({ id: "btn", label: "", actions: [{ kind: "play" }] });
 
-      expect(playback.playParts).toHaveBeenCalledOnce();
+      expect(playback.playMessage).toHaveBeenCalledOnce();
     });
   });
 });

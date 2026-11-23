@@ -21,13 +21,13 @@ interface GridStep {
 }
 
 export function findGridKeyTarget(
-  cells: GridCells,
+  grid: GridCells,
   from: GridPosition,
   event: GridKeyEvent,
   direction: GridDirection,
 ): GridPosition | null {
   if (event.key === "Home" || event.key === "End") {
-    return findEdgeTarget(cells, from, event);
+    return findEdgeTarget(grid, from, event);
   }
 
   if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
@@ -36,11 +36,11 @@ export function findGridKeyTarget(
 
   const step = resolveArrowStep(event.key, direction);
 
-  return step ? findArrowTarget(cells, from, step) : null;
+  return step ? findArrowTarget(grid, from, step) : null;
 }
 
 function findEdgeTarget(
-  cells: GridCells,
+  grid: GridCells,
   from: GridPosition,
   event: GridKeyEvent,
 ): GridPosition | null {
@@ -49,7 +49,7 @@ function findEdgeTarget(
   }
 
   const spansWholeGrid = event.ctrlKey || event.metaKey;
-  const candidates = listOccupiedPositions(cells).filter(
+  const candidates = listOccupiedPositions(grid).filter(
     (position) => spansWholeGrid || position.row === from.row,
   );
   const goesToFirst = event.key === "Home";
@@ -82,7 +82,7 @@ function resolveArrowStep(
 }
 
 function findArrowTarget(
-  cells: GridCells,
+  grid: GridCells,
   from: GridPosition,
   step: GridStep,
 ): GridPosition | null {
@@ -94,7 +94,7 @@ function findArrowTarget(
     crossDistance: number;
   } | null = null;
 
-  for (const position of listOccupiedPositions(cells)) {
+  for (const position of listOccupiedPositions(grid)) {
     const primaryDelta = movesVertically
       ? position.row - from.row
       : position.column - from.column;

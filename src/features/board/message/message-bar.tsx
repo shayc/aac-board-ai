@@ -7,13 +7,16 @@ import { shortLandscape } from "@shared/theme/short-landscape";
 import { LIGHT_SCHEME_CLASS } from "@shared/theme/theme";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import { AACSymbol, SYMBOL_IMAGE_SIZE_PROPERTY } from "../aac-symbol";
-import { CONTROL_SIZE } from "../board-control-sizes";
+import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
 import { usePlayingMessagePartId } from "../playback/use-board-playback";
 import type { MessagePart } from "./message";
 import { useMessagePreferences } from "./message-preferences-store";
 
-// Smaller on a short landscape screen, to leave room for labels.
-const SYMBOL_SIZES = { regular: 64, compact: 48 } as const;
+// A short landscape screen gets compact; smaller symbols leave room for labels.
+const BAR_SIZES = {
+  regular: { control: CONTROL_SIZES.large, symbol: 64 },
+  compact: { control: CONTROL_SIZES.medium, symbol: 48 },
+} as const;
 
 const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word.
@@ -107,7 +110,7 @@ function scrollPartIntoView(
 
 function messageBarSx(theme: Theme) {
   return {
-    [SYMBOL_IMAGE_SIZE_PROPERTY]: `${SYMBOL_SIZES.regular}px`,
+    ...barSizeProperties(BAR_SIZES.regular),
     flexGrow: 1,
     alignItems: "center",
     gap: 2,
@@ -123,10 +126,17 @@ function messageBarSx(theme: Theme) {
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
     ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[300] }),
-    [shortLandscape(theme)]: {
-      [SYMBOL_IMAGE_SIZE_PROPERTY]: `${SYMBOL_SIZES.compact}px`,
-    },
+    [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
+}
+
+type BarSize = (typeof BAR_SIZES)[keyof typeof BAR_SIZES];
+
+function barSizeProperties({ control, symbol }: BarSize) {
+  return {
+    [CONTROL_SIZE_PROPERTY]: `${control}px`,
+    [SYMBOL_IMAGE_SIZE_PROPERTY]: `${symbol}px`,
+  };
 }
 
 function scrollContainerSx(theme: Theme) {
@@ -137,7 +147,7 @@ function scrollContainerSx(theme: Theme) {
     flexGrow: 1,
     alignSelf: "stretch",
     // A fixed height stops the first word added from pushing the board down.
-    height: `calc(${CONTROL_SIZE} + ${theme.spacing(BAR_INSET * 2)})`,
+    height: `calc(var(${CONTROL_SIZE_PROPERTY}) + ${theme.spacing(BAR_INSET * 2)})`,
     px: MESSAGE_PADDING,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,

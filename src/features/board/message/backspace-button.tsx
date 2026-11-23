@@ -11,7 +11,10 @@ import { BackspaceIcon } from "@shared/ui/icons";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
-import { CONTROL_ICON_SIZE, CONTROL_SIZE } from "../board-control-sizes";
+import {
+  CONTROL_ICON_SIZE,
+  MESSAGE_CONTROL_SIZE,
+} from "../board-control-sizes";
 import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
 import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
 
@@ -84,8 +87,8 @@ function backspaceSx(theme: Theme) {
 
   return {
     flexShrink: 0,
-    width: CONTROL_SIZE,
-    height: CONTROL_SIZE,
+    width: MESSAGE_CONTROL_SIZE,
+    height: MESSAGE_CONTROL_SIZE,
     fontSize: CONTROL_ICON_SIZE,
     color: "text.primary",
     [`&, &.${iconButtonClasses.disabled}`]: {
