@@ -10,13 +10,13 @@ import { ExternalLink } from "@shared/ui/external-link";
 import { assertNever } from "@shared/utils/assert-never";
 import { type ReactNode, useId } from "react";
 import {
+  areSuggestionsSupported,
+  checkSuggestionLanguageSupport,
+} from "./sources/suggestion-support";
+import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
-import {
-  areSuggestionsSupported,
-  checkSuggestionLanguageSupport,
-} from "./suggestion-support";
 
 export function SuggestionSettings() {
   const t = useTranslate();

@@ -11,7 +11,8 @@ import {
 } from "@shared/playback/use-playback";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect } from "react";
-import type { MessagePart, PlayMessage } from "../message/message-types";
+import type { MessagePart } from "../message/message";
+import type { PlayMessage } from "../message/use-message";
 import { planPlayback } from "./plan-playback";
 
 const MESSAGE_OWNER = "board-message";

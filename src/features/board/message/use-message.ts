@@ -1,21 +1,21 @@
 import { useRef, useState } from "react";
-import { saveMessageDraft } from "./message-draft";
-import { useMessagePreferences } from "./message-preferences-store";
 import {
   applyEdits,
   createTextPart,
   EMPTY_MESSAGE,
   hasSameContent,
   markPlayed,
-} from "./message-transforms";
-import type {
-  Message,
-  MessageEdit,
-  MessagePart,
-  PlayMessage,
-} from "./message-types";
+  type Message,
+  type MessageEdit,
+  type MessagePart,
+} from "./message";
+import { saveMessageDraft } from "./message-draft";
+import { useMessagePreferences } from "./message-preferences-store";
 
 const UNDO_LIMIT = 100;
+
+/** Plays the parts and resolves to whether they played to their end. */
+export type PlayMessage = (parts: readonly MessagePart[]) => Promise<boolean>;
 
 export interface UseMessageReturn {
   parts: readonly MessagePart[];

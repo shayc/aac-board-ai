@@ -2,13 +2,16 @@ import { setCommunicationLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { renderWithProviders } from "@shared/testing/render-with-providers";
+import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { TEST_IMAGE_SRC } from "@shared/testing/test-image";
 import { setTestViewport } from "@shared/testing/viewport";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
+import { useBoardPlayback } from "../playback/use-board-playback";
+import type { MessagePart } from "./message";
 import { MessageBar, type MessageBarProps } from "./message-bar";
-import type { MessagePart } from "./message-types";
+import { setMessageImagesVisible } from "./message-preferences-store";
 
 const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   kind: "tile",
@@ -18,7 +21,6 @@ const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   imageSrc: TEST_IMAGE_SRC,
 }));
 const ACTIVE_SCROLL_PART_INDEX = 3;
-const ACTIVE_SCROLL_PART_ID = String(ACTIVE_SCROLL_PART_INDEX);
 
 function createProps(
   overrides: Partial<MessageBarProps> = {},
@@ -26,8 +28,6 @@ function createProps(
   return {
     parts: [],
     isWordOpen: false,
-    activePartId: null,
-    areImagesVisible: true,
     ...overrides,
   };
 }
@@ -38,6 +38,49 @@ function ScrollableMessageBar(props: MessageBarProps) {
       <MessageBar {...props} />
     </div>
   );
+}
+
+async function renderPlaybackBar(
+  initialParts: MessagePart[],
+  activeIndex: number,
+) {
+  const speech = stubSpeech();
+  preventSpeechEnd(speech.speak);
+
+  function PlaybackExample() {
+    const [parts, setParts] = useState(initialParts);
+    const playback = useBoardPlayback();
+    const activePart = parts[activeIndex];
+    assertDefined(activePart);
+
+    function appendPart() {
+      setParts([
+        ...parts,
+        { kind: "text", id: "newest", label: "newest", language: "en" },
+      ]);
+    }
+
+    return (
+      <>
+        <ScrollableMessageBar parts={parts} isWordOpen={false} />
+        <button onClick={() => void playback.playMessage([activePart])}>
+          Play part
+        </button>
+        <button onClick={appendPart}>Append</button>
+        <button
+          onClick={() => {
+            appendPart();
+            void playback.playMessage([activePart]);
+          }}
+        >
+          Append and play
+        </button>
+        <button onClick={playback.stop}>Stop</button>
+      </>
+    );
+  }
+
+  return renderWithProviders(<PlaybackExample />);
 }
 
 function SpaceTakingScrollbars({ children }: { children: ReactNode }) {
@@ -298,8 +341,9 @@ describe("MessageBar", () => {
       },
     ];
 
+    setMessageImagesVisible(false);
     const screen = await renderWithProviders(
-      <MessageBar {...createProps({ parts, areImagesVisible: false })} />,
+      <MessageBar {...createProps({ parts })} />,
     );
 
     await expect.element(screen.getByText("I")).toBeVisible();
@@ -321,9 +365,8 @@ describe("MessageBar", () => {
         },
       ];
 
-      const screen = await renderWithProviders(
-        <MessageBar {...createProps({ parts, activePartId: "b" })} />,
-      );
+      const screen = await renderPlaybackBar(parts, 1);
+      await screen.getByRole("button", { name: "Play part" }).click();
 
       const scroller = getScrollContainer(screen.container);
       const activePart = scroller.children[1];
@@ -361,9 +404,9 @@ describe("MessageBar", () => {
     });
 
     test("scrolls the active part into view when it changes during playback", async () => {
-      const props = createProps({ parts: SCROLL_PARTS });
-      const screen = await renderWithProviders(
-        <ScrollableMessageBar {...props} />,
+      const screen = await renderPlaybackBar(
+        SCROLL_PARTS,
+        ACTIVE_SCROLL_PART_INDEX,
       );
       const scroller = getScrollContainer(screen.container);
 
@@ -375,13 +418,9 @@ describe("MessageBar", () => {
         scroller.getBoundingClientRect().left,
       );
 
-      // Keep the parts reference so only active-part scrolling is triggered.
-      await screen.rerender(
-        <ScrollableMessageBar
-          {...props}
-          activePartId={ACTIVE_SCROLL_PART_ID}
-        />,
-      );
+      await screen
+        .getByRole("button", { name: "Play part", exact: true })
+        .click();
 
       expect(scroller.scrollLeft).toBeLessThan(initialScrollLeft);
       expect(activePart.getBoundingClientRect().left).toBeCloseTo(
@@ -394,24 +433,14 @@ describe("MessageBar", () => {
     });
 
     test("keeps the newest part in view when an edit happens during playback", async () => {
-      const props = createProps({
-        parts: SCROLL_PARTS,
-        activePartId: ACTIVE_SCROLL_PART_ID,
-      });
-      const screen = await renderWithProviders(
-        <ScrollableMessageBar {...props} />,
+      const screen = await renderPlaybackBar(
+        SCROLL_PARTS,
+        ACTIVE_SCROLL_PART_INDEX,
       );
+      await screen.getByRole("button", { name: "Play part" }).click();
       const scroller = getScrollContainer(screen.container);
 
-      await screen.rerender(
-        <ScrollableMessageBar
-          {...props}
-          parts={[
-            ...SCROLL_PARTS,
-            { kind: "text", id: "newest", label: "newest", language: "en" },
-          ]}
-        />,
-      );
+      await screen.getByRole("button", { name: "Append", exact: true }).click();
 
       const lastPart = scroller.lastElementChild;
       assertDefined(lastPart);
@@ -422,22 +451,15 @@ describe("MessageBar", () => {
     });
 
     test("scrolls to the active part when an edit starts playback", async () => {
-      const props = createProps({ parts: SCROLL_PARTS });
-      const screen = await renderWithProviders(
-        <ScrollableMessageBar {...props} />,
+      const screen = await renderPlaybackBar(
+        SCROLL_PARTS,
+        ACTIVE_SCROLL_PART_INDEX,
       );
       const scroller = getScrollContainer(screen.container);
 
-      await screen.rerender(
-        <ScrollableMessageBar
-          {...props}
-          parts={[
-            ...SCROLL_PARTS,
-            { kind: "text", id: "newest", label: "s", language: "en" },
-          ]}
-          activePartId={ACTIVE_SCROLL_PART_ID}
-        />,
-      );
+      await screen
+        .getByRole("button", { name: "Append and play", exact: true })
+        .click();
 
       const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
       assertDefined(activePart);
@@ -448,20 +470,16 @@ describe("MessageBar", () => {
     });
 
     test("preserves the scroll position when playback becomes idle", async () => {
-      const props = createProps({
-        parts: SCROLL_PARTS,
-        activePartId: ACTIVE_SCROLL_PART_ID,
-      });
-      const screen = await renderWithProviders(
-        <ScrollableMessageBar {...props} />,
+      const screen = await renderPlaybackBar(
+        SCROLL_PARTS,
+        ACTIVE_SCROLL_PART_INDEX,
       );
+      await screen.getByRole("button", { name: "Play part" }).click();
       const scroller = getScrollContainer(screen.container);
       expect(scroller.scrollLeft).toBeGreaterThan(0);
 
       scroller.scrollLeft = 0;
-      await screen.rerender(
-        <ScrollableMessageBar {...props} activePartId={null} />,
-      );
+      await screen.getByRole("button", { name: "Stop", exact: true }).click();
 
       expect(scroller.scrollLeft).toBe(0);
     });

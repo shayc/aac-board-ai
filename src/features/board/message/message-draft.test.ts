@@ -8,13 +8,13 @@ import {
 import { assertDefined } from "@shared/testing/assert-defined";
 import { collectReportedErrors } from "@shared/testing/collect-reported-errors";
 import { describe, expect, onTestFinished, test } from "vitest";
-import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 import {
   createTextPart,
   createTilePart,
   EMPTY_MESSAGE,
-} from "./message-transforms";
-import type { Message } from "./message-types";
+  type Message,
+} from "./message";
+import { restoreMessageDraft, saveMessageDraft } from "./message-draft";
 
 const STORAGE_KEY = "message-draft";
 

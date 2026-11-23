@@ -4,8 +4,13 @@ import { parseBoolean } from "@shared/utils/parse-boolean";
 import { parseOptionalString } from "@shared/utils/parse-optional-string";
 import { reportErrorsTogether } from "@shared/utils/report-errors-together";
 import { settleAll } from "@shared/utils/settle-all";
-import { EMPTY_MESSAGE } from "./message-transforms";
-import type { Message, MessagePart, TextPart, TilePart } from "./message-types";
+import {
+  EMPTY_MESSAGE,
+  type Message,
+  type MessagePart,
+  type TextPart,
+  type TilePart,
+} from "./message";
 
 // localStorage, not sessionStorage: an installed app can restart from scratch
 // in the background, and a message composed ahead of time must survive that.

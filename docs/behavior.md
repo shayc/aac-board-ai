@@ -167,7 +167,7 @@ cannot change.
 
 ### Activate a tile
 
-[`activateButton`](../src/features/board/activation/button-activator.ts)
+[`activateTile`](../src/features/board/tile/tile-activation.ts)
 coordinates navigation and playback, and hands message edits to
 [`useMessage`](../src/features/board/message/use-message.ts), the one owner of
 how the message changes:

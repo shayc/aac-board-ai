@@ -6,12 +6,11 @@ import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { LIGHT_SCHEME_CLASS } from "@shared/theme/theme";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
-import {
-  AACSymbol,
-  SYMBOL_IMAGE_SIZE_PROPERTY,
-} from "../aac-symbol/aac-symbol";
+import { AACSymbol, SYMBOL_IMAGE_SIZE_PROPERTY } from "../aac-symbol";
 import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
-import type { MessagePart } from "./message-types";
+import { useActiveMessagePartId } from "../playback/use-board-playback";
+import type { MessagePart } from "./message";
+import { useMessagePreferences } from "./message-preferences-store";
 
 // A short landscape screen gets compact; smaller symbols leave room for labels.
 const BAR_SIZES = {
@@ -28,20 +27,16 @@ const ACTIVE_PART_ANCHOR = "--active-message-part";
 export interface MessageBarProps {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
-  activePartId: string | null;
-  areImagesVisible: boolean;
   endAction?: ReactNode;
 }
 
-export function MessageBar({
-  parts,
-  isWordOpen,
-  activePartId,
-  areImagesVisible,
-  endAction,
-}: MessageBarProps) {
+export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const playingPartId = useActiveMessagePartId();
+  const { areImagesVisible, isHighlightingEnabled } = useMessagePreferences();
+  const activePartId = isHighlightingEnabled ? playingPartId : null;
 
   // Reads the latest parts without reacting to them, so an edit during
   // playback shows the newest part instead of jumping back to the active one.

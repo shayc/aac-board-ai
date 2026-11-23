@@ -1,7 +1,6 @@
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import { describe, expect, test } from "vitest";
-import { createTilePart } from "../message/message-transforms";
-import type { MessagePart } from "../message/message-types";
+import { createTilePart, type MessagePart } from "../message/message";
 import { planPlayback } from "./plan-playback";
 
 describe("planPlayback", () => {

@@ -21,14 +21,13 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { type Locator, userEvent } from "vitest/browser";
 import { CommunicationBoard } from "./communication-board";
+import { EMPTY_MESSAGE, type Message } from "./message/message";
 import { restoreMessageDraft } from "./message/message-draft";
 import {
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
   setMessagePlayTiles,
 } from "./message/message-preferences-store";
-import { EMPTY_MESSAGE } from "./message/message-transforms";
-import type { Message } from "./message/message-types";
 import {
   communicationBoardTree,
   EMPTY_MESSAGE_REVIEW,

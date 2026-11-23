@@ -9,9 +9,10 @@ import {
   EMPTY_MESSAGE,
   hasSameContent,
   markPlayed,
+  type Message,
   spell,
-} from "./message-transforms";
-import type { Message, TilePart } from "./message-types";
+  type TilePart,
+} from "./message";
 
 const HELLO_TILE: TilePart = {
   kind: "tile",

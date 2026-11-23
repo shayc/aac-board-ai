@@ -1,7 +1,7 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { PlaybackStep, SpeechStep } from "@shared/playback/playback-types";
 import type { SpeechText } from "@shared/speech/speech-synthesis";
-import type { MessagePart } from "../message/message-types";
+import type { MessagePart } from "../message/message";
 
 interface SpeechPart extends SpeechText {
   id: string;

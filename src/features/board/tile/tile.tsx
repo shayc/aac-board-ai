@@ -6,10 +6,7 @@ import { type Translate, useTranslate } from "@shared/language/use-translate";
 import { buttonFeedbackTransition } from "@shared/theme/button-feedback";
 import { assertNever } from "@shared/utils/assert-never";
 import type { CSSProperties } from "react";
-import {
-  AACSymbol,
-  SYMBOL_LABEL_FONT_SIZE_PROPERTY,
-} from "../aac-symbol/aac-symbol";
+import { AACSymbol, SYMBOL_LABEL_FONT_SIZE_PROPERTY } from "../aac-symbol";
 import { useTilePreferences } from "./tile-preferences-store";
 
 interface TileProps {

@@ -10,7 +10,7 @@ import {
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { page } from "vitest/browser";
-import type { MessagePart } from "../message/message-types";
+import type { MessagePart } from "../message/message";
 import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
 function renderPlayback() {

@@ -1,12 +1,11 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
-import { createTilePart } from "../message/message-transforms";
-import type { MessageEdit } from "../message/message-types";
+import { createTilePart, type MessageEdit } from "../message/message";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
-interface ButtonActivatorOptions {
+interface TileActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "play" | "echo">;
   playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
@@ -14,16 +13,16 @@ interface ButtonActivatorOptions {
   shouldPlayTiles: boolean;
 }
 
-type ButtonActivator = (button: BoardButton) => void;
+type TileActivator = (button: BoardButton) => void;
 
-export function createButtonActivator({
+export function createTileActivator({
   message,
   playback,
   navigation,
   boardLanguage,
   shouldPlayTiles,
-}: ButtonActivatorOptions): ButtonActivator {
-  function activateButton(button: BoardButton) {
+}: TileActivatorOptions): TileActivator {
+  function activateTile(button: BoardButton) {
     if (button.linkedBoardId) {
       navigation.goToBoard(button.linkedBoardId);
 
@@ -100,7 +99,7 @@ export function createButtonActivator({
     void message.echo(editsAfterPlay);
   }
 
-  return activateButton;
+  return activateTile;
 }
 
 function toMessageEdits(

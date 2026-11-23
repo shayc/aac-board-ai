@@ -65,8 +65,6 @@ function barWithBackspace(disabled: boolean) {
     <MessageBar
       parts={[]}
       isWordOpen={false}
-      activePartId={null}
-      areImagesVisible
       endAction={
         <BackspaceButton
           shortcutLabels={SHORTCUT_LABELS}

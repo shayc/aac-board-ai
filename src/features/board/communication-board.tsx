@@ -9,7 +9,6 @@ import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provid
 import { maxSafeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
-import { createButtonActivator } from "./activation/button-activator";
 import {
   BOTTOM_CONTROLS_INSET,
   PAGE_MARGIN,
@@ -17,13 +16,13 @@ import {
 } from "./board-spacing";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { BackspaceButton } from "./message/backspace-button";
+import type { Message } from "./message/message";
+import { MessageBar } from "./message/message-bar";
 import { useMessagePreferences } from "./message/message-preferences-store";
-import type { Message } from "./message/message-types";
 import { useMessage } from "./message/use-message";
 import { HomeButton } from "./navigation/home-button";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlayButton } from "./playback/play-button";
-import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps, scanRowProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
@@ -31,6 +30,7 @@ import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { MessageSuggestions } from "./suggestions/message-suggestions";
 import { Tile } from "./tile/tile";
+import { createTileActivator } from "./tile/tile-activation";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -61,7 +61,7 @@ export function CommunicationBoard({
   // The members are picked one by one: each hook returns a new object when its
   // state changes, `message` on every edit, and an activator built from the
   // whole objects would change with them and re-render every tile on each tap.
-  const activateButton = createButtonActivator({
+  const activateTile = createTileActivator({
     message: {
       apply: message.apply,
       play: message.play,
@@ -114,7 +114,7 @@ export function CommunicationBoard({
     <Tile
       button={button}
       language={boardLanguage}
-      onActivate={activateButton}
+      onActivate={activateTile}
       {...gridItemProps}
     />
   );
@@ -141,7 +141,7 @@ export function CommunicationBoard({
             >
               {!areControlsBelowGrid && homeButton}
 
-              <PlaybackMessageBar
+              <MessageBar
                 parts={message.parts}
                 isWordOpen={message.isWordOpen}
                 endAction={
