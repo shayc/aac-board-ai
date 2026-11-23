@@ -122,6 +122,7 @@ export function CommunicationBoard({
       <ScanningScope>
         <Stack
           {...shortcuts.rootProps}
+          // The document's dir follows the UI locale, not the board's language.
           dir={direction}
           direction="column"
           sx={{

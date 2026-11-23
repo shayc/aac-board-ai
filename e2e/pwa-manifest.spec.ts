@@ -20,6 +20,8 @@ test("the manifest's icons and screenshots match their declared sizes", async ({
 
   // Chrome shows its richer install dialog only with a screenshot for the
   // device's form factor, and ignores one whose file doesn't match `sizes`.
+  // Retake both, in the state they show, after a visible change to the header
+  // or board. Wide is 1024×640 at scale 1.875, the smallest that fits the board.
   expect(
     new Set(manifest.screenshots.map(({ form_factor }) => form_factor)),
   ).toEqual(new Set(["narrow", "wide"]));
