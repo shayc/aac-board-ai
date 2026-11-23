@@ -70,7 +70,7 @@ function obfToBoardButton(
     soundSrc: obfButton.sound_id
       ? soundSrcById.get(obfButton.sound_id)
       : undefined,
-    actions: parseActions(obfButton),
+    actions: obfToBoardActions(obfButton),
     linkedBoardId: obfButton.load_board?.id,
   };
 }
@@ -84,7 +84,7 @@ function sanitizeColor(color: string | undefined): string | undefined {
   return CSS.supports("color", color) ? color : undefined;
 }
 
-function parseActions(obfButton: OBFButton): BoardAction[] {
+function obfToBoardActions(obfButton: OBFButton): BoardAction[] {
   const rawActions =
     obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 

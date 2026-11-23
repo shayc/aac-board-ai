@@ -10,12 +10,6 @@ import type { BoardSetRecord } from "../storage/board-set-storage";
 
 const DEFAULT_SOURCE_LANGUAGE = "en";
 
-interface Named {
-  readonly name: string;
-  /** Keyed by language code. */
-  readonly translatedNames?: Readonly<Record<string, string>>;
-}
-
 export function resolveBoardInLanguage(
   storedBoard: StoredBoard,
   language: string,
@@ -46,7 +40,10 @@ export function boardSetInLanguage(
 }
 
 export function nameInLanguage(
-  { name, translatedNames }: Named,
+  {
+    name,
+    translatedNames,
+  }: { name: string; translatedNames?: Readonly<Record<string, string>> },
   language: string,
 ): string {
   return translatedNames?.[language] || name;
