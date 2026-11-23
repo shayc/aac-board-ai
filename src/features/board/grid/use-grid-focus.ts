@@ -8,14 +8,14 @@ import {
   useState,
 } from "react";
 import { useKeyboard } from "react-aria";
-import { findGridKeyTarget, type GridKeyEvent } from "./grid-key-navigation";
 import {
   findFirstOccupiedPosition,
   gridArrangementKey,
   type GridCells,
   type GridPosition,
   isSameGridPosition,
-} from "./grid-model";
+} from "./grid-cells";
+import { findGridKeyTarget, type GridKeyEvent } from "./grid-key-navigation";
 
 const GRID_CELL_SELECTOR = "[role='gridcell']";
 const GRID_FOCUSABLE_SELECTOR = "[tabindex]";

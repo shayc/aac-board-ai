@@ -1,9 +1,5 @@
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
-import {
-  deriveSuggestionStatus,
-  type SuggestionStatus,
-} from "./derive-suggestion-status";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import {
   isAvailableEngineStatus,
@@ -12,6 +8,10 @@ import {
 import { useProofreaderSource } from "./sources/use-proofreader-source";
 import { useRewriterSource } from "./sources/use-rewriter-source";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
+import {
+  deriveSuggestionStatus,
+  type SuggestionStatus,
+} from "./suggestion-status";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 

@@ -6,7 +6,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { FocusEvent } from "react";
 import { SCAN_OUTLINE_REACH_PX } from "../scanning/scan-targets";
-import type { SuggestionStatus } from "./derive-suggestion-status";
+import type { SuggestionStatus } from "./suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
 // A keyframe, not a transition: the theme owns the chip's transitions for

@@ -247,7 +247,7 @@ language.
    repeats the message or an earlier candidate, ignoring case, a final full
    stop, and apostrophe style, and one that carries model artifacts such as an
    underscored word or a quotation mark.
-4. [`deriveSuggestionStatus`](../src/features/board/suggestions/derive-suggestion-status.ts)
+4. [`deriveSuggestionStatus`](../src/features/board/suggestions/suggestion-status.ts)
    reduces the sources to one status for the bar. A model that still needs
    downloading, or that failed to prepare, shows an enable button; pressing it
    is the user gesture a model download needs. A download shows its progress.
