@@ -182,7 +182,7 @@ how the message changes:
    message part.
    With the message setting "Speak symbols when added" off, a tile stays
    silent: it adds its part, and a tile that spells and then plays does not
-   echo the word. It still stops any playback, as a played tile would. A tile
+   echo the message. It still stops any playback, as a played tile would. A tile
    that only plays the message still plays it, and so does the play button.
 2. A play action (OBF `:speak`) captures the message at that point. Changes
    from later actions, such as clearing the message, apply only if playback
@@ -192,18 +192,19 @@ how the message changes:
 3. Once the whole message plays to its end, from the play button, the keyboard
    shortcut, or a tile that only plays it, the next tile or letter starts a new
    message. Editing the message, or replaying it without letting it finish,
-   keeps adding to it. A tile that spells and then plays echoes the word and
-   does not count. A message setting turns this off.
+   keeps adding to it. A tile that spells and then plays echoes the message:
+   it plays the whole message, which does not count as played. A message
+   setting turns this off.
 4. The board playback adapter calls `planPlayback` to turn message parts into
-   speech and recorded-audio steps. The shared coordinator plays them in order
-   and publishes progress for highlighting. A recording, or speech for a single
-   part, highlights its part throughout. Speech that joins several parts
+   speech and audio steps. The shared coordinator plays them in order
+   and publishes progress for highlighting. A tile's sound, or speech for a
+   single part, highlights its part throughout. Speech that joins several parts
    highlights each one only when the voice reports a word boundary in it, so
    a voice that reports no word boundaries highlights none of them rather
-   than leave the first one highlighted for the whole utterance. A
-   recorded-audio step carries the tile's spoken text, and the coordinator
-   speaks it in place of a recording that cannot play, so a broken or
-   unreachable recording does not silence a tile that has text to speak.
+   than leave the first one highlighted for the whole utterance. An
+   audio step carries the tile's spoken text, and the coordinator
+   speaks it in place of a sound that cannot play, so a broken or
+   unreachable sound does not silence a tile that has text to speak.
 
 Each new playback request interrupts the current one, and a board that closes
 stops its own playback, so a message it was playing is never marked played
@@ -214,7 +215,7 @@ The shared coordinator resolves each request as completed, interrupted, or
 failed. The board playback adapter is the only place that reads that outcome:
 it reports a failure once in an error snackbar, including when only some steps
 failed, and tells its callers only whether a message played to its end. A
-recording spoken from its text instead is not a failure: the words were heard,
+sound spoken from its text instead is not a failure: the words were heard,
 so the step counts as played and nothing is reported.
 
 Playback knows nothing of the message's state. `useMessage` is given the
@@ -222,7 +223,7 @@ adapter's play function, and its `play` runs it and decides from the result
 whether the message has played. The play button, the keyboard shortcut, and a
 tile that plays the message as it stands all call `play`. An echo calls
 `useMessage`'s `echo`, which runs the adapter's play function too and never
-counts.
+counts the message as played.
 
 ### Suggest a message
 

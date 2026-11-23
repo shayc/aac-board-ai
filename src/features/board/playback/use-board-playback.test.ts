@@ -11,13 +11,16 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { page } from "vitest/browser";
 import type { MessagePart } from "../message/message";
-import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
+import {
+  useBoardPlayback,
+  usePlayingMessagePartId,
+} from "./use-board-playback";
 
 function renderPlayback() {
   return renderHook(
     () => ({
       ...useBoardPlayback(),
-      activePartId: useActiveMessagePartId(),
+      playingPartId: usePlayingMessagePartId(),
     }),
     { wrapper: AppProviders },
   );
@@ -32,7 +35,7 @@ describe("useBoardPlayback", () => {
     audio = stubAudio();
   });
 
-  test("tracks playing state and active parts through speech boundaries and completion", async () => {
+  test("tracks whether the message plays and which part through speech boundaries and completion", async () => {
     let fireBoundary: ((charIndex: number) => void) | undefined;
     let endSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
@@ -50,23 +53,23 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     expect(result.current.isMessagePlaying).toBe(false);
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
 
     const playPromise = result.current.playMessage(parts);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
 
     fireBoundary?.(2);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBe("2");
+    expect(result.current.playingPartId).toBe("2");
 
     endSpeak?.();
     await playPromise;
     await rerender();
     expect(result.current.isMessagePlaying).toBe(false);
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
   });
 
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
@@ -108,7 +111,7 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playPart({
+    const playPromise = result.current.playTile({
       kind: "tile",
       id: "1",
       label: "hi",
@@ -117,7 +120,7 @@ describe("useBoardPlayback", () => {
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
 
     result.current.stop();
     await playPromise;
@@ -139,14 +142,14 @@ describe("useBoardPlayback", () => {
     const playPromise = result.current.playMessage(parts);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBe("1");
+    expect(result.current.playingPartId).toBe("1");
 
     result.current.stop();
     await rerender();
 
     expect(speech.cancel).toHaveBeenCalled();
     expect(result.current.isMessagePlaying).toBe(false);
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
 
     resolveSpeak?.();
     await playPromise;
@@ -182,7 +185,7 @@ describe("useBoardPlayback", () => {
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(audio.play).not.toHaveBeenCalled();
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
   });
 
   test("ignores a boundary event that arrives after stop", async () => {
@@ -208,7 +211,7 @@ describe("useBoardPlayback", () => {
     result.current.stop();
     fireBoundary?.(2);
     await rerender();
-    expect(result.current.activePartId).toBeNull();
+    expect(result.current.playingPartId).toBeNull();
 
     resolveSpeak?.();
     await playPromise;
@@ -264,7 +267,7 @@ describe("useBoardPlayback", () => {
     failSpeech(speech.speak);
     const { result } = await renderPlayback();
 
-    await result.current.playPart({
+    await result.current.playTile({
       kind: "tile",
       id: "1",
       label: "hi",
@@ -305,7 +308,7 @@ describe("useBoardPlayback", () => {
     failAudio(audio.play);
     const { result, rerender } = await renderPlayback();
 
-    await result.current.playPart({
+    await result.current.playTile({
       kind: "tile",
       id: "1",
       label: "Dog",
@@ -359,7 +362,7 @@ describe("useBoardPlayback", () => {
     await expect.poll(() => speech.spokenTexts()).toEqual(["Dog"]);
     await rerender();
 
-    expect(result.current.activePartId).toBe("1");
+    expect(result.current.playingPartId).toBe("1");
 
     result.current.stop();
     await playPromise;
@@ -370,7 +373,7 @@ describe("useBoardPlayback", () => {
     failSpeech(speech.speak);
     const { result } = await renderPlayback();
 
-    await result.current.playPart({
+    await result.current.playTile({
       kind: "tile",
       id: "1",
       label: "Dog",

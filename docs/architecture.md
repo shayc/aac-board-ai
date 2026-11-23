@@ -416,7 +416,7 @@ full.
   `insertBoardSetRecords` and `deleteBoardSetRecords`, then refresh the store
   and notify other tabs. Storage functions name the records they touch; store
   functions name the board set.
-- **Playback** — speaking text or playing recorded audio.
+- **Playback** — speaking text or playing a tile's sound.
   [`shared/playback/`](../src/shared/playback/) owns device output and progress;
   [`features/board/playback/`](../src/features/board/playback/) turns message
   parts into the steps to play and reports a playback that fails.
