@@ -481,8 +481,6 @@ export const rtlTheme = createTheme({
   direction: "rtl",
 });
 
-// Shared by menu items and Autocomplete options. MUI drops the 48px touch row
-// from the sm breakpoint up, so tablets would get desktop rows.
 function menuRowStyle(theme: Theme) {
   return {
     marginInline: 4,
