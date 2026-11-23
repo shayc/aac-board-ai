@@ -144,16 +144,16 @@ describe("TileSettings", () => {
 
     await expect
       .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "97%");
-    await expect.element(screen.getByText("97%")).toBeVisible();
+      .toHaveAttribute("aria-valuetext", "95%");
+    await expect.element(screen.getByText("95%")).toBeVisible();
 
     expect(readStoredPreferences("tile-preferences")).toMatchObject({
-      brightness: 0.97,
+      brightness: 0.95,
     });
   });
 
   test.each([
-    { name: "Brightness", lowest: "70%" },
+    { name: "Brightness", lowest: "50%" },
     { name: "Color intensity", lowest: "0%" },
   ])("lowers $name to $lowest in ten steps", async ({ name, lowest }) => {
     const screen = await renderWithProviders(<TileSettings />);
