@@ -8,7 +8,7 @@ import { LIGHT_SCHEME_CLASS } from "@shared/theme/theme";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
 import { AACSymbol, SYMBOL_IMAGE_SIZE_PROPERTY } from "../aac-symbol";
 import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
-import { useActiveMessagePartId } from "../playback/use-board-playback";
+import { usePlayingMessagePartId } from "../playback/use-board-playback";
 import type { MessagePart } from "./message";
 import { useMessagePreferences } from "./message-preferences-store";
 
@@ -22,7 +22,7 @@ const BAR_INSET = 1;
 // Clears the bar's rounded end, which would clip the first word.
 const MESSAGE_PADDING = 3;
 const PART_INLINE_PADDING = 1;
-const ACTIVE_PART_ANCHOR = "--active-message-part";
+const HIGHLIGHTED_PART_ANCHOR = "--highlighted-message-part";
 
 export interface MessageBarProps {
   parts: readonly MessagePart[];
@@ -34,13 +34,13 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const playingPartId = useActiveMessagePartId();
+  const playingPartId = usePlayingMessagePartId();
   const { areImagesVisible, isHighlightingEnabled } = useMessagePreferences();
-  const activePartId = isHighlightingEnabled ? playingPartId : null;
+  const highlightedPartId = isHighlightingEnabled ? playingPartId : null;
 
   // Reads the latest parts without reacting to them, so an edit during
-  // playback shows the newest part instead of jumping back to the active one.
-  const scrollActivePartIntoView = useEffectEvent((partId: string) => {
+  // playback shows the newest part instead of jumping back to the highlighted one.
+  const scrollHighlightedPartIntoView = useEffectEvent((partId: string) => {
     const index = parts.findIndex((part) => part.id === partId);
     if (index === -1) {
       return;
@@ -59,10 +59,10 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
   // Declared after the newest-part scroll so it wins when an edit starts
   // playback in the same render, as a spelling tile's echo does.
   useLayoutEffect(() => {
-    if (activePartId !== null) {
-      scrollActivePartIntoView(activePartId);
+    if (highlightedPartId !== null) {
+      scrollHighlightedPartIntoView(highlightedPartId);
     }
-  }, [activePartId]);
+  }, [highlightedPartId]);
 
   const lastPart = parts.at(-1);
   const caretPartId = lastPart?.kind === "text" ? lastPart.id : undefined;
@@ -78,7 +78,10 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
         // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
-        sx={[scrollContainerSx, activePartId !== null && activePartFillSx]}
+        sx={[
+          scrollContainerSx,
+          highlightedPartId !== null && highlightedPartFillSx,
+        ]}
       >
         {parts.map((part) => (
           <MessagePartItem
@@ -86,7 +89,7 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
             label={part.label}
             language={part.language}
             imageSrc={part.kind === "tile" ? part.imageSrc : undefined}
-            isActive={part.id === activePartId}
+            isHighlighted={part.id === highlightedPartId}
             caretPosition={part.id === caretPartId ? caretPosition : undefined}
             isImageVisible={areImagesVisible}
           />
@@ -139,7 +142,7 @@ function barSizeProperties({ control, symbol }: BarSize) {
 function scrollContainerSx(theme: Theme) {
   return {
     position: "relative",
-    // Keeps the active part's fill behind the labels but above the bar.
+    // Keeps the highlighted part's fill behind the labels but above the bar.
     isolation: "isolate",
     flexGrow: 1,
     alignSelf: "stretch",
@@ -154,7 +157,7 @@ function scrollContainerSx(theme: Theme) {
   };
 }
 
-function activePartFillSx(theme: Theme) {
+function highlightedPartFillSx(theme: Theme) {
   const blockOutset = theme.spacing(0.25);
   const inlineOutset = theme.spacing(PART_INLINE_PADDING);
 
@@ -163,7 +166,7 @@ function activePartFillSx(theme: Theme) {
       content: '""',
       position: "absolute",
       zIndex: -1,
-      positionAnchor: ACTIVE_PART_ANCHOR,
+      positionAnchor: HIGHLIGHTED_PART_ANCHOR,
       top: `calc(anchor(top) - ${blockOutset})`,
       bottom: `calc(anchor(bottom) - ${blockOutset})`,
       // Logical insets, since the RTL stylis plugin flips `left` and `right`
@@ -183,7 +186,7 @@ interface MessagePartItemProps {
   label: string;
   language: string | undefined;
   imageSrc?: string;
-  isActive: boolean;
+  isHighlighted: boolean;
   caretPosition: "word-end" | "next-word" | undefined;
   isImageVisible: boolean;
 }
@@ -192,7 +195,7 @@ function MessagePartItem({
   label,
   language,
   imageSrc,
-  isActive,
+  isHighlighted,
   caretPosition,
   isImageVisible,
 }: MessagePartItemProps) {
@@ -205,8 +208,10 @@ function MessagePartItem({
         py: 0.5,
         px: PART_INLINE_PADDING,
         [`& .${typographyClasses.root}`]: {
-          anchorName: isActive ? ACTIVE_PART_ANCHOR : "none",
-          color: isActive ? theme.vars.palette.primary.contrastText : undefined,
+          anchorName: isHighlighted ? HIGHLIGHTED_PART_ANCHOR : "none",
+          color: isHighlighted
+            ? theme.vars.palette.primary.contrastText
+            : undefined,
         },
         // Forced-colors mode repaints backgrounds, so draw the caret as a border.
         ...(caretPosition && {

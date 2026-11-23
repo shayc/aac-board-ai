@@ -20,7 +20,7 @@ const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   language: "en",
   imageSrc: TEST_IMAGE_SRC,
 }));
-const ACTIVE_SCROLL_PART_INDEX = 3;
+const HIGHLIGHTED_SCROLL_PART_INDEX = 3;
 
 function createProps(
   overrides: Partial<MessageBarProps> = {},
@@ -42,7 +42,7 @@ function ScrollableMessageBar(props: MessageBarProps) {
 
 async function renderPlaybackBar(
   initialParts: MessagePart[],
-  activeIndex: number,
+  highlightedIndex: number,
 ) {
   const speech = stubSpeech();
   preventSpeechEnd(speech.speak);
@@ -50,8 +50,8 @@ async function renderPlaybackBar(
   function PlaybackExample() {
     const [parts, setParts] = useState(initialParts);
     const playback = useBoardPlayback();
-    const activePart = parts[activeIndex];
-    assertDefined(activePart);
+    const highlightedPart = parts[highlightedIndex];
+    assertDefined(highlightedPart);
 
     function appendPart() {
       setParts([
@@ -63,14 +63,14 @@ async function renderPlaybackBar(
     return (
       <>
         <ScrollableMessageBar parts={parts} isWordOpen={false} />
-        <button onClick={() => void playback.playMessage([activePart])}>
+        <button onClick={() => void playback.playMessage([highlightedPart])}>
           Play part
         </button>
         <button onClick={appendPart}>Append</button>
         <button
           onClick={() => {
             appendPart();
-            void playback.playMessage([activePart]);
+            void playback.playMessage([highlightedPart]);
           }}
         >
           Append and play
@@ -351,7 +351,7 @@ describe("MessageBar", () => {
   });
 
   test.for(["en", "he"])(
-    "fills behind the active part's label in %s",
+    "fills behind the highlighted part's label in %s",
     async (language) => {
       setCommunicationLanguage(language);
       const parts: MessagePart[] = [
@@ -369,10 +369,10 @@ describe("MessageBar", () => {
       await screen.getByRole("button", { name: "Play part" }).click();
 
       const scroller = getScrollContainer(screen.container);
-      const activePart = scroller.children[1];
-      assertDefined(activePart);
+      const highlightedPart = scroller.children[1];
+      assertDefined(highlightedPart);
       const fill = fillBounds(scroller);
-      const partBounds = activePart.getBoundingClientRect();
+      const partBounds = highlightedPart.getBoundingClientRect();
       expect(fill.left).toBeGreaterThanOrEqual(partBounds.left - 1);
       expect(fill.right).toBeLessThanOrEqual(partBounds.right + 1);
       expect(fill.right - fill.left).toBeGreaterThan(0);
@@ -403,18 +403,18 @@ describe("MessageBar", () => {
       );
     });
 
-    test("scrolls the active part into view when it changes during playback", async () => {
+    test("scrolls the highlighted part into view when it changes during playback", async () => {
       const screen = await renderPlaybackBar(
         SCROLL_PARTS,
-        ACTIVE_SCROLL_PART_INDEX,
+        HIGHLIGHTED_SCROLL_PART_INDEX,
       );
       const scroller = getScrollContainer(screen.container);
 
-      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
-      assertDefined(activePart);
+      const highlightedPart = scroller.children[HIGHLIGHTED_SCROLL_PART_INDEX];
+      assertDefined(highlightedPart);
 
       const initialScrollLeft = scroller.scrollLeft;
-      expect(activePart.getBoundingClientRect().right).toBeLessThan(
+      expect(highlightedPart.getBoundingClientRect().right).toBeLessThan(
         scroller.getBoundingClientRect().left,
       );
 
@@ -423,11 +423,11 @@ describe("MessageBar", () => {
         .click();
 
       expect(scroller.scrollLeft).toBeLessThan(initialScrollLeft);
-      expect(activePart.getBoundingClientRect().left).toBeCloseTo(
+      expect(highlightedPart.getBoundingClientRect().left).toBeCloseTo(
         scroller.getBoundingClientRect().left,
         0,
       );
-      expect(activePart.getBoundingClientRect().right).toBeLessThanOrEqual(
+      expect(highlightedPart.getBoundingClientRect().right).toBeLessThanOrEqual(
         scroller.getBoundingClientRect().right,
       );
     });
@@ -435,7 +435,7 @@ describe("MessageBar", () => {
     test("keeps the newest part in view when an edit happens during playback", async () => {
       const screen = await renderPlaybackBar(
         SCROLL_PARTS,
-        ACTIVE_SCROLL_PART_INDEX,
+        HIGHLIGHTED_SCROLL_PART_INDEX,
       );
       await screen.getByRole("button", { name: "Play part" }).click();
       const scroller = getScrollContainer(screen.container);
@@ -450,10 +450,10 @@ describe("MessageBar", () => {
       );
     });
 
-    test("scrolls to the active part when an edit starts playback", async () => {
+    test("scrolls to the highlighted part when an edit starts playback", async () => {
       const screen = await renderPlaybackBar(
         SCROLL_PARTS,
-        ACTIVE_SCROLL_PART_INDEX,
+        HIGHLIGHTED_SCROLL_PART_INDEX,
       );
       const scroller = getScrollContainer(screen.container);
 
@@ -461,9 +461,9 @@ describe("MessageBar", () => {
         .getByRole("button", { name: "Append and play", exact: true })
         .click();
 
-      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
-      assertDefined(activePart);
-      expect(activePart.getBoundingClientRect().left).toBeCloseTo(
+      const highlightedPart = scroller.children[HIGHLIGHTED_SCROLL_PART_INDEX];
+      assertDefined(highlightedPart);
+      expect(highlightedPart.getBoundingClientRect().left).toBeCloseTo(
         scroller.getBoundingClientRect().left,
         0,
       );
@@ -472,7 +472,7 @@ describe("MessageBar", () => {
     test("preserves the scroll position when playback becomes idle", async () => {
       const screen = await renderPlaybackBar(
         SCROLL_PARTS,
-        ACTIVE_SCROLL_PART_INDEX,
+        HIGHLIGHTED_SCROLL_PART_INDEX,
       );
       await screen.getByRole("button", { name: "Play part" }).click();
       const scroller = getScrollContainer(screen.container);

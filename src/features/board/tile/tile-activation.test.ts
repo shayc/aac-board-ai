@@ -34,7 +34,7 @@ async function setup(
 ) {
   const playback = {
     playMessage: vi.fn<PlayMessage>(() => Promise.resolve(true)),
-    playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
+    playTile: vi.fn<ActivationOptions["playback"]["playTile"]>(() =>
       Promise.resolve(),
     ),
     stop: vi.fn<ActivationOptions["playback"]["stop"]>(),
@@ -80,7 +80,7 @@ async function setup(
   return {
     activateTile: createTileActivator({
       message,
-      playback: { playPart: playback.playPart, stop: playback.stop },
+      playback: { playTile: playback.playTile, stop: playback.stop },
       navigation,
       boardLanguage,
       shouldPlayTiles,
@@ -110,7 +110,7 @@ describe("createTileActivator", () => {
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(await readLabels()).toEqual(["hi"]);
     expect(playback.playMessage).not.toHaveBeenCalled();
-    expect(playback.playPart).not.toHaveBeenCalled();
+    expect(playback.playTile).not.toHaveBeenCalled();
   });
 
   test("appends a button without actions to the message and plays that part", async () => {
@@ -138,7 +138,7 @@ describe("createTileActivator", () => {
     });
     expect(appended.id).toBeTruthy();
     expect(appended.id).not.toBe("btn");
-    expect(playback.playPart).toHaveBeenCalledExactlyOnceWith(appended);
+    expect(playback.playTile).toHaveBeenCalledExactlyOnceWith(appended);
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
@@ -150,7 +150,7 @@ describe("createTileActivator", () => {
     activateTile({ id: "btn", label: "bell", actions: [] });
 
     expect(await readLabels()).toEqual(["bell"]);
-    expect(playback.playPart).not.toHaveBeenCalled();
+    expect(playback.playTile).not.toHaveBeenCalled();
     expect(playback.stop).toHaveBeenCalledOnce();
   });
 

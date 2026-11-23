@@ -7,7 +7,7 @@ import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
 interface TileActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "play" | "echo">;
-  playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
+  playback: Pick<UseBoardPlaybackReturn, "playTile" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
   boardLanguage: string | undefined;
   shouldPlayTiles: boolean;
@@ -30,7 +30,7 @@ export function createTileActivator({
     }
 
     if (button.actions.length === 0) {
-      composeAndPlayButton(button);
+      addAndPlayTile(button);
 
       return;
     }
@@ -38,7 +38,7 @@ export function createTileActivator({
     runActions(button.actions);
   }
 
-  function composeAndPlayButton(button: BoardButton) {
+  function addAndPlayTile(button: BoardButton) {
     const part = createTilePart({
       label: button.label,
       vocalization: button.vocalization,
@@ -54,7 +54,7 @@ export function createTileActivator({
       return;
     }
 
-    void playback.playPart(part);
+    void playback.playTile(part);
   }
 
   function runActions(actions: readonly BoardAction[]) {
