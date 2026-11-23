@@ -9,21 +9,22 @@ Accessibility comes first, followed by offline reliability, privacy,
 responsiveness, and internationalization.
 
 See [README.md](../README.md) for product details and setup,
-[AGENTS.md](../AGENTS.md) for contribution and testing rules,
-[behavior.md](behavior.md) for how each flow, accessibility rule, and layout
-rule works, and the [glossary](#glossary) for AAC terms.
+[AGENTS.md](../AGENTS.md) for contribution and testing rules, and the
+[glossary](#glossary) for AAC terms. The reason behind a single decision is a
+comment beside the code it explains.
 
 - [Invariants](#invariants)
 - [Runtime architecture](#runtime-architecture)
 - [Data and state ownership](#data-and-state-ownership)
 - [Module boundaries and code map](#module-boundaries-and-code-map)
+- [Core flows](#core-flows)
 - [Current limitations](#current-limitations)
 - [Glossary](#glossary)
 
 ## Invariants
 
 A change that breaks one of these rules needs a decision, not just a passing
-build. Each links to the section that explains it.
+build.
 
 - **Core communication never depends on an optional feature.** People rely on
   the app to communicate, so reading, navigating, and composing with a loaded
@@ -34,8 +35,7 @@ build. Each links to the section that explains it.
   network is used only for a board link the user confirmed, remote media a
   board points at, a voice that speaks through an online service, and the
   browser's download of a built-in AI model
-  ([Runtime architecture](#runtime-architecture),
-  [Start at `/`](behavior.md#start-at-)).
+  ([Runtime architecture](#runtime-architecture)).
 - **Dependencies run one way.** The app composes features, the board imports
   the library, and shared code imports from neither the app nor a feature
   ([Module boundaries](#module-boundaries-and-code-map)).
@@ -47,28 +47,24 @@ build. Each links to the section that explains it.
   ([Data and state ownership](#data-and-state-ownership)).
 - **Board route loaders only read.** They never translate or wait on a model.
   Only the loader for `/` writes, importing the starter board set into an empty
-  library ([Open a board](behavior.md#open-a-board),
-  [Start at `/`](behavior.md#start-at-)).
+  library.
 - **`useMessage` is the one owner of how the message changes.** Tiles,
-  shortcuts, and suggestions all edit the message through it
-  ([Activate a tile](behavior.md#activate-a-tile)).
+  shortcuts, and suggestions all edit the message through it.
 - **Shared playback owns all device output and reads no settings store.** The
   board playback adapter is the only place that reports a failed playback
-  ([Data and state ownership](#data-and-state-ownership),
-  [Activate a tile](behavior.md#activate-a-tile)).
+  ([Data and state ownership](#data-and-state-ownership)).
 - **An error is reported where it stops.** A catch that keeps an error from
   travelling further passes it to `reportError`, because the message on screen
-  never names the cause. The few exceptions are listed with the rule
-  ([Report failures](behavior.md#report-failures)).
+  never names the cause. Three things are not reported: cancelled work, an
+  error the screen already explains in full, such as board not found, and
+  playback, preferences, the message draft, and built-in AI, which fail as a
+  matter of course on many devices and handle that themselves.
 - **Speech follows the text, not the setting.** A message part whose language
-  is known is spoken in that language
-  ([Language and direction](behavior.md#language-and-direction)).
+  is known is spoken in that language.
 - **A populated grid has one Tab stop.** Arrow keys move inside it, and
-  horizontal movement follows text direction
-  ([Accessibility](behavior.md#accessibility)).
+  horizontal movement follows text direction.
 - **Scanned controls hold no scanning code.** The scanner reads scan groups
-  from the DOM, so the grid and its tiles know nothing about scanning
-  ([Switch scanning](behavior.md#switch-scanning)).
+  from the DOM, so the grid and its tiles know nothing about scanning.
 
 ## Runtime architecture
 
@@ -291,6 +287,32 @@ Closing or unmounting settings does not delete preferences. Removing a feature
 requires an explicit decision about retaining or deleting its persisted
 preferences.
 
+## Core flows
+
+One line per flow, each linked to where it starts in the code.
+
+- **[Start at `/`](../src/app/routing/root/root-index-route.ts):** a board
+  link the user confirmed is imported; otherwise the newest stored board set
+  opens, or the starter board set is imported into an empty library.
+- **[Import board files](../src/features/library/import/board-file-import.ts):**
+  file selection, drag and drop, URL imports, and PWA file handling all use
+  `importBoardFile`, and each file becomes its own board set.
+- **[Export a board set](../src/features/library/export/board-set-export.ts):**
+  `boardSetToOBZ` packages one set's stored OBF records and assets as an OBZ
+  file.
+- **[Open a board](../src/app/routing/board-set/board-loader.ts):** the route
+  loaders read the stored OBF, map it through `obfToBoard`, and restore the
+  message draft, and the page shows the board in the communication language.
+- **[Translate board sets](../src/features/library/translation/use-translate-board-sets.ts):**
+  the app shell translates the sets that lack the communication language and
+  revalidates the one on screen.
+- **[Activate a tile](../src/features/board/tile/tile-activation.ts):**
+  `activateTile` opens a linked board, adds the tile to the message and plays
+  it unless a message setting keeps tiles silent, or runs the tile's actions.
+- **[Suggest a message](../src/features/board/suggestions/use-message-suggestions.ts):**
+  the Proofreader and Rewriter offer phrasings of the message, and selecting
+  one replaces it.
+
 ## Current limitations
 
 The README lists what the app does not do
@@ -361,8 +383,7 @@ is built:
   unrelated.
 - **Report** — telling the person that something failed, in a snackbar or on
   the error page, names what failed. Reporting an error, through the browser's
-  `reportError`, records why in the console for whoever investigates
-  ([Report failures](behavior.md#report-failures)).
+  `reportError`, records why in the console for whoever investigates.
 - **Translation** — UI text comes from the Paraglide message catalogs and is
   read through `useTranslate()`. Board translation is separate: it shows board
   strings in the communication language, reading the translations a board

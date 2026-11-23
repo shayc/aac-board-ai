@@ -122,6 +122,7 @@ function messageBarSx(theme: Theme) {
     borderColor: "transparent",
     borderRadius: theme.vars.shape.borderRadiusFull,
     bgcolor: "background.paper",
+    // Imported symbols are drawn for a light ground, so the bar stays light.
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),

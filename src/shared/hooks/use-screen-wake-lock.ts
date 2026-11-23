@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 /**
  * Keeps the screen on while the calling component is mounted, so a device
- * left on the table during a conversation does not dim and lock.
+ * left on the table during a conversation does not dim and lock. An installed
+ * app before iOS 18.4 is granted a lock it does not honor.
  */
 export function useScreenWakeLock(): void {
   useEffect(keepScreenAwake, []);
@@ -25,6 +26,8 @@ function keepScreenAwake(): (() => void) | undefined {
       return;
     }
 
+    // A refusal, on low battery for example, leaves the screen to the device's
+    // auto-lock.
     const lock = await navigator.wakeLock
       .request("screen")
       .catch(() => undefined);

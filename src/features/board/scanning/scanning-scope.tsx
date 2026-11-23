@@ -18,6 +18,7 @@ interface ScanningScopeProps {
   children: ReactNode;
 }
 
+/** Only the board is scanned: the header, drawers and dialogs are for whoever sets up the device. */
 export function ScanningScope({ children }: ScanningScopeProps) {
   const scopeRef = useRef<HTMLDivElement>(null);
   const { isEnabled, method, intervalMs } = useScanningPreferences();

@@ -49,6 +49,7 @@ export function createTileActivator({
 
     message.apply([{ kind: "tile", part }]);
     if (!shouldPlayTiles) {
+      // A silent tile still interrupts playback, as a played one would.
       playback.stop();
 
       return;
