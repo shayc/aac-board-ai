@@ -9,12 +9,12 @@ import {
   type BoardSetRecord,
   getBoardsDB,
   runTransaction,
-  validateId,
 } from "./boards-db";
 import { normalizeAssetPath } from "./normalize-asset-path";
 
-export { MAX_ID_LENGTH } from "./boards-db";
 export type { BoardSetRecord } from "./boards-db";
+
+export const MAX_ID_LENGTH = 255;
 
 export class BoardSetAlreadyExistsError extends Error {
   constructor(boardSetId: string) {
@@ -164,6 +164,14 @@ function validateBoardSetInput({
 
   if (!boardIds.has(rootBoardId)) {
     throw new Error(`Root board not found: ${rootBoardId}`);
+  }
+}
+
+function validateId(id: string, fieldName: string): void {
+  if (!id || id.length > MAX_ID_LENGTH) {
+    throw new Error(
+      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
+    );
   }
 }
 

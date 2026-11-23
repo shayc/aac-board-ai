@@ -24,10 +24,6 @@ export function useBoardSetDownload({
   const phase = useDownloadPhase(url);
 
   async function download() {
-    if (phase) {
-      return;
-    }
-
     try {
       const importedBoardSet = await downloadBoardSet(url);
       if (!importedBoardSet) {
