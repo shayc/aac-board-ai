@@ -24,12 +24,12 @@ export function obfToBoard(
 }
 
 function buildMediaSrcById(
-  media: readonly OBFMedia[] = [],
+  media: readonly OBFMedia[] | undefined,
   assetURLByPath: ReadonlyMap<string, string>,
 ): Map<string, string> {
   const mediaSrcById = new Map<string, string>();
 
-  for (const item of media) {
+  for (const item of media ?? []) {
     const src = resolveMediaSrc(item, assetURLByPath);
     if (src) {
       mediaSrcById.set(item.id, src);
