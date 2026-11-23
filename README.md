@@ -82,8 +82,6 @@ Open [http://localhost:5173](http://localhost:5173).
 
 To run tests in Chromium and WebKit, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
-To check performance against its budgets locally, run `npm run perf`; see [docs/performance.md](docs/performance.md).
-
 ## Architecture
 
 Built with React 19, TypeScript, Vite, and MUI.
