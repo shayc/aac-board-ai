@@ -2,9 +2,9 @@ import { describe, expect, test } from "vitest";
 import type { Board } from "../board-types";
 import {
   applyTranslations,
-  findBoardInLanguage,
   findStringTranslations,
   getSourceLanguage,
+  resolveBoardInLanguage,
 } from "./board-in-language";
 
 const spanishTranslations = new Map([
@@ -126,19 +126,28 @@ describe("applyTranslations", () => {
   });
 });
 
-describe("findBoardInLanguage", () => {
-  test("returns the board itself when its language matches", () => {
-    expect(findBoardInLanguage(mockBoard, "en")).toBe(mockBoard);
-  });
+describe("resolveBoardInLanguage", () => {
+  test.each<[string | undefined, string, string | undefined]>([
+    ["en-US", "en", "en"],
+    ["pt-BR", "de", "pt"],
+    [undefined, "en", "en"],
+    [undefined, "de", undefined],
+  ])(
+    "resolves source locale %s for requested language %s to %s",
+    (locale, language, expected) => {
+      const source = { ...mockBoard, locale };
+      const result = resolveBoardInLanguage(source, language);
 
-  test("returns a translated board from the board's own translations", () => {
-    const translated = findBoardInLanguage(mockBoard, "es");
-    expect(translated).toBeDefined();
-    expect(translated?.name).toBe("Mi Tablero");
-    expect(translated?.buttons[0]?.label).toBe("Hola");
-  });
+      expect(result.board).toBe(source);
+      expect(result.boardLanguage).toBe(expected);
+    },
+  );
 
-  test("returns nothing when the board has no translations for the language", () => {
-    expect(findBoardInLanguage(mockBoard, "de")).toBeUndefined();
+  test("returns the translated board and its language", () => {
+    const { board, boardLanguage } = resolveBoardInLanguage(mockBoard, "es");
+
+    expect(board.name).toBe("Mi Tablero");
+    expect(board.buttons[0]?.label).toBe("Hola");
+    expect(boardLanguage).toBe("es");
   });
 });

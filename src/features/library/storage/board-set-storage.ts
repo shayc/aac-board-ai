@@ -1,7 +1,7 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import type { StringTranslations } from "../board-types";
+import { withOBFStrings } from "../obf/obf-strings";
 import type { BoardSetMetadata } from "../obf/obf-to-board-set-metadata";
-import { withOBFStrings } from "../obf/with-obf-strings";
 import {
   type AssetRecord,
   type BoardRecord,

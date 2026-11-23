@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { makeOBFBoard } from "../testing";
-import { withOBFStrings } from "./with-obf-strings";
+import { withOBFStrings } from "./obf-strings";
 
 describe("withOBFStrings", () => {
   test("adds a language's strings without changing the board it was given", () => {

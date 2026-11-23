@@ -1,26 +1,9 @@
 import { useCommunicationLanguage } from "@shared/language/language-store";
-import { getLanguageCode } from "@shared/language/locale";
 import type { Board } from "../board-types";
-import { findBoardInLanguage } from "./board-in-language";
+import { resolveBoardInLanguage } from "./board-in-language";
 
-interface UseBoardInLanguageReturn {
-  board: Board;
-  boardLanguage: string | undefined;
-}
-
-/**
- * Falls back to the source board when untranslated. Its language is then the
- * one the board file declares, and unknown when it declares none.
- */
-export function useBoardInLanguage(board: Board): UseBoardInLanguageReturn {
+export function useBoardInLanguage(board: Board) {
   const { language } = useCommunicationLanguage();
-  const translatedBoard = findBoardInLanguage(board, language);
-  if (translatedBoard) {
-    return { board: translatedBoard, boardLanguage: language };
-  }
 
-  return {
-    board,
-    boardLanguage: board.locale ? getLanguageCode(board.locale) : undefined,
-  };
+  return resolveBoardInLanguage(board, language);
 }
