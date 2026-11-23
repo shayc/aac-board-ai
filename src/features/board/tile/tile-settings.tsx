@@ -23,7 +23,7 @@ import {
 } from "./tile-preferences-store";
 
 // Ten steps each, so the sliders feel alike despite their different ranges.
-const BRIGHTNESS_STEP = 0.03;
+const BRIGHTNESS_STEP = 0.05;
 const SATURATION_STEP = 0.1;
 
 export function TileSettings() {
