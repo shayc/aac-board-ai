@@ -10,8 +10,8 @@ import {
 import { useKeyboard } from "react-aria";
 import {
   findFirstOccupiedPosition,
-  gridArrangementKey,
   type GridCells,
+  gridCellsKey,
   type GridPosition,
   isSameGridPosition,
 } from "./grid-cells";
@@ -27,17 +27,17 @@ interface UseGridFocusReturn {
 }
 
 export function useGridFocus<Item extends object>(
-  grid: GridCells<Item>,
+  cells: GridCells<Item>,
   getItemKey: (item: Item) => string,
 ): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
-    () => findFirstOccupiedPosition(grid),
+    () => findFirstOccupiedPosition(cells),
   );
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
-      const next = findKeyTargetElement(rootRef.current, grid, event);
+      const next = findKeyTargetElement(rootRef.current, cells, event);
       if (!next) {
         event.continuePropagation();
 
@@ -50,10 +50,10 @@ export function useGridFocus<Item extends object>(
   });
 
   const rememberedCell =
-    grid[rememberedPosition.row]?.[rememberedPosition.column];
+    cells[rememberedPosition.row]?.[rememberedPosition.column];
   const tabStopPosition = rememberedCell
     ? rememberedPosition
-    : findFirstOccupiedPosition(grid);
+    : findFirstOccupiedPosition(cells);
 
   const restoreLostFocus = useEffectEvent(() => {
     if (document.activeElement !== document.body) {
@@ -65,17 +65,17 @@ export function useGridFocus<Item extends object>(
     tabStop?.focus();
   });
 
-  // Depending on the grid array would restore focus on renders that reuse the cells.
-  const arrangementKey = gridArrangementKey(grid, getItemKey);
-  const previousArrangementKeyRef = useRef(arrangementKey);
+  // Depending on the array itself would restore focus on renders that only rebuild it.
+  const cellsKey = gridCellsKey(cells, getItemKey);
+  const previousCellsKeyRef = useRef(cellsKey);
   useEffect(() => {
-    if (previousArrangementKeyRef.current === arrangementKey) {
+    if (previousCellsKeyRef.current === cellsKey) {
       return;
     }
 
-    previousArrangementKeyRef.current = arrangementKey;
+    previousCellsKeyRef.current = cellsKey;
     restoreLostFocus();
-  }, [arrangementKey]);
+  }, [cellsKey]);
 
   function handleFocus(event: FocusEvent<HTMLElement>) {
     const position = findGridPosition(event.target);
@@ -99,7 +99,7 @@ interface TargetedGridKeyEvent extends GridKeyEvent {
 
 function findKeyTargetElement(
   root: HTMLElement | null,
-  grid: GridCells,
+  cells: GridCells,
   event: TargetedGridKeyEvent,
 ): HTMLElement | null {
   const from = findGridPosition(event.target);
@@ -108,7 +108,7 @@ function findKeyTargetElement(
   }
 
   const direction = root.matches(":dir(rtl)") ? "rtl" : "ltr";
-  const target = findGridKeyTarget(grid, from, event, direction);
+  const target = findGridKeyTarget(cells, from, event, direction);
 
   return target && findGridFocusableAt(root, target);
 }

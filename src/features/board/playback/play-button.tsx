@@ -1,27 +1,21 @@
 import { buttonClasses } from "@mui/material/Button";
-import Fab, { fabClasses } from "@mui/material/Fab";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { focusableDisabledProps } from "@shared/ui/focusable-disabled";
 import { PlayArrowFilledIcon, StopFilledIcon } from "@shared/ui/icons";
 import { ShortcutTooltip } from "@shared/ui/shortcut-tooltip";
 import {
   BoardControlButton,
   type BoardControlShape,
 } from "../board-control-button";
-import {
-  CONTROL_ICON_SIZE,
-  MESSAGE_CONTROL_SIZE,
-} from "../board-control-sizes";
-import { BOARD_SHORTCUT_ARIA_KEYS } from "../shortcuts/resolve-board-shortcut";
-import type { BoardShortcutLabels } from "../shortcuts/use-board-shortcut-labels";
+import { BOARD_ARIA_KEY_SHORTCUTS } from "../shortcuts/resolve-board-shortcut";
+import type { BoardShortcutKeys } from "../shortcuts/use-board-shortcut-keys";
 
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
   shape?: BoardControlShape;
-  shortcutLabels: Pick<BoardShortcutLabels, "play" | "stop">;
+  shortcutKeys: Pick<BoardShortcutKeys, "play" | "stop">;
   onPlay: () => void;
   onStop: () => void;
 }
@@ -30,58 +24,41 @@ export function PlayButton({
   disabled = false,
   isPlaying,
   shape = "round",
-  shortcutLabels,
+  shortcutKeys,
   onPlay,
   onStop,
 }: PlayButtonProps) {
   const t = useTranslate();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
   const shortcut = isPlaying ? "stop" : "play";
-  const shortcutKeys = shortcutLabels[shortcut];
-  const ariaKeyShortcuts = BOARD_SHORTCUT_ARIA_KEYS[shortcut];
+  const keys = shortcutKeys[shortcut];
+  const ariaKeyShortcuts = BOARD_ARIA_KEY_SHORTCUTS[shortcut];
   const handleClick = isPlaying ? onStop : onPlay;
   const Icon = isPlaying ? StopFilledIcon : PlayArrowFilledIcon;
 
-  if (shape === "pill") {
-    return (
-      <ShortcutTooltip action={label} keys={shortcutKeys}>
-        <BoardControlButton
-          aria-label={label}
-          aria-keyshortcuts={ariaKeyShortcuts}
-          disabled={disabled}
-          color="primary"
-          onClick={handleClick}
-          sx={(theme) => ({
-            [`&.${buttonClasses.disabled}`]: disabledSx(theme),
-          })}
-        >
-          <Icon />
-        </BoardControlButton>
-      </ShortcutTooltip>
-    );
-  }
+  const isInBar = shape === "round";
 
   return (
-    <ShortcutTooltip action={label} keys={shortcutKeys}>
-      <Fab
-        {...focusableDisabledProps(disabled)}
+    <ShortcutTooltip action={label} keys={keys}>
+      <BoardControlButton
         aria-label={label}
         aria-keyshortcuts={ariaKeyShortcuts}
+        disabled={disabled}
         color="primary"
-        onClick={disabled ? undefined : handleClick}
+        shape={shape}
+        disableElevation={isInBar}
+        onClick={handleClick}
         sx={(theme) => ({
           flexShrink: 0,
-          width: MESSAGE_CONTROL_SIZE,
-          height: MESSAGE_CONTROL_SIZE,
-          [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
-          [`&.${fabClasses.disabled}`]: {
+          [`&.${buttonClasses.disabled}`]: {
             ...disabledSx(theme),
-            ...theme.applyStyles("dark", disabledOnDarkBarSx(theme)),
+            ...(isInBar &&
+              theme.applyStyles("dark", disabledOnDarkBarSx(theme))),
           },
         })}
       >
-        <Icon sx={{ fontSize: CONTROL_ICON_SIZE }} />
-      </Fab>
+        <Icon />
+      </BoardControlButton>
     </ShortcutTooltip>
   );
 }

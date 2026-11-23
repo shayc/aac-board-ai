@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
 import {
   appendTilePart,
-  applyBackspace,
   applyEdits,
+  backspace,
   closeWord,
   createTextPart,
   createTilePart,
@@ -136,7 +136,7 @@ describe("closeWord", () => {
   });
 });
 
-describe("applyBackspace", () => {
+describe("backspace", () => {
   const graphemes = [
     "😀",
     "e\u0301",
@@ -149,7 +149,7 @@ describe("applyBackspace", () => {
   ];
 
   test("removes the last character of a spelled word", () => {
-    const message = applyBackspace(spell(EMPTY_MESSAGE, "world", "en"));
+    const message = backspace(spell(EMPTY_MESSAGE, "world", "en"));
 
     expect(labelsOf(message)).toEqual(["worl"]);
   });
@@ -157,7 +157,7 @@ describe("applyBackspace", () => {
   test.each(graphemes)("removes the complete final grapheme %s", (grapheme) => {
     const original = spell(EMPTY_MESSAGE, `a${grapheme}`, "en");
 
-    const message = applyBackspace(original);
+    const message = backspace(original);
 
     expect(labelsOf(message)).toEqual(["a"]);
     expect(labelsOf(original)).toEqual([`a${grapheme}`]);
@@ -172,7 +172,7 @@ describe("applyBackspace", () => {
         "en",
       );
 
-      const message = applyBackspace(original);
+      const message = backspace(original);
 
       expect(message.parts).toEqual([HELLO_TILE]);
     },
@@ -182,7 +182,7 @@ describe("applyBackspace", () => {
     const tile = createTilePart({ label: "world", language: "en" });
     const original = appendTilePart(spell(EMPTY_MESSAGE, "hi", "en"), tile);
 
-    const message = applyBackspace(original);
+    const message = backspace(original);
 
     expect(labelsOf(message)).toEqual(["hi"]);
   });
@@ -194,7 +194,7 @@ describe("applyBackspace", () => {
       "en",
     );
 
-    const message = spell(applyBackspace(spelled), "o", "en");
+    const message = spell(backspace(spelled), "o", "en");
 
     expect(labelsOf(message)).toEqual(["hi", "o"]);
   });
@@ -205,7 +205,7 @@ describe("applyBackspace", () => {
       HELLO_TILE,
     );
 
-    const message = spell(applyBackspace(original), "o", "en");
+    const message = spell(backspace(original), "o", "en");
 
     expect(labelsOf(message)).toEqual(["hi", "o"]);
   });
@@ -213,7 +213,7 @@ describe("applyBackspace", () => {
   test("reopens a closed word without removing a letter", () => {
     const closed = closeWord(spell(EMPTY_MESSAGE, "hi", "en"));
 
-    const message = spell(applyBackspace(closed), "t", "en");
+    const message = spell(backspace(closed), "t", "en");
 
     expect(labelsOf(message)).toEqual(["hit"]);
   });
@@ -221,19 +221,17 @@ describe("applyBackspace", () => {
   test("removes a letter from a closed word on the second press", () => {
     const closed = closeWord(spell(EMPTY_MESSAGE, "hit", "en"));
 
-    const message = spell(applyBackspace(applyBackspace(closed)), "m", "en");
+    const message = spell(backspace(backspace(closed)), "m", "en");
 
     expect(labelsOf(message)).toEqual(["him"]);
   });
 
   test("returns an empty message when its only part is removed", () => {
-    expect(applyBackspace(spell(EMPTY_MESSAGE, "h", "en"))).toEqual(
-      EMPTY_MESSAGE,
-    );
+    expect(backspace(spell(EMPTY_MESSAGE, "h", "en"))).toEqual(EMPTY_MESSAGE);
   });
 
   test("leaves an empty message as it is", () => {
-    expect(applyBackspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
+    expect(backspace(EMPTY_MESSAGE)).toBe(EMPTY_MESSAGE);
   });
 });
 
@@ -257,7 +255,7 @@ describe("applyEdits", () => {
   });
 
   test("returns an empty message itself for a clear", () => {
-    const emptied = applyBackspace(spell(EMPTY_MESSAGE, "h", "en"));
+    const emptied = backspace(spell(EMPTY_MESSAGE, "h", "en"));
 
     expect(applyEdits(emptied, [{ kind: "clear" }])).toBe(emptied);
   });
@@ -280,7 +278,7 @@ describe("hasSameContent", () => {
     { description: "a letter", edited: spell(message, "a", "en") },
     {
       description: "a backspace that only reopens the word",
-      edited: applyBackspace(message),
+      edited: backspace(message),
     },
     { description: "a space", edited: closeWord(spell(message, "a", "en")) },
   ])("tells a message from itself after $description", ({ edited }) => {
@@ -310,7 +308,7 @@ describe("a played message", () => {
   });
 
   test("is edited by backspace, and then added to", () => {
-    const message = spell(applyBackspace(played), "t", "en");
+    const message = spell(backspace(played), "t", "en");
 
     expect(labelsOf(message)).toEqual(["ht"]);
   });
@@ -321,7 +319,7 @@ describe("a played message", () => {
       true,
     );
 
-    const message = spell(applyBackspace(closed), "t", "en");
+    const message = spell(backspace(closed), "t", "en");
 
     expect(labelsOf(message)).toEqual(["hit"]);
   });

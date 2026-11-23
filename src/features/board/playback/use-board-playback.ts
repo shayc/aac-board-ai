@@ -12,7 +12,7 @@ import {
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect } from "react";
 import type { MessagePart, TilePart } from "../message/message";
-import type { PlayMessage } from "../message/use-message";
+import type { PlayParts } from "../message/use-message";
 import { planPlayback } from "./plan-playback";
 
 const MESSAGE_OWNER = "board-message";
@@ -21,11 +21,7 @@ const BOARD_OWNERS: ReadonlySet<string> = new Set([MESSAGE_OWNER, TILE_OWNER]);
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  /**
-   * Only plays: `useMessage`'s `play` runs it and decides whether the message
-   * counts as played.
-   */
-  playMessage: PlayMessage;
+  playParts: PlayParts;
   playTile: (part: TilePart) => Promise<void>;
   stop: () => void;
 }
@@ -61,7 +57,7 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     return outcome === "completed";
   }
 
-  function playMessage(parts: readonly MessagePart[]) {
+  function playParts(parts: readonly MessagePart[]) {
     return playAndReportFailure({
       owner: MESSAGE_OWNER,
       steps: planPlayback(parts, language),
@@ -77,7 +73,7 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
 
   return {
     isMessagePlaying,
-    playMessage,
+    playParts,
     playTile,
     stop: playback.stop,
   };

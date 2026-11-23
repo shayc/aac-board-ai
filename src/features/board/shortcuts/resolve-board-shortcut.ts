@@ -5,7 +5,7 @@ type BoardShortcutAction = "backspace" | "clear" | "undo" | "play" | "stop";
  * Clearing has none: the attribute names keys that activate an element, and
  * the backspace button clears only on a long press.
  */
-export const BOARD_SHORTCUT_ARIA_KEYS = {
+export const BOARD_ARIA_KEY_SHORTCUTS = {
   backspace: "Backspace",
   play: "Meta+Enter Control+Enter",
   stop: "Escape",

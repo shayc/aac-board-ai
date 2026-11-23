@@ -63,14 +63,14 @@ async function renderPlaybackBar(
     return (
       <>
         <ScrollableMessageBar parts={parts} isWordOpen={false} />
-        <button onClick={() => void playback.playMessage([highlightedPart])}>
+        <button onClick={() => void playback.playParts([highlightedPart])}>
           Play part
         </button>
         <button onClick={appendPart}>Append</button>
         <button
           onClick={() => {
             appendPart();
-            void playback.playMessage([highlightedPart]);
+            void playback.playParts([highlightedPart]);
           }}
         >
           Append and play

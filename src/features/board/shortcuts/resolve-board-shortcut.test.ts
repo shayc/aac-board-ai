@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
-  BOARD_SHORTCUT_ARIA_KEYS,
+  BOARD_ARIA_KEY_SHORTCUTS,
   type BoardShortcutKeyEvent,
   resolveBoardShortcut,
 } from "./resolve-board-shortcut";
@@ -136,7 +136,7 @@ describe("resolveBoardShortcut", () => {
     }
   });
 
-  test.each(Object.entries(BOARD_SHORTCUT_ARIA_KEYS))(
+  test.each(Object.entries(BOARD_ARIA_KEY_SHORTCUTS))(
     "every combination aria-keyshortcuts names for %s runs that action",
     (expectedAction, ariaKeyShortcuts) => {
       const isMessagePlaying = expectedAction === "stop";

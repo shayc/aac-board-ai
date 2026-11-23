@@ -26,11 +26,11 @@ import { PlayButton } from "./playback/play-button";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps, scanRowProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
-import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
+import { useBoardShortcutKeys } from "./shortcuts/use-board-shortcut-keys";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { MessageSuggestions } from "./suggestions/message-suggestions";
+import { createTileActivator } from "./tile-activation";
 import { Tile } from "./tile/tile";
-import { createTileActivator } from "./tile/tile-activation";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -47,16 +47,17 @@ export function CommunicationBoard({
   initialMessage,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-  const { language, direction } = useCommunicationLanguage();
+  const { language: communicationLanguage, direction } =
+    useCommunicationLanguage();
   const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
   const playback = useBoardPlayback();
-  const message = useMessage(playback.playMessage, initialMessage);
+  const message = useMessage(playback.playParts, initialMessage);
   const { shouldPlayTiles } = useMessagePreferences();
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
-  const shortcutLabels = useBoardShortcutLabels();
+  const shortcutKeys = useBoardShortcutKeys();
 
   // Pass individual members so message edits do not re-render every tile.
   const activateTile = createTileActivator({
@@ -90,7 +91,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
-      shortcutLabels={shortcutLabels}
+      shortcutKeys={shortcutKeys}
       onPress={message.backspace}
       onLongPress={message.clear}
     />
@@ -101,7 +102,7 @@ export function CommunicationBoard({
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
       shape={areControlsBelowGrid ? "pill" : "round"}
-      shortcutLabels={shortcutLabels}
+      shortcutKeys={shortcutKeys}
       onPlay={() => void message.play()}
       onStop={playback.stop}
     />
@@ -158,9 +159,9 @@ export function CommunicationBoard({
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}
-                  language={language}
+                  language={communicationLanguage}
                   onPhraseSelect={(phrase) =>
-                    message.replaceWithText(phrase, language)
+                    message.replaceWithText(phrase, communicationLanguage)
                   }
                 />
               </ErrorBoundary>

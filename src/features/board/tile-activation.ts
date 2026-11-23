@@ -1,9 +1,9 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
-import { createTilePart, type MessageEdit } from "../message/message";
-import type { UseMessageReturn } from "../message/use-message";
-import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
-import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
+import { createTilePart, type MessageEdit } from "./message/message";
+import type { UseMessageReturn } from "./message/use-message";
+import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
+import type { UseBoardPlaybackReturn } from "./playback/use-board-playback";
 
 interface TileActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "play" | "echo">;

@@ -55,7 +55,7 @@ describe("useBoardPlayback", () => {
     expect(result.current.isMessagePlaying).toBe(false);
     expect(result.current.playingPartId).toBeNull();
 
-    const playPromise = result.current.playMessage(parts);
+    const playPromise = result.current.playParts(parts);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
     expect(result.current.playingPartId).toBeNull();
@@ -102,7 +102,7 @@ describe("useBoardPlayback", () => {
 
     const { result } = await renderPlayback();
 
-    await result.current.playMessage(parts);
+    await result.current.playParts(parts);
 
     expect(callOrder).toEqual(["speak:before", "play:ding.mp3", "speak:after"]);
   });
@@ -139,7 +139,7 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playMessage(parts);
+    const playPromise = result.current.playParts(parts);
     await rerender();
     expect(result.current.isMessagePlaying).toBe(true);
     expect(result.current.playingPartId).toBe("1");
@@ -175,7 +175,7 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playMessage(parts);
+    const playPromise = result.current.playParts(parts);
     await rerender();
 
     result.current.stop();
@@ -205,7 +205,7 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playMessage(parts);
+    const playPromise = result.current.playParts(parts);
     await rerender();
 
     result.current.stop();
@@ -228,10 +228,10 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    const firstPlay = result.current.playMessage([
+    const firstPlay = result.current.playParts([
       { kind: "tile", id: "1", label: "first", language: "en" },
     ]);
-    const secondPlay = result.current.playMessage([
+    const secondPlay = result.current.playParts([
       { kind: "tile", id: "2", label: "second", language: "en" },
     ]);
 
@@ -250,7 +250,7 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([
+      result.current.playParts([
         { kind: "tile", id: "1", label: "hi", language: "en" },
       ]),
     ).resolves.toBe(false);
@@ -285,7 +285,7 @@ describe("useBoardPlayback", () => {
     const { result } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([
+      result.current.playParts([
         { kind: "tile", id: "1", label: "before", language: "en" },
         {
           kind: "tile",
@@ -326,7 +326,7 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([
+      result.current.playParts([
         { kind: "tile", id: "1", label: "before", language: "en" },
         {
           kind: "tile",
@@ -350,7 +350,7 @@ describe("useBoardPlayback", () => {
     preventSpeechEnd(speech.speak);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playMessage([
+    const playPromise = result.current.playParts([
       {
         kind: "tile",
         id: "1",
@@ -391,7 +391,7 @@ describe("useBoardPlayback", () => {
     const { result, rerender } = await renderPlayback();
 
     await expect(
-      result.current.playMessage([
+      result.current.playParts([
         { kind: "tile", id: "1", label: "hi", language: "en" },
       ]),
     ).resolves.toBe(true);
@@ -404,7 +404,7 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playMessage([
+    const playPromise = result.current.playParts([
       { kind: "tile", id: "1", label: "hi", language: "en" },
     ]);
     result.current.stop();

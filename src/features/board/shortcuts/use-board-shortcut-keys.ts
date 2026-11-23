@@ -2,7 +2,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 
 /** Keys as the platform's menus print them, except `spokenClear`. */
-export interface BoardShortcutLabels {
+export interface BoardShortcutKeys {
   clear: string;
   /** The clear keys in words, for the hint a screen reader reads aloud. */
   spokenClear: string;
@@ -10,7 +10,7 @@ export interface BoardShortcutLabels {
   stop: string;
 }
 
-export function useBoardShortcutLabels(): BoardShortcutLabels {
+export function useBoardShortcutKeys(): BoardShortcutKeys {
   const t = useTranslate();
 
   if (isApplePlatform(currentPlatform())) {

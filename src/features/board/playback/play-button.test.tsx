@@ -11,8 +11,8 @@ import { BackspaceButton } from "../message/backspace-button";
 import { MessageBar } from "../message/message-bar";
 import { PlayButton } from "./play-button";
 
-const SHORTCUT_LABELS = { play: "⌘↩", stop: "Esc" };
-const BACKSPACE_SHORTCUT_LABELS = {
+const SHORTCUT_KEYS = { play: "⌘↩", stop: "Esc" };
+const BACKSPACE_SHORTCUT_KEYS = {
   clear: "⌘⌫",
   spokenClear: "Command+Delete",
 };
@@ -35,14 +35,14 @@ async function measureDisabledGlyphContrasts(mode: ColorMode) {
         <>
           <BackspaceButton
             disabled
-            shortcutLabels={BACKSPACE_SHORTCUT_LABELS}
+            shortcutKeys={BACKSPACE_SHORTCUT_KEYS}
             onPress={vi.fn()}
             onLongPress={vi.fn()}
           />
           <PlayButton
             disabled
             isPlaying={false}
-            shortcutLabels={SHORTCUT_LABELS}
+            shortcutKeys={SHORTCUT_KEYS}
             {...createHandlers()}
           />
         </>
@@ -76,7 +76,7 @@ describe("PlayButton", () => {
 
     const screen = await renderWithProviders(
       <PlayButton
-        shortcutLabels={SHORTCUT_LABELS}
+        shortcutKeys={SHORTCUT_KEYS}
         isPlaying={false}
         {...handlers}
       />,
@@ -92,7 +92,7 @@ describe("PlayButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <PlayButton shortcutLabels={SHORTCUT_LABELS} isPlaying {...handlers} />,
+      <PlayButton shortcutKeys={SHORTCUT_KEYS} isPlaying {...handlers} />,
     );
 
     await screen.getByRole("button", { name: "Stop speaking" }).click();
@@ -105,7 +105,7 @@ describe("PlayButton", () => {
     const handlers = createHandlers();
     const screen = await renderWithProviders(
       <PlayButton
-        shortcutLabels={SHORTCUT_LABELS}
+        shortcutKeys={SHORTCUT_KEYS}
         isPlaying={false}
         {...handlers}
       />,
@@ -116,7 +116,7 @@ describe("PlayButton", () => {
 
     await screen.rerender(
       <PlayButton
-        shortcutLabels={SHORTCUT_LABELS}
+        shortcutKeys={SHORTCUT_KEYS}
         disabled
         isPlaying={false}
         {...handlers}
@@ -134,7 +134,7 @@ describe("PlayButton", () => {
   test("shows the play shortcut when focused from the keyboard", async () => {
     const screen = await renderWithProviders(
       <PlayButton
-        shortcutLabels={SHORTCUT_LABELS}
+        shortcutKeys={SHORTCUT_KEYS}
         isPlaying={false}
         {...createHandlers()}
       />,
@@ -156,7 +156,7 @@ describe("PlayButton", () => {
   test("shows the stop shortcut while playing", async () => {
     const screen = await renderWithProviders(
       <PlayButton
-        shortcutLabels={SHORTCUT_LABELS}
+        shortcutKeys={SHORTCUT_KEYS}
         isPlaying
         shape="pill"
         {...createHandlers()}
