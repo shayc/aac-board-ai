@@ -90,9 +90,7 @@ export async function closeBoardsDB(): Promise<void> {
 
   try {
     (await pending)?.close();
-  } catch {
-    // Open never succeeded — nothing to close.
-  }
+  } catch {}
 }
 
 /**

@@ -47,8 +47,6 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     [playback],
   );
 
-  // AAC users depend on knowing their speech output failed, so a failure is
-  // reported here, once, instead of being left to each caller.
   async function playAndReportFailure(
     request: PlaybackRequest,
   ): Promise<boolean> {

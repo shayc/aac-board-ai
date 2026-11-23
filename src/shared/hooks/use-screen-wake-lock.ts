@@ -25,8 +25,6 @@ function keepScreenAwake(): (() => void) | undefined {
       return;
     }
 
-    // The browser refuses while the page is hidden or the battery is low.
-    // The screen then follows the device's auto-lock setting.
     const lock = await navigator.wakeLock
       .request("screen")
       .catch(() => undefined);
@@ -34,7 +32,7 @@ function keepScreenAwake(): (() => void) | undefined {
       return;
     }
 
-    // An overlapping request can have settled first.
+    // Release the extra lock if another request won while this one waited.
     if (isStopped || isHoldingLock()) {
       void lock.release();
 

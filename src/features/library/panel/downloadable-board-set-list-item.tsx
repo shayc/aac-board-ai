@@ -156,7 +156,6 @@ type RingProgress =
   | { variant: "indeterminate" };
 
 function ringProgress(phase: DownloadPhase): RingProgress {
-  // Wait for response headers to avoid flashing an indeterminate spinner.
   if (phase.kind === "connecting") {
     return { variant: "determinate", value: 0 };
   }

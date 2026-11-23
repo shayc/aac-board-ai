@@ -127,8 +127,6 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    // In dark mode white would outshine the board and mid grey reads as
-    // disabled; grey 300 is as light as the board's pastel tiles.
     ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[300] }),
     [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
@@ -220,7 +218,6 @@ function MessagePartItem({
           "&::after": {
             content: '""',
             alignSelf: "center",
-            // As tall as the line of the word it follows.
             height: "1.2em",
             marginInlineStart: theme.spacing(
               caretPosition === "next-word" ? PART_INLINE_PADDING * 2 : 0.5,

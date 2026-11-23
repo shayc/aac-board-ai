@@ -34,8 +34,6 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const boardReadFailures = readFailures.filter(({ fileName }) =>
       hasBoardFileExtension(fileName),
     );
-    // Non-board files are reported only when no board file was given, so a
-    // stray file never turns a successful import into an error.
     if (boardFiles.length === 0 && boardReadFailures.length === 0) {
       showSnackbar({
         message: (t) => t(m.libraryImportNotBoardFiles),

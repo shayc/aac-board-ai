@@ -80,15 +80,13 @@ export function createTileActivator({
       boardLanguage,
     );
 
-    // Only a tile that leaves the message as it stands plays it.
     if (!hasChanged) {
       void message.play(editsAfterPlay);
 
       return;
     }
 
-    // A tile that spells and then plays echoes the word being typed, which is
-    // feedback on the tile, so it stays silent when tiles are not played.
+    // Spelling echoes are tile feedback and use the tile speech setting.
     if (!shouldPlayTiles) {
       playback.stop();
       message.apply(editsAfterPlay);

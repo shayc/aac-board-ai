@@ -257,8 +257,6 @@ describe("useMessage", () => {
     expect(message.apply([{ kind: "space" }])).toBe(false);
   });
 
-  // A no-op edit, such as a tile that only plays, must not save a released
-  // copy of a played message while clearing after playing is off.
   test("keeps a played message played through an edit that changes nothing", async () => {
     const { result, rerender } = await renderHook(() =>
       useMessage(playMessage),

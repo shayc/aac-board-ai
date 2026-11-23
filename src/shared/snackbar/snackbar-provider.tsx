@@ -91,7 +91,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open={state.open}
         onClose={handleClose}
         autoHideDuration={autoHideDurationMs}
-        // Keep persistent errors clear of the board's bottom controls.
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
         sx={snackbarSx}

@@ -69,7 +69,6 @@ export function SuggestionBar({
             display: "flex",
             alignItems: "center",
             gap: 2,
-            // The margin takes the padding back, so the row keeps its size.
             p: OUTLINE_CLEARANCE,
             m: `-${OUTLINE_CLEARANCE}`,
             overflowX: "auto",
@@ -95,8 +94,7 @@ export function SuggestionBar({
 
       {status.kind === "pending" && (
         <PendingDots
-          // The dots move when the first phrase arrives and when the phrases
-          // clear, so they wait again instead of jumping there at full strength.
+          // Restart the fade-in delay when the dots change position.
           key={hasPhrases ? "after-phrases" : "alone"}
         />
       )}

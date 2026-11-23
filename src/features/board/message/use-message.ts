@@ -42,7 +42,7 @@ export function useMessage(
   const undoStackRef = useRef<Message[]>([]);
   const text = message.parts.map((part) => part.label).join(" ");
 
-  // Read on every edit, so turning the setting off releases a played message.
+  // Turning off clear-after-play lets edits add to an already-spoken message.
   function readMessage() {
     return shouldClearAfterPlayback
       ? messageRef.current
@@ -54,7 +54,7 @@ export function useMessage(
     messageRef.current = next;
     setRenderedMessage(next);
 
-    // A played message due to be replaced is not kept for the next person to see.
+    // Clear the saved draft so the next person never sees the played message.
     const isDueToBeReplaced = next.hasPlayed && shouldClearAfterPlayback;
     saveMessageDraft(isDueToBeReplaced ? EMPTY_MESSAGE : next);
   }
@@ -104,10 +104,10 @@ export function useMessage(
     }
   }
 
-  // Counts as played only at the end of the unchanged message. Edits that
-  // follow (such as a tile's ":clear") wait, so it stays visible while playing.
+  // Mark only unchanged messages that finish playing. Defer edits like
+  // :clear so the message stays visible through playback.
   async function play(editsAfterPlay: readonly MessageEdit[] = []) {
-    // Started first, so a playback that cannot start changes nothing.
+    // Start first so a synchronous setup failure preserves the played flag.
     const completion = playMessage(messageRef.current.parts);
     setPlayed(false);
     const playingMessage = messageRef.current;
@@ -123,8 +123,7 @@ export function useMessage(
     }
   }
 
-  // An echo is feedback on a tile, such as the word being spelled, so the
-  // message stays open for more. Edits that follow wait as they do for `play`.
+  // An echo leaves the word open so the next letter can extend it.
   async function echo(editsAfterPlay: readonly MessageEdit[]) {
     const echoed = messageRef.current;
 

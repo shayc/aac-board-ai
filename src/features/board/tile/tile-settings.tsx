@@ -184,8 +184,6 @@ function LabelPlacementPreview({
 function radioSx(theme: Theme) {
   return {
     p: 0.5,
-    // Concentric with the preview's corners across the padding, so the hover
-    // and ripple halo runs parallel to its border.
     borderRadius: `calc(${theme.vars.shape.borderRadiusSm} + ${theme.spacing(0.5)})`,
   };
 }

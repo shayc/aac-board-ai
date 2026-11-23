@@ -294,7 +294,6 @@ describe("BackspaceButton colors", () => {
     },
   );
 
-  // The ring is the only cue that a hold will clear the message.
   test.each(["light", "dark"] as const)(
     "draws the hold ring in %s mode with non-text contrast",
     async (mode) => {
@@ -304,8 +303,6 @@ describe("BackspaceButton colors", () => {
     },
   );
 
-  // Disabled controls are exempt from contrast minimums, but an empty message
-  // must still show where backspace is, and the dark bar is greyer.
   test("keeps the disabled icon in dark mode at least as visible as in light mode", async () => {
     const { icon: light } = await measureContrasts("light", true);
     const { icon: dark } = await measureContrasts("dark", true);
@@ -315,7 +312,6 @@ describe("BackspaceButton colors", () => {
 });
 
 describe("BackspaceButton in the message bar", () => {
-  // A disabled icon button loses its fill by MUI's default; backspace keeps it.
   test("keeps its fill while disabled and darkens it under the pointer", async () => {
     const screen = await renderWithProviders(barWithBackspace(false));
     const button = screen.getByRole("button", { name: "Backspace" });

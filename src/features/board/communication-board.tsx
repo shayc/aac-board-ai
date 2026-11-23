@@ -58,9 +58,7 @@ export function CommunicationBoard({
   const shortcuts = useBoardShortcuts({ message, playback });
   const shortcutLabels = useBoardShortcutLabels();
 
-  // The members are picked one by one: each hook returns a new object when its
-  // state changes, `message` on every edit, and an activator built from the
-  // whole objects would change with them and re-render every tile on each tap.
+  // Pass individual members so message edits do not re-render every tile.
   const activateTile = createTileActivator({
     message: {
       apply: message.apply,
@@ -73,7 +71,6 @@ export function CommunicationBoard({
     shouldPlayTiles,
   });
 
-  // A short landscape screen has width to spare and no height.
   const areControlsBelowGrid = isNarrowScreen && !isShortLandscape;
   const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
   const scrollClearance = isShortLandscape

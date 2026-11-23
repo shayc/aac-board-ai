@@ -69,9 +69,7 @@ export async function restoreMessageDraft(): Promise<Message> {
 function removeMessageDraft() {
   try {
     localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    // Storage is unavailable, so no draft is saved either.
-  }
+  } catch {}
 }
 
 function toSavedPart(part: MessagePart): SavedPart {

@@ -109,7 +109,6 @@ function formatValue(value: number, unit: Unit): string {
     return `${value.toFixed(0)} kB`;
   }
 
-  // Round before choosing the unit, so 999.6 ms reads as 1.0 s, not 1000 ms.
   return Math.round(value) >= MS_PER_SECOND
     ? `${(value / MS_PER_SECOND).toFixed(1)} s`
     : `${formatMs(value)} ms`;

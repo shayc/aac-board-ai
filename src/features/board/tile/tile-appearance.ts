@@ -40,8 +40,6 @@ export function tileColorStyle({
 export function tileSx(theme: Theme) {
   const background = tileBackground(theme);
   const borderColor = dim("var(--tile-border-color, transparent)");
-  // The shorter side decides, so a wide but short tile keeps its label small
-  // and leaves the height to the symbol.
   const labelFontSize = `clamp(${theme.typography.body1.fontSize}, 12cqmin, ${theme.typography.h6.fontSize})`;
 
   return {
@@ -59,9 +57,7 @@ export function tileSx(theme: Theme) {
     backgroundColor: background,
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadiusSm,
-    // Deeper resting shadows blur into the gutters and muddy tile edges.
     boxShadow: theme.vars.shadows[1],
-    // A press tints the tile's own background; the theme's overlay is hidden.
     "&::before": {
       display: "none",
     },

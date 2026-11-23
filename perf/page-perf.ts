@@ -54,7 +54,6 @@ export function installPagePerf(watches: Record<string, string>): void {
     { capture: true },
   );
 
-  // Mirrors src/shared/testing/stub-speech.ts, which depends on Vitest.
   speechSynthesis.speak = (utterance) => {
     queueMicrotask(() => {
       utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
