@@ -1,6 +1,7 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type {
   Board,
+  StoredBoard,
   StringTranslations,
   TranslationsByLocale,
 } from "../board-types";
@@ -9,35 +10,28 @@ import type { BoardSetRecord } from "../storage/board-set-storage";
 
 const DEFAULT_SOURCE_LANGUAGE = "en";
 
-interface BoardInLanguage {
-  board: Board;
-  boardLanguage: string | undefined;
+interface Named {
+  readonly name: string;
+  /** Keyed by language code. */
+  readonly translatedNames?: Readonly<Record<string, string>>;
 }
 
 export function resolveBoardInLanguage(
-  board: Board,
+  storedBoard: StoredBoard,
   language: string,
-): BoardInLanguage {
-  if (getSourceLanguage(board) === language) {
-    return { board, boardLanguage: language };
+): Board {
+  const { locale, translationsByLocale, ...board } = storedBoard;
+  if (getSourceLanguage(storedBoard) === language) {
+    return { ...board, language };
   }
 
-  const translations = findStringTranslations(
-    board.translationsByLocale,
-    language,
-  );
+  const translations = findStringTranslations(translationsByLocale, language);
   if (translations) {
-    return {
-      board: applyTranslations(board, translations),
-      boardLanguage: language,
-    };
+    return { ...applyTranslations(board, translations), language };
   }
 
   // The requested locale could give untranslated text the wrong voice.
-  return {
-    board,
-    boardLanguage: board.locale ? getLanguageCode(board.locale) : undefined,
-  };
+  return { ...board, language: locale ? getLanguageCode(locale) : undefined };
 }
 
 export function getSourceLanguage({ locale }: { locale?: string }): string {
@@ -48,9 +42,14 @@ export function boardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,
 ): BoardSetRecord {
-  const name = boardSet.translatedNames?.[language];
+  return { ...boardSet, name: nameInLanguage(boardSet, language) };
+}
 
-  return name ? { ...boardSet, name } : boardSet;
+export function nameInLanguage(
+  { name, translatedNames }: Named,
+  language: string,
+): string {
+  return translatedNames?.[language] || name;
 }
 
 export function findStringTranslations(
@@ -66,10 +65,9 @@ export function findStringTranslations(
   return undefined;
 }
 
-export function applyTranslations(
-  board: Board,
-  translations: StringTranslations,
-): Board {
+export function applyTranslations<
+  Translatable extends Pick<Board, "name" | "buttons">,
+>(board: Translatable, translations: StringTranslations): Translatable {
   function translateString(text: string | undefined) {
     const translated = text ? (translations.get(text) ?? text) : text;
 

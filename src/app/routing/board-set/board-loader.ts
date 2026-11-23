@@ -1,14 +1,14 @@
 import { type Message, restoreMessageDraft } from "@features/board";
 import {
-  type Board,
   BoardNotFoundError,
   loadStoredBoard,
+  type StoredBoard,
 } from "@features/library";
 import type { LoaderFunctionArgs } from "react-router";
 import { ROUTE_ERROR_CODES, routeErrorResponse } from "../errors/route-error";
 
 export interface BoardRouteData {
-  board: Board;
+  board: StoredBoard;
   restoredMessage: Message;
 }
 
@@ -33,7 +33,7 @@ async function loadBoard(
   boardSetId: string,
   boardId: string,
   signal: AbortSignal,
-): Promise<Board> {
+): Promise<StoredBoard> {
   try {
     return await loadStoredBoard({ boardSetId, boardId }, signal);
   } catch (error) {

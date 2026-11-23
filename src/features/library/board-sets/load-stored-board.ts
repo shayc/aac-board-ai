@@ -1,7 +1,7 @@
 import { reportErrorsTogether } from "@shared/utils/report-errors-together";
 import { settleAll } from "@shared/utils/settle-all";
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { Board, BoardKey } from "../board-types";
+import type { BoardKey, StoredBoard } from "../board-types";
 import { collectMediaPaths } from "../obf/collect-media-paths";
 import { obfToBoard } from "../obf/obf-to-board";
 import { getAssetURL } from "../storage/asset-urls";
@@ -17,7 +17,7 @@ export class BoardNotFoundError extends Error {
 export async function loadStoredBoard(
   key: BoardKey,
   signal?: AbortSignal,
-): Promise<Board> {
+): Promise<StoredBoard> {
   const obfBoard = await readOBFBoard(key);
   signal?.throwIfAborted();
 
@@ -50,7 +50,7 @@ async function readAssetURLs(
   const { values: assetURLEntries, errors } = await settleAll(
     Array.from(
       collectMediaPaths([obfBoard]),
-      async (path) => [path, await getAssetURL(boardSetId, path)] as const,
+      async (path) => [path, await getAssetURL({ boardSetId, path })] as const,
     ),
   );
   reportErrorsTogether(
@@ -72,9 +72,9 @@ async function readAssetURLs(
 // Broken links are dropped here, not at import: the stored file keeps them so
 // export writes back what was imported.
 function withoutBrokenLinks(
-  board: Board,
+  board: StoredBoard,
   storedBoardIds: ReadonlySet<string>,
-): Board {
+): StoredBoard {
   return {
     ...board,
     buttons: board.buttons.map((button) =>

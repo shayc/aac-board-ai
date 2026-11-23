@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import type { Board } from "../board-types";
+import type { StoredBoard } from "../board-types";
 import { collectBoardStrings } from "./collect-board-strings";
 
-const mockBoard: Board = {
+const mockBoard: StoredBoard = {
   id: "board-1",
   name: "My Board",
   grid: { order: [["hello", "more"]] },

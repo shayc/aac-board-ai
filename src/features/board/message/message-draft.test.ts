@@ -82,7 +82,10 @@ describe("message draft", () => {
         assets: [await loadTestImageAsset("images/hello.png")],
       },
     ]);
-    const imageSrc = await getAssetURL("media-set", "images/hello.png");
+    const imageSrc = await getAssetURL({
+      boardSetId: "media-set",
+      path: "images/hello.png",
+    });
     assertDefined(imageSrc);
     saveMessageDraft({
       ...MESSAGE,

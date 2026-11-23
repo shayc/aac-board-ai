@@ -4,7 +4,7 @@ const FINAL_FULL_STOP = /[.。．｡।]$/;
 // The engines use these interchangeably with "'".
 const TYPOGRAPHIC_APOSTROPHES = /[‘’ʼ]/g;
 
-export function selectSuggestionPhrases(
+export function filterSuggestionPhrases(
   text: string,
   candidates: readonly (string | undefined)[],
 ): string[] {

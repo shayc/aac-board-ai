@@ -1,4 +1,4 @@
-import type { BoardSummary } from "@features/library";
+import { type BoardSummary, nameInLanguage } from "@features/library";
 import Autocomplete from "@mui/material/Autocomplete";
 import Button, { buttonClasses } from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -110,10 +110,7 @@ function toBoardOptions(
   language: string,
 ): BoardOption[] {
   return boards
-    .map(({ id, name, translatedNames }) => ({
-      id,
-      name: translatedNames[language] ?? name,
-    }))
+    .map((board) => ({ id: board.id, name: nameInLanguage(board, language) }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }
 

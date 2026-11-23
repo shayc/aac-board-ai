@@ -161,10 +161,7 @@ async function readAssetURLs(
   const { values: assetURLEntries, errors } = await settleAll(
     parts
       .flatMap(assetKeysOf)
-      .map(
-        async (key) =>
-          [key, await getAssetURL(key.boardSetId, key.path)] as const,
-      ),
+      .map(async (key) => [key, await getAssetURL(key)] as const),
   );
   reportErrorsTogether(
     errors,

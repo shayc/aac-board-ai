@@ -14,8 +14,8 @@ import { BoardSetMenu } from "./board-set-menu";
 import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
 type BoardSetEntry =
-  | { kind: "open"; boardSet: BoardSetRecord }
-  | { kind: "download"; boardSet: CatalogBoardSet };
+  | { kind: "stored"; boardSet: BoardSetRecord }
+  | { kind: "downloadable"; boardSet: CatalogBoardSet };
 
 interface BoardSetListProps {
   boardSets: readonly BoardSetRecord[];
@@ -64,7 +64,7 @@ export function BoardSetList({
   function renderEntry(entry: BoardSetEntry) {
     const { kind, boardSet } = entry;
 
-    if (kind === "download") {
+    if (kind === "downloadable") {
       return (
         <DownloadableBoardSetListItem
           key={boardSet.id}
@@ -126,11 +126,11 @@ function toSortedEntries(
   const collator = new Intl.Collator(locale, { numeric: true });
   const entries: BoardSetEntry[] = [
     ...boardSets.map((boardSet) => ({
-      kind: "open" as const,
+      kind: "stored" as const,
       boardSet,
     })),
     ...downloadableBoardSets.map((boardSet) => ({
-      kind: "download" as const,
+      kind: "downloadable" as const,
       boardSet,
     })),
   ];

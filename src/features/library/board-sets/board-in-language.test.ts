@@ -1,9 +1,10 @@
 import { describe, expect, test } from "vitest";
-import type { Board } from "../board-types";
+import type { StoredBoard } from "../board-types";
 import {
   applyTranslations,
   findStringTranslations,
   getSourceLanguage,
+  nameInLanguage,
   resolveBoardInLanguage,
 } from "./board-in-language";
 
@@ -14,7 +15,7 @@ const spanishTranslations = new Map([
 ]);
 const frenchTranslations = new Map([["Hello", "Bonjour"]]);
 
-const mockBoard: Board = {
+const mockBoard: StoredBoard = {
   id: "board-1",
   name: "My Board",
   grid: { order: [["hello", "more"]] },
@@ -44,6 +45,17 @@ describe("getSourceLanguage", () => {
     expect(getSourceLanguage(mockBoard)).toBe("en");
     expect(getSourceLanguage({ ...mockBoard, locale: undefined })).toBe("en");
     expect(getSourceLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
+  });
+});
+
+describe("nameInLanguage", () => {
+  test("returns the translated name, or the source name without one", () => {
+    const named = { name: "Food", translatedNames: { es: "Comida", fr: "" } };
+
+    expect(nameInLanguage(named, "es")).toBe("Comida");
+    expect(nameInLanguage(named, "de")).toBe("Food");
+    expect(nameInLanguage(named, "fr")).toBe("Food");
+    expect(nameInLanguage({ name: "Food" }, "es")).toBe("Food");
   });
 });
 
@@ -98,7 +110,7 @@ describe("applyTranslations", () => {
   );
 
   test("matches source text exactly and keeps translated whitespace", () => {
-    const board: Board = {
+    const board: StoredBoard = {
       ...mockBoard,
       name: " My Board ",
       buttons: [
@@ -133,21 +145,28 @@ describe("resolveBoardInLanguage", () => {
     [undefined, "en", "en"],
     [undefined, "de", undefined],
   ])(
-    "resolves source locale %s for requested language %s to %s",
+    "shows source locale %s for requested language %s untranslated, in %s",
     (locale, language, expected) => {
-      const source = { ...mockBoard, locale };
-      const result = resolveBoardInLanguage(source, language);
+      const board = resolveBoardInLanguage({ ...mockBoard, locale }, language);
 
-      expect(result.board).toBe(source);
-      expect(result.boardLanguage).toBe(expected);
+      expect(board.name).toBe("My Board");
+      expect(board.buttons).toBe(mockBoard.buttons);
+      expect(board.language).toBe(expected);
     },
   );
 
   test("returns the translated board and its language", () => {
-    const { board, boardLanguage } = resolveBoardInLanguage(mockBoard, "es");
+    const board = resolveBoardInLanguage(mockBoard, "es");
 
     expect(board.name).toBe("Mi Tablero");
     expect(board.buttons[0]?.label).toBe("Hola");
-    expect(boardLanguage).toBe("es");
+    expect(board.language).toBe("es");
+  });
+
+  test("leaves the stored board's locale and translations behind", () => {
+    const board = resolveBoardInLanguage(mockBoard, "es");
+
+    expect(board).not.toHaveProperty("locale");
+    expect(board).not.toHaveProperty("translationsByLocale");
   });
 });

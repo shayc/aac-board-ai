@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { selectSuggestionPhrases } from "./select-suggestion-phrases";
+import { filterSuggestionPhrases } from "./filter-suggestion-phrases";
 
-describe("selectSuggestionPhrases", () => {
+describe("filterSuggestionPhrases", () => {
   test("drops duplicates and the original text regardless of case and whitespace", () => {
     expect(
-      selectSuggestionPhrases("want eat", [
+      filterSuggestionPhrases("want eat", [
         "I want to eat.",
         "I would like to eat.",
         "I want to eat.",
@@ -17,7 +17,7 @@ describe("selectSuggestionPhrases", () => {
 
   test("deduplicates a trailing full stop while keeping the first phrasing", () => {
     expect(
-      selectSuggestionPhrases("want eat", [
+      filterSuggestionPhrases("want eat", [
         "want eat.",
         "I want to eat.",
         "I want to eat",
@@ -29,7 +29,7 @@ describe("selectSuggestionPhrases", () => {
 
   test("deduplicates phrases that differ only by apostrophe style", () => {
     expect(
-      selectSuggestionPhrases("I no you go", [
+      filterSuggestionPhrases("I no you go", [
         "I know you're going.",
         "I know you’re going.",
         "I know youʼre going.",
@@ -41,7 +41,7 @@ describe("selectSuggestionPhrases", () => {
     "deduplicates a trailing %s full stop",
     (fullStop) => {
       expect(
-        selectSuggestionPhrases("want eat", [
+        filterSuggestionPhrases("want eat", [
           "I want to eat",
           `I want to eat${fullStop}`,
         ]),
@@ -51,13 +51,13 @@ describe("selectSuggestionPhrases", () => {
 
   test("ignores empty candidate slots", () => {
     expect(
-      selectSuggestionPhrases("want eat", [undefined, "I want to eat."]),
+      filterSuggestionPhrases("want eat", [undefined, "I want to eat."]),
     ).toEqual(["I want to eat."]);
   });
 
   test("filters candidates with underscored tokens or double quotes", () => {
     expect(
-      selectSuggestionPhrases("seed", [
+      filterSuggestionPhrases("seed", [
         "raw_token",
         'he said "hi"',
         "looks good",

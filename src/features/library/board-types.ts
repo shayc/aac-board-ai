@@ -3,12 +3,19 @@ export interface BoardKey {
   readonly boardId: string;
 }
 
+/** A board shown in one language. */
 export interface Board {
   readonly id: string;
   readonly name: string;
-  readonly locale?: string;
+  /** Undefined when the language of the board's text is unknown. */
+  readonly language: string | undefined;
   readonly grid: BoardGrid;
   readonly buttons: readonly BoardButton[];
+}
+
+/** A board in its source text, with every translation it has. */
+export interface StoredBoard extends Omit<Board, "language"> {
+  readonly locale?: string;
   readonly translationsByLocale: TranslationsByLocale;
 }
 

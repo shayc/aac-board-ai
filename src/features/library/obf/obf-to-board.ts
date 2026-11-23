@@ -1,13 +1,13 @@
 import { normalizeLocale } from "@shared/language/locale";
 import type { OBFBoard, OBFButton, OBFMedia } from "@shayc/open-board-format";
-import type { Board, BoardAction, BoardButton } from "../board-types";
+import type { BoardAction, BoardButton, StoredBoard } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import { obfToTranslationsByLocale } from "./obf-strings";
 
 export function obfToBoard(
   obfBoard: OBFBoard,
   assetURLByPath: ReadonlyMap<string, string> = new Map(),
-): Board {
+): StoredBoard {
   const imageSrcById = buildMediaSrcById(obfBoard.images, assetURLByPath);
   const soundSrcById = buildMediaSrcById(obfBoard.sounds, assetURLByPath);
 
@@ -70,7 +70,7 @@ function obfToBoardButton(
     soundSrc: obfButton.sound_id
       ? soundSrcById.get(obfButton.sound_id)
       : undefined,
-    actions: collectActions(obfButton),
+    actions: parseActions(obfButton),
     linkedBoardId: obfButton.load_board?.id,
   };
 }
@@ -84,7 +84,7 @@ function sanitizeColor(color: string | undefined): string | undefined {
   return CSS.supports("color", color) ? color : undefined;
 }
 
-function collectActions(obfButton: OBFButton): BoardAction[] {
+function parseActions(obfButton: OBFButton): BoardAction[] {
   const rawActions =
     obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 

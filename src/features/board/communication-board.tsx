@@ -34,14 +34,12 @@ import { createTileActivator } from "./tile/tile-activation";
 
 interface CommunicationBoardProps {
   board: Board;
-  boardLanguage: string | undefined;
   rootBoardId: string | undefined;
   initialMessage?: Message;
 }
 
 export function CommunicationBoard({
   board,
-  boardLanguage,
   rootBoardId,
   initialMessage,
 }: CommunicationBoardProps) {
@@ -67,7 +65,7 @@ export function CommunicationBoard({
     },
     playback: { playTile: playback.playTile, stop: playback.stop },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
-    boardLanguage,
+    boardLanguage: board.language,
     shouldPlayTiles,
   });
 
@@ -110,7 +108,7 @@ export function CommunicationBoard({
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
     <Tile
       button={button}
-      language={boardLanguage}
+      language={board.language}
       onActivate={activateTile}
       {...gridItemProps}
     />

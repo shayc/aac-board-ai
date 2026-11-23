@@ -14,10 +14,10 @@ export function findAssetKey(url: string): AssetKey | undefined {
   return assetKeysByURL.get(url);
 }
 
-export async function getAssetURL(
-  boardSetId: string,
-  path: string,
-): Promise<string | undefined> {
+export async function getAssetURL({
+  boardSetId,
+  path,
+}: AssetKey): Promise<string | undefined> {
   const normalizedPath = normalizeAssetPath(path);
   const cachedURL = urlsByBoardSetId.get(boardSetId)?.get(normalizedPath);
   if (cachedURL) {

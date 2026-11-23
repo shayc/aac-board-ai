@@ -23,7 +23,7 @@ async function readAssetURL(url: string): Promise<string> {
 }
 
 async function requireAssetURL(boardSetId: string): Promise<string> {
-  const url = await getAssetURL(boardSetId, ASSET_PATH);
+  const url = await getAssetURL({ boardSetId, path: ASSET_PATH });
   assertDefined(url);
 
   return url;
@@ -42,7 +42,9 @@ describe("asset URLs", () => {
 
     expect(concurrent).toBe(first);
     expect(await requireAssetURL(SET_ID)).toBe(first);
-    expect(await getAssetURL(SET_ID, `/${ASSET_PATH}`)).toBe(first);
+    expect(
+      await getAssetURL({ boardSetId: SET_ID, path: `/${ASSET_PATH}` }),
+    ).toBe(first);
     expect(await readAssetURL(first)).toBe("hello");
   });
 
@@ -59,7 +61,9 @@ describe("asset URLs", () => {
   test("returns nothing for a missing asset", async () => {
     await seedAsset("hello");
 
-    await expect(getAssetURL(SET_ID, "missing.txt")).resolves.toBeUndefined();
+    await expect(
+      getAssetURL({ boardSetId: SET_ID, path: "missing.txt" }),
+    ).resolves.toBeUndefined();
   });
 
   test("revokes only the deleted board set's URLs", async () => {

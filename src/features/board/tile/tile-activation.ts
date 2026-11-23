@@ -73,12 +73,12 @@ export function createTileActivator({
       actions.slice(0, playIndex),
       boardLanguage,
     );
-    const hasChanged = message.apply(editsBeforePlay);
     const editsAfterPlay = toMessageEdits(
       actions.slice(playIndex + 1),
       boardLanguage,
     );
 
+    const hasChanged = message.apply(editsBeforePlay);
     if (!hasChanged) {
       void message.play(editsAfterPlay);
 

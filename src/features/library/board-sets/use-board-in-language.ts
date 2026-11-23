@@ -1,9 +1,9 @@
 import { useCommunicationLanguage } from "@shared/language/language-store";
-import type { Board } from "../board-types";
+import type { Board, StoredBoard } from "../board-types";
 import { resolveBoardInLanguage } from "./board-in-language";
 
-export function useBoardInLanguage(board: Board) {
+export function useBoardInLanguage(storedBoard: StoredBoard): Board {
   const { language } = useCommunicationLanguage();
 
-  return resolveBoardInLanguage(board, language);
+  return resolveBoardInLanguage(storedBoard, language);
 }

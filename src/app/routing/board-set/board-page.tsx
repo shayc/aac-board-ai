@@ -8,7 +8,7 @@ import { BOARD_SET_ROUTE_ID, type boardSetLoader } from "./board-set-loader";
 export function BoardPage() {
   const { board: storedBoard, restoredMessage } =
     useLoaderData<typeof boardLoader>();
-  const { board, boardLanguage } = useBoardInLanguage(storedBoard);
+  const board = useBoardInLanguage(storedBoard);
   const rootBoardId =
     useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.rootBoardId;
 
@@ -19,7 +19,6 @@ export function BoardPage() {
       <title>{board.name}</title>
       <CommunicationBoard
         board={board}
-        boardLanguage={boardLanguage}
         rootBoardId={rootBoardId}
         initialMessage={restoredMessage}
       />

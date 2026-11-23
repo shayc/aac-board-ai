@@ -1,6 +1,6 @@
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
-import { selectSuggestionPhrases } from "./select-suggestion-phrases";
+import { filterSuggestionPhrases } from "./filter-suggestion-phrases";
 import {
   isAvailableEngineStatus,
   SUGGESTION_ENGINES,
@@ -59,7 +59,7 @@ export function useMessageSuggestions({
   const isAvailable = sources.some(({ engineStatus }) =>
     isAvailableEngineStatus(engineStatus),
   );
-  const phrases = selectSuggestionPhrases(
+  const phrases = filterSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),
   );

@@ -1,6 +1,6 @@
-import type { Board } from "../board-types";
+import type { StoredBoard } from "../board-types";
 
-export function collectBoardStrings(board: Board): Set<string> {
+export function collectBoardStrings(board: StoredBoard): Set<string> {
   const strings = new Set<string>();
 
   if (board.name) {

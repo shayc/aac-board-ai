@@ -4,7 +4,7 @@ import {
   getSourceLanguage,
 } from "../board-sets/board-in-language";
 import { saveBoardSetTranslations } from "../board-sets/board-sets-store";
-import type { Board, StringTranslations } from "../board-types";
+import type { StoredBoard, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -102,7 +102,7 @@ async function translateBoardSet(
   return boardsMissingLanguage.length > 0;
 }
 
-async function listBoards(boardSetId: string): Promise<Board[]> {
+async function listBoards(boardSetId: string): Promise<StoredBoard[]> {
   const records = await listBoardRecords(boardSetId);
 
   return records.map(({ obf }) => obfToBoard(obf));
@@ -110,7 +110,7 @@ async function listBoards(boardSetId: string): Promise<Board[]> {
 
 function findNameInLanguage(
   boardSet: BoardSetRecord,
-  boards: readonly Board[],
+  boards: readonly StoredBoard[],
   language: string,
 ): string | undefined {
   if (getSourceLanguage(boardSet) === language) {
@@ -127,7 +127,7 @@ function findNameInLanguage(
   );
 }
 
-function isBoardInLanguage(board: Board, language: string): boolean {
+function isBoardInLanguage(board: StoredBoard, language: string): boolean {
   return (
     getSourceLanguage(board) === language ||
     findStringTranslations(board.translationsByLocale, language) !== undefined
@@ -135,7 +135,7 @@ function isBoardInLanguage(board: Board, language: string): boolean {
 }
 
 function collectStringsBySourceLanguage(
-  boards: readonly Board[],
+  boards: readonly StoredBoard[],
 ): Map<string, Set<string>> {
   const stringsBySourceLanguage = new Map<string, Set<string>>();
 
@@ -227,8 +227,8 @@ async function translateStrings(
 }
 
 function pickBoardTranslations(
-  board: Board,
-  findTranslation: (board: Board, text: string) => string,
+  board: StoredBoard,
+  findTranslation: (board: StoredBoard, text: string) => string,
 ): StringTranslations {
   return new Map(
     Array.from(collectBoardStrings(board), (text) => [

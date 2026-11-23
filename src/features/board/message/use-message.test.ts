@@ -576,7 +576,7 @@ async function seedMediaBoardSet() {
 }
 
 async function requireAssetURL(path: string): Promise<string> {
-  const url = await getAssetURL(MEDIA_BOARD_SET_ID, path);
+  const url = await getAssetURL({ boardSetId: MEDIA_BOARD_SET_ID, path });
   assertDefined(url);
 
   return url;

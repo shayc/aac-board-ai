@@ -1,6 +1,6 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { beforeEach, describe, expect, test } from "vitest";
-import type { Board } from "../board-types";
+import type { StoredBoard } from "../board-types";
 import { insertBoardSetRecords } from "../storage/board-set-storage";
 import { loadTestImageAsset, makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardNotFoundError, loadStoredBoard } from "./load-stored-board";
@@ -49,7 +49,7 @@ function isObjectURLAlive(url: string): Promise<boolean> {
   });
 }
 
-function getImageURL(board: Board): string {
+function getImageURL(board: StoredBoard): string {
   const imageURL = board.buttons[0]?.imageSrc;
   assertDefined(imageURL);
 

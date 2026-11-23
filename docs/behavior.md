@@ -91,9 +91,10 @@ The board route loaders only read; they never translate or wait on a model:
    out of the loaded board, so its tile is an ordinary tile.
 2. The page renders the board in the communication language through
    `useBoardInLanguage`: the source board, or the board's own translations for
-   that language, from the board file or saved on this device. The hook also
-   names the language the board ended up in: the board file's own when it has
-   no translation, and unknown when the file declares none.
+   that language, from the board file or saved on this device. The `Board` it
+   returns names the language it ended up in: the board file's own when it has
+   no translation. A file that declares no language is taken as English when
+   English is the communication language, and is unknown otherwise.
 
 The message being composed outlives the page:
 [`useMessage`](../src/features/board/message/use-message.ts) saves it on every
@@ -243,7 +244,7 @@ language.
 2. Every change to the message aborts the requests in flight and starts new
    ones, and a result that arrives late is dropped, so a suggestion always
    belongs to the message on screen.
-3. [`selectSuggestionPhrases`](../src/features/board/suggestions/select-suggestion-phrases.ts)
+3. [`filterSuggestionPhrases`](../src/features/board/suggestions/filter-suggestion-phrases.ts)
    keeps the candidates worth showing, in source order. It drops one that
    repeats the message or an earlier candidate, ignoring case, a final full
    stop, and apostrophe style, and one that carries model artifacts such as an

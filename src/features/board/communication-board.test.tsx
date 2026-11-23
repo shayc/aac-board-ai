@@ -1,4 +1,3 @@
-import { obfToBoard } from "@features/library/testing";
 import { setCommunicationLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
@@ -31,6 +30,7 @@ import {
 import {
   communicationBoardTree,
   EMPTY_MESSAGE_REVIEW,
+  obfToShownBoard,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -1200,8 +1200,7 @@ function closableBoardTree({ isOpen, initialMessage }: ClosableBoardTreeProps) {
         <div style={{ height: "100vh" }}>
           {isOpen && (
             <CommunicationBoard
-              board={obfToBoard(TWO_BUTTON_BOARD)}
-              boardLanguage={TWO_BUTTON_BOARD.locale}
+              board={obfToShownBoard(TWO_BUTTON_BOARD)}
               rootBoardId={undefined}
               initialMessage={initialMessage}
             />

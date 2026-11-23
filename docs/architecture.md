@@ -43,7 +43,7 @@ build. Each links to the section that explains it.
 - **Only `library/storage/` touches IndexedDB, and only `board/suggestions/`
   and `library/translation/` use built-in AI.** Oxlint enforces both
   ([Module boundaries](#module-boundaries-and-code-map)).
-- **Stored boards keep their OBF structure.** The runtime `Board` is derived on
+- **Stored boards keep their OBF structure.** The runtime `StoredBoard` is derived on
   each read, and loading never changes the stored record
   ([Data and state ownership](#data-and-state-ownership)).
 - **Board route loaders only read.** They never translate or wait on a model.
@@ -130,7 +130,7 @@ State has distinct owners and lifetimes:
 | State                 | Owner                                 | Contents                                                                                               |
 | --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset bytes                                                |
-| Active board          | React Router loaders                  | Stored `Board`, and its set's board list and root board, for the current route                         |
+| Active board          | React Router loaders                  | `StoredBoard`, and its set's board list and root board, for the current route                          |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
 | Navigation history    | React Router                          | Browser history of the boards visited                                                                  |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
@@ -142,8 +142,10 @@ Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding translations saved on this device. Board links
 carry the linked board's ID, which the OBF library resolves from the archive.
 Board-set records store the set's translated names. `obfToBoard` derives the
-runtime `Board` on each read, so runtime types can evolve without rewriting
-stored records. The storage schema in
+runtime `StoredBoard` on each read, so runtime types can evolve without
+rewriting stored records. A `StoredBoard` holds the source text and every
+translation; `useBoardInLanguage` turns it into the `Board` the page shows, in
+one language. The storage schema in
 [`boards-db.ts`](../src/features/library/storage/boards-db.ts) has no migrations
 yet: a schema change edits it in place, and a browser holding a database from
 another schema or version needs its site data cleared. Until then every load
@@ -363,6 +365,8 @@ full.
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It
   adds to the message, navigates to a linked board, or runs an action.
+- **Folder** — a tile that navigates to a linked board, marked by a folded
+  corner.
 - **Button** — the data model behind a tile, named after the OBF button. Code uses
   `BoardButton` for the data and `Tile` for the view.
 - **Vocalization** — the text a tile speaks when it differs from its visible label.

@@ -1,3 +1,4 @@
+import type { Board } from "@features/library";
 import { obfToBoard } from "@features/library/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import type { ReviewedIncomplete } from "@shared/testing/axe";
@@ -25,6 +26,13 @@ export const TWO_BUTTON_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 2, order: [["btn-1", "btn-2"]] },
 };
 
+/** The board in its own language, as the page shows one with no translation. */
+export function obfToShownBoard(obfBoard: OBFBoard): Board {
+  const { id, name, grid, buttons, locale } = obfToBoard(obfBoard);
+
+  return { id, name, language: locale, grid, buttons };
+}
+
 export function communicationBoardTree(
   obfBoard: OBFBoard,
   initialEntries: InitialEntry[] = ["/"],
@@ -35,8 +43,7 @@ export function communicationBoardTree(
       <AppProviders>
         <div style={{ height: "100vh" }}>
           <CommunicationBoard
-            board={obfToBoard(obfBoard)}
-            boardLanguage={obfBoard.locale}
+            board={obfToShownBoard(obfBoard)}
             rootBoardId={rootBoardId}
           />
         </div>

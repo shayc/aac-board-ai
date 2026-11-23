@@ -56,7 +56,7 @@ export function Grid<Item extends { id: string }>({
         {grid.map((row, rowIndex) => (
           <GridRow
             key={rowIndex}
-            items={row}
+            cells={row}
             rowIndex={rowIndex}
             tabStopColumn={
               rowIndex === tabStopPosition.row
@@ -78,7 +78,7 @@ function getItemId(item: { id: string }): string {
 }
 
 interface GridRowProps<Item extends { id: string }> {
-  items: readonly (Item | undefined)[];
+  cells: readonly (Item | undefined)[];
   rowIndex: number;
   tabStopColumn: number | undefined;
   rowProps: GridRowDataAttributes | undefined;
@@ -87,7 +87,7 @@ interface GridRowProps<Item extends { id: string }> {
 }
 
 function GridRow<Item extends { id: string }>({
-  items,
+  cells,
   rowIndex,
   tabStopColumn,
   rowProps,
@@ -96,7 +96,7 @@ function GridRow<Item extends { id: string }>({
 }: GridRowProps<Item>) {
   return (
     <Stack {...rowProps} role="row" direction="row" sx={gridRowSx}>
-      {items.map((item, columnIndex) => (
+      {cells.map((item, columnIndex) => (
         <GridCell
           key={columnIndex}
           item={item}

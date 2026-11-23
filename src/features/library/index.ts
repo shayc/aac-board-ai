@@ -7,6 +7,7 @@ export {
   rootBoardPath,
   useActiveBoardSetId,
 } from "./board-paths";
+export { nameInLanguage } from "./board-sets/board-in-language";
 export { listBoardSummaries } from "./board-sets/list-board-summaries";
 export {
   BoardNotFoundError,
@@ -32,4 +33,9 @@ export { useTranslateBoardSets } from "./translation/use-translate-board-sets";
 
 export type { BoardSummary } from "./board-sets/list-board-summaries";
 export type { AssetKey } from "./storage/asset-urls";
-export type { Board, BoardAction, BoardButton } from "./board-types";
+export type {
+  Board,
+  BoardAction,
+  BoardButton,
+  StoredBoard,
+} from "./board-types";

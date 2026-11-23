@@ -9,7 +9,7 @@ import {
 
 const SCAN_METHODS = ["auto", "step"] as const;
 
-/** Auto uses one switch to select. Step uses separate move and select switches. */
+/** Auto uses one switch to select. Step uses separate advance and select switches. */
 export type ScanMethod = (typeof SCAN_METHODS)[number];
 
 interface ScanningPreferences {
