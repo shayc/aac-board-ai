@@ -58,6 +58,7 @@ export function tileSx(theme: Theme) {
     border: `4px solid ${borderColor}`,
     borderRadius: theme.vars.shape.borderRadiusSm,
     boxShadow: theme.vars.shadows[1],
+    // The tile mixes its own press feedback in place of the theme's overlay.
     "&::before": {
       display: "none",
     },

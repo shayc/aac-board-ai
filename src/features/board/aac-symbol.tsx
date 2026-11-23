@@ -4,7 +4,7 @@ import visuallyHidden from "@mui/utils/visuallyHidden";
 
 // A sized container, such as a tile, sets this to scale the label with it.
 export const SYMBOL_LABEL_FONT_SIZE_PROPERTY = "--symbol-label-font-size";
-
+// A container that sizes itself to its symbols, such as the message bar, sets this.
 export const SYMBOL_IMAGE_SIZE_PROPERTY = "--symbol-image-size";
 
 export type SymbolLabelPlacement = "top" | "bottom";
@@ -45,6 +45,7 @@ export function AACSymbol({
       {isImageDisplayed && (
         <Box
           component="span"
+          // Reserves the image's space before it loads.
           sx={{
             position: "relative",
             flexGrow: 1,

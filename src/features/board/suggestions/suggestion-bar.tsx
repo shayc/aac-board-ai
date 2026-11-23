@@ -93,7 +93,10 @@ export function SuggestionBar({
       )}
 
       {status.kind === "pending" && (
-        <PendingDots key={hasPhrases ? "after-phrases" : "alone"} />
+        <PendingDots
+          // Remounting restarts the delay when the first phrase arrives.
+          key={hasPhrases ? "after-phrases" : "alone"}
+        />
       )}
     </Stack>
   );
