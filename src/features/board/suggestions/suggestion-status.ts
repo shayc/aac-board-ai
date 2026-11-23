@@ -4,6 +4,7 @@ import { isAvailableEngineStatus } from "./sources/suggestion-support";
 
 export type SuggestionStatus =
   | { kind: "idle" }
+  /** A model download starts only from a user gesture, so the bar asks for a press. */
   | { kind: "not-enabled" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
