@@ -296,7 +296,7 @@ sit in loaders, stores, hooks and components alike.
 - **Board links:** a `?board=` link that can't be parsed or imported is
   explained by the page too, but its title gives no cause, so the loader and
   the action report the underlying error themselves, through
-  [`failBoardFileURLImport`](../src/app/routing/root/fail-board-file-url-import.ts).
+  [`failBoardFileURLImport`](../src/app/routing/root/root-index-route.ts).
 - **Library:** a failed list load, catalog download, export or delete is
   reported beside its message.
 - **Stored pictures and sounds:** a board opens, and a message draft is

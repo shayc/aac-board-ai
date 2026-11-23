@@ -5,8 +5,12 @@ import {
   rootBoardPath,
   starterBoardSet,
 } from "@features/library";
-import { type LoaderFunctionArgs, redirect } from "react-router";
-import { failBoardFileURLImport } from "./fail-board-file-url-import";
+import {
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  redirect,
+} from "react-router";
+import { ROUTE_ERROR_CODES, routeErrorResponse } from "../errors/route-error";
 
 export async function rootIndexLoader({
   request,
@@ -31,10 +35,39 @@ export async function rootIndexLoader({
   return redirect(rootBoardPath(importedBoardSet));
 }
 
+export async function rootIndexAction({
+  request,
+}: ActionFunctionArgs): Promise<Response> {
+  const boardFileURL = new URL(request.url).searchParams.get("board");
+  if (!boardFileURL) {
+    return redirect("/");
+  }
+
+  try {
+    const importedBoardSet = await importBoardFileFromURL(boardFileURL, {
+      signal: request.signal,
+    });
+
+    return redirect(rootBoardPath(importedBoardSet));
+  } catch (error) {
+    request.signal.throwIfAborted();
+    failBoardFileURLImport(error);
+  }
+}
+
 function parseBoardFileHost(boardFileURL: string): string {
   try {
     return parseBoardFileURL(boardFileURL).host;
   } catch (error) {
     failBoardFileURLImport(error);
   }
+}
+
+/**
+ * Ends a `?board=` navigation on the "import failed" page. That page names no
+ * cause and reportRouteError skips it, so the cause is reported here.
+ */
+function failBoardFileURLImport(cause: unknown): never {
+  reportError(cause);
+  throw routeErrorResponse(ROUTE_ERROR_CODES.boardFileURLImportFailed);
 }

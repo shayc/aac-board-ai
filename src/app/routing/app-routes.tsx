@@ -12,8 +12,7 @@ import {
 import { NotFound } from "./errors/not-found";
 import { RouteErrorBoundary } from "./errors/route-error-boundary";
 import { BoardFileURLImportPage } from "./root/board-file-url-import-page";
-import { rootIndexAction } from "./root/root-index-action";
-import { rootIndexLoader } from "./root/root-index-loader";
+import { rootIndexAction, rootIndexLoader } from "./root/root-index-route";
 
 export const appRoutes: RouteObject[] = [
   {
