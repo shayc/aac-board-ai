@@ -1,18 +1,28 @@
+import { useColorScheme } from "@mui/material/styles";
 import type { ReactNode } from "react";
 import { expect } from "vitest";
-import { type ColorMode, ColorModeSwitch } from "./color-mode-switch";
 import { renderWithProviders } from "./render-with-providers";
 
-export type { ColorMode };
+export type ColorMode = "light" | "dark";
 
 /**
  * Renders with the app's providers and resolves once the given color mode's
  * colors have settled. A "Use … mode" button is rendered before the children.
  */
 export async function renderInColorMode(children: ReactNode, mode: ColorMode) {
+  function ColorModeSwitch() {
+    const { setMode } = useColorScheme();
+
+    return (
+      <button type="button" onClick={() => setMode(mode)}>
+        Use {mode} mode
+      </button>
+    );
+  }
+
   const screen = await renderWithProviders(
     <>
-      <ColorModeSwitch mode={mode} />
+      <ColorModeSwitch />
       {children}
     </>,
   );
