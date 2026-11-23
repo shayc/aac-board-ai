@@ -17,7 +17,6 @@ rule works, and the [glossary](#glossary) for AAC terms.
 - [Runtime architecture](#runtime-architecture)
 - [Data and state ownership](#data-and-state-ownership)
 - [Module boundaries and code map](#module-boundaries-and-code-map)
-- [Core flows](#core-flows)
 - [Current limitations](#current-limitations)
 - [Glossary](#glossary)
 
@@ -265,13 +264,6 @@ At the repository root, [messages/](../messages/) holds UI catalogs and
 [project.inlang/](../project.inlang/) configures Paraglide, which compiles them into
 generated `src/paraglide/` modules.
 
-### Companion packages
-
-The app delegates OBF/OBZ parsing to
-[`@shayc/open-board-format`](https://github.com/shayc/open-board-format) and browser
-AI availability, provisioning, and session lifecycle to
-[`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai).
-
 ### Settings composition
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
@@ -299,47 +291,17 @@ Closing or unmounting settings does not delete preferences. Removing a feature
 requires an explicit decision about retaining or deleting its persisted
 preferences.
 
-## Core flows
-
-One line per flow; [behavior.md](behavior.md#core-flows) describes each in
-full.
-
-- **[Start at `/`](behavior.md#start-at-):** a board link the user confirmed is
-  imported; otherwise the newest stored board set opens, or the starter board
-  set is imported into an empty library.
-- **[Import board files](behavior.md#import-board-files):** file selection,
-  drag and drop, URL imports, and PWA file handling all use `importBoardFile`,
-  and each file becomes its own board set.
-- **[Export a board set](behavior.md#export-a-board-set):** `boardSetToOBZ`
-  packages one set's stored OBF records and assets as an OBZ file.
-- **[Open a board](behavior.md#open-a-board):** the route loaders read the
-  stored OBF, map it through `obfToBoard`, and restore the message draft, and
-  the page shows the board in the communication language.
-- **[Translate board sets](behavior.md#translate-board-sets):** the app shell
-  translates the sets that lack the communication language and revalidates
-  the one on screen.
-- **[Activate a tile](behavior.md#activate-a-tile):** `activateTile` opens a
-  linked board, adds the tile to the message and plays it unless a message
-  setting keeps tiles silent, or runs the tile's actions.
-- **[Suggest a message](behavior.md#suggest-a-message):** the Proofreader and
-  Rewriter offer phrasings of the message, and selecting one replaces it.
-
 ## Current limitations
 
-- **Older browsers are not supported.** The app targets the current versions of
-  Chrome, Edge, Firefox, and Safari
-  ([Baseline Newly available](https://web.dev/baseline)). Tile colors are
-  computed in CSS with relative colors and `contrast-color()`, with no fallback.
-  A browser without relative colors shows tiles without their colors, and one
-  without `contrast-color()` does not pick a label color that contrasts with the
-  tile.
-- **AI availability varies.** Support depends on browser, hardware, model
-  installation, and language.
-- **Boards cannot be edited or synced.** There is no editor or cross-device
-  sync. Moving boards between devices means exporting each board set as an OBZ
-  file and importing it on the other device.
-- **Speech may use external services.** Offline availability and privacy depend
-  on the selected voice.
+The README lists what the app does not do
+([Limitations](../README.md#limitations),
+[Browser support](../README.md#browser-support)). Two limits come from how it
+is built:
+
+- **Tile colors have no fallback.** They are computed in CSS with relative
+  colors and `contrast-color()`. A browser without relative colors shows tiles
+  without their colors, and one without `contrast-color()` does not pick a
+  label color that contrasts with the tile.
 - **Remote media has limited offline support.** Cached third-party images may be
   evicted under storage pressure. Third-party audio remains network-dependent
   because the current cache strategy cannot reliably serve range requests using
