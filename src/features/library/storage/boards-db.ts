@@ -5,8 +5,6 @@ import type { BoardSetMetadata } from "../obf/obf-to-board-set-metadata";
 const DB_NAME = "boards-db";
 const DB_VERSION = 1;
 
-export const MAX_ID_LENGTH = 255;
-
 export interface BoardSetRecord extends BoardSetMetadata {
   readonly id: string;
   readonly rootBoardId: string;
@@ -123,12 +121,4 @@ export async function runTransaction(
 // in IDB, so [boardSetId, []] is an upper bound for one set's keys.
 export function boardSetRange(boardSetId: string): IDBKeyRange {
   return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
-}
-
-export function validateId(id: string, fieldName: string): void {
-  if (!id || id.length > MAX_ID_LENGTH) {
-    throw new Error(
-      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
-    );
-  }
 }
