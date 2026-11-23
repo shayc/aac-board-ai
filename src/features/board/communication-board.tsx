@@ -26,15 +26,14 @@ import { PlayButton } from "./playback/play-button";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { scanGroupProps, scanRowProps } from "./scanning/scan-targets";
 import { ScanningScope } from "./scanning/scanning-scope";
-import { useBoardShortcutKeys } from "./shortcuts/use-board-shortcut-keys";
+import { useBoardShortcutLabels } from "./shortcuts/use-board-shortcut-labels";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { MessageSuggestions } from "./suggestions/message-suggestions";
-import { createTileActivator } from "./tile-activation";
 import { Tile } from "./tile/tile";
+import { createTileActivator } from "./tile/tile-activation";
 
 interface CommunicationBoardProps {
   board: Board;
-  /** The language the board's text is in, when known; it may not be the communication language. */
   boardLanguage: string | undefined;
   rootBoardId: string | undefined;
   initialMessage?: Message;
@@ -57,7 +56,7 @@ export function CommunicationBoard({
   const { shouldPlayTiles } = useMessagePreferences();
   const navigation = useBoardNavigation(rootBoardId);
   const shortcuts = useBoardShortcuts({ message, playback });
-  const shortcutKeys = useBoardShortcutKeys();
+  const shortcutLabels = useBoardShortcutLabels();
 
   // Pass individual members so message edits do not re-render every tile.
   const activateTile = createTileActivator({
@@ -91,7 +90,7 @@ export function CommunicationBoard({
   const backspaceButton = (
     <BackspaceButton
       disabled={!hasMessage}
-      shortcutKeys={shortcutKeys}
+      shortcutLabels={shortcutLabels}
       onPress={message.backspace}
       onLongPress={message.clear}
     />
@@ -102,7 +101,7 @@ export function CommunicationBoard({
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
       shape={areControlsBelowGrid ? "pill" : "round"}
-      shortcutKeys={shortcutKeys}
+      shortcutLabels={shortcutLabels}
       onPlay={() => void message.play()}
       onStop={playback.stop}
     />

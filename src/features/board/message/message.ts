@@ -131,7 +131,7 @@ export function hasSameContent(first: Message, second: Message): boolean {
   return first.parts === second.parts && first.isWordOpen === second.isWordOpen;
 }
 
-export function backspace(message: Message): Message {
+export function applyBackspace(message: Message): Message {
   const lastPart = message.parts.at(-1);
   if (!lastPart) {
     return message;
@@ -193,7 +193,7 @@ function applyEdit(message: Message, edit: MessageEdit): Message {
     case "space":
       return closeWord(message);
     case "backspace":
-      return backspace(message);
+      return applyBackspace(message);
     case "clear":
       return message.parts.length > 0 ? EMPTY_MESSAGE : message;
     default:

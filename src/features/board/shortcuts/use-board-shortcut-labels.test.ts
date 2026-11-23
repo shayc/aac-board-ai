@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isApplePlatform } from "./use-board-shortcut-keys";
+import { isApplePlatform } from "./use-board-shortcut-labels";
 
 describe("isApplePlatform", () => {
   test.each(["MacIntel", "macOS", "iPhone", "iPad"])(

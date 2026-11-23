@@ -18,7 +18,7 @@ import { CONTROL_SIZES } from "../board-control-sizes";
 import { BackspaceButton } from "./backspace-button";
 import { MessageBar } from "./message-bar";
 
-const SHORTCUT_KEYS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
+const SHORTCUT_LABELS = { clear: "⌘⌫", spokenClear: "Command+Delete" };
 const TRANSPARENT = "rgba(0, 0, 0, 0)";
 
 function createHandlers() {
@@ -52,7 +52,7 @@ function ClearableBackspace() {
 
   return (
     <BackspaceButton
-      shortcutKeys={SHORTCUT_KEYS}
+      shortcutLabels={SHORTCUT_LABELS}
       disabled={isCleared}
       onPress={() => {}}
       onLongPress={() => setIsCleared(true)}
@@ -67,7 +67,7 @@ function barWithBackspace(disabled: boolean) {
       isWordOpen={false}
       endAction={
         <BackspaceButton
-          shortcutKeys={SHORTCUT_KEYS}
+          shortcutLabels={SHORTCUT_LABELS}
           {...createHandlers()}
           disabled={disabled}
         />
@@ -118,7 +118,7 @@ describe("BackspaceButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...handlers} />,
+      <BackspaceButton shortcutLabels={SHORTCUT_LABELS} {...handlers} />,
     );
 
     const button = screen.getByRole("button", { name: "Backspace" });
@@ -132,7 +132,7 @@ describe("BackspaceButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...handlers} />,
+      <BackspaceButton shortcutLabels={SHORTCUT_LABELS} {...handlers} />,
     );
 
     const button = screen.getByRole("button", { name: "Backspace" });
@@ -144,7 +144,10 @@ describe("BackspaceButton", () => {
 
   test("fills the ring while held and empties it on release", async () => {
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
     const button = screen.getByRole("button", { name: "Backspace" }).element();
     const ring = button.querySelector<HTMLElement>("[role=progressbar]");
@@ -174,7 +177,11 @@ describe("BackspaceButton", () => {
     const handlers = createHandlers();
 
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...handlers} disabled />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...handlers}
+        disabled
+      />,
     );
 
     const button = screen.getByRole("button", { name: "Backspace" });
@@ -197,7 +204,10 @@ describe("BackspaceButton", () => {
     async ({ direction, transform }) => {
       const screen = await renderWithProviders(
         <div dir={direction}>
-          <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...createHandlers()} />
+          <BackspaceButton
+            shortcutLabels={SHORTCUT_LABELS}
+            {...createHandlers()}
+          />
         </div>,
       );
       const icon = screen
@@ -218,7 +228,10 @@ describe("BackspaceButton shortcut hints", () => {
 
   test("shows the clear shortcut when focused from the keyboard", async () => {
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
 
     await userEvent.tab();
@@ -233,7 +246,10 @@ describe("BackspaceButton shortcut hints", () => {
   test("keeps the shortcut tooltip closed on hover", async () => {
     vi.useFakeTimers();
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
     const button = screen.getByRole("button", { name: "Backspace" });
 
@@ -250,7 +266,10 @@ describe("BackspaceButton shortcut hints", () => {
 
   test("names the clear shortcut in the hint and its own key", async () => {
     const screen = await renderWithProviders(
-      <BackspaceButton shortcutKeys={SHORTCUT_KEYS} {...createHandlers()} />,
+      <BackspaceButton
+        shortcutLabels={SHORTCUT_LABELS}
+        {...createHandlers()}
+      />,
     );
     const button = screen.getByRole("button", { name: "Backspace" });
 

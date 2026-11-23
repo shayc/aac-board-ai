@@ -2,9 +2,9 @@ import type { BoardButton } from "@features/library";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { createTilePart, type MessageEdit } from "./message/message";
-import { setMessageClearAfterPlayback } from "./message/message-preferences-store";
-import { type PlayParts, useMessage } from "./message/use-message";
+import { createTilePart, type MessageEdit } from "../message/message";
+import { setMessageClearAfterPlayback } from "../message/message-preferences-store";
+import { type PlayParts, useMessage } from "../message/use-message";
 import { createTileActivator } from "./tile-activation";
 
 type ActivationOptions = Parameters<typeof createTileActivator>[0];
