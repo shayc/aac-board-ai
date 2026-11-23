@@ -72,6 +72,7 @@ export function CommunicationBoard({
   });
 
   const areControlsBelowGrid = isNarrowScreen && !isShortLandscape;
+  const controlShape = areControlsBelowGrid ? "pill" : "round";
   const pageMargin = isShortLandscape ? PAGE_MARGIN.xs : PAGE_MARGIN;
   const scrollClearance = isShortLandscape
     ? SCROLL_CLEARANCE.xs
@@ -82,7 +83,7 @@ export function CommunicationBoard({
   const homeButton = (
     <HomeButton
       disabled={!navigation.canGoHome}
-      shape={areControlsBelowGrid ? "pill" : "round"}
+      shape={controlShape}
       onClick={navigation.goHome}
     />
   );
@@ -100,7 +101,7 @@ export function CommunicationBoard({
     <PlayButton
       disabled={!playback.isMessagePlaying && !hasMessage}
       isPlaying={playback.isMessagePlaying}
-      shape={areControlsBelowGrid ? "pill" : "round"}
+      shape={controlShape}
       shortcutLabels={shortcutLabels}
       onPlay={() => void message.play()}
       onStop={playback.stop}

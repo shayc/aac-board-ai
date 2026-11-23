@@ -86,8 +86,8 @@ function findArrowTarget(
   from: GridPosition,
   step: GridStep,
 ): GridPosition | null {
-  const movesVertically = step.row !== 0;
-  const stepDirection = movesVertically ? step.row : step.column;
+  const primaryAxis = step.row !== 0 ? "row" : "column";
+  const crossAxis = primaryAxis === "row" ? "column" : "row";
   let best: {
     position: GridPosition;
     primaryDistance: number;
@@ -95,25 +95,19 @@ function findArrowTarget(
   } | null = null;
 
   for (const position of listOccupiedPositions(grid)) {
-    const primaryDelta = movesVertically
-      ? position.row - from.row
-      : position.column - from.column;
-    const crossDelta = movesVertically
-      ? position.column - from.column
-      : position.row - from.row;
-
-    if (Math.sign(primaryDelta) !== stepDirection) {
+    const primaryDelta = position[primaryAxis] - from[primaryAxis];
+    if (Math.sign(primaryDelta) !== step[primaryAxis]) {
       continue;
     }
 
     const primaryDistance = Math.abs(primaryDelta);
-    const crossDistance = Math.abs(crossDelta);
-    if (
+    const crossDistance = Math.abs(position[crossAxis] - from[crossAxis]);
+    const isNearer =
       !best ||
       crossDistance < best.crossDistance ||
       (crossDistance === best.crossDistance &&
-        primaryDistance < best.primaryDistance)
-    ) {
+        primaryDistance < best.primaryDistance);
+    if (isNearer) {
       best = { position, primaryDistance, crossDistance };
     }
   }

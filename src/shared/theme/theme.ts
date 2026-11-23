@@ -6,6 +6,7 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
+  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
 import { toggleButtonClasses } from "@mui/material/ToggleButton";
@@ -141,29 +142,19 @@ const themeOptions = {
       },
     },
   },
-  motion: {
-    reducedMotion: "system",
-  },
+  motion: { reducedMotion: "system" },
   typography: {
     fontFamily: "system-ui, sans-serif",
     fontWeightLight: 400,
     fontWeightBold: 600,
-    h6: {
-      fontWeight: 600,
-    },
-    button: {
-      textTransform: "none",
-    },
+    h6: { fontWeight: 600 },
+    button: { textTransform: "none" },
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        html: {
-          overscrollBehaviorY: "none",
-        },
-        body: {
-          userSelect: "none",
-        },
+        html: { overscrollBehaviorY: "none" },
+        body: { userSelect: "none" },
       },
     },
     MuiPaper: {
@@ -225,9 +216,7 @@ const themeOptions = {
           variants: [
             {
               props: { fullScreen: false },
-              style: {
-                borderRadius: theme.vars.shape.borderRadiusLg,
-              },
+              style: { borderRadius: theme.vars.shape.borderRadiusLg },
             },
             {
               props: { fullScreen: true },
@@ -244,15 +233,11 @@ const themeOptions = {
     },
     MuiDialogActions: {
       styleOverrides: {
-        root: {
-          padding: 16,
-        },
+        root: { padding: 16 },
       },
     },
     MuiButtonBase: {
-      defaultProps: {
-        disableRipple: true,
-      },
+      defaultProps: { disableRipple: true },
       styleOverrides: {
         root: ({ theme }) => ({
           "&::before": {
@@ -264,9 +249,7 @@ const themeOptions = {
             opacity: 0,
             pointerEvents: "none",
             transition: buttonFeedbackTransition(theme, ["opacity"]),
-            "@media (prefers-reduced-motion: reduce)": {
-              transition: "none",
-            },
+            "@media (prefers-reduced-motion: reduce)": { transition: "none" },
             ...instantFeedbackOnTouch,
           },
           "&:active::before": {
@@ -351,9 +334,7 @@ const themeOptions = {
             paddingLeft: 20,
             paddingRight: 20,
           },
-          [`& .${chipClasses.icon}`]: {
-            marginLeft: 12,
-          },
+          [`& .${chipClasses.icon}`]: { marginLeft: 12 },
           variants: [
             {
               props: { variant: "outlined" },
@@ -399,13 +380,7 @@ const themeOptions = {
     },
     MuiMenuItem: {
       styleOverrides: {
-        root: ({ theme }) => ({
-          marginInline: 4,
-          borderRadius: theme.vars.shape.borderRadiusSm,
-          // MUI drops the 48px touch row from the sm breakpoint up, so tablets
-          // would get desktop rows. The Autocomplete option below matches.
-          "@media (pointer: coarse)": { minHeight: 48 },
-        }),
+        root: ({ theme }) => menuRowStyle(theme),
       },
     },
     MuiAutocomplete: {
@@ -421,9 +396,7 @@ const themeOptions = {
         // these rules come after MUI's.
         listbox: ({ theme }) => ({
           [`& .${autocompleteClasses.option}`]: {
-            marginInline: 4,
-            borderRadius: theme.vars.shape.borderRadiusSm,
-            "@media (pointer: coarse)": { minHeight: 48 },
+            ...menuRowStyle(theme),
             // Enter picks the highlighted option, so it shows on every device.
             [`&.${autocompleteClasses.focused}`]: {
               backgroundColor: theme.vars.palette.action.selected,
@@ -488,9 +461,7 @@ const themeOptions = {
       },
     },
     MuiTooltip: {
-      defaultProps: {
-        enterDelay: 500,
-      },
+      defaultProps: { enterDelay: 500 },
       styleOverrides: {
         tooltip: ({ theme }) => ({
           fontSize: theme.typography.pxToRem(13),
@@ -509,3 +480,13 @@ export const rtlTheme = createTheme({
   ...themeOptions,
   direction: "rtl",
 });
+
+// Shared by menu items and Autocomplete options. MUI drops the 48px touch row
+// from the sm breakpoint up, so tablets would get desktop rows.
+function menuRowStyle(theme: Theme) {
+  return {
+    marginInline: 4,
+    borderRadius: theme.vars.shape.borderRadiusSm,
+    "@media (pointer: coarse)": { minHeight: 48 },
+  };
+}
