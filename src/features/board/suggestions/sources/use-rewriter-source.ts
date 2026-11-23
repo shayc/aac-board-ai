@@ -19,7 +19,7 @@ export function useRewriterSource({
   language,
   tone,
 }: UseRewriterSourceOptions): SuggestionSource {
-  const sharedContext = suggestionContext(customInstructions);
+  const sharedContext = buildSharedContext(customInstructions);
   const rewriter = useRewriter({
     sharedContext,
     length: "shorter",
@@ -39,7 +39,7 @@ export function useRewriterSource({
   return toSuggestionSource(rewriter, request);
 }
 
-function suggestionContext(customInstructions: string): string {
+function buildSharedContext(customInstructions: string): string {
   const instructions = customInstructions.trim();
 
   return instructions === ""

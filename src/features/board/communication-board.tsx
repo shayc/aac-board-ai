@@ -34,7 +34,6 @@ import { createTileActivator } from "./tile/tile-activation";
 
 interface CommunicationBoardProps {
   board: Board;
-  /** The language the board's text is in, when known; it may not be the communication language. */
   boardLanguage: string | undefined;
   rootBoardId: string | undefined;
   initialMessage?: Message;
@@ -47,7 +46,8 @@ export function CommunicationBoard({
   initialMessage,
 }: CommunicationBoardProps) {
   const t = useTranslate();
-  const { language, direction } = useCommunicationLanguage();
+  const { language: communicationLanguage, direction } =
+    useCommunicationLanguage();
   const isNarrowScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const isShortLandscape = useMediaQuery(shortLandscape);
 
@@ -65,7 +65,7 @@ export function CommunicationBoard({
       play: message.play,
       echo: message.echo,
     },
-    playback: { playPart: playback.playPart, stop: playback.stop },
+    playback: { playTile: playback.playTile, stop: playback.stop },
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
     boardLanguage,
     shouldPlayTiles,
@@ -158,9 +158,9 @@ export function CommunicationBoard({
               <ErrorBoundary fallback={null}>
                 <MessageSuggestions
                   messageText={message.text}
-                  language={language}
+                  language={communicationLanguage}
                   onPhraseSelect={(phrase) =>
-                    message.replaceWithText(phrase, language)
+                    message.replaceWithText(phrase, communicationLanguage)
                   }
                 />
               </ErrorBoundary>

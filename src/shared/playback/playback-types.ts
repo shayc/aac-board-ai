@@ -1,5 +1,9 @@
 import type { SpeechText } from "@shared/speech/speech-synthesis";
 
+/**
+ * `failed` means the request played to its end but some step, fallback
+ * included, did not play.
+ */
 export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
 export interface AudioStep {

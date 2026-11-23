@@ -7,7 +7,6 @@ interface SpeechPart extends SpeechText {
   id: string;
 }
 
-/** Parts in an unknown language are spoken as the default language. */
 export function planPlayback(
   parts: readonly MessagePart[],
   defaultLanguage: string,

@@ -88,19 +88,22 @@ function buildScrollPadding(breakpoint: Breakpoint) {
 }
 
 interface GridDimensions {
-  rows: number;
-  columns: number;
+  rowCount: number;
+  columnCount: number;
 }
 
-export function gridContentSx(theme: Theme, { rows, columns }: GridDimensions) {
+export function gridContentSx(
+  theme: Theme,
+  { rowCount, columnCount }: GridDimensions,
+) {
   function buildBreakpointRules(breakpoint: Breakpoint) {
     return {
       ...buildAxisRules({
         axis: AXES.inline,
         breakpoint,
-        trackCount: columns,
+        trackCount: columnCount,
       }),
-      ...buildAxisRules({ axis: AXES.block, breakpoint, trackCount: rows }),
+      ...buildAxisRules({ axis: AXES.block, breakpoint, trackCount: rowCount }),
     };
   }
 

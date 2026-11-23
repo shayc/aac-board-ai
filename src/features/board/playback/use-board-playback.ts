@@ -11,7 +11,7 @@ import {
 } from "@shared/playback/use-playback";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect } from "react";
-import type { MessagePart } from "../message/message";
+import type { MessagePart, TilePart } from "../message/message";
 import type { PlayMessage } from "../message/use-message";
 import { planPlayback } from "./plan-playback";
 
@@ -26,7 +26,7 @@ export interface UseBoardPlaybackReturn {
    * counts as played.
    */
   playMessage: PlayMessage;
-  playPart: (part: MessagePart) => Promise<void>;
+  playTile: (part: TilePart) => Promise<void>;
   stop: () => void;
 }
 
@@ -68,7 +68,7 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     });
   }
 
-  async function playPart(part: MessagePart) {
+  async function playTile(part: TilePart) {
     await playAndReportFailure({
       owner: TILE_OWNER,
       steps: planPlayback([part], language),
@@ -78,12 +78,12 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
   return {
     isMessagePlaying,
     playMessage,
-    playPart,
+    playTile,
     stop: playback.stop,
   };
 }
 
-export function useActiveMessagePartId(): string | null {
+export function usePlayingMessagePartId(): string | null {
   return useActiveCue(MESSAGE_OWNER);
 }
 

@@ -42,7 +42,7 @@ export function useMessage(
   const undoStackRef = useRef<Message[]>([]);
   const text = message.parts.map((part) => part.label).join(" ");
 
-  function readMessage() {
+  function messageToEdit() {
     return shouldClearAfterPlayback
       ? messageRef.current
       : markPlayed(messageRef.current, false);
@@ -78,7 +78,7 @@ export function useMessage(
   }
 
   function apply(edits: readonly MessageEdit[]): boolean {
-    const current = readMessage();
+    const current = messageToEdit();
 
     return editFrom(current, edits) !== current;
   }

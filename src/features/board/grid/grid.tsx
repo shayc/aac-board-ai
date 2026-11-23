@@ -40,8 +40,8 @@ export function Grid<Item extends { id: string }>({
     grid,
     getItemKey,
   );
-  const rows = grid.length;
-  const columns = grid[0]?.length ?? 0;
+  const rowCount = grid.length;
+  const columnCount = grid[0]?.length ?? 0;
 
   return (
     <Box sx={gridViewportSx}>
@@ -51,7 +51,7 @@ export function Grid<Item extends { id: string }>({
         role="grid"
         aria-label={ariaLabel}
         direction="column"
-        sx={(theme) => gridContentSx(theme, { rows, columns })}
+        sx={(theme) => gridContentSx(theme, { rowCount, columnCount })}
       >
         {grid.map((row, rowIndex) => (
           <GridRow
