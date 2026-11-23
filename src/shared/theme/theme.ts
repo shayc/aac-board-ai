@@ -485,6 +485,7 @@ function menuRowStyle(theme: Theme) {
   return {
     marginInline: 4,
     borderRadius: theme.vars.shape.borderRadiusSm,
+    // MUI drops the 48px touch row from sm up, so tablets would get desktop rows.
     "@media (pointer: coarse)": { minHeight: 48 },
   };
 }
