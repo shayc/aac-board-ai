@@ -196,7 +196,7 @@ const themeOptions = {
 
           return {
             backgroundColor: theme.vars.palette.background.default,
-            // The RTL stylis plugin mirrors these corners with the drawer anchor.
+            // Manually mirroring these corners would flip them twice in RTL.
             variants: [
               {
                 props: { anchor: "left" },
@@ -431,7 +431,6 @@ const themeOptions = {
             [`&.${autocompleteClasses.focusVisible}`]: {
               backgroundColor: "transparent",
             },
-            // The selected option keeps its tint, which MUI turns grey on touch.
             [`&[aria-selected="true"].${autocompleteClasses.focused}`]: {
               backgroundColor: theme.alpha(
                 theme.vars.palette.primary.main,

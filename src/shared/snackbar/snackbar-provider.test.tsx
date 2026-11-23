@@ -44,7 +44,6 @@ describe("SnackbarProvider", () => {
     await screen.getByRole("button", { name: "show-saved" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
 
-    // Axe needs the final opacity for color-contrast checks.
     await vi.waitFor(() => {
       const alert = screen.getByRole("status").element();
       expect(getComputedStyle(alert).opacity).toBe("1");

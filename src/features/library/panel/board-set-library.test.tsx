@@ -150,7 +150,6 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .not.toBeInTheDocument();
-      // The message is the browser's own wording, so only the name is stable.
       expect(reportedErrors).toMatchObject([{ name: "InvalidStateError" }]);
     });
 

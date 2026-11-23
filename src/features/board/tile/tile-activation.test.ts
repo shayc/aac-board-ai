@@ -63,7 +63,6 @@ async function setup(
     return parts.map((part) => part.label);
   }
 
-  // Rerendering runs everything that waited for a resolved playback.
   async function playbackSettled() {
     await rerender();
   }
@@ -463,8 +462,7 @@ describe("createTileActivator", () => {
       expect(playback.playMessage).toHaveBeenCalledExactlyOnceWith(parts);
     });
 
-    // While clearing after playing is off, the message hook releases a
-    // played message each time it is edited, which must not count as a change.
+    // Clearing the played flag alone must still let the same message replay.
     test("replays a played message when clearing after playing is off", async () => {
       setMessageClearAfterPlayback(false);
       const { activateTile, playback } = await setup(PLAYED_PARTS, {

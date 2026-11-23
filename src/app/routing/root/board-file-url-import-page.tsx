@@ -18,7 +18,7 @@ export function BoardFileURLImportPage() {
   const navigate = useNavigate();
   const t = useTranslate();
   const descriptionId = useId();
-  // Guard against duplicate taps before the router updates navigation state.
+  // Hide the import buttons on the next render even if navigation is still idle.
   const [hasAnswered, setHasAnswered] = useState(false);
 
   if (hasAnswered) {

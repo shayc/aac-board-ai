@@ -69,7 +69,6 @@ function getTileNameProps(
     return { lang: language };
   }
 
-  // A generated name inherits the document's UI language.
   return { "aria-label": actionName };
 }
 

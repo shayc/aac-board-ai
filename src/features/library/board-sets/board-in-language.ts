@@ -33,7 +33,7 @@ export function resolveBoardInLanguage(
     };
   }
 
-  // Only a declared locale identifies the language of an untranslated fallback.
+  // The requested locale could give untranslated text the wrong voice.
   return {
     board,
     boardLanguage: board.locale ? getLanguageCode(board.locale) : undefined,

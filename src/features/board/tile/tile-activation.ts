@@ -48,7 +48,6 @@ export function createTileActivator({
     });
 
     message.apply([{ kind: "tile", part }]);
-    // A silent tile still interrupts a message that is playing.
     if (!shouldPlayTiles) {
       playback.stop();
 
@@ -86,7 +85,6 @@ export function createTileActivator({
       return;
     }
 
-    // Spelling echoes are tile feedback and use the tile speech setting.
     if (!shouldPlayTiles) {
       playback.stop();
       message.apply(editsAfterPlay);
@@ -106,7 +104,6 @@ function toMessageEdits(
 ): MessageEdit[] {
   return actions.flatMap((action) => {
     switch (action.kind) {
-      // Spelled letters are the board's text, so they are in its language.
       case "spell":
         return { ...action, language: boardLanguage };
       case "space":

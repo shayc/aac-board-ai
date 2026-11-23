@@ -61,7 +61,6 @@ export function SuggestionSettings() {
         </UnavailableNotice>
       );
     case "custom-instructions":
-    // A failed probe leaves the field usable rather than hiding it.
     case undefined:
       return <CustomInstructionsField />;
     default:

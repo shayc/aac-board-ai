@@ -69,12 +69,7 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
   const caretPosition = isWordOpen ? "word-end" : "next-word";
 
   return (
-    <Stack
-      // Imported symbols need a light background in both themes.
-      className={LIGHT_SCHEME_CLASS}
-      direction="row"
-      sx={messageBarSx}
-    >
+    <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
       <Stack
         ref={scrollContainerRef}
         // A live region would repeat the tile's spoken feedback.

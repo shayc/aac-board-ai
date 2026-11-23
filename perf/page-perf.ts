@@ -65,7 +65,6 @@ export function installPagePerf(watches: Record<string, string>): void {
     perf.watch(name, selector);
   }
 
-  // Timestamp after paint, ahead of queued normal-priority work that adds timing noise.
   function firstVisibleFrame(selector: string): Promise<number> {
     return new Promise((resolve) => {
       function isVisible(): boolean {
@@ -92,6 +91,8 @@ export function installPagePerf(watches: Record<string, string>): void {
         }
         observer.disconnect();
 
+        // Taking the timestamp in rAF would count a frame before paint.
+        // A normal-priority task could also count work queued after the frame.
         void scheduler.postTask(
           () => {
             resolve(performance.now());

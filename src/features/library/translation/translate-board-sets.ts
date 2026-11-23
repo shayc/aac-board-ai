@@ -181,7 +181,7 @@ async function translateBySourceLanguage(
         sourceLanguage,
         targetLanguage,
         signal,
-        // Keep translation status active across the model-download handoff.
+        // Waiting for the model would leave a gap in the status notice.
         onDownloadProgress: onTranslating,
       });
       translators.set(sourceLanguage, translator);

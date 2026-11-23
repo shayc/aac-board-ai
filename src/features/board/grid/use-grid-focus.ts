@@ -65,7 +65,7 @@ export function useGridFocus<Item extends object>(
     tabStop?.focus();
   });
 
-  // Cell keys track remounts that drop focus even when the grid array is new.
+  // Depending on the grid array would restore focus on renders that reuse the cells.
   const arrangementKey = gridArrangementKey(grid, getItemKey);
   const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {

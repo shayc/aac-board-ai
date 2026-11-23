@@ -39,7 +39,6 @@ function saveFile(file: Blob, fileName: string): void {
   link.download = fileName;
 
   link.click();
-  // The click resolves the blob URL, so the download survives the revoke.
   URL.revokeObjectURL(url);
 }
 

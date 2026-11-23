@@ -125,7 +125,6 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
         enableTrackSlot
         {...ringProgress(phase)}
         sx={{
-          // Downloads can update faster than MUI's default 300ms transition.
           [`& .${circularProgressClasses.circle}`]: { transition: "none" },
         }}
       />

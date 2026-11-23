@@ -681,7 +681,6 @@ describe("app flow", () => {
     const notice = screen.getByRole("status");
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
 
-    // Leave preparation pending to isolate the language change's status reset.
     translator.create.mockImplementation(() => new Promise(() => {}));
     setCommunicationLanguage("fr");
 

@@ -139,7 +139,6 @@ async function buildBase({ source, commit }: BuildSource): Promise<void> {
     run("npm", ["ci"], sourceDir, { HUSKY: "0" });
     buildApp(sourceDir, DIST_DIRS.base);
   } finally {
-    // Neither step may throw: a failure here would hide the one that led here.
     git(["worktree", "remove", "--force", sourceDir]);
     rmSync(sourceDir, { recursive: true, force: true });
   }

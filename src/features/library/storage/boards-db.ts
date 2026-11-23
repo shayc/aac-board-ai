@@ -111,7 +111,7 @@ export async function runTransaction(
     try {
       tx.abort();
     } catch {
-      // Already finished — the transaction aborted itself.
+      // abort() can throw after the transaction ends. Preserve the write error.
     }
 
     await Promise.allSettled([writing, tx.done]);

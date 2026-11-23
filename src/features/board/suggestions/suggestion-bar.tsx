@@ -93,10 +93,7 @@ export function SuggestionBar({
       )}
 
       {status.kind === "pending" && (
-        <PendingDots
-          // Restart the fade-in delay when the dots change position.
-          key={hasPhrases ? "after-phrases" : "alone"}
-        />
+        <PendingDots key={hasPhrases ? "after-phrases" : "alone"} />
       )}
     </Stack>
   );

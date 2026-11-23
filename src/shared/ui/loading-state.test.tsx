@@ -7,7 +7,6 @@ describe("LoadingState", () => {
   test("has no accessibility violations once it has faded in", async () => {
     const screen = await renderWithProviders(<LoadingState />);
 
-    // Wait for the fade so axe checks the final text contrast.
     await vi.waitFor(() => {
       const content = screen.getByText("Loading…").element().parentElement;
       expect(content && getComputedStyle(content).opacity).toBe("1");
