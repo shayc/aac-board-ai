@@ -9,6 +9,7 @@ import { DirectionalThemeProvider } from "@shared/theme/directional-theme-provid
 import { maxSafeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { ErrorBoundary } from "@shared/ui/error-boundary";
+import { controlSizeSx } from "./board-control-sizes";
 import {
   BOTTOM_CONTROLS_INSET,
   PAGE_MARGIN,
@@ -123,11 +124,12 @@ export function CommunicationBoard({
           {...shortcuts.rootProps}
           dir={direction}
           direction="column"
-          sx={{
+          sx={(theme) => ({
+            ...controlSizeSx(theme),
             height: "100%",
             pl: { sm: safeAreaInset("left") },
             pr: { sm: safeAreaInset("right") },
-          }}
+          })}
         >
           <Stack spacing={pageMargin} sx={{ pt: pageMargin, px: pageMargin }}>
             <Stack
