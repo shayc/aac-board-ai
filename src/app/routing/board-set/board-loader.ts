@@ -21,6 +21,7 @@ export async function boardLoader({
     throw routeErrorResponse(ROUTE_ERROR_CODES.boardNotFound);
   }
 
+  // Restored here so the board opens with the draft and no edit comes first.
   const [board, restoredMessage] = await Promise.all([
     loadBoard(boardSetId, boardId, request.signal),
     restoreMessageDraft(),

@@ -55,10 +55,11 @@ build.
   ([Data and state ownership](#data-and-state-ownership)).
 - **An error is reported where it stops.** A catch that keeps an error from
   travelling further passes it to `reportError`, because the message on screen
-  never names the cause. Three things are not reported: cancelled work, an
-  error the screen already explains in full, such as board not found, and
-  playback, preferences, the message draft, and built-in AI, which fail as a
-  matter of course on many devices and handle that themselves.
+  never names the cause. Three things are not passed to `reportError`:
+  - Cancelled downloads and interrupted navigations, which are not failures.
+  - An error the screen already explains in full, such as board not found.
+  - Playback, preferences, saving the message draft, and built-in AI, which
+    fail as a matter of course on many devices and handle that themselves.
 - **Speech follows the text, not the setting.** A message part whose language
   is known is spoken in that language.
 - **A populated grid has one Tab stop.** Arrow keys move inside it, and

@@ -108,7 +108,7 @@ accessibility, offline reliability, or privacy for elegance.
 - Update `messages/en.json` and all sibling catalogs together when adding, removing, or changing a message's meaning. Matching keys alone do not ensure translation consistency.
 - Preserve interpolation names and plural inputs across locales; review plural sentences with representative values.
 - Follow the [domain glossary](docs/architecture.md#glossary): keep board, board set, tile, and symbol distinct, using each locale's established terms and appropriate grammatical inflections across sentences, labels, hints, and accessible names.
-- Failure messages leave out file and board set names: the person just picked that file or set, and names the app doesn't control can be long. Catalog download results and the delete confirmation do name the set.
+- Import, export, and delete failure messages leave out file and board set names: the person just picked that file or set, and names the app doesn't control can be long. Catalog download results and the delete confirmation do name the set.
 - Review visible text and accessible labels together, including both the action and its target (for example, stopping a message). Suggestion instructions describe wording; speech settings describe voice output.
 
 ### Comments
