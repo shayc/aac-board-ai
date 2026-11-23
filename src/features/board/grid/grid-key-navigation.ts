@@ -3,7 +3,7 @@ import {
   type GridPosition,
   isSameGridPosition,
   listOccupiedPositions,
-} from "./grid-model";
+} from "./grid-cells";
 
 export type GridDirection = "ltr" | "rtl";
 

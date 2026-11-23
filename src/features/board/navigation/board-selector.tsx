@@ -54,14 +54,11 @@ export function BoardSelector({ boards }: BoardSelectorProps) {
           onClick={(event) => setAnchorElement(event.currentTarget)}
           sx={{
             maxWidth: "100%",
-            // As tall as the icon buttons beside it. The triangle carries its
-            // own space, so the end side needs less padding.
             py: 1,
             pl: 2.5,
             pr: 1.5,
             font: "inherit",
             [`& .${buttonClasses.endIcon}`]: { margin: 0 },
-            // Button shrinks its icons to 20px. The header's icons are 24px.
             [`& .${buttonClasses.endIcon} > *:nth-of-type(1)`]: {
               fontSize: 24,
             },
@@ -153,8 +150,7 @@ function BoardSearch({
       }}
       open
       onClose={(_event, reason) => {
-        // Choosing the current board changes nothing, so onChange alone would
-        // leave the popup open. Blur and a click in the field must not close.
+        // Picking the current board skips onChange, so handle selection here too.
         if (reason === "selectOption" || reason === "escape") {
           onClose();
         }

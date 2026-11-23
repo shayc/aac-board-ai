@@ -1,4 +1,4 @@
-import type { GridOrder } from "../grid/grid-model";
+import type { GridOrder } from "../grid/grid-cells";
 
 export function rowMajorOrder(
   items: readonly { id: string }[],

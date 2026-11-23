@@ -76,7 +76,6 @@ async function translateBoardSet(
     ]);
   }
 
-  // Optional AI failures leave the set available for a later retry.
   const translationsBySourceLanguage = await translateBySourceLanguage(
     stringsBySourceLanguage,
     language,
@@ -100,8 +99,6 @@ async function translateBoardSet(
     ),
   });
 
-  // A set that only gained its name, such as one already in the language,
-  // shows the same boards as before, so nothing that shows them has to reload.
   return boardsMissingLanguage.length > 0;
 }
 
@@ -179,13 +176,12 @@ async function translateBySourceLanguage(
   const translators = new Map<string, OpenTranslator>();
 
   try {
-    // Open every translator first so a refused one wastes no translation.
     for (const sourceLanguage of stringsBySourceLanguage.keys()) {
       const translator = await createTranslator({
         sourceLanguage,
         targetLanguage,
         signal,
-        // Keep translation status active across the model-download handoff.
+        // Waiting for the model would leave a gap in the status notice.
         onDownloadProgress: onTranslating,
       });
       translators.set(sourceLanguage, translator);

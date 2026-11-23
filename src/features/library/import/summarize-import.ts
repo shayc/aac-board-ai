@@ -17,7 +17,6 @@ export function summarizeImport({
     };
   }
 
-  // One failure keeps its own reason; a count can't say a file was too large.
   if (importedCount > 0 && failedCount > 1) {
     const total = importedCount + failedCount;
 

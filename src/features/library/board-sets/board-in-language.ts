@@ -9,20 +9,35 @@ import type { BoardSetRecord } from "../storage/board-set-storage";
 
 const DEFAULT_SOURCE_LANGUAGE = "en";
 
-export function findBoardInLanguage(
+interface BoardInLanguage {
+  board: Board;
+  boardLanguage: string | undefined;
+}
+
+export function resolveBoardInLanguage(
   board: Board,
   language: string,
-): Board | undefined {
+): BoardInLanguage {
   if (getSourceLanguage(board) === language) {
-    return board;
+    return { board, boardLanguage: language };
   }
 
   const translations = findStringTranslations(
     board.translationsByLocale,
     language,
   );
+  if (translations) {
+    return {
+      board: applyTranslations(board, translations),
+      boardLanguage: language,
+    };
+  }
 
-  return translations ? applyTranslations(board, translations) : undefined;
+  // The requested locale could give untranslated text the wrong voice.
+  return {
+    board,
+    boardLanguage: board.locale ? getLanguageCode(board.locale) : undefined,
+  };
 }
 
 export function getSourceLanguage({ locale }: { locale?: string }): string {

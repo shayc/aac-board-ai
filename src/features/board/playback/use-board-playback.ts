@@ -11,7 +11,8 @@ import {
 } from "@shared/playback/use-playback";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect } from "react";
-import type { MessagePart, PlayMessage } from "../message/message-types";
+import type { MessagePart } from "../message/message";
+import type { PlayMessage } from "../message/use-message";
 import { planPlayback } from "./plan-playback";
 
 const MESSAGE_OWNER = "board-message";
@@ -46,8 +47,6 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     [playback],
   );
 
-  // AAC users depend on knowing their speech output failed, so a failure is
-  // reported here, once, instead of being left to each caller.
   async function playAndReportFailure(
     request: PlaybackRequest,
   ): Promise<boolean> {

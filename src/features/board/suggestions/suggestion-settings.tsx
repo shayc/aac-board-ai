@@ -10,13 +10,13 @@ import { ExternalLink } from "@shared/ui/external-link";
 import { assertNever } from "@shared/utils/assert-never";
 import { type ReactNode, useId } from "react";
 import {
+  areSuggestionsSupported,
+  checkSuggestionLanguageSupport,
+} from "./sources/suggestion-support";
+import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
-import {
-  areSuggestionsSupported,
-  checkSuggestionLanguageSupport,
-} from "./suggestion-support";
 
 export function SuggestionSettings() {
   const t = useTranslate();
@@ -61,7 +61,6 @@ export function SuggestionSettings() {
         </UnavailableNotice>
       );
     case "custom-instructions":
-    // A failed probe leaves the field usable rather than hiding it.
     case undefined:
       return <CustomInstructionsField />;
     default:

@@ -4,7 +4,7 @@ export { MessageSettings } from "./message/message-settings";
 export { BoardSelector } from "./navigation/board-selector";
 export { ScanningSettings } from "./scanning/scanning-settings";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
-export { areSuggestionsSupported } from "./suggestions/suggestion-support";
+export { areSuggestionsSupported } from "./suggestions/sources/suggestion-support";
 export { TileSettings } from "./tile/tile-settings";
 
-export type { Message } from "./message/message-types";
+export type { Message } from "./message/message";

@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest";
 import {
   deriveSuggestionStatus,
   type SuggestionStatusInput,
-} from "./derive-suggestion-status";
+} from "./suggestion-status";
 
 type SourceInput = SuggestionStatusInput["sources"][number];
 

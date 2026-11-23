@@ -1,12 +1,11 @@
 import type { BoardAction, BoardButton } from "@features/library";
 import { assertNever } from "@shared/utils/assert-never";
-import { createTilePart } from "../message/message-transforms";
-import type { MessageEdit } from "../message/message-types";
+import { createTilePart, type MessageEdit } from "../message/message";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 
-interface ButtonActivatorOptions {
+interface TileActivatorOptions {
   message: Pick<UseMessageReturn, "apply" | "play" | "echo">;
   playback: Pick<UseBoardPlaybackReturn, "playPart" | "stop">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
@@ -14,16 +13,16 @@ interface ButtonActivatorOptions {
   shouldPlayTiles: boolean;
 }
 
-type ButtonActivator = (button: BoardButton) => void;
+type TileActivator = (button: BoardButton) => void;
 
-export function createButtonActivator({
+export function createTileActivator({
   message,
   playback,
   navigation,
   boardLanguage,
   shouldPlayTiles,
-}: ButtonActivatorOptions): ButtonActivator {
-  function activateButton(button: BoardButton) {
+}: TileActivatorOptions): TileActivator {
+  function activateTile(button: BoardButton) {
     if (button.linkedBoardId) {
       navigation.goToBoard(button.linkedBoardId);
 
@@ -49,7 +48,6 @@ export function createButtonActivator({
     });
 
     message.apply([{ kind: "tile", part }]);
-    // A silent tile still interrupts a message that is playing.
     if (!shouldPlayTiles) {
       playback.stop();
 
@@ -81,15 +79,12 @@ export function createButtonActivator({
       boardLanguage,
     );
 
-    // Only a tile that leaves the message as it stands plays it.
     if (!hasChanged) {
       void message.play(editsAfterPlay);
 
       return;
     }
 
-    // A tile that spells and then plays echoes the word being typed, which is
-    // feedback on the tile, so it stays silent when tiles are not played.
     if (!shouldPlayTiles) {
       playback.stop();
       message.apply(editsAfterPlay);
@@ -100,7 +95,7 @@ export function createButtonActivator({
     void message.echo(editsAfterPlay);
   }
 
-  return activateButton;
+  return activateTile;
 }
 
 function toMessageEdits(
@@ -109,7 +104,6 @@ function toMessageEdits(
 ): MessageEdit[] {
   return actions.flatMap((action) => {
     switch (action.kind) {
-      // Spelled letters are the board's text, so they are in its language.
       case "spell":
         return { ...action, language: boardLanguage };
       case "space":

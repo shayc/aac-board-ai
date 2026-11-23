@@ -1,12 +1,8 @@
 import { normalizeLocale } from "@shared/language/locale";
 import type { OBFBoard, OBFButton, OBFMedia } from "@shayc/open-board-format";
-import type {
-  Board,
-  BoardAction,
-  BoardButton,
-  TranslationsByLocale,
-} from "../board-types";
+import type { Board, BoardAction, BoardButton } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
+import { obfToTranslationsByLocale } from "./obf-strings";
 
 export function obfToBoard(
   obfBoard: OBFBoard,
@@ -53,7 +49,7 @@ function resolveMediaSrc(
 ): string | undefined {
   const assetURL = media.path ? assetURLByPath.get(media.path) : undefined;
 
-  // OBF validation accepts an empty string as a source.
+  // Use || so an empty OBF source falls through to the next source.
   return assetURL || media.data || media.url;
 }
 
@@ -114,19 +110,4 @@ function parseAction(raw: string): BoardAction {
     default:
       return { kind: "unsupported", raw };
   }
-}
-
-export function obfToTranslationsByLocale(
-  strings: OBFBoard["strings"],
-): TranslationsByLocale {
-  if (!strings) {
-    return new Map();
-  }
-
-  return new Map(
-    Object.entries(strings).map(([locale, translations]) => [
-      normalizeLocale(locale),
-      new Map(Object.entries(translations)),
-    ]),
-  );
 }

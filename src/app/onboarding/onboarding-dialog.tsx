@@ -139,7 +139,6 @@ function introductionSx(theme: Theme) {
     minHeight: 0,
     my: "auto",
     pt: 6,
-    // The action stays in view while a tall introduction scrolls.
     overflowY: "auto",
     [shortLandscape(theme)]: {
       display: "grid",

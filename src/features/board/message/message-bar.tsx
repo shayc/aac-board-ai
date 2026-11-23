@@ -6,12 +6,11 @@ import { useTranslate } from "@shared/language/use-translate";
 import { shortLandscape } from "@shared/theme/short-landscape";
 import { LIGHT_SCHEME_CLASS } from "@shared/theme/theme";
 import { type ReactNode, useEffectEvent, useLayoutEffect, useRef } from "react";
-import {
-  AACSymbol,
-  SYMBOL_IMAGE_SIZE_PROPERTY,
-} from "../aac-symbol/aac-symbol";
+import { AACSymbol, SYMBOL_IMAGE_SIZE_PROPERTY } from "../aac-symbol";
 import { CONTROL_SIZE_PROPERTY, CONTROL_SIZES } from "../board-control-sizes";
-import type { MessagePart } from "./message-types";
+import { useActiveMessagePartId } from "../playback/use-board-playback";
+import type { MessagePart } from "./message";
+import { useMessagePreferences } from "./message-preferences-store";
 
 // A short landscape screen gets compact; smaller symbols leave room for labels.
 const BAR_SIZES = {
@@ -28,20 +27,16 @@ const ACTIVE_PART_ANCHOR = "--active-message-part";
 export interface MessageBarProps {
   parts: readonly MessagePart[];
   isWordOpen: boolean;
-  activePartId: string | null;
-  areImagesVisible: boolean;
   endAction?: ReactNode;
 }
 
-export function MessageBar({
-  parts,
-  isWordOpen,
-  activePartId,
-  areImagesVisible,
-  endAction,
-}: MessageBarProps) {
+export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
   const t = useTranslate();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const playingPartId = useActiveMessagePartId();
+  const { areImagesVisible, isHighlightingEnabled } = useMessagePreferences();
+  const activePartId = isHighlightingEnabled ? playingPartId : null;
 
   // Reads the latest parts without reacting to them, so an edit during
   // playback shows the newest part instead of jumping back to the active one.
@@ -74,12 +69,7 @@ export function MessageBar({
   const caretPosition = isWordOpen ? "word-end" : "next-word";
 
   return (
-    <Stack
-      // Imported symbols need a light background in both themes.
-      className={LIGHT_SCHEME_CLASS}
-      direction="row"
-      sx={messageBarSx}
-    >
+    <Stack className={LIGHT_SCHEME_CLASS} direction="row" sx={messageBarSx}>
       <Stack
         ref={scrollContainerRef}
         // A live region would repeat the tile's spoken feedback.
@@ -132,8 +122,6 @@ function messageBarSx(theme: Theme) {
     colorScheme: "light",
     userSelect: "text",
     ...theme.applyStyles("light", { boxShadow: theme.vars.shadows[1] }),
-    // In dark mode white would outshine the board and mid grey reads as
-    // disabled; grey 300 is as light as the board's pastel tiles.
     ...theme.applyStyles("dark", { bgcolor: theme.vars.palette.grey[300] }),
     [shortLandscape(theme)]: barSizeProperties(BAR_SIZES.compact),
   } as const;
@@ -225,7 +213,6 @@ function MessagePartItem({
           "&::after": {
             content: '""',
             alignSelf: "center",
-            // As tall as the line of the word it follows.
             height: "1.2em",
             marginInlineStart: theme.spacing(
               caretPosition === "next-word" ? PART_INLINE_PADDING * 2 : 0.5,

@@ -1,13 +1,13 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { Fragment, type ReactNode } from "react";
+import { buildGrid, type GridOrder } from "./grid-cells";
 import {
   gridCellSx,
   gridContentSx,
   gridRowSx,
   gridViewportSx,
 } from "./grid-layout";
-import { buildGrid, type GridOrder } from "./grid-model";
 import { useGridFocus } from "./use-grid-focus";
 
 /** The grid moves focus to the element that carries these, so every item must render one. */

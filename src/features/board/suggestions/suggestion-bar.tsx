@@ -6,7 +6,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { FocusEvent } from "react";
 import { SCAN_OUTLINE_REACH_PX } from "../scanning/scan-targets";
-import type { SuggestionStatus } from "./derive-suggestion-status";
+import type { SuggestionStatus } from "./suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
 // A keyframe, not a transition: the theme owns the chip's transitions for
@@ -69,7 +69,6 @@ export function SuggestionBar({
             display: "flex",
             alignItems: "center",
             gap: 2,
-            // The margin takes the padding back, so the row keeps its size.
             p: OUTLINE_CLEARANCE,
             m: `-${OUTLINE_CLEARANCE}`,
             overflowX: "auto",
@@ -94,11 +93,7 @@ export function SuggestionBar({
       )}
 
       {status.kind === "pending" && (
-        <PendingDots
-          // The dots move when the first phrase arrives and when the phrases
-          // clear, so they wait again instead of jumping there at full strength.
-          key={hasPhrases ? "after-phrases" : "alone"}
-        />
+        <PendingDots key={hasPhrases ? "after-phrases" : "alone"} />
       )}
     </Stack>
   );

@@ -49,9 +49,8 @@ export async function expectNoA11yViolations(
     assert.fail(describeResults(violations));
   }
 
-  // Incomplete results, which axe could not decide, would otherwise pass
-  // unseen. Contrast is left out: axe cannot judge layered colors, such as
-  // MUI's outline drawn over a field's text.
+  // Check undecided results too. Review layered contrast separately because
+  // axe cannot judge it.
   const reviewableIncomplete = incomplete.filter(
     (result) => result.id !== "color-contrast",
   );

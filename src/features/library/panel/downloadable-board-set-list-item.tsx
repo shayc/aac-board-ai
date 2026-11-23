@@ -125,7 +125,6 @@ function DownloadButtonIcon({ phase }: DownloadButtonIconProps) {
         enableTrackSlot
         {...ringProgress(phase)}
         sx={{
-          // Downloads can update faster than MUI's default 300ms transition.
           [`& .${circularProgressClasses.circle}`]: { transition: "none" },
         }}
       />
@@ -156,7 +155,6 @@ type RingProgress =
   | { variant: "indeterminate" };
 
 function ringProgress(phase: DownloadPhase): RingProgress {
-  // Wait for response headers to avoid flashing an indeterminate spinner.
   if (phase.kind === "connecting") {
     return { variant: "determinate", value: 0 };
   }

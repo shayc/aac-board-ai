@@ -196,7 +196,7 @@ const themeOptions = {
 
           return {
             backgroundColor: theme.vars.palette.background.default,
-            // The RTL stylis plugin mirrors these corners with the drawer anchor.
+            // Manually mirroring these corners would flip them twice in RTL.
             variants: [
               {
                 props: { anchor: "left" },
@@ -286,8 +286,6 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
-              // MUI's grey disabled fill is darker than the light page and
-              // would outweigh the enabled buttons beside it.
               style: theme.applyStyles("light", {
                 [`&.${buttonClasses.disabled}`]: {
                   backgroundColor: theme.vars.palette.Button.inheritContainedBg,
@@ -305,8 +303,6 @@ const themeOptions = {
           variants: [
             {
               props: { color: "default" },
-              // The icon's dimmer color would press fainter than a text
-              // button beside it, as in the header.
               style: {
                 "&::before": {
                   backgroundColor: theme.vars.palette.text.primary,
@@ -346,7 +342,6 @@ const themeOptions = {
     MuiChip: {
       styleOverrides: {
         clickable: ({ theme }) => ({
-          // Beside large buttons, so chips share their height and label type.
           ...theme.typography.button,
           height: 48,
           borderRadius: theme.vars.shape.borderRadiusFull,
@@ -362,7 +357,6 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "outlined" },
-              // The 1px outline keeps the label where filled chips place it.
               style: {
                 [`& .${chipClasses.label}`]: {
                   paddingLeft: 19,
@@ -372,7 +366,6 @@ const themeOptions = {
             },
             {
               props: { variant: "filled", color: "default" },
-              // A quieter fill keeps chips distinct from navigation buttons.
               style: {
                 backgroundColor: theme.alpha(theme.palette.common.black, 0.06),
                 [`&:hover, &.${chipClasses.focusVisible}`]: {
@@ -435,11 +428,9 @@ const themeOptions = {
             [`&.${autocompleteClasses.focused}`]: {
               backgroundColor: theme.vars.palette.action.selected,
             },
-            // The keyboard ring alone marks the option, as in lists and menus.
             [`&.${autocompleteClasses.focusVisible}`]: {
               backgroundColor: "transparent",
             },
-            // The selected option keeps its tint, which MUI turns grey on touch.
             [`&[aria-selected="true"].${autocompleteClasses.focused}`]: {
               backgroundColor: theme.alpha(
                 theme.vars.palette.primary.main,
@@ -476,7 +467,6 @@ const themeOptions = {
     MuiToggleButton: {
       styleOverrides: {
         root: ({ theme }) => {
-          // MUI's 8% tint is 1.1:1 against the drawer, too faint to see.
           const selectedBackground = `color-mix(in srgb, ${theme.vars.palette.primary.main} 20%, transparent)`;
 
           return {

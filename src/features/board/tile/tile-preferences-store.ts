@@ -6,7 +6,7 @@ import {
   type ClampedNumberOptions,
   parseClampedNumber,
 } from "@shared/utils/parse-clamped-number";
-import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
+import type { SymbolLabelPlacement } from "../aac-symbol";
 
 const TILE_LABEL_PLACEMENTS = [
   "top",

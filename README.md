@@ -82,8 +82,6 @@ Open [http://localhost:5173](http://localhost:5173).
 
 To run tests in Chromium and WebKit, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
-To check performance against its budgets locally, run `npm run perf`; see [docs/performance.md](docs/performance.md).
-
 ## Architecture
 
 Built with React 19, TypeScript, Vite, and MUI.
@@ -101,7 +99,7 @@ Three short files show how a selected tile becomes part of a spoken message:
 
 1. [`board-types.ts`](src/features/library/board-types.ts): the data. A `Board` is a grid of `BoardButton`s, the model both features share.
 2. [`communication-board.tsx`](src/features/board/communication-board.tsx): the board screen. It wires message, suggestions, playback and navigation together, and its imports are a table of contents for `features/board/`.
-3. [`button-activator.ts`](src/features/board/activation/button-activator.ts): what activating a tile does. It opens a linked board, adds to the message and plays it unless tiles are set to stay silent, or runs the tile's actions.
+3. [`tile-activation.ts`](src/features/board/tile/tile-activation.ts): what activating a tile does. It opens a linked board, adds to the message and plays it unless tiles are set to stay silent, or runs the tile's actions.
 
 [`board-page.tsx`](src/app/routing/board-set/board-page.tsx) is where a stored board reaches that screen. The [glossary](docs/architecture.md#glossary) settles what board, board set, tile, symbol and message mean.
 

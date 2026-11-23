@@ -226,8 +226,6 @@ describe("Tile", () => {
     );
   });
 
-  // A saturated mid-tone is the hardest case for a fold mixed toward black;
-  // a dark tile's fold mixes toward white instead.
   test.each([
     {
       description: "mid-tone",

@@ -40,7 +40,6 @@ describe("BoardSetDeleteDialog", () => {
   });
 
   test("keeps naming the board set while the dialog closes", async () => {
-    // Fake timers hold the exit transition, so the closing dialog can be inspected.
     vi.useFakeTimers();
     onTestFinished(() => {
       vi.useRealTimers();

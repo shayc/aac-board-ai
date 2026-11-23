@@ -96,8 +96,7 @@ function AppDrawerContent({
   const startSide = useStartSide();
   const endSide = useEndSide();
   const [isScrolled, setIsScrolled] = useState(false);
-  // MUI mirrors the drawer anchor in right-to-left, so "left" is the start
-  // side; the tooltip points into the screen, away from the drawer's edge.
+  // MUI treats the left drawer anchor as inline start in RTL.
   const closeTooltipPlacement = anchor === "left" ? endSide : startSide;
 
   return (

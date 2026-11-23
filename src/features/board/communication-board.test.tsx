@@ -21,14 +21,13 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { type Locator, userEvent } from "vitest/browser";
 import { CommunicationBoard } from "./communication-board";
+import { EMPTY_MESSAGE, type Message } from "./message/message";
 import { restoreMessageDraft } from "./message/message-draft";
 import {
   setMessageHighlightingEnabled,
   setMessageImagesVisible,
   setMessagePlayTiles,
 } from "./message/message-preferences-store";
-import { EMPTY_MESSAGE } from "./message/message-transforms";
-import type { Message } from "./message/message-types";
 import {
   communicationBoardTree,
   EMPTY_MESSAGE_REVIEW,
@@ -349,8 +348,6 @@ describe("CommunicationBoard", () => {
   });
 
   describe("layout", () => {
-    // Available heights exclude the app header (56px on phones, 64px on tablets,
-    // 48px on a short landscape screen).
     const LAYOUT_CASES = [
       {
         name: "a phone",
@@ -361,12 +358,9 @@ describe("CommunicationBoard", () => {
         overflowHint: 8,
         wholeRows: 5,
         isPlayBelowGrid: true,
-        // Inset toward the thumb, twice the page margin.
         playEnd: 32,
-        // The shared 32px icon and the pill's 12px padding.
         playHeight: 32 + 2 * 12,
         messageBarStart: 16,
-        // As tall as backspace, 80px, with the bar's 8px inset and 1px border.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
       {
@@ -380,9 +374,7 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: false,
         playEnd: 16 + 8 + 1,
         playHeight: 64,
-        // Past the 64px home button and a 16px gap.
         messageBarStart: 16 + 64 + 16,
-        // As tall as play, 64px, with the bar's 8px inset and 1px border.
         messageBarHeight: 64 + 2 * 8 + 2 * 1,
       },
       {
@@ -410,9 +402,7 @@ describe("CommunicationBoard", () => {
         isPlayBelowGrid: false,
         playEnd: 24 + 8 + 1,
         playHeight: 80,
-        // Home grows to play's 80px where the bar has room for it.
         messageBarStart: 24 + 80 + 16,
-        // Play, 80px, sets the height where there is room for it.
         messageBarHeight: 80 + 2 * 8 + 2 * 1,
       },
     ];
@@ -483,7 +473,6 @@ describe("CommunicationBoard", () => {
   });
 
   describe("phone controls", () => {
-    // The narrowest phones, and larger ones with display zoom, are 320px wide.
     test.each([{ width: 375 }, { width: 320 }])(
       "makes home and play equally wide and inset toward the thumb, on a $width px wide phone",
       async ({ width }) => {
@@ -551,7 +540,6 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello" }).click();
       await screen.getByRole("button", { name: "Speak message" }).click();
 
-      // A tile that had played would have spoken before the message did.
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hello"]);
       });

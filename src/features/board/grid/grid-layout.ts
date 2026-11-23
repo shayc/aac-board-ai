@@ -149,8 +149,6 @@ function buildTrackFit(
   { axis, breakpoint, trackCount }: AxisLayout,
   visibleTracks: number,
 ) {
-  // A fitting axis is inset by its padding on both sides. A scrolling axis has
-  // padding on one side and a gap plus the next track's hint on the other.
   const isScrollable = visibleTracks < trackCount;
   const insetPx = isScrollable
     ? scrollingInsetPx(axis, breakpoint)

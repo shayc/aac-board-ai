@@ -8,11 +8,10 @@ import {
 import { assertDefined } from "@shared/testing/assert-defined";
 import { assert, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { createTilePart, EMPTY_MESSAGE, type TilePart } from "./message";
 import { restoreMessageDraft } from "./message-draft";
 import { setMessageClearAfterPlayback } from "./message-preferences-store";
-import { createTilePart, EMPTY_MESSAGE } from "./message-transforms";
-import type { PlayMessage, TilePart } from "./message-types";
-import { useMessage } from "./use-message";
+import { type PlayMessage, useMessage } from "./use-message";
 
 const MEDIA_BOARD_SET_ID = "media-set";
 const IMAGE_PATH = "images/hello.png";
@@ -258,8 +257,6 @@ describe("useMessage", () => {
     expect(message.apply([{ kind: "space" }])).toBe(false);
   });
 
-  // A no-op edit, such as a tile that only plays, must not save a released
-  // copy of a played message while clearing after playing is off.
   test("keeps a played message played through an edit that changes nothing", async () => {
     const { result, rerender } = await renderHook(() =>
       useMessage(playMessage),

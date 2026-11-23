@@ -8,14 +8,14 @@ import {
   useState,
 } from "react";
 import { useKeyboard } from "react-aria";
-import { findGridKeyTarget, type GridKeyEvent } from "./grid-key-navigation";
 import {
   findFirstOccupiedPosition,
   gridArrangementKey,
   type GridCells,
   type GridPosition,
   isSameGridPosition,
-} from "./grid-model";
+} from "./grid-cells";
+import { findGridKeyTarget, type GridKeyEvent } from "./grid-key-navigation";
 
 const GRID_CELL_SELECTOR = "[role='gridcell']";
 const GRID_FOCUSABLE_SELECTOR = "[tabindex]";
@@ -65,8 +65,7 @@ export function useGridFocus<Item extends object>(
     tabStop?.focus();
   });
 
-  // A focused item unmounts, dropping focus to the body, only when the cells'
-  // keys change. The grid array itself is new each render.
+  // Depending on the grid array would restore focus on renders that reuse the cells.
   const arrangementKey = gridArrangementKey(grid, getItemKey);
   const previousArrangementKeyRef = useRef(arrangementKey);
   useEffect(() => {

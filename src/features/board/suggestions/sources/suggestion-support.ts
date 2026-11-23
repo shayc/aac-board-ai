@@ -36,7 +36,6 @@ export function rewriterLanguageOptions(
 ): AvailabilityOptionsMap["Rewriter"] {
   return {
     expectedInputLanguages: [language],
-    // The built-in suggestion context is written in English.
     expectedContextLanguages: [
       ...new Set([SUGGESTION_CONTEXT_LANGUAGE, language]),
     ],

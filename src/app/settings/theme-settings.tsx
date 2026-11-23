@@ -64,7 +64,6 @@ export function ThemeSettings() {
       >
         {THEME_OPTIONS.map(({ value, message, Icon }) => (
           <ToggleButton key={value} value={value} sx={optionSx}>
-            {/* The checkmark shows the selection without relying on color. */}
             {mode === value ? <CheckIcon /> : <Icon />}
             {t(message)}
           </ToggleButton>

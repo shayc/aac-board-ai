@@ -52,8 +52,7 @@ export function resolveBoardShortcut(
 }
 
 function isUndoKey(event: BoardShortcutKeyEvent): boolean {
-  // Shift makes the keys redo, which the board does not have. Alt is how
-  // Windows reports AltGr, which types a letter, alongside Ctrl.
+  // Windows reports AltGr as Ctrl+Alt. Typing with it must not trigger undo.
   if (event.shiftKey || event.altKey) {
     return false;
   }

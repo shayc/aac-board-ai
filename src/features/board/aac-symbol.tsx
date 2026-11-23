@@ -25,8 +25,6 @@ export function AACSymbol({
   isImageVisible = true,
 }: AACSymbolProps) {
   const hasLabel = label.trim() !== "";
-  // "Visible" is what the caller asks for; "displayed" is what shows. A symbol
-  // never renders blank, so whichever part is left stands in for a hidden one.
   const isImageDisplayed = Boolean(imageSrc) && (isImageVisible || !hasLabel);
   const isLabelDisplayed = isLabelVisible || !isImageDisplayed;
 
@@ -50,10 +48,9 @@ export function AACSymbol({
           sx={{
             position: "relative",
             flexGrow: 1,
-            // The fallback holds the image's place until it loads.
             height: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, 54px)`,
             maxHeight: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, none)`,
-            // Let the image shrink so the label keeps its full line.
+            // Override the flex item minimum so the image can shrink before the label.
             minHeight: 0,
             aspectRatio: "1 / 1",
           }}

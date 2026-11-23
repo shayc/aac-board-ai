@@ -46,7 +46,6 @@ function scopeSx(theme: Theme) {
       outline: `${SCAN_OUTLINE_WIDTH_PX}px solid ${theme.vars.palette.primary.main}`,
       outlineOffset: SCAN_OUTLINE_OFFSET_PX,
     },
-    // The outline follows the radius, so the row's corners match its tiles'.
     [`& ${SCAN_HIGHLIGHTED_ROW_SELECTOR}`]: {
       borderRadius: theme.vars.shape.borderRadiusSm,
     },

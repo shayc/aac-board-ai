@@ -5,7 +5,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { StarShineFilledIcon } from "@shared/ui/icons";
 import { assertNever } from "@shared/utils/assert-never";
 import type { ReactNode } from "react";
-import type { SuggestionStatus } from "./derive-suggestion-status";
+import type { SuggestionStatus } from "./suggestion-status";
 
 interface SuggestionStatusNoticeProps {
   status: SuggestionStatus;

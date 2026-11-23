@@ -167,7 +167,7 @@ cannot change.
 
 ### Activate a tile
 
-[`activateButton`](../src/features/board/activation/button-activator.ts)
+[`activateTile`](../src/features/board/tile/tile-activation.ts)
 coordinates navigation and playback, and hands message edits to
 [`useMessage`](../src/features/board/message/use-message.ts), the one owner of
 how the message changes:
@@ -247,7 +247,7 @@ language.
    repeats the message or an earlier candidate, ignoring case, a final full
    stop, and apostrophe style, and one that carries model artifacts such as an
    underscored word or a quotation mark.
-4. [`deriveSuggestionStatus`](../src/features/board/suggestions/derive-suggestion-status.ts)
+4. [`deriveSuggestionStatus`](../src/features/board/suggestions/suggestion-status.ts)
    reduces the sources to one status for the bar. A model that still needs
    downloading, or that failed to prepare, shows an enable button; pressing it
    is the user gesture a model download needs. A download shows its progress.
@@ -296,7 +296,7 @@ sit in loaders, stores, hooks and components alike.
 - **Board links:** a `?board=` link that can't be parsed or imported is
   explained by the page too, but its title gives no cause, so the loader and
   the action report the underlying error themselves, through
-  [`failBoardFileURLImport`](../src/app/routing/root/fail-board-file-url-import.ts).
+  [`failBoardFileURLImport`](../src/app/routing/root/root-index-route.ts).
 - **Library:** a failed list load, catalog download, export or delete is
   reported beside its message.
 - **Stored pictures and sounds:** a board opens, and a message draft is

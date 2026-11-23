@@ -1,5 +1,5 @@
 import type { Locator } from "vitest/browser";
-import type { GridPosition } from "../grid/grid-model";
+import type { GridPosition } from "../grid/grid-cells";
 
 export function getCellPosition(item: Locator): GridPosition {
   const cell = item.element().closest("[role='gridcell']");

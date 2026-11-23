@@ -1,6 +1,6 @@
 import type { Status } from "@shayc/react-built-in-ai";
-import type { SuggestionSource } from "./suggestion-source";
-import { isAvailableEngineStatus } from "./suggestion-support";
+import type { SuggestionSource } from "./sources/suggestion-source";
+import { isAvailableEngineStatus } from "./sources/suggestion-support";
 
 export type SuggestionStatus =
   | { kind: "idle" }

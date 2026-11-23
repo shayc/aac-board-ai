@@ -31,8 +31,6 @@ async function measureDisabledGlyphContrasts(mode: ColorMode) {
     <MessageBar
       parts={[]}
       isWordOpen={false}
-      activePartId={null}
-      areImagesVisible
       endAction={
         <>
           <BackspaceButton

@@ -16,7 +16,6 @@ function ShowButtons({
 }) {
   const { showSnackbar } = useSnackbar();
 
-  // Pinned to the bottom so a visible snackbar never covers the buttons.
   return (
     <div style={{ position: "fixed", bottom: 0 }}>
       {Object.entries(snackbars).map(([name, options]) => (
@@ -45,7 +44,6 @@ describe("SnackbarProvider", () => {
     await screen.getByRole("button", { name: "show-saved" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
 
-    // Axe needs the final opacity for color-contrast checks.
     await vi.waitFor(() => {
       const alert = screen.getByRole("status").element();
       expect(getComputedStyle(alert).opacity).toBe("1");
