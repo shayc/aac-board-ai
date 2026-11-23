@@ -82,6 +82,12 @@ Open [http://localhost:5173](http://localhost:5173).
 
 To run tests in Chromium and WebKit, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
+## Release
+
+Netlify builds a deploy preview for every pull request and publishes production from the `release` branch. Merging to `main` does not deploy.
+
+To ship, bump the version in a pull request, tag the merged commit, and publish a GitHub release for the tag. The [Publish release](.github/workflows/publish-release.yml) workflow fast-forwards `release` to the tag, and Netlify deploys it. To roll back, publish an earlier deploy from the Netlify deploy list.
+
 ## Architecture
 
 Built with React 19, TypeScript, Vite, and MUI.
