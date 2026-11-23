@@ -1,5 +1,3 @@
-# Netlify publishes production from the release branch, so merges to main
-# cost no deploy credits until a GitHub release is published.
 name: Publish release
 
 on:
