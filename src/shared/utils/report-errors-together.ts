@@ -11,8 +11,6 @@ export function reportErrorsTogether(
     return;
   }
 
-  // The console prints only an uncaught error's own message, so the first
-  // cause is named there; the rest stay on `errors`.
   const firstError = errors[0];
 
   reportError(

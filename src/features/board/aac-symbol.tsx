@@ -2,9 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 
-// A sized container, such as a tile, sets this to scale the label with it.
 export const SYMBOL_LABEL_FONT_SIZE_PROPERTY = "--symbol-label-font-size";
-
 export const SYMBOL_IMAGE_SIZE_PROPERTY = "--symbol-image-size";
 
 export type SymbolLabelPlacement = "top" | "bottom";
@@ -50,7 +48,6 @@ export function AACSymbol({
             flexGrow: 1,
             height: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, 54px)`,
             maxHeight: `var(${SYMBOL_IMAGE_SIZE_PROPERTY}, none)`,
-            // Override the flex item minimum so the image can shrink before the label.
             minHeight: 0,
             aspectRatio: "1 / 1",
           }}

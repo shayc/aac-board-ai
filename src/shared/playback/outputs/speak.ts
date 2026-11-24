@@ -38,8 +38,6 @@ export function speak(
     reject(new Error(`Speech failed: ${event.error}`, { cause: event }));
   }
 
-  // A sentence boundary reports where a sentence starts, not which word is
-  // being spoken. Other names pass, since an engine may leave the name empty.
   if (onWordBoundary) {
     utterance.addEventListener(
       "boundary",

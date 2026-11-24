@@ -14,6 +14,7 @@ const ICON_SX = {
 const SHAPE_SX = {
   pill: { width: MIN_CELL_WIDTH_PX, ...ICON_SX },
   round: (theme: Theme) => ({
+    flexShrink: 0,
     width: CONTROL_SIZES.large,
     height: CONTROL_SIZES.large,
     px: 0,

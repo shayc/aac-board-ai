@@ -12,16 +12,15 @@ import { usePlayingMessagePartId } from "../playback/use-board-playback";
 import type { MessagePart } from "./message";
 import { useMessagePreferences } from "./message-preferences-store";
 
-// A short landscape screen gets compact; smaller symbols leave room for labels.
 const BAR_SIZES = {
   regular: { control: CONTROL_SIZES.large, symbol: 64 },
   compact: { control: CONTROL_SIZES.medium, symbol: 48 },
 } as const;
 
 const BAR_INSET = 1;
-// Clears the bar's rounded end, which would clip the first word.
-const MESSAGE_PADDING = 3;
+const MESSAGE_START_PADDING = 3;
 const PART_INLINE_PADDING = 1;
+
 const HIGHLIGHTED_PART_ANCHOR = "--highlighted-message-part";
 
 export interface MessageBarProps {
@@ -38,8 +37,6 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
   const { areImagesVisible, isHighlightingEnabled } = useMessagePreferences();
   const highlightedPartId = isHighlightingEnabled ? playingPartId : null;
 
-  // Reads the latest parts without reacting to them, so an edit during
-  // playback shows the newest part instead of jumping back to the highlighted one.
   const scrollHighlightedPartIntoView = useEffectEvent((partId: string) => {
     const index = parts.findIndex((part) => part.id === partId);
     if (index === -1) {
@@ -75,7 +72,6 @@ export function MessageBar({ parts, isWordOpen, endAction }: MessageBarProps) {
         // A live region would repeat the tile's spoken feedback.
         role="list"
         aria-label={t(m.messageLabel)}
-        // Keyboard users need focus here to scroll the message.
         tabIndex={parts.length > 0 ? 0 : undefined}
         direction="row"
         sx={[
@@ -114,10 +110,9 @@ function messageBarSx(theme: Theme) {
     flexGrow: 1,
     alignItems: "center",
     gap: 2,
-    px: BAR_INSET,
+    paddingInlineEnd: BAR_INSET,
     overflow: "hidden",
     color: "text.primary",
-    // Forced-colors mode paints this border in place of the shadow and fill.
     border: 1,
     borderColor: "transparent",
     borderRadius: theme.vars.shape.borderRadiusFull,
@@ -143,17 +138,14 @@ function barSizeProperties({ control, symbol }: BarSize) {
 function scrollContainerSx(theme: Theme) {
   return {
     position: "relative",
-    // Keeps the highlighted part's fill behind the labels but above the bar.
     isolation: "isolate",
     flexGrow: 1,
     alignSelf: "stretch",
-    // A fixed height stops the first word added from pushing the board down.
     height: `calc(var(${CONTROL_SIZE_PROPERTY}) + ${theme.spacing(BAR_INSET * 2)})`,
-    px: MESSAGE_PADDING,
+    paddingInlineStart: MESSAGE_START_PADDING,
     overflow: "auto",
     borderStartStartRadius: theme.vars.shape.borderRadiusFull,
     borderEndStartRadius: theme.vars.shape.borderRadiusFull,
-    // Keep the focus ring inside the bar's clipped overflow.
     "&:focus-visible": { ...theme.focusVisible, outlineOffset: -4 },
   };
 }
@@ -170,13 +162,10 @@ function highlightedPartFillSx(theme: Theme) {
       positionAnchor: HIGHLIGHTED_PART_ANCHOR,
       top: `calc(anchor(top) - ${blockOutset})`,
       bottom: `calc(anchor(bottom) - ${blockOutset})`,
-      // Logical insets, since the RTL stylis plugin flips `left` and `right`
-      // but not the `anchor()` sides inside them.
       insetInlineStart: `calc(anchor(start) - ${inlineOutset})`,
       insetInlineEnd: `calc(anchor(end) - ${inlineOutset})`,
       borderRadius: theme.vars.shape.borderRadiusFull,
       bgcolor: "primary.main",
-      // Forced-colors mode drops the fill but paints a transparent outline.
       outline: "2px solid transparent",
       pointerEvents: "none",
     },
@@ -214,7 +203,7 @@ function MessagePartItem({
             ? theme.vars.palette.primary.contrastText
             : undefined,
         },
-        // Forced-colors mode repaints backgrounds, so draw the caret as a border.
+
         ...(caretPosition && {
           "&::after": {
             content: '""',
