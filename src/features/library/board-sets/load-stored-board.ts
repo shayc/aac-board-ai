@@ -69,8 +69,6 @@ async function readAssetURLs(
   return assetURLByPath;
 }
 
-// Broken links are dropped here, not at import: the stored file keeps them so
-// export writes back what was imported.
 function withoutBrokenLinks(
   board: Board,
   storedBoardIds: ReadonlySet<string>,

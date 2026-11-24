@@ -79,8 +79,6 @@ export function appendTilePart(message: Message, part: TilePart): Message {
   return { parts: [...parts, part], isWordOpen: false, hasPlayed: false };
 }
 
-// A word keeps the language it was started in, so letters added from a board
-// in another language do not change how the whole word is pronounced.
 export function spell(
   message: Message,
   text: string,
@@ -107,8 +105,6 @@ export function spell(
   };
 }
 
-// A played message has no word for a space to end: the next letter starts a
-// new message either way.
 export function closeWord(message: Message): Message {
   if (!message.isWordOpen || message.hasPlayed) {
     return message;
@@ -125,8 +121,6 @@ export function markPlayed(message: Message, hasPlayed: boolean): Message {
   return { ...message, hasPlayed };
 }
 
-// Every edit replaces the parts or changes whether the last word is open, so
-// two messages that share both differ at most in whether they have played.
 export function hasSameContent(first: Message, second: Message): boolean {
   return first.parts === second.parts && first.isWordOpen === second.isWordOpen;
 }

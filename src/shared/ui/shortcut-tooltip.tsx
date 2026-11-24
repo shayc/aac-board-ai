@@ -24,8 +24,6 @@ export function ShortcutTooltip({
 
   return (
     <Tooltip
-      // A string title keeps the control's own name; an element title would
-      // make MUI label the control by the tooltip while it is open.
       title={t(m.shortcutTooltip, { action, shortcut: isolateLTR(keys) })}
       placement="top"
       disableHoverListener

@@ -81,7 +81,7 @@ export async function updateBoardSetTranslations(
 
   await runTransaction(tx, async () => {
     const boardSet = await boardSetStore.get(boardSetId);
-    // A set deleted while it was being translated must not regain its boards.
+
     if (!boardSet) {
       return;
     }

@@ -9,23 +9,16 @@ import { SCAN_OUTLINE_REACH_PX } from "../scanning/scan-targets";
 import type { SuggestionStatus } from "./suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
-// A keyframe, not a transition: the theme owns the chip's transitions for
-// press feedback, and a keyframe starts over each time its element mounts.
 const fadeIn = keyframes`
   from { opacity: 0; }
 `;
 
-// Opacity only, so nothing beside the grid moves or changes size.
 const pendingPulse = keyframes`
   0%, 60%, 100% { opacity: 0.5; }
   30% { opacity: 1; }
 `;
 
-// A first phrase mostly arrives within 600ms; a shorter wait flashes the dots.
 const PENDING_DOTS_DELAY_MS = 700;
-
-// Room for the widest outline a chip gets, the scan highlight. A scroll
-// container clips at its padding edge.
 const OUTLINE_CLEARANCE = `${SCAN_OUTLINE_REACH_PX}px`;
 
 export interface SuggestionBarProps {
@@ -99,17 +92,12 @@ export function SuggestionBar({
   );
 }
 
-// Browsers leave a partly visible chip where it is on Tab, so its focus ring
-// stays cut off. A tapped chip shows no ring and stays put.
 function revealKeyboardFocusedChip({ target }: FocusEvent) {
   if (target.matches(":focus-visible")) {
     target.scrollIntoView({ block: "nearest", inline: "nearest" });
   }
 }
 
-// Rendered only while pending, so they leave at once: the last phrase lands in
-// the same render and would push fading dots past it. No fill or outline:
-// a shape around the dots reads as one more chip to tap.
 function PendingDots() {
   return (
     <Box

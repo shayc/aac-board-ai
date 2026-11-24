@@ -33,7 +33,6 @@ export function resolveBoardInLanguage(
     };
   }
 
-  // The requested locale could give untranslated text the wrong voice.
   return {
     board,
     boardLanguage: board.locale ? getLanguageCode(board.locale) : undefined,

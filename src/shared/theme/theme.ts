@@ -445,7 +445,6 @@ const themeOptions = {
           return {
             borderColor: theme.vars.palette.outline,
             [`&.${toggleButtonClasses.selected}`]: {
-              // Primary-colored text on the stronger tint falls under 4.5:1.
               color: theme.vars.palette.text.primary,
               backgroundColor: selectedBackground,
               "&:hover": {

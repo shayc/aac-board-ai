@@ -113,8 +113,6 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-// A voice reads any text as its own language, so the voice follows the
-// language of the text rather than the communication language.
 export function getSpeechParameters(language: string): SpeechParameters {
   const voicesByLanguage = voicesByLanguageStore.getSnapshot();
   const { voiceURIs, rate, pitch, volume } =
