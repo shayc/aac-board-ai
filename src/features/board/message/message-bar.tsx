@@ -18,7 +18,7 @@ const BAR_SIZES = {
 } as const;
 
 const BAR_INSET = 1;
-const MESSAGE_START_PADDING = 2;
+const MESSAGE_START_PADDING = 3;
 const PART_INLINE_PADDING = 1;
 
 const HIGHLIGHTED_PART_ANCHOR = "--highlighted-message-part";
